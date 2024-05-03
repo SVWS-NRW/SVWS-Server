@@ -1926,11 +1926,23 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Startzeit der Klausur
 	 */
-	public Integer startzeitByKursklausur(final @NotNull GostKursklausur klausur) {
+	public Integer startzeitByKursklausurOrNull(final @NotNull GostKursklausur klausur) {
 		final GostKlausurtermin termin = terminOrNullByKursklausur(klausur);
 		if (klausur.startzeit != null)
 			return klausur.startzeit;
 		return termin == null ? null : termin.startzeit;
+	}
+
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird eine Exception zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public int startzeitByKursklausurOrException(final @NotNull GostKursklausur klausur) {
+		return klausur.startzeit != null ? klausur.startzeit : DeveloperNotificationException.ifNull("Startzeit darf nicht null sein.", terminOrExceptionByKursklausur(klausur).startzeit);
 	}
 
 	/**

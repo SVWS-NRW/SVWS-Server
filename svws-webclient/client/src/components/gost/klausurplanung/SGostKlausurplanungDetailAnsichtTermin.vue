@@ -25,7 +25,7 @@
 								<tr class="border-b last:border-b-0 border-black/25 border-dashed" v-for="klausur in raummanager.kursklausurGetMengeByRaumid(raum.id)" :key="klausur.id">
 									<td class="px-3 py-1" :class="{'w-1/2': raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</td>
 									<td class="px-3 py-1" :class="{'w-1/2': raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) !== null && raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) !== null}">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</td>
-									<td class="pl-3 py-1 text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getKursklausurManager().startzeitByKursklausur(klausur)!) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-highlight" v-if="raummanager.getKursklausurManager().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
+									<td class="pl-3 py-1 text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getKursklausurManager().startzeitByKursklausurOrException(klausur)) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-highlight" v-if="raummanager.getKursklausurManager().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
 									<td class="pl-3 py-1 text-center" v-if="raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) === null">{{ raummanager.getKursklausurManager().vorgabeByKursklausur(klausur).dauer }} Min.</td>
 								</tr>
 							</table>

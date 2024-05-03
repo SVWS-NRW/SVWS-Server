@@ -20,11 +20,11 @@ public class GostNachschreibterminblockungKonfiguration {
 	public long maxTimeMillis = 1000L;
 
 	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	@Schema(description = "die Liste der zu blockenden Schülerklausurtermine", example = "")
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	@Schema(description = "die Liste der GostKlausurtermine, in die geblockt werden soll", example = "")
 	public @NotNull List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
 
 	/** True, falls NachschreiberInnen der selben Klausur auf den selben Termin geblockt werden sollen. */

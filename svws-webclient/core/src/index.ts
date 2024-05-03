@@ -191,6 +191,8 @@ export { GostKlausurenKalenderinformation } from './core/data/gost/klausurplanun
 export { GostKlausurenMetaDataCollection } from './core/data/gost/klausurplanung/GostKlausurenMetaDataCollection';
 export { GostKlausurenUpdate } from './core/data/gost/klausurplanung/GostKlausurenUpdate';
 export { GostKlausurraum } from './core/data/gost/klausurplanung/GostKlausurraum';
+export { GostKlausurraumRich } from './core/data/gost/klausurplanung/GostKlausurraumRich';
+export { GostKlausurraumblockungKonfiguration } from './core/data/gost/klausurplanung/GostKlausurraumblockungKonfiguration';
 export { GostKlausurraumstunde } from './core/data/gost/klausurplanung/GostKlausurraumstunde';
 export { GostKlausurtermin } from './core/data/gost/klausurplanung/GostKlausurtermin';
 export { GostKlausurterminblockungDaten } from './core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
@@ -203,6 +205,7 @@ export { GostKursklausurRich } from './core/data/gost/klausurplanung/GostKurskla
 export { GostNachschreibterminblockungKonfiguration } from './core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 export { GostSchuelerklausur } from './core/data/gost/klausurplanung/GostSchuelerklausur';
 export { GostSchuelerklausurTermin } from './core/data/gost/klausurplanung/GostSchuelerklausurTermin';
+export { GostSchuelerklausurTerminRich } from './core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
 export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
@@ -560,6 +563,7 @@ export { KlausurblockungSchienenAlgorithmusGreedy5 } from './core/utils/gost/kla
 export { KlausurblockungSchienenAlgorithmusGreedy6 } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy6';
 export { KlausurblockungSchienenAlgorithmusGreedy7 } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy7';
 export { KlausurblockungSchienenDynDaten } from './core/utils/gost/klausurplanung/KlausurblockungSchienenDynDaten';
+export { KlausurraumblockungAlgorithmus } from './core/utils/gost/klausurplanung/KlausurraumblockungAlgorithmus';
 export { KlausurterminblockungAlgorithmus } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmus';
 export { KlausurterminblockungAlgorithmusAbstract } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
 export { KlausurterminblockungAlgorithmusGreedy1 } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy1';

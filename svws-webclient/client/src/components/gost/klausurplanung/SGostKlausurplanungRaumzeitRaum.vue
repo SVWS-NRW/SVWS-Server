@@ -43,7 +43,7 @@
 						</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (kMan().startzeitByKursklausur(klausur) !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausur(klausur)!) + ' Uhr' || 'Startzeit' : '') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (kMan().startzeitByKursklausurOrNull(klausur) !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausurOrException(klausur)) + ' Uhr' || 'Startzeit' : '') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
 						</div>
 					</div>
 				</template>

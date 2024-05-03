@@ -1840,11 +1840,23 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Startzeit der Klausur
 	 */
-	public startzeitByKursklausur(klausur : GostKursklausur) : number | null {
+	public startzeitByKursklausurOrNull(klausur : GostKursklausur) : number | null {
 		const termin : GostKlausurtermin | null = this.terminOrNullByKursklausur(klausur);
 		if (klausur.startzeit !== null)
 			return klausur.startzeit;
 		return termin === null ? null : termin.startzeit;
+	}
+
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird eine Exception zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public startzeitByKursklausurOrException(klausur : GostKursklausur) : number {
+		return klausur.startzeit !== null ? klausur.startzeit : DeveloperNotificationException.ifNull("Startzeit darf nicht null sein.", this.terminOrExceptionByKursklausur(klausur).startzeit)!;
 	}
 
 	/**
