@@ -30,6 +30,10 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 
+    // TODO: Sobald ein Filter ausgewählt wird wird kurz darauf der Filter wieder gelöscht. Vermutlich ein Timing Problem beim laden des Schülers
+    // nur nachdem man zwei Mal hintereinander einen Filter ausgewählt hat bleibt er bestehen
+    //    -> Hier aber auch nur solange bis man einen anderen Schüler ausgewählt hat, danach ist er erneut weg
+
 	/**
 	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und Schülers und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
@@ -56,7 +60,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
         const view = this.getView(schuelerListeManager);
 
 		this.setPatchedDefaultState({
-			idSchuljahresabschnitt: idSchuljahresabschnitt,
+			idSchuljahresabschnitt,
 			schuelerListeManager,
 			view
 		});
@@ -65,7 +69,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
     private getView(schuelerListeManager: SchuelerListeManager): RouteNode<any, any> | undefined {
         // Setze ggf. den Tab in der Schüler-Applikation und setze den neu erzeugten Routing-State
-        const auswahlSchuelerVorher = schuelerListeManager.hasDaten() ? schuelerListeManager.auswahl() : null;
+        const auswahlSchuelerVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
         if (auswahlSchuelerVorher && schuelerListeManager.liste.has(auswahlSchuelerVorher.id)) {
             return this._state.value.view;
         } else {
@@ -79,7 +83,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
         if (idSchueler !== undefined) {
             // Hier wird der ausgewählte Schüler geholt
-            auswahlSchueler = this.schuelerListeManager.liste.get(idSchueler);
+            auswahlSchueler = schuelerListeManager.liste.get(idSchueler);
         } else {
             // Ermittle einen ggf. zuvor ausgewählten Schüler und versucht diesen erneut zu holen
             const auswahlSchuelerVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
@@ -91,6 +95,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
         // Wenn kein Schüler ausgewählt wurde wird entweder der oberste Eintrag aus der Schüler Liste zurückgegeben oder null
         if (!auswahlSchueler) {
             auswahlSchueler = schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0);
+            console.log('After 2 ')
         }
 
         return auswahlSchueler
