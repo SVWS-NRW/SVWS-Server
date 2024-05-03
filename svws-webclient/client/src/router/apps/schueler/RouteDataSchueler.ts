@@ -9,6 +9,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { RouteNode } from "~/router/RouteNode";
 
 
 interface RouteStateSchueler extends RouteStateInterface {
@@ -28,44 +29,82 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		super(defaultState);
 	}
 
-	private async ladeStammdaten(eintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
-		if (eintrag === null)
-			return null;
-		return await api.server.getSchuelerStammdaten(api.schema, eintrag.id);
-	}
 
 	/**
-	 * Setzt den Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
+	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und Schülers und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param {number | undefined} idSchueler   die ID des Schülers
 	 */
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
-		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den Schülerlisten-Manager zunächst ohne Auswahl
+	public async loadData(idSchuljahresabschnitt: number, idSchueler: number | undefined) {
+		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den SchülerListeManager
 		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 		const auswahllisteDaten = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
-		const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
+
+        // Erzeuge SchuelerListeManager mit default SchuelerStatus Filter
+        const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen
-		const auswahlVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
-		let auswahl = null;
-		if ((auswahlVorher !== null) && schuelerListeManager.liste.has(auswahlVorher.id))
-			auswahl = schuelerListeManager.liste.getOrException(auswahlVorher.id);
-		if (auswahl === null)
-			auswahl = schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0);
-		const stammdaten = await this.ladeStammdaten(auswahl);
-		schuelerListeManager.setDaten(stammdaten);
-		// Setze ggf. den Tab in der Schüler-Applikation und setze den neu erzeugten Routing-State
-		const view = auswahlVorher === null ? routeSchuelerIndividualdaten : this._state.value.view;
+
+        // Lade und setze Schueler Stammdaten des ggf. ausgewählten Schülers
+        const auswahlSchueler = this.getSchuelerAuswahl(idSchueler, schuelerListeManager);
+        const schuelerStammdaten = await this.ladeStammdaten(auswahlSchueler);
+		schuelerListeManager.setDaten(schuelerStammdaten);
+
+        // Lade view
+        const view = this.getView(schuelerListeManager);
+
 		this.setPatchedDefaultState({
-			idSchuljahresabschnitt,
+			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			schuelerListeManager,
 			view
 		});
 	}
 
-	/**
+
+    private getView(schuelerListeManager: SchuelerListeManager): RouteNode<any, any> | undefined {
+        // Setze ggf. den Tab in der Schüler-Applikation und setze den neu erzeugten Routing-State
+        const auswahlSchuelerVorher = schuelerListeManager.hasDaten() ? schuelerListeManager.auswahl() : null;
+        if (auswahlSchuelerVorher && schuelerListeManager.liste.has(auswahlSchuelerVorher.id)) {
+            return this._state.value.view;
+        } else {
+            return routeSchuelerIndividualdaten;
+        }
+    }
+
+
+    private getSchuelerAuswahl(idSchueler: number | undefined, schuelerListeManager: SchuelerListeManager): SchuelerListeEintrag | null {
+        let auswahlSchueler;
+
+        if (idSchueler !== undefined) {
+            // Hier wird der ausgewählte Schüler geholt
+            auswahlSchueler = this.schuelerListeManager.liste.get(idSchueler);
+        } else {
+            // Ermittle einen ggf. zuvor ausgewählten Schüler und versucht diesen erneut zu holen
+            const auswahlSchuelerVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
+            if (auswahlSchuelerVorher && schuelerListeManager.liste.has(auswahlSchuelerVorher.id)) {
+                auswahlSchueler = schuelerListeManager.liste.getOrException(auswahlSchuelerVorher.id);
+            }
+        }
+
+        // Wenn kein Schüler ausgewählt wurde wird entweder der oberste Eintrag aus der Schüler Liste zurückgegeben oder null
+        if (!auswahlSchueler) {
+            auswahlSchueler = schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0);
+        }
+
+        return auswahlSchueler
+    }
+
+
+    private async ladeStammdaten(eintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
+        if (eintrag === null)
+            return null;
+        return await api.server.getSchuelerStammdaten(api.schema, eintrag.id);
+    }
+
+
+    /**
 	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
 	 *
 	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
@@ -74,32 +113,11 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		return this._state.value.idSchuljahresabschnitt;
 	}
 
-	/**
-	 * Setzt den ausgewählten Schueler und lädt dessen Stammddaten.
-	 *
-	 * @param schueler   der ausgewählte Schüler
-	 */
-	public async setSchueler(schueler: SchuelerListeEintrag | null) {
-		if ((schueler === null) && (!this.schuelerListeManager.hasDaten()))
-			return;
-		if ((schueler === null) || (this.schuelerListeManager.liste.list().isEmpty())) {
-			this.schuelerListeManager.setDaten(null);
-			this.commit();
-			return;
-		}
-		if ((schueler !== null) && (this.schuelerListeManager.hasDaten() && (schueler.id === this.schuelerListeManager.auswahl().id)))
-			return;
-		let auswahl = this.schuelerListeManager.liste.get(schueler.id);
-		if (auswahl === null)
-			auswahl = this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
-		const stammdaten = await this.ladeStammdaten(auswahl);
-		this.schuelerListeManager.setDaten(stammdaten);
-		this.setPatchedState({schuelerListeManager: this.schuelerListeManager}, false);
-	}
 
 	get schuelerListeManager(): SchuelerListeManager {
 		return this._state.value.schuelerListeManager;
 	}
+
 
 	patch = async (data : Partial<SchuelerStammdaten>) => {
 		if (!this.schuelerListeManager.hasDaten())
