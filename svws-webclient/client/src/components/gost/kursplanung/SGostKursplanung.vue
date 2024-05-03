@@ -56,7 +56,7 @@
 								<span class="icon-sm i-ri-group-line" /> Schülerzuordnung
 							</svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
-						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung">
+						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Kurse leeren ...', action: async () => {}, default: true }">
 							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-delete-bin-line" v-else /> </template>
 						</svws-ui-button-select>
 						<template v-if="allowRegeln">
@@ -191,6 +191,7 @@
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void|boolean>; default?: boolean; separator?: true }> = [];
+		// result.push({ text: "Kurse leeren ...", action: async () => {}, default: true });
 		result.push({ text: "Leere alle Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(false)) });
 		result.push({ text: "Leere alle Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(true)) });
 		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size())) {

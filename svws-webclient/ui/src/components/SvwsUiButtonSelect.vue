@@ -1,13 +1,13 @@
 <template>
 	<div class="svws-ui-button-select" ref="button">
 		<svws-ui-button ref="inputEl" :type="type">
-			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : action(defaultAction)" class="flex gap-1">
+			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : (defaultAction && action(defaultAction))" class="flex gap-1">
 				<slot name="icon" />{{ defaultAction.text }}
 			</span>
-			<span v-else-if="defaultItem" @click="action(defaultItem)" class="flex gap-1">
+			<span v-else-if="defaultItem" @click="defaultItem && action(defaultItem)" class="flex gap-1">
 				<slot name="icon" />{{ defaultItem.text }}
 			</span>
-			<span class="icon i-ri-menu-line" v-else />
+			<span v-else class="icon i-ri-menu-line" />
 		</svws-ui-button>
 		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
 			<span class="icon i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
