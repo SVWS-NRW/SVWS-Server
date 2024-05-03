@@ -48,7 +48,7 @@
 							<slot name="modalActions" />
 						</div>
 
-						<div class="modal--logs">
+						<div class="modal--logs" v-if="$slots.modalLogs">
 							<slot name="modalLogs" />
 						</div>
 					</div>

@@ -757,6 +757,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return true;
 	});
 
+	revertBlockung = api.call(async () => {
+		await api.server.revertActivateGostBlockungsergebnis(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+		this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = false;
+		this.setPatchedState({ jahrgangsdaten: this.jahrgangsdaten });
+	})
+
 	ergebnisSynchronisieren = api.call(async (): Promise<void> => {
 		if ((!this.hatBlockung && !this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id]) || (this._state.value.auswahlErgebnis === undefined))
 			return;

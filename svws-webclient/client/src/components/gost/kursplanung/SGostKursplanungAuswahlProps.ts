@@ -24,6 +24,7 @@ export interface GostKursplanungAuswahlProps {
 	hatBlockung: boolean;
 	auswahlErgebnis: GostBlockungsergebnis | undefined;
 	restoreBlockung: () => Promise<void>;
+	revertBlockung: () => Promise<void>;
 	aktAbschnitt: Schuljahresabschnitt;
 	mode: ServerMode;
 	ausfuehrlicheDarstellungKursdifferenz: () => boolean;

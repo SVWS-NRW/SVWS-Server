@@ -23,7 +23,7 @@
 					<div v-else>
 						<span>{{ row.name }}&nbsp;</span>
 					</div>
-					<div class="-my-1 ml-auto inline-flex">
+					<div class="-my-1 ml-auto inline-flex gap-1">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
 							<template v-if="allow_berechne_blockung">
 								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
@@ -31,7 +31,7 @@
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button>
+								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button>
 							</template>
 							<svws-ui-tooltip position="top" v-else>
 								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Berechnen</svws-ui-button>

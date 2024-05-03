@@ -4,8 +4,13 @@
 			<template #cell(kuerzel)="{ rowData: row }">
 				<div class="flex justify-between w-full pr-1">
 					<span>{{ row.kuerzel }}</span>
-					<div class="flex w-fit">
-						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
+					<div class="flex w-fit gap-1">
+						<s-gost-kursplanung-modal-blockung-revert v-if="istRueckgaengigMoeglich[row.id]" v-slot="{ openModal }" :revert-blockung>
+							<svws-ui-button :disabled="apiStatus.pending" type="transparent" @click="openModal()" class="-my-1" title="Die Persistierung der Blockung für dieses Halbjahr rückgängig machen">
+								<span class="icon-sm i-ri-eraser-line -mb-0.5" /> Rückgängig
+							</svws-ui-button>
+						</s-gost-kursplanung-modal-blockung-revert>
+						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung>
 							<svws-ui-button :disabled="apiStatus.pending" type="transparent" @click="openModal()" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten">
 								<span class="icon-sm i-ri-arrow-turn-back-line -mb-0.5" /> Wiederherstellen
 							</svws-ui-button>
@@ -40,6 +45,16 @@
 		const festgelegt = props.jahrgangsdaten()?.istBlockungFestgelegt[row.id];
 		return festgelegt === true;
 	}
+
+	const istRueckgaengigMoeglich = computed<boolean[]>(() => {
+		const jgdaten = props.jahrgangsdaten();
+		if (jgdaten === undefined)
+			return [ false, false, false, false, false, false ];
+		const result : boolean[] = [];
+		for (const hj of GostHalbjahr.values())
+			result.push(!jgdaten.existierenNotenInLeistungsdaten[hj.id] && jgdaten.istBlockungFestgelegt[hj.id]);
+		return result;
+	});
 
 	async function select_hj(halbjahr: GostHalbjahr | null) {
 		if (halbjahr !== null)
