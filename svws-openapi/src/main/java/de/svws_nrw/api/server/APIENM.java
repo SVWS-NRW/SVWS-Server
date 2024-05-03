@@ -203,7 +203,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response synchronizeENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::synchronize, request,
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::synchronize, request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
@@ -229,7 +229,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response uploadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::upload, request,
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::upload, request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
@@ -254,7 +254,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response downloadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::download, request,
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::download, request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
@@ -278,7 +278,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server, u.U. auch fehlende OAuth-Daten.")
 	public Response truncateENMServer(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::truncate, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return DBBenutzerUtils.runWithTransaction(DataENMDaten::truncate, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 }

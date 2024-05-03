@@ -516,7 +516,6 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static void importEnmSchueler(final DBEntityManager conn, final List<ENMSchueler> listEnmSchueler) throws ApiOperationException {
-		conn.transactionBegin();
 		DBUtilsSchule.get(conn);
 
 		// Bestimme die Schüler-IDs, anhand der zu importierenden Daten
@@ -728,7 +727,6 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (!setTeilleistungenTimestamps.isEmpty())
 			conn.transactionPersist(setTeilleistungenTimestamps);
 		conn.transactionFlush();
-		conn.transactionCommitOrThrow();
 	}
 
 
