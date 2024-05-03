@@ -712,20 +712,20 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (!setLernabschnittsbemerkungen.isEmpty())
 			conn.transactionPersistAll(setLernabschnittsbemerkungen);
 		if (!setLernabschnitte.isEmpty())
-			conn.transactionPersist(setLernabschnitte);
+			conn.transactionPersistAll(setLernabschnitte);
 		if (!setLeistungen.isEmpty())
-			conn.transactionPersist(setLeistungen);
+			conn.transactionPersistAll(setLeistungen);
 		if (!setTeilleistungen.isEmpty())
-			conn.transactionPersist(setTeilleistungen);
+			conn.transactionPersistAll(setTeilleistungen);
 		conn.transactionFlush();
 
 		// TODO Prüfen, ob das Neusetzen der Timestamps nicht einen Konflikt mit den Triggern durch die Persistierung oben hervorruft...
 		if (!setLernabschnitteTimestamps.isEmpty())
-			conn.transactionPersist(setLernabschnitteTimestamps);
+			conn.transactionPersistAll(setLernabschnitteTimestamps);
 		if (!setLeistungenTimestamps.isEmpty())
-			conn.transactionPersist(setLeistungenTimestamps);
+			conn.transactionPersistAll(setLeistungenTimestamps);
 		if (!setTeilleistungenTimestamps.isEmpty())
-			conn.transactionPersist(setTeilleistungenTimestamps);
+			conn.transactionPersistAll(setTeilleistungenTimestamps);
 		conn.transactionFlush();
 	}
 
