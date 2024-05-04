@@ -8,11 +8,11 @@ export abstract class JavaString {
 		return str.includes(s);
 	}
 
-	public static isBlank(s: string) {
+	public static isBlank(s: string): boolean {
 		return s.trim().length === 0;
 	}
 
-	public static isEmpty(s: string) {
+	public static isEmpty(s: string): boolean {
 		return s.length === 0;
 	}
 
@@ -22,11 +22,11 @@ export abstract class JavaString {
 		return s.indexOf(str, fromIndex);
 	}
 
-	public static replaceFirst(s : string, regex : string, replacement : string) {
+	public static replaceFirst(s : string, regex : string, replacement : string): string {
 		return s.replace(new RegExp(regex), replacement);
 	}
 
-	public static replaceAll(s : string, regex : string, replacement : string) {
+	public static replaceAll(s : string, regex : string, replacement : string): string {
 		return s.replace(new RegExp(regex, "g"), replacement);
 	}
 

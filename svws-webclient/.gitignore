@@ -33,3 +33,5 @@ yarn-error.log*
 *.sw?
 node_modules
 /.npmrc
+
+core/jsr.json

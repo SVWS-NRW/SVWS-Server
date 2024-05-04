@@ -18,7 +18,7 @@ export class JavaLong extends JavaObject {
 		return a;
 	}
 
-	public static compare(a : number, b : number) {
+	public static compare(a : number, b : number): 0 | 1 | -1 {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 

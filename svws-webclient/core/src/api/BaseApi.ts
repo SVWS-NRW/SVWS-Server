@@ -41,7 +41,7 @@ export class BaseApi {
 		return this.url + path;
 	}
 
-	protected decodeFilename(header: string) {
+	protected decodeFilename(header: string): string {
 		// prüfe, ob filename vorhanden ist im Header und ermittel `filename`. Ebenso `filenameUTF8`
 		const nameRegex = /(.*filename="(?<filename>.*)")?(.*filename\*=UTF-8''(?<filenameUTF8>.*))?/
 		const match = nameRegex.exec(header);
