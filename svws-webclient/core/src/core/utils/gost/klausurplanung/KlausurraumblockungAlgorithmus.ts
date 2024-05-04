@@ -1,10 +1,8 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
 import { GostKlausurraumblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurraumblockungKonfiguration';
-import { Pair } from '../../../../core/adt/Pair';
 
 export class KlausurraumblockungAlgorithmus extends JavaObject {
 
@@ -14,16 +12,23 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 	}
 
 	/**
-	 * @param config   		  Die Konfiguration
+	 * Verteilt die Klausuren auf die zur Verfügung stehenden Räume.
+	 * <br>
+	 * <br>Harte Kriterien:
+	 * <br>- Die Raumkapazität darf nicht überschritten werden
+	 * <br>- Es dürfen nur Klausuren in einen Raum geblockt werden, die dieselbe Startzeit haben.
+	 * <br>
+	 * <br>Weiche Kriterien (mit zugeordneter Güte von 0 ... 1):
+	 * <br>- Möglichst geringe Raumanzahl.
+	 * <br>- Möglichst gleiche Klausurlängen in einem Raum.
+	 * <br>- Möglichst Klausuren des selben Kurses im selben Raum.
+	 *
+	 * @param config   		  Die Konfiguration und die Eingabedaten.
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostKlausurraumRich (Nachschreiber), 2. Element = Liste von GostSchuelerklausurTerminRich-Objekten
-	 *
-	 * Harte Parameter sind:
-	 * - Die Raumkapazität darf nicht überschritten werden
-	 * - Es dürfen nur Klausuren in einen Raum geblockt werden, die dieselbe Startzeit haben.
 	 */
-	public berechne(config : GostKlausurraumblockungKonfiguration) : List<Pair<GostKlausurraumRich, List<GostSchuelerklausurTerminRich | null>>> {
-		return new ArrayList<Pair<GostKlausurraumRich, List<GostSchuelerklausurTerminRich | null>>>();
+	public berechne(config : GostKlausurraumblockungKonfiguration) : List<GostKlausurraumRich> {
+		return new ArrayList<GostKlausurraumRich>();
 	}
 
 	transpilerCanonicalName(): string {

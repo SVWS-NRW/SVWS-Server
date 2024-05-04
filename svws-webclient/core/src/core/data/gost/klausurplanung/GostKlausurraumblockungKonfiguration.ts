@@ -22,7 +22,7 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	public raeume : List<GostKlausurraumRich> = new ArrayList<GostKlausurraumRich>();
 
 	/**
-	 * Gewicht, um die Schülerklausuren auf möchlichst wenig Räume zu verteilen.
+	 * Gewicht, um die Schülerklausuren auf möglichst wenig Räume zu verteilen.
 	 */
 	public _regel_blocke_in_moeglichst_wenig_raeume : number = 1;
 

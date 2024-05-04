@@ -27,7 +27,7 @@ public class GostKlausurraumblockungKonfiguration {
 	@Schema(description = "die Liste der GostKlausurräume, in die geblockt werden soll", example = "")
 	public @NotNull List<@NotNull GostKlausurraumRich> raeume = new ArrayList<>();
 
-	/** Gewicht, um die Schülerklausuren auf möchlichst wenig Räume zu verteilen. */
+	/** Gewicht, um die Schülerklausuren auf möglichst wenig Räume zu verteilen. */
 	public double _regel_blocke_in_moeglichst_wenig_raeume = 1;
 
 	/** Gewicht, um alle Klausuren desselben Kurses in denselben Raum zu blocken. */

@@ -1,8 +1,12 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -22,14 +26,17 @@ public class GostKlausurraumRich {
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 
+	/** Die zugeordneten {@link GostSchuelerklausurTerminRich}-Objekte. */
+	public final @NotNull List<@NotNull GostSchuelerklausurTerminRich> schuelerklausuren = new ArrayList<>();
+
 	/**
 	 * Konstruktor zur Erstellung des Rich-Objekts.
 	 *
-	 * @param klausurraum     das zu vergleichende Objekt
-	 * @param stundenplanraum
+	 * @param klausurraum      Das zugehörige {@link GostKlausurraum}-Objekt.
+	 * @param stundenplanraum  Das zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 */
-	public GostKlausurraumRich(final GostKlausurraum klausurraum, final StundenplanRaum stundenplanraum) {
+	public GostKlausurraumRich(final @NotNull GostKlausurraum klausurraum, final @NotNull StundenplanRaum stundenplanraum) {
 		id = klausurraum.id;
 		groesse = stundenplanraum.groesse;
 	}
@@ -41,10 +48,10 @@ public class GostKlausurraumRich {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
