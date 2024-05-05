@@ -9,9 +9,11 @@ import type { Comparator } from '../../../../java/util/Comparator';
 import { GostKursklausurManager, cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
 import type { List } from '../../../../java/util/List';
 import { cast_java_util_List } from '../../../../java/util/List';
+import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
 import { GostKlausurtermin, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashSet } from '../../../../java/util/HashSet';
 import { Pair } from '../../../../core/adt/Pair';
+import { StundenplanManager } from '../../../../core/utils/stundenplan/StundenplanManager';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 import { MapUtils } from '../../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../../core/utils/Map2DUtils';
@@ -19,6 +21,7 @@ import { GostKlausurenCollectionSkrsKrs } from '../../../../core/data/gost/klaus
 import { StundenplanRaum } from '../../../../core/data/stundenplan/StundenplanRaum';
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 import { ListUtils } from '../../../../core/utils/ListUtils';
@@ -27,6 +30,8 @@ import type { JavaMap } from '../../../../java/util/JavaMap';
 export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _kursklausurManager : GostKursklausurManager;
+
+	private _stundenplanManager : StundenplanManager | null = null;
 
 	private readonly _termin : GostKlausurtermin;
 
@@ -121,6 +126,7 @@ export class GostKlausurraumManager extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
 			this._termin = new GostKlausurtermin();
 			this._kursklausurManager = new GostKursklausurManager();
+			this._stundenplanManager = null;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
@@ -152,6 +158,26 @@ export class GostKlausurraumManager extends JavaObject {
 			this.schuelerklausurAddOhneUpdate(this._kursklausurManager.schuelerklausurterminGetByIdOrException(skt!));
 		this.schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 		this.update_all();
+	}
+
+	/**
+	 * Setzt den StundenplanManager
+	 *
+	 * @param stundenplanManager der StundenplanManager
+	 */
+	public setStundenplanManager(stundenplanManager : StundenplanManager) : void {
+		this._stundenplanManager = stundenplanManager;
+	}
+
+	/**
+	 * Liefert den StundenplanManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den StundenplanManager
+	 */
+	public getStundenplanManager() : StundenplanManager {
+		if (this._stundenplanManager === null)
+			throw new DeveloperNotificationException("StundenplanManager not set.")
+		return this._stundenplanManager;
 	}
 
 	/**
@@ -1035,6 +1061,111 @@ export class GostKlausurraumManager extends JavaObject {
 				ergebnis.add(new Pair<GostKlausurtermin, List<GostSchuelerklausurTermin>>(this.getKursklausurManager().terminGetByIdOrException(entry.getKey()!), entry.getValue()));
 			}
 		}
+		return ergebnis;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public isSchuelerklausurenInRaum(fremdTermine : boolean) : boolean {
+		for (let termin of this.schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
+			if (this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(termin.id))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Gibt die Liste der zu verteilenden Schülerklausurtermine zurück. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return die Liste der Schülerklausurtermine
+	 */
+	public raeumeVerfuegbarGetMenge(fremdTermine : boolean) : List<GostKlausurraum> {
+		const raeume : List<GostKlausurraum> | null = fremdTermine ? this._raummenge : this._raummenge_by_idTermin.get(this.getHauptTermin().id);
+		return raeume === null ? new ArrayList() : raeume;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public anzahlPlaetzeAlleRaeume(fremdTermine : boolean) : number {
+		let kapazitaet : number = 0;
+		for (let raum of this.raeumeVerfuegbarGetMenge(fremdTermine)) {
+			if (raum.idStundenplanRaum !== null)
+				kapazitaet += this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum).groesse;
+		}
+		return kapazitaet;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public anzahlBenoetigtePlaetzeAlleKlausuren(fremdTermine : boolean) : number {
+		return this.schuelerklausurtermineZuVerteilenGetMenge(fremdTermine).size();
+	}
+
+	/**
+	 * Gibt die Liste der zu verteilenden Schülerklausurtermine zurück. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return die Liste der Schülerklausurtermine
+	 */
+	public schuelerklausurtermineZuVerteilenGetMenge(fremdTermine : boolean) : List<GostSchuelerklausurTermin> {
+		const skts : List<GostSchuelerklausurTermin> | null = fremdTermine ? this._schuelerklausurterminmenge : this._schuelerklausurterminmenge_by_idTermin.get(this.getHauptTermin().id);
+		return skts === null ? new ArrayList() : skts;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public isPlatzkapazitaetAusreichend(fremdTermine : boolean) : boolean {
+		return this.anzahlBenoetigtePlaetzeAlleKlausuren(fremdTermine) <= this.anzahlPlaetzeAlleRaeume(fremdTermine);
+	}
+
+	/**
+	 * Erzeugt eine um relevante Informationen angereicherte Schülerklausurtermin-Objekte Liste, z.B. für Blockungs-Algorithmen. <br>
+	 *
+	 * @param termine die Liste der Schülerklausurtermin-Objekte.
+	 *
+	 * @return die Liste von angereicherten Objekten
+	 */
+	public enrichSchuelerklausurtermine(termine : List<GostSchuelerklausurTermin>) : List<GostSchuelerklausurTerminRich> {
+		let ergebnis : List<GostSchuelerklausurTerminRich> = new ArrayList<GostSchuelerklausurTerminRich>();
+		for (let termin of termine)
+			ergebnis.add(new GostSchuelerklausurTerminRich(termin, this.getKursklausurManager()));
+		return ergebnis;
+	}
+
+	/**
+	 * Erzeugt eine um relevante Informationen angereicherte Klausurraum-Objekte Liste, z.B. für Blockungs-Algorithmen. <br>
+	 *
+	 * @param raeume die Liste der Klausurraum-Objekte.
+	 *
+	 * @return die Liste von angereicherten Objekten
+	 */
+	public enrichKlausurraeume(raeume : List<GostKlausurraum>) : List<GostKlausurraumRich> {
+		let ergebnis : List<GostKlausurraumRich> = new ArrayList<GostKlausurraumRich>();
+		for (let raum of raeume)
+			if (raum.idStundenplanRaum !== null)
+				ergebnis.add(new GostKlausurraumRich(raum, this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
 		return ergebnis;
 	}
 

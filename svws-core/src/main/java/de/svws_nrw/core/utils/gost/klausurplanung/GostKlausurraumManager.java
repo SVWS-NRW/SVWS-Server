@@ -12,17 +12,20 @@ import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -33,6 +36,7 @@ import jakarta.validation.constraints.NotNull;
 public class GostKlausurraumManager {
 
 	private final @NotNull GostKursklausurManager _kursklausurManager;
+	private StundenplanManager _stundenplanManager;
 	private final @NotNull GostKlausurtermin _termin;
 
 	/** Ein Comparator für die GostKlausurräume. */
@@ -74,6 +78,7 @@ public class GostKlausurraumManager {
 	public GostKlausurraumManager() {
 		_termin = new GostKlausurtermin();
 		_kursklausurManager = new GostKursklausurManager();
+		_stundenplanManager = null;
 	}
 
 	/**
@@ -129,6 +134,26 @@ public class GostKlausurraumManager {
 
 		update_all();
 
+	}
+
+	/**
+	 * Setzt den StundenplanManager
+	 *
+	 * @param stundenplanManager der StundenplanManager
+	 */
+	public void setStundenplanManager(final @NotNull StundenplanManager stundenplanManager) {
+		_stundenplanManager = stundenplanManager;
+	}
+
+	/**
+	 * Liefert den StundenplanManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den StundenplanManager
+	 */
+	public @NotNull StundenplanManager getStundenplanManager() {
+		if (_stundenplanManager == null)
+			throw new DeveloperNotificationException("StundenplanManager not set.");
+		return _stundenplanManager;
 	}
 
 	/**
@@ -1074,5 +1099,112 @@ public class GostKlausurraumManager {
 		}
 		return ergebnis;
 	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public boolean isSchuelerklausurenInRaum(final boolean fremdTermine) {
+		for (@NotNull GostSchuelerklausurTermin termin : schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
+			if (_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(termin.id))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Gibt die Liste der zu verteilenden Schülerklausurtermine zurück. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return die Liste der Schülerklausurtermine
+	 */
+	public @NotNull List<@NotNull GostKlausurraum> raeumeVerfuegbarGetMenge(final boolean fremdTermine) {
+		final List<@NotNull GostKlausurraum> raeume = fremdTermine ? _raummenge : _raummenge_by_idTermin.get(getHauptTermin().id);
+		return raeume == null ? new ArrayList<>() : raeume;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public int anzahlPlaetzeAlleRaeume(final boolean fremdTermine) {
+		int kapazitaet = 0;
+		for (@NotNull GostKlausurraum raum : raeumeVerfuegbarGetMenge(fremdTermine)) {
+			if (raum.idStundenplanRaum != null)
+				kapazitaet += getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum).groesse;
+		}
+		return kapazitaet;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public int anzahlBenoetigtePlaetzeAlleKlausuren(final boolean fremdTermine) {
+		return schuelerklausurtermineZuVerteilenGetMenge(fremdTermine).size();
+	}
+
+	/**
+	 * Gibt die Liste der zu verteilenden Schülerklausurtermine zurück. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return die Liste der Schülerklausurtermine
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermineZuVerteilenGetMenge(final boolean fremdTermine) {
+		final List<@NotNull GostSchuelerklausurTermin> skts = fremdTermine ? _schuelerklausurterminmenge : _schuelerklausurterminmenge_by_idTermin.get(getHauptTermin().id);
+		return skts == null ? new ArrayList<>() : skts;
+	}
+
+	/**
+	 * Prüft, ob Schülerklausuren bereits Klausurräumen zugeordnet sind. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return Wahrheitswert
+	 */
+	public boolean isPlatzkapazitaetAusreichend(final boolean fremdTermine) {
+		return anzahlBenoetigtePlaetzeAlleKlausuren(fremdTermine) <= anzahlPlaetzeAlleRaeume(fremdTermine);
+	}
+
+	/**
+	 * Erzeugt eine um relevante Informationen angereicherte Schülerklausurtermin-Objekte Liste, z.B. für Blockungs-Algorithmen. <br>
+	 *
+	 * @param termine die Liste der Schülerklausurtermin-Objekte.
+	 *
+	 * @return die Liste von angereicherten Objekten
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTerminRich> enrichSchuelerklausurtermine(final @NotNull List<@NotNull GostSchuelerklausurTermin> termine) {
+		@NotNull List<@NotNull GostSchuelerklausurTerminRich> ergebnis = new ArrayList<>();
+		for (@NotNull GostSchuelerklausurTermin termin : termine)
+			ergebnis.add(new GostSchuelerklausurTerminRich(termin, getKursklausurManager()));
+		return ergebnis;
+	}
+
+	/**
+	 * Erzeugt eine um relevante Informationen angereicherte Klausurraum-Objekte Liste, z.B. für Blockungs-Algorithmen. <br>
+	 *
+	 * @param raeume die Liste der Klausurraum-Objekte.
+	 *
+	 * @return die Liste von angereicherten Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurraumRich> enrichKlausurraeume(final @NotNull List<@NotNull GostKlausurraum> raeume) {
+		@NotNull List<@NotNull GostKlausurraumRich> ergebnis = new ArrayList<>();
+		for (@NotNull GostKlausurraum raum : raeume)
+			if (raum.idStundenplanRaum != null) // TODO in andere Methode verlagern
+				ergebnis.add(new GostKlausurraumRich(raum, getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
+		return ergebnis;
+	}
+
+
 
 }

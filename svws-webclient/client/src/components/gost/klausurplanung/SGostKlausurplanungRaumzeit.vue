@@ -65,7 +65,6 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurraumManager} from '@core';
 	import { GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
@@ -75,19 +74,10 @@
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
-	// const raummanager = ref<GostKlausurraumManager>(new GostKlausurraumManager());
-
 	const chooseTermin = async (termin: GostKlausurtermin) => {
 		await props.setRaumTermin(termin);
-		// if (props.terminauswahl.value === null || termin.id !== props.terminauswahl.value.id) {
-		// 	props.raummanager() = await props.erzeugeKlausurraummanager(termin);
-		// 	props.terminauswahl.value = termin;
 		await props.gotoTermin(termin.id);
-		// }
-
 	}
-
-	// const selectedTermin = ref<GostKlausurtermin | null>(null);
 
 	const termine = () => props.kMan().terminMitDatumGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, false);
 
