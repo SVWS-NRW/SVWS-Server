@@ -564,6 +564,7 @@ export { KlausurblockungSchienenAlgorithmusGreedy6 } from './core/utils/gost/kla
 export { KlausurblockungSchienenAlgorithmusGreedy7 } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy7';
 export { KlausurblockungSchienenDynDaten } from './core/utils/gost/klausurplanung/KlausurblockungSchienenDynDaten';
 export { KlausurraumblockungAlgorithmus } from './core/utils/gost/klausurplanung/KlausurraumblockungAlgorithmus';
+export { KlausurraumblockungAlgorithmusDynDaten } from './core/utils/gost/klausurplanung/KlausurraumblockungAlgorithmusDynDaten';
 export { KlausurterminblockungAlgorithmus } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmus';
 export { KlausurterminblockungAlgorithmusAbstract } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
 export { KlausurterminblockungAlgorithmusGreedy1 } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy1';

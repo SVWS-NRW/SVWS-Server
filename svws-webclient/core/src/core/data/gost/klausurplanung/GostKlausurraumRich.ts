@@ -1,8 +1,5 @@
 import { StundenplanRaum, cast_de_svws_nrw_core_data_stundenplan_StundenplanRaum } from '../../../../core/data/stundenplan/StundenplanRaum';
-import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
-import { ArrayList } from '../../../../java/util/ArrayList';
 import { JavaLong } from '../../../../java/lang/JavaLong';
-import type { List } from '../../../../java/util/List';
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 
@@ -17,11 +14,6 @@ export class GostKlausurraumRich extends JavaObject {
 	 * Die Grösse des Raumes an Arbeitsplätzen für Schüler.
 	 */
 	public groesse : number = -1;
-
-	/**
-	 * Die zugeordneten {@link GostSchuelerklausurTerminRich}-Objekte.
-	 */
-	public readonly schuelerklausuren : List<GostSchuelerklausurTerminRich> = new ArrayList<GostSchuelerklausurTerminRich>();
 
 
 	/**
@@ -88,11 +80,6 @@ export class GostKlausurraumRich extends JavaObject {
 		if (typeof obj.groesse === "undefined")
 			 throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
-		if ((obj.schuelerklausuren !== undefined) && (obj.schuelerklausuren !== null)) {
-			for (const elem of obj.schuelerklausuren) {
-				result.schuelerklausuren?.add(GostSchuelerklausurTerminRich.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
@@ -100,18 +87,6 @@ export class GostKlausurraumRich extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"groesse" : ' + obj.groesse + ',';
-		if (!obj.schuelerklausuren) {
-			result += '"schuelerklausuren" : []';
-		} else {
-			result += '"schuelerklausuren" : [ ';
-			for (let i = 0; i < obj.schuelerklausuren.size(); i++) {
-				const elem = obj.schuelerklausuren.get(i);
-				result += GostSchuelerklausurTerminRich.transpilerToJSON(elem);
-				if (i < obj.schuelerklausuren.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -124,20 +99,6 @@ export class GostKlausurraumRich extends JavaObject {
 		}
 		if (typeof obj.groesse !== "undefined") {
 			result += '"groesse" : ' + obj.groesse + ',';
-		}
-		if (typeof obj.schuelerklausuren !== "undefined") {
-			if (!obj.schuelerklausuren) {
-				result += '"schuelerklausuren" : []';
-			} else {
-				result += '"schuelerklausuren" : [ ';
-				for (let i = 0; i < obj.schuelerklausuren.size(); i++) {
-					const elem = obj.schuelerklausuren.get(i);
-					result += GostSchuelerklausurTerminRich.transpilerToJSON(elem);
-					if (i < obj.schuelerklausuren.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

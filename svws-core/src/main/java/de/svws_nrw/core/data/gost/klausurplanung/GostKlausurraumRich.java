@@ -1,8 +1,5 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,9 +22,6 @@ public class GostKlausurraumRich {
 	/** Die Grösse des Raumes an Arbeitsplätzen für Schüler. */
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
-
-	/** Die zugeordneten {@link GostSchuelerklausurTerminRich}-Objekte. */
-	public final @NotNull List<@NotNull GostSchuelerklausurTerminRich> schuelerklausuren = new ArrayList<>();
 
 	/**
 	 * Konstruktor zur Erstellung des Rich-Objekts.
