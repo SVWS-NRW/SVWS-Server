@@ -96,8 +96,8 @@
 		const rm = props.raummanager();
 		return rm !== undefined
 			? {
-				"text-black/50 dark:text-white/50": rm.isAlleSchuelerklausurenVerplant(klausur),
-				"": !rm.isAlleSchuelerklausurenVerplant(klausur),
+				"text-black/50 dark:text-white/50": rm.isKursklausurAlleSchuelerklausurenVerplant(klausur),
+				"": !rm.isKursklausurAlleSchuelerklausurenVerplant(klausur),
 			}
 			: {}
 	};
@@ -109,9 +109,9 @@
 		const rm = props.raummanager();
 		if (object instanceof GostKursklausur && rm !== undefined) {
 			//if (object.idTermin === props.terminauswahl.value.id)
-			return !rm.isAlleSchuelerklausurenVerplant(object);
+			return !rm.isKursklausurAlleSchuelerklausurenVerplant(object);
 		} else if (object instanceof GostKlausurtermin && rm !== undefined) {
-			return object.id === rm.getHauptTermin().id && rm.schuelerklausurOhneRaumGetMenge().size() > 0;
+			return object.id === rm.getHauptTermin().id && rm.schuelerklausurHauptterminOhneRaumGetMenge().size() > 0;
 		} else if (object instanceof GostSchuelerklausurTermin && rm !== undefined) {
 			return true;
 		}
@@ -130,9 +130,9 @@
 			}
 		} else if (dragData.value instanceof GostKlausurtermin && rm !== undefined) {
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurOhneRaumGetMenge(), rm);
+				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurHauptterminOhneRaumGetMenge(), rm);
 			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurOhneRaumGetMenge(), rm);
+				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurHauptterminOhneRaumGetMenge(), rm);
 			}
 		} else if (dragData.value instanceof GostSchuelerklausurTermin && rm !== undefined) {
 			if (zone instanceof GostKlausurraum)

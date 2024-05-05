@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
@@ -54,6 +56,7 @@ public class GostKlausurraumManager {
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausurTermin> _schuelerklausurtermin_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostSchuelerklausurTermin> _schuelerklausurterminmenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum_and_idTermin = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum_and_idKursklausur = new HashMap2D<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idKursklausur = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin = new HashMap<>();
@@ -151,6 +154,7 @@ public class GostKlausurraumManager {
 		update_raumstundenmenge_by_idSchuelerklausurtermin(); // benötigt _raumstunde_by_id
 		update_schuelerklausurterminmenge_by_idTermin();
 		update_schuelerklausurterminmenge_by_idRaum(); // benötigt _raumstundenmenge_by_idSchuelerklausur
+		update_schuelerklausurterminmenge_by_idRaum_and_idTermin(); // benötigt _raumstundenmenge_by_idSchuelerklausur
 		update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur
 		update_schuelerklausurterminmenge_by_idKursklausur();
 		update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
@@ -202,6 +206,14 @@ public class GostKlausurraumManager {
 		_schuelerklausurterminmenge_by_idTermin.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge)
 			MapUtils.addToList(_schuelerklausurterminmenge_by_idTermin, _kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id, k);
+	}
+
+	private void update_schuelerklausurterminmenge_by_idRaum_and_idTermin() {
+		_schuelerklausurterminmenge_by_idRaum_and_idTermin.clear();
+		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge) {
+			final List<@NotNull GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
+			Map2DUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idRaum_and_idTermin, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum, _kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id).add(k);
+		}
 	}
 
 	private void update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur() {
@@ -900,8 +912,9 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurOhneRaumGetMenge() {
-		return schuelerklausurGetMengeByRaumid(-1L);
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurHauptterminOhneRaumGetMenge() {
+		final List<@NotNull GostSchuelerklausurTermin> schuelerklausuren = _schuelerklausurterminmenge_by_idRaum_and_idTermin.getOrNull(-1L, getHauptTermin().id);
+		return schuelerklausuren == null ? new ArrayList<>() : schuelerklausuren;
 	}
 
 	/**
@@ -928,8 +941,24 @@ public class GostKlausurraumManager {
 	 *
 	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
 	 */
-	public boolean isAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
+	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
 		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
+			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Prüft, ob alle zu einem Klausurtermin gehörenden Schülerklausuren einem Raum
+	 * zugeordnet sind.
+	 *
+	 * @param t der zu prüfende Klausurtermin
+	 *
+	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
+	 */
+	public boolean isTerminAlleSchuelerklausurenVerplant(final @NotNull GostKlausurtermin t) {
+		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idTermin, t.id)) {
 			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -1014,12 +1043,9 @@ public class GostKlausurraumManager {
 	 * @return true, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
 	 */
 	public boolean isKlausurenInFremdraeumen() {
-		List<@NotNull GostSchuelerklausurTermin> skts = _schuelerklausurterminmenge_by_idTermin.get(_termin.id);
-		if (skts == null)
-			return false;
-		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
+		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge) {
 			final GostKlausurraum raum = _klausurraum_by_idSchuelerklausurtermin.get(skt.id);
-			if (raum != null && raum.idTermin != _termin.id)
+			if (raum != null && raum.idTermin != getKursklausurManager().terminOrExceptionBySchuelerklausurTermin(skt).id)
 				return true;
 		}
 		return false;
@@ -1032,6 +1058,21 @@ public class GostKlausurraumManager {
 	 */
 	public int anzahlTermine() {
 		return _schuelerklausurterminmenge_by_idTermin.containsKey(_termin.id) ? _schuelerklausurterminmenge_by_idTermin.size() : _schuelerklausurterminmenge_by_idTermin.size()  + 1;
+	}
+
+	/**
+	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
+	 *
+	 * @return die Anzahl
+	 */
+	public @NotNull List<@NotNull Pair<@NotNull GostKlausurtermin, @NotNull List<@NotNull GostSchuelerklausurTermin>>> getFremdTermine() {
+		final @NotNull List<@NotNull Pair<@NotNull GostKlausurtermin, @NotNull List<@NotNull GostSchuelerklausurTermin>>> ergebnis = new ArrayList<>();
+		for (@NotNull Entry<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> entry : _schuelerklausurterminmenge_by_idTermin.entrySet()) {
+			if (_termin.id != entry.getKey()) {
+				ergebnis.add(new Pair<>(getKursklausurManager().terminGetByIdOrException(entry.getKey()), entry.getValue()));
+			}
+		}
+		return ergebnis;
 	}
 
 }

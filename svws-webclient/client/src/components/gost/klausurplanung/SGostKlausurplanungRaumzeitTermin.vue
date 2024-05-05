@@ -7,9 +7,18 @@
 				<!--<span>{{ kMan().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
 			</div>
 		</template>
+		<svws-ui-content-card v-if="zeigeAlleJahrgaenge() || raummanager().isKlausurenInFremdraeumen()" :has-background="true" :title="'Jahrgangsübergreifende Planung' + (!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen() ? ' aktiviert, da jahrgangsgemischte Räume existieren.' : '')">
+			<ul>
+				<li class="flex" v-for="pair in raummanager().getFremdTermine()" :key="pair.a.id">
+					<span>{{ pair.b!.size() }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(pair.a.halbjahr).jahrgang }},&nbsp;</span>
+					<span v-if="raummanager().isTerminAlleSchuelerklausurenVerplant(pair.a)" class="text-green-500">alle zugewiesen.</span>
+					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+					<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(pair.a.abijahr, pair.a.halbjahr, pair.a.id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+				</li>
+			</ul>
+		</svws-ui-content-card>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
 			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-badge type="highlight" size="big" v-if="!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen()" class="warning">Jahrgangsübergreifende Planung aktiviert, da jahrgangsgemischte Räume existieren.</svws-ui-badge>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
@@ -34,10 +43,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs} from '@core';
-	import { DateUtils} from '@core';
+	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs } from '@core';
+	import { DateUtils, GostHalbjahr } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import { onMounted, ref, watch } from 'vue';
+	import { RouteManager } from '~/router/RouteManager';
+	import { routeGostKlausurplanungRaumzeit } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;

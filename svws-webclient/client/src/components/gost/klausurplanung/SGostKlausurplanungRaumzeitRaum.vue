@@ -3,15 +3,15 @@
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
-			'bg-red-200': raum .idTermin !== raummanager().getHauptTermin().id,
+			'bg-red-200': raum.idTermin !== raummanager().getHauptTermin().id,
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
-				<svws-ui-select :title="stundenplanRaumSelected ? 'Raum' : 'Raum auswählen...'"
-					v-model="stundenplanRaumSelected"
+				<svws-ui-select :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
+					:model-value="raum.idStundenplanRaum === null ? undefined : stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum)"
 					headless
 					class="flex-grow"
-					@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager())"
+					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null }, raummanager())"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
 				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
@@ -97,13 +97,6 @@
 		if (props.raum.idStundenplanRaum !== null)
 			raeume.add(0, props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
 		return raeume;
-	});
-
-	const stundenplanRaumSelected = computed({
-		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),
-		set: (value: StundenplanRaum | undefined): void => {
-			props.raum.idStundenplanRaum = value === undefined ? null : value.id;
-		}
 	});
 
 	function isDropZone() : boolean {
