@@ -15,6 +15,7 @@ import { routeLogin } from "~/router/login/RouteLogin";
 
 import SApp from "~/components/SApp.vue";
 import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
+import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -27,6 +28,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.children = [
 			routeSchema,
 			routeSchemagruppe,
+			routeSchemaNeu,
 		];
 		super.menu = [
 			routeSchema,
@@ -38,7 +40,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return this.getRoute();
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		let cur: RouteNode<unknown, any> = to;
 		while (cur.parent !== this)
 		  cur = cur.parent;

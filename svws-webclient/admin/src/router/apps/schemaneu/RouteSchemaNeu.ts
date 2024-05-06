@@ -7,27 +7,25 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 
 import { routeSchema } from "../schema/RouteSchema";
 
-import type { SchemagruppeProps } from "~/components/schemagruppe/SSchemagruppeProps";
+import type { SchemaNeuProps } from "~/components/schemaneu/SSchemaNeuProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
-const SSchemagruppe = () => import("~/components/schemagruppe/SSchemagruppe.vue")
+const SSchemaNeu = () => import("~/components/schemaneu/SSchemaNeu.vue")
 
 
-export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {
+export class RouteSchemaNeu extends RouteNode<unknown, RouteApp> {
 
 	public constructor() {
-		super("schemagruppe", "/schemagruppe", SSchemagruppe);
+		super("schemaneu", "/schemaneu", SSchemaNeu);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Schemagruppe";
+		super.text = "SchemaNeu";
 		super.setView("liste", SSchemaAuswahl, (route) => this.getAuswahlProps(route));
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeSchema.data.auswahlGruppe.length === 0)
-			return routeSchema.getRoute();
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getRoute() : RouteLocationRaw {
@@ -38,14 +36,17 @@ export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {
 		return routeSchema.getAuswahlProps(to);
 	}
 
-	public getProps(to: RouteLocationNormalized): SchemagruppeProps {
+	public getProps(to: RouteLocationNormalized): SchemaNeuProps {
 		return {
-			auswahlGruppe: routeSchema.data.auswahlGruppe,
-			removeSchemata: routeSchema.data.removeSchemata,
 			apiStatus: api.status,
+			migrationQuellinformationen: () => routeSchema.data.migrationQuellinformationen.value,
+			addSchema: routeSchema.data.addSchema,
+			importSchema: routeSchema.data.importSchema,
+			migrateSchema: routeSchema.data.migrateSchema,
+			duplicateSchema: routeSchema.data.duplicateSchema,
 		};
 	}
 
 }
 
-export const routeSchemagruppe = new RouteSchemagruppe();
+export const routeSchemaNeu = new RouteSchemaNeu();

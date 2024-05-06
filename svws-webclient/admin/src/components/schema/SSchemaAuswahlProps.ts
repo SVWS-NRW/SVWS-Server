@@ -9,6 +9,7 @@ export interface SchemaAuswahlProps {
 	migrationQuellinformationen: () => SchemaMigrationQuelle;
 	mapSchema: () => Map<string, SchemaListeEintrag>;
 	gotoSchema: (value: SchemaListeEintrag | undefined) => Promise<void>;
+	gotoSchemaNeu: () => Promise<void>;
 	setAuswahlGruppe: (value: SchemaListeEintrag[]) => void;
 	addSchema: (data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>;
 	importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

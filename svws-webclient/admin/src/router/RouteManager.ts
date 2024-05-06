@@ -171,17 +171,11 @@ export class RouteManager {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
 			const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
-				result = await node.doEnter(to_node, to.params);
-				if (result !== undefined)
-					return result;
-				result = await node.doUpdate(to_node, to.params);
+				result = await node.doUpdate(to_node, to.params, from_node, from.params, true);
 				if (result !== undefined)
 					return result;
 			}
-			result = await to_node.doEnter(to_node, to.params);
-			if (result !== undefined)
-				return result;
-			result = await to_node.doUpdate(to_node, to.params);
+			result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
 			if (result !== undefined)
 				return result;
 		} else {
@@ -195,19 +189,11 @@ export class RouteManager {
 			const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
 			if (to_is_successor) {
 				for (const node of to_predecessors_all) {
-					if (to_is_successor.includes(node) && (node.name !== from_node.name)) {
-						result = await node.doEnter(to_node, to.params);
-						if (result !== undefined)
-							return result;
-					}
-					result = await node.doUpdate(to_node, to.params);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, (to_is_successor.includes(node) && (node.name !== from_node.name)));
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doEnter(to_node, to.params);
-				if (result !== undefined)
-					return result;
-				result = await to_node.doUpdate(to_node, to.params);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
 				if (result !== undefined)
 					return result;
 			} else if (from_is_successor) {
@@ -217,20 +203,20 @@ export class RouteManager {
 						return result;
 				}
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, false);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false);
 				if (result !== undefined)
 					return result;
 			} else if (equals) {
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, false);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false);
 				if (result !== undefined)
 					return result;
 			} else {
@@ -250,19 +236,11 @@ export class RouteManager {
 						return result;
 				}
 				for (const node of to_predecessors_all) {
-					if (to_predecessors.includes(node)) {
-						result = await node.doEnter(to_node, to.params);
-						if (result !== undefined)
-							return result;
-					}
-					result = await node.doUpdate(to_node, to.params);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, to_predecessors.includes(node));
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doEnter(to_node, to.params);
-				if (result !== undefined)
-					return result;
-				result = await to_node.doUpdate(to_node, to.params);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
 				if (result !== undefined)
 					return result;
 			}

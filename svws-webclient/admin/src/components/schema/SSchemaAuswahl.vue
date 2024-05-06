@@ -43,18 +43,7 @@
 					<span class="icon i-ri-alert-fill icon-error -my-0.5" v-if="rowData.isDeactivated === true" />
 				</template>
 				<template v-if="hasRootPrivileges && auswahlGruppe.length === 0" #actions>
-					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen">
-						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <span class="icon i-ri-database-2-line !w-[1.5em] !h-[1.5em]" />  </svws-ui-button>
-					</s-schema-migrate-modal>
-					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">
-						<svws-ui-button @click="openModal" type="icon" title="Backup wiederherstellen: SQLite-Schema importieren"> <span class="icon i-ri-device-recover-line !w-[1.5em] !h-[1.5em]" /> </svws-ui-button>
-					</s-schema-auswahl-import-modal>
-					<s-schema-duplicate-modal v-slot="{ openModal }" :duplicate-schema="duplicateSchema">
-						<svws-ui-button @click="openModal" type="icon" title="Schema duplizieren"> <span class="icon i-ri-file-copy-line" /> </svws-ui-button>
-					</s-schema-duplicate-modal>
-					<s-schema-auswahl-neu-modal v-slot="{ openModal }" :add-schema="addSchema">
-						<svws-ui-button @click="openModal" type="icon" title="Schema hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
-					</s-schema-auswahl-neu-modal>
+					<svws-ui-button @click="gotoSchemaNeu" type="icon" title="Neues Schema anlegen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</template>

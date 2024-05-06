@@ -33,7 +33,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		super.defaultChild = routeSchemaUebersicht;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.schema instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		// Prüfe, ob bereits ein Schema ausgewählt wurde. Wenn nicht, dann lade die Liste vom Server und wähle ein Default-Schema aus
@@ -76,6 +76,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 			auswahlGruppe: this.data.auswahlGruppe,
 			mapSchema: () => this.data.mapSchema,
 			gotoSchema: this.data.gotoSchema,
+			gotoSchemaNeu: this.data.gotoSchemaNeu,
 			setAuswahlGruppe: this.data.setAuswahlGruppe,
 			addSchema: this.data.addSchema,
 			importSchema: this.data.importSchema,

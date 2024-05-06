@@ -205,11 +205,15 @@ export class RouteDataSchema {
 		this.setPatchedState({auswahl});
 	}
 
+	gotoSchemaNeu = async () => {
+		await RouteManager.doRoute('/schemaneu');
+	}
+
 	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	{
 		this.setPatchedState({ auswahlGruppe });
-		if (auswahlGruppe.length > 0 && routeApp.selectedChild?.name === 'schema')
+		if ((auswahlGruppe.length > 0) && ((routeApp.selectedChild?.name === 'schema') || (routeApp.selectedChild?.name === 'schemaneu')))
 			RouteManager.doRoute('/schemagruppe');
-		else if (auswahlGruppe.length === 0 && routeApp.selectedChild?.name === 'schemagruppe')
+		else if ((auswahlGruppe.length === 0) && (routeApp.selectedChild?.name === 'schemagruppe'))
 			RouteManager.doRoute('schema');
 	}
 
@@ -245,7 +249,7 @@ export class RouteDataSchema {
 			if (item.name === schema) {
 				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
 				this.setPatchedState({mapSchema: this.mapSchema});
-				await this.gotoSchema(item);
+				await this.setSchema(item);
 				break;
 			}
 		api.status.stop();
