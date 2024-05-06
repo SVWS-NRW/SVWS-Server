@@ -174,6 +174,7 @@ import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/Stund
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
+import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
 
 export class ApiServer extends BaseApi {
 
@@ -11606,6 +11607,175 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getVermerkarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten
+	 *
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Vermerkarten unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<VermerkartEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getVermerkarten(schema : string) : Promise<List<VermerkartEintrag>> {
+		const path = "/db/{schema}/schule/vermerkarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<VermerkartEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VermerkartEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
+	 *
+	 * Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Vermerkart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: VermerkartEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Vermerkart mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der Vermerkart
+	 */
+	public async getVermerkart(schema : string, id : number) : Promise<VermerkartEintrag> {
+		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return VermerkartEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
+	 *
+	 * Passt die Vermerkart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Vermerkart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Vermerkart-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Vermerkart-Daten zu ändern.
+	 *   Code 404: Keine Vermerkart mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<VermerkartEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchVermerkart(data : Partial<VermerkartEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteVermerkartEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
+	 *
+	 * Entfernt einen Vermerkart-Katalog-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: VermerkartEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Kein Vermerkart-Katalog-Eintrag vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteVermerkartEintrag(schema : string, id : number) : Promise<VermerkartEintrag> {
+		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return VermerkartEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteVermerkartEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/delete/multiple
+	 *
+	 * Entfernt mehrere Vermerkart-Katalog-Einträge der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<VermerkartEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Vermerkart-Katalog-Einträge nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.
+	 */
+	public async deleteVermerkartEintraege(data : List<number>, schema : string) : Promise<List<VermerkartEintrag>> {
+		const path = "/db/{schema}/schule/vermerkarten/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<VermerkartEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VermerkartEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/new
+	 *
+	 * Erstellt eine neue Vermerkart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Vermerkart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Vermerkart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: VermerkartEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Vermerkart anzulegen.
+	 *   Code 404: Keine Vermerkart  mit dem eingegebenen Kuerzel gefunden
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<VermerkartEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Vermerkart wurde erfolgreich angelegt.
+	 */
+	public async createVermerkart(data : Partial<VermerkartEintrag>, schema : string) : Promise<VermerkartEintrag> {
+		const path = "/db/{schema}/schule/vermerkarten/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return VermerkartEintrag.transpilerFromJSON(text);
 	}
 
 

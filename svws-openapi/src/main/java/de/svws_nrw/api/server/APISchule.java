@@ -21,6 +21,7 @@ import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
+import de.svws_nrw.core.data.schule.VermerkartEintrag;
 import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchuelerstatusKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
@@ -68,6 +69,7 @@ import de.svws_nrw.data.schule.DataKatalogSchulgliederungen;
 import de.svws_nrw.data.schule.DataKatalogSchultraeger;
 import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
 import de.svws_nrw.data.schule.DataReligionen;
+import de.svws_nrw.data.schule.DataVermerkarten;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -770,7 +772,7 @@ public class APISchule {
     }
 
 
-    /**
+	/**
      * Die OpenAPI-Methode für das Entfernen eines Religion-Katalog-Eintrags der Schule.
      *
      * @param schema       das Datenbankschema
@@ -824,6 +826,177 @@ public class APISchule {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Vermerkarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Vermerkarten
+	 */
+	@GET
+	@Path("/vermerkarten")
+	@Operation(summary = "Gibt eine Übersicht aller Vermerkarten im Katalog zurück.",
+		description = "Erstellt eine Liste aller in dem Katalog vorhanden Vermerkarten unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, "
+			+ "einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = VermerkartEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getVermerkarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).getAll(),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Vermerkart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Vermerkart
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zur Vermerkart
+	 */
+	@GET
+	@Path("/vermerkarten/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID der Vermerkarten die zugehörigen Daten.",
+		description = "Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Vermerkart",
+		content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = VermerkartEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Vermerkart mit der angegebenen ID gefunden")
+	public Response getVermerkart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+								@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).get(id),
+			request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Vermerkart.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Vermerkart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Vermerkart
+	 */
+	@POST
+	@Path("/vermerkarten/new")
+	@Operation(summary = "Erstellt eine neue Vermerkart und gibt sie zurück.",
+		description = "Erstellt eine neue Vermerkart und gibt sie zurück."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Vermerkart "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "201", description = "Vermerkart wurde erfolgreich angelegt.",
+		content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = VermerkartEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Vermerkart anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Keine Vermerkart  mit dem eingegebenen Kuerzel gefunden")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createVermerkart(
+		@PathParam("schema") final String schema,
+		@RequestBody(description = "Der Post für die Vermerkart-Daten", required = true, content =
+		@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = VermerkartEintrag.class))) final InputStream is,
+		@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).add(is),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Vermerkart im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Vermerkart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/vermerkarten/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID der Vermerkart zugehörigen Stammdaten an.",
+		description = "Passt die Vermerkart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Vermerkart "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Vermerkart-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Vermerkart-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Vermerkart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+
+	public Response patchVermerkart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+								  @RequestBody(description = "Der Patch für die Vermerkart-Stammdaten", required = true,
+									  content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = VermerkartEintrag.class))) final
+								  InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).patch(id, is),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen eines Vermerkart-Katalog-Eintrags der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die ID des Vermerkart-Katalog-Eintrags
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Vermerkart-Katalog-Eintrag
+	 */
+	@DELETE
+	@Path("/vermerkarten/{id : \\d+}")
+	@Operation(summary = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule.",
+		description = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = VermerkartEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Kein Vermerkart-Katalog-Eintrag vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteVermerkartEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+										  @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).delete(id),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Vermerkart-Katalog-Einträge der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Vermerkart-Katalog-Einträge
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Vermerkart-Katalog-Einträgen
+	 */
+	@DELETE
+	@Path("/vermerkarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Vermerkart-Katalog-Einträge der Schule.",
+		description = "Entfernt mehrere Vermerkart-Katalog-Einträge der Schule."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.",
+		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = VermerkartEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Vermerkart-Katalog-Einträge nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteVermerkartEintraege(@PathParam("schema") final String schema,
+											@RequestBody(description = "Die IDs der zu löschenden Vermerkart-Katalog-Einträge", required = true, content =
+											@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+											@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
 
 
     /**

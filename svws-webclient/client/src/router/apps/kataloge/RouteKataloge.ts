@@ -13,6 +13,7 @@ import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalog
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
@@ -42,6 +43,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 		super.menu = [
 			routeKatalogFaecher,
 			routeKatalogReligion,
+			routeKatalogVermerkarten,
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,

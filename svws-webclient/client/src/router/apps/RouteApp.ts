@@ -11,10 +11,11 @@ import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
-import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge"
 import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
 import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
@@ -51,6 +52,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKataloge,
 			routeKatalogFaecher,
 			routeKatalogReligion,
+			routeKatalogVermerkarten,
 			routeKatalogBetriebe,
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
