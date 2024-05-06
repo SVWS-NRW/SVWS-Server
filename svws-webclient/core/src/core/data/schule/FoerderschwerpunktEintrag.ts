@@ -27,11 +27,6 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	 */
 	public istSichtbar : boolean = false;
 
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
-	 */
-	public istAenderbar : boolean = false;
-
 
 	public constructor() {
 		super();
@@ -63,9 +58,6 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
-			 throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
 		return result;
 	}
 
@@ -76,7 +68,6 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		result += '"text" : ' + JSON.stringify(obj.text!) + ',';
 		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,9 +89,6 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		}
-		if (typeof obj.istAenderbar !== "undefined") {
-			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

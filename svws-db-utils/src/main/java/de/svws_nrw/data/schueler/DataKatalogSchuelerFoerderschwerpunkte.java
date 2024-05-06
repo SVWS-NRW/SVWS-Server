@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
@@ -34,10 +35,10 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 	private final Function<DTOFoerderschwerpunkt, FoerderschwerpunktEintrag> dtoMapper = (final DTOFoerderschwerpunkt k) -> {
 		final FoerderschwerpunktEintrag eintrag = new FoerderschwerpunktEintrag();
 		eintrag.id = k.ID;
-		eintrag.kuerzel = "" + k.ID;
-		eintrag.text = k.Bezeichnung;
+		eintrag.kuerzel = (k.Bezeichnung == null) ? "" : k.Bezeichnung;
+		final Foerderschwerpunkt fs = Foerderschwerpunkt.getByKuerzel(eintrag.kuerzel);
+		eintrag.text = (fs == null) ? "---" : fs.daten.beschreibung;
 		eintrag.kuerzelStatistik = k.StatistikKrz;
-		eintrag.istAenderbar = k.Aenderbar;
 		eintrag.istSichtbar = k.Sichtbar;
 		return eintrag;
 	};

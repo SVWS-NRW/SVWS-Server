@@ -98,6 +98,7 @@ export default {
 				error: withOpacity("--color-error"),
 				success: withOpacity("--color-success"),
 				highlight: withOpacity("--color-highlight"),
+				statistics: withOpacity("--color-statistics"),
 			},
 			opacity: {
 				92: "0.92"

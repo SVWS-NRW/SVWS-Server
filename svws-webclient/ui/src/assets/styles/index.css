@@ -14,6 +14,7 @@
 		--color-error: 225, 29, 72; /* #e11d48 // color-rose-600 */
 		--color-success: 132, 204, 22; /* #84cc16, color-lime-500  */
 		--color-highlight: 255, 246, 147; /* #fff693 */
+		--color-statistics: 139, 92, 246; /* #8b5cf6, color-violet-500 */
 	}
 
 	@media (prefers-color-scheme: dark) {
