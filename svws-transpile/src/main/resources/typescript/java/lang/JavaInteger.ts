@@ -18,7 +18,7 @@ export class JavaInteger extends JavaObject {
 		return a;
 	}
 
-	public static compare(a : number, b : number): 0 | 1 | -1 {
+	public static compare(a : number, b : number): number {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 
