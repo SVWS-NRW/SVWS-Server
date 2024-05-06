@@ -1,39 +1,34 @@
 <template>
-	<div v-if="sprachendaten().pruefungen.size()" class="inline-block py-2 align-middle sm:px-6 lg:px-8 w-full">
-		<div class="overflow-hidden rounded-lg shadow">
-			<table class="border-collapse text-sm w-full">
-				<thead class="bg-slate-100">
-					<tr>
-						<td colspan="5" class="px-2">Sprachprüfungen</td>
-					</tr>
-					<tr>
-						<td class="px-2">Sprache</td>
-						<td class="px-2">Typ</td>
-						<td class="px-2">Niveau</td>
-						<td class="px-2">Ersetzt</td>
-						<td class="px-2 text-center">Note</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="pruefung in sprachendaten().pruefungen" :key="pruefung.sprache || ''" class="border bottom-1  border-[#7f7f7f]/20">
-						<td class="px-2">{{ pruefung.sprache }}</td>
-						<td class="px-2">{{ pruefung.istHSUPruefung ? "HSU":'' }}{{ pruefung.istFeststellungspruefung ? 'SFP':'' }}</td>
-						<td class="px-2">{{ Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung }}</td>
-						<td class="px-2">{{ pruefung.istHSUPruefung?'–':'' }}{{ pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':'' }}{{ pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':'' }}{{ pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':'' }}</td>
-						<td class="text-center">{{ pruefung.note }}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+	<svws-ui-table v-if="sprachendaten().pruefungen.size()" :items="sprachendaten().pruefungen" :columns>
+		<template #cell(sprache)="{rowData: pruefung}">
+			<svws-ui-tooltip>
+				{{ pruefung.sprache }}
+				<template #content>
+					{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(pruefung.sprache).daten.bezeichnung }}
+				</template>
+			</svws-ui-tooltip>
+		</template>
+		<template #cell(typ)="{rowData: pruefung}">
+			<svws-ui-tooltip>
+				{{ pruefung.istHSUPruefung ? "HSU":'' }}{{ pruefung.istFeststellungspruefung ? 'SFP':'' }}
+				<template #content>
+					{{ pruefung.istHSUPruefung ? "Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht":'' }}{{ pruefung.istFeststellungspruefung ? 'Prüfung ist eine Sprachfeststellungsprüfung':'' }}
+				</template>
+			</svws-ui-tooltip>
+		</template>
+		<template #cell(niveau)="{rowData: pruefung}">{{ Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung }}</template>
+		<template #cell(ersetzt)="{rowData: pruefung}">{{ pruefung.istHSUPruefung?'–':'' }}{{ pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':'' }}{{ pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':'' }}{{ pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':'' }}</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
 	import type { Sprachendaten } from '../../../../../core/src/core/data/schueler/Sprachendaten';
 	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
+	import { ZulaessigesFach } from '../../../../../core/src/core/types/fach/ZulaessigesFach';
 
 	const props = defineProps<{
 		sprachendaten: () => Sprachendaten;
 	}>();
+	const columns = [{key: 'sprache', label: 'Sprachprüfung',}, {key: 'typ', label: 'Typ',}, {key: 'anspruchsniveauId', label: "Niveau",}, {key: 'ersetzt', label: 'Ersetzt',}, {key: 'note', label: 'Note'}];
 
 </script>
