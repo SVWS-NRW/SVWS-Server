@@ -10,10 +10,12 @@ import { OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationRespo
 
 
 interface RouteStateDatenaustausch extends RouteStateInterface {
+	secretSet: boolean;
 }
 
 const defaultState = <RouteStateDatenaustausch> {
-	view: routeSchuleDatenaustauschLaufbahnplanung
+	secretSet: false,
+	view: routeSchuleDatenaustauschLaufbahnplanung,
 };
 
 
@@ -21,6 +23,10 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 
 	public constructor() {
 		super(defaultState);
+	}
+
+	public get secretSet() : boolean {
+		return this._state.value.secretSet;
 	}
 
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all') : Promise<SimpleOperationResponse> => {
@@ -48,6 +54,16 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		return true;
 	}
 
+	ladeCredentials = async () => {
+		let res;
+		try {
+			res = await api.server.getOAuthClientSecret(api.schema,1);
+		} catch {
+			console.log("Kein OAuth-Secret vorhanden.");
+		}
+		this.setPatchedState({secretSet: res !== undefined});
+	}
+
 	setWenomCredentials = async (url: string, token: string) => {
 		const wenom = OAuth2ServerTyp.WENOM;
 		const oauth = new OAuth2ClientSecret();
@@ -56,11 +72,17 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		oauth.authServer = url;
 		oauth.clientSecret = token;
 		await api.server.addOAuthClientSecret(oauth, api.schema);
+		this.setPatchedState({secretSet: true});
 	}
 
 	wenomSynchronize = api.call(async () => {await api.server.synchronizeENMDaten(api.schema)});
 
 	wenomTruncate = api.call(async () => {await api.server.truncateENMServer(api.schema)});
+
+	wenomRemoveCredential = api.call(async () => {
+		await api.server.deleteOAuthSecret(api.schema, 1);
+		this.setPatchedState({secretSet: false});
+	});
 
 }
 

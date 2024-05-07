@@ -19,15 +19,21 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteSchuleDa
 		super.text = "Webnotenmanager";
 	}
 
+	public async enter() {
+		return routeSchuleDatenaustausch.data.ladeCredentials();
+	}
+
 	public getRoute() : RouteLocationRaw {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {
+			secretSet: () => routeSchuleDatenaustausch.data.secretSet,
 			setWenomCredentials: routeSchuleDatenaustausch.data.setWenomCredentials,
 			wenomSynchronize: routeSchuleDatenaustausch.data.wenomSynchronize,
 			wenomTruncate: routeSchuleDatenaustausch.data.wenomTruncate,
+			wenomRemoveCredentials: routeSchuleDatenaustausch.data.wenomRemoveCredential,
 		};
 	}
 }
