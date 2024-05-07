@@ -1,5 +1,7 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
 import { NotenKatalogEintrag } from '../../core/data/schule/NotenKatalogEintrag';
+import { ArrayList } from '../../java/util/ArrayList';
+import type { List } from '../../java/util/List';
 
 export class Note extends JavaEnum<Note> {
 
@@ -188,6 +190,11 @@ export class Note extends JavaEnum<Note> {
 	 * Der Noten-Katalog-Eintrag
 	 */
 	private katalogEintrag : NotenKatalogEintrag | null = null;
+
+	/**
+	 * Noten ohne Tendenz als Liste mit 1,2,3,4,5,6
+	 */
+	private static listNotenOhneTendenz : List<Note> = new ArrayList<Note>();
 
 	/**
 	 * Erzeugt ein neues Element der Aufzählung
@@ -482,6 +489,22 @@ export class Note extends JavaEnum<Note> {
 				return Note.KEINE;
 			}
 		}
+	}
+
+	/**
+	 * Gibt nur die Noten ohne Tendenz zurück
+	 * @return Die Noten von 1 bis 6 als List
+	 */
+	public static getNotenOhneTendenz() : List<Note> {
+		if (Note.listNotenOhneTendenz.isEmpty()) {
+			Note.listNotenOhneTendenz.add(Note.SEHR_GUT);
+			Note.listNotenOhneTendenz.add(Note.GUT);
+			Note.listNotenOhneTendenz.add(Note.BEFRIEDIGEND);
+			Note.listNotenOhneTendenz.add(Note.AUSREICHEND);
+			Note.listNotenOhneTendenz.add(Note.MANGELHAFT);
+			Note.listNotenOhneTendenz.add(Note.UNGENUEGEND);
+		}
+		return Note.listNotenOhneTendenz;
 	}
 
 	/**

@@ -1,5 +1,8 @@
 package de.svws_nrw.core.types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.core.data.schule.NotenKatalogEintrag;
@@ -145,6 +148,8 @@ public enum Note {
 		this.gueltigBis = gueltigBis;
 	}
 
+	/** Noten ohne Tendenz als Liste mit 1,2,3,4,5,6 */
+	private static @NotNull List<@NotNull Note> listNotenOhneTendenz = new ArrayList<>();
 
 	/**
 	 * Gibt zurück, ob es sich um eine echte Note oder nur um eine "Pseudonote" handelt
@@ -285,6 +290,23 @@ public enum Note {
 			case "15": return SEHR_GUT_PLUS;
 			default: return KEINE;
 		}
+	}
+
+
+	/**
+	 * Gibt nur die Noten ohne Tendenz zurück
+	 * @return Die Noten von 1 bis 6 als List
+	 */
+	public static @NotNull List<@NotNull Note> getNotenOhneTendenz() {
+		if (listNotenOhneTendenz.isEmpty()) {
+			listNotenOhneTendenz.add(SEHR_GUT);
+			listNotenOhneTendenz.add(GUT);
+			listNotenOhneTendenz.add(BEFRIEDIGEND);
+			listNotenOhneTendenz.add(AUSREICHEND);
+			listNotenOhneTendenz.add(MANGELHAFT);
+			listNotenOhneTendenz.add(UNGENUEGEND);
+		}
+		return listNotenOhneTendenz;
 	}
 
 

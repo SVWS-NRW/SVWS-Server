@@ -5,7 +5,7 @@ export class Sprachpruefung extends JavaObject {
 	/**
 	 * Das einstellige Sprachkürzel des geprüften Faches
 	 */
-	public sprache : string | null = null;
+	public sprache : string = "";
 
 	/**
 	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde
@@ -13,7 +13,7 @@ export class Sprachpruefung extends JavaObject {
 	public jahrgang : string | null = null;
 
 	/**
-	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung
+	 * ID der Bezeichnung des am Schulabschluss orientierten Anspruchsniveau der Sprachprüfung
 	 */
 	public anspruchsniveauId : number | null = null;
 
@@ -53,7 +53,7 @@ export class Sprachpruefung extends JavaObject {
 	public kannWahlpflichtfremdspracheErsetzen : boolean = false;
 
 	/**
-	 * Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden.
+	 * Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden
 	 */
 	public kannBelegungAlsFortgefuehrteSpracheErlauben : boolean = false;
 
@@ -83,7 +83,9 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerFromJSON(json : string): Sprachpruefung {
 		const obj = JSON.parse(json);
 		const result = new Sprachpruefung();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : obj.sprache;
+		if (typeof obj.sprache === "undefined")
+			 throw new Error('invalid json format, missing attribute sprache');
+		result.sprache = obj.sprache;
 		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId === null ? null : obj.anspruchsniveauId;
 		result.pruefungsdatum = typeof obj.pruefungsdatum === "undefined" ? null : obj.pruefungsdatum === null ? null : obj.pruefungsdatum;
@@ -113,7 +115,7 @@ export class Sprachpruefung extends JavaObject {
 
 	public static transpilerToJSON(obj : Sprachpruefung) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
 		result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
@@ -134,7 +136,7 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachpruefung>) : string {
 		let result = '{';
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';

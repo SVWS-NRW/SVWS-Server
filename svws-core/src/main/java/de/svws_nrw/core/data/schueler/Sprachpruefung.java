@@ -1,20 +1,21 @@
 package de.svws_nrw.core.data.schueler;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Core-DTO beinhaltet die Sprachbelegungsinformationen eines Schülers.
+ * Dieser Core-DTO beinhaltet die Sprachprüfungsinformationen eines Schülers.
  */
 @TranspilerDTO
 public class Sprachpruefung {
 
 	/** Das einstellige Sprachkürzel des geprüften Faches */
-	public String sprache = null;
+	public @NotNull String sprache = "";
 
 	/** Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde */
 	public String jahrgang;
 
-	/** ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung */
+	/** ID der Bezeichnung des am Schulabschluss orientierten Anspruchsniveau der Sprachprüfung */
 	public Integer anspruchsniveauId;
 
 	/** Gibt das Datum an, an dem die Prüfung abgelegt wurde */
@@ -23,11 +24,11 @@ public class Sprachpruefung {
 	/** Sprache, die durch die Prüfung ersetzt wird */
 	public String ersetzteSprache;
 
-    /** Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht */
-    public boolean istHSUPruefung;
+  /** Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht */
+  public boolean istHSUPruefung;
 
-    /** Prüfung ist eine Sprachfeststellungsprüfung */
-    public boolean istFeststellungspruefung;
+  /** Prüfung ist eine Sprachfeststellungsprüfung */
+  public boolean istFeststellungspruefung;
 
 	/** Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden */
 	public boolean kannErstePflichtfremdspracheErsetzen;
@@ -38,13 +39,13 @@ public class Sprachpruefung {
 	/** Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden */
 	public boolean kannWahlpflichtfremdspracheErsetzen;
 
-    /** Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden.*/
-    public boolean kannBelegungAlsFortgefuehrteSpracheErlauben;
+	/** Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden */
+	public boolean kannBelegungAlsFortgefuehrteSpracheErlauben;
 
 	/** Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde */
 	public String referenzniveau;
 
-    /** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
-    public Integer note;
+  /** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
+  public Integer note;
 
 }
