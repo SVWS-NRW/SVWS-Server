@@ -295,6 +295,7 @@ public enum Note {
 
 	/**
 	 * Gibt nur die Noten ohne Tendenz zurück
+	 *
 	 * @return Die Noten von 1 bis 6 als List
 	 */
 	public static @NotNull List<@NotNull Note> getNotenOhneTendenz() {

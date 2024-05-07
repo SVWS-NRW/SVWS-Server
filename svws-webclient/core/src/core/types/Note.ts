@@ -493,6 +493,7 @@ export class Note extends JavaEnum<Note> {
 
 	/**
 	 * Gibt nur die Noten ohne Tendenz zurück
+	 *
 	 * @return Die Noten von 1 bis 6 als List
 	 */
 	public static getNotenOhneTendenz() : List<Note> {

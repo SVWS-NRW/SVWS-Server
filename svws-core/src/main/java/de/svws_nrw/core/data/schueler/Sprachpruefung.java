@@ -24,11 +24,11 @@ public class Sprachpruefung {
 	/** Sprache, die durch die Prüfung ersetzt wird */
 	public String ersetzteSprache;
 
-  /** Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht */
-  public boolean istHSUPruefung;
+	/** Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht */
+	public boolean istHSUPruefung;
 
-  /** Prüfung ist eine Sprachfeststellungsprüfung */
-  public boolean istFeststellungspruefung;
+	/** Prüfung ist eine Sprachfeststellungsprüfung */
+	public boolean istFeststellungspruefung;
 
 	/** Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden */
 	public boolean kannErstePflichtfremdspracheErsetzen;
@@ -45,7 +45,7 @@ public class Sprachpruefung {
 	/** Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde */
 	public String referenzniveau;
 
-  /** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
-  public Integer note;
+	/** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
+	public Integer note;
 
 }
