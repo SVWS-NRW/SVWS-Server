@@ -1,11 +1,16 @@
 package de.svws_nrw.core.utils.gost.klausurplanung;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich;
 import de.svws_nrw.core.utils.ArrayUtils;
+import de.svws_nrw.core.utils.ListUtils;
+import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,18 +23,21 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	private final @NotNull Random _random;
 
-	private final double _regel_aehnliche_klausurdauer_pro_raum;
-	private final double _regel_blocke_in_moeglichst_wenig_raeume;
-	private final double _regel_selbe_kursklausur_in_selben_raum;
+	private final boolean _regel_optimiere_blocke_in_moeglichst_wenig_raeume;
+	private final boolean _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
+	private final boolean _regel_forciere_selbe_kursklausur_im_selben_raum;
+	private final boolean _regel_forciere_selbe_klausurdauer_pro_raum;
 
 	private final int _raumAnzahl;
 	private final @NotNull GostKlausurraumRich @NotNull [] _raumAt;
-	private final @NotNull int @NotNull [] _raumAtBelegt;
+	private final @NotNull int[] _raumZuBelegung;     // dynamisch
+	private final @NotNull int[] _raumZuKlausurdauer; // dynamisch
 
-	private final int _klausurAnzahl;
-	private final @NotNull GostSchuelerklausurTerminRich @NotNull [] _klausurAt;
-	private final @NotNull GostKlausurraumRich[] _klausurZuRaum;
-	private final @NotNull GostKlausurraumRich[] _klausurZuRaumSave;
+	private final int _klausurGruppenAnzahl;
+	private final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _klausurGruppen;
+	private final @NotNull int[] _klausurGruppeZuKlausurdauer;
+	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaum;     // dynamisch
+	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaumSave; // dynamisch (nur zur Speicherung)
 
 	/**
 	 * Initialisiert alle Datenstrukturen um diese für schnelle Manipulation zur Verfügung zu stellen.
@@ -40,70 +48,110 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	KlausurraumblockungAlgorithmusDynDaten(final @NotNull Random random, final @NotNull GostKlausurraumblockungKonfiguration config) {
 		_random = random;
 
-		_regel_aehnliche_klausurdauer_pro_raum =  config._regel_aehnliche_klausurdauer_pro_raum;
-		_regel_blocke_in_moeglichst_wenig_raeume =  config._regel_blocke_in_moeglichst_wenig_raeume;
-		_regel_selbe_kursklausur_in_selben_raum =  config._regel_selbe_kursklausur_in_selben_raum;
+		// Regeln kopieren
+		_regel_optimiere_blocke_in_moeglichst_wenig_raeume =  config._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
+		_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume =  config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
+		_regel_forciere_selbe_kursklausur_im_selben_raum =  config._regel_forciere_selbe_kursklausur_im_selben_raum;
+		_regel_forciere_selbe_klausurdauer_pro_raum =  config._regel_forciere_selbe_klausurdauer_pro_raum;
 
 		// Räume kopieren.
 		_raumAnzahl = config.raeume.size();
 		_raumAt = new GostKlausurraumRich[_raumAnzahl];
-		_raumAtBelegt = new int[_raumAnzahl];
+		_raumZuBelegung = new int[_raumAnzahl];
+		_raumZuKlausurdauer = new int[_raumAnzahl];
 		for (int i = 0; i < _raumAnzahl; i++)
 			_raumAt[i] = config.raeume.get(i);
 
 		// Klausuren kopieren.
-		_klausurAnzahl = config.schuelerklausurtermine.size();
-		_klausurAt = new GostSchuelerklausurTerminRich[_klausurAnzahl];
-		_klausurZuRaum = new GostKlausurraumRich[_klausurAnzahl];
-		_klausurZuRaumSave = new GostKlausurraumRich[_klausurAnzahl];
-		for (int i = 0; i < _klausurAnzahl; i++)
-			_klausurAt[i] = config.schuelerklausurtermine.get(i);
+		_klausurGruppen = _erzeugeKlausurGruppen(config.schuelerklausurtermine);
+		_klausurGruppenAnzahl = _klausurGruppen.size();
+		_klausurGruppeZuRaum = new GostKlausurraumRich[_klausurGruppenAnzahl];
+		_klausurGruppeZuRaumSave = new GostKlausurraumRich[_klausurGruppenAnzahl];
+		_klausurGruppeZuKlausurdauer = new int[_klausurGruppenAnzahl];
+		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++)
+			_klausurGruppeZuKlausurdauer[kg] = _gibErsteKlausurDerGruppe(kg).dauer;
 
 		// Zuordnung erzeugen.
 		aktionZustandClear();
 	}
 
+	private @NotNull GostSchuelerklausurTerminRich _gibErsteKlausurDerGruppe(final int kg) {
+		final @NotNull List<@NotNull GostSchuelerklausurTerminRich> list = ListUtils.getNonNullElementAtOrException(_klausurGruppen, kg);
+		return ListUtils.getNonNullElementAtOrException(list, 0);
+	}
+
+	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppen(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
+		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> gruppen = new ArrayList<>();
+
+		if (_regel_forciere_selbe_kursklausur_im_selben_raum) {
+			// Gruppiere Klausuren nach "idKursklausur".
+			final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTerminRich>> map = new HashMap<>();
+			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
+				MapUtils.addToList(map, klausur.idKursklausur, klausur);
+			gruppen.addAll(map.values());
+		} else {
+			// Jede Klausur hat eine Gruppe.
+			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
+				gruppen.add(ListUtils.create1(klausur));
+		}
+
+		return gruppen;
+	}
+
 	private void aktionZustandClear() {
 		// Alle Räume leeren.
-		for (int r = 0; r < _raumAnzahl; r++)
-			_raumAtBelegt[r] = 0;
+		for (int r = 0; r < _raumAnzahl; r++) {
+			_raumZuBelegung[r] = 0;
+			_raumZuKlausurdauer[r] = -1; // keine Zuordnung
+		}
 
 		// Alle Klausuren leeren.
-		for (int k = 0; k < _klausurAnzahl; k++)
-			_klausurZuRaum[k] = null;
+		for (int k = 0; k < _klausurGruppenAnzahl; k++)
+			_klausurGruppeZuRaum[k] = null;
 	}
 
-	private double gibMalus(final @NotNull GostKlausurraumRich[] klausurZuRaum) {
+	private boolean aktionSetzeKlausurgruppeInDenRaum(final int kg, final int r) {
+		final @NotNull List<GostSchuelerklausurTerminRich> gruppe = _klausurGruppen.get(kg);
+
+		// Ist noch Platz für alle Klausuren der Gruppe?
+		if (_raumZuBelegung[r] + gruppe.size() > _raumAt[r].groesse)
+			return false;
+
+		// Ist die Klausurdauer in dem Raum überhaupt erlaubt?
+		if ((_regel_forciere_selbe_klausurdauer_pro_raum) && (_raumZuKlausurdauer[r] >= 0) && (_klausurGruppeZuKlausurdauer[kg] != _raumZuKlausurdauer[r]))
+			return false;
+
+		// Raum-Zuordnungen
+		_raumZuBelegung[r] += gruppe.size();
+		if (_regel_forciere_selbe_klausurdauer_pro_raum)
+			_raumZuKlausurdauer[r] = _klausurGruppeZuKlausurdauer[kg];
+
+		// Klausur-Zuordnungen
+		_klausurGruppeZuRaum[kg] = _raumAt[r];
+
+		return true;
+	}
+
+	private double gibMalus(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
 		double malus = 0.0;
-
-		// MALUS: nicht verteilte Klausuren.
-		for (int i = 0; i < _klausurAnzahl; i++)
-			if (klausurZuRaum[i] == null)
-				malus += 1000.0;
-
-		malus += gibMalus_regel_aehnliche_klausurdauer_pro_raum(klausurZuRaum);
-		malus += gibMalus_regel_blocke_in_moeglichst_wenig_raeume(klausurZuRaum);
-		malus += gibMalus_regel_selbe_kursklausur_in_selben_raum(klausurZuRaum);
-
+		malus += gibMalus_nicht_verteiler_klausuren(klausurGruppeZuRaum);
+		malus += gibMalus_regel_optimiere_blocke_in_moeglichst_wenig_raeume(klausurGruppeZuRaum);
+		malus += gibMalus_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume(klausurGruppeZuRaum);
 		return malus;
 	}
 
-	private double gibMalus_regel_aehnliche_klausurdauer_pro_raum(final @NotNull GostKlausurraumRich[] klausurZuRaum) {
-		if (_regel_aehnliche_klausurdauer_pro_raum <= 0.0)
-			return 0;
-
+	private double gibMalus_nicht_verteiler_klausuren(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
 		double malus = 0.0;
-
-		for (int k1 = 0; k1 < _klausurAnzahl; k1++)
-			for (int k2 = k1 + 1; k2 < _klausurAnzahl; k2++)
-				if ((_klausurAt[k1].dauer != _klausurAt[k2].dauer) && gibKlausurImSelbenRaum(klausurZuRaum, k1, k2))
-					malus += _regel_aehnliche_klausurdauer_pro_raum;
-
+		for (int i = 0; i < klausurGruppeZuRaum.length; i++)
+			if (klausurGruppeZuRaum[i] == null)
+				malus += _klausurGruppen.get(i).size() * 1000.0;
 		return malus;
 	}
 
-	private double gibMalus_regel_blocke_in_moeglichst_wenig_raeume(@NotNull final GostKlausurraumRich[] klausurZuRaum) {
-		if (_regel_blocke_in_moeglichst_wenig_raeume <= 0.0)
+
+	// Attribut "_raumZuBelegung" geht nicht, da man den lokalen Parameter analysieren muss!
+	private double gibMalus_regel_optimiere_blocke_in_moeglichst_wenig_raeume(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
+		if (!_regel_optimiere_blocke_in_moeglichst_wenig_raeume)
 			return 0.0;
 
 		double malus = 0.0;
@@ -111,9 +159,10 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		for (int r = 0; r < _raumAnzahl; r++) {
 			final @NotNull GostKlausurraumRich raum1 = _raumAt[r];
 
+			// Zähle Klausuren im Raum.
 			int counter = 0;
-			for (int k = 0; k < _klausurAnzahl; k++) {
-				final GostKlausurraumRich raum2 = klausurZuRaum[k];
+			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
+				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
 				if (raum2 == null)
 					continue;
 				if (raum1.id != raum2.id)
@@ -121,47 +170,39 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 				counter++;
 			}
 
+			// Wird der Raum genutzt?
 			if (counter > 0)
-				malus += _regel_blocke_in_moeglichst_wenig_raeume;
+				malus += 1;
 		}
 
 		return malus;
 	}
 
-	private double gibMalus_regel_selbe_kursklausur_in_selben_raum(@NotNull final GostKlausurraumRich[] klausurZuRaum) {
-		if (_regel_selbe_kursklausur_in_selben_raum <= 0.0)
+	// Attribut "_raumZuBelegung" geht nicht, da man den lokalen Parameter analysieren muss!
+	private double gibMalus_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
+		if (!_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume)
 			return 0.0;
 
-		double malus = 0.0;
+		int maximum = 0; // Der Raum mit den meisten Klausuren.
 
-		for (int k1 = 0; k1 < _klausurAnzahl; k1++)
-			for (int k2 = k1 + 1; k2 < _klausurAnzahl; k2++)
-				if ((_klausurAt[k1].idKursklausur == _klausurAt[k2].idKursklausur) && !gibKlausurImSelbenRaum(klausurZuRaum, k1, k2))
-					malus += _regel_selbe_kursklausur_in_selben_raum;
+		for (int r = 0; r < _raumAnzahl; r++) {
+			final @NotNull GostKlausurraumRich raum1 = _raumAt[r];
 
-		return malus;
-	}
+			// Zähle Klausuren im Raum.
+			int counter = 0;
+			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
+				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
+				if (raum2 == null)
+					continue;
+				if (raum1.id != raum2.id)
+					continue;
+				counter++;
+			}
 
-	private static boolean gibKlausurImSelbenRaum(final @NotNull GostKlausurraumRich[] klausurZuRaum, final int k1, final int k2) {
-		final GostKlausurraumRich raum1 = klausurZuRaum[k1];
-		final GostKlausurraumRich raum2 = klausurZuRaum[k2];
-		if (raum1 == null)
-			return false;
-		if (raum2 == null)
-			return false;
-		return raum1.id == raum2.id;
-	}
+			maximum = Math.max(maximum, counter);
+		}
 
-	private boolean aktionSetzeKlausurInDenRaum(final int k, final int r) {
-		if (_raumAtBelegt[r] >= _raumAt[r].groesse)
-			return false;
-
-		if (_klausurZuRaum[k] != null)
-			return false;
-
-		_klausurZuRaum[k] = _raumAt[r];
-		_raumAtBelegt[r]++;
-		return true;
+		return 1.0 * maximum;
 	}
 
 	/**
@@ -169,14 +210,14 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	 * falls er besser ist als der zuvor gespeicherte Zustand.
 	 */
 	private void aktionSpeichernFallsBesser() {
-		final double malusSave = gibMalus(_klausurZuRaumSave);
-		final double malus = gibMalus(_klausurZuRaum);
+		final double malusSave = gibMalus(_klausurGruppeZuRaumSave);
+		final double malus = gibMalus(_klausurGruppeZuRaum);
 
 		if (malus >= malusSave)
 			return;
 
 		// Der jetzige Zustand ist besser --> Speichere die Klausur-Schienen-Zuordnung.
-		System.arraycopy(_klausurZuRaum, 0, _klausurZuRaumSave, 0, _klausurAnzahl);
+		System.arraycopy(_klausurGruppeZuRaum, 0, _klausurGruppeZuRaumSave, 0, _klausurGruppenAnzahl);
 	}
 
 	/**
@@ -187,11 +228,11 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		aktionZustandClear();
 
 		final int[] randomR = ArrayUtils.getIndexPermutation(_raumAnzahl, _random);
-		final int[] randomK = ArrayUtils.getIndexPermutation(_klausurAnzahl, _random);
+		final int[] randomKG = ArrayUtils.getIndexPermutation(_klausurGruppen.size(), _random);
 
-		for (final int k : randomK)
+		for (final int kg : randomKG)
 			for (final int r : randomR)
-				if (aktionSetzeKlausurInDenRaum(k, r))
+				if (aktionSetzeKlausurgruppeInDenRaum(kg, r))
 					break;
 
 		aktionSpeichernFallsBesser();
@@ -228,12 +269,15 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 			raum.schuelerklausurterminIDs.clear();
 
 			// Fülle die Klausuren-Liste des Raumes.
-			for (int k = 0; k < _klausurAnzahl; k++) {
-				final GostKlausurraumRich raum2 = _klausurZuRaumSave[k];
+			for (int kg = 0; kg < _klausurGruppenAnzahl; kg++) {
+				final GostKlausurraumRich raum2 = _klausurGruppeZuRaumSave[kg];
 				if (raum2 == null)
 					continue;
-				if (raum2.id == raum.id)
-					raum.schuelerklausurterminIDs.add(_klausurAt[k].id);
+				if (raum2.id != raum.id)
+					continue;
+				// Alle Klausuren der Gruppe dem Raum hinzufügen.
+				for (final @NotNull GostSchuelerklausurTerminRich klausur : _klausurGruppen.get(kg))
+					raum.schuelerklausurterminIDs.add(klausur.id);
 			}
 		}
 	}

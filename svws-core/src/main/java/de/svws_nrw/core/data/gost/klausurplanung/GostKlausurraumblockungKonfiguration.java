@@ -27,13 +27,17 @@ public class GostKlausurraumblockungKonfiguration {
 	@Schema(description = "die Liste der GostKlausurräume, in die geblockt werden soll", example = "")
 	public @NotNull List<@NotNull GostKlausurraumRich> raeume = new ArrayList<>();
 
-	/** Gewicht, um die Schülerklausuren auf möglichst wenig Räume zu verteilen. */
-	public double _regel_blocke_in_moeglichst_wenig_raeume = 1;
+	/** TRUE, dann werden so wenig Räume wie möglich genutzt.
+	 *  Falls {@link #_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume} auch TRUE, dann gilt diese Regel primär.*/
+	public boolean _regel_optimiere_blocke_in_moeglichst_wenig_raeume = true;
 
-	/** Gewicht, um alle Klausuren desselben Kurses in denselben Raum zu blocken. */
-	public double _regel_selbe_kursklausur_in_selben_raum = 1;
+	/** TRUE, dann werden wird auf die Räume gleichmäßig verteilt.*/
+	public boolean _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = true;
 
-	/** Gewicht, um in einem Klausurraum möglichst alle Klausuren mit ähnlichen Klausurdauern zu blocken. */
-	public double _regel_aehnliche_klausurdauer_pro_raum = 0;
+	/** TRUE, dann müssen die selben Kursklausuren im selben Raum geschrieben werden. */
+	public boolean _regel_forciere_selbe_kursklausur_im_selben_raum = true;
+
+	/** TRUE, dann dürfen nur die selben Klausurdauern in einen Raum. */
+	public boolean _regel_forciere_selbe_klausurdauer_pro_raum = false;
 
 }

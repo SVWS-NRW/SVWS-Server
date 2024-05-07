@@ -22,19 +22,25 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	public raeume : List<GostKlausurraumRich> = new ArrayList<GostKlausurraumRich>();
 
 	/**
-	 * Gewicht, um die Schülerklausuren auf möglichst wenig Räume zu verteilen.
+	 * TRUE, dann werden so wenig Räume wie möglich genutzt.
+	 *   Falls {@link #_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume} auch TRUE, dann gilt diese Regel primär.
 	 */
-	public _regel_blocke_in_moeglichst_wenig_raeume : number = 1;
+	public _regel_optimiere_blocke_in_moeglichst_wenig_raeume : boolean = true;
 
 	/**
-	 * Gewicht, um alle Klausuren desselben Kurses in denselben Raum zu blocken.
+	 * TRUE, dann werden wird auf die Räume gleichmäßig verteilt.
 	 */
-	public _regel_selbe_kursklausur_in_selben_raum : number = 1;
+	public _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume : boolean = true;
 
 	/**
-	 * Gewicht, um in einem Klausurraum möglichst alle Klausuren mit ähnlichen Klausurdauern zu blocken.
+	 * TRUE, dann müssen die selben Kursklausuren im selben Raum geschrieben werden.
 	 */
-	public _regel_aehnliche_klausurdauer_pro_raum : number = 0;
+	public _regel_forciere_selbe_kursklausur_im_selben_raum : boolean = true;
+
+	/**
+	 * TRUE, dann dürfen nur die selben Klausurdauern in einen Raum.
+	 */
+	public _regel_forciere_selbe_klausurdauer_pro_raum : boolean = false;
 
 
 	public constructor() {
@@ -65,15 +71,18 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 				result.raeume?.add(GostKlausurraumRich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj._regel_blocke_in_moeglichst_wenig_raeume === "undefined")
-			 throw new Error('invalid json format, missing attribute _regel_blocke_in_moeglichst_wenig_raeume');
-		result._regel_blocke_in_moeglichst_wenig_raeume = obj._regel_blocke_in_moeglichst_wenig_raeume;
-		if (typeof obj._regel_selbe_kursklausur_in_selben_raum === "undefined")
-			 throw new Error('invalid json format, missing attribute _regel_selbe_kursklausur_in_selben_raum');
-		result._regel_selbe_kursklausur_in_selben_raum = obj._regel_selbe_kursklausur_in_selben_raum;
-		if (typeof obj._regel_aehnliche_klausurdauer_pro_raum === "undefined")
-			 throw new Error('invalid json format, missing attribute _regel_aehnliche_klausurdauer_pro_raum');
-		result._regel_aehnliche_klausurdauer_pro_raum = obj._regel_aehnliche_klausurdauer_pro_raum;
+		if (typeof obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_in_moeglichst_wenig_raeume');
+		result._regel_optimiere_blocke_in_moeglichst_wenig_raeume = obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
+		if (typeof obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume');
+		result._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
+		if (typeof obj._regel_forciere_selbe_kursklausur_im_selben_raum === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_forciere_selbe_kursklausur_im_selben_raum');
+		result._regel_forciere_selbe_kursklausur_im_selben_raum = obj._regel_forciere_selbe_kursklausur_im_selben_raum;
+		if (typeof obj._regel_forciere_selbe_klausurdauer_pro_raum === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_forciere_selbe_klausurdauer_pro_raum');
+		result._regel_forciere_selbe_klausurdauer_pro_raum = obj._regel_forciere_selbe_klausurdauer_pro_raum;
 		return result;
 	}
 
@@ -104,9 +113,10 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"_regel_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_blocke_in_moeglichst_wenig_raeume + ',';
-		result += '"_regel_selbe_kursklausur_in_selben_raum" : ' + obj._regel_selbe_kursklausur_in_selben_raum + ',';
-		result += '"_regel_aehnliche_klausurdauer_pro_raum" : ' + obj._regel_aehnliche_klausurdauer_pro_raum + ',';
+		result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume + ',';
+		result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume + ',';
+		result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum + ',';
+		result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -145,14 +155,17 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj._regel_blocke_in_moeglichst_wenig_raeume !== "undefined") {
-			result += '"_regel_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_blocke_in_moeglichst_wenig_raeume + ',';
+		if (typeof obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume !== "undefined") {
+			result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume + ',';
 		}
-		if (typeof obj._regel_selbe_kursklausur_in_selben_raum !== "undefined") {
-			result += '"_regel_selbe_kursklausur_in_selben_raum" : ' + obj._regel_selbe_kursklausur_in_selben_raum + ',';
+		if (typeof obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume !== "undefined") {
+			result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume + ',';
 		}
-		if (typeof obj._regel_aehnliche_klausurdauer_pro_raum !== "undefined") {
-			result += '"_regel_aehnliche_klausurdauer_pro_raum" : ' + obj._regel_aehnliche_klausurdauer_pro_raum + ',';
+		if (typeof obj._regel_forciere_selbe_kursklausur_im_selben_raum !== "undefined") {
+			result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum + ',';
+		}
+		if (typeof obj._regel_forciere_selbe_klausurdauer_pro_raum !== "undefined") {
+			result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
