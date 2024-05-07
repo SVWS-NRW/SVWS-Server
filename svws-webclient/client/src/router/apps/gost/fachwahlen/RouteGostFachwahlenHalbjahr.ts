@@ -14,7 +14,7 @@ import { routeApp } from "../../RouteApp";
 
 const SGostFachwahlenHalbjahr = () => import("~/components/gost/fachwahlen/SGostFachwahlenHalbjahr.vue");
 
-export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
+export class RouteGostFachwahlenHalbjahr extends RouteNode<any, RouteGost> {
 
 	private _halbjahr = ref<GostHalbjahr>(GostHalbjahr.EF1);
 
@@ -37,7 +37,7 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
 		return false;
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.idhalbjahr instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idHalbjahr = parseInt(to_params.idhalbjahr);

@@ -8,7 +8,7 @@ import { routeApp } from "../../RouteApp";
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
-export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<unknown, RouteKatalogFoerderschwerpunkte> {
+export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKatalogFoerderschwerpunkte> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
@@ -17,7 +17,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<unknown, Rout
 		super.text = "Förderschwerpunkt";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFoerderschwerpunkte.data.auswahl === undefined)
 			return routeKatalogFoerderschwerpunkte.getRoute(undefined)
 	}

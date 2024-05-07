@@ -53,7 +53,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		return false;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
@@ -73,7 +73,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		return true;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
@@ -173,7 +173,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnis.blockungID, ergebnis.id, undefined);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.setAuswahlBlockung(undefined, true);
 		this.data.unsetHalbjahr();
 	}

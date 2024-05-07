@@ -56,7 +56,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		return false;
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
@@ -67,7 +67,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			return this.defaultChild!.getRoute(abiturjahr);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.setEintrag(-1);
 	}
 

@@ -11,7 +11,7 @@ import { type RouteSchuleDatenaustauschUntis, routeSchuleDatenaustauschUntis } f
 
 const SSchuleDatenaustauschUntisStundenplan = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisStundenplan.vue");
 
-export class RouteSchuleDatenaustauschUntisStundenplan extends RouteNode<unknown, RouteSchuleDatenaustauschUntis> {
+export class RouteSchuleDatenaustauschUntisStundenplan extends RouteNode<any, RouteSchuleDatenaustauschUntis> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.stundenplan", "stundenplan", SSchuleDatenaustauschUntisStundenplan);

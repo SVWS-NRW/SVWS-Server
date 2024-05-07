@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SAufsichtsbereichDaten = () => import("~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDaten.vue");
 
-export class RouteKatalogAufsichtsbereichDaten extends RouteNode<unknown, RouteKatalogAufsichtsbereiche> {
+export class RouteKatalogAufsichtsbereichDaten extends RouteNode<any, RouteKatalogAufsichtsbereiche> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.aufsichtsbereiche.daten", "daten", SAufsichtsbereichDaten);
@@ -20,7 +20,7 @@ export class RouteKatalogAufsichtsbereichDaten extends RouteNode<unknown, RouteK
 		super.text = "Aufsichtsbereich";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogAufsichtsbereiche.data.auswahl === undefined)
 			return routeKatalogAufsichtsbereiche.getRoute(undefined)
 	}

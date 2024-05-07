@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SPausenzeitDaten = () => import("~/components/kataloge/pausenzeiten/daten/SPausenzeitDaten.vue");
 
-export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalogPausenzeiten> {
+export class RouteKatalogPausenzeitDaten extends RouteNode<any, RouteKatalogPausenzeiten> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten.daten", "daten", SPausenzeitDaten);
@@ -20,7 +20,7 @@ export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalog
 		super.text = "Pausenzeit";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogPausenzeiten.data.auswahl === undefined)
 			return routeKatalogPausenzeiten.getRoute(undefined)
 	}

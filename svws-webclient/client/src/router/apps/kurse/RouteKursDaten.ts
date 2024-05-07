@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -11,7 +11,7 @@ import { routeApp } from "../RouteApp";
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 
-export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
+export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse.daten", "daten", SKursDaten);

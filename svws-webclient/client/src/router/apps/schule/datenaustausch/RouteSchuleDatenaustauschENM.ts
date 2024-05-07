@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENM.vue");
 
-export class RouteSchuleDatenaustauschENM extends RouteNode<unknown, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteSchuleDatenaustausch> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM);

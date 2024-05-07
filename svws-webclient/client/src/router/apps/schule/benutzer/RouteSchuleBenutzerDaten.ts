@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
 
-export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenutzer> {
+export class RouteSchuleBenutzerDaten extends RouteNode<any, RouteSchuleBenutzer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer_daten", "daten", SBenutzer);

@@ -8,15 +8,16 @@ import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@
 
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
+import { type RouteData } from "./RouteData";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
  * das Routing innerhalb des SVWS-Clients.
  */
-export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unknown, any>> {
+export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent extends RouteNode<any, any>> {
 
 	/** Eine Map mit allen Knoten */
-	protected static mapNodesByName: Map<string, RouteNode<unknown, any>> = new Map();
+	protected static mapNodesByName: Map<string, RouteNode<any, any>> = new Map();
 
 	/** Das vue-Router-Objekt (siehe RouteRecordRaw) */
 	protected _record: RouteRecordRaw;
@@ -34,19 +35,22 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	protected _parent?: TRouteParent;
 
 	/** Die Kind-Knoten zu dieser Route */
-	protected _children: RouteNode<unknown, any>[];
+	protected _children: RouteNode<any, any>[];
 
 	/** Die Knoten, welche in einem Menu zu dieser Komponente zur Verfügung gestellt werden */
-	protected _menu: RouteNode<unknown, any>[];
+	protected _menu: RouteNode<any, any>[];
+
+	/** Gibt an, ob dem Knoten Daten zugeordnet sind (siehe auch _data) */
+	protected _hasData: boolean;
 
 	/** Die Daten, die dem Knoten zugeordnet sind */
 	protected _data: TRouteData;
 
 	/** Der ausgewählte Kind-Knoten, zu welchem geroutet werden soll (z.B. bei Tabs nach einer Auswahl) */
-	protected _selectedChild: Ref<RouteNode<unknown, any> | undefined> = ref(undefined);
+	protected _selectedChild: Ref<RouteNode<any, any> | undefined> = ref(undefined);
 
 	/** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
-	protected _defaultChild: RouteNode<unknown, any> | undefined = undefined;
+	protected _defaultChild: RouteNode<any, any> | undefined = undefined;
 
 	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
 	private _mode: ServerMode = ServerMode.DEV;
@@ -79,6 +83,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		};
 		this._children = [];
 		this._menu = [];
+		this._hasData = (data !== undefined);
 		this._data = (data !== undefined) ? data : {} as TRouteData;
 		// Setze die erlaubten Schulformen
 		for (const sf of schulformen)
@@ -162,7 +167,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @param nodes   Ein Array mit den Kindern für das Routing
      */
-	public set children(nodes: RouteNode<unknown, any>[]) {
+	public set children(nodes: RouteNode<any, any>[]) {
 		if (this._children !== undefined)
 			this._children.forEach(c => c.parent = undefined);
 		this._children = nodes;
@@ -177,8 +182,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns ein Array mit den Kind-Knoten
      */
-	public get children() : RouteNode<unknown, any>[] {
-		const result : RouteNode<unknown, any>[] = [];
+	public get children() : RouteNode<any, any>[] {
+		const result : RouteNode<any, any>[] = [];
 		for (const node of this._children) {
 			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
 				continue;
@@ -193,7 +198,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @param nodes   Ein Array mit den Knoten
      */
-	public set menu(nodes: RouteNode<unknown, any>[]) {
+	public set menu(nodes: RouteNode<any, any>[]) {
 		this._menu = nodes;
 	}
 
@@ -203,8 +208,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns ein Array mit den Knoten
      */
-	public get menu() : RouteNode<unknown, any>[] {
-		const result: RouteNode<unknown, any>[] = [];
+	public get menu() : RouteNode<any, any>[] {
+		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu)
 			if (node.mode.checkServerMode(api.mode))
 				result.push(node);
@@ -257,7 +262,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	/**
      * TODO
      */
-	public get selectedChild() : RouteNode<unknown, any> | undefined {
+	public get selectedChild() : RouteNode<any, any> | undefined {
 		return this._selectedChild.value;
 	}
 
@@ -278,14 +283,14 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	/**
      * TODO
      */
-	public set defaultChild(node : RouteNode<unknown, any> | undefined) {
+	public set defaultChild(node : RouteNode<any, any> | undefined) {
 		this._defaultChild = node;
 	}
 
 	/**
      * TODO
      */
-	public get defaultChild() : RouteNode<unknown, any> | undefined {
+	public get defaultChild() : RouteNode<any, any> | undefined {
 		return this._defaultChild;
 	}
 
@@ -403,7 +408,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Quell-Route
      * @param from_params die Parameter der Quell-Route
      */
-	protected async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	protected async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return true;
 	}
 
@@ -415,7 +420,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Quell-Route
      * @param from_params die Parameter der Quell-Route
      */
-	public async doBeforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async doBeforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			return this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
@@ -434,12 +439,12 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns die Folge der Knoten von dem anderen Knoten bis zu diesem Knoten (einschließlich),
      *   falls dieser Knoten ein Nachfolger-Knoten ist und ansonsten false
      */
-	public checkSuccessorOf(other: string | RouteNode<unknown, any>): RouteNode<unknown, any>[] | false {
+	public checkSuccessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
 		if ((other_node === undefined) || (this.parent === undefined))
 			return false;
-		const result: RouteNode<unknown, any>[] = [ this ];
-		let current: RouteNode<unknown, any> | undefined = this.parent;
+		const result: RouteNode<any, any>[] = [ this ];
+		let current: RouteNode<any, any> | undefined = this.parent;
 		do {
 			result.push(current);
 			if (current.name === other_node.name)
@@ -458,12 +463,12 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns die Folge der Knoten von diesem Knoten bis zu dem anderen Knoten (einschließlich),
      *   falls dieser Knoten ein Vorgänger-Knoten ist und ansonsten false
      */
-	public checkPredecessorOf(other: string | RouteNode<unknown, any>): RouteNode<unknown, any>[] | false {
+	public checkPredecessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
 		if ((other_node === undefined) || (other_node.parent === undefined))
 			return false;
-		const result: RouteNode<unknown, any>[] = [ this ];
-		let current: RouteNode<unknown, any> | undefined = other_node.parent;
+		const result: RouteNode<any, any>[] = [ this ];
+		let current: RouteNode<any, any> | undefined = other_node.parent;
 		while (current !== undefined) {
 			result.push(current);
 			if (current.name === this.name)
@@ -481,9 +486,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns die Vorgänger dieses Knotens als Array
      */
-	public getPredecessors(): RouteNode<unknown, any>[] {
-		const result: RouteNode<unknown, any>[] = [ ];
-		let current: RouteNode<unknown, any> | undefined = this.parent;
+	public getPredecessors(): RouteNode<any, any>[] {
+		const result: RouteNode<any, any>[] = [ ];
+		let current: RouteNode<any, any> | undefined = this.parent;
 		while (current !== undefined) {
 			result.push(current);
 			current = current.parent;
@@ -498,7 +503,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async enter(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -508,7 +513,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doEnter(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 		  return await this.enter(to, to_params, from, from_params);
 		} catch (e) {
@@ -527,7 +532,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -541,7 +546,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		 * @param from die alte Route
 		 * @param from_params  die Routen-Parameter der alten Route
      */
-	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -564,7 +569,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -574,7 +579,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
    * @param from   die Route, die verlassen wird
    * @param from_params   die Routen-Parameter
    */
-	public async doLeaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 		  return await this.leaveBefore(from, from_params);
 		} catch (e) {
@@ -592,7 +597,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
 	}
 
 	/**
@@ -602,10 +607,28 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns der Knoten oder undefined
      */
-	public static getNodeByName(name : string | undefined | null) : RouteNode<unknown, any> | undefined {
+	public static getNodeByName(name : string | undefined | null) : RouteNode<any, any> | undefined {
 		if ((name === undefined) || (name === null))
 			return undefined;
 		return RouteNode.mapNodesByName.get(name);
+	}
+
+	/**
+	 * Führt einen Reset der Daten bei diesem Knoten aus.
+	 */
+	public resetData() : void {
+		if ((this._hasData) && (this._data !== undefined))
+			this._data.reset();
+	}
+
+	/**
+	 * Führt einen Reset der Daten bei diesem Knoten und allen Folgenknoten im Baum aus.
+	 * Dabei wird der Reset zuerst bei den Blättern ausgeführt.
+	 */
+	public resetDataRecursive() : void {
+		for (const child of this._children)
+			child.resetDataRecursive();
+		this.resetData();
 	}
 
 	/**

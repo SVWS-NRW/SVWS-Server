@@ -27,7 +27,7 @@ export class RouteManager {
 	protected active = false;
 
 	/** Die Routing-Node, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
-	protected _node : RouteNode<unknown, any> | undefined = undefined;
+	protected _node : RouteNode<any, any> | undefined = undefined;
 
 	/** Die Route-Location, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
 	protected _routeLocation: RouteLocationNormalized | undefined = undefined;
@@ -157,8 +157,8 @@ export class RouteManager {
 			}
 		}
 		// Bestimme die Knoten, für die Quelle und das Ziel der Route
-		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
-		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
+		const to_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+		const from_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 		if (to_node === undefined)
 			return false;
 		if ((from_node === undefined) && (from.fullPath !== "/"))
@@ -182,7 +182,7 @@ export class RouteManager {
 		// Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
 		if (from.fullPath === "/") {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
-			const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
+			const to_predecessors: RouteNode<any, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
 				result = await node.doEnter(to_node, to.params, from_node, from.params);
 				if (result !== undefined)
@@ -205,7 +205,7 @@ export class RouteManager {
 			const equals = (to_node.name === from_node.name);
 			const to_is_successor = to_node.checkSuccessorOf(from_node);
 			const from_is_successor = from_node.checkSuccessorOf(to_node);
-			const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
+			const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
 			if (to_is_successor) {
 				for (const node of to_predecessors_all) {
 					if (to_is_successor.includes(node) && (node.name !== from_node.name)) {
@@ -247,8 +247,8 @@ export class RouteManager {
 				if (result !== undefined)
 					return result;
 			} else {
-				let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
-				let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
+				let from_predecessors: RouteNode<any, any>[] = from_node.getPredecessors();
+				let to_predecessors: RouteNode<any, any>[] = [...to_predecessors_all];
 				// Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
 				while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
 					from_predecessors = from_predecessors.slice(1);
@@ -296,10 +296,10 @@ export class RouteManager {
 	 */
 	protected async afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): Promise<any> {
 		try {
-			const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+			const to_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 			this._node = to_node;
 			this._routeLocation = to;
-			const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
+			const from_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
 				if (api.mode !== ServerMode.STABLE)
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
@@ -309,13 +309,13 @@ export class RouteManager {
 					const to_is_successor = to_node.checkSuccessorOf(from_node);
 					if (!to_is_successor) {
 						const from_is_successor = from_node.checkSuccessorOf(to_node);
-						const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
+						const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
 						if (from_is_successor) {
 							for (const node of from_is_successor.slice(1).reverse())
 								await node.leave(from_node, from.params);
 						} else if (!equals) {
-							let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
-							let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
+							let from_predecessors: RouteNode<any, any>[] = from_node.getPredecessors();
+							let to_predecessors: RouteNode<any, any>[] = [...to_predecessors_all];
 							// Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
 							while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
 								from_predecessors = from_predecessors.slice(1);
@@ -345,7 +345,7 @@ export class RouteManager {
 	 *
 	 * @returns die RouteNode zur aktuellen Route
 	 */
-	public getRouteNode() : RouteNode<unknown, any> | undefined {
+	public getRouteNode() : RouteNode<any, any> | undefined {
 		return this._node;
 	}
 
@@ -359,6 +359,17 @@ export class RouteManager {
 		if (this._routeLocation === undefined)
 			return undefined;
 		return this._routeLocation.params;
+	}
+
+	/**
+	 * Führt einen Reset auf den Daten bei allen Routing-Knoten
+	 * aus, außer beim Login-Knoten. Dies dient dazu den internen Client-State
+	 * bei einem Logout aufzuräumen.
+	 */
+	public static resetRouteState() : void {
+		routeError.resetDataRecursive();
+		routeInit.resetDataRecursive();
+		routeApp.resetDataRecursive();
 	}
 
 }

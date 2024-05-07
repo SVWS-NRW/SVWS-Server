@@ -31,7 +31,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 		super.defaultChild = routeSchuleBenutzerDaten;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
@@ -39,7 +39,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 		return true;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);

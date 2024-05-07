@@ -12,7 +12,7 @@ import { routeApp } from "../../RouteApp";
 
 const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
 
-export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchuleBenutzergruppe> {
+export class RouteSchuleBenutzergruppeDaten extends RouteNode<any, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe);
@@ -21,7 +21,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 		super.text = "Benutzergruppe";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if(routeSchuleBenutzergruppe.data.auswahl === undefined )
 			return routeSchuleBenutzergruppe.getRoute(undefined);
 	}

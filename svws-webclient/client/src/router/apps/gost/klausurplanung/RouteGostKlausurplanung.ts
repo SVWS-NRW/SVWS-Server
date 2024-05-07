@@ -60,17 +60,14 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return false;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : Number(to_params.abiturjahr);
 		if ((abiturjahr === undefined))
 			return routeGost.defaultChild!.getRoute(-1);
 		return true;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe die Parameter zunächst allgemein
 			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array || to_params.kw instanceof Array)

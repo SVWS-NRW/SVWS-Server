@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SRaumDaten = () => import("~/components/kataloge/raeume/daten/SRaumDaten.vue");
 
-export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume> {
+export class RouteKatalogRaumDaten extends RouteNode<any, RouteKatalogRaeume> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.daten", "daten", SRaumDaten);
@@ -19,7 +19,7 @@ export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume
 		super.text = "Raum";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogRaeume.data.auswahl === undefined)
 			return routeKatalogRaeume.getRoute(undefined)
 	}

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
-export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
@@ -19,7 +19,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein"));

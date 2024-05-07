@@ -81,15 +81,15 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.defaultChild = routeSchueler;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<void | RouteLocationRaw | Error> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<void | RouteLocationRaw | Error> {
 		await this.data.init();
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
 		if (idSchuljahresabschnitt instanceof Error)
 			return routeError.getRoute(idSchuljahresabschnitt);
@@ -99,14 +99,14 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
 		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		// Prüfe, ob die View aktualisiert werden muss
-		let cur: RouteNode<unknown, any> = to;
+		let cur: RouteNode<any, any> = to;
 		while (cur.parent !== this)
 		  cur = cur.parent;
 		if (cur !== this.data.view)
 			this.data.setView(cur, this.children);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.leave();
 	}
 

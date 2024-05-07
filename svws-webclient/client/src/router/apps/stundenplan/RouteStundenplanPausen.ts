@@ -9,7 +9,7 @@ import { routeApp } from "../RouteApp";
 
 const StundenplanPausen = () => import("~/components/stundenplan/pausen/StundenplanPausen.vue");
 
-export class RouteStundenplanPausen extends RouteNode<unknown, RouteStundenplan> {
+export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.pausen", "pausen", StundenplanPausen);
@@ -18,7 +18,7 @@ export class RouteStundenplanPausen extends RouteNode<unknown, RouteStundenplan>
 		super.text = "Pausen";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

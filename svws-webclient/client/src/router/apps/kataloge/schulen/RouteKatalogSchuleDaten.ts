@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SSchuleDaten = () => import("~/components/kataloge/schulen/daten/SSchuleDaten.vue");
 
-export class RouteKatalogSchuleDaten extends RouteNode<unknown, RouteKatalogSchulen> {
+export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.schulen.daten", "daten", SSchuleDaten);
@@ -19,7 +19,7 @@ export class RouteKatalogSchuleDaten extends RouteNode<unknown, RouteKatalogSchu
 		super.text = "Schule";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogSchulen.data.auswahl === undefined)
 			return routeKatalogSchulen.getRoute(undefined)
 	}

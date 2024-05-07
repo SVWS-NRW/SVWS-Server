@@ -10,7 +10,7 @@ import type { SchuleDatenaustauschKurs42RaeumeProps } from "~/components/schule/
 
 const SSchuleDatenaustauschKurs42Raeume = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Raeume.vue");
 
-export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<unknown, RouteSchuleDatenaustauschKurs42> {
+export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<any, RouteSchuleDatenaustauschKurs42> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);

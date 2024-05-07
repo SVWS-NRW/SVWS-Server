@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungen.vue");
 
-export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, RouteSchuelerLernabschnitte> {
+export class RouteSchuelerLernabschnittLeistungen extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.leistungen", "leistungen", SSchuelerLernabschnittLeistungen);
@@ -22,7 +22,7 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, Rou
 		];
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getRoute(id: number, abschnitt: number, wechselNr: number) : RouteLocationRaw {

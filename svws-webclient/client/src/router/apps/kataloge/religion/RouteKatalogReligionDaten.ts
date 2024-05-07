@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
 
-export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogReligionen> {
+export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligionen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen.daten", "daten", SReligionDaten);
@@ -19,7 +19,7 @@ export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogRe
 		super.text = "Religion";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogReligion.data.auswahl === undefined)
 			return routeKatalogReligion.getRoute(undefined)
 	}

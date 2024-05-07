@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschSchulbewerbung = () => import("~/components/schule/datenaustausch/schulbewerbung/SSchuleDatenaustauschSchulbewerbung.vue");
 
-export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<unknown, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<any, RouteSchuleDatenaustausch> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.IMPORT_EXPORT_SCHULBEWERBUNG_DE ], "schule.datenaustausch.schulbewerbung", "schulbewerbung", SSchuleDatenaustauschSchulbewerbung);

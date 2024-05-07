@@ -29,7 +29,7 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		super.defaultChild = routeSchuleDatenaustauschKurs42Blockung;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name)
 			return this.defaultChild!.getRoute();
 		if (!to.name.startsWith(this.data.view.name)) {

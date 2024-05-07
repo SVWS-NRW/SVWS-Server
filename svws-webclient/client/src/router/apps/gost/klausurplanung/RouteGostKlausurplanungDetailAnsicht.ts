@@ -8,7 +8,7 @@ import type { GostKlausurplanungDetailAnsichtProps } from "~/components/gost/kla
 import SGostKlausurplanungDetailAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsicht.vue";
 import { routeApp } from "../../RouteApp";
 
-export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.detailansicht", "detailansicht", SGostKlausurplanungDetailAnsichtVue);

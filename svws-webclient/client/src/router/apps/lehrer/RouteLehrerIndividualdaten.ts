@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -10,7 +10,7 @@ import type { LehrerIndividualdatenProps } from "~/components/lehrer/individuald
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
 
-export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> {
+export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.daten", "daten", SLehrerIndividualdaten);

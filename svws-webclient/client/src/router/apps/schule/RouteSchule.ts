@@ -43,11 +43,11 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.defaultChild = undefined;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.ladeDaten();
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.entferneDaten();
 	}
 

@@ -9,7 +9,7 @@ import { routeApp } from "../../RouteApp";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
-export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender/:kw(\\d+)?", SGostKlausurplanungKalender);
@@ -31,7 +31,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, kw }};
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.kw instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");

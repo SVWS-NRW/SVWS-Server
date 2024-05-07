@@ -13,7 +13,7 @@ import { routeApp } from "../../RouteApp";
 
 const SGostFachwahlenAbitur = () => import("~/components/gost/fachwahlen/SGostFachwahlenAbitur.vue");
 
-export class RouteGostFachwahlenAbitur extends RouteNode<unknown, RouteGost> {
+export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen.abitur", "abitur", SGostFachwahlenAbitur);
@@ -34,7 +34,7 @@ export class RouteGostFachwahlenAbitur extends RouteNode<unknown, RouteGost> {
 		return false;
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);

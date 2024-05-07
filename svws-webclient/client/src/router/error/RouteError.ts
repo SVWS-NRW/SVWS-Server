@@ -10,7 +10,7 @@ import type { ErrorProps } from "~/components/error/SErrorProps";
 import { routerManager } from "~/router/RouteManager";
 
 
-export class RouteError extends RouteNode<unknown, any> {
+export class RouteError extends RouteNode<any, any> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "error", "/error/:errorcode?", SError);
@@ -19,10 +19,10 @@ export class RouteError extends RouteNode<unknown, any> {
 		super.text = "Fehler";
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.error instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 	}

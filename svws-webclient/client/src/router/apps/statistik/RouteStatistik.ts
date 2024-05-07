@@ -14,7 +14,7 @@ import {api} from "~/router/Api";
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
 
-export class RouteStatistik extends RouteNode<unknown, RouteApp> {
+export class RouteStatistik extends RouteNode<any, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "statistik", "statistik", SStatistikApp);

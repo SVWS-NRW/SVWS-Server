@@ -17,7 +17,7 @@ import { routeApp } from "../../RouteApp";
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
 
-export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanung> {
+export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKursplanung> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);
@@ -41,7 +41,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		return false;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
@@ -57,7 +57,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		return true;
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array || to_params.idschueler instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung und des Ergebnisses

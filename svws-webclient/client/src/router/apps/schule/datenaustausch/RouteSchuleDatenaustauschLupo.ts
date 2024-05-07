@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue");
 
-export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<unknown, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, RouteSchuleDatenaustausch> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.laufbahnplanung", "laufbahnplanung", SSchuleDatenaustauschLaufbahnplanung);

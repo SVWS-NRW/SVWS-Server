@@ -50,10 +50,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		super.defaultChild = routeSchuelerIndividualdaten;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
 		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
 		if (idSchuljahresabschnitt instanceof Error)
 			return routeError.getRoute(idSchuljahresabschnitt);
@@ -88,7 +85,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
-	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
+	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeSchuelerStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 		const redirect_name: string = (routeSchueler.selectedChild === undefined) ? routeSchuelerIndividualdaten.name : routeSchueler.selectedChild.name;

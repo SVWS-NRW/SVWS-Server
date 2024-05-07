@@ -13,7 +13,7 @@ import { routeInit } from "~/router/init/RouteInit";
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 
-export class RouteLogin extends RouteNode<unknown, any> {
+export class RouteLogin extends RouteNode<any, any> {
 
 	protected defaultChildNode = undefined;
 
@@ -50,6 +50,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 		this.schema.value = api.schema;
 		await RouteManager.doRoute({ name: this.name });
 		await api.logout();
+		RouteManager.resetRouteState();
 	}
 
 	public setSchema = async (schema: DBSchemaListeEintrag) => {

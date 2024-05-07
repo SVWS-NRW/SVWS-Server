@@ -31,11 +31,11 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 		]);
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		await routeKlassenStundenplan.data.ladeListe();
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.idStundenplan instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		// Prüfe, ob eine Klasse ausgewählt ist. Wenn nicht dann wechsele in die Klassen-Route zurück.
@@ -57,7 +57,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ idSchuljahresabschnitt: String(routeApp.data.idSchuljahresabschnitt), id: String(id) }))
 			redirect = this.defaultChild!;
 		return redirect.getRoute(id);

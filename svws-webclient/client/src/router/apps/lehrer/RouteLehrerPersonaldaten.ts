@@ -11,7 +11,7 @@ import { routeError } from "~/router/error/RouteError";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
-export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
+export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
@@ -20,7 +20,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 		super.text = "Personaldaten";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (!routeLehrer.data.lehrerListeManager.hasDaten())
 			return routeLehrer.getRoute();
 		const id = RouteNode.getIntParam(to_params, "id");
@@ -30,7 +30,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 			await routeLehrer.data.loadPersonaldaten();
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await routeLehrer.data.unloadPersonaldaten();
 	}
 

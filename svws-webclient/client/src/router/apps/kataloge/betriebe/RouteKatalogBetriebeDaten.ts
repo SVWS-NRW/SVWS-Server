@@ -12,7 +12,7 @@ import type { BetriebeDatenProps } from "~/components/kataloge/betriebe/daten/SB
 
 const SBetriebeDaten = () => import("~/components/kataloge/betriebe/daten/SBetriebedaten.vue")
 
-export class RouteKatalogBetriebeDaten extends RouteNode<unknown, RouteKatalogBetriebe> {
+export class RouteKatalogBetriebeDaten extends RouteNode<any, RouteKatalogBetriebe> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe.daten", "daten", SBetriebeDaten);
@@ -21,7 +21,7 @@ export class RouteKatalogBetriebeDaten extends RouteNode<unknown, RouteKatalogBe
 		super.text = "Betrieb";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogBetriebe.data.auswahl === undefined)
 			return routeKatalogBetriebe.getRoute(undefined)
 	}

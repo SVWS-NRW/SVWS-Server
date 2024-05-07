@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 
-export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaecher> {
+export class RouteKatalogFachDaten extends RouteNode<any, RouteKatalogFaecher> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher.daten", "daten", SFachDaten);
@@ -20,7 +20,7 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 		super.text = "Fach";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFaecher.data.auswahl === undefined)
 			return routeKatalogFaecher.getRoute(undefined)
 	}

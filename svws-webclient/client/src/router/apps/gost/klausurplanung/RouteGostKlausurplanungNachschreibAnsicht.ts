@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager } from "@core";
+import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -8,7 +8,7 @@ import type { GostKlausurplanungNachschreibAnsichtProps } from "~/components/gos
 import SGostKlausurplanungNachschreibAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreibAnsicht.vue";
 import { routeApp } from "../../RouteApp";
 
-export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.nachschreibansicht", "nachschreibansicht", SGostKlausurplanungNachschreibAnsichtVue);

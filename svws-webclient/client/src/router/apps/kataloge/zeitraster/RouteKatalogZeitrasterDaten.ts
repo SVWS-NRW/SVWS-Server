@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
 
-export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalogZeitraster> {
+export class RouteKatalogZeitrasterDaten extends RouteNode<any, RouteKatalogZeitraster> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.zeitraster.daten", "daten", SStundenplanZeitrasterPausenzeit);

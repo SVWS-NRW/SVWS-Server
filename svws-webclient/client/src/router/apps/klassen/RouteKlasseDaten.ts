@@ -10,7 +10,7 @@ import { routeApp } from "../RouteApp";
 
 const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue");
 
-export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
+export class RouteKlasseDaten extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen.daten", "daten", SKlassenDaten);

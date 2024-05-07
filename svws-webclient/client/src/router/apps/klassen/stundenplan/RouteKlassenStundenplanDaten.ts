@@ -10,7 +10,7 @@ import { StundenplanAnsicht } from "@comp";
 import { type StundenplanAnsichtProps } from "@comp";
 import { routeApp } from "../../RouteApp";
 
-export class RouteKlassenStundenplanDaten extends RouteNode<unknown, RouteKlassenStundenplan> {
+export class RouteKlassenStundenplanDaten extends RouteNode<any, RouteKlassenStundenplan> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
@@ -21,7 +21,7 @@ export class RouteKlassenStundenplanDaten extends RouteNode<unknown, RouteKlasse
 		];
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.idStundenplan instanceof Array
 				|| to_params.wochentyp instanceof Array || to_params.kw instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
@@ -54,7 +54,7 @@ export class RouteKlassenStundenplanDaten extends RouteNode<unknown, RouteKlasse
 		await routeKlassenStundenplan.data.setEintrag(idKlasse, idStundenplan, wochentyp, kwjahr, kw);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await routeKlassenStundenplan.data.setEintrag(-1, undefined, 0, undefined, undefined);
 	}
 

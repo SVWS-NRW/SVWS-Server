@@ -47,18 +47,18 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		]);
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		let cur: RouteNode<unknown, any> = to;
+		let cur: RouteNode<any, any> = to;
 		while (cur.parent !== this)
 			cur = cur.parent;
 		if (cur !== this.data.view)
@@ -70,17 +70,17 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		await this.data.setAbiturjahrgang(eintrag);
 		if (this.name !== to.name)
 			return;
-		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
 			return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: String(abiturjahr) }};
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		routeGost.data.params = from_params;
 	}
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
-		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
 			redirect = this.defaultChild!;
 		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr || -1 }};
