@@ -64,7 +64,12 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 	patch = async (data : Partial<VermerkartEintrag>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const mapKatalogeintraege = this._state.value.mapKatalogeintraege;
+		const auswahl =  this._state.value.auswahl;
 		await api.server.patchVermerkart(data, api.schema, this.auswahl.id)
+		if (auswahl !== undefined)
+			Object.assign(auswahl, data);
+		this.setPatchedState({ auswahl, mapKatalogeintraege });
 	}
 
 	deleteEintraege = async (eintraege: Iterable<VermerkartEintrag>) => {
