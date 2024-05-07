@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -349,12 +350,18 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 					conn.transactionPersist(dto);
 					if (_idSchuljahresAbschnitt == -1)
 						throw new ApiOperationException(Status.FORBIDDEN, "idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
-					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, skts_ids, _idSchuljahresAbschnitt);
+					final GostKlausurraumRich krRich = new GostKlausurraumRich();
+					krRich.id = -1;
+					krRich.schuelerklausurterminIDs = skts_ids;
+					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, ListUtils.create1(krRich), _idSchuljahresAbschnitt);
 				}
 			}
 			if (key.equals("idTermin")) {
 				dto.Startzeit = null; // Bei Zuweisung eines neuen Termins wird individuelle Startzeit gelöscht
-				result = DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausurenTransaction(conn, skts_ids); // Auch alle Raumzuweisungen werden gelöscht
+				final GostKlausurraumRich krRich = new GostKlausurraumRich();
+				krRich.id = -1;
+				krRich.schuelerklausurterminIDs = skts_ids;
+				result = DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausurenTransaction(conn, ListUtils.create1(krRich)); // Auch alle Raumzuweisungen werden gelöscht
 			}
 			mapper.map(conn, dto, value, map);
 		}

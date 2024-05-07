@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
@@ -815,13 +816,12 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema     das Datenbankschema
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param raumid         die Id des Klausurraums
 	 * @param abschnittid	die Id des Schuljahresabschnitts
-	 * @param schuelerklausurIds         die Ids der GostSchuelerklausuren
+	 * @param raumSchuelerZuteilung         die Ids der GostSchuelerklausuren
 	 * @return die HTTP-Antwort
 	 */
 	@POST
-	@Path("/schuelerklausuren/zuraum/{raumid : -?\\d+}/abschnitt/{abschnittid : -?\\d+}")
+	@Path("/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}")
 	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
 	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
@@ -829,15 +829,40 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response setzeGostSchuelerklausurenZuRaum(
 			@PathParam("schema") final String schema,
-			@PathParam("raumid") final long raumid,
 			@PathParam("abschnittid") final long abschnittid,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerklausurIds,
+            array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (raumid == -1)
-				return DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausuren(conn, schuelerklausurIds);
-			return DataGostKlausurenSchuelerklausurraumstunde.setzeRaumZuSchuelerklausuren(conn, raumid, schuelerklausurIds, abschnittid);
+			return DataGostKlausurenSchuelerklausurraumstunde.setzeRaumZuSchuelerklausuren(conn, raumSchuelerZuteilung, abschnittid);
+			},
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param schema     das Datenbankschema
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param raumSchuelerZuteilung         die Ids der GostSchuelerklausuren
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schuelerklausuren/ausraum")
+	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response loescheGostSchuelerklausurenAusRaum(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			return DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausuren(conn, raumSchuelerZuteilung);
 			},
 			request,
 			ServerMode.STABLE,

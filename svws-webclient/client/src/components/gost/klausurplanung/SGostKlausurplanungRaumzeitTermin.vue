@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs } from '@core';
+	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs, List, GostKlausurraumRich } from '@core';
 	import { DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import { RouteManager } from '~/router/RouteManager';
@@ -89,6 +89,7 @@
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		zeigeAlleJahrgaenge: () => boolean;
+		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>();
 
 	const _showModalAutomatischVerteilen = ref<boolean>(false);
@@ -96,14 +97,14 @@
 
 	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.raummanager().isKlausurenInFremdraeumen();
 
-	const verteilen = () => {
+	const verteilen = async () => {
 		const config = new GostKlausurraumblockungKonfiguration();
 		config.schuelerklausurtermine = props.raummanager().enrichSchuelerklausurtermine(props.raummanager().schuelerklausurtermineZuVerteilenGetMenge(multijahrgang()));
 		config.raeume = props.raummanager().enrichKlausurraeume(props.raummanager().raeumeVerfuegbarGetMenge(multijahrgang()));
 		const algo = new KlausurraumblockungAlgorithmus();
-		console.log('Konfiguration: ', config);
-		const ergebnis = algo.berechne(config);
-		console.log("Ergebnis Raumblockung: ", ergebnis);
+		algo.berechne(config);
+		await props.setzeRaumZuSchuelerklausuren(config.raeume, true);
+		await props.setzeRaumZuSchuelerklausuren(config.raeume, false);
 		showModalAutomatischVerteilen().value = false;
 	}
 

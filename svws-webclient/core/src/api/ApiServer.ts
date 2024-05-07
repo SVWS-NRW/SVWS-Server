@@ -60,6 +60,7 @@ import { GostKlausurenDataCollection } from '../core/data/gost/klausurplanung/Go
 import { GostKlausurenMetaDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenMetaDataCollection';
 import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
+import { GostKlausurraumRich } from '../core/data/gost/klausurplanung/GostKlausurraumRich';
 import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
 import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
 import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausurvorgabe';
@@ -5304,6 +5305,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode loescheGostSchuelerklausurenAusRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/ausraum
+	 *
+	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 */
+	public async loescheGostSchuelerklausurenAusRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrs> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/ausraum"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenNachschreiber für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
 	 *
 	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
@@ -5445,7 +5473,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\d+}/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\d+}
 	 *
 	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
@@ -5456,19 +5484,17 @@ export class ApiServer extends BaseApi {
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} raumid - der Pfad-Parameter raumid
 	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<number>, schema : string, raumid : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\\d+}/abschnitt/{abschnittid : -?\\d+}"
+	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{raumid\s*(:[^{}]+({[^{}]+})*)?}/g, raumid.toString())
 			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);

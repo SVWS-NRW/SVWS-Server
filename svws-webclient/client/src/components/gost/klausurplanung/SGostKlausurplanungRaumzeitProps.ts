@@ -5,6 +5,7 @@ import type {
 	GostKlausurenCollectionSkrsKrs,
 	GostKlausurraum,
 	GostKlausurraumManager,
+	GostKlausurraumRich,
 	GostKlausurtermin,
 	GostKursklausur,
 	GostKursklausurManager,
@@ -25,7 +26,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
+	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrs>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	setRaumTermin : (termin: GostKlausurtermin | null) => Promise<void>;

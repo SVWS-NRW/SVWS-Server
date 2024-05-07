@@ -1,5 +1,5 @@
 
-import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate} from "@core";
+import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich} from "@core";
 import { StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
@@ -16,7 +16,6 @@ import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanu
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeApp } from "../../RouteApp";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
-import { routeGost } from "../RouteGost";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -430,17 +429,22 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return manager;
 	}
 
-	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
+	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<GostKlausurenCollectionSkrsKrs> => {
+		if (!this.raummanager)
+			throw new DeveloperNotificationException('Kein Raummanager gesetzt');
 		if (this._state.value.abschnitt === undefined)
 			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt');
-		if (sks.isEmpty())
+		if (rRaeume.isEmpty())
 			return new GostKlausurenCollectionSkrsKrs();
 		api.status.start();
 		const skids = new ArrayList<number>();
-		for (const sk of sks)
-			skids.add(sk.id);
-		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt.id);
-		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
+		let collectionSkrsKrs;
+		if (!deleteFromRaeume) {
+			collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(rRaeume, api.schema, this._state.value.abschnitt.id);
+		} else {
+			collectionSkrsKrs = await api.server.loescheGostSchuelerklausurenAusRaum(rRaeume, api.schema);
+		}
+		this.raummanager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
 		api.status.stop();
 		return collectionSkrsKrs;

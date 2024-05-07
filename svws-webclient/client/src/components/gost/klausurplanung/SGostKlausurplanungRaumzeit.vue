@@ -58,14 +58,16 @@
 					:drag-data="() => dragData"
 					:on-drag
 					:on-drop
-					:zeige-alle-jahrgaenge />
+					:zeige-alle-jahrgaenge
+					:setze-raum-zu-schuelerklausuren />
 			</template>
 		</div>
 	</template>
 </template>
 
 <script setup lang="ts">
-	import { GostSchuelerklausurTermin, ListUtils} from '@core';
+	import type { List} from '@core';
+	import { ArrayList, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import { ref, onMounted } from 'vue';
@@ -112,26 +114,35 @@
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		const rm = props.raummanager();
-		if (dragData.value instanceof GostKursklausur && rm !== undefined) {
-			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id), rm);
-			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id), rm);
-			}
-		} else if (dragData.value instanceof GostKlausurtermin && rm !== undefined) {
-			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurHauptterminOhneRaumGetMenge(), rm);
-			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurHauptterminOhneRaumGetMenge(), rm);
-			}
-		} else if (dragData.value instanceof GostSchuelerklausurTermin && rm !== undefined) {
-			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, ListUtils.create1(dragData.value as GostSchuelerklausurTermin), rm);
-			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, ListUtils.create1(dragData.value), rm);
+		if (rm !== undefined) {
+			if (zone instanceof GostKlausurraum) {
+				const rRaum = new GostKlausurraumRich(zone, null);
+				if (dragData.value instanceof GostKursklausur)
+					rRaum.schuelerklausurterminIDs = mapIDs(rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id));
+				else if (dragData.value instanceof GostKlausurtermin)
+					rRaum.schuelerklausurterminIDs = mapIDs(rm.schuelerklausurHauptterminOhneRaumGetMenge());
+				else if (dragData.value instanceof GostSchuelerklausurTermin)
+					rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+				if (!rRaum.schuelerklausurterminIDs.isEmpty())
+					await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), false);
+			} else if (zone instanceof GostKlausurtermin) {
+				const rRaum = new GostKlausurraumRich();
+				if (dragData.value instanceof GostKursklausur)
+					rRaum.schuelerklausurterminIDs = mapIDs(rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id));
+				else if (dragData.value instanceof GostSchuelerklausurTermin)
+					rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+				if (!rRaum.schuelerklausurterminIDs.isEmpty())
+					await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), true);
 			}
 		}
 	};
+
+	function mapIDs(skts: List<GostSchuelerklausurTermin>) {
+		const numList = new ArrayList<number>();
+		for (const skt of skts)
+			numList.add(skt.id);
+		return numList;
+	}
 
 	function isDropZone() : boolean {
 		if ((dragData.value === undefined))
