@@ -121,8 +121,8 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 		return pruefung;
 	}
 
-	patchSprachpruefung = async (data: Partial<Sprachpruefung>): Promise<void> => {
-		const pruefung : Sprachpruefung | null = this.getSprachpruefung(data);
+	patchSprachpruefung = async (data: Partial<Sprachpruefung>, sprache: string): Promise<void> => {
+		const pruefung = this.getSprachpruefung({sprache});
 		if ((pruefung === null) || (pruefung.sprache === null))
 			return;
 		api.status.start();
