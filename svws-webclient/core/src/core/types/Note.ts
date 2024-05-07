@@ -99,7 +99,7 @@ export class Note extends JavaEnum<Note> {
 	/**
 	 * Der Noteneintrag "ärztliches Attest" mit dem Wert AT.
 	 */
-	public static readonly ATTEST : Note = new Note("ATTEST", 17, 16, 2500, null, "AT", "(ärtzliches Attest)", "--------------------", null, null);
+	public static readonly ATTEST : Note = new Note("ATTEST", 17, 16, 2500, null, "AT", "(ärztliches Attest)", "--------------------", null, null);
 
 	/**
 	 * Der Noteneintrag "mit besonderem Erfolg teilgenommen" mit dem Wert E1.
