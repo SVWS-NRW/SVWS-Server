@@ -33,11 +33,11 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		super.defaultChild = routeKatalogVermerkartenDaten;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.ladeListe();
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined) {
@@ -45,14 +45,14 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		} else {
 			const id = parseInt(to_params.id);
 			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined && this.data.auswahl !== undefined) {
+			if ((eintrag === undefined) && (this.data.auswahl !== undefined)) {
 				await this.data.ladeListe();
 				return this.getRoute(this.data.auswahl.id);
 			}
 			else if (eintrag)
 				this.data.setEintrag(eintrag);
 		}
-		if (to.name === this.name && this.data.auswahl !== undefined)
+		if ((to.name === this.name) && (this.data.auswahl !== undefined))
 			return this.getRoute(this.data.auswahl.id);
 	}
 

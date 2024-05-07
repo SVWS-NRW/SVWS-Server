@@ -10,7 +10,7 @@ import { routeApp } from "../../RouteApp";
 
 const SVermerkDaten = () => import("~/components/kataloge/vermerke/daten/SVermerkartDaten.vue");
 
-export class RouteKatalogVermerkartenDaten extends RouteNode<unknown, RouteKatalogVermerkarten> {
+export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVermerkarten> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.vermerke.daten", "daten", SVermerkDaten);
@@ -19,7 +19,7 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<unknown, RouteKatal
 		super.text = "Vermerkart";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogVermerkarten.data.auswahl === undefined)
 			return routeKatalogVermerkarten.getRoute(undefined)
 	}
@@ -31,7 +31,7 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<unknown, RouteKatal
 	public getProps(to: RouteLocationNormalized): VermerkartDatenProps {
 		return {
 			patch: routeKatalogVermerkarten.data.patch,
-			auswahl: routeKatalogVermerkarten.data.auswahl || new VermerkartEintrag(),
+			auswahl: () => (routeKatalogVermerkarten.data.auswahl === undefined) ? new VermerkartEintrag() : routeKatalogVermerkarten.data.auswahl,
 		};
 	}
 
