@@ -7,7 +7,7 @@
 			<div v-if="$slots.filter" class="flex flex-shrink-0 items-center gap-1" :class="{'mr-5': $slots.filterAdvanced || toggleColumns, 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
 				<slot name="filter" />
 			</div>
-			<div v-if="toggleColumns">
+			<div v-if="toggleColumns" :class="{'ml-auto': !$slots.filter}">
 				<svws-ui-tooltip :indicator="false" :hover="false" :show-arrow="false" position="top" class="h-full">
 					<svws-ui-button type="transparent" class="h-full">
 						<span class="icon i-ri-table-line" />
