@@ -47,11 +47,11 @@
 							Impressum
 						</svws-ui-button>
 					</a>
-					<a href="#">
-						<svws-ui-button type="transparent">
+					<datenschutz-modal v-slot="{ openModal }">
+						<svws-ui-button type="transparent" @click="openModal()">
 							Datenschutz
 						</svws-ui-button>
-					</a>
+					</datenschutz-modal>
 				</template>
 			</svws-ui-menu>
 		</template>

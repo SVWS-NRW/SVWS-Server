@@ -54,7 +54,9 @@
 											</div>
 											<nav class="flex items-center gap-2">
 												<a class="login-footer-link" href="#">Impressum</a>
-												<a class="login-footer-link" href="#">Datenschutz</a>
+												<datenschutz-modal v-slot="{ openModal }">
+													<a class="login-footer-link" href="#" @click="openModal()">Datenschutz</a>
+												</datenschutz-modal>
 											</nav>
 										</div>
 									</div>
@@ -86,7 +88,7 @@
 
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { computed, ref, shallowRef } from "vue";
+	import { computed, ref, shallowRef, toRef } from "vue";
 	import { ArrayList, DeveloperNotificationException } from "@core";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -98,6 +100,7 @@
 	const username = ref("Admin");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
+	const showDatenschutzModal = ref<boolean>(false);
 
 	const copied = ref<boolean|null>(null);
 	async function copyToClipboard() {

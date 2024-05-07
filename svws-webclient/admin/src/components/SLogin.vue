@@ -49,7 +49,9 @@
 											</p>
 											<nav class="flex flex-row items-center gap-2 mt-0.5">
 												<a class="login-footer-link" href="#">Impressum</a>
-												<a class="login-footer-link" href="#">Datenschutz</a>
+												<datenschutz-modal v-slot="{ openModal }">
+													<a class="login-footer-link" href="#" @click="openModal()">Datenschutz</a>
+												</datenschutz-modal>
 											</nav>
 										</div>
 									</div>
