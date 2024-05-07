@@ -1,9 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { Random } from '../../../../java/util/Random';
-import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
-import { PairNN } from '../../../../core/adt/PairNN';
-import type { List } from '../../../../java/util/List';
-import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
 import { KlausurraumblockungAlgorithmusDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurraumblockungAlgorithmusDynDaten';
 import { GostKlausurraumblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurraumblockungKonfiguration';
 import { System } from '../../../../java/lang/System';
@@ -23,6 +19,8 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 
 	/**
 	 * Verteilt die Klausuren auf die zur Verfügung stehenden Räume.
+	 * <br>Die Zuordnung ist im {@link GostKlausurraumRich#schuelerklausurterminIDs}-Objekt zu finden.
+	 *
 	 * <br>
 	 * <br>Harte Kriterien:
 	 * <br>- Die Raumkapazität darf nicht überschritten werden
@@ -34,10 +32,8 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 	 * <br>- Möglichst Klausuren des selben Kurses im selben Raum.
 	 *
 	 * @param config   		  Die Konfiguration und die Eingabedaten.
-	 *
-	 * @return Eine Liste von Paaren: 1. Element = GostKlausurraumRich (Nachschreiber), 2. Element = Liste von GostSchuelerklausurTerminRich-Objekten
 	 */
-	public berechne(config : GostKlausurraumblockungKonfiguration) : List<PairNN<GostKlausurraumRich, List<GostSchuelerklausurTerminRich>>> {
+	public berechne(config : GostKlausurraumblockungKonfiguration) : void {
 		const dynDaten : KlausurraumblockungAlgorithmusDynDaten | null = new KlausurraumblockungAlgorithmusDynDaten(this.random, config);
 		dynDaten.aktionKlausurenVerteilenAlgorithmus00_zufaellig();
 		const zeitEnde : number = System.currentTimeMillis() + config.maxTimeMillis;
@@ -47,7 +43,7 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 			dynDaten.aktionKlausurenVerteilenAlgorithmus02();
 			dynDaten.aktionKlausurenVerteilenAlgorithmus03();
 		} while (System.currentTimeMillis() < zeitEnde);
-		return dynDaten.gibGespeichertenZustand();
+		dynDaten.aktionLadeGespeichertenZustand();
 	}
 
 	transpilerCanonicalName(): string {

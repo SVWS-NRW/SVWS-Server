@@ -1,11 +1,8 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { Random } from '../../../../java/util/Random';
 import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
-import { PairNN } from '../../../../core/adt/PairNN';
 import { ArrayUtils } from '../../../../core/utils/ArrayUtils';
-import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
-import type { List } from '../../../../java/util/List';
 import { GostKlausurraumblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurraumblockungKonfiguration';
 import { System } from '../../../../java/lang/System';
 
@@ -190,25 +187,20 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Liefert den gespeicherten Zustand als {@link GostKlausurraumRich}-Ausgabe-Objekt.
-	 *
-	 * @return den gespeicherten Zustand als {@link GostKlausurraumRich}-Ausgabe-Objekt.
+	 * Lädt den gespeicherten Zustand die {@link GostKlausurraumRich#schuelerklausurterminIDs}-Liste.
 	 */
-	gibGespeichertenZustand() : List<PairNN<GostKlausurraumRich, List<GostSchuelerklausurTerminRich>>> {
-		const paare : List<PairNN<GostKlausurraumRich, List<GostSchuelerklausurTerminRich>>> = new ArrayList<PairNN<GostKlausurraumRich, List<GostSchuelerklausurTerminRich>>>();
+	aktionLadeGespeichertenZustand() : void {
 		for (let r : number = 0; r < this._raumAnzahl; r++) {
 			const raum : GostKlausurraumRich = this._raumAt[r];
-			const klausurenDesRaumes : List<GostSchuelerklausurTerminRich> = new ArrayList<GostSchuelerklausurTerminRich>();
+			raum.schuelerklausurterminIDs.clear();
 			for (let k : number = 0; k < this._klausurAnzahl; k++) {
 				const raum2 : GostKlausurraumRich | null = this._klausurZuRaumSave[k];
 				if (raum2 === null)
 					continue;
 				if (raum2.id === raum.id)
-					klausurenDesRaumes.add(this._klausurAt[k]);
+					raum.schuelerklausurterminIDs.add(this._klausurAt[k].id);
 			}
-			paare.add(new PairNN<GostKlausurraumRich, List<GostSchuelerklausurTerminRich>>(raum, klausurenDesRaumes));
 		}
-		return paare;
 	}
 
 	transpilerCanonicalName(): string {

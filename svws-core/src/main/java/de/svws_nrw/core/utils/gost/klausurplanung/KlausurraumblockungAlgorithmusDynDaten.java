@@ -1,10 +1,7 @@
 package de.svws_nrw.core.utils.gost.klausurplanung;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import de.svws_nrw.core.adt.PairNN;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich;
@@ -222,29 +219,23 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	}
 
 	/**
-	 * Liefert den gespeicherten Zustand als {@link GostKlausurraumRich}-Ausgabe-Objekt.
-	 *
-	 * @return den gespeicherten Zustand als {@link GostKlausurraumRich}-Ausgabe-Objekt.
+	 * Lädt den gespeicherten Zustand die {@link GostKlausurraumRich#schuelerklausurterminIDs}-Liste.
 	 */
-	@NotNull List<@NotNull PairNN<@NotNull GostKlausurraumRich, @NotNull List<@NotNull GostSchuelerklausurTerminRich>>> gibGespeichertenZustand() {
-		final @NotNull List<@NotNull PairNN<@NotNull GostKlausurraumRich, @NotNull List<@NotNull GostSchuelerklausurTerminRich>>> paare = new ArrayList<>();
-
+	void aktionLadeGespeichertenZustand() {
 		for (int r = 0; r < _raumAnzahl; r++) {
+			// Leere die Klausuren-Liste des Raumes.
 			final @NotNull GostKlausurraumRich raum = _raumAt[r];
-			final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausurenDesRaumes = new ArrayList<>();
+			raum.schuelerklausurterminIDs.clear();
 
+			// Fülle die Klausuren-Liste des Raumes.
 			for (int k = 0; k < _klausurAnzahl; k++) {
 				final GostKlausurraumRich raum2 = _klausurZuRaumSave[k];
 				if (raum2 == null)
 					continue;
 				if (raum2.id == raum.id)
-					klausurenDesRaumes.add(_klausurAt[k]);
+					raum.schuelerklausurterminIDs.add(_klausurAt[k].id);
 			}
-
-			paare.add(new PairNN<>(raum, klausurenDesRaumes));
 		}
-
-		return paare;
 	}
 
 }
