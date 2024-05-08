@@ -14,7 +14,7 @@
 									<h2 class="text-headline-sm leading-tight opacity-50">Administrative<br>Verwaltung</h2>
 								</div>
 								<svws-ui-input-wrapper center>
-									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
+									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveradresse" @keyup.enter="connect" @focus="inputFocus = true" />
 									<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
 										<span v-if="!connected || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>

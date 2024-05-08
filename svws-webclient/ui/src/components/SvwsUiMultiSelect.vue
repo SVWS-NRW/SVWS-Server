@@ -344,7 +344,7 @@
 
     .svws-remove {
       @apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
-			hover:span.icon {
+			&:hover {
 				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 			}

@@ -56,18 +56,10 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="type === 'date'" class="svws-icon">
-			<span class="icon i-ri-calendar-line" />
-		</span>
-		<span v-if="type === 'email'" class="svws-icon">
-			<span class="icon i-ri-at-line" />
-		</span>
-		<span v-if="type === 'tel'" class="svws-icon">
-			<span class="icon i-ri-phone-line" />
-		</span>
-		<span v-if="removable && data" @click.stop="updateData('')" class="svws-icon--remove">
-			<span class="icon i-ri-close-line" />
-		</span>
+		<span v-if="removable && type === 'date'" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" />
+		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-line" />
+		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
+		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
 		<span v-if="type === 'number' && input" class="svws-input-stepper">
 			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><span class="icon i-ri-subtract-line" /></button>
 			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><span class="icon i-ri-add-line" /></button>
@@ -260,22 +252,22 @@
     }
 	}
 
-	.text-input-component .svws-icon {
-		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
+	.text-input-component .icon.svws-icon {
+		@apply pointer-events-none absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base opacity-25 mt-1;
 
 		&--remove {
-			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 bg-white hover:text-error dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
+			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
+			&:hover {
+				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+			}
 		}
-
-    span.icon {
-      @apply opacity-25 -mr-0.5;
-    }
 	}
 
   .text-input-component {
     &:hover,
     &:focus-within {
-      .svws-icon span.icon {
+      .svws-icon.icon {
         @apply opacity-50;
       }
     }
@@ -300,64 +292,20 @@
     .svws-ui-table .svws-ui-tbody .svws-ui-td & {
       @apply my-auto -ml-1;
 
-      .svws-icon {
-        @apply w-6 h-6 -top-1 right-0;
-
-        span.icon {
-          @apply relative top-px;
-        }
+      .svws-icon.icon {
+        @apply w-6 h-6 -top-1 right-0 relative;
       }
     }
 
     &:focus-within {
-      .svws-icon span.icon {
+      .svws-icon.icon {
         @apply opacity-75;
       }
     }
   }
 
-  .text-input--statistics .svws-icon {
-    @apply text-violet-500;
-
-    span.icon {
-      @apply opacity-50;
-    }
-  }
-
-  .text-input--number {
-    input {
-      @apply pr-12;
-      appearance: textfield;
-    }
-
-    .svws-input-stepper {
-      @apply absolute top-1 right-1 bottom-1 flex justify-center items-center gap-0.5;
-
-      button {
-        @apply bg-light dark:bg-white/5 border border-black/10 dark:border-white/10 rounded text-base focus:outline-none;
-
-        &:hover,
-        &:focus-visible {
-          @apply bg-black/10 dark:bg-white/10;
-        }
-
-        &:focus-visible {
-          @apply ring-2 ring-offset-1 ring-black/25 dark:ring-white/25;
-        }
-
-        &.svws-disabled {
-          @apply pointer-events-none opacity-25;
-
-          span.icon {
-            @apply opacity-50;
-          }
-        }
-      }
-    }
-
-    .text-input--placeholder {
-      max-width: calc(100% - 0.7em);
-    }
+  .text-input--statistics .svws-icon.icon {
+    @apply text-violet-500 opacity-50;
   }
 
 	.text-input--invalid .svws-icon {
