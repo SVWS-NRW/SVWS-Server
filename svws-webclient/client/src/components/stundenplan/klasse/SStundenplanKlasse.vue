@@ -12,6 +12,11 @@
 					<svws-ui-button type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
 						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
+					<s-stundenplan-klasse-modal-merge v-if="stundenplanManager().unterrichtsgruppenMergeableGet()" :stundenplan-manager v-slot="{ openModal }">
+						<svws-ui-button type="error" size="small" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
+							<span class="icon-sm icon-error i-ri-error-warning-line" /> Unterricht zusammenlegen
+						</svws-ui-button>
+					</s-stundenplan-klasse-modal-merge>
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
