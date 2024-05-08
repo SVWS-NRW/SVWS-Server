@@ -2,7 +2,6 @@
 	<div class="flex flex-col mt-3 gap-4">
 		<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
 		<div class="flex flex-col gap-8 text-left" v-if="db === 'mdb'">
-			<svws-ui-text-input v-model.trim="password" placeholder="Datenbank-Passwort" type="password" />
 			<div class="flex flex-col gap-2 px-2">
 				<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
 				<input type="file" @change="migrate" :disabled="loading" accept=".mdb">
@@ -86,11 +85,14 @@
 		status.value = await props.migrateDB(formData);
 		loading.value = false;
 	}
+
 </script>
 
 <style lang="postcss" scoped>
-.init-form-header {
-	@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-	font-size: 2.618rem;
-}
+
+	.init-form-header {
+		@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
+		font-size: 2.618rem;
+	}
+
 </style>
