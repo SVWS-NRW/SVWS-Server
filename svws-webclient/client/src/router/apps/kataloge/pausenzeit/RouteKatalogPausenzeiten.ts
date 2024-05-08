@@ -59,7 +59,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		const name = (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty()) ? this.name : this.defaultChild!.name;
+		const name = (this.data.auswahl === undefined && id === undefined) ? this.name : this.defaultChild!.name;
 		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 

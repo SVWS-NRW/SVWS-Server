@@ -62,7 +62,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		const name = (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty()) ? this.name : this.defaultChild!.name;
+		const name = (this.data.auswahl === undefined && id === undefined) ? this.name : this.defaultChild!.name;
 		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
