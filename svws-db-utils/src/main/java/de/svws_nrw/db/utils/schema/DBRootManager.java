@@ -3,7 +3,6 @@ package de.svws_nrw.db.utils.schema;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -416,6 +415,31 @@ public final class DBRootManager {
 	}
 
 
+	/**
+	 * Prüft für die übergebene Konfiguration, ob der Benutzer nicht in der
+	 * Datenbank angelegt ist oder ob er angelegt ist und das Kennwort gültig
+	 * ist. Die Prüfung des Kennwortes erfolgt über eine Verbindung zum
+	 * Schema 'information_schema'.
+	 *
+	 * @param config   die Konfiguration mit dem zu prüfenden Benutzernamen und dem Kennwort
+	 *
+	 * @return true, falls der Benutzer nicht existiert oder sein Kennwort gültig ist, und ansonsten false
+	 */
+	private boolean checkUserNotExistsOrCredentialsValid(final DBConfig config) {
+		try {
+			final List<String> benutzer = DTOInformationUser.queryNames(conn);
+			if (!benutzer.contains(config.getUsername()))
+				return true;
+			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema("information_schema"));
+			try (DBEntityManager conn = userInformationSchema.getEntityManager()) {
+				/* Kein Zugriff über conn nötig... Nur ein Verbindungstest */
+			}
+			return true;
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * Erstelle als root-Benutzer ein neuese Datenbank-Schema bzw. eine neue Datenbankdatei. Ein bereits
@@ -427,8 +451,10 @@ public final class DBRootManager {
 	 * @param logger    ein Logger, welcher die jeweiligen Informationen zu den einzelnen Operationen loggt.
 	 *
 	 * @return true im Erfolgsfall und false, falls ein Fehler aufgetreten ist.
+	 *
+	 * @throws DBException falls ein Fehler auftritt
 	 */
-	public static boolean recreateDB(final DBConfig config, final String user_root, final String pw_root, final Logger logger) {
+	public static boolean recreateDB(final DBConfig config, final String user_root, final String pw_root, final Logger logger) throws DBException {
 		if (config.getDBDriver().isFileBased()) {
 			logger.log("-> Lösche existierende Datenbankdatei für die Ziel-DB - falls vorhanden...");
 			removeDBFile(config.getDBDriver(), config.getDBLocation());
@@ -442,7 +468,7 @@ public final class DBRootManager {
 			final Benutzer rootUser;
 			try {
 				rootUser = Benutzer.create(rootConfig);
-			} catch (final DBException db) {
+			} catch (@SuppressWarnings("unused") final DBException db) {
 				logger.logLn(2, " [Fehler]");
 				logger.log(LogLevel.ERROR, 2, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
 				logger.log(LogLevel.ERROR, 2, "Überprüfen Sie das verwendete Kennwort.");
@@ -454,27 +480,34 @@ public final class DBRootManager {
 				if (rootConn == null) {
 					logger.logLn(0, " [Fehler]");
 					logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
-					throw new SQLException();
+					throw new DBException("");
 				}
 				logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
 				final DBRootManager root_manager = new DBRootManager(rootConn);
 
+				logger.log("- Prüfe, ob der Benutzer noch angelegt werden kann oder ob das angebene Kennwort zu einem existierenden Benutzer passt...");
+				if (!root_manager.checkUserNotExistsOrCredentialsValid(config))
+					throw new DBException("Der Datenbank-Benutzer exisiert bereits und das angegeben Kennwort passt nicht dazu.");
+				logger.logLn(0, " [OK]");
+
 				logger.log("- Entferne aus der Ziel-DB das alte Schema, falls vorhanden...");
 				if (!root_manager.dropDBSchemaIfExists(config.getDBSchema()))
-					throw new SQLException();
+					throw new DBException("Das bereits existierende Schema konnte nicht entfernt werden.");
 				logger.logLn(0, " [OK]");
 
 				logger.log("- Erstelle in der Ziel-DB das Schema und den Admin-Benutzer:");
 				if (!root_manager.createDBSchemaWithAdminUser(config.getUsername(), config.getPassword(), config.getDBSchema()))
-					throw new SQLException();
+					throw new DBException("Das Schema konnte nicht erstellt werden oder der Admin-Benutzer konnte nicht angelegt werden.");
 				logger.logLn(0, " [OK]");
 
-				logger.modifyIndent(-2);
 				return true;
-			} catch (@SuppressWarnings("unused") final SQLException e) {
+			} catch (final Exception e) {
 				logger.logLn(0, " [Fehler]");
+				if (e instanceof final DBException dbe)
+					throw dbe;
+				throw new DBException("Ein unerwarteter Fehler ist beim Erstellen des Datenbank-Schemas aufgetreten.", e);
+			} finally {
 				logger.modifyIndent(-2);
-				return false;
 			}
 		}
 
