@@ -63,7 +63,7 @@
 								@dragover="updateDragOverPosition($event, wochentag, stunde, 0)">
 								Jede Woche
 							</div>
-							<div class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
+							<div v-if="manager().getWochenTypModell() > 0" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
 								<template v-for="wt, wtIndex in manager().getWochenTypModell()" :key="wtIndex">
 									<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:border-black hover:font-bold"
 										:class="{'bg-success/50': wtIndex+1 === dragOverPos.wochentyp}"
