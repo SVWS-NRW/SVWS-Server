@@ -305,8 +305,12 @@ public final class DBMigrationManager {
 		// Leere das bestehende Schema der Zieldatenbank
 		final Benutzer tgtUser;
 		try {
+			logger.log("-> Verbinde zur Ziel-Datenbank... ");
 			tgtUser = Benutzer.create(tgtConfig);
-		} catch (@SuppressWarnings("unused") final DBException db) {
+			logger.logLn("[OK]");
+		} catch (final DBException e) {
+			logger.logLn("[Fehler]");
+			logger.logLn(2, e.getMessage());
 			return false;
 		}
 		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
