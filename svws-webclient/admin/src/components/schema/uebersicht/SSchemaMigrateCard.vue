@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="ml-4 mt-4 mb-4">
+	<svws-ui-content-card>
 		<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 		<div class="flex flex-col items-start gap-3">
 			<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">

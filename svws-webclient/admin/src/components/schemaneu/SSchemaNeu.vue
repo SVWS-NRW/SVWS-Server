@@ -3,58 +3,38 @@
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-[2]">
-					<h2 class="svws-headline">
-						<span>Neues Schema anlegen</span>
-					</h2>
-					<span class="svws-subline" />
+					<h2 class="svws-headline" />
+					<span class="svws-subline">
+						Neues Schema anlegen
+					</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
 		<svws-ui-router-tab-bar :routes="[]" :hidden="[]" :model-value="{ name: 'Dummy', text: 'Dummy' }">
-			<div class="page--content !flex flex-col">
-				<div class="flex flex-row gap-8 h-full w-full">
-					<div class="flex-grow">
+			<div class="page--content">
+				<div class="flex flex-col gap-y-16 lg:gap-y-20">
+					<svws-ui-content-card>
 						<!-- Neues leeres Schema anlegen -->
-						<button role="button" class="svws-ui-content-button" :class="{'svws-active': currentAction === 'neu'}" @click="clickNeuesSchema">
-							<div class="svws-icon"><span class="icon i-ri-add-line" /></div>
-							<div class="flex flex-col">
-								<div class="svws-title">Neues Schema: Leer</div>
-								<div class="svws-description">Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden.</div>
-							</div>
-						</button>
-						<s-schema-neu-leer v-if="currentAction === 'neu'" class="ml-4 mt-4 mb-4" :add-schema="addSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden." icon="i-ri-add-line">
+							<s-schema-neu-leer :add-schema="addSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						</s-schema-action-button>
 						<!-- Backup in neues Schema importieren -->
-						<button role="button" class="svws-ui-content-button" :class="{'svws-active': currentAction === 'import'}" @click="clickImportSchema">
-							<div class="svws-icon"><span class="icon i-ri-device-recover-line" /></div>
-							<div class="flex flex-col">
-								<div class="svws-title">Neues Schema: Importiere Backup</div>
-								<div class="svws-description">Ein SQLite-Backup wird in ein neues Schema wiederhergestellt.</div>
-							</div>
-						</button>
-						<s-schema-neu-import v-if="currentAction === 'import'" class="ml-4 mt-4 mb-4" :import-schema="importSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt." icon="i-ri-device-recover-line">
+							<s-schema-neu-import :import-schema="importSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						</s-schema-action-button>
 						<!-- In Neues Schema migrieren -->
-						<button role="button" class="svws-ui-content-button" :class="{'svws-active': currentAction === 'migrate'}" @click="clickMigrateSchema">
-							<div class="svws-icon"><span class="icon i-ri-database-2-line" /></div>
-							<div class="flex flex-col">
-								<div class="svws-title">Neues Schema: Migriere Schild2-Datenbank</div>
-								<div class="svws-description">Eine Schild2-Datenbank wird in ein neues Schema migriert.</div>
-							</div>
-						</button>
-						<s-schema-neu-migrate v-if="currentAction === 'migrate'" class="ml-4 mt-4 mb-4" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen"
-							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line">
+							<s-schema-neu-migrate :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen"
+								:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						</s-schema-action-button>
 						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<button role="button" class="svws-ui-content-button" :class="{'svws-active': currentAction === 'duplicate'}" @click="clickDuplicateSchema">
-							<div class="svws-icon"><span class="icon i-ri-file-copy-line" /></div>
-							<div class="flex flex-col">
-								<div class="svws-title">Neues Schema: Dupliziere Auswahl</div>
-								<div class="svws-description">Dupliziert das aktuell ausgewählte Schema in ein neues Schema.</div>
-							</div>
-						</button>
-						<s-schema-neu-duplicate v-if="currentAction === 'duplicate'" class="ml-4 mt-4 mb-4" :duplicate-schema="duplicateSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-					</div>
+						<s-schema-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line">
+							<s-schema-neu-duplicate :duplicate-schema="duplicateSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						</s-schema-action-button>
+					</svws-ui-content-card>
 				</div>
-				<div class="w-full flex-grow">
+				<div class="col-span-full">
 					<log-box :logs="logs" :status="status">
 						<template #button>
 							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>

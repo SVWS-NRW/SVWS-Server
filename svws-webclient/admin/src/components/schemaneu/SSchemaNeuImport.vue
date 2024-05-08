@@ -1,24 +1,20 @@
 <template>
 	<div class="input-wrapper">
-		<div class="flex flex-row gap-16">
-			<div class="flex flex-col gap-3 w-128 text-left">
-				<div><b>Quell-Datenbank: </b> SQLite-Datei auswählen (Endung .sqlite)</div>
-				<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
-			</div>
-			<div class="flex flex-col gap-3 w-128 text-left">
-				<div><b>Ziel-Datenbank (wird erstellt):</b></div>
-				<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
-				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
-				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
-			</div>
+		<div class="flex flex-col gap-2 mb-5">
+			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
+			<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
 		</div>
 		<svws-ui-spacing />
-		<svws-ui-button type="primary" @click="doImport" :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || loading().value || (user === 'root')">
-			<svws-ui-spinner :spinning="loading().value" />
-			Schema anlegen
-		</svws-ui-button>
+		<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
+		<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
+		<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
+		<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 	</div>
+	<svws-ui-spacing />
+	<svws-ui-button type="primary" @click="doImport" :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || loading().value || (user === 'root')">
+		<svws-ui-spinner :spinning="loading().value" />
+		Schema anlegen
+	</svws-ui-button>
 </template>
 
 <script setup lang="ts">
