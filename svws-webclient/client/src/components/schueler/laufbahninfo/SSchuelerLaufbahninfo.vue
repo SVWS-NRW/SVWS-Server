@@ -75,7 +75,7 @@
 					<svws-ui-select title="Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.jahrgang)" @update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)" :items="sprachJahrgaengeVon" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(anspruchsniveauId)="{ rowData }">
-					<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByID(rowData.anspruchsniveauId)" @update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
+					<svws-ui-select title="Sprachpruefungniveau" headless :removable="true" :model-value="Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)" @update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)" :items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
 				</template>
 				<template #cell(note)="{ rowData }">
 					<svws-ui-select :items="Note.getNotenOhneTendenz()" :item-text="i => i?.kuerzel" :model-value="Note.fromNoteSekI(rowData.note)" @update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI() }, rowData.sprache)" headless />
@@ -105,7 +105,7 @@
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn } from "@ui";
 	import type { Sprachbelegung , Sprachpruefung} from '@core';
-	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note, Schulgliederung } from '@core';
+	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note, Schulgliederung, Sprachpruefungniveau } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
@@ -129,15 +129,15 @@
 	const colsSprachpruefungen = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
-			{ key: "typ", label: "Prüfungsart", tooltip: "Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht oder eine Sprachfeststellungsprüfung", minWidth: 4 },
+			{ key: "typ", label: "Prüfungsart", tooltip: "Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht oder eine Sprachfeststellungsprüfung", minWidth: 5 },
 			{ key: "ersetzt", label: "Ersetzt", minWidth: 4 },
-			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4, span: 0.5 },
+			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4 },
 			...([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung)))
 				? [] : [{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 }]),
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
-			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
-			{ key: "referenzniveau", label: "Niveau", tooltip: "Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde", minWidth: 6 },
-			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
+			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
+			{ key: "referenzniveau", label: "GeR", tooltip: "Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde", minWidth: 3 },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
 			{ key: "ersetzteSprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
 		]
 	});
