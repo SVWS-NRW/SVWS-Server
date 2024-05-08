@@ -8,6 +8,8 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
+import { type RouteNode } from "~/router/RouteNode";
 
 
 interface RouteStateKlassen extends RouteStateInterface {
@@ -15,6 +17,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 	klassenListeManager: KlassenListeManager;
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
+	oldView?: RouteNode<any, any>;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -23,6 +26,7 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
+	oldView: undefined,
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -136,6 +140,22 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	gotoSchueler = async (eintrag: Schueler) => {
 		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+	}
+
+	setGruppenprozess = async (value: boolean) => {
+		if (((value === true) && (this._state.value.oldView !== undefined))
+			|| ((value === false) && (this._state.value.oldView === undefined))) {
+			this.commit();
+			return;
+		}
+		if (value) {
+			this._state.value.oldView = this._state.value.view;
+			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));
+			return;
+		}
+		const view = this._state.value.oldView ?? routeKlasseDaten;
+		this._state.value.oldView = undefined;
+		await RouteManager.doRoute(view.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));
 	}
 
 	setFilter = async () => {

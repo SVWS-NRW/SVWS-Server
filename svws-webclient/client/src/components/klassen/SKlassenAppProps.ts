@@ -6,5 +6,6 @@ export interface KlassenAppProps {
 	setTab: (value: AuswahlChildData) => Promise<void>;
 	tab: AuswahlChildData;
 	tabs: AuswahlChildData[];
+	tabsGruppenprozesse: AuswahlChildData[];
 	tabsHidden: boolean[];
 }

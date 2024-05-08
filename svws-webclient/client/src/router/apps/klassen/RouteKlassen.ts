@@ -14,6 +14,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
+import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -29,7 +30,8 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKlasseDaten,
-			routeKlassenStundenplan
+			routeKlassenStundenplan,
+			routeKlasseGruppenprozesse,
 		];
 		super.defaultChild = routeKlasseDaten;
 	}
@@ -101,6 +103,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
+			setGruppenprozess: this.data.setGruppenprozess,
 			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
 		};
 	}
@@ -112,6 +115,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			setTab: this.setTab,
 			tab: this.getTab(),
 			tabs: this.getTabs(),
+			tabsGruppenprozesse: this.getTabsGruppenprozesse(),
 			tabsHidden: this.children_hidden().value,
 		};
 	}
@@ -120,11 +124,25 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
+	private isGruppenprozess(child : RouteNode<any, any>) : boolean {
+		return (child === routeKlasseGruppenprozesse);
+	}
+
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of super.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
+		for (const c of super.children) {
+			if (!this.isGruppenprozess(c) && c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
+		}
+		return result;
+	}
+
+	private getTabsGruppenprozesse(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of super.children) {
+			if (this.isGruppenprozess(c) && c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
+		}
 		return result;
 	}
 

@@ -3,21 +3,28 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<h2 class="svws-headline">
-						<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							ID:
-							{{ klassenListeManager().daten().id }}
-						</svws-ui-badge>
-					</h2>
-					<span class="svws-subline">
-						{{ lehrerkuerzel }}
-					</span>
+					<template v-if="istGruppenprozess">
+						<h2 class="svws-headline">
+							Gruppenprozesse
+						</h2>
+					</template>
+					<template>
+						<h2 class="svws-headline">
+							<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID:
+								{{ klassenListeManager().daten().id }}
+							</svws-ui-badge>
+						</h2>
+						<span class="svws-subline">
+							{{ lehrerkuerzel }}
+						</span>
+					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+		<svws-ui-router-tab-bar :routes="istGruppenprozess ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</template>
@@ -32,6 +39,8 @@
 	import { computed } from "vue";
 
 	const props = defineProps<KlassenAppProps>();
+
+	const istGruppenprozess = computed<boolean>(() => props.klassenListeManager().liste.auswahlSize() > 0);
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';

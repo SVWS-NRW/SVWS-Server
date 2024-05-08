@@ -128,7 +128,7 @@
 
 	const selectedItems = shallowRef<KlassenDaten[]>([]);
 
-	function setAuswahl(items : KlassenDaten[]) {
+	async function setAuswahl(items : KlassenDaten[]) {
 		const auswahl = props.klassenListeManager().liste;
 		for (const vorhanden of [ ... auswahl.auswahl() ])
 			if (!items.includes(vorhanden))
@@ -136,6 +136,7 @@
 		for (const item of items)
 			auswahl.auswahlAdd(item);
 		selectedItems.value = [ ... auswahl.auswahl() ];
+		await props.setGruppenprozess(selectedItems.value.length > 0);
 	}
 
 	function lehrerkuerzel(list: number[]) {
