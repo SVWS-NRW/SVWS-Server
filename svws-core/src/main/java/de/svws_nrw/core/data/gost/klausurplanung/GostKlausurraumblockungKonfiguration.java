@@ -40,4 +40,7 @@ public class GostKlausurraumblockungKonfiguration {
 	/** TRUE, dann dürfen nur die selben Klausurdauern in einen Raum. */
 	public boolean _regel_forciere_selbe_klausurdauer_pro_raum = false;
 
+	/** TRUE, dann dürfen nur die selben Klausurstart-Zeiten in einen Raum. */
+	public boolean _regel_forciere_selben_klausurstart_pro_raum = true;
+
 }

@@ -23,6 +23,8 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	private readonly _regel_forciere_selbe_klausurdauer_pro_raum : boolean;
 
+	private readonly _regel_forciere_selben_klausurstart_pro_raum : boolean;
+
 	private readonly _raumAnzahl : number;
 
 	private readonly _raumAt : Array<GostKlausurraumRich>;
@@ -31,11 +33,15 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	private readonly _raumZuKlausurdauer : Array<number>;
 
+	private readonly _raumZuKlausurstart : Array<number>;
+
 	private readonly _klausurGruppenAnzahl : number;
 
 	private readonly _klausurGruppen : List<List<GostSchuelerklausurTerminRich>>;
 
 	private readonly _klausurGruppeZuKlausurdauer : Array<number>;
+
+	private readonly _klausurGruppeZuKlausurstart : Array<number>;
 
 	private readonly _klausurGruppeZuRaum : Array<GostKlausurraumRich | null>;
 
@@ -55,10 +61,12 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		this._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
 		this._regel_forciere_selbe_kursklausur_im_selben_raum = config._regel_forciere_selbe_kursklausur_im_selben_raum;
 		this._regel_forciere_selbe_klausurdauer_pro_raum = config._regel_forciere_selbe_klausurdauer_pro_raum;
+		this._regel_forciere_selben_klausurstart_pro_raum = config._regel_forciere_selben_klausurstart_pro_raum;
 		this._raumAnzahl = config.raeume.size();
 		this._raumAt = Array(this._raumAnzahl).fill(null);
 		this._raumZuBelegung = Array(this._raumAnzahl).fill(0);
 		this._raumZuKlausurdauer = Array(this._raumAnzahl).fill(0);
+		this._raumZuKlausurstart = Array(this._raumAnzahl).fill(0);
 		for (let i : number = 0; i < this._raumAnzahl; i++)
 			this._raumAt[i] = config.raeume.get(i);
 		this._klausurGruppen = this._erzeugeKlausurGruppen(config.schuelerklausurtermine);
@@ -66,8 +74,11 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		this._klausurGruppeZuRaum = Array(this._klausurGruppenAnzahl).fill(null);
 		this._klausurGruppeZuRaumSave = Array(this._klausurGruppenAnzahl).fill(null);
 		this._klausurGruppeZuKlausurdauer = Array(this._klausurGruppenAnzahl).fill(0);
-		for (let kg : number = 0; kg < this._klausurGruppenAnzahl; kg++)
+		this._klausurGruppeZuKlausurstart = Array(this._klausurGruppenAnzahl).fill(0);
+		for (let kg : number = 0; kg < this._klausurGruppenAnzahl; kg++) {
 			this._klausurGruppeZuKlausurdauer[kg] = this._gibErsteKlausurDerGruppe(kg).dauer;
+			this._klausurGruppeZuKlausurstart[kg] = this._gibErsteKlausurDerGruppe(kg).startzeit;
+		}
 		this.aktionZustandClear();
 	}
 
@@ -94,6 +105,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		for (let r : number = 0; r < this._raumAnzahl; r++) {
 			this._raumZuBelegung[r] = 0;
 			this._raumZuKlausurdauer[r] = -1;
+			this._raumZuKlausurstart[r] = -1;
 		}
 		for (let k : number = 0; k < this._klausurGruppenAnzahl; k++)
 			this._klausurGruppeZuRaum[k] = null;
@@ -103,9 +115,13 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		const gruppe : List<GostSchuelerklausurTerminRich | null> = this._klausurGruppen.get(kg);
 		if (this._raumZuBelegung[r] + gruppe.size() > this._raumAt[r].groesse)
 			return false;
+		if ((this._regel_forciere_selben_klausurstart_pro_raum) && (this._raumZuKlausurstart[r] >= 0) && (this._klausurGruppeZuKlausurstart[kg] !== this._raumZuKlausurstart[r]))
+			return false;
 		if ((this._regel_forciere_selbe_klausurdauer_pro_raum) && (this._raumZuKlausurdauer[r] >= 0) && (this._klausurGruppeZuKlausurdauer[kg] !== this._raumZuKlausurdauer[r]))
 			return false;
 		this._raumZuBelegung[r] += gruppe.size();
+		if (this._regel_forciere_selben_klausurstart_pro_raum)
+			this._raumZuKlausurstart[r] = this._klausurGruppeZuKlausurstart[kg];
 		if (this._regel_forciere_selbe_klausurdauer_pro_raum)
 			this._raumZuKlausurdauer[r] = this._klausurGruppeZuKlausurdauer[kg];
 		this._klausurGruppeZuRaum[kg] = this._raumAt[r];

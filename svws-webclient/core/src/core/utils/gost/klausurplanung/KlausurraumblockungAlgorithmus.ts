@@ -22,14 +22,15 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 	 * <br>Die Zuordnung ist im {@link GostKlausurraumRich#schuelerklausurterminIDs}-Objekt zu finden.
 	 *
 	 * <br>
-	 * <br>Harte Kriterien:
+	 * <br>Obligatorische Kriterien:
 	 * <br>- Die Raumkapazität darf nicht überschritten werden
 	 * <br>- Es dürfen nur Klausuren in einen Raum geblockt werden, die dieselbe Startzeit haben.
 	 * <br>
-	 * <br>Weiche Kriterien (mit zugeordneter Güte von 0 ... 1):
-	 * <br>- Möglichst gleiche Klausurlängen in einem Raum.
-	 * <br>- Möglichst geringe Raumanzahl.
-	 * <br>- Möglichst Klausuren des selben Kurses im selben Raum.
+	 * <br>Fakultative Kriterien:
+	 * <br>- {@link GostKlausurraumblockungKonfiguration#_regel_forciere_selbe_klausurdauer_pro_raum}
+	 * <br>- {@link GostKlausurraumblockungKonfiguration#_regel_forciere_selbe_kursklausur_im_selben_raum}
+	 * <br>- {@link GostKlausurraumblockungKonfiguration#_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume}
+	 * <br>- {@link GostKlausurraumblockungKonfiguration#_regel_optimiere_blocke_in_moeglichst_wenig_raeume}
 	 *
 	 * @param config   		  Die Konfiguration und die Eingabedaten.
 	 */

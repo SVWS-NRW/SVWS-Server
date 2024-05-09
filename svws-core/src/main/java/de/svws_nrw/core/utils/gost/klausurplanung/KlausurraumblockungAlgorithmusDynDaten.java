@@ -27,17 +27,20 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private final boolean _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
 	private final boolean _regel_forciere_selbe_kursklausur_im_selben_raum;
 	private final boolean _regel_forciere_selbe_klausurdauer_pro_raum;
+	private final boolean _regel_forciere_selben_klausurstart_pro_raum;
 
-	private final int _raumAnzahl;
-	private final @NotNull GostKlausurraumRich @NotNull [] _raumAt;
-	private final @NotNull int[] _raumZuBelegung;     // dynamisch
-	private final @NotNull int[] _raumZuKlausurdauer; // dynamisch
+	private final int _raumAnzahl;                                  // statisch
+	private final @NotNull GostKlausurraumRich @NotNull [] _raumAt; // statisch
+	private final @NotNull int[] _raumZuBelegung;                   // dynamisch
+	private final @NotNull int[] _raumZuKlausurdauer;               // dynamisch
+	private final @NotNull int[] _raumZuKlausurstart;               // dynamisch
 
-	private final int _klausurGruppenAnzahl;
-	private final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _klausurGruppen;
-	private final @NotNull int[] _klausurGruppeZuKlausurdauer;
-	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaum;     // dynamisch
-	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaumSave; // dynamisch (nur zur Speicherung)
+	private final int _klausurGruppenAnzahl;                                                            // statisch
+	private final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _klausurGruppen; // statisch
+	private final @NotNull int[] _klausurGruppeZuKlausurdauer;                                          // statisch
+	private final @NotNull int[] _klausurGruppeZuKlausurstart;                                          // statisch
+	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaum;                                  // dynamisch
+	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaumSave;                              // halb-dynamisch (nur zur Speicherung)
 
 	/**
 	 * Initialisiert alle Datenstrukturen um diese für schnelle Manipulation zur Verfügung zu stellen.
@@ -53,12 +56,14 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume =  config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
 		_regel_forciere_selbe_kursklausur_im_selben_raum =  config._regel_forciere_selbe_kursklausur_im_selben_raum;
 		_regel_forciere_selbe_klausurdauer_pro_raum =  config._regel_forciere_selbe_klausurdauer_pro_raum;
+		_regel_forciere_selben_klausurstart_pro_raum = config._regel_forciere_selben_klausurstart_pro_raum;
 
 		// Räume kopieren.
 		_raumAnzahl = config.raeume.size();
 		_raumAt = new GostKlausurraumRich[_raumAnzahl];
 		_raumZuBelegung = new int[_raumAnzahl];
 		_raumZuKlausurdauer = new int[_raumAnzahl];
+		_raumZuKlausurstart = new int[_raumAnzahl];
 		for (int i = 0; i < _raumAnzahl; i++)
 			_raumAt[i] = config.raeume.get(i);
 
@@ -68,8 +73,11 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		_klausurGruppeZuRaum = new GostKlausurraumRich[_klausurGruppenAnzahl];
 		_klausurGruppeZuRaumSave = new GostKlausurraumRich[_klausurGruppenAnzahl];
 		_klausurGruppeZuKlausurdauer = new int[_klausurGruppenAnzahl];
-		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++)
+		_klausurGruppeZuKlausurstart = new int[_klausurGruppenAnzahl];
+		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++) {
 			_klausurGruppeZuKlausurdauer[kg] = _gibErsteKlausurDerGruppe(kg).dauer;
+			_klausurGruppeZuKlausurstart[kg] = _gibErsteKlausurDerGruppe(kg).startzeit;
+		}
 
 		// Zuordnung erzeugen.
 		aktionZustandClear();
@@ -103,6 +111,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		for (int r = 0; r < _raumAnzahl; r++) {
 			_raumZuBelegung[r] = 0;
 			_raumZuKlausurdauer[r] = -1; // keine Zuordnung
+			_raumZuKlausurstart[r] = -1; // keine Zuordnung
 		}
 
 		// Alle Klausuren leeren.
@@ -117,12 +126,18 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		if (_raumZuBelegung[r] + gruppe.size() > _raumAt[r].groesse)
 			return false;
 
-		// Ist die Klausurdauer in dem Raum überhaupt erlaubt?
+		// Ist die Klausur-Startzeit in dem Raum überhaupt erlaubt?
+		if ((_regel_forciere_selben_klausurstart_pro_raum) && (_raumZuKlausurstart[r] >= 0) && (_klausurGruppeZuKlausurstart[kg] != _raumZuKlausurstart[r]))
+			return false;
+
+		// Ist die Klausur-Dauer in dem Raum überhaupt erlaubt?
 		if ((_regel_forciere_selbe_klausurdauer_pro_raum) && (_raumZuKlausurdauer[r] >= 0) && (_klausurGruppeZuKlausurdauer[kg] != _raumZuKlausurdauer[r]))
 			return false;
 
 		// Raum-Zuordnungen
 		_raumZuBelegung[r] += gruppe.size();
+		if (_regel_forciere_selben_klausurstart_pro_raum)
+			_raumZuKlausurstart[r] = _klausurGruppeZuKlausurstart[kg];
 		if (_regel_forciere_selbe_klausurdauer_pro_raum)
 			_raumZuKlausurdauer[r] = _klausurGruppeZuKlausurdauer[kg];
 

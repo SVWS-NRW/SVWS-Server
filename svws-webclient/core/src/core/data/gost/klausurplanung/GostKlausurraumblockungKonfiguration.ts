@@ -42,6 +42,11 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	 */
 	public _regel_forciere_selbe_klausurdauer_pro_raum : boolean = false;
 
+	/**
+	 * TRUE, dann dürfen nur die selben Klausurstart-Zeiten in einen Raum.
+	 */
+	public _regel_forciere_selben_klausurstart_pro_raum : boolean = true;
+
 
 	public constructor() {
 		super();
@@ -83,6 +88,9 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 		if (typeof obj._regel_forciere_selbe_klausurdauer_pro_raum === "undefined")
 			 throw new Error('invalid json format, missing attribute _regel_forciere_selbe_klausurdauer_pro_raum');
 		result._regel_forciere_selbe_klausurdauer_pro_raum = obj._regel_forciere_selbe_klausurdauer_pro_raum;
+		if (typeof obj._regel_forciere_selben_klausurstart_pro_raum === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_forciere_selben_klausurstart_pro_raum');
+		result._regel_forciere_selben_klausurstart_pro_raum = obj._regel_forciere_selben_klausurstart_pro_raum;
 		return result;
 	}
 
@@ -117,6 +125,7 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 		result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume + ',';
 		result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum + ',';
 		result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
+		result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -166,6 +175,9 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 		}
 		if (typeof obj._regel_forciere_selbe_klausurdauer_pro_raum !== "undefined") {
 			result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
+		}
+		if (typeof obj._regel_forciere_selben_klausurstart_pro_raum !== "undefined") {
+			result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
