@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.pdf;
 
-import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
@@ -27,7 +27,7 @@ import java.util.zip.ZipOutputStream;
 public final class PdfFactory {
 
 	/** Die Daten für die Report-Ausgabe. */
-	private final ReportingAusgabedaten reportingAusgabedaten;
+	private final ReportingParameter reportingParameter;
 
 	/** Die Template-Definition für die Erstellung der Html-Datei */
 	private final HtmlTemplateDefinition htmlTemplateDefinition;
@@ -46,13 +46,13 @@ public final class PdfFactory {
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen Html-Inhalten zu erzeugen.
 	 *
 	 * @param htmlBuilders Eine Map mit den Dateinamen und Html-Dateiinhalten.
-	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
+	 * @param reportingParameter Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 * @param logger Logger, der die Erstellung der Reports protokolliert.
 	 * @param log Log, das die Erstellung des Reports protokolliert.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) throws ApiOperationException {
+	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log) throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
@@ -69,17 +69,17 @@ public final class PdfFactory {
 
 		this.htmlBuilders = htmlBuilders;
 
-		// Validiere Reporting-Ausgabedaten
-		if (reportingAusgabedaten == null)
+		// Validiere Reporting-Parameter
+		if (reportingParameter == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Daten zur Ausgabe im Report übergeben.");
 
-		this.reportingAusgabedaten = reportingAusgabedaten;
+		this.reportingParameter = reportingParameter;
 
 		// Validiere die Angaben zur Vorlage für den Report
-		if (ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage) == null)
+		if (ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage) == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine gültige Report-Vorlage übergeben.");
 
-		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage));
+		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage));
 
 		if (this.htmlTemplateDefinition == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Template-Definitionen inkonsistent.");
@@ -90,15 +90,13 @@ public final class PdfFactory {
 	 * Erstellt eine Response in Form einer einzelnen PDF-Datei oder ZIP-Datei mit den mehreren generierten PDF-Dateien.
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response createPdfResponse() {
 
 		try {
 			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
 			if (!pdfBuilders.isEmpty()) {
-				if (!reportingAusgabedaten.einzelausgabeHauptdaten || pdfBuilders.size() == 1) {
+				if (!reportingParameter.einzelausgabeHauptdaten || pdfBuilders.size() == 1) {
 					return pdfBuilders.getFirst().getPdfResponse();
 				}
 				final byte[] zipData = createZIP(pdfBuilders);

@@ -123,7 +123,7 @@ import { Raum } from '../core/data/schule/Raum';
 import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
-import { ReportingAusgabedaten } from '../core/data/reporting/ReportingAusgabedaten';
+import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
 import { Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
@@ -8321,15 +8321,15 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
-	 * @param {ReportingAusgabedaten} data - der Request-Body für die HTTP-Methode
+	 * @param {ReportingParameter} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
 	 */
-	public async pdfReport(data : ReportingAusgabedaten, schema : string) : Promise<ApiFile> {
+	public async pdfReport(data : ReportingParameter, schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/reporting/ausgabe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReportingAusgabedaten.transpilerToJSON(data);
+		const body : string = ReportingParameter.transpilerToJSON(data);
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
 	}

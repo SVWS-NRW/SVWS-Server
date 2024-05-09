@@ -3,7 +3,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
 
-export class ReportingAusgabedaten extends JavaObject {
+export class ReportingParameter extends JavaObject {
 
 	/**
 	 * Die ID des Schuljahres, auf den sich die Ausgabe des Reports beziehen soll.
@@ -51,16 +51,16 @@ export class ReportingAusgabedaten extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.reporting.ReportingAusgabedaten';
+		return 'de.svws_nrw.core.data.reporting.ReportingParameter';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.reporting.ReportingAusgabedaten'].includes(name);
+		return ['de.svws_nrw.core.data.reporting.ReportingParameter'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): ReportingAusgabedaten {
+	public static transpilerFromJSON(json : string): ReportingParameter {
 		const obj = JSON.parse(json);
-		const result = new ReportingAusgabedaten();
+		const result = new ReportingParameter();
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -92,7 +92,7 @@ export class ReportingAusgabedaten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : ReportingAusgabedaten) : string {
+	public static transpilerToJSON(obj : ReportingParameter) : string {
 		let result = '{';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
@@ -129,7 +129,7 @@ export class ReportingAusgabedaten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<ReportingAusgabedaten>) : string {
+	public static transpilerToJSONPatch(obj : Partial<ReportingParameter>) : string {
 		let result = '{';
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
@@ -184,6 +184,6 @@ export class ReportingAusgabedaten extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_reporting_ReportingAusgabedaten(obj : unknown) : ReportingAusgabedaten {
-	return obj as ReportingAusgabedaten;
+export function cast_de_svws_nrw_core_data_reporting_ReportingParameter(obj : unknown) : ReportingParameter {
+	return obj as ReportingParameter;
 }

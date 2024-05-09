@@ -15,8 +15,7 @@ import {
 	GostHalbjahr,
 	SchuelerStatus,
 	HashSet,
-	ReportingAusgabedaten,
-	ReportingReportvorlage
+	ReportingReportvorlage, ReportingParameter
 } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -24,6 +23,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
+import {routeApp} from "~/router/apps/RouteApp";
 
 interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -785,47 +785,47 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
-		const reportingAusgabedaten = new ReportingAusgabedaten();
-		reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
-		reportingAusgabedaten.idsHauptdaten = new ArrayList<number>();
-		reportingAusgabedaten.idsHauptdaten.add(this.ergebnismanager.getErgebnis().id);
-		reportingAusgabedaten.einzelausgabeHauptdaten = false;
-		reportingAusgabedaten.idsDetaildaten = new ArrayList<number>();
-		reportingAusgabedaten.einzelausgabeDetaildaten = false;
-		reportingAusgabedaten.detailLevel = 0;
+		const reportingParameter = new ReportingParameter();
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;;
+		reportingParameter.idsHauptdaten = new ArrayList<number>();
+		reportingParameter.idsHauptdaten.add(this.ergebnismanager.getErgebnis().id);
+		reportingParameter.einzelausgabeHauptdaten = false;
+		reportingParameter.idsDetaildaten = new ArrayList<number>();
+		reportingParameter.einzelausgabeDetaildaten = false;
+		reportingParameter.detailLevel = 0;
 		const list = new ArrayList<number>();
 		switch (title) {
 			case "Schülerliste markierte Kurse":
 				for (const kurs of this.kursAuswahl.value)
 					list.add(kurs);
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
-				reportingAusgabedaten.idsDetaildaten = list;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kurse-Schienen-Zuordnung":
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kurse-Schienen-Zuordnung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
-				reportingAusgabedaten.idsDetaildaten = list;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
-				reportingAusgabedaten.idsDetaildaten = list;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kursbelegung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
-				reportingAusgabedaten.idsDetaildaten = list;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kursbelegung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
-				reportingAusgabedaten.idsDetaildaten = list;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			default:
 				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}

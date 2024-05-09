@@ -1,5 +1,13 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
-import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, ReportingAusgabedaten, ReportingReportvorlage, SimpleOperationResponse } from "@core";
+import {
+	ArrayList,
+	DeveloperNotificationException,
+	GostBelegpruefungsArt,
+	OpenApiError,
+	ReportingParameter,
+	ReportingReportvorlage,
+	SimpleOperationResponse
+} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -7,6 +15,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerLaufbahninfo } from "../../schueler/laufbahninfo/RouteSchuelerLaufbahninfo";
+import {routeApp} from "~/router/apps/RouteApp";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {
@@ -111,20 +120,20 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number, einzelpdfs: boolean) => {
 		try {
 			api.status.start();
-			const reportingAusgabedaten = new ReportingAusgabedaten();
-			reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
-			reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
-			reportingAusgabedaten.idsHauptdaten = list;
-			reportingAusgabedaten.einzelausgabeHauptdaten = einzelpdfs;
-			reportingAusgabedaten.detailLevel = detaillevel;
+			const reportingParameter = new ReportingParameter();
+			reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+			reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+			reportingParameter.idsHauptdaten = list;
+			reportingParameter.einzelausgabeHauptdaten = einzelpdfs;
+			reportingParameter.detailLevel = detaillevel;
 			switch (title) {
 				case 'Laufbahnwahlbogen':
-					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+					return await api.server.pdfReport(reportingParameter, api.schema);
 				case 'Laufbahnwahlbogen (nur Belegung)':
-					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+					return await api.server.pdfReport(reportingParameter, api.schema);
 				case 'Ergebnisliste Laufbahnwahlen':
-					reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getBezeichnung();
-					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+					reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getBezeichnung();
+					return await api.server.pdfReport(reportingParameter, api.schema);
 				default:
 					throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
 			}

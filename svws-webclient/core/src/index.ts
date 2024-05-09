@@ -257,7 +257,7 @@ export { LehrerPersonalabschnittsdatenLehrerfunktion } from './core/data/lehrer/
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { OAuth2ClientSecret } from './core/data/oauth2/OAuth2ClientSecret';
-export { ReportingAusgabedaten } from './core/data/reporting/ReportingAusgabedaten';
+export { ReportingParameter } from './core/data/reporting/ReportingParameter';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';

@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
@@ -51,11 +52,17 @@ public class ReportingRepository {
 	/** Die Verbindung zu Datenbank, um Daten abrufen zu können. */
 	private final DBEntityManager conn;
 
+	/** Die Reporting-Parameter, mit IDs und weiteren Informationen, die für den Druck verwendet werden sollen. */
+	private final ReportingParameter reportingParameter;
+
 	/** Die Stammdaten der Schule zur Datenbankanbindung. */
 	private final SchuleStammdaten schulstammdaten;
 
 	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
 	private final Schuljahresabschnitt aktuellerSchuljahresabschnitt;
+
+	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
+	private final Schuljahresabschnitt auswahlSchuljahresabschnitt;
 
 	/** Stellt den Katalog der Förderschwerpunkte über eine Map zur Förderschwerpunkt-ID zur Verfügung */
 	private final Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
@@ -71,6 +78,9 @@ public class ReportingRepository {
 
 	/** Stellt die Daten von bereits abgerufenen aktuellen Lernabschnitten zur Schüler-ID zur Verfügung. */
 	private final Map<Long, SchuelerLernabschnittsdaten> mapAktuelleLernabschnittsdaten = new HashMap<>();
+
+	/** Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung. */
+	private final Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten = new HashMap<>();
 
 	/** Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung. */
 	private final Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten = new HashMap<>();
@@ -110,20 +120,25 @@ public class ReportingRepository {
 	 *
 	 * <ul>
 	 *     <li>Stammdaten der Schule</li>
-	 *     <li>Schuljahresabschnitte und aktueller Schuljahresabschnitt</li>
+	 *     <li>Schuljahresabschnitte und aktueller sowie zu druckender Schuljahresabschnitt</li>
 	 *     <li>Kataloge: Förderschwerpunkte, Orte, Ortsteile</li>
-	 *     <li>Maps: Jahrgänge, Klassen des aktuellen Schuljahresabschnitts</li>
+	 *     <li>Maps: Jahrgänge, Klassen des aktuellen und zu druckenden Schuljahresabschnitts</li>
 	 *     <li>Map: Lernabschnittsdaten der Schüler</li>
 	 * </ul>
 	 *
 	 * @param conn	Die Verbindung zur Datenbank der Schule.
+	 * @param reportingParameter Die Daten, die für die Generierung eines Reports verwendet werden sollen.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ReportingRepository(final DBEntityManager conn) throws ApiOperationException {
+	public ReportingRepository(final DBEntityManager conn, final ReportingParameter reportingParameter) throws ApiOperationException {
 		if (conn == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Datenbankverbindung wurde nicht angegeben.");
 		this.conn = conn;
+
+		if (reportingParameter == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Parameter für die Reporterzeugung übergeben.");
+		this.reportingParameter = reportingParameter;
 
 		// Ermittle die Daten der Schule. Wenn diese nicht gefunden wird oder sie keinen aktuellen Schuljahresabschnitt besitzt, dann wird ein Fehler geworfen.
 		schulstammdaten = DataSchuleStammdaten.getStammdaten(this.conn);
@@ -132,6 +147,11 @@ public class ReportingRepository {
 		mapSchuljahresabschnitte = new DataSchuljahresabschnitte(this.conn).getAbschnitte().stream().collect(Collectors.toMap(a -> a.id, a -> a));
 		aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt).toList().getFirst();
 
+		if (this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id || this.reportingParameter.idSchuljahresabschnitt < 0 || this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
+			auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
+		else
+			auswahlSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().getFirst();
+
 		katalogFoerderschwerpunkte = new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 		katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 		katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
@@ -139,6 +159,8 @@ public class ReportingRepository {
 
 		mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
 		mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream().collect(Collectors.toMap(k -> k.id, k -> k));
+		if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
+			mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream().collect(Collectors.toMap(k -> k.id, k -> k)));
 
 		// TODO: Die Map der Lehrer noch mit den aktuell aktiven Lehrern füllen.
 		mapLehrerStammdaten = new HashMap<>();
@@ -164,6 +186,14 @@ public class ReportingRepository {
 		return conn;
 	}
 
+	/**
+	 * Die Reporting-Parameter, mit IDs und weiteren Informationen, die für den Druck verwendet werden sollen.
+	 * @return Die übergebenen Reporting-Parameter
+	 * */
+	public ReportingParameter reportingParameter() {
+		return reportingParameter;
+	}
+
 
 
 	/**
@@ -174,12 +204,21 @@ public class ReportingRepository {
 		return schulstammdaten;
 	}
 
+
 	/**
 	 * Stellt den aktuellen Schuljahresabschnitt der Schule aus der Datenbankverbindung zur Verfügung
 	 * @return Aktueller Schuljahresabschnitt der Schule
 	 */
 	public Schuljahresabschnitt aktuellerSchuljahresabschnitt() {
 		return aktuellerSchuljahresabschnitt;
+	}
+
+	/**
+	 * Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde
+	 * @return Schuljahresabschnitt der Auswahl für den Druck
+	 */
+	public Schuljahresabschnitt auswahlSchuljahresabschnitt() {
+		return auswahlSchuljahresabschnitt;
 	}
 
 
@@ -217,13 +256,20 @@ public class ReportingRepository {
 	}
 
 
-
 	/**
 	 * Stellt die Daten von bereits abgerufenen aktuellen Lernabschnitten zur Schüler-ID zur Verfügung.
 	 * @return Map der Daten von bereits abgerufenen aktuellen Lernabschnitten.
 	 */
 	public Map<Long, SchuelerLernabschnittsdaten> mapAktuelleLernabschnittsdaten() {
 		return mapAktuelleLernabschnittsdaten;
+	}
+
+	/**
+	 * Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung.
+	 * @return Map der Daten von bereits abgerufenen ausgewählten Lernabschnitten.
+	 */
+	public Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten() {
+		return mapAuswahlLernabschnittsdaten;
 	}
 
 	/**

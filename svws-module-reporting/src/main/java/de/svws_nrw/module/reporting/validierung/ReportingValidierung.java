@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * TODO
+ * TODO: Doku
  */
 public class ReportingValidierung {
 

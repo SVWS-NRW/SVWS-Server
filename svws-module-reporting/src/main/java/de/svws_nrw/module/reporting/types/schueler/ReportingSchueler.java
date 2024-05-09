@@ -33,6 +33,9 @@ public class ReportingSchueler {
 	/** Das Aufnahmedatum des Schülers. */
 	private String aufnahmedatum;
 
+	/** Daten des ausgewählten Lernabschnitts. */
+	private ReportingSchuelerLernabschnitt auswahlLernabschnitt = null;
+
 	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
 	private String bemerkungen;
 
@@ -186,6 +189,7 @@ public class ReportingSchueler {
 	 * @param aktuellerLernabschnitt Daten des aktuellen Lernabschnitts.
 	 * @param anmeldedatum Das Anmeldedatum des Schülers.
 	 * @param aufnahmedatum Das Aufnahmedatum des Schülers.
+	 * @param auswahlLernabschnitt Daten des ausgewählten Lernabschnitts.
 	 * @param bemerkungen Textfeld mit Bemerkungen zum Schülerdatensatz.
 	 * @param druckeKonfessionAufZeugnisse Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll.
 	 * @param emailPrivat Die private Email-Adresse des Schülers.
@@ -236,10 +240,11 @@ public class ReportingSchueler {
 	 * @param wohnortsteilname Der Name des Ortsteils des Wohnorts des Schülers.
 	 * @param zuzugsjahr Das Zuzugsjahr des Schülers.
 	 */
-	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final String bemerkungen, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
+	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt, final String bemerkungen, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;
+		this.auswahlLernabschnitt = auswahlLernabschnitt;
 		this.bemerkungen = bemerkungen;
 		this.druckeKonfessionAufZeugnisse = druckeKonfessionAufZeugnisse;
 		this.emailPrivat = emailPrivat;
@@ -341,6 +346,22 @@ public class ReportingSchueler {
 	 */
 	public void setAufnahmedatum(final String aufnahmedatum) {
 		this.aufnahmedatum = aufnahmedatum;
+	}
+
+	/**
+	 * Daten des ausgewählten Lernabschnitts.
+	 * @return Inhalt des Feldes auswahlLernabschnitt
+	 */
+	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
+		return auswahlLernabschnitt;
+	}
+
+	/**
+	 * Daten des ausgewählten Lernabschnitts wird gesetzt.
+	 * @param auswahlLernabschnitt Neuer Wert für das Feld auswahlLernabschnitt
+	 */
+	public void setAuswahlLernabschnitt(final ReportingSchuelerLernabschnitt auswahlLernabschnitt) {
+		this.auswahlLernabschnitt = auswahlLernabschnitt;
 	}
 
 	/**

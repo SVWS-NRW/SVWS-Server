@@ -1,7 +1,7 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -37,7 +37,7 @@ public class APIReporting {
 	 * einzige Report-Datei oder eine ZIP-Datei mit einzelnen Dateien zurückgegeben.
      *
      * @param schema das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param reportingAusgabedaten Objekt mit den Daten und Einstellungen für den zu erstellenden Report.
+	 * @param reportingParameter Objekt mit den Daten und Einstellungen für den zu erstellenden Report.
      * @param request die Informationen zur HTTP-Anfrage
      *
      * @return Der Report (bzw. ZIP-Datei mit einzelnen Dateien) mit den angeforderten Daten
@@ -60,10 +60,10 @@ public class APIReporting {
 	public Response pdfReport(
 		@PathParam("schema") final String schema,
 		@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt werden soll.", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReportingAusgabedaten.class)))
-		final ReportingAusgabedaten reportingAusgabedaten, @Context final HttpServletRequest request) {
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReportingParameter.class)))
+		final ReportingParameter reportingParameter, @Context final HttpServletRequest request) {
 			return DBBenutzerUtils.runWithTransaction(
-				conn ->	new ReportingFactory(conn, reportingAusgabedaten).createReportResponse(),
+				conn ->	new ReportingFactory(conn, reportingParameter).createReportResponse(),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN,

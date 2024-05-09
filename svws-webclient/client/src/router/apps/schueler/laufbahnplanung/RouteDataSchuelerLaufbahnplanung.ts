@@ -11,12 +11,13 @@ import {
 	GostHalbjahr,
 	DeveloperNotificationException,
 	ArrayList,
-	ReportingAusgabedaten, ReportingAusgabeformat, ReportingReportvorlage
+	ReportingAusgabeformat, ReportingReportvorlage, ReportingParameter
 } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
+import {routeApp} from "~/router/apps/RouteApp";
 
 
 interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
@@ -167,18 +168,18 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	getPdfWahlbogen = async(title: string) => {
 		const list = new ArrayList<number>();
 		list.add(this.auswahl.id);
-		const reportingAusgabedaten = new ReportingAusgabedaten();
-		reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
-		reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
-		reportingAusgabedaten.idsHauptdaten = list;
-		reportingAusgabedaten.einzelausgabeHauptdaten = false;
+		const reportingParameter = new ReportingParameter();
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;;
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+		reportingParameter.idsHauptdaten = list;
+		reportingParameter.einzelausgabeHauptdaten = false;
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				reportingAusgabedaten.detailLevel = 1;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.detailLevel = 1;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				reportingAusgabedaten.detailLevel = 0;
-				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
+				reportingParameter.detailLevel = 0;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			default:
 				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
 		}

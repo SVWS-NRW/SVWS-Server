@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting;
 
-import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
@@ -22,7 +22,7 @@ public final class ReportingFactory {
 	private final DBEntityManager conn;
 
 	/** Die Daten für die Report-Ausgabe. */
-	private final ReportingAusgabedaten reportingAusgabedaten;
+	private final ReportingParameter reportingParameter;
 
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log = new LogConsumerList();
@@ -35,11 +35,11 @@ public final class ReportingFactory {
 	 * Erzeugt eine neue Reporting-Factory, um einen Report zu erzeugen.
 	 *
 	 * @param conn Die Verbindung zur Datenbank.
-	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
+	 * @param reportingParameter Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ReportingFactory(final DBEntityManager conn, final ReportingAusgabedaten reportingAusgabedaten) throws ApiOperationException {
+	public ReportingFactory(final DBEntityManager conn, final ReportingParameter reportingParameter) throws ApiOperationException {
 
 		this.logger.addConsumer(log);
 
@@ -49,11 +49,11 @@ public final class ReportingFactory {
 
 		this.conn = conn;
 
-		// Validiere Reporting-Ausgabedaten
-		if (reportingAusgabedaten == null)
+		// Validiere Reporting-Parameter
+		if (reportingParameter == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Daten zur Ausgabe im Report übergeben.");
 
-		this.reportingAusgabedaten = reportingAusgabedaten;
+		this.reportingParameter = reportingParameter;
 	}
 
 
@@ -66,11 +66,11 @@ public final class ReportingFactory {
 	public Response createReportResponse() {
 
 		try {
-            return switch (ReportingAusgabeformat.getByID(reportingAusgabedaten.ausgabeformat)) {
-                case ReportingAusgabeformat.HTML ->	new HtmlFactory(conn, reportingAusgabedaten, logger, log).createHtmlResponse();
+            return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
+                case ReportingAusgabeformat.HTML ->	new HtmlFactory(conn, reportingParameter, logger, log).createHtmlResponse();
                 case ReportingAusgabeformat.PDF ->	{
-						final HtmlFactory htmlFactory = new HtmlFactory(conn, reportingAusgabedaten, logger, log);
-						yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingAusgabedaten, logger, log).createPdfResponse();
+						final HtmlFactory htmlFactory = new HtmlFactory(conn, reportingParameter, logger, log);
+						yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingParameter, logger, log).createPdfResponse();
 					}
                 case null -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein bekanntes Ausgabeformat übergeben.");
             };

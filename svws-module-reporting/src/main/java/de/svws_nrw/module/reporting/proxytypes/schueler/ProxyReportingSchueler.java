@@ -61,6 +61,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		super(null,
 			schuelerStammdaten.anmeldedatum,
 			schuelerStammdaten.aufnahmedatum,
+			null,
 			schuelerStammdaten.bemerkungen,
 			schuelerStammdaten.druckeKonfessionAufZeugnisse,
 			schuelerStammdaten.emailPrivat,
@@ -158,6 +159,31 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	}
 
 	/**
+	 * Stellt die Daten des ausgewählten Lernabschnitts des Schülers zur Verfügung.
+	 * @return Daten des ausgewählten Lernabschnitts, wenn dieser vorhanden ist.
+	 */
+	@Override
+	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
+		if (super.auswahlLernabschnitt() == null) {
+			if (this.reportingRepository.mapAuswahlLernabschnittsdaten().containsKey(this.id())) {
+				super.setAuswahlLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, this.reportingRepository.mapAuswahlLernabschnittsdaten().get(this.id())));
+			} else {
+				if (!lernabschnitte().isEmpty()) {
+					if (lernabschnitte().size() == 1) {
+						super.setAuswahlLernabschnitt(lernabschnitte().getFirst());
+					} else {
+						super.setAuswahlLernabschnitt(lernabschnitte().stream()
+							.filter(a -> a.wechselNr() == 0)
+							.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList()
+							.getFirst());
+					}
+				}
+			}
+		}
+		return super.auswahlLernabschnitt();
+	}
+
+	/**
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.
 	 *
 	 * @return Daten zum Abitur in der GOSt
@@ -213,8 +239,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				e.printStackTrace();
 			}
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
-			if (schuelerLernabschnittsdaten.isEmpty())
+			if (schuelerLernabschnittsdaten.isEmpty()) {
+				super.setAktuellerLernabschnitt(null);
+				super.setAuswahlLernabschnitt(null);
 				return super.lernabschnitte();
+			}
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
 				.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
 				.sorted(Comparator
@@ -226,11 +255,20 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			if (schuelerLernabschnittsdaten.size() == 1) {
 				this.reportingRepository.mapAktuelleLernabschnittsdaten()
 					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
+				if (reportingRepository.reportingParameter().idSchuljahresabschnitt == reportingRepository.mapAktuelleLernabschnittsdaten().get(super.id()).schuljahresabschnitt)
+					this.reportingRepository.mapAuswahlLernabschnittsdaten()
+						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
 			} else {
 				this.reportingRepository.mapAktuelleLernabschnittsdaten()
 					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
 						.filter(a -> a.wechselNr == 0)
 						.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
+						.toList()
+						.getFirst());
+				this.reportingRepository.mapAuswahlLernabschnittsdaten()
+					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
+						.filter(a -> a.wechselNr == 0)
+						.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id)
 						.toList()
 						.getFirst());
 			}

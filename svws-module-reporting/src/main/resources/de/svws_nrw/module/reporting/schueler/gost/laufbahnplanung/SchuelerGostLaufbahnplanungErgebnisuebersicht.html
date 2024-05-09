@@ -10,14 +10,14 @@
 		<div style="page-break-inside: avoid;" th:each="schueler,iterStatSchueler : ${Schueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml()}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Ergebnisse der Laufbahnplanungsprüfung <br/>' + 'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().aktuellesGOStHalbjahr()}">Ergebnisse der Laufbahnplanungsprüfung<br/>Abitur 2023 - Q1.2<br/></div>
+			<div class="pageTopRight" th:utext="'Ergebnisse der Laufbahnplanungsprüfung<br/>' + 'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().auswahlGOStHalbjahr()}">Ergebnisse der Laufbahnplanungsprüfung<br/>Abitur 2023 - Q1.2<br/></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 			<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table th:if="${iterStatSchueler.count == iterStatSchueler.first}" class="fixed-layout-100 no-space-pad">
 				<tr>
-					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Ergebnisse der Laufbahnprüfung - Abitur ' + schueler.gostLaufbahnplanung().abiturjahr() + ' - ' + schueler.gostLaufbahnplanung().aktuellesGOStHalbjahr()}">Ergebnisse der Laufbahnprüfung - Abitur 2023 - Q1.2</h3></td>
+					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Ergebnisse der Laufbahnprüfung - Abitur ' + schueler.gostLaufbahnplanung().abiturjahr() + ' - ' + schueler.gostLaufbahnplanung().auswahlGOStHalbjahr()}">Ergebnisse der Laufbahnprüfung - Abitur 2023 - Q1.2</h3></td>
 				</tr>
 			</table>
 			<table class="fixed-layout-100 no-space-pad">
@@ -76,7 +76,7 @@
 					<td></td>
 					<td>Fehler</td>
 				</tr>
-				<tr th:if="${(DruckparameterDetaillevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
+				<tr th:if="${(Parameter.detailLevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Fehler und Kommentare zur Gesamtlaufbahn:</u></p>
 						<ul th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
@@ -86,7 +86,7 @@
 					</td>
 					<td></td>
 				</tr>
-				<tr th:if="${DruckparameterDetaillevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
+				<tr th:if="${Parameter.detailLevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 						<ul>

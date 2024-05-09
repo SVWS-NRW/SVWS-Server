@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.html;
 
 import de.svws_nrw.base.ResourceUtils;
-import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
@@ -9,7 +9,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.ReportingErrorResponse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
-import de.svws_nrw.module.reporting.html.contexts.HtmlContextDruckparameter;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
@@ -42,7 +41,7 @@ public final class HtmlFactory {
 	private final DBEntityManager conn;
 
 	/** Die Daten für die Report-Ausgabe. */
-	private final ReportingAusgabedaten reportingAusgabedaten;
+	private final ReportingParameter reportingParameter;
 
 	/** Die Template-Definition für die Erstellung der Html-Datei */
 	private final HtmlTemplateDefinition htmlTemplateDefinition;
@@ -61,13 +60,13 @@ public final class HtmlFactory {
 	 * Erzeugt eine neue Html-Factory, um eine Html-Datei aus einem html-Template zu erzeugen.
 	 *
 	 * @param conn Die Verbindung zur Datenbank.
-	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
+	 * @param reportingParameter Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 * @param logger Logger, der die Erstellung der Reports protokolliert.
 	 * @param log Log, das die Erstellung des Reports protokolliert.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlFactory(final DBEntityManager conn, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) throws ApiOperationException {
+	public HtmlFactory(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log) throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
@@ -84,33 +83,33 @@ public final class HtmlFactory {
 
 		this.conn = conn;
 
-		// Validiere Reporting-Ausgabedaten
-		if (reportingAusgabedaten == null)
+		// Validiere Reporting-Parameter
+		if (reportingParameter == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Daten zur Ausgabe im Report übergeben.");
 
-		this.reportingAusgabedaten = reportingAusgabedaten;
+		this.reportingParameter = reportingParameter;
 
 		// Validiere die Angaben zur Vorlage für den Report.
-		if (ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage) == null)
+		if (ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage) == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine gültige Report-Vorlage übergeben.");
 
-		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage));
+		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage));
 
 		if (this.htmlTemplateDefinition == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Template-Definitionen inkonsistent.");
 
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
-		logger.logLn("Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
+		this.logger.logLn("Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
 		if (!conn.getUser().pruefeKompetenz(new HashSet<>(htmlTemplateDefinition.getBenutzerKompetenzen())))
 			throw new ApiOperationException(Status.FORBIDDEN, "Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 
 		// Validiere Hauptdaten-Angabe
-		if (reportingAusgabedaten.idsHauptdaten == null || reportingAusgabedaten.idsHauptdaten.isEmpty())
+		if (reportingParameter.idsHauptdaten == null || reportingParameter.idsHauptdaten.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Daten zum Drucken übergeben.");
 
 		// Setze Werte nach Validierung, falls null.
-		if (reportingAusgabedaten.idsDetaildaten == null)
-			this.reportingAusgabedaten.idsDetaildaten = new ArrayList<>();
+		if (reportingParameter.idsDetaildaten == null)
+			this.reportingParameter.idsDetaildaten = new ArrayList<>();
 
 		getContexts();
 	}
@@ -126,29 +125,29 @@ public final class HtmlFactory {
 		final ReportingValidierung reportingValidierung = new ReportingValidierung();
 
 		logger.logLn("Erzeuge Repository");
-		final ReportingRepository reportingRepository = new ReportingRepository(conn);
+		final ReportingRepository reportingRepository = new ReportingRepository(conn, reportingParameter);
 
 		logger.logLn("Erzeuge Datenkontext Schule");
 		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 		mapHtmlContexts.put("Schule", htmlContextSchule);
 
-		logger.logLn("Erzeuge Datenkontext Druckparameter");
-		final HtmlContextDruckparameter htmlContextDruckparameter = new HtmlContextDruckparameter(reportingAusgabedaten.detailLevel, reportingAusgabedaten.idsDetaildaten);
-		mapHtmlContexts.put("Druckparameter", htmlContextDruckparameter);
+//		logger.logLn("Erzeuge Datenkontext Druckparameter");
+//		final HtmlContextDruckparameter htmlContextDruckparameter = new HtmlContextDruckparameter(reportingParameter);
+//		mapHtmlContexts.put("Druckparameter", htmlContextDruckparameter);
 
 		// Betrachte die Html-Template-Definition und erzeuge damit die korrekten Contexts der Hauptdaten
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
 			case "SCHUELER" :
 				// Schüler-Context ist Hauptdatenquelle
-				logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s.".formatted(reportingAusgabedaten.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				reportingValidierung.validiereSchuelerDaten(reportingRepository, reportingAusgabedaten.idsHauptdaten, htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"), htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
-				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, reportingAusgabedaten.idsHauptdaten);
+				logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s.".formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				reportingValidierung.validiereSchuelerDaten(reportingRepository, reportingParameter.idsHauptdaten, htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"), htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
+				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
 				mapHtmlContexts.put("Schueler", htmlContextSchueler);
 				break;
 			case "GOST_KURSPLANUNG" :
 				// GOSt-Kursplanung-Blockungsergebnis-Context ist Hauptdatenquelle
-				logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s.".formatted(reportingAusgabedaten.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
-				final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, reportingAusgabedaten.idsHauptdaten.getFirst());
+				logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s.".formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
+				final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, reportingRepository);
 				mapHtmlContexts.put("Blockungsergebnis", htmlContextBlockung);
 				break;
 			default:
@@ -160,7 +159,7 @@ public final class HtmlFactory {
 
 
 	/**
-	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die HtmlBuilder, aus denen die Html-Inhalte erzuegt werden können"
+	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die HtmlBuilder, aus denen die Html-Inhalte erzeugt werden können.
 	 *
 	 * @return Eine Liste mit HtmlBuilder.
 	 *
@@ -181,7 +180,7 @@ public final class HtmlFactory {
 		try {
 			final List<HtmlBuilder> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
-				if (!reportingAusgabedaten.einzelausgabeHauptdaten || htmlBuilders.size() == 1) {
+				if (!reportingParameter.einzelausgabeHauptdaten || htmlBuilders.size() == 1) {
 					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlBuilders.getFirst().getDateiname(), StandardCharsets.UTF_8);
 					return Response.ok(htmlBuilders.getFirst().getHtml(), "text/html").header("Content-Disposition", "attachment; " + encodedFilename).build();
 				}
@@ -211,7 +210,7 @@ public final class HtmlFactory {
 
 		final List<HtmlBuilder> htmlBuilders = new ArrayList<>();
 
-		if (!reportingAusgabedaten.einzelausgabeHauptdaten) {
+		if (!reportingParameter.einzelausgabeHauptdaten) {
 			// Dateiname der Dateien aus den Daten erzeugen.
 			logger.logLn("Erzeuge Dateinamen.");
 			final String dateiname = getDateiname(mapHtmlContexts);
@@ -267,7 +266,7 @@ public final class HtmlFactory {
 		}
 
 		try {
-			// Prüfe, ob der erzeugte Dateiname konform zu System ist. Andernfalls wird hier eine Exception ausgelöst.
+			// Prüfe, ob der erzeugte Dateiname konform zu System ist, in dem versucht wird eine entsprechend benannte Datei zu erzeugen. Scheitert dies, so wird eine Exception ausgelöst.
 			(new File(dateiname + ".html")).getCanonicalFile();
 		} catch (final Exception e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der generierte Dateiname enthält ungültige Zeichen.");

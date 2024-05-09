@@ -17,7 +17,7 @@ import java.util.List;
 @XmlRootElement
 @Schema(description = "Die Daten und Einstellungen für die Report-Generierung.")
 @TranspilerDTO
-public class ReportingAusgabedaten {
+public class ReportingParameter {
 
 	/** Die ID des Schuljahres, auf den sich die Ausgabe des Reports beziehen soll. */
 	@Schema(description = "Der Schuljahresabschnitt, für den der Report erstellt werden soll.", example = "0")

@@ -7,12 +7,12 @@
 	</head>
 
 	<body>
-		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(DruckparameterIdsListe)}">
+		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(Parameter.idsDetaildaten)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung()} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefteAuflistung()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(DruckparameterIdsListe)}">Gesamtdruck Kurs 13/57</span></div>
+			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(Parameter.idsDetaildaten)}">Gesamtdruck Kurs 13/57</span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table class="fixed-layout-100 no-space-pad">

@@ -34,10 +34,10 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldungKategorie;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungFachwahl;
-import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -82,7 +82,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) throws ApiOperationException {
-		super(0, "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		this.reportingRepository = reportingRepository;
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind an die aus initSchuelerGostLaufbahnplanung.
@@ -97,6 +97,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			try {
 				return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
 			} catch (final ApiOperationException e) {
+				e.printStackTrace();
 				return new GostLaufbahnplanungBeratungsdaten();
 			}
 		});
@@ -104,6 +105,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			try {
 				return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
 			} catch (final ApiOperationException e) {
+				e.printStackTrace();
 				return new GostJahrgangsdaten();
 			}
 		});
@@ -122,11 +124,17 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			super.setPruefungsordnung("APO-GOSt");
 		super.setBeratungsbogenText(gostJahrgangsdaten.textBeratungsbogen);
 		super.setEmailText(gostJahrgangsdaten.textMailversand);
+
 		super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.' + this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
 		super.setAktuelleKlasse(reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel());
-		eintragBeratungGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt().jahrgang());
+		eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
+
+		super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.' + reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
+		super.setAuswahlKlasse(reportingSchueler.auswahlLernabschnitt().klasse().kuerzel());
+		eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
+
 		eintragBeratungslehrkraefteErgaenzen(schuelerBeratungsdaten, gostJahrgangsdaten);
-		super.setLetzterRuecklaufDatum(schuelerBeratungsdaten.beratungsdatum);
+		super.setLetzterRuecklaufDatum(schuelerBeratungsdaten.ruecklaufdatum);
 		super.setLetzteBeratungDatum(schuelerBeratungsdaten.beratungsdatum);
 		super.setKommentar(schuelerBeratungsdaten.kommentar);
 
@@ -186,25 +194,48 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 
 	/**
-	 * Setzt das Beratungshalbjahr für den Schüler
-	 * @param aktuellerJahrgang 	Der aktuelle Jahrgang des Schülers
+	 * Setzt das Beratungshalbjahr für den Schüler zum aktuellen Schuljahresabschnitt des Schülers
+	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
 	 */
-	private void eintragBeratungGostHalbjahrErgaenzen(final ReportingJahrgang aktuellerJahrgang) {
-		final int folgeHalbjahr = (this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt % 2) + 1;
+	private void eintragBeratungAktuellesGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
+		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
 		switch (folgeHalbjahr) {
-			case 2 -> super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
+			case 2 -> super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
 			case 1 -> {
-				if (aktuellerJahrgang.folgejahrgang() != null)
-					super.setFolgeGOStHalbjahr(aktuellerJahrgang.folgejahrgang().kuerzelStatistik() + ".1");
+				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
+					super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1");
 				else
-					super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
+					super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
 
 			}
-			default -> super.setFolgeGOStHalbjahr("");
+			default -> super.setFolgeAktuellesGOStHalbjahr("");
 		}
 		// Frühestes Beratungshalbjahr kann die EF.1 sein.
-		if (super.folgeGOStHalbjahr().compareTo("EF.1") < 0)
-			super.setFolgeGOStHalbjahr("EF.1");
+		if (super.folgeAktuellesGOStHalbjahr().compareTo("EF.1") < 0)
+			super.setFolgeAktuellesGOStHalbjahr("EF.1");
+	}
+
+
+	/**
+	 * Setzt das Beratungshalbjahr für den Schüler zum ausgewählten Schuljahresabschnitt des Schülers
+	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
+	 */
+	private void eintragBeratungAuswahlGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
+		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
+		switch (folgeHalbjahr) {
+			case 2 -> super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+			case 1 -> {
+				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
+					super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1");
+				else
+					super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+
+			}
+			default -> super.setFolgeAuswahlGOStHalbjahr("");
+		}
+		// Frühestes Beratungshalbjahr kann die EF.1 sein.
+		if (super.folgeAuswahlGOStHalbjahr().compareTo("EF.1") < 0)
+			super.setFolgeAuswahlGOStHalbjahr("EF.1");
 	}
 
 
@@ -222,6 +253,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					try {
 						return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
 					} catch (final ApiOperationException e) {
+						e.printStackTrace();
 						return new LehrerStammdaten();
 					}
 				})));
@@ -237,6 +269,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 							try {
 								return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id);
 							} catch (final ApiOperationException e) {
+								e.printStackTrace();
 								return new LehrerStammdaten();
 							}
 						})));

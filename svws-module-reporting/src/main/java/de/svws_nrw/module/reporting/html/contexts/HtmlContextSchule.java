@@ -1,9 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import org.thymeleaf.context.Context;
-
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import org.thymeleaf.context.Context;
 
 
 /**
@@ -27,8 +26,8 @@ public final class HtmlContextSchule extends HtmlContext {
 	private void erzeugeContext(final ReportingRepository reportingRepository) {
 		final Context context = new Context();
 
-		final ProxyReportingSchule proxyReportingSchule = new ProxyReportingSchule(reportingRepository);
-		context.setVariable("Schule", proxyReportingSchule);
+		context.setVariable("Schule", new ProxyReportingSchule(reportingRepository));
+		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}

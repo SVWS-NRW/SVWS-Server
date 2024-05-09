@@ -82,7 +82,7 @@ public enum HtmlTemplateDefinition {
 		"""
                 <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Pruefungsergebnisse"</p>
                 <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-                    <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().aktuellesGOStHalbjahr(), '.', '')}"></p>
+                    <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '')}"></p>
                 </th:block>
         """,
 		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -96,8 +96,8 @@ public enum HtmlTemplateDefinition {
         """
                 <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Wahlboegen"</p>
                 <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-                    <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
-                    <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeGOStHalbjahr(), '.', '')}"></p>
+                    <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+                    <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
                 </th:block>
         """,
 		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN));

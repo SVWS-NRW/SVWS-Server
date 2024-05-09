@@ -24,8 +24,14 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	/** Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn */
 	private String aktuelleKlasse;
 
-	/** Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt */
+	/** Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule */
 	private String aktuellesGOStHalbjahr;
+
+	/** Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn */
+	private String auswahlKlasse;
+
+	/** Das ausgewählte Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt  */
+	private String auswahlGOStHalbjahr;
 
 	/** Der Text der Schule für den Beratungsbogen */
 	private String beratungsbogenText;
@@ -43,7 +49,10 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	private List<ReportingGostLaufbahnplanungErgebnismeldung> fehler;
 
 	/** Das folgende Halbjahr der Oberstufenlaufbahn, also in der Regel das Halbjahr, für das die Beratung erfolgt */
-	private String folgeGOStHalbjahr;
+	private String folgeAktuellesGOStHalbjahr;
+
+	/** Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt */
+	private String folgeAuswahlGOStHalbjahr;
 
 	/** Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält. */
 	private List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise;
@@ -125,10 +134,13 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param abiturjahr Das Kalenderjahr, in dem die Abiturprüfung stattfindet
 	 * @param aktuelleKlasse Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn
-	 * @param aktuellesGOStHalbjahr Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt
+	 * @param aktuellesGOStHalbjahr Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
+	 * @param auswahlKlasse Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn
+	 * @param auswahlGOStHalbjahr Das ausgewählte Halbjahr der Oberstufenlaufbahn
 	 * @param beratungsbogenText Der Text der Schule für den Beratungsbogen
 	 * @param beratungslehrkraefte Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt
-	 * @param folgeGOStHalbjahr Das folgende Halbjahr der Oberstufenlaufbahn, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 * @param folgeAktuellesGOStHalbjahr Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 * @param folgeAuswahlGOStHalbjahr Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
 	 * @param emailText Der Text der Schule für den E-Mail-Versand
 	 * @param fachwahlen Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält.
 	 * @param fehler Eine Liste vom Typ Fehler, die alle Fehler zur Laufbahn und deren Daten enthält.
@@ -157,16 +169,19 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 * @param wochenstundenDurchschnittQPh Wochenstundendurchschnitt in der Qualifikationsphase
 	 * @param wochenstundenGesamt Wochenstundensumme der gesamten Laufbahn
 	 */
-	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr, final String beratungsbogenText, final List<ReportingLehrer> beratungslehrkraefte, final String emailText, final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen, final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler, final String folgeGOStHalbjahr, final List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise, final String letzteBeratungDatum, final ReportingLehrer letzteBeratungLehrkraft, final String letzterRuecklaufDatum, final String kommentar, final int kursanzahlEF1, final int kursanzahlEF2, final int kursanzahlQ11, final int kursanzahlQ12, final int kursanzahlQ21, final int kursanzahlQ22, final int kursanzahlQPh, final String pruefungsordnung, final int wochenstundenEF1, final int wochenstundenEF2, final int wochenstundenQ11, final int wochenstundenQ12, final int wochenstundenQ21, final int wochenstundenQ22, final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2, final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
+	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr, final String auswahlKlasse, final String auswahlGOStHalbjahr, final String beratungsbogenText, final List<ReportingLehrer> beratungslehrkraefte, final String emailText, final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen, final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler, final String folgeAktuellesGOStHalbjahr, final String folgeAuswahlGOStHalbjahr, final List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise, final String letzteBeratungDatum, final ReportingLehrer letzteBeratungLehrkraft, final String letzterRuecklaufDatum, final String kommentar, final int kursanzahlEF1, final int kursanzahlEF2, final int kursanzahlQ11, final int kursanzahlQ12, final int kursanzahlQ21, final int kursanzahlQ22, final int kursanzahlQPh, final String pruefungsordnung, final int wochenstundenEF1, final int wochenstundenEF2, final int wochenstundenQ11, final int wochenstundenQ12, final int wochenstundenQ21, final int wochenstundenQ22, final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2, final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
 		this.abiturjahr = abiturjahr;
 		this.aktuellesGOStHalbjahr = aktuellesGOStHalbjahr;
 		this.aktuelleKlasse = aktuelleKlasse;
+		this.auswahlGOStHalbjahr = auswahlGOStHalbjahr;
+		this.auswahlKlasse = auswahlKlasse;
 		this.beratungsbogenText = beratungsbogenText;
 		this.beratungslehrkraefte = beratungslehrkraefte;
 		this.emailText = emailText;
 		this.fachwahlen = fachwahlen;
 		this.fehler = fehler;
-		this.folgeGOStHalbjahr = folgeGOStHalbjahr;
+		this.folgeAktuellesGOStHalbjahr = folgeAktuellesGOStHalbjahr;
+		this.folgeAuswahlGOStHalbjahr = folgeAuswahlGOStHalbjahr;
 		this.hinweise = hinweise;
 		this.letzteBeratungDatum = letzteBeratungDatum;
 		this.letzteBeratungLehrkraft = letzteBeratungLehrkraft;
@@ -277,7 +292,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt
+	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
 	 * @return Inhalt des Feldes aktuellesGOStHalbjahr
 	 */
 	public String aktuellesGOStHalbjahr() {
@@ -285,11 +300,43 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt, wird gesetzt.
+	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule wird gesetzt.
 	 * @param aktuellesGOStHalbjahr Neuer Wert für das Feld aktuellesGOStHalbjahr
 	 */
 	public void setAktuellesGOStHalbjahr(final String aktuellesGOStHalbjahr) {
 		this.aktuellesGOStHalbjahr = aktuellesGOStHalbjahr;
+	}
+
+	/**
+	 * Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn
+	 * @return Inhalt des Feldes auswahlKlasse
+	 */
+	public String auswahlKlasse() {
+		return auswahlKlasse;
+	}
+
+	/**
+	 * Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn wird gesetzt.
+	 * @param auswahlKlasse Neuer Wert für das Feld auswahlKlasse
+	 */
+	public void setAuswahlKlasse(final String auswahlKlasse) {
+		this.auswahlKlasse = auswahlKlasse;
+	}
+
+	/**
+	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn
+	 * @return Inhalt des Feldes auswahlGOStHalbjahr
+	 */
+	public String auswahlGOStHalbjahr() {
+		return auswahlGOStHalbjahr;
+	}
+
+	/**
+	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn wird gesetzt.
+	 * @param auswahlGOStHalbjahr Neuer Wert für das Feld auswahlGOStHalbjahr
+	 */
+	public void setAuswahlGOStHalbjahr(final String auswahlGOStHalbjahr) {
+		this.auswahlGOStHalbjahr = auswahlGOStHalbjahr;
 	}
 
 	/**
@@ -374,19 +421,35 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das folgende Halbjahr der Oberstufenlaufbahn, also in der Regel das Halbjahr, für das die Beratung erfolgt
-	 * @return Inhalt des Feldes folgeGOStHalbjahr
+	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 * @return Inhalt des Feldes folgeAktuellesGOStHalbjahr
 	 */
-	public String folgeGOStHalbjahr() {
-		return folgeGOStHalbjahr;
+	public String folgeAktuellesGOStHalbjahr() {
+		return folgeAktuellesGOStHalbjahr;
 	}
 
 	/**
-	 * Das folgende Halbjahr der Oberstufenlaufbahn, also in der Regel das Halbjahr, für das die Beratung erfolgt, wird gesetzt.
-	 * @param folgeGOStHalbjahr Neuer Wert für das Feld folgeGOStHalbjahr
+	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt, wird gesetzt.
+	 * @param folgeAktuellesGOStHalbjahr Neuer Wert für das Feld folgeAktuellesGOStHalbjahr
 	 */
-	public void setFolgeGOStHalbjahr(final String folgeGOStHalbjahr) {
-		this.folgeGOStHalbjahr = folgeGOStHalbjahr;
+	public void setFolgeAktuellesGOStHalbjahr(final String folgeAktuellesGOStHalbjahr) {
+		this.folgeAktuellesGOStHalbjahr = folgeAktuellesGOStHalbjahr;
+	}
+
+	/**
+	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
+	 * @return Inhalt des Feldes folgeAuswahlGOStHalbjahr
+	 */
+	public String folgeAuswahlGOStHalbjahr() {
+		return folgeAuswahlGOStHalbjahr;
+	}
+
+	/**
+	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt, wird gesetzt.
+	 * @param folgeAuswahlGOStHalbjahr Neuer Wert für das Feld folgeAuswahlGOStHalbjahr
+	 */
+	public void setFolgeAuswahlGOStHalbjahr(final String folgeAuswahlGOStHalbjahr) {
+		this.folgeAuswahlGOStHalbjahr = folgeAuswahlGOStHalbjahr;
 	}
 
 	/**

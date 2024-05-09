@@ -39,12 +39,12 @@ public final class HtmlContextSchueler extends HtmlContext {
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 * @param reportingRepository Das Repository mit Daten zum Reporting.
+	 * @param reportingSchueler   Liste der Schüler, die berücksichtigt werden sollen.
 	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler, final ReportingRepository reportingRepository) throws ApiOperationException {
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
         this.reportingRepository = reportingRepository;
         erzeugeContextFromSchueler(reportingSchueler);
 	}
@@ -52,14 +52,13 @@ public final class HtmlContextSchueler extends HtmlContext {
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 * @param idsSchueler			Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 * @param reportingRepository   Das Repository mit Daten zum Reporting.
 	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler) throws ApiOperationException {
+	public HtmlContextSchueler(final ReportingRepository reportingRepository) throws ApiOperationException {
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(idsSchueler);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
 	}
 
 
@@ -87,6 +86,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Schueler", schueler);
+		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}
@@ -146,6 +146,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Schueler", schueler);
+		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}
@@ -173,7 +174,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		for (final ReportingSchueler reportingSchueler : schueler) {
 			final List<ReportingSchueler> einSchueler = new ArrayList<>();
 			einSchueler.add(reportingSchueler);
-			resultContexts.add(new HtmlContextSchueler(einSchueler, this.reportingRepository));
+			resultContexts.add(new HtmlContextSchueler(this.reportingRepository, einSchueler));
 		}
 
 		return resultContexts;
