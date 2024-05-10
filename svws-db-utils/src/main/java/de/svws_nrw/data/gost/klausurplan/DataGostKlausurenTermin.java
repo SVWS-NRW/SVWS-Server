@@ -3,6 +3,7 @@ package de.svws_nrw.data.gost.klausurplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,9 +120,9 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> schuelerklausurTermine) throws ApiOperationException {
-		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
+		final Set<GostKlausurtermin> ergebnis = new HashSet<>();
 		if (schuelerklausurTermine.isEmpty())
-			return ergebnis;
+			return new ArrayList<>(ergebnis);
 		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
 		if (schuelerklausurTermineNullTermin.size() > 0) {
 			final List<GostSchuelerklausur> schuelerklausurNullTermin =  DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
@@ -133,7 +134,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 
 		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", schuelerklausurTermine.stream().map(skt -> skt.idTermin).toList(), DTOGostKlausurenTermine.class);
 		ergebnis.addAll(DTOMapper.mapList(terminDTOs, dtoMapper));
-		return ergebnis;
+		return new ArrayList<>(ergebnis);
 	}
 
 	/**
