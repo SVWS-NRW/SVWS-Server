@@ -6463,7 +6463,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu001
+	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu001/{ingore_missing:[01]}
 	 *
 	 * Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.
 	 *
@@ -6484,12 +6484,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {FormData} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ingore_missing - der Pfad-Parameter ingore_missing
 	 *
 	 * @returns Der Log vom Import des Untis-Stundenplans
 	 */
-	public async importStundenplanUntisGPU001(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/untis/import/gpu001"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async importStundenplanUntisGPU001(data : FormData, schema : string, ingore_missing : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/untis/import/gpu001/{ingore_missing:[01]}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ingore_missing\s*(:[^{}]+({[^{}]+})*)?}/g, ingore_missing.toString());
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);

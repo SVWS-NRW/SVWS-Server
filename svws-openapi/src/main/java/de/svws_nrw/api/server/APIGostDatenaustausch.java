@@ -187,15 +187,16 @@ public class APIGostDatenaustausch {
     /**
      * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der im Untis-Format GPU001.txt vorliegt.
      *
-     * @param multipart     Die GPU001.txt
-     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden soll
-     * @param request       die Informationen zur HTTP-Anfrage
+     * @param multipart       Die GPU001.txt
+     * @param schemaname      Name des Schemas, in welches der Untis-Stundenplan importiert werden soll
+     * @param ignoreMissing   gibt an, ob fehlerhafte Unterrichtseinträge ignoriert werden ohne eine Abbruch der Operation zu Erzeugen
+     * @param request         die Informationen zur HTTP-Anfrage
      *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
      */
     @POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/untis/import/gpu001")
+    @Path("/untis/import/gpu001/{ingore_missing:[01]}")
     @Operation(summary = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.",
         description = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Import des Untis-Stundenplans",
@@ -208,10 +209,11 @@ public class APIGostDatenaustausch {
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um den Untis-Stundenplan zu importieren.")
     public Response importStundenplanUntisGPU001(@PathParam("schema") final String schemaname,
+    		@PathParam("ingore_missing") final int ignoreMissing,
     		@RequestBody(description = "Die Textdatei GPU001.txt", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final UntisGPU001MultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> DataUntis.importGPU001(conn, multipart),
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataUntis.importGPU001(conn, multipart, (ignoreMissing == 1)),
         		request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
     }
 

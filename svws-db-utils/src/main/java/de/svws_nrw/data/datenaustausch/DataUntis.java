@@ -88,7 +88,7 @@ public final class DataUntis {
 	}
 
 	private static void _importGPU001(final Logger logger, final DBEntityManager conn, final long idSchuljahresabschnitt,
-			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp) throws ApiOperationException {
+			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp, final boolean ignoreMissing) throws ApiOperationException {
 		// Prüfe die ID des Schuljahreabschnitts
 		logger.logLn("-> Prüfe, ob der Schuljahresabschnitt existiert... ");
 		final Schuljahresabschnitt schuljahresabschnitt = DataSchuljahresabschnitte.getByID(conn, idSchuljahresabschnitt);
@@ -150,12 +150,20 @@ public final class DataUntis {
 			final DTOKlassen klasse = mapKlassenByKuerzel.get(u.klasseKuerzel);
 			if (klasse == null) {
 				logger.logLn(2, "[Fehler] - Die Klasse mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.klasseKuerzel));
+				if (ignoreMissing) {
+					logger.logLn(2, "Der Unterrichts-Eintrag wird ignoriert.");
+					continue;
+				}
 				throw new ApiOperationException(Status.NOT_FOUND, "Die Klasse mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.klasseKuerzel));
 			}
 			// Bestimme den Fachlehrer
 			final LehrerListeEintrag lehrer = mapLehrerByKuerzel.get(u.lehrerKuerzel);
 			if ((u.lehrerKuerzel != null) && (lehrer == null)) {
 				logger.logLn(2, "[Fehler] - Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
+				if (ignoreMissing) {
+					logger.logLn(2, "Der Unterrichts-Eintrag wird ignoriert.");
+					continue;
+				}
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
 			}
 			// Prüfe, ob es sich um Kursunterricht handelt
@@ -164,8 +172,12 @@ public final class DataUntis {
 				// Bestimme das Fach
 				final FachDaten fach = mapFaecherByKuerzel.get(u.fachKuerzel);
 				if (fach == null) {
-					logger.logLn(2, "[Fehler] - Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
-					throw new ApiOperationException(Status.NOT_FOUND, "Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
+					logger.logLn(2, "[Fehler] - Das Fach bzw. der Kurs mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
+					if (ignoreMissing) {
+						logger.logLn(2, "Der Unterrichts-Eintrag wird ignoriert.");
+						continue;
+					}
+					throw new ApiOperationException(Status.NOT_FOUND, "Das Fach bzw. der Kurs mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
 				}
 				// Erstelle den Klassen-Unterricht ...
 				final long uid = next_uid++;
@@ -220,10 +232,12 @@ public final class DataUntis {
      *
      * @param conn        die Datenbank-Verbindung
      * @param multipart   der Multipart-Body mmit der Datei
+     * @param ignoreMissing   wenn true, dann werden fehlende Klassen und Kurse ignoriert
+     *                        und protokolliert, es wird aber kein Fehler erzeugt.
      *
      * @return die HTTP-Response mit dem Log
      */
-    public static Response importGPU001(final DBEntityManager conn, final UntisGPU001MultipartBody multipart) {
+    public static Response importGPU001(final DBEntityManager conn, final UntisGPU001MultipartBody multipart, final boolean ignoreMissing) {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
 		final SimpleOperationResponse daten = new SimpleOperationResponse();
@@ -236,8 +250,8 @@ public final class DataUntis {
         	final List<UntisGPU001> unterrichte = UntisGPU001.readCSV(strGPU001);
             final StundenplanListeEintragMinimal entry = new ObjectMapper().readValue(multipart.entry, StundenplanListeEintragMinimal.class);
 	    	logger.logLn("Importiere den Stundenplan:");
-	    	_importGPU001(logger, conn, entry.idSchuljahresabschnitt, entry.gueltigAb, entry.bezeichnung, unterrichte, 0);
-			logger.logLn("  Import beendet");
+	    	_importGPU001(logger, conn, entry.idSchuljahresabschnitt, entry.gueltigAb, entry.bezeichnung, unterrichte, 0, ignoreMissing);
+			logger.logLn("Import beendet");
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			logger.logLn(2, "Fehler beim Einlesen der Datensätze.");
 			daten.success = false;

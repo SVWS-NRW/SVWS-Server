@@ -219,8 +219,8 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		}
 	}
 
-	importUntisStundenplanGPU001 = async (formData: FormData) : Promise<SimpleOperationResponse> => {
-		return await this.importUntisGPU(() => api.server.importStundenplanUntisGPU001(formData, api.schema));
+	importUntisStundenplanGPU001 = async (formData: FormData, ignoreMissing: boolean) : Promise<SimpleOperationResponse> => {
+		return await this.importUntisGPU(() => api.server.importStundenplanUntisGPU001(formData, api.schema, ignoreMissing ? 1 : 0));
 	}
 
 	importUntisRaeumeGPU005 = async (formData: FormData) : Promise<SimpleOperationResponse> => {

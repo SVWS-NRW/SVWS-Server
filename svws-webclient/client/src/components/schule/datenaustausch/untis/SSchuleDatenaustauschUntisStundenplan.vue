@@ -1,10 +1,19 @@
 <template>
 	<div class="page--content overflow-hidden flex flex-col">
 		<div class="flex flex-col items-start gap-2">
-			<svws-ui-input-wrapper :grid="2">
+			<svws-ui-input-wrapper>
 				<abschnitt-auswahl :disable-headless="true" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="a => setAbschnitt(a)" :akt-schulabschnitt="aktSchulabschnitt" />
-				<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
 				<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
+				<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
+				<svws-ui-tooltip>
+					<svws-ui-checkbox v-model="ignoreMissing">Ignoriere Unterrichts-Einträge mit fehlerhaften Daten</svws-ui-checkbox>
+					<template #content>
+						<p>Ist die Einstellung aktiviert, so werden keine Fehler bei den folgenden fehlerhaften Daten erzeugt, sondern nur Meldungen im Log.</p>
+						<p>Sind die Kürzel für Klassen, Fächer oder Kurse nicht in der SVWS-Datenbank vorhanden, so werden die zugehörigen Unterrichte ignoriert.</p>
+						<p>Ist ein Kürzel für einen Lehrer nicht in der SVWS-Datenbank vorhanden, so wird der Unterricht ohne zugeordneten Lehrer angelegt.</p>
+					</template>
+				</svws-ui-tooltip>
+				<svws-ui-spacing />
 				<div class="col-span-full flex flex-row gap-2">
 					<svws-ui-tooltip>
 						<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
@@ -40,6 +49,7 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const abschnitt = ref<Schuljahresabschnitt>(props.aktAbschnitt);
 	const file = ref<File | null>(null);
+	const ignoreMissing = ref<boolean>(true);
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
@@ -74,7 +84,7 @@
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", file.value);
-		const result = await props.importUntisStundenplanGPU001(formData);
+		const result = await props.importUntisStundenplanGPU001(formData, ignoreMissing.value);
 		logs.value = result.log;
 		status.value = result.success;
 		loading.value = false;
@@ -97,4 +107,3 @@
 	}
 
 </style>
-./SSchuleDatenaustauschUntisStundenplanProps
