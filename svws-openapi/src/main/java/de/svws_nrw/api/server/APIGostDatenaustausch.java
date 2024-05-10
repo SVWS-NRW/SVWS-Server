@@ -291,7 +291,7 @@ public class APIGostDatenaustausch {
     		} catch (final ApiOperationException aoe) {
     			final SimpleOperationResponse sor = new SimpleOperationResponse();
     			sor.log.addAll(log.getStrings());
-    			throw new ApiOperationException(aoe.getStatus(), aoe, sor);
+    			throw new ApiOperationException(aoe.getStatus(), aoe, sor, "application/json");
     		}
     	}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
     }
