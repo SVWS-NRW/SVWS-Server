@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.gost.klausurplanung;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +22,29 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurraumblockungAlgorithmusDynDaten {
 
+	private static final @NotNull Comparator<@NotNull GostKlausurraumRich> _compRaeume = (final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
+		if (o1.groesse < o2.groesse) return -1;
+		if (o1.groesse > o2.groesse) return +1;
+
+		if (o1.id < o2.id) return -1;
+		if (o1.id > o2.id) return +1;
+
+		return 0;
+	};
+
+	private static final @NotNull Comparator<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _compKlausurGruppen = (final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o1, final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o2) -> {
+		if (o1.size() < o2.size()) return -1;
+		if (o1.size() > o2.size()) return +1;
+
+		// Falls die Gruppen die gleiche Größe haben, wird nach der ID des ersten Repräsentanten sortiert.
+		final @NotNull GostSchuelerklausurTerminRich k1 = ListUtils.getNonNullElementAtOrException(o1, 0);
+		final @NotNull GostSchuelerklausurTerminRich k2 = ListUtils.getNonNullElementAtOrException(o2, 0);
+		if (k1.id < k2.id) return -1;
+		if (k1.id > k2.id) return +1;
+
+		return 0;
+	};
+
 	private final @NotNull Random _random;
 
 	private final boolean _regel_optimiere_blocke_in_moeglichst_wenig_raeume;
@@ -31,12 +55,16 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	private final int _raumAnzahl;                                  // statisch
 	private final @NotNull GostKlausurraumRich @NotNull [] _raumAt; // statisch
+	private final @NotNull int[] _raumSortiertAufsteigend;          // statisch
+	private final @NotNull int[] _raumSortiertAbsteigend;           // statisch
 	private final @NotNull int[] _raumZuBelegung;                   // dynamisch
 	private final @NotNull int[] _raumZuKlausurdauer;               // dynamisch
 	private final @NotNull int[] _raumZuKlausurstart;               // dynamisch
 
 	private final int _klausurGruppenAnzahl;                                                            // statisch
 	private final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _klausurGruppen; // statisch
+	private final @NotNull int[] _klausurGruppenAufsteigend;                                            // statisch
+	private final @NotNull int[] _klausurGruppenAbsteigend;                                             // statisch
 	private final @NotNull int[] _klausurGruppeZuKlausurdauer;                                          // statisch
 	private final @NotNull int[] _klausurGruppeZuKlausurstart;                                          // statisch
 	private final @NotNull GostKlausurraumRich[] _klausurGruppeZuRaum;                                  // dynamisch
@@ -60,27 +88,47 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 		// Räume kopieren.
 		_raumAnzahl = config.raeume.size();
-		_raumAt = new GostKlausurraumRich[_raumAnzahl];
+		_raumAt = _erzeugeRaeumeSortiert(config.raeume);
 		_raumZuBelegung = new int[_raumAnzahl];
 		_raumZuKlausurdauer = new int[_raumAnzahl];
 		_raumZuKlausurstart = new int[_raumAnzahl];
-		for (int i = 0; i < _raumAnzahl; i++)
-			_raumAt[i] = config.raeume.get(i);
+		_raumSortiertAufsteigend = new int[_raumAnzahl];
+		_raumSortiertAbsteigend = new int[_raumAnzahl];
+		for (int i = 0; i < _raumAnzahl; i++) {
+			_raumSortiertAufsteigend[i] = i;
+			_raumSortiertAbsteigend[i] = _raumAnzahl - 1 - i;
+		}
 
 		// Klausuren kopieren.
-		_klausurGruppen = _erzeugeKlausurGruppen(config.schuelerklausurtermine);
+		_klausurGruppen = _erzeugeKlausurGruppenSortiert(config.schuelerklausurtermine);
 		_klausurGruppenAnzahl = _klausurGruppen.size();
 		_klausurGruppeZuRaum = new GostKlausurraumRich[_klausurGruppenAnzahl];
 		_klausurGruppeZuRaumSave = new GostKlausurraumRich[_klausurGruppenAnzahl];
 		_klausurGruppeZuKlausurdauer = new int[_klausurGruppenAnzahl];
 		_klausurGruppeZuKlausurstart = new int[_klausurGruppenAnzahl];
+		_klausurGruppenAufsteigend = new int[_klausurGruppenAnzahl];
+		_klausurGruppenAbsteigend = new int[_klausurGruppenAnzahl];
 		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++) {
 			_klausurGruppeZuKlausurdauer[kg] = _gibErsteKlausurDerGruppe(kg).dauer;
 			_klausurGruppeZuKlausurstart[kg] = _gibErsteKlausurDerGruppe(kg).startzeit;
+			_klausurGruppenAufsteigend[kg] = kg;
+			_klausurGruppenAbsteigend[kg] = _klausurGruppenAnzahl - 1 - kg;
 		}
 
 		// Zuordnung erzeugen.
 		aktionZustandClear();
+	}
+
+	private static @NotNull GostKlausurraumRich @NotNull [] _erzeugeRaeumeSortiert(final @NotNull List<@NotNull GostKlausurraumRich> raeume) {
+		final @NotNull List<@NotNull GostKlausurraumRich> list = new ArrayList<>(raeume);
+		list.sort(_compRaeume);
+
+
+		final @NotNull GostKlausurraumRich @NotNull [] copy = new GostKlausurraumRich[list.size()];
+		for (int i = 0; i < copy.length; i++)
+			copy[i] = list.get(i);
+
+		return copy;
 	}
 
 	private @NotNull GostSchuelerklausurTerminRich _gibErsteKlausurDerGruppe(final int kg) {
@@ -88,7 +136,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		return ListUtils.getNonNullElementAtOrException(list, 0);
 	}
 
-	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppen(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
+	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppenSortiert(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> gruppen = new ArrayList<>();
 
 		if (_regel_forciere_selbe_kursklausur_im_selben_raum) {
@@ -98,11 +146,12 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 				MapUtils.addToList(map, klausur.idKursklausur, klausur);
 			gruppen.addAll(map.values());
 		} else {
-			// Jede Klausur hat eine Gruppe.
+			// Jede Klausur hat seine eigene Gruppe.
 			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
 				gruppen.add(ListUtils.create1(klausur));
 		}
 
+		gruppen.sort(_compKlausurGruppen);
 		return gruppen;
 	}
 
@@ -235,18 +284,11 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		System.arraycopy(_klausurGruppeZuRaum, 0, _klausurGruppeZuRaumSave, 0, _klausurGruppenAnzahl);
 	}
 
-	/**
-	 * Verteilt alle Klausuren zufällig auf die Räume.
-	 * Dabei werden die Räume nacheinander aufgefüllt.
-	 */
-	void aktionKlausurenVerteilenAlgorithmus00_zufaellig() {
+	private void aktionKlausurenVerteilenAlgorithmusGeneric(final int[] aRaum, final int[] aKlausurGruppe) {
 		aktionZustandClear();
 
-		final int[] randomR = ArrayUtils.getIndexPermutation(_raumAnzahl, _random);
-		final int[] randomKG = ArrayUtils.getIndexPermutation(_klausurGruppen.size(), _random);
-
-		for (final int kg : randomKG)
-			for (final int r : randomR)
+		for (final int kg : (aKlausurGruppe == null ?  ArrayUtils.getIndexPermutation(_klausurGruppenAnzahl, _random) : aKlausurGruppe))
+			for (final int r : (aRaum == null ?  ArrayUtils.getIndexPermutation(_raumAnzahl, _random) : aRaum))
 				if (aktionSetzeKlausurgruppeInDenRaum(kg, r))
 					break;
 
@@ -254,24 +296,84 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	}
 
 	/**
-	 * Verteilt die Klausuren mit Algorithmus 01.
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in zufälliger Reihenfolge.
+	 * <br>Klausurgruppen in zufälliger Reihenfolge.
 	 */
-	void aktionKlausurenVerteilenAlgorithmus01() {
-		// empty
+	void aktionKlausurenVerteilenAlgorithmus01_raum_zufaellig_gruppe_zufaellig() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(null, null);
 	}
 
 	/**
-	 * Verteilt die Klausuren mit Algorithmus 02.
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in aufsteigender Reihenfolge.
+	 * <br>Klausurgruppen in zufälliger Reihenfolge.
 	 */
-	void aktionKlausurenVerteilenAlgorithmus02() {
-		// empty
+	void aktionKlausurenVerteilenAlgorithmus02_raum_aufsteigend_gruppe_zufaellig() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAufsteigend, null);
 	}
 
 	/**
-	 * Verteilt die Klausuren mit Algorithmus 03.
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in absteigender Reihenfolge.
+	 * <br>Klausurgruppen in zufälliger Reihenfolge.
 	 */
-	void aktionKlausurenVerteilenAlgorithmus03() {
-		// empty
+	void aktionKlausurenVerteilenAlgorithmus03_raum_absteigend_gruppe_zufaellig() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAbsteigend, null);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in zufälliger Reihenfolge.
+	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus04_raum_zufaellig_gruppe_aufsteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(null, _klausurGruppenAufsteigend);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in aufsteigender Reihenfolge.
+	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus05_raum_aufsteigend_gruppe_aufsteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAufsteigend, _klausurGruppenAufsteigend);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in absteigender Reihenfolge.
+	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus06_raum_absteigend_gruppe_aufsteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAbsteigend, _klausurGruppenAufsteigend);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in zufälliger Reihenfolge.
+	 * <br>Klausurgruppen in absteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus07_raum_zufaellig_gruppe_absteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(null, _klausurGruppenAbsteigend);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in aufsteigender Reihenfolge.
+	 * <br>Klausurgruppen in absteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus08_raum_aufsteigend_gruppe_absteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAufsteigend, _klausurGruppenAbsteigend);
+	}
+
+	/**
+	 * Der Algorithmus verteilt Klausurgruppen auf Räume:
+	 * <br>Räume in absteigender Reihenfolge.
+	 * <br>Klausurgruppen in absteigender Reihenfolge.
+	 */
+	void aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend() {
+		aktionKlausurenVerteilenAlgorithmusGeneric(_raumSortiertAbsteigend, _klausurGruppenAbsteigend);
 	}
 
 	/**

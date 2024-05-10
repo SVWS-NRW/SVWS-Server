@@ -42,18 +42,21 @@ public class KlausurraumblockungAlgorithmus {
 	 * @param config   		  Die Konfiguration und die Eingabedaten.
 	 */
 	public void berechne(final @NotNull GostKlausurraumblockungKonfiguration config) {
-
 		final KlausurraumblockungAlgorithmusDynDaten dynDaten = new KlausurraumblockungAlgorithmusDynDaten(random, config);
-		dynDaten.aktionKlausurenVerteilenAlgorithmus00_zufaellig();
+		dynDaten.aktionKlausurenVerteilenAlgorithmus01_raum_zufaellig_gruppe_zufaellig();
 
 		final long zeitEnde = System.currentTimeMillis() + config.maxTimeMillis;
 		do {
-			dynDaten.aktionKlausurenVerteilenAlgorithmus00_zufaellig();
-			dynDaten.aktionKlausurenVerteilenAlgorithmus01();
-			dynDaten.aktionKlausurenVerteilenAlgorithmus02();
-			dynDaten.aktionKlausurenVerteilenAlgorithmus03();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus01_raum_zufaellig_gruppe_zufaellig();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus02_raum_aufsteigend_gruppe_zufaellig();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus03_raum_absteigend_gruppe_zufaellig();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus04_raum_zufaellig_gruppe_aufsteigend();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus05_raum_aufsteigend_gruppe_aufsteigend();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus06_raum_absteigend_gruppe_aufsteigend();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus07_raum_zufaellig_gruppe_absteigend();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus08_raum_aufsteigend_gruppe_absteigend();
+			dynDaten.aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend();
 		} while (System.currentTimeMillis() < zeitEnde);
-
 
 		dynDaten.aktionLadeGespeichertenZustand();
 	}
