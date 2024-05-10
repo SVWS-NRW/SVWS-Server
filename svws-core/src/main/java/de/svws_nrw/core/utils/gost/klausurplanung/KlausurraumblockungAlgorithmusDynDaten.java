@@ -50,6 +50,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	};
 
 	private final @NotNull Random _random;
+	private final @NotNull GostKlausurraumblockungKonfiguration _config;
 
 	private final boolean _regel_optimiere_blocke_in_moeglichst_wenig_raeume;
 	private final boolean _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
@@ -82,6 +83,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	 */
 	KlausurraumblockungAlgorithmusDynDaten(final @NotNull Random random, final @NotNull GostKlausurraumblockungKonfiguration config) {
 		_random = random;
+		_config = config;
 
 		// Regeln kopieren
 		_regel_optimiere_blocke_in_moeglichst_wenig_raeume =  config._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
@@ -383,8 +385,10 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	/**
 	 * Lädt den gespeicherten Zustand die {@link GostKlausurraumRich#schuelerklausurterminIDs}-Liste.
+	 * Überschreibt {@link GostKlausurraumblockungKonfiguration#schuelerklausurtermine} mit den Klausuren, die nicht verteilt wurden.
 	 */
-	void aktionLadeGespeichertenZustand() {
+	void aktionLadeGespeichertenZustandInDieConfig() {
+		// Verteile die Klausuren auf ihre Räume (falls es eine Zuordnung gibt).
 		for (int r = 0; r < _raumAnzahl; r++) {
 			// Leere die Klausuren-Liste des Raumes.
 			final @NotNull GostKlausurraumRich raum = _raumAt[r];
@@ -402,6 +406,12 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 					raum.schuelerklausurterminIDs.add(klausur.id);
 			}
 		}
+
+		// Überschreibe die Klausur-Liste mit den Klausuren, die nicht verteilt werden konnten.
+		_config.schuelerklausurtermine.clear();
+		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++)
+			if (_klausurGruppeZuRaumSave[kg] == null)
+				_config.schuelerklausurtermine.addAll(_klausurGruppen.get(kg));
 	}
 
 }

@@ -58,7 +58,7 @@ public class KlausurraumblockungAlgorithmus {
 			dynDaten.aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend();
 		} while (System.currentTimeMillis() < zeitEnde);
 
-		dynDaten.aktionLadeGespeichertenZustand();
+		dynDaten.aktionLadeGespeichertenZustandInDieConfig();
 	}
 
 }

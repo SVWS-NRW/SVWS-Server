@@ -49,7 +49,7 @@ export class KlausurraumblockungAlgorithmus extends JavaObject {
 			dynDaten.aktionKlausurenVerteilenAlgorithmus08_raum_aufsteigend_gruppe_absteigend();
 			dynDaten.aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend();
 		} while (System.currentTimeMillis() < zeitEnde);
-		dynDaten.aktionLadeGespeichertenZustand();
+		dynDaten.aktionLadeGespeichertenZustandInDieConfig();
 	}
 
 	transpilerCanonicalName(): string {

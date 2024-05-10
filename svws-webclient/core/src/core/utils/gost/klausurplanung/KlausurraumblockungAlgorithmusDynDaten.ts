@@ -48,6 +48,8 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	private readonly _random : Random;
 
+	private readonly _config : GostKlausurraumblockungKonfiguration;
+
 	private readonly _regel_optimiere_blocke_in_moeglichst_wenig_raeume : boolean;
 
 	private readonly _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume : boolean;
@@ -98,6 +100,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	constructor(random : Random, config : GostKlausurraumblockungKonfiguration) {
 		super();
 		this._random = random;
+		this._config = config;
 		this._regel_optimiere_blocke_in_moeglichst_wenig_raeume = config._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
 		this._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
 		this._regel_forciere_selbe_kursklausur_im_selben_raum = config._regel_forciere_selbe_kursklausur_im_selben_raum;
@@ -348,8 +351,9 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	/**
 	 * Lädt den gespeicherten Zustand die {@link GostKlausurraumRich#schuelerklausurterminIDs}-Liste.
+	 * Überschreibt {@link GostKlausurraumblockungKonfiguration#schuelerklausurtermine} mit den Klausuren, die nicht verteilt wurden.
 	 */
-	aktionLadeGespeichertenZustand() : void {
+	aktionLadeGespeichertenZustandInDieConfig() : void {
 		for (let r : number = 0; r < this._raumAnzahl; r++) {
 			const raum : GostKlausurraumRich = this._raumAt[r];
 			raum.schuelerklausurterminIDs.clear();
@@ -363,6 +367,10 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 					raum.schuelerklausurterminIDs.add(klausur.id);
 			}
 		}
+		this._config.schuelerklausurtermine.clear();
+		for (let kg : number = 0; kg < this._klausurGruppenAnzahl; kg++)
+			if (this._klausurGruppeZuRaumSave[kg] === null)
+				this._config.schuelerklausurtermine.addAll(this._klausurGruppen.get(kg));
 	}
 
 	transpilerCanonicalName(): string {
