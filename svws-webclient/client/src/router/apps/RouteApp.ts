@@ -30,10 +30,9 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
-import { ConfigElement } from "~/components/Config";
-import SApp from "~/components/SApp.vue";
 import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
 import { routeError } from "../error/RouteError";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
