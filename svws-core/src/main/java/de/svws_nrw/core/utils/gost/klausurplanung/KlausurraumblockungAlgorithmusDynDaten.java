@@ -22,6 +22,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurraumblockungAlgorithmusDynDaten {
 
+	private static final double MALUS_NICHT_VERTEILT = 1000000.0;
+	private static final double MALUS_MOEGLICHST_WENIG_RAEUME = 1000.0;
+	private static final double MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME = 1.0;
+
 	private static final @NotNull Comparator<@NotNull GostKlausurraumRich> _compRaeume = (final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
 		if (o1.groesse < o2.groesse) return -1;
 		if (o1.groesse > o2.groesse) return +1;
@@ -208,7 +212,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		double malus = 0.0;
 		for (int i = 0; i < klausurGruppeZuRaum.length; i++)
 			if (klausurGruppeZuRaum[i] == null)
-				malus += _klausurGruppen.get(i).size() * 1000.0;
+				malus += _klausurGruppen.get(i).size() * MALUS_NICHT_VERTEILT;
 		return malus;
 	}
 
@@ -223,20 +227,20 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		for (int r = 0; r < _raumAnzahl; r++) {
 			final @NotNull GostKlausurraumRich raum1 = _raumAt[r];
 
-			// Zähle Klausuren im Raum.
-			int counter = 0;
+			// Zähle KlausurGruppen im Raum.
+			int counterGruppen = 0;
 			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
 				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
 				if (raum2 == null)
 					continue;
 				if (raum1.id != raum2.id)
 					continue;
-				counter++;
+				counterGruppen++;
 			}
 
 			// Wird der Raum genutzt?
-			if (counter > 0)
-				malus += 1;
+			if (counterGruppen > 0)
+				malus += MALUS_MOEGLICHST_WENIG_RAEUME;
 		}
 
 		return malus;
@@ -253,20 +257,21 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 			final @NotNull GostKlausurraumRich raum1 = _raumAt[r];
 
 			// Zähle Klausuren im Raum.
-			int counter = 0;
+			int counterKlausuren = 0;
 			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
 				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
 				if (raum2 == null)
 					continue;
 				if (raum1.id != raum2.id)
 					continue;
-				counter++;
+				counterKlausuren += _klausurGruppen.get(k).size();
 			}
 
-			maximum = Math.max(maximum, counter);
+			maximum = Math.max(maximum, counterKlausuren);
 		}
 
-		return 1.0 * maximum;
+		// Das Maximum aller Klausuren pro Raum muss minimiert werden.
+		return maximum * MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME;
 	}
 
 	/**

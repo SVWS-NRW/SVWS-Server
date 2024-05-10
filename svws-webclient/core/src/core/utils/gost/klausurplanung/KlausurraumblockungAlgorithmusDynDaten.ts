@@ -14,6 +14,12 @@ import { GostKlausurraumblockungKonfiguration } from '../../../../core/data/gost
 
 export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
+	private static readonly MALUS_NICHT_VERTEILT : number = 1000000.0;
+
+	private static readonly MALUS_MOEGLICHST_WENIG_RAEUME : number = 1000.0;
+
+	private static readonly MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME : number = 1.0;
+
 	private static readonly _compRaeume : Comparator<GostKlausurraumRich> = { compare : (o1: GostKlausurraumRich, o2: GostKlausurraumRich) => {
 		if (o1.groesse < o2.groesse)
 			return -1;
@@ -193,7 +199,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		let malus : number = 0.0;
 		for (let i : number = 0; i < klausurGruppeZuRaum.length; i++)
 			if (klausurGruppeZuRaum[i] === null)
-				malus += this._klausurGruppen.get(i).size() * 1000.0;
+				malus += this._klausurGruppen.get(i).size() * KlausurraumblockungAlgorithmusDynDaten.MALUS_NICHT_VERTEILT;
 		return malus;
 	}
 
@@ -203,17 +209,17 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		let malus : number = 0.0;
 		for (let r : number = 0; r < this._raumAnzahl; r++) {
 			const raum1 : GostKlausurraumRich = this._raumAt[r];
-			let counter : number = 0;
+			let counterGruppen : number = 0;
 			for (let k : number = 0; k < this._klausurGruppenAnzahl; k++) {
 				const raum2 : GostKlausurraumRich | null = klausurGruppeZuRaum[k];
 				if (raum2 === null)
 					continue;
 				if (raum1.id !== raum2.id)
 					continue;
-				counter++;
+				counterGruppen++;
 			}
-			if (counter > 0)
-				malus += 1;
+			if (counterGruppen > 0)
+				malus += KlausurraumblockungAlgorithmusDynDaten.MALUS_MOEGLICHST_WENIG_RAEUME;
 		}
 		return malus;
 	}
@@ -224,18 +230,18 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		let maximum : number = 0;
 		for (let r : number = 0; r < this._raumAnzahl; r++) {
 			const raum1 : GostKlausurraumRich = this._raumAt[r];
-			let counter : number = 0;
+			let counterKlausuren : number = 0;
 			for (let k : number = 0; k < this._klausurGruppenAnzahl; k++) {
 				const raum2 : GostKlausurraumRich | null = klausurGruppeZuRaum[k];
 				if (raum2 === null)
 					continue;
 				if (raum1.id !== raum2.id)
 					continue;
-				counter++;
+				counterKlausuren += this._klausurGruppen.get(k).size();
 			}
-			maximum = Math.max(maximum, counter);
+			maximum = Math.max(maximum, counterKlausuren);
 		}
-		return 1.0 * maximum;
+		return maximum * KlausurraumblockungAlgorithmusDynDaten.MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME;
 	}
 
 	/**
@@ -291,7 +297,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in zufälliger Reihenfolge.
 	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus04_raum_zufaellig_gruppe_aufsteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus04_raum_zufaellig_gruppe_aufsteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(null, this._klausurGruppenAufsteigend);
 	}
 
@@ -300,7 +306,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in aufsteigender Reihenfolge.
 	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus05_raum_aufsteigend_gruppe_aufsteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus05_raum_aufsteigend_gruppe_aufsteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(this._raumSortiertAufsteigend, this._klausurGruppenAufsteigend);
 	}
 
@@ -309,7 +315,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in absteigender Reihenfolge.
 	 * <br>Klausurgruppen in aufsteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus06_raum_absteigend_gruppe_aufsteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus06_raum_absteigend_gruppe_aufsteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(this._raumSortiertAbsteigend, this._klausurGruppenAufsteigend);
 	}
 
@@ -318,7 +324,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in zufälliger Reihenfolge.
 	 * <br>Klausurgruppen in absteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus07_raum_zufaellig_gruppe_absteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus07_raum_zufaellig_gruppe_absteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(null, this._klausurGruppenAbsteigend);
 	}
 
@@ -327,7 +333,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in aufsteigender Reihenfolge.
 	 * <br>Klausurgruppen in absteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus08_raum_aufsteigend_gruppe_absteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus08_raum_aufsteigend_gruppe_absteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(this._raumSortiertAufsteigend, this._klausurGruppenAbsteigend);
 	}
 
@@ -336,7 +342,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	 * <br>Räume in absteigender Reihenfolge.
 	 * <br>Klausurgruppen in absteigender Reihenfolge.
 	 */
-	public aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend() : void {
+	aktionKlausurenVerteilenAlgorithmus09_raum_absteigend_gruppe_absteigend() : void {
 		this.aktionKlausurenVerteilenAlgorithmusGeneric(this._raumSortiertAbsteigend, this._klausurGruppenAbsteigend);
 	}
 
