@@ -32,6 +32,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -569,9 +570,9 @@ public final class DataUntis {
 			for (final @NotNull GostBlockungKurs kurs : kurse) {
 				final UntisGPU019 dto = new UntisGPU019();
 				// TODO evtl. Multi-Schienen-Kurse unterstützen
-				final int[] schienen = ergebnisManager.getOfKursSchienenNummern(kurs.id);
-				final int idSchiene = schienen[0];
-				dto.name = datenManager.schieneGet(idSchiene).bezeichnung;
+				final Set<GostBlockungsergebnisSchiene> schienen = ergebnisManager.getOfKursSchienenmenge(kurs.id);
+				final GostBlockungsergebnisSchiene schiene = schienen.iterator().next();
+				dto.name = datenManager.schieneGet(schiene.id).bezeichnung;
 				dto.art = "2";
 				dto.anzahlWochenstunden = kurs.wochenstunden;
 				dto.idUnterricht = mapKursZuUnterricht.get(kurs.id);
