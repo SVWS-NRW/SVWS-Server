@@ -531,6 +531,7 @@ export { StringUtils } from './core/utils/StringUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
+export { FachListeManager } from './core/utils/fach/FachListeManager';
 export { FachUtils } from './core/utils/fach/FachUtils';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
