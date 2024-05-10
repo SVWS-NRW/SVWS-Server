@@ -7,17 +7,18 @@
 			<svws-ui-notification type="info" v-if="raummanager().isSchuelerklausurenInRaum(multijahrgang())">
 				Einige Klausuren wurden bereits Räumen zugewiesen. Diese werden durch diesen Vorgang neu verteilt.
 			</svws-ui-notification>
-			<!--<svws-ui-radio-group :row="true">
-				<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
-			</svws-ui-radio-group>
-			<svws-ui-spacing />
-			<svws-ui-radio-group :row="true">
-				<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
-			</svws-ui-radio-group>
 			<svws-ui-spacing :size="2" />
-			<svws-ui-checkbox type="toggle" v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal" class="text-left">
-				Gleicher Termin falls gleiche Lehrkraft, Fach und Kursart
-			</svws-ui-checkbox>-->
+			<svws-ui-checkbox type="toggle" v-model="config._regel_optimiere_blocke_in_moeglichst_wenig_raeume" class="text-left">
+				Verteile in möglichst wenige Räume
+			</svws-ui-checkbox>
+			<svws-ui-spacing :size="1" />
+			<svws-ui-checkbox type="toggle" v-model="config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" class="text-left">
+				Verteile gleichmäßig auf alle Räume
+			</svws-ui-checkbox>
+			<svws-ui-spacing :size="1" />
+			<svws-ui-checkbox type="toggle" v-model="config._regel_forciere_selbe_klausurdauer_pro_raum" class="text-left">
+				Forciere selbe Klausurdauer pro Raum
+			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModalAutomatischVerteilen().value = false"> Abbrechen </svws-ui-button>
@@ -95,14 +96,18 @@
 	const _showModalAutomatischVerteilen = ref<boolean>(false);
 	const showModalAutomatischVerteilen = () => _showModalAutomatischVerteilen;
 
+	const config = new GostKlausurraumblockungKonfiguration();
+
 	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.raummanager().isKlausurenInFremdraeumen();
 
 	const verteilen = async () => {
-		const config = new GostKlausurraumblockungKonfiguration();
+		config._regel_forciere_selbe_kursklausur_im_selben_raum = true;
 		config.schuelerklausurtermine = props.raummanager().enrichSchuelerklausurtermine(props.raummanager().schuelerklausurtermineZuVerteilenGetMenge(multijahrgang()));
 		config.raeume = props.raummanager().enrichKlausurraeume(props.raummanager().raeumeVerfuegbarGetMenge(multijahrgang()));
+		console.log("config", config);
 		const algo = new KlausurraumblockungAlgorithmus();
 		algo.berechne(config);
+		console.log("ergebnis", config);
 		await props.setzeRaumZuSchuelerklausuren(config.raeume, true);
 		await props.setzeRaumZuSchuelerklausuren(config.raeume, false);
 		showModalAutomatischVerteilen().value = false;

@@ -215,13 +215,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		for (GostKlausurraumRich pair : raumSchuelerZuteilung) {
 
-//			if (pair.id == -1) {
-//				GostKlausurenCollectionSkrsKrs loeschResult = loescheRaumZuSchuelerklausurenTransaction(conn, pair.b);
-//				result.idsSchuelerklausurtermine.addAll(loeschResult.idsSchuelerklausurtermine);
-//				result.raumstundenGeloescht.addAll(loeschResult.raumstundenGeloescht);
-//				continue;
-//			}
-
+			if (pair.schuelerklausurterminIDs.isEmpty())
+				continue;
 			final long idRaum = pair.id != -1 ? pair.id : ermittleRaumidAusSchuelerklausurterminen(conn, pair.schuelerklausurterminIDs);
 
 			// Raum und Termin holen
@@ -230,8 +225,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 			// Neue Schülerklausuren ermitteln
 			final List<GostSchuelerklausurTermin> listSchuelerklausurtermineNeu = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, pair.schuelerklausurterminIDs);
-			if (listSchuelerklausurtermineNeu.isEmpty())
-				throw new ApiOperationException(Status.NOT_FOUND);
 
 			// Schon im Raum existente Schülerklausuren ermitteln
 			final List<GostSchuelerklausurterminraumstunde> listSchuelerklausurtermineSchonImRaumRaumstunden = getSchuelerklausurterminraumstundenZuRaumid(conn, idRaum);
@@ -286,7 +279,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 			result.idsSchuelerklausurtermine.addAll(pair.schuelerklausurterminIDs);
 			result.raeume.add(raum);
-//			result.idKlausurraum = idRaum;
 
 			result.raumstunden.addAll(createRaumStundenInDb(conn, idRaum, zeitrasterRaum, raumManager));
 			conn.transactionFlush();
