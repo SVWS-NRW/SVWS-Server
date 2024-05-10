@@ -20,12 +20,12 @@ public final class SprachpruefungniveauConverter extends DBAttributeConverter<Sp
 
 	@Override
 	public Integer convertToDatabaseColumn(final Sprachpruefungniveau attribute) {
-		return attribute.daten.id;
+		return (attribute == null) ? null : attribute.daten.id;
 	}
 
 	@Override
 	public Sprachpruefungniveau convertToEntityAttribute(final Integer dbData) {
-		return Sprachpruefungniveau.getByID(dbData);
+		return (dbData == null) ? null : Sprachpruefungniveau.getByID(dbData);
 	}
 
 	@Override
