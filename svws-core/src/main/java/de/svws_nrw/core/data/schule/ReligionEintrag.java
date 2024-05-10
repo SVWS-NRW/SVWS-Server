@@ -38,8 +38,4 @@ public class ReligionEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar = true;
 
-	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
-	public boolean istAenderbar = true;
-
 }

@@ -8,6 +8,12 @@
 				<svws-ui-input-wrapper>
 					<svws-ui-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="getStatistikText" required statistics />
 				</svws-ui-input-wrapper>
+				<svws-ui-spacing />
+				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="value => patch({ sortierung: value === null ? 32000 : value })" />
+				<svws-ui-spacing />
+				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="value => patch({ istSichtbar: value === true ? true : false })">
+					Sichtbar
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

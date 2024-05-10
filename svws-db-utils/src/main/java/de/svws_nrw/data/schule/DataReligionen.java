@@ -47,9 +47,8 @@ public final class DataReligionen extends DataManager<Long> {
 		daten.text = k.Bezeichnung;
 		daten.textZeugnis = k.ZeugnisBezeichnung;
 		daten.kuerzel = k.StatistikKrz;
-		daten.sortierung = k.Sortierung;
-		daten.istSichtbar = k.Sichtbar;
-		daten.istAenderbar = k.Aenderbar;
+		daten.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
+		daten.istSichtbar = (k.Sichtbar == null) || k.Sichtbar;
 		return daten;
 	};
 
@@ -143,7 +142,6 @@ public final class DataReligionen extends DataManager<Long> {
 		Map.entry("text", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge())),
 		Map.entry("textZeugnis", (conn, dto, value, map) -> dto.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge())),
 		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
-		Map.entry("istAenderbar", (conn, dto, value, map) -> dto.Aenderbar = JSONMapper.convertToBoolean(value, true)),
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true))
 	);
 

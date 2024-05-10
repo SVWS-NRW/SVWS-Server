@@ -32,11 +32,6 @@ export class ReligionEintrag extends JavaObject {
 	 */
 	public istSichtbar : boolean = true;
 
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
-	 */
-	public istAenderbar : boolean = true;
-
 
 	public constructor() {
 		super();
@@ -65,9 +60,6 @@ export class ReligionEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
-			 throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
 		return result;
 	}
 
@@ -79,7 +71,6 @@ export class ReligionEintrag extends JavaObject {
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -104,9 +95,6 @@ export class ReligionEintrag extends JavaObject {
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		}
-		if (typeof obj.istAenderbar !== "undefined") {
-			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
