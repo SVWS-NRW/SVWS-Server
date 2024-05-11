@@ -165,7 +165,7 @@
 <script setup lang="ts">
 
 	import type { JavaMapEntry, JavaSet, List} from "@core";
-	import { OpenApiError } from "@core";
+	import { OpenApiError, UserNotificationException } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import type { Ref } from 'vue';
 	import { computed, ref, onMounted } from 'vue';

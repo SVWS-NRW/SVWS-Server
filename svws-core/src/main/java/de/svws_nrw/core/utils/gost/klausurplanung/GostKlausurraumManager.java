@@ -1050,17 +1050,17 @@ public class GostKlausurraumManager {
 		return start == null ? _termin.startzeit : start;
 	}
 
-	/**
-	 * Liefert eine Liste von {@link GostKlausurraum}-Objekten. <br>
-	 * Laufzeit: O(1)
-	 *
-	 * @param terminOnly falls true, werden nur die Räume, die speziell zu diesem Termin gehören angezeigt, falls false werden alle angezeigt
-	 *
-	 * @return eine Liste der {@link GostKlausurraum}-Objekte.
-	 */
-	public @NotNull List<@NotNull GostKlausurraum> raumGetMengeTerminOnlyAsList(final boolean terminOnly) {
-		return terminOnly ? MapUtils.getOrDefault(_raummenge_by_idTermin, _termin.id, new ArrayList<>()) : raumGetMengeAsList();
-	}
+//	/**
+//	 * Liefert eine Liste von {@link GostKlausurraum}-Objekten. <br>
+//	 * Laufzeit: O(1)
+//	 *
+//	 * @param terminOnly falls true, werden nur die Räume, die speziell zu diesem Termin gehören angezeigt, falls false werden alle angezeigt
+//	 *
+//	 * @return eine Liste der {@link GostKlausurraum}-Objekte.
+//	 */
+//	public @NotNull List<@NotNull GostKlausurraum> raumGetMengeTerminOnlyAsList(final boolean terminOnly) {
+//		return terminOnly ? MapUtils.getOrDefault(_raummenge_by_idTermin, _termin.id, new ArrayList<>()) : raumGetMengeAsList();
+//	}
 
 	/**
 	 * Liefert true zurück, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
@@ -1203,6 +1203,20 @@ public class GostKlausurraumManager {
 			if (raum.idStundenplanRaum != null) // TODO in andere Methode verlagern
 				ergebnis.add(new GostKlausurraumRich(raum, getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
 		return ergebnis;
+	}
+
+	/**
+	 * Prüft, ob allen Räumen ein Stundenplanraum zugewiesen ist. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return true oder false
+	 */
+	public boolean alleRaeumeHabenStundenplanRaum(final boolean fremdTermine) {
+		for (final @NotNull GostKlausurraum raum : raeumeVerfuegbarGetMenge(fremdTermine))
+			if (raum.idStundenplanRaum == null)
+				return false;
+		return true;
 	}
 
 

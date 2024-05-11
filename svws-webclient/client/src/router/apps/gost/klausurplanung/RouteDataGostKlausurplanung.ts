@@ -222,6 +222,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.raummanager;
 	}
 
+	public getConfigValue(key: string): string {
+		return api.config.getValue("gost.klausurplan." + key);
+	}
+
+	public setConfigValue(key: string, value: string) {
+		api.config.setValue('gost.klausurplan.' + key, value);
+	}
+
 	setRaumTermin = async (termin: GostKlausurtermin | null) => {
 		if (this._state.value.raummanager === undefined || termin !== this._state.value.raummanager.getHauptTermin()) {
 			this._state.value.raummanager = termin !== null ? await this.erzeugeKlausurraummanager(termin) : undefined;
@@ -231,12 +239,12 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	quartalsauswahl = computed<0 | 1 | 2>({
 		get: () => {
-			const value = parseInt(api.config.getValue("gost.klausurplan.quartal"));
+			const value = parseInt(this.getConfigValue("quartal"));
 			return (value === 1 || value === 2) ? value : 0;
 		},
 		set: (value) => {
 			if (this.quartalsauswahl.value !== value) {
-				api.config.setValue("gost.klausurplan.quartal", value.toString());
+				this.setConfigValue("quartal", value.toString());
 				this.commit();
 			}
 		}
@@ -265,11 +273,11 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	get zeigeAlleJahrgaenge(): boolean {
-		return api.config.getValue("gost.klausurplan.zeigeAlleJahrgaenge") === 'true';
+		return this.getConfigValue("zeigeAlleJahrgaenge") === 'true';
 	}
 
-	setZeigeAlleJahrgaenge = async (value: boolean) => {
-		await api.config.setValue('gost.klausurplan.zeigeAlleJahrgaenge', value ? "true" : "false");
+	setZeigeAlleJahrgaenge = (value: boolean) => {
+		this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false");
 	}
 
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {

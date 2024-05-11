@@ -47,6 +47,11 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		api.config.addElements([
 			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
 			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
+			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),
+			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", "user", "true"),
+			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
+			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", "user", "false"),
+			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selben_klausurstart_pro_raum", "user", "true"),
 		]);
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);

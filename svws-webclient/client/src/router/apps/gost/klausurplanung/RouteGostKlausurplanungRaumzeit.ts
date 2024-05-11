@@ -59,6 +59,8 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			raummanager: () => routeGostKlausurplanung.data.raummanager,
 			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
+			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
+			getConfigValue: routeGostKlausurplanung.data.getConfigValue,
 		}
 	}
 

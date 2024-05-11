@@ -1015,18 +1015,6 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von {@link GostKlausurraum}-Objekten. <br>
-	 * Laufzeit: O(1)
-	 *
-	 * @param terminOnly falls true, werden nur die Räume, die speziell zu diesem Termin gehören angezeigt, falls false werden alle angezeigt
-	 *
-	 * @return eine Liste der {@link GostKlausurraum}-Objekte.
-	 */
-	public raumGetMengeTerminOnlyAsList(terminOnly : boolean) : List<GostKlausurraum> {
-		return terminOnly ? MapUtils.getOrDefault(this._raummenge_by_idTermin, this._termin.id, new ArrayList()) : this.raumGetMengeAsList();
-	}
-
-	/**
 	 * Liefert true zurück, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
 	 *
 	 * @return true, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
@@ -1167,6 +1155,20 @@ export class GostKlausurraumManager extends JavaObject {
 			if (raum.idStundenplanRaum !== null)
 				ergebnis.add(new GostKlausurraumRich(raum, this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
 		return ergebnis;
+	}
+
+	/**
+	 * Prüft, ob allen Räumen ein Stundenplanraum zugewiesen ist. <br>
+	 *
+	 * @param fremdTermine wenn true, werden Fremdtermine (jahrgangsübergreifend) auch berücksichtigt.
+	 *
+	 * @return true oder false
+	 */
+	public alleRaeumeHabenStundenplanRaum(fremdTermine : boolean) : boolean {
+		for (const raum of this.raeumeVerfuegbarGetMenge(fremdTermine))
+			if (raum.idStundenplanRaum === null)
+				return false;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

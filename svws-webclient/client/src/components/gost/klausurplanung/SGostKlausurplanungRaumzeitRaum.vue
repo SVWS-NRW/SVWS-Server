@@ -13,7 +13,8 @@
 					class="flex-grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null }, raummanager())"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-					:items="raeumeVerfuegbar" />
+					:items="raeumeVerfuegbar"
+					:class="raum.idStundenplanRaum === null ? 'bg-yellow-300 rounded' : ''" />
 				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 					<span class="icon i-ri-alert-fill" />
 				</span>

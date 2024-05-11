@@ -59,7 +59,9 @@
 					:on-drag
 					:on-drop
 					:zeige-alle-jahrgaenge
-					:setze-raum-zu-schuelerklausuren />
+					:setze-raum-zu-schuelerklausuren
+					:get-config-value
+					:set-config-value />
 			</template>
 		</div>
 	</template>
