@@ -1,11 +1,10 @@
 <template>
-	<svws-ui-content-card>
-		<div class="flex flex-col gap-2 mb-5">
+	<svws-ui-action-button title="Backup wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line" :action-function="add" action-label="Wiederherstellen" :action-disabled="!file || loading().value" :is-loading="loading().value">
+		<div class="flex flex-col gap-2">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
 			<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
 		</div>
-		<svws-ui-button @click="add" :disabled="!file || loading().value"> <svws-ui-spinner :spinning="loading().value" /> Wiederherstellen </svws-ui-button>
-	</svws-ui-content-card>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

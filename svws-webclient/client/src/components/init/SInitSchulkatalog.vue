@@ -1,10 +1,12 @@
 <template>
-	<div class="mt-3 flex flex-col">
-		<svws-ui-select :model-value="model" @update:model-value="runInitSchule" title="Schule auswählen" autocomplete
-			:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
-			:item-filter="filter" required :disabled="loading" />
-		<svws-ui-spinner :spinning="loading" />
-	</div>
+	<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt" icon="i-ri-archive-line">
+		<div class="flex gap-2">
+			<svws-ui-select :model-value="model" @update:model-value="runInitSchule" title="Schule auswählen" autocomplete
+				:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
+				:item-filter="filter" required :disabled="loading" />
+			<svws-ui-spinner v-if="loading" spinning />
+		</div>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

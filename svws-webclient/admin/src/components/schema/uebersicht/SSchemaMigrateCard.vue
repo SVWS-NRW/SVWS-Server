@@ -1,38 +1,37 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
-		<div class="flex flex-col items-start gap-3">
-			<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
-				<div class="flex flex-col gap-0.5 pl-3">
-					<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
-					<svws-ui-checkbox class="text-left" type="toggle" v-model="migrationQuellinformationen().schildzentral">Schulnummer angeben</svws-ui-checkbox>
+	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert." icon="i-ri-database-2-line" :action-function="migrate" :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loading().value" action-label="Migrieren">
+		<div class="flex flex-col">
+			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
+			<div class="flex flex-col items-start gap-3">
+				<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
+					<div class="flex flex-col gap-0.5 pl-3">
+						<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
+						<svws-ui-checkbox class="text-left" type="toggle" v-model="migrationQuellinformationen().schildzentral">Schulnummer angeben</svws-ui-checkbox>
+					</div>
+				</div>
+				<svws-ui-text-input v-if="migrationQuellinformationen().dbms !== 'mdb' && migrationQuellinformationen().schildzentral" v-model="migrationQuellinformationen().schulnummer" placeholder="Schulnummer" />
+				<div class="flex flex-col gap-12 mt-5 w-full">
+					<svws-ui-input-wrapper v-if="migrationQuellinformationen().dbms !== 'mdb'">
+						<div v-if="targetSchema === undefined" class="text-button -mb-1 mt-2">Quell-Datenbank</div>
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
+					</svws-ui-input-wrapper>
+					<div v-else class="flex flex-col gap-2 -mt-5">
+						<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
+						<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".mdb">
+					</div>
+					<svws-ui-input-wrapper v-if="targetSchema === undefined">
+						<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
+						<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
+						<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
+						<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
+					</svws-ui-input-wrapper>
 				</div>
 			</div>
-			<svws-ui-text-input v-if="migrationQuellinformationen().dbms !== 'mdb' && migrationQuellinformationen().schildzentral" v-model="migrationQuellinformationen().schulnummer" placeholder="Schulnummer" />
-			<div class="flex flex-col gap-12 mt-5 w-full">
-				<svws-ui-input-wrapper v-if="migrationQuellinformationen().dbms !== 'mdb'">
-					<div v-if="targetSchema === undefined" class="text-button -mb-1 mt-2">Quell-Datenbank</div>
-					<svws-ui-text-input v-model.trim="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
-					<svws-ui-text-input v-model.trim="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
-					<svws-ui-text-input v-model.trim="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
-					<svws-ui-text-input v-model.trim="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
-				</svws-ui-input-wrapper>
-				<div v-else class="flex flex-col gap-2 -mt-5 mb-5">
-					<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-					<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".mdb">
-				</div>
-				<svws-ui-input-wrapper v-if="targetSchema === undefined">
-					<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
-					<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
-					<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
-					<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
-				</svws-ui-input-wrapper>
-			</div>
 		</div>
-		<div class="flex gap-1 items-start mt-1">
-			<svws-ui-button @click="migrate" :disabled="loading().value || (migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')"> <svws-ui-spinner :spinning="loading().value" /> Migrieren </svws-ui-button>
-		</div>
-	</svws-ui-content-card>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

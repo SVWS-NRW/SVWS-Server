@@ -7,12 +7,21 @@
 				</slot>
 			</div>
 			<div class="flex flex-col">
-				<div class="svws-title">{{ title }}</div>
-				<div class="svws-description">{{ description }}</div>
+				<div class="svws-title" :class="{'my-auto': !description}">{{ title }}</div>
+				<div v-if="description" class="svws-description">{{ description }}</div>
 			</div>
 		</button>
-		<div v-if="isActive" class="p-4">
+		<div v-if="isActive" class="p-4" :class="{'pt-5': $slots.default}">
 			<slot />
+			<svws-ui-button v-if="actionFunction" :disabled="actionDisabled || isLoading" title="Aktion ausführen" @click="actionFunction" :is-loading="isLoading" :class="{'mt-8': $slots.default}">
+				<template v-if="isLoading">
+					<svws-ui-spinner spinning />
+				</template>
+				<template v-else>
+					<span class="icon i-ri-play-line" />
+				</template>
+				{{ actionLabel || 'Ausführen' }}
+			</svws-ui-button>
 		</div>
 	</div>
 </template>
@@ -25,10 +34,18 @@
 		title?: string;
 		description?: string;
 		icon?: string;
+		actionLabel?: string;
+		actionFunction?: (() => void) | (() => Promise<void>) | undefined;
+		actionDisabled?: boolean;
+		isLoading?: boolean;
 	}>(), {
 		title: '',
 		description: '',
-		icon: 'i-ri-archive-line',
+		icon: 'i-ri-settings-2-line',
+		actionLabel: '',
+		actionFunction: undefined,
+		actionDisabled: false,
+		isLoading: false,
 	});
 
 	const isActive = ref<boolean>(false);
@@ -55,7 +72,7 @@
 			@apply py-4 px-3 text-balance flex gap-3 text-left w-full rounded-lg border border-transparent;
 
 			.icon {
-				@apply block h-[1.1em] w-[1.1em];
+				@apply block h-[1.05em] w-[1.05em];
 			}
 
 			.svws-title {
@@ -71,16 +88,21 @@
 			}
 		}
 
-		&.svws-active {
-			@apply border-black/10 dark:border-white/10;
+		.svws-ui-action-button--button:hover,
+		.svws-ui-action-button--button:focus-visible {
+			@apply outline-none bg-black/10 border-black/10 opacity-100 border;
 		}
 
-		&:not(.svws-active) .svws-ui-action-button--button:hover,
-		&:not(.svws-active) .svws-ui-action-button--button:focus-visible {
-			@apply outline-none bg-black/10 border-black/10 opacity-100 border;
+		&.svws-active {
+			@apply border-black/10 dark:border-white/10;
 
-			.svws-icon {
-				@apply opacity-100;
+			.svws-ui-action-button--button {
+				@apply rounded-b-none border-b-black/5 dark:border-white/5;
+			}
+
+			.svws-ui-action-button--button:hover,
+			.svws-ui-action-button--button:focus-visible {
+				@apply border-x-transparent border-t-transparent;
 			}
 		}
 

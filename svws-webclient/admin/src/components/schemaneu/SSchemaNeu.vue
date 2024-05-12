@@ -16,22 +16,14 @@
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
 						<!-- Neues leeres Schema anlegen -->
-						<s-schema-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden." icon="i-ri-add-line">
-							<s-schema-neu-leer :add-schema="addSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-						</s-schema-action-button>
+						<s-schema-neu-leer :add-schema="addSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 						<!-- Backup in neues Schema importieren -->
-						<s-schema-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt." icon="i-ri-device-recover-line">
-							<s-schema-neu-import :import-schema="importSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-						</s-schema-action-button>
+						<s-schema-neu-import :import-schema="importSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 						<!-- In Neues Schema migrieren -->
-						<s-schema-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line">
-							<s-schema-neu-migrate :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen"
-								:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-						</s-schema-action-button>
+						<s-schema-neu-migrate :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen"
+							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<s-schema-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line">
-							<s-schema-neu-duplicate :duplicate-schema="duplicateSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-						</s-schema-action-button>
+						<s-schema-neu-duplicate :duplicate-schema="duplicateSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 					</svws-ui-content-card>
 				</div>
 				<div class="col-span-full">

@@ -1,20 +1,17 @@
 <template>
-	<div class="input-wrapper">
-		<div class="flex flex-col gap-2 mb-5">
-			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
-			<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
+	<svws-ui-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt." icon="i-ri-device-recover-line" action-label="Schema anlegen" :action-function="doImport" :action-disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root')" :is-loading="loading().value">
+		<div class="input-wrapper">
+			<div class="flex flex-col gap-2 mb-2">
+				<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
+				<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
+			</div>
+			<svws-ui-spacing />
+			<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
+			<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 		</div>
-		<svws-ui-spacing />
-		<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
-		<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
-		<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
-		<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
-	</div>
-	<svws-ui-spacing />
-	<svws-ui-button type="primary" @click="doImport" :disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || loading().value || (user === 'root')">
-		<svws-ui-spinner :spinning="loading().value" />
-		Schema anlegen
-	</svws-ui-button>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

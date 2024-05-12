@@ -1,13 +1,11 @@
 <template>
-	<div class="input-wrapper">
-		<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" :valid="value => value !== 'root'" />
-		<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading().value" type="password" />
-		<svws-ui-spacing />
-		<svws-ui-button type="primary" @click="add" :disabled="(props.schema === undefined) || user.length === 0 || loading().value || (user === 'root')">
-			<svws-ui-spinner :spinning="loading().value" />
-			Hinzufügen
-		</svws-ui-button>
-	</div>
+	<svws-ui-action-button title="In Konfiguration aufnehmen" description="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen." icon="i-ri-share-forward-2-line" :action-function="add" :action-disabled="(props.schema === undefined) || user.length === 0 || (user === 'root')" :is-loading="loading().value" action-label="Hinzufügen">
+		<div class="input-wrapper">
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading().value" type="password" />
+			<svws-ui-spacing />
+		</div>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

@@ -1,14 +1,12 @@
 <template>
-	<div class="input-wrapper">
-		<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading().value" />
-		<svws-ui-spacing />
-		<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" :valid="value => value !== 'root'" />
-		<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading().value" type="password" />
-		<svws-ui-button type="primary" @click="add" :disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || loading().value || (user === 'root')">
-			<svws-ui-spinner :spinning="loading().value" />
-			Schema anlegen
-		</svws-ui-button>
-	</div>
+	<svws-ui-action-button title="Leeres Schema" description="Es wird ein leeres neues Schema in der neuesten Revision erzeugt. Dieses kann im Anschluss initialisiert werden." icon="i-ri-add-line" :action-function="add" :action-disabled="(schemaname.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root')" :is-loading="loading().value" action-label="Schema anlegen">
+		<div class="input-wrapper">
+			<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading().value" />
+			<svws-ui-spacing />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading().value" type="password" />
+		</div>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

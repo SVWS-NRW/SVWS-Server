@@ -1,16 +1,20 @@
 <template>
-	<div class="flex flex-col gap-2 px-2 text-left mt-3">
-		<span class="font-bold text-button">SQLite-Datenbank hochladen</span>
-		<input type="file" @change="import_file" :disabled="loading" accept=".sqlite">
-		<svws-ui-spinner :spinning="loading" />
-		{{
-			status === false
-				? "Fehler beim Upload"
-				: status === true
-					? "Upload erfolgreich"
-					: ""
-		}}
-	</div>
+	<svws-ui-action-button title="Backup" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line">
+		<div class="flex flex-col gap-2 text-left">
+			<span class="font-bold text-button">SQLite-Datenbank hochladen</span>
+			<input type="file" @change="import_file" :disabled="loading" accept=".sqlite">
+			<svws-ui-spinner :spinning="loading" />
+			<div class="font-bold text-sm">
+				{{
+					status === false
+						? "Fehler beim Upload"
+						: status === true
+							? "Upload erfolgreich"
+							: ""
+				}}
+			</div>
+		</div>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">

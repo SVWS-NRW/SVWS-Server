@@ -3,7 +3,7 @@
 		<template #main>
 			<div class="init-wrapper">
 				<div class="init-container">
-					<div class="init-form modal">
+					<div class="init-form modal modal--md">
 						<div class="modal--titlebar">
 							<div class="modal--title inline-flex items-center gap-1">
 								<span>Initialisierung der Datenbank</span>
@@ -12,32 +12,10 @@
 						</div>
 						<div class="modal--content-wrapper">
 							<div class="modal--content overflow-y-auto">
-								<div v-if="!source" class="mb-6 opacity-50 leading-tight text-left">Wähle eine der folgenden Option aus, um mit der Initialiserung der Datenbank zu beginnen:</div>
-								<div class="flex flex-col gap-2">
-									<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': source && source !== 'schulkatalog', 'svws-active': source === 'schulkatalog'}" @click="setSource('schulkatalog')">
-										<div class="svws-icon"><span class="icon i-ri-archive-line" /></div>
-										<div class="flex flex-col">
-											<div class="svws-title">Schulkatalog</div>
-											<div class="svws-description">Daten werden über die Auswahl der Schulnummer ausgwählt</div>
-										</div>
-									</button>
-									<s-init-schulkatalog v-if="source === 'schulkatalog'" :list-schulkatalog="listSchulkatalog" :init-schule="initSchule" class="mb-20" />
-									<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': source && source !== 'schild2', 'svws-active': source === 'schild2'}" @click="setSource('schild2')">
-										<div class="svws-icon"><span class="icon i-ri-database-2-line" /></div>
-										<div class="flex flex-col">
-											<div class="svws-title">Schild 2-Datenbank</div>
-											<div class="svws-description">Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert.</div>
-										</div>
-									</button>
-									<s-init-schild2 v-if="source === 'schild2'" :migrate-d-b="migrateDB" :set-d-b="setDB" class="mb-20" :db="db" />
-									<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': source && source !== 'backup', 'svws-active': source === 'backup'}" @click="setSource('backup')">
-										<div class="svws-icon"><span class="icon i-ri-device-recover-line" /></div>
-										<div class="flex flex-col">
-											<div class="svws-title">Backup</div>
-											<div class="svws-description">Daten werden aus einem Backup wiederhergestellt</div>
-										</div>
-									</button>
-									<s-init-backup v-if="source === 'backup'" :migrate-d-b="migrateDB" class="mb-20" />
+								<div class="flex flex-col">
+									<s-init-schulkatalog :list-schulkatalog="listSchulkatalog" :init-schule="initSchule" />
+									<s-init-schild2 :migrate-d-b="migrateDB" :set-d-b="setDB" :db="db" />
+									<s-init-backup :migrate-d-b="migrateDB" />
 								</div>
 							</div>
 						</div>

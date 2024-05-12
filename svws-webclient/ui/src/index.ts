@@ -1,5 +1,6 @@
 import "./assets/styles/index.css";
 
+export { default as SvwsUiActionButton } from "./components/SvwsUiActionButton.vue"
 export { default as SvwsUiButton } from "./components/SvwsUiButton.vue";
 export { default as SvwsUiButtonSelect } from "./components/SvwsUiButtonSelect.vue";
 export { default as SvwsUiAvatar } from "./components/SvwsUiAvatar.vue";

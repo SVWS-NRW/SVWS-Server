@@ -3,41 +3,29 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<template v-if="eintrag !== undefined">
 				<svws-ui-content-card v-if="(eintrag !== undefined) && (!eintrag.isInConfig)">
-					<s-schema-action-button title="In Konfiguration aufnehmen" description="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen." icon="i-ri-share-forward-2-line">
-						<s-schema-add-existing-card :schema="eintrag.name" :add-existing="addExistingSchemaToConfig"
-							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-					</s-schema-action-button>
+					<s-schema-add-existing-card :schema="eintrag.name" :add-existing="addExistingSchemaToConfig"
+						:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="eintrag.isSVWS || revisionNotUpToDate" title="Sicherung">
-					<s-schema-action-button v-if="eintrag.isSVWS" title="Backup" description="Daten aus dem Schema werden in ein SQLite-Backup übertragen" icon="i-ri-save-3-line">
-						<svws-ui-button @click="getBackupSchema" :disabled="loading"><svws-ui-spinner v-if="loading" :spinning="loading" /> Backup starten </svws-ui-button>
-					</s-schema-action-button>
-					<s-schema-action-button v-if="revisionNotUpToDate" title="Aktualisieren" :description="`Setzt das Schema auf die aktuelle Revision ${ revision } hoch.`" icon="i-ri-speed-line">
-						<div v-if="eintrag.isTainted" class="mb-2 text-error flex">
+					<svws-ui-action-button v-if="eintrag.isSVWS" title="Backup" description="Daten aus dem Schema werden in ein SQLite-Backup übertragen" icon="i-ri-save-3-line" :action-function="getBackupSchema" action-label="Backup starten" :is-loading="loading" />
+					<svws-ui-action-button v-if="revisionNotUpToDate" title="Aktualisieren" :description="`Setzt das Schema auf die aktuelle Revision ${ revision } hoch.`" icon="i-ri-speed-line" :action-function="upgradeSchema" action-label="Aktualisierung starten" :is-loading="loading">
+						<div v-if="eintrag.isTainted" class="text-error flex">
 							<span class="icon icon-error i-ri-error-warning-line inline relative mt-0.5 mr-1" />
 							Achtung, auch nach dem Hochsetzen bleibt das Schema „Tainted“.
 						</div>
-						<svws-ui-button @click="upgradeSchema" :disabled="loading"><svws-ui-spinner v-if="loading" :spinning="loading" /> Aktualisierung starten </svws-ui-button>
-					</s-schema-action-button>
+					</svws-ui-action-button>
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="zeigeInitialisierungMitSchulkatalog || ((eintrag !== undefined) && (eintrag.isInConfig))" title="Initialisieren / Wiederherstellen">
-					<s-schema-action-button v-if="zeigeInitialisierungMitSchulkatalog" title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer initialisiert" icon="i-ri-archive-line">
+					<svws-ui-action-button v-if="zeigeInitialisierungMitSchulkatalog" title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer initialisiert" icon="i-ri-archive-line" :action-function="init" action-label="Initialisieren" :is-loading="loading" :action-disabled="schule == undefined">
 						<svws-ui-input-wrapper>
 							<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
-							<div class="flex gap-1 flex-wrap justify-self-start">
-								<svws-ui-button :disabled="schule == undefined" @click="init"><svws-ui-spinner :spinning="loading" /> Initialisieren</svws-ui-button>
-							</div>
 						</svws-ui-input-wrapper>
-					</s-schema-action-button>
-					<s-schema-action-button v-if="(eintrag !== undefined) && (eintrag.isInConfig)" title="Backup wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line">
-						<s-schema-import-card :restore-schema="restoreSchema"
-							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-					</s-schema-action-button>
-					<s-schema-action-button v-if="(eintrag !== undefined) && (eintrag.isInConfig)" title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert." icon="i-ri-database-2-line">
-						<s-schema-migrate-card :migrate-schema="migrateSchema"
-							:target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen"
-							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
-					</s-schema-action-button>
+					</svws-ui-action-button>
+					<s-schema-import-card v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :restore-schema="restoreSchema"
+						:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+					<s-schema-migrate-card v-if="(eintrag !== undefined) && (eintrag.isInConfig)" :migrate-schema="migrateSchema"
+						:target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen"
+						:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
 				</svws-ui-content-card>
 			</template>
 		</div>

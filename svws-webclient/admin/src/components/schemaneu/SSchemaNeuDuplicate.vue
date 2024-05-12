@@ -1,15 +1,12 @@
 <template>
-	<div class="input-wrapper">
-		<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
-		<svws-ui-spacing />
-		<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
-		<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
-		<svws-ui-spacing />
-		<svws-ui-button type="primary" @click="duplicate" :disabled="loading().value || (user === 'root') || (schema.length === 0) || (user.length === 0) || (password.length === 0)">
-			<svws-ui-spinner :spinning="loading().value" />
-			Duplizieren
-		</svws-ui-button>
-	</div>
+	<svws-ui-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function="duplicate" :disabled="(user === 'root') || (schema.length === 0) || (user.length === 0) || (password.length === 0)" :is-loading="loading().value">
+		<div class="input-wrapper">
+			<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
+			<svws-ui-spacing />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
+		</div>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">
