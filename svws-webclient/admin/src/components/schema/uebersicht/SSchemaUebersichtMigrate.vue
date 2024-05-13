@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert" icon="i-ri-database-2-line" :action-function="migrate" :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loadingFunction().value" action-label="Migrieren" :is-active @click="e => $emit('click', e)">
+	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert" icon="i-ri-database-2-line" :action-function :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loadingFunction().value" action-label="Migrieren" :is-active @click="e => $emit('click', e)">
 		<div class="flex flex-col">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 			<div class="flex flex-col items-start gap-3">
@@ -65,7 +65,7 @@
 	const zielUsername = shallowRef("");
 	const zielUserPassword = shallowRef("");
 
-	async function migrate() {
+	async function actionFunction() {
 		props.loadingFunction().value = true;
 		const formData = new FormData();
 		if (file.value !== null) {

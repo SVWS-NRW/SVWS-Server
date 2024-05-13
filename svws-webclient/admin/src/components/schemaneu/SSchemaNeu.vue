@@ -16,14 +16,13 @@
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
 						<!-- Neues leeres Schema anlegen -->
-						<s-schema-neu-leer :add-schema="addSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :is-active="currentAction === 'neu'" @click="clickNeu" />
 						<!-- Backup in neues Schema importieren -->
-						<s-schema-neu-import :import-schema="importSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :is-active="currentAction === 'restore'" @click="clickRestore" />
 						<!-- In Neues Schema migrieren -->
-						<s-schema-neu-migrate :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen"
-							:logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :is-active="currentAction === 'migrate'" @click="clickMigrate" />
 						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<s-schema-neu-duplicate :duplicate-schema="duplicateSchema" :logs="logsFunction" :loading="loadingFunction" :status="statusFunction" />
+						<s-schema-neu-duplicate :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" @click="clickDuplicate" />
 					</svws-ui-content-card>
 				</div>
 				<div class="col-span-full">
@@ -49,7 +48,7 @@
 	const loading = ref<boolean>(false);
 	const logs = shallowRef<List<string|null> | undefined>(undefined);
 	const status = shallowRef<boolean | undefined>(undefined);
-	const currentAction = ref<'' | 'neu' | 'import' | 'migrate' | 'duplicate'>('');
+	const currentAction = ref<'' | 'neu' | 'restore' | 'migrate' | 'duplicate'>('');
 
 	const logsFunction = () => logs;
 	const loadingFunction = () => loading;
@@ -61,22 +60,22 @@
 		status.value = undefined;
 	}
 
-	async function clickNeuesSchema() {
+	async function clickNeu() {
 		currentAction.value = (currentAction.value === 'neu') ? '' : 'neu';
 		clearLog();
 	}
 
-	async function clickImportSchema() {
-		currentAction.value = (currentAction.value === 'import') ? '' : 'import';
+	async function clickRestore() {
+		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
 		clearLog();
 	}
 
-	async function clickMigrateSchema() {
+	async function clickMigrate() {
 		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
 		clearLog();
 	}
 
-	async function clickDuplicateSchema() {
+	async function clickDuplicate() {
 		currentAction.value = (currentAction.value === 'duplicate') ? '' : 'duplicate';
 		clearLog();
 	}

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="In Konfiguration aufnehmen" description="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen." icon="i-ri-share-forward-2-line" :action-function="add" :action-disabled="(props.schema === undefined) || user.length === 0 || (user === 'root')" :is-loading="loadingFunction().value" action-label="Hinzufügen" :is-active>
+	<svws-ui-action-button title="In Konfiguration aufnehmen" description="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen." icon="i-ri-share-forward-2-line" :action-function :action-disabled="(props.schema === undefined) || user.length === 0 || (user === 'root')" :is-loading="loadingFunction().value" action-label="Hinzufügen" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loadingFunction().value" type="password" />
@@ -25,7 +25,7 @@
 	const user = ref<string>('');
 	const password = ref<string>('');
 
-	async function add() {
+	async function actionFunction() {
 		props.loadingFunction().value = true;
 		const data = new BenutzerKennwort();
 		data.user = user.value;

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function="duplicate" :disabled="(user === 'root') || (schema.length === 0) || (user.length === 0) || (password.length === 0)" :is-loading="loading().value">
+	<svws-ui-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function :disabled="(user === 'root') || (schema.length === 0) || (user.length === 0) || (password.length === 0)" :is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
 			<svws-ui-spacing />
@@ -16,24 +16,25 @@
 
 	const props = defineProps<{
 		duplicateSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		logs: () => ShallowRef<List<string | null> | undefined>;
-		status: () => ShallowRef<boolean | undefined>;
-		loading: () => ShallowRef<boolean>;
+		logsFunction: () => ShallowRef<List<string | null> | undefined>;
+		statusFunction: () => ShallowRef<boolean | undefined>;
+		loadingFunction: () => ShallowRef<boolean>;
+		isActive: boolean;
 	}>();
 
 	const schema = ref<string>("");
 	const user = ref<string>('');
 	const password = ref<string>('');
 
-	async function duplicate() {
-		props.loading().value = true;
+	async function actionFunction() {
+		props.loadingFunction().value = true;
 		const formData = new FormData();
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.duplicateSchema(formData, schema.value);
-		props.logs().value = result.log;
-		props.status().value = result.success;
-		props.loading().value = false;
+		props.logsFunction().value = result.log;
+		props.statusFunction().value = result.success;
+		props.loadingFunction().value = false;
 		schema.value = '';
 	}
 

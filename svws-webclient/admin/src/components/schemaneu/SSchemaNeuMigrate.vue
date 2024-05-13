@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migriert." icon="i-ri-database-2-line" action-label="Migrieren" :action-function="migrate" :action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || (status().value != undefined) || (zielUsername === 'root')" :is-loading="loading().value">
+	<svws-ui-action-button title="Schild2-Datenbank migrieren" description="Eine Schild2-Datenbank wird in ein neues Schema migrier." icon="i-ri-database-2-line" action-label="Migrieren" :action-function :action-disabled="(zielSchema.length === 0) || (zielUsername.length === 0) || (zielUserPassword.length === 0) || (statusFunction().value != undefined) || (zielUsername === 'root')" :is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank-Typ" />
 			<svws-ui-spacing />
@@ -17,7 +17,7 @@
 			</template>
 			<template v-else>
 				<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-				<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".mdb">
+				<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".mdb">
 			</template>
 			<svws-ui-spacing />
 			<div class="font-bold text-button mt-2">Ziel-Datenbank (wird erstellt):</div>
@@ -37,9 +37,10 @@
 	const props = defineProps<{
 		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		logs: () => ShallowRef<List<string | null> | undefined>;
-		status: () => ShallowRef<boolean | undefined>;
-		loading: () => ShallowRef<boolean>;
+		logsFunction: () => ShallowRef<List<string | null> | undefined>;
+		statusFunction: () => ShallowRef<boolean | undefined>;
+		loadingFunction: () => ShallowRef<boolean>;
+		isActive: boolean;
 	}>();
 
 	const items = new Map<string, string>();
@@ -53,8 +54,8 @@
 	const zielUsername = shallowRef("");
 	const zielUserPassword = shallowRef("");
 
-	async function migrate() {
-		props.loading().value = true;
+	async function actionFunction() {
+		props.loadingFunction().value = true;
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -71,13 +72,13 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.logs().value = result.log;
-			props.status().value = result.success;
+			props.logsFunction().value = result.log;
+			props.statusFunction().value = result.success;
 		} catch (e) {
 			console.log(e);
-			props.status().value = false;
+			props.statusFunction().value = false;
 		}
-		props.loading().value = false;
+		props.loadingFunction().value = false;
 		zielSchema.value = '';
 		zielUserPassword.value = '';
 		zielUsername.value = '';

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="Backup wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line" :action-function="add" action-label="Wiederherstellen" :action-disabled="!file || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
+	<svws-ui-action-button title="Backup wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line" :action-function action-label="Wiederherstellen" :action-disabled="!file || loadingFunction().value" :is-loading="loadingFunction().value" :is-active>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
 			<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
@@ -30,7 +30,7 @@
 		clear();
 	}
 
-	async function add() {
+	async function actionFunction() {
 		if (file.value === null)
 			return;
 		props.loadingFunction().value = true;

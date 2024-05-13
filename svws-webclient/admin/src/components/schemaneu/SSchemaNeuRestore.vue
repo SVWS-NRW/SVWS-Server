@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt." icon="i-ri-device-recover-line" action-label="Schema anlegen" :action-function="doImport" :action-disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root')" :is-loading="loading().value">
+	<svws-ui-action-button title="Backup importieren" description="Ein SQLite-Backup wird in ein neues Schema wiederhergestellt" icon="i-ri-device-recover-line" action-label="Schema anlegen" :action-function :action-disabled="(schema.length === 0) || (user.length === 0) || (password.length === 0) || (user === 'root')" :is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
 			<div class="flex flex-col gap-2 mb-2">
 				<div class="font-bold text-button">Quell-Datenbank: SQLite-Datei (.sqlite) hochladen</div>
-				<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".sqlite">
+				<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".sqlite">
 			</div>
 			<svws-ui-spacing />
 			<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
@@ -21,9 +21,10 @@
 
 	const props = defineProps<{
 		importSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
-		logs: () => ShallowRef<List<string | null> | undefined>;
-		status: () => ShallowRef<boolean | undefined>;
-		loading: () => ShallowRef<boolean>;
+		logsFunction: () => ShallowRef<List<string | null> | undefined>;
+		statusFunction: () => ShallowRef<boolean | undefined>;
+		loadingFunction: () => ShallowRef<boolean>;
+		isActive: boolean;
 	}>();
 
 	const schema = ref<string>('');
@@ -38,18 +39,18 @@
 		}
 	}
 
-	async function doImport(event: Event) {
+	async function actionFunction() {
 		if (file.value === null)
 			return;
-		props.loading().value = true;
+		props.loadingFunction().value = true;
 		const formData = new FormData();
 		formData.append("database", file.value);
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
 		const result = await props.importSchema(formData, schema.value);
-		props.logs().value = result.log;
-		props.status().value = result.success;
-		props.loading().value = false;
+		props.logsFunction().value = result.log;
+		props.statusFunction().value = result.success;
+		props.loadingFunction().value = false;
 		schema.value = '';
 		user.value = '';
 		password.value = '';
