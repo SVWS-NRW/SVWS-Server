@@ -15,7 +15,7 @@
 					</svws-ui-action-button>
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="zeigeInitialisierungMitSchulkatalog || ((eintrag !== undefined) && (eintrag.isInConfig))" title="Initialisieren / Wiederherstellen">
-					<svws-ui-action-button v-if="zeigeInitialisierungMitSchulkatalog" title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer initialisiert" icon="i-ri-archive-line" :action-function="init" action-label="Initialisieren" :is-loading="loading" :action-disabled="schule == undefined" :is-active="currentAction === 'init'" @click="clickInit">
+					<svws-ui-action-button v-if="zeigeInitialisierungMitSchulkatalog" title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer initialisiert" icon="i-ri-archive-line" :action-function="init" action-label="Initialisieren" :is-loading="loading" :action-disabled="schule === undefined" :is-active="currentAction === 'init'" @click="clickInit">
 						<svws-ui-input-wrapper>
 							<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
 						</svws-ui-input-wrapper>
@@ -31,7 +31,7 @@
 			</svws-ui-content-card>
 		</div>
 		<div class="col-span-full">
-			<log-box :logs="logs" :status="status">
+			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
 				</template>
