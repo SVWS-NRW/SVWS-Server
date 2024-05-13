@@ -54,20 +54,21 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
-		const schuljahresabschnittId = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (schuljahresabschnittId instanceof Error)
-			return routeError.getRoute(schuljahresabschnittId);
-		if (schuljahresabschnittId === undefined)
+		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+		if (idSchuljahresabschnitt instanceof Error)
+			return routeError.getRoute(idSchuljahresabschnitt);
+		if (idSchuljahresabschnitt === undefined)
 			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const schuelerId = RouteNode.getIntParam(to_params, "id");
-		if (schuelerId instanceof Error)
-			return routeError.getRoute(schuelerId);
 
-        // Hier werden die Daten zum ausgewählten Schuljahresabschnitt und Schüler geladen
-        await this.data.reload(schuljahresabschnittId, schuelerId);
+        const idSchueler = RouteNode.getIntParam(to_params, "id");
+		if (idSchueler instanceof Error)
+			return routeError.getRoute(idSchueler);
+
+        // Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
+        await this.data.reload(idSchuljahresabschnitt, idSchueler);
 
 		if (!this.data.schuelerListeManager.hasDaten()) {
-			if (schuelerId === undefined) {
+			if (idSchueler === undefined) {
 				const listFiltered = this.data.schuelerListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;

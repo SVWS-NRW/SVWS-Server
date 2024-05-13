@@ -42,7 +42,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 		const auswahllisteDaten = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
 
-        // Erzeuge SchuelerListeManager mit default SchuelerStatus Filter
+        // Erzeuge neuen SchuelerListeManager mit default SchuelerStatus Filter
         const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
