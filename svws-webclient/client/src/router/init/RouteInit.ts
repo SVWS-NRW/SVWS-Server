@@ -9,10 +9,10 @@ import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 
 import SInit from "~/components/init/SInit.vue";
 import type { InitProps } from "~/components/init/SInitProps";
+import { routeLogin } from "../login/RouteLogin";
 
 
 export class RouteInit extends RouteNode<any, any> {
@@ -35,7 +35,7 @@ export class RouteInit extends RouteNode<any, any> {
 			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`, error);
 			return false;
 		}
-		return this.gotoApp();
+		return this.logout();
 	}
 
 	importSQLite = async (formData: FormData): Promise<boolean> => {
@@ -45,7 +45,7 @@ export class RouteInit extends RouteNode<any, any> {
 			console.warn(`Das Initialiseren des Schemas mit einnem SQLite-Backup ist fehlgeschlagen.`);
 			return false;
 		}
-		return this.gotoApp();
+		return this.logout();
 	}
 
 	migrateDB = async (formData: FormData): Promise<boolean> => {
@@ -84,12 +84,11 @@ export class RouteInit extends RouteNode<any, any> {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 			return false;
 		}
-		return this.gotoApp();
+		return this.logout();
 	}
 
-	gotoApp = async (): Promise<true> => {
-		await api.init();
-		await RouteManager.doRoute(routeApp.getRoute());
+	logout = async (): Promise<true> => {
+		await routeLogin.login(api.schema, '', '');
 		return true;
 	}
 

@@ -13,12 +13,11 @@
 						<div class="modal--content-wrapper">
 							<div class="modal--content overflow-y-auto">
 								<div class="flex flex-col">
-									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt" icon="i-ri-archive-line" :is-loading :action-disabled="schule === undefined" :is-active="currentAction === 'init'" @click="clickInit">
+									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt" icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined" :is-active="currentAction === 'init'" @click="clickInit">
 										<div class="flex gap-2">
-											<svws-ui-select :model-value="schule" @update:model-value="init" title="Schule auswählen" autocomplete
-												:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
-												:item-filter="filter" required :disabled="isLoading" />
-											<svws-ui-spinner v-if="isLoading" spinning />
+											<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
+												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
+												:item-filter required :disabled="isLoading" />
 										</div>
 									</svws-ui-action-button>
 									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert." icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')" :is-active="currentAction === 'migrate'" @click="clickMigrate">
@@ -52,7 +51,6 @@
 										<div class="flex flex-col gap-2 text-left">
 											<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
 											<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
-											<svws-ui-spinner :spinning="isLoading" />
 											<div class="font-bold text-sm">
 												{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
 											</div>
@@ -170,7 +168,7 @@
 	}
 
 	// Init
-	const filter = (items: Iterable<SchulenKatalogEintrag>, search: string) => {
+	const itemFilter = (items: Iterable<SchulenKatalogEintrag>, search: string) => {
 		const list = [];
 		for (const i of items)
 			if (i.SchulNr.includes(search.toLocaleLowerCase())
@@ -179,11 +177,11 @@
 		return list;
 	}
 
-	async function init(schule: SchulenKatalogEintrag | null | undefined) {
-		if (schule === null || schule === undefined)
+	async function init() {
+		if (schule.value === null || schule.value === undefined)
 			return;
 		isLoading.value = true;
-		status.value = await props.initSchule(schule);
+		status.value = await props.initSchule(schule.value);
 		isLoading.value = false;
 	}
 </script>
