@@ -64,7 +64,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			return routeError.getRoute(schuelerId);
 
         // Hier werden die Daten zum ausgewählten Schuljahresabschnitt und Schüler geladen
-        await this.data.loadData(schuljahresabschnittId, schuelerId);
+        await this.data.reload(schuljahresabschnittId, schuelerId);
 
 		if (!this.data.schuelerListeManager.hasDaten()) {
 			if (schuelerId === undefined) {
@@ -75,8 +75,10 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			}
 			return this.getRoute();
 		}
+
 		if (to.name === this.name)
 			return this.getChildRoute(this.data.schuelerListeManager.daten().id, from);
+
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
