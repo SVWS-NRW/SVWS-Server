@@ -28,6 +28,6 @@
 
 	const props = defineProps<FaecherAppProps>();
 
-	const fach = computed<FachDaten | undefined>(() => props.auswahl());
+	const fach = computed<FachDaten | undefined>(() => props.fachListeManager().auswahl());
 
 </script>

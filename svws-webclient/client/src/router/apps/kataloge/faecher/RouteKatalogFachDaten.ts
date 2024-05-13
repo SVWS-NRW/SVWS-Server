@@ -21,8 +21,8 @@ export class RouteKatalogFachDaten extends RouteNode<any, RouteKatalogFaecher> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogFaecher.data.auswahl === undefined)
-			return routeKatalogFaecher.getRoute(undefined)
+		if (routeKatalogFaecher.data.fachListeManager.auswahlID() === null)
+			return routeKatalogFaecher.getRoute()
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -32,10 +32,8 @@ export class RouteKatalogFachDaten extends RouteNode<any, RouteKatalogFaecher> {
 
 	public getProps(to: RouteLocationNormalized): FachDatenProps {
 		return {
-			schulform: api.schulform,
 			patch: routeKatalogFaecher.data.patch,
-			data: () => routeKatalogFaecher.data.daten,
-			mapKatalogeintraege: () => routeKatalogFaecher.data.mapKatalogeintraege
+			fachListeManager: () => routeKatalogFaecher.data.fachListeManager,
 		};
 	}
 

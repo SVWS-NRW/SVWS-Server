@@ -8,7 +8,7 @@
 							Gruppenprozesse
 						</h2>
 					</template>
-					<template>
+					<template v-else>
 						<h2 class="svws-headline">
 							<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">

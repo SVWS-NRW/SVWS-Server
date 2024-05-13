@@ -1,4 +1,4 @@
-import { DeveloperNotificationException, type FachDaten  } from "@core";
+import { ArrayList, DeveloperNotificationException, FachListeManager, type FachDaten  } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -8,15 +8,13 @@ import { routeKatalogFachDaten } from "./RouteKatalogFachDaten";
 import { routeKatalogFaecher } from "./RouteKatalogFaecher";
 
 interface RouteStateKatalogFaecher extends RouteStateInterface {
-	auswahl: FachDaten | undefined;
-	daten: FachDaten | undefined;
-	mapKatalogeintraege: Map<number, FachDaten>;
+	idSchuljahresabschnitt: number;
+	fachListeManager: FachListeManager;
 }
 
 const defaultState = <RouteStateKatalogFaecher> {
-	auswahl: undefined,
-	daten: undefined,
-	mapKatalogeintraege: new Map(),
+	idSchuljahresabschnitt: -1,
+	fachListeManager: new FachListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeKatalogFachDaten,
 };
 
@@ -26,42 +24,68 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 		super(defaultState);
 	}
 
-	get auswahl(): FachDaten | undefined {
-		return this._state.value.auswahl;
+	get fachListeManager(): FachListeManager {
+		return this._state.value.fachListeManager;
 	}
 
-	get mapKatalogeintraege(): Map<number, FachDaten> {
-		return this._state.value.mapKatalogeintraege;
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) {
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			 return null;
+		return await this.ladeListe(idSchuljahresabschnitt);
 	}
 
-	get daten(): FachDaten {
-		if (this._state.value.daten === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächerdaten nicht initialisiert");
-		return this._state.value.daten;
+	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
 	}
 
-	private async ladeListeIntern() {
+
+	private async ladeListeIntern(idSchuljahresabschnitt : number) {
 		const listKatalogeintraege = await api.server.getFaecher(api.schema);
-		const mapKatalogeintraege = new Map<number, FachDaten>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		const daten = auswahl !== undefined ? await this.getDatenInternal(auswahl) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		return { auswahl, mapKatalogeintraege, daten };
+		// Bestimme die Fachdaten vorher, um ggf. eine neue ID für das Routing zurückzugeben
+		const hatteAuswahl = (this.fachListeManager.auswahlID() !== null) ? this.fachListeManager.auswahl() : null;
+		const fachListeManager = new FachListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
+		// Wählen nun ein Fach aus, dabei wird sich ggf. an der alten Auswahl orientiert
+		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
+			let auswahl = fachListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
+			if ((auswahl === null) && (fachListeManager.liste.size() > 0))
+				auswahl = fachListeManager.liste.list().get(0);
+			if (auswahl !== null)
+				fachListeManager.setDaten(auswahl);
+		}
+		return {fachListeManager, idSchuljahresabschnitt};
 	}
 
-	public async ladeListe() {
-		const { auswahl, mapKatalogeintraege, daten } = await this.ladeListeIntern();
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, daten });
+	public async ladeListe(idSchuljahresabschnitt: number) {
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return null;
+		const o = await this.ladeListeIntern(idSchuljahresabschnitt);
+		this.setPatchedDefaultState(o);
+		return o.fachListeManager.auswahlID();
 	}
 
 	private async getDatenInternal(auswahl: FachDaten) {
 		return await api.server.getFach(api.schema, auswahl.id);
 	}
 
-	setEintrag = async (auswahl: FachDaten) => {
-		const daten = await this.getDatenInternal(auswahl);
-		this.setPatchedState({ auswahl, daten });
+	setEintrag = async (fach: FachDaten | null) => {
+		if ((fach === null) && (!this.fachListeManager.hasDaten()))
+			return;
+		const fachListeManager = this.fachListeManager;
+		if ((fach === null) || (fachListeManager.liste.list().isEmpty())) {
+			fachListeManager.setDaten(null);
+			this.setPatchedState({ fachListeManager });
+			return;
+		}
+		if ((fach !== null) && (fachListeManager.hasDaten() && (fach.id === fachListeManager.auswahl().id)))
+			return;
+		const daten = await this.getDatenInternal(fach);
+		fachListeManager.setDaten(daten);
+		this.setPatchedState({ fachListeManager });
 	}
 
 	gotoEintrag = async (eintrag: FachDaten) => {
@@ -69,12 +93,14 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 	}
 
 	patch = async (data : Partial<FachDaten>) => {
-		if (this.auswahl === undefined)
+		if (!this.fachListeManager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchFach(data, api.schema, this.daten.id);
-		Object.assign(this.daten, data);
-		const eintrag = this.mapKatalogeintraege.get(this.daten.id);
-		if (eintrag !== undefined) {
+		const idFach = this.fachListeManager.auswahl().id;
+		const daten = this.fachListeManager.daten();
+		await api.server.patchFach(data, api.schema, idFach);
+		Object.assign(daten, data);
+		const eintrag = this.fachListeManager.liste.get(idFach);
+		if (eintrag !== null) {
 			if (data.sortierung !== undefined)
 				eintrag.sortierung = data.sortierung;
 			if (data.kuerzel !== undefined)
@@ -82,15 +108,29 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 			if (data.bezeichnung !== undefined)
 				eintrag.bezeichnung = data.bezeichnung;
 		}
+		this.fachListeManager.setDaten(daten);
 		this.commit();
 	}
 
+	setFilter = async () => {
+		if (!this.fachListeManager.hasDaten()) {
+			const listFiltered = this.fachListeManager.filtered();
+			if (!listFiltered.isEmpty()) {
+				await this.gotoEintrag(listFiltered.get(0));
+				return;
+			}
+		}
+		const fachListeManager = this.fachListeManager;
+		this.setPatchedState({ fachListeManager });
+	}
+
 	setzeDefaultSortierungSekII = async () => {
-		const auswahl = this.auswahl;
+		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
+		const auswahl = this.fachListeManager.auswahl();
 		await api.server.setFaecherSortierungSekII(api.schema);
-		const result = await this.ladeListeIntern();
-		const daten = (auswahl === undefined) ? undefined : await this.getDatenInternal(auswahl);
-		this.setPatchedDefaultState({ auswahl: result.auswahl, daten, mapKatalogeintraege: result.mapKatalogeintraege })
+		const { fachListeManager } = await this.ladeListeIntern(idSchuljahresabschnitt);
+		this._state.value.fachListeManager = fachListeManager;
+		await this.setEintrag(auswahl);
 	}
 
 }

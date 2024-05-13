@@ -51,7 +51,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
 			return null;
-		// Bestimme die Klassendaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
+		// Bestimme die Klassendaten vorher, um ggf. eine neue ID für das Routing zurückzugeben
 		const hatteAuswahl = (this.klassenListeManager.auswahlID() !== null) ? this.klassenListeManager.auswahl() : null;
 		// Lade die Kataloge und erstelle den Manager
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);

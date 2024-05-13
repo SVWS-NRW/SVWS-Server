@@ -11,13 +11,13 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="faecher" :columns="cols">
-				<!--<template #cell(bezeichnung)="{rowData}">
-					<span class="svws-ui-badge" :style="`&#45;&#45;background-color: ${getBgColor(rowData.kuerzelStatistik || '')}`">{{ rowData.bezeichnung }}</span>
-				</template>-->
+			<svws-ui-table :clicked="fachListeManager().auswahl()" clickable @update:clicked="gotoEintrag" :items="fachListeManager().filtered()" :columns :filter-open="true">
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+				</template>
 				<template #actions>
-					<template v-if="schulform.daten.hatGymOb">
-						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i="setzeDefaultSortierungSekII">
+					<template v-if="fachListeManager().schulform().daten.hatGymOb">
+						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i :set-filter>
 							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
@@ -35,18 +35,17 @@
 
 	const props = defineProps<FaecherAuswahlProps>();
 
-	const cols= [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 
-	const faecher = computed<FachDaten[]>(() => {
-		const result : FachDaten[] = [];
-		for (const fach of props.mapKatalogeintraege().values()) {
-			result.push(fach);
+	const filterNurSichtbare = computed<boolean>({
+		get: () => props.fachListeManager().filterNurSichtbar(),
+		set: (value) => {
+			props.fachListeManager().setFilterNurSichtbar(value);
+			void props.setFilter();
 		}
-		result.sort((a, b) => a.sortierung - b.sortierung);
-		return result;
 	});
 
 </script>

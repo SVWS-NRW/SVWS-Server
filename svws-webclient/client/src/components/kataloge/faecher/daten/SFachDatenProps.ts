@@ -1,8 +1,6 @@
-import type { FachDaten, Schulform } from "@core";
+import type { FachDaten, FachListeManager } from "@core";
 
 export interface FachDatenProps {
-	schulform: Schulform;
 	patch: (data : Partial<FachDaten>) => Promise<void>;
-	data: () => FachDaten;
-	mapKatalogeintraege: () => Map<number, FachDaten>;
+	fachListeManager: () => FachListeManager;
 }

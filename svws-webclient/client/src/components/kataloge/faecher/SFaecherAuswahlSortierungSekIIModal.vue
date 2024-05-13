@@ -20,6 +20,7 @@
 
 	const props = defineProps<{
 		setzeDefaultSortierungSekII: () => Promise<void>;
+		setFilter: () => Promise<void>;
 	}>();
 
 	const showModal = ref<boolean>(false);
@@ -31,6 +32,7 @@
 	async function sortiere() {
 		showModal.value = false;
 		await props.setzeDefaultSortierungSekII();
+		await props.setFilter();
 	}
 
 </script>
