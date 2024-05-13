@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert." icon="i-ri-database-2-line" :action-function="migrate" :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loading().value" action-label="Migrieren">
+	<svws-ui-action-button title="Schild2-Schema migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert" icon="i-ri-database-2-line" :action-function="migrate" :action-disabled="(migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')" :is-loading="loadingFunction().value" action-label="Migrieren" :is-active @click="e => $emit('click', e)">
 		<div class="flex flex-col">
 			<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 			<div class="flex flex-col items-start gap-3">
@@ -20,7 +20,7 @@
 					</svws-ui-input-wrapper>
 					<div v-else class="flex flex-col gap-2 -mt-5">
 						<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-						<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".mdb">
+						<input type="file" @change="onFileChanged" :disabled="loadingFunction().value" accept=".mdb">
 					</div>
 					<svws-ui-input-wrapper v-if="targetSchema === undefined">
 						<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
@@ -44,9 +44,14 @@
 		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		logs: () => ShallowRef<List<string | null> | undefined>;
-		status: () => ShallowRef<boolean | undefined>;
-		loading: () => ShallowRef<boolean>;
+		logsFunction: () => ShallowRef<List<string | null> | undefined>;
+		statusFunction: () => ShallowRef<boolean | undefined>;
+		loadingFunction: () => ShallowRef<boolean>;
+		isActive: boolean;
+	}>();
+
+	const emit = defineEmits<{
+		'click': [value: MouseEvent];
 	}>();
 
 	const items = new Map<string, string>();
@@ -61,7 +66,7 @@
 	const zielUserPassword = shallowRef("");
 
 	async function migrate() {
-		props.loading().value = true;
+		props.loadingFunction().value = true;
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -78,13 +83,13 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			props.logs().value = result.log;
-			props.status().value = result.success;
+			props.logsFunction().value = result.log;
+			props.statusFunction().value = result.success;
 		} catch (e) {
 			console.log(e);
-			props.status().value = false;
+			props.statusFunction().value = false;
 		}
-		props.loading().value = false;
+		props.loadingFunction().value = false;
 		zielSchema.value = '';
 		zielUserPassword.value = '';
 		zielUsername.value = '';
@@ -101,9 +106,9 @@
 	}
 
 	function clear() {
-		props.loading().value = false;
-		props.logs().value = undefined;
-		props.status().value = undefined;
+		props.loadingFunction().value = false;
+		props.logsFunction().value = undefined;
+		props.statusFunction().value = undefined;
 	}
 
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<div :class="{'svws-active': isActive}" class="svws-ui-action-button">
-		<button role="button" class="svws-ui-action-button--button" @click="toggleActionButton">
+		<button role="button" class="svws-ui-action-button--button" @click="e => $emit('click', e)">
 			<div class="svws-icon">
 				<slot name="icon">
 					<span class="icon" :class="[icon]" />
@@ -28,8 +28,6 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
-
 	const props = withDefaults(defineProps<{
 		title?: string;
 		description?: string;
@@ -38,6 +36,7 @@
 		actionFunction?: (() => void) | (() => Promise<void>) | undefined;
 		actionDisabled?: boolean;
 		isLoading?: boolean;
+		isActive?: boolean;
 	}>(), {
 		title: '',
 		description: '',
@@ -46,13 +45,13 @@
 		actionFunction: undefined,
 		actionDisabled: false,
 		isLoading: false,
+		isActive: false,
 	});
 
-	const isActive = ref<boolean>(false);
+	const emit = defineEmits<{
+		'click': [value: MouseEvent];
+	}>();
 
-	const toggleActionButton = () => {
-		isActive.value = !isActive.value;
-	};
 
 </script>
 
@@ -97,7 +96,7 @@
 			@apply border-black/10 dark:border-white/10;
 
 			.svws-ui-action-button--button {
-				@apply rounded-b-none border-b-black/5 dark:border-white/5;
+				@apply rounded-b-none border-b-black/5 dark:border-white/5  bg-primary/10;
 			}
 
 			.svws-ui-action-button--button:hover,
