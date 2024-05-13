@@ -130,6 +130,7 @@ export class RouteInit extends RouteNode<any, any> {
 			listSchulkatalog: this.listSchulkatalog.value,
 			initSchule: this.initSchule,
 			migrateDB: this.migrateDB,
+			importSQLite: this.importSQLite,
 			source: this.source.value,
 			db: this.db.value,
 		}

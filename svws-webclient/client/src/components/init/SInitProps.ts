@@ -6,6 +6,7 @@ export interface InitProps {
 	listSchulkatalog: List<SchulenKatalogEintrag>;
 	initSchule: (schule: SchulenKatalogEintrag) => Promise<boolean>;
 	migrateDB: (data: FormData) => Promise<boolean>;
+	importSQLite: (data: FormData) => Promise<boolean>;
 	source?: 'schulkatalog'|'schild2'|'backup';
 	db?: 'mysql'|'mariadb'|'mssql'|'mdb';
 }

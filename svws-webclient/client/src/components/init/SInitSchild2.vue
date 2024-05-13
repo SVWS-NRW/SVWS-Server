@@ -1,11 +1,11 @@
 <template>
-	<svws-ui-action-button title="Schild 2-Datenbank" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert." icon="i-ri-database-2-line" :action-function="migrate()" action-label="Migration starten" :is-loading="loading">
+	<svws-ui-action-button title="Schild 2-Datenbank" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert." icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading="loading">
 		<div class="flex flex-col gap-4">
 			<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
 			<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
 				<div class="flex flex-col gap-2 px-2">
 					<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
-					<input type="file" @change="migrate" :disabled="loading" accept=".mdb">
+					<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
 				</div>
 			</div>
 			<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 
-	import {ref} from "vue";
+	import {ref, shallowRef} from "vue";
 
 	const props = defineProps<{
 		migrateDB: (data: FormData) => Promise<boolean>;
@@ -70,15 +70,19 @@
 		}
 	}
 
-	async function migrate(event?: Event) {
+	const file = shallowRef<File | null>(null);
+
+	function onFileChanged(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if ((target !== null) && (target.files !== null) && (target.files.length > 0))
+			file.value = target.files[0];
+	}
+
+	async function migrate() : Promise<void> {
 		loading.value = true;
 		const formData = new FormData();
-		const target = event?.target as HTMLInputElement;
-		if (target?.files?.length) {
-			const file = target.files.item(0);
-			if (file)
-				formData.append("database", file);
-		}
+		if (file.value)
+			formData.append("database", file.value);
 		formData.append('username', user.value);
 		formData.append('password', password.value);
 		formData.append('databasePassword', password.value);
@@ -89,12 +93,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.init-form-header {
-		@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-		font-size: 2.618rem;
-	}
-
-</style>

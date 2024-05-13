@@ -1,8 +1,8 @@
 <template>
-	<svws-ui-action-button title="Backup" description="Daten werden aus einem Backup wiederhergestellt" icon="i-ri-device-recover-line">
+	<svws-ui-action-button title="Backup" description="Daten werden aus einem Backup wiederhergestellt" :action-function="doImport" action-label="Import starten" icon="i-ri-device-recover-line">
 		<div class="flex flex-col gap-2 text-left">
 			<span class="font-bold text-button">SQLite-Datenbank hochladen</span>
-			<input type="file" @change="import_file" :disabled="loading" accept=".sqlite">
+			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 			<svws-ui-spinner :spinning="loading" />
 			<div class="font-bold text-sm">
 				{{
@@ -19,33 +19,31 @@
 
 <script setup lang="ts">
 
-	import {ref} from "vue";
+	import { ref, shallowRef } from "vue";
 
 	const props = defineProps<{
-		migrateDB: (data: FormData) => Promise<boolean>;
+		importSQLite: (data: FormData) => Promise<boolean>;
 	}>();
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 
-	async function import_file(event: Event) {
+	const file = shallowRef<File | null>(null);
+
+	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (!target.files?.length)
-			return;
-		const file = target.files.item(0);
-		if (!file)
+		if ((target !== null) && (target.files !== null) && (target.files.length > 0))
+			file.value = target.files[0];
+	}
+
+	async function doImport() {
+		if (!file.value)
 			return;
 		loading.value = true;
 		const formData = new FormData();
-		formData.append("database", file);
-		status.value = await props.migrateDB(formData);
+		formData.append("database", file.value);
+		status.value = await props.importSQLite(formData);
 		loading.value = false;
 	}
-</script>
 
-<style lang="postcss" scoped>
-.init-form-header {
-	@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-	font-size: 2.618rem;
-}
-</style>
+</script>

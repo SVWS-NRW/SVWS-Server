@@ -39,5 +39,6 @@
 		status.value = await props.initSchule(schule);
 		loading.value = false;
 	}
+
 </script>
 
