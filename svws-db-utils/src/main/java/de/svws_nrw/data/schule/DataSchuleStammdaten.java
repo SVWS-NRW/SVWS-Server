@@ -342,6 +342,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		// Initialisiere die Daten in der Tabelle EigeneSchule
 		eigeneSchule = new DTOEigeneSchule(1L);
 		eigeneSchule.Schulform = Schulform.getByNummer(schulEintrag.SF);
+		if (eigeneSchule.Schulform == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulform mit der Nummer " + schulEintrag.SF + " bei den Schulformen gefunden.");
 		eigeneSchule.SchulformNr = eigeneSchule.Schulform.daten.nummer;
 		eigeneSchule.SchulformBez = eigeneSchule.Schulform.daten.bezeichnung;
 		eigeneSchule.SchultraegerArt = schulEintrag.ArtDerTraegerschaft;
