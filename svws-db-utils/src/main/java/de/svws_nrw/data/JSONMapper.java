@@ -343,13 +343,14 @@ public final class JSONMapper {
 	 * @param obj        das zu konvertierende Objekt
 	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
 	 * @param lower      die untere Intervallgrenze (einschließlich)
-	 * @param upper      die obere Intervallgrenze (außschließlich)
+	 * @param upper      die obere Intervallgrenze (außschließlich) oder null, wenn es keine
+	 *                   obere Grenze gibt
 	 *
 	 * @return das konvertierte Integer-Objekt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Integer convertToIntegerInRange(final Object obj, final boolean nullable, final int lower, final int upper) throws ApiOperationException {
+	public static Integer convertToIntegerInRange(final Object obj, final boolean nullable, final int lower, final Integer upper) throws ApiOperationException {
 		if (obj == null) {
 			if (nullable)
 				return null;
@@ -359,7 +360,7 @@ public final class JSONMapper {
 			if ((obj instanceof Float) || (obj instanceof Double))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer: Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.");
 			final int value = n.intValue();
-			if ((value >= lower) && (value < upper))
+			if ((value >= lower) && ((upper == null) || (value < upper)))
 				return value;
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.");
 		}
