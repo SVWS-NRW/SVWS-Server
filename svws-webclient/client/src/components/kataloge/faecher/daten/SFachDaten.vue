@@ -46,7 +46,7 @@
 				<svws-ui-checkbox v-if="schulform !== Schulform.G" :model-value="data().holeAusAltenLernabschnitten" @update:model-value="value => patch({ holeAusAltenLernabschnitten: value === true ? true : false })">
 					Berücksichtigen beim Holen von abgeschlossenen Fächern
 				</svws-ui-checkbox>
-				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" :model-value="data().maxZeichenInFachbemerkungen === JavaInteger.MAX_VALUE ? null : data().maxZeichenInFachbemerkungen" @change="z => patch({ maxZeichenInFachbemerkungen: z ?? JavaInteger.MAX_VALUE })" />
+				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" :model-value="data().maxZeichenInFachbemerkungen === JavaInteger.MAX_VALUE ? null : data().maxZeichenInFachbemerkungen" @blur="z => patch({ maxZeichenInFachbemerkungen: z ?? JavaInteger.MAX_VALUE-1 })" :min="0" :max="JavaInteger.MAX_VALUE-1" :valid="i => (i === null) || (i > 0) && (i < JavaInteger.MAX_VALUE)" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
