@@ -493,7 +493,7 @@
 		@apply cursor-not-allowed;
 
 		.text-input--placeholder {
-			@apply text-black/25 dark:text-white bg-white;
+			@apply text-black/25 dark:text-white/25;
 		}
 	}
 
