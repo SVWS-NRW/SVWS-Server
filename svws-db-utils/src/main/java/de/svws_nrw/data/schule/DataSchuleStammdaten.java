@@ -341,7 +341,10 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		// Initialisiere die Daten in der Tabelle EigeneSchule
 		eigeneSchule = new DTOEigeneSchule(1L);
-		eigeneSchule.Schulform = Schulform.getByNummer(schulEintrag.SF);
+		eigeneSchule.Schulform = switch (schulEintrag.SF) {
+			case "81" -> Schulform.S;
+			default -> Schulform.getByNummer(schulEintrag.SF);
+		};
 		if (eigeneSchule.Schulform == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulform mit der Nummer " + schulEintrag.SF + " bei den Schulformen gefunden.");
 		eigeneSchule.SchulformNr = eigeneSchule.Schulform.daten.nummer;
