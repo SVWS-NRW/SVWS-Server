@@ -317,4 +317,16 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 		return true;
 	}
 
+
+	/**
+	 * Diese Methode übernimmt die Auswahl des übergebenen {@link AttributMitAuswahl}.
+	 *
+	 * @param srcAuswahl   Die Auswahl des AttributMitAuswahl, die übernommen wird.
+	 */
+	public void setAuswahl(final @NotNull AttributMitAuswahl<@NotNull K, @NotNull V> srcAuswahl){
+		for (final @NotNull K key : srcAuswahl.auswahlKeyList())
+			if (this.has(key))
+				this.auswahlAddByKey(key);
+	}
+
 }

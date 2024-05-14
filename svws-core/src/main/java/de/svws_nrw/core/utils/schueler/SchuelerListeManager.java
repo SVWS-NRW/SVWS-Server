@@ -309,5 +309,16 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link SchuelerListeManager}
+	 *
+	 * @param srcManager Manager aus dem die Filterinformationen übernommen werden
+	 */
+	public void useFilter(final @NotNull SchuelerListeManager srcManager) {
+		this.klassen.setAuswahl(srcManager.klassen);
+		this.kurse.setAuswahl(srcManager.kurse);
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+	}
 
 }

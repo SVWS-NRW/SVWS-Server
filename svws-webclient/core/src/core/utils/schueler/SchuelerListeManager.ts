@@ -321,6 +321,18 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
 	}
 
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link SchuelerListeManager}
+	 *
+	 * @param srcManager Manager aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : SchuelerListeManager) : void {
+		this.klassen.setAuswahl(srcManager.klassen);
+		this.kurse.setAuswahl(srcManager.kurse);
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.schueler.SchuelerListeManager';
 	}

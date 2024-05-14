@@ -50,8 +50,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		super.defaultChild = routeSchuelerIndividualdaten;
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
 		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
@@ -64,6 +62,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (idSchueler instanceof Error)
 			return routeError.getRoute(idSchueler);
 
+		// TODO: Nur im Fall von isEntering=true" aufrufen
         // Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
         await this.data.reload(idSchuljahresabschnitt, idSchueler);
 

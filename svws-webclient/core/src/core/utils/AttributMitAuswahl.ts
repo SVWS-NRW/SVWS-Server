@@ -301,6 +301,17 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		return true;
 	}
 
+	/**
+	 * Diese Methode übernimmt die Auswahl des übergebenen {@link AttributMitAuswahl}.
+	 *
+	 * @param srcAuswahl   Die Auswahl des AttributMitAuswahl, die übernommen wird.
+	 */
+	public setAuswahl(srcAuswahl : AttributMitAuswahl<K, V>) : void {
+		for (const key of srcAuswahl.auswahlKeyList())
+			if (this.has(key))
+				this.auswahlAddByKey(key);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.AttributMitAuswahl';
 	}
