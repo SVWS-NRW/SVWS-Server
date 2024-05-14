@@ -43,7 +43,7 @@
 
 	const props = defineProps<SchuleDatenaustauschUntisStundenplanProps>();
 
-	const bezeichnung = ref<string>("Import Untis");
+	const bezeichnung = ref<string>(`Import ${new Date().toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin', hour: 'numeric', minute: 'numeric'})}`);
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const gueltigAb = ref<string>(getGueltigAb(props.aktAbschnitt));
 	// eslint-disable-next-line vue/no-setup-props-destructure

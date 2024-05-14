@@ -78,7 +78,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse stellt Methoden für den Import und Export von Kurs 42 - Blockungen
+ * Diese Klasse stellt Methoden für den Import und Export von Untis-Daten
  * zur Vefügung.
  */
 public final class DataUntis {

@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card :title="`${item}. Stunde`">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @blur="start = $event " />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @blur="ende = $event" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="start = $event " />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="ende = $event" />
 			<svws-ui-button v-if="start !== null || ende !== null" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
 			<div class="col-span-full">
 				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" />

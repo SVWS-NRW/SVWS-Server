@@ -48,7 +48,7 @@
 				</svws-ui-checkbox>
 				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen"
 					:model-value="fachListeManager().daten().maxZeichenInFachbemerkungen === JavaInteger.MAX_VALUE ? null : fachListeManager().daten().maxZeichenInFachbemerkungen"
-					@blur="z => patch({ maxZeichenInFachbemerkungen: z ?? JavaInteger.MAX_VALUE })" :min="0" :max="JavaInteger.MAX_VALUE - 1"
+					@change="z => patch({ maxZeichenInFachbemerkungen: z ?? JavaInteger.MAX_VALUE })" :min="0" :max="JavaInteger.MAX_VALUE - 1"
 					:valid="i => (i === null) || (i > 0) && (i < JavaInteger.MAX_VALUE)" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
