@@ -19,6 +19,9 @@
 												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
 												:item-filter required :disabled="isLoading" />
 										</div>
+										<div class="font-bold text-sm text-error mt-2">
+											{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
+										</div>
 									</svws-ui-action-button>
 									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert." icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')" :is-active="currentAction === 'migrate'" @click="clickMigrate">
 										<div class="flex flex-col gap-4">

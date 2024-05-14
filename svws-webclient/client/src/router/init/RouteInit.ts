@@ -1,25 +1,23 @@
-import type { Ref} from "vue";
-import { ref} from "vue";
+import { ref } from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
+import type { InitProps } from "~/components/init/SInitProps";
 import type { List, SchulenKatalogEintrag} from "@core";
-import { DatenbankVerbindungsdaten, DeveloperNotificationException, ServerMode} from "@core";
-import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
+import { DatenbankVerbindungsdaten, DeveloperNotificationException, ServerMode, ArrayList, BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
+import { routeLogin } from "../login/RouteLogin";
 
 import SInit from "~/components/init/SInit.vue";
-import type { InitProps } from "~/components/init/SInitProps";
-import { routeLogin } from "../login/RouteLogin";
 
 
 export class RouteInit extends RouteNode<any, any> {
 
-	protected listSchulkatalog: Ref<List<SchulenKatalogEintrag>> = ref(new ArrayList<SchulenKatalogEintrag>());
-	protected source: Ref<'schulkatalog'|'schild2'|'backup'|undefined> = ref(undefined);
-	protected db: Ref<'mysql'|'mariadb'|'mssql'|'mdb'|undefined> = ref(undefined);
+	protected listSchulkatalog = ref<List<SchulenKatalogEintrag>>(new ArrayList<SchulenKatalogEintrag>());
+	protected source = ref<'schulkatalog' | 'schild2' | 'backup' | undefined>(undefined);
+	protected db = ref<'mysql' | 'mariadb' | 'mssql' | 'mdb'| undefined>(undefined);
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init/:source?/:db?", SInit);
@@ -88,7 +86,8 @@ export class RouteInit extends RouteNode<any, any> {
 	}
 
 	logout = async (): Promise<true> => {
-		await routeLogin.login(api.schema, '', '');
+		await api.logout();
+		await RouteManager.doRoute(routeLogin.getRoute());
 		return true;
 	}
 
