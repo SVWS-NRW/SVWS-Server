@@ -17,11 +17,9 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, Rou
 		super.text = "Blockungen";
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams) {
-		await routeSchuleDatenaustauschUntis.data.ladeAbiturjahrgaenge();
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await routeSchuleDatenaustauschUntis.data.ladeAbiturjahrgaenge();
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);

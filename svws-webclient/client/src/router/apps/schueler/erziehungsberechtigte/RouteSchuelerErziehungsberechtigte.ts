@@ -21,11 +21,9 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 		super.text = "Erziehungsberechtigte";
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
-	}
-
-	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await this.data.ladeListe();
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = to_params.id === undefined ? undefined : parseInt(to_params.id);

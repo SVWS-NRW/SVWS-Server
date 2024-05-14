@@ -31,11 +31,9 @@ export class RouteLehrerStundenplan extends RouteNode<RouteDataLehrerStundenplan
 		]);
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		await routeLehrerStundenplan.data.ladeListe();
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await routeLehrerStundenplan.data.ladeListe();
 		if (to_params.id instanceof Array || to_params.idStundenplan instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.

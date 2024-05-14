@@ -111,7 +111,7 @@ export class RouteManager {
 	}
 
 	/**
-	 * Der beforeEach-Handler ist Navigation-Guard, welcher prüft, ob eine Route angesteuert werden darf oder nicht.
+	 * Der beforeEach-Handler ist ein Navigation-Guard, welcher prüft, ob eine Route angesteuert werden darf oder nicht.
 	 * Dabei wird das Routing so lange gesperrt, bis der afterEach-Handler ausgeführt wurde.
 	 * Schlägt der Navigation-Guard fehl, dann gibt es zwei mögliche Antworten:
 	 *   1. false, d.h. die Route ist ungültig

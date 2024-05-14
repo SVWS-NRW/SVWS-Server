@@ -100,11 +100,9 @@ export class RouteInit extends RouteNode<any, any> {
 		await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
 		if (to_params.source instanceof Array || to_params.db instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if ((to_params.source === 'schild2') && (to_params.db === undefined))

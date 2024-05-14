@@ -33,8 +33,9 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await this.data.ladeListe();
 	}
 
 	public getRoute() : RouteLocationRaw {

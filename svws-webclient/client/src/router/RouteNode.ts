@@ -497,56 +497,33 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * bevor eine Route neu betreten wird.
-     *
-     * @param to   die neue Route
-     * @param to_params   die Routen-Parameter
-     */
-	protected async enter(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * wenn die Informationen einer Route aktualisiert werden sollen.
+	 * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
+	 * mal betreten wird oder einfach nur angepasst wird
+	 *
+	 * @param to            die neue Route
+	 * @param to_params     die Routen-Parameter
+	 * @param from          die alte Route
+	 * @param from_params   die Routen-Parameter der alten Route
+	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 */
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * bevor eine Route neu betreten wird.
-     *
-     * @param to   die neue Route
-     * @param to_params   die Routen-Parameter
-     */
-	public async doEnter(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		try {
-		  return await this.enter(to, to_params, from, from_params);
-		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doEnter(" + to.name + ")");
-			return { name: "error" };
-		}
-	}
-
-	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * wenn die Informationen einer Route aktualisiert werden sollen.
-     * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
-     * mal betreten wird oder einfach nur angepasst wird
-     *
-     * @param to   die neue Route
-     * @param to_params   die Routen-Parameter
-     */
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * wenn die Informationen einer Route aktualisiert werden sollen.
-     * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
-     * mal betreten wird oder einfach nur angepasst wird
-     *
-     * @param to   die neue Route
-     * @param to_params   die Routen-Parameter
-		 * @param from die alte Route
-		 * @param from_params  die Routen-Parameter der alten Route
-     */
-	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * wenn die Informationen einer Route aktualisiert werden sollen.
+	 * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
+	 * mal betreten wird oder einfach nur angepasst wird
+	 *
+	 * @param to            die neue Route
+	 * @param to_params     die Routen-Parameter
+	 * @param from          die alte Route
+	 * @param from_params   die Routen-Parameter der alten Route
+	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 */
+	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -554,7 +531,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params, from, from_params);
+			return await this.update(to, to_params, from, from_params, isEntering);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");

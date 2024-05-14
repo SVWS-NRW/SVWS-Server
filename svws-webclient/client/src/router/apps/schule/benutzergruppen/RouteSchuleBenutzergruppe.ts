@@ -42,11 +42,9 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 		return true;
 	}
 
-	public async enter(to: RouteNode<any, any>, to_params: RouteParams): Promise<any> {
-		await this.data.ladeListe();
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<any> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await this.data.ladeListe();
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);

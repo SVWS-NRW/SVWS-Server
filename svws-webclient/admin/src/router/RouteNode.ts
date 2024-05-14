@@ -441,11 +441,11 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 * mal betreten wird oder einfach nur angepasst wird. Wird die Route das erste
 	 * mal betreten, so ist ein Flag gesetzt.
 	 *
-	 * @param to          die neue Route
-	 * @param to_params   die Routen-Parameter der neuen Route
-	 * @param to          die alte Route
-	 * @param to_params   die Routen-Parameter der alten Route
-	 * @param isEntering  gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param to            die neue Route
+	 * @param to_params     die Routen-Parameter der neuen Route
+	 * @param from          die alte Route
+	 * @param from_params   die Routen-Parameter der alten Route
+	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
 	 */
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 	}
