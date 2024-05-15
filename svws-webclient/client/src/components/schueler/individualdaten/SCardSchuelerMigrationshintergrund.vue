@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Migrationshintergrund">
 		<template #actions>
-			<svws-ui-checkbox :model-value="hatMigrationshintergrund" @update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})">
+			<svws-ui-checkbox class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" @update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})">
 				Migrationshintergrund vorhanden
 			</svws-ui-checkbox>
 		</template>
