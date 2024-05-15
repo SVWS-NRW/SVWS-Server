@@ -4907,24 +4907,13 @@ public class StundenplanManager {
 	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
 	public boolean unterrichtIstVerschiebenErlaubtNach(final @NotNull StundenplanUnterricht quellUnterricht, final @NotNull StundenplanZeitraster zielZeitraster, final int zielWochentyp) {
-		boolean bereitsVerallgemeinert = false;
 		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, quellUnterricht.id)) {
 			// Ein anderes Zeitraster kollidiert nie.
 			if (partner.idZeitraster != zielZeitraster.id)
 				continue;
-			// Verschieben innerhalb eines Zeitrasters möglich?
-			if (quellUnterricht.idZeitraster == zielZeitraster.id) {
-				// Ein verschieben innerhalb des Zeitrasters auf einen speziellen Wochentyp ist möglich
-				if ((quellUnterricht.wochentyp == 0) && (zielWochentyp != 0))
-					continue;
-				// Ein verschieben innerhalb des Zeitrasters auf einen allgemeinen Wochentyp ist möglich, wenn nicht weitere spezielle vorhanden sind
-				if ((quellUnterricht.wochentyp != 0) && (zielWochentyp == 0)) {
-					if (bereitsVerallgemeinert)
-						return false;
-					bereitsVerallgemeinert = true;
-					continue;
-				}
-			}
+			// Gleiches Zeitraster und der selbe Unterricht kollidiert nie.
+			if (quellUnterricht.id == partner.id)
+				continue;
 			// Wir sind im selben Zeitraster, hier kann es zur Kollision kommen.
 			if ((partner.wochentyp == 0) || (zielWochentyp == 0) || (zielWochentyp == partner.wochentyp))
 				return false;
