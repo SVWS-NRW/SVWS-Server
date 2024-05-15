@@ -53,21 +53,19 @@
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
-						<!-- TODO Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
+						<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
 						<div v-if="(dragData !== undefined) && (dragData() !== undefined)"
 							@dragleave="dragOverPos.wochentyp = undefined"
-							class="absolute w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
+							class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
 							:class="isDragOverPosition(wochentag, stunde).value ? ['opacity-100']:['opacity-0']">
 							<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:font-bold"
-								:class="{'bg-success/50': dragOverPos.wochentyp === 0}"
-								@dragover="updateDragOverPosition($event, wochentag, stunde, 0)">
+								:class="{'bg-success/50': dragOverPos.wochentyp === 0}">
 								Jede Woche
 							</div>
 							<div v-if="manager().getWochenTypModell() > 0" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
 								<template v-for="wt, wtIndex in manager().getWochenTypModell()" :key="wtIndex">
 									<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:border-black hover:font-bold"
-										:class="{'bg-success/50': wtIndex+1 === dragOverPos.wochentyp}"
-										@dragover="updateDragOverPosition($event, wochentag, stunde, wtIndex+1)">
+										:class="{'bg-success/50': wtIndex+1 === dragOverPos.wochentyp}">
 										<span class="w-20">{{ manager().stundenplanGetWochenTypAsString(wtIndex+1) }}</span>
 									</div>
 								</template>
@@ -444,6 +442,22 @@
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
 		if (isDropZoneZeitraster(wochentag, stunde))
 			event.preventDefault();
+		if (props.manager().getWochenTypModell() <= 0) {
+			updateDragOverPosition(event, wochentag, stunde, 0);
+			return;
+		}
+		const container : HTMLDivElement | null = event.currentTarget instanceof HTMLDivElement ? event.currentTarget as HTMLDivElement : null;
+		if (container === null)
+			return;
+		const rect = container.getBoundingClientRect();
+		const mouseRelX = (event.clientX - rect.x) / rect.width;
+		const mouseRelY = (event.clientY - rect.y) / rect.height;
+		if (mouseRelY <= 0.5) {
+			updateDragOverPosition(event, wochentag, stunde, 0);
+			return;
+		}
+		const wt = Math.trunc(mouseRelX * props.manager().getWochenTypModell()) + 1;
+		updateDragOverPosition(event, wochentag, stunde, wt);
 	}
 
 	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {
