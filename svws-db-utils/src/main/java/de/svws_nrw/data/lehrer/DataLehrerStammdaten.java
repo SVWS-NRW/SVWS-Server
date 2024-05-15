@@ -63,6 +63,8 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 		daten.telefonMobil = lehrer.telefonMobil;
 		daten.emailDienstlich = lehrer.eMailDienstlich;
 		daten.emailPrivat = lehrer.eMailPrivat;
+		daten.istSichtbar = (lehrer.Sichtbar == null) || lehrer.Sichtbar;
+		daten.istRelevantFuerStatistik = (lehrer.statistikRelevant == null) || lehrer.statistikRelevant;
 		daten.foto = "";
 		return daten;
 	};
@@ -175,6 +177,10 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
 	    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
 	    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
+
+	    			// Sichtbarkeit und Statistik-Relevanz
+	    			case "istSichtbar" -> lehrer.Sichtbar = JSONMapper.convertToBoolean(value, false);
+	    			case "istRelevantFuerStatistik" -> lehrer.statistikRelevant = JSONMapper.convertToBoolean(value, false);
 
 	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    		}

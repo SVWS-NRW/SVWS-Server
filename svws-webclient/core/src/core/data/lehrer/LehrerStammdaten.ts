@@ -107,6 +107,16 @@ export class LehrerStammdaten extends JavaObject {
 	 */
 	public foto : string | null = null;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar : boolean = false;
+
+	/**
+	 * Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht.
+	 */
+	public istRelevantFuerStatistik : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -156,6 +166,12 @@ export class LehrerStammdaten extends JavaObject {
 		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat === null ? null : obj.emailPrivat;
 		result.emailDienstlich = typeof obj.emailDienstlich === "undefined" ? null : obj.emailDienstlich === null ? null : obj.emailDienstlich;
 		result.foto = typeof obj.foto === "undefined" ? null : obj.foto === null ? null : obj.foto;
+		if (typeof obj.istSichtbar === "undefined")
+			 throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		if (typeof obj.istRelevantFuerStatistik === "undefined")
+			 throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
+		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
 		return result;
 	}
 
@@ -182,6 +198,8 @@ export class LehrerStammdaten extends JavaObject {
 		result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
 		result += '"emailDienstlich" : ' + ((!obj.emailDienstlich) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
 		result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -251,6 +269,12 @@ export class LehrerStammdaten extends JavaObject {
 		}
 		if (typeof obj.foto !== "undefined") {
 			result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+		}
+		if (typeof obj.istSichtbar !== "undefined") {
+			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		}
+		if (typeof obj.istRelevantFuerStatistik !== "undefined") {
+			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

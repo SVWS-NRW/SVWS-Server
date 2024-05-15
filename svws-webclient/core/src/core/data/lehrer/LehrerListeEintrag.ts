@@ -43,11 +43,6 @@ export class LehrerListeEintrag extends JavaObject {
 	public istSichtbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
-	 */
-	public istAenderbar : boolean = false;
-
-	/**
 	 * Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht.
 	 */
 	public istRelevantFuerStatistik : boolean = false;
@@ -90,9 +85,6 @@ export class LehrerListeEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
-			 throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
 		if (typeof obj.istRelevantFuerStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
 		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
@@ -109,7 +101,6 @@ export class LehrerListeEintrag extends JavaObject {
 		result += '"personTyp" : ' + JSON.stringify(obj.personTyp!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -141,9 +132,6 @@ export class LehrerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		}
-		if (typeof obj.istAenderbar !== "undefined") {
-			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		if (typeof obj.istRelevantFuerStatistik !== "undefined") {
 			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';

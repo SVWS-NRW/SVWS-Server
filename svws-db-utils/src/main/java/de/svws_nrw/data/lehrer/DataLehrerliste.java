@@ -42,10 +42,9 @@ public final class DataLehrerliste extends DataManager<Long> {
 		eintrag.nachname = l.Nachname;
 		eintrag.vorname = l.Vorname == null ? "" : l.Vorname;
 		eintrag.personTyp = l.PersonTyp.kuerzel;
-		eintrag.sortierung = l.Sortierung;
-		eintrag.istSichtbar = l.Sichtbar;
-		eintrag.istAenderbar = l.Aenderbar;
-		eintrag.istRelevantFuerStatistik = l.statistikRelevant;
+		eintrag.sortierung = (l.Sortierung == null) ? 32000 : l.Sortierung;
+		eintrag.istSichtbar = (l.Sichtbar == null) || l.Sichtbar;
+		eintrag.istRelevantFuerStatistik = (l.statistikRelevant == null) || l.statistikRelevant;
 		return eintrag;
 	};
 

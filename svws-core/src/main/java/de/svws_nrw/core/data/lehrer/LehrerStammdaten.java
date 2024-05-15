@@ -98,4 +98,12 @@ public class LehrerStammdaten {
 	@Schema(description = "Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)", example = "ein Bild")
 	public String foto;
 
+	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
+	public boolean istSichtbar;
+
+	/** Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht. */
+	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example = "true")
+	public boolean istRelevantFuerStatistik;
+
 }
