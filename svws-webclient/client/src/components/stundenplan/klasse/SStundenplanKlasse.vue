@@ -23,7 +23,7 @@
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)"
+							@dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)"
 							:style="`--background-color: ${stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td" :class="{
 								'text-error font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) < 0,
@@ -53,18 +53,20 @@
 				<svws-ui-table :items="stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKursunterricht">
 					<template #body>
 						<template v-if="(schienSortierung === true) && (!stundenplanManager().schieneGetMengeByKlasseId(klasse.id).isEmpty())">
-							<div v-for="schiene of stundenplanManager().schieneGetMengeByKlasseId(klasse.id)" :key="schiene.id" :id="schiene.id > -1 ? `schiene-${schiene.hashCode().toString()}`: ''">
+							<div v-for="schiene of stundenplanManager().schieneGetMengeByKlasseId(klasse.id)" :key="schiene.id" @dragstart="onDrag(schiene, $event)" @dragend="onDrag(undefined)" draggable="true">
 								<!-- Die Schienenzeile -->
-								<div role="row" class="svws-ui-tr bg-light" :draggable="isDraggable()" @dragstart="onDrag(schiene, $event)" @dragend="onDrag(undefined)">
-									<div role="cell" class="select-none svws-ui-td font-bold group" :class="{ 'cursor-grabbing': dragData !== undefined }" draggable="true">
-										<span class="icon i-ri-draggable inline-block opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-										{{ schiene.bezeichnung }}
+								<div role="row" class="svws-ui-tr bg-light">
+									<div role="cell" class="select-none svws-ui-td font-bold group" :class="{ 'cursor-grabbing': dragData !== undefined }">
+										<div class="select-none group cursor-grab inline-flex">
+											<span class="icon i-ri-draggable inline-block opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+											<span class="">{{ schiene.bezeichnung }}</span>
+										</div>
 									</div>
 									<div role="cell" class="select-none svws-ui-td" />
 								</div>
 								<!-- Die Kurszeilen -->
 								<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAndSchieneId(klasse.id, schiene.id)" :key="kurs.id" role="row" class="svws-ui-tr"
-									:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
+									@dragstart.stop="onDrag(kurs, $event)" @dragend.stop="onDrag(undefined)"
 									:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }"
 									:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 									<div role="cell" class="select-none svws-ui-td" :class="{
@@ -72,8 +74,7 @@
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 									}">
 										<div class="ml-3">
-											<div class="svws-ui-badge select-none group cursor-grab"
-												:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
+											<div class="svws-ui-badge select-none group cursor-grab" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }">
 												<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 												<span class="my-0.5" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 											</div>
@@ -91,7 +92,7 @@
 						</template>
 						<template v-else>
 							<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
-								:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
+								@dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
 								:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 								<div role="cell" class="select-none svws-ui-td" :class="{
 									'text-error font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
@@ -173,18 +174,6 @@
 
 	function onDrag(data: StundenplanAnsichtDragData, event?: DragEvent) {
 		dragData.value = data;
-		if (event === undefined)
-			return;
-		let id = '';
-		if (data instanceof StundenplanKlassenunterricht)
-			id = `klasse-${data.idFach}-${data.idKlasse}`;
-		else if (data instanceof StundenplanKurs)
-			id = `kurs-${data.id}`;
-		else if (dragData.value instanceof StundenplanSchiene || dragData.value?.isTranspiledInstanceOf("java.util.List"))
-			id = `schiene-${dragData.value.hashCode().toString()}`;
-		const element = document.getElementById(id);
-		if ((element !== null) && (event.dataTransfer !== null))
-			event.dataTransfer?.setDragImage(element, 0, 0);
 	}
 
 	async function onDrop(zone: StundenplanAnsichtDropZone, wochentyp?: number) {
@@ -277,10 +266,6 @@
 		// TODO Fall Lehrer -> StundenplanPausenzeit
 	}
 
-	function isDraggable() : boolean {
-		return dragData.value === undefined;
-	}
-
 	function isDropZone() : boolean {
 		if ((dragData.value === undefined) || (dragData.value instanceof StundenplanKurs) || (dragData.value instanceof StundenplanKlassenunterricht))
 			return false;
@@ -299,7 +284,7 @@
 
 	const colsKursunterricht: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Unterricht", tooltip: "Kursunterricht", span: 1 },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 5, align: "center" }
 	];
 
 </script>
