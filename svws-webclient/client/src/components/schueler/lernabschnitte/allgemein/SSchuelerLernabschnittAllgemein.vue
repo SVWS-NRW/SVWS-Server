@@ -2,20 +2,20 @@
 	<div class="content">
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
+				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
 					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" />
-				<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
+				<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })" />
-				<svws-ui-text-input placeholder="Datum von" type="date"
+				<svws-ui-text-input placeholder="Datum von" type="date" statistics
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined"
 					@change="datumAnfang => patch({datumAnfang})" />
-				<svws-ui-text-input placeholder="Datum bis" type="date"
+				<svws-ui-text-input placeholder="Datum bis" type="date" statistics
 					:model-value="manager().lernabschnittGet().datumEnde || undefined"
 					@change="datumEnde => patch({datumEnde})" />
 				<svws-ui-spacing />
 				<div>
-					<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}">Klassenlehrer</span>
-					<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
+					<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}">Klassenlehrer </span>
+					<span v-if="!klassenlehrer.length">– Keine Daten vorhanden.</span>
 					<div v-else class="flex flex-col leading-tight text-base">
 						<span v-for="kl in klassenlehrer" :key="kl.id">
 							{{ getLehrerText(kl) }}
@@ -30,21 +30,21 @@
 				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete
+					<svws-ui-select title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete statistics
 						v-model="gliederung" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
-					<svws-ui-select title="Organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete
+					<svws-ui-select title="Organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete statistics
 						v-model="organisationsform" />
-					<svws-ui-select title="Klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete
+					<svws-ui-select title="Klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete statistics
 						v-model="klassenart" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text " autocomplete
+					<svws-ui-select title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text " autocomplete statistics
 						v-model="foerderschwerpunkt" />
-					<svws-ui-select title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete
+					<svws-ui-select title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete statistics
 						v-model="foerderschwerpunkt2" />
-					<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="schwerbehinderung" statistics span="full"> Schwerstbehinderung </svws-ui-checkbox>
 					<svws-ui-checkbox v-model="autismus" span="full"> Autismus </svws-ui-checkbox>
 					<svws-ui-checkbox v-model="aosf" span="full"> AOSF </svws-ui-checkbox>
 					<svws-ui-checkbox v-model="zieldifferentesLernen" span="full"> zieldifferentes Lernen </svws-ui-checkbox>
