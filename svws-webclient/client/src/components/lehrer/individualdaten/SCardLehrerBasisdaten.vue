@@ -1,9 +1,10 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
-		<template #actions>
-			<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
-		</template>
 		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-input-wrapper>
+				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="istStatistikrelevant"> Ist statistikrelevant </svws-ui-checkbox>
+			</svws-ui-input-wrapper>
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel})" type="text" required />
 			<svws-ui-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 			<svws-ui-text-input placeholder="Nachname" :model-value="data.nachname" @change="nachname => patch({nachname})" type="text" required />
@@ -23,7 +24,6 @@
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef } from "vue";
 	import type { LehrerListeManager, LehrerStammdaten } from "@core";
 	import { computed } from "vue";
 	import { DeveloperNotificationException, Geschlecht, Nationalitaeten, PersonalTyp } from "@core";
@@ -36,24 +36,29 @@
 
 	const data = computed<LehrerStammdaten>(() => props.lehrerListeManager().daten());
 
-	const inputGeschlecht: WritableComputedRef<Geschlecht> = computed({
+	const inputGeschlecht = computed<Geschlecht>({
 		get: () => Geschlecht.fromValue(data.value.geschlecht) || Geschlecht.X,
 		set: (value) => void props.patch({ geschlecht: value.id })
 	});
 
-	const inputPersonalTyp: WritableComputedRef<PersonalTyp> = computed({
+	const inputPersonalTyp = computed<PersonalTyp>({
 		get: () => PersonalTyp.values().find(i => i.kuerzel === data.value.personalTyp) || PersonalTyp.SONSTIGE,
 		set: (value) => void props.patch({ personalTyp: value.kuerzel })
 	});
 
-	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
+	const inputStaatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
-	const istSichtbar: WritableComputedRef<boolean> = computed({
+	const istSichtbar = computed<boolean>({
 		get: () => true,
 		set: (value) => {throw new DeveloperNotificationException("Sichtbarkeit ist noch nicht implementiert")}//doPatch({ istSichtbar: value })
+	});
+
+	const istStatistikrelevant = computed<boolean>({
+		get: () => true,
+		set: (value) => {throw new DeveloperNotificationException("Sichtbarkeit ist noch nicht implementiert")}//doPatch({ istStatistikrelevant: value })
 	});
 
 
