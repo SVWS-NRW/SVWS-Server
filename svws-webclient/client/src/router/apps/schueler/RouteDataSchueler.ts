@@ -44,8 +44,8 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
         schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
         schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 
-        // bisher ausgewählte Filter übernehmen, damit sie nicht verloren gehen
-        this.restoreFilter(schuelerListeManager);
+		// bisher ausgewählte Filter übernehmen, damit sie nicht verloren gehen
+		schuelerListeManager.useFilter(this.schuelerListeManager);
 
         // Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
         const auswahlSchueler = this.getSchuelerAuswahl(idSchueler, schuelerListeManager);
@@ -75,38 +75,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
         const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
         return SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
     }
-
-
-	/**
-	 * Übernimmt die bestehenden Auswahl Filter in den übergebenen {@link SchuelerListeManager}
-	 *
-	 * @param {SchuelerListeManager} targetAuswahlManager   Der {@link SchuelerListeManager} für den die Filter des aktuellen {@link SchuelerListeManager} übernommen werden sollen
-	 */
-	private restoreFilter(targetAuswahlManager: SchuelerListeManager): void {
-		for (const keyKlasse of this.schuelerListeManager.klassen.auswahlKeyList()) {
-			if (targetAuswahlManager.klassen.has(keyKlasse)) {
-				targetAuswahlManager.klassen.auswahlAddByKey(keyKlasse);
-			}
-		}
-
-		for (const keyKurs of this.schuelerListeManager.kurse.auswahlKeyList()) {
-			if (targetAuswahlManager.kurse.has(keyKurs)) {
-				targetAuswahlManager.kurse.auswahlAddByKey(keyKurs);
-			}
-		}
-
-		for (const keyJahrgang of this.schuelerListeManager.jahrgaenge.auswahlKeyList()) {
-			if (targetAuswahlManager.jahrgaenge.has(keyJahrgang)) {
-				targetAuswahlManager.jahrgaenge.auswahlAddByKey(keyJahrgang);
-			}
-		}
-
-		for (const keySchulgliederung of this.schuelerListeManager.schulgliederungen.auswahlKeyList()) {
-			if (targetAuswahlManager.schulgliederungen.has(keySchulgliederung)) {
-				targetAuswahlManager.schulgliederungen.auswahlAddByKey(keySchulgliederung);
-			}
-		}
-	}
 
 
 	/**
