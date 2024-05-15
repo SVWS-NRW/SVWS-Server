@@ -5,7 +5,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
 					<div :class="{'flex gap-2': showExtraWTM}">
-						<svws-ui-select :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
+						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
 					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
