@@ -422,42 +422,40 @@
 		return props.useDragAndDrop && (props.dragData() === undefined);
 	}
 
-	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number) : boolean {
+	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, hatWt : boolean, wt : number) : boolean {
 		const data = props.dragData();
 		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
 			return false;
 		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht) || (data instanceof StundenplanSchiene))
 			return true;
 		let z = new StundenplanZeitraster();
-		if (data instanceof StundenplanUnterricht)
+		let uwt = 0;
+		if (data instanceof StundenplanUnterricht) {
 			z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-		else
+			uwt = data.wochentyp;
+		} else {
 			for (const d of data) {
 				z = props.manager().zeitrasterGetByIdOrException(d.idZeitraster);
+				uwt = d.wochentyp;
 				break;
 			}
-		return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
+		}
+		return (!((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde) && (!hatWt || (wt === uwt))));
 	}
 
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
-		if (isDropZoneZeitraster(wochentag, stunde))
-			event.preventDefault();
-		if (props.manager().getWochenTypModell() <= 0) {
-			updateDragOverPosition(event, wochentag, stunde, 0);
-			return;
-		}
 		const container : HTMLDivElement | null = event.currentTarget instanceof HTMLDivElement ? event.currentTarget as HTMLDivElement : null;
 		if (container === null)
 			return;
 		const rect = container.getBoundingClientRect();
 		const mouseRelX = (event.clientX - rect.x) / rect.width;
 		const mouseRelY = (event.clientY - rect.y) / rect.height;
-		if (mouseRelY <= 0.5) {
-			updateDragOverPosition(event, wochentag, stunde, 0);
-			return;
-		}
-		const wt = Math.trunc(mouseRelX * props.manager().getWochenTypModell()) + 1;
+		const hatWt = props.manager().getWochenTypModell() > 0;
+		const calcWt = Math.trunc(mouseRelX * props.manager().getWochenTypModell()) + 1;
+		const wt = hatWt && (mouseRelY > 0.5) ? calcWt : 0;
 		updateDragOverPosition(event, wochentag, stunde, wt);
+		if (isDropZoneZeitraster(wochentag, stunde, hatWt, wt))
+			event.preventDefault();
 	}
 
 	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {
