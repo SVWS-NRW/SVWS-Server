@@ -173,6 +173,18 @@
 
 	function onDrag(data: StundenplanAnsichtDragData, event?: DragEvent) {
 		dragData.value = data;
+		if (event === undefined)
+			return;
+		let id = '';
+		if (data instanceof StundenplanKlassenunterricht)
+			id = `klasse-${data.idFach}-${data.idKlasse}`;
+		else if (data instanceof StundenplanKurs)
+			id = `kurs-${data.id}`;
+		else if (dragData.value instanceof StundenplanSchiene || dragData.value?.isTranspiledInstanceOf("java.util.List"))
+			id = `schiene-${dragData.value.hashCode().toString()}`;
+		const element = document.getElementById(id);
+		if ((element !== null) && (event.dataTransfer !== null))
+			event.dataTransfer?.setDragImage(element, 0, 0);
 	}
 
 	async function onDrop(zone: StundenplanAnsichtDropZone, wochentyp?: number) {
