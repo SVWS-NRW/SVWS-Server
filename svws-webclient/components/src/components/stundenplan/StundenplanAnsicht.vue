@@ -87,16 +87,15 @@
 							</div>
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0).value]" :key="schiene.id">
-							<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, 0, schiene.id).value.hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
-								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}"
-									:draggable @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id).value, $event)" @dragend="onDrag(undefined)">
+							<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id).value, $event)" @dragend="onDrag(undefined)" :draggable>
+								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}">
 									{{ schiene.bezeichnung }}
 								</div>
 								<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, schiene.id).value" :key="unterricht.id"
 									class="svws-ui-stundenplan--unterricht"
 									:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1}"
 									:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
-									:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
+									:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 									<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 									<div title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 									<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
@@ -114,7 +113,7 @@
 										</template>
 										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, 0).value" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht"
-											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, 0).value.size() === 1, 'svws-compact': !wochentyp()}"
+											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, 0).value.size() === 1, 'svws-compact': !wochentyp(), 'cursor-grab': draggable}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -126,16 +125,15 @@
 										<template v-if="getUnterricht(wochentag, stunde, wt, schiene.id).value.size() > 0">
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 										</template>
-										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt, schiene.id).value.hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
-											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}"
-												:draggable @dragstart="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id).value, $event)" @dragend="onDrag(undefined)">
+										<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id).value, $event)" @dragend="onDrag(undefined)" :draggable>
+											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}">
 												{{ schiene.bezeichnung }}
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.id).value" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
 												:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, wt, schiene.id).value.size() === 1, 'svws-compact': !wochentyp()} "
 												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
-												:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
+												:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 												<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 												<div title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 												<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
@@ -154,7 +152,8 @@
 					<template v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause">
 						<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
 							<template v-if="modePausenaufsichten === 'normal'">
-								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause).value" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause).value" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+									:class="{'svws-lehrkraft': mode === 'lehrer', 'cursor-grab': draggable}"
 									:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
 									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
@@ -175,7 +174,7 @@
 											<span class="text-sm">{{ getPausenaufsichtenPausenzeit(pause).value.size() }} Aufsichten</span>
 										</span>
 										<template #content>
-											<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause).value" :key="pausenaufsicht.id" class="grid grid-cols-3 gap-2 items-center" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+											<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause).value" :key="pausenaufsicht.id" class="grid grid-cols-3 gap-2 items-center" :class="{'svws-lehrkraft': mode === 'lehrer', 'cursor-grab': draggable}"
 												:draggable @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 												<div class="text-sm"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
 												<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
@@ -198,15 +197,15 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
-	import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
-	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-	import { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
+	import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
+	import type { List } from "../../../../core/src/java/util/List";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 	import { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
+	import { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
+	import { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
+	import { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
 	import { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
 
