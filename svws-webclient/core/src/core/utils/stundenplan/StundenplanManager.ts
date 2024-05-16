@@ -4569,20 +4569,11 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
 	public unterrichtIstVerschiebenErlaubtNach(quellUnterricht : StundenplanUnterricht, zielZeitraster : StundenplanZeitraster, zielWochentyp : number) : boolean {
-		let bereitsVerallgemeinert : boolean = false;
 		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, quellUnterricht.id)) {
 			if (partner.idZeitraster !== zielZeitraster.id)
 				continue;
-			if (quellUnterricht.idZeitraster === zielZeitraster.id) {
-				if ((quellUnterricht.wochentyp === 0) && (zielWochentyp !== 0))
-					continue;
-				if ((quellUnterricht.wochentyp !== 0) && (zielWochentyp === 0)) {
-					if (bereitsVerallgemeinert)
-						return false;
-					bereitsVerallgemeinert = true;
-					continue;
-				}
-			}
+			if (quellUnterricht.id === partner.id)
+				continue;
 			if ((partner.wochentyp === 0) || (zielWochentyp === 0) || (zielWochentyp === partner.wochentyp))
 				return false;
 		}
