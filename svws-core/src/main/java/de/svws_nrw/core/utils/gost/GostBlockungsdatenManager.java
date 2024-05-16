@@ -707,22 +707,22 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
-	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
+	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}.
+	 * <br>Falls das Ergebnis nicht existiert, passiert nichts.
 	 *
 	 * @param ergebnis  Das Ergebnis mit der neuen Bewertung.
 	 *
-	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
+	 * @throws DeveloperNotificationException Falls die Daten inkonsistent sind.
 	 */
 	public void ergebnisUpdateBewertung(final @NotNull GostBlockungsergebnis ergebnis) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 
-		// Bewertung aktualisieren.
-		for (final @NotNull GostBlockungsergebnis eintrag : _daten.ergebnisse)
-			if (eintrag.id == ergebnis.id)
-				eintrag.bewertung = ergebnis.bewertung;
+		// Ersetze, falls vorhanden, das aktuelle Ergebnis mit dem neuen Ergebnis. Aktualisiert dadurch auch die Bewertung.
+		for (int i = 0; i < _daten.ergebnisse.size(); i++)
+			if (_daten.ergebnisse.get(i).id == ergebnis.id)
+				_daten.ergebnisse.set(i, ergebnis);
 
 		// Ergebnisse sortieren.
 		_daten.ergebnisse.sort(_compErgebnisse);

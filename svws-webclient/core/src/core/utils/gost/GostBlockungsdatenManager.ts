@@ -744,19 +744,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
-	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
+	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}.
+	 * <br>Falls das Ergebnis nicht existiert, passiert nichts.
 	 *
 	 * @param ergebnis  Das Ergebnis mit der neuen Bewertung.
 	 *
-	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
+	 * @throws DeveloperNotificationException Falls die Daten inkonsistent sind.
 	 */
 	public ergebnisUpdateBewertung(ergebnis : GostBlockungsergebnis) : void {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
-		for (const eintrag of this._daten.ergebnisse)
-			if (eintrag.id === ergebnis.id)
-				eintrag.bewertung = ergebnis.bewertung;
+		for (let i : number = 0; i < this._daten.ergebnisse.size(); i++)
+			if (this._daten.ergebnisse.get(i).id === ergebnis.id)
+				this._daten.ergebnisse.set(i, ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
