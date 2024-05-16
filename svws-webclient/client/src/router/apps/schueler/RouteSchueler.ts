@@ -16,6 +16,7 @@ import { routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnit
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
+import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchuelerVermerke";
 
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 
@@ -39,6 +40,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		super.setView("liste", SSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuelerIndividualdaten,
+			routeSchuelerVermerke,
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerKAoA,

@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
+import de.svws_nrw.core.data.schueler.SchuelerVermerke;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittBemerkungen;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
@@ -31,6 +32,7 @@ import de.svws_nrw.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
+import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
@@ -772,6 +774,57 @@ public class APISchueler {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogHerkunftsarten().getList(),
         	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Vermerke eines Schülers.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+	 *                soll
+	 * @param id      die Datenbank-ID zur Identifikation des Schülers
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Vermerkdaten des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/vermerke")
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Vermerkdaten.", description = "Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank "
+		+ "und liefert diese zurück. "
+		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerke"
+		+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Vermerkdaten des Schülers", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerVermerke.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
+	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+								 @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIDasResponse(id),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+	// TODO Docstring
+    // TODO rework this
+
+	@PATCH
+	@Path("/{id : \\d+}/vermerke")
+	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachbelegung.",
+		description = "Passt die Sprachbelegung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Sprachbelegung integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchSchuelerVermerke(@PathParam("id") final long id,
+												@RequestBody(description = "Der Patch für die Vermerke", required = true, content =
+												@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
+												@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(id, is),
+			// TODO SEC Prüfen
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+	}
+
+
+
 
 
 	/**

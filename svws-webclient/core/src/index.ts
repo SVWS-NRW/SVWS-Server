@@ -294,6 +294,7 @@ export { SchuelerSchulbesuchMerkmal } from './core/data/schueler/SchuelerSchulbe
 export { SchuelerSchulbesuchSchule } from './core/data/schueler/SchuelerSchulbesuchSchule';
 export { SchuelerSchulbesuchsdaten } from './core/data/schueler/SchuelerSchulbesuchsdaten';
 export { SchuelerStammdaten } from './core/data/schueler/SchuelerStammdaten';
+export { SchuelerVermerke } from './core/data/schueler/SchuelerVermerke';
 export { Sprachbelegung } from './core/data/schueler/Sprachbelegung';
 export { Sprachendaten } from './core/data/schueler/Sprachendaten';
 export { Sprachpruefung } from './core/data/schueler/Sprachpruefung';

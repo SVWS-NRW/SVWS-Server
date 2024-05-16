@@ -145,6 +145,7 @@ import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
 import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
+import { SchuelerVermerke } from '../core/data/schueler/SchuelerVermerke';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 import { SchulEintrag } from '../core/data/kataloge/SchulEintrag';
@@ -9407,6 +9408,59 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerStammdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getVermerkdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke
+	 *
+	 * Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerkebesitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Vermerkdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerVermerke>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Vermerkdaten des Schülers
+	 */
+	public async getVermerkdaten(schema : string, id : number) : Promise<List<SchuelerVermerke>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerVermerke>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerVermerke für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke
+	 *
+	 * Passt die Sprachbelegung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Sprachbelegung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerVermerke>} data - der Request-Body für die HTTP-Methode
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchuelerVermerke(data : Partial<SchuelerVermerke>, id : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke"
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
