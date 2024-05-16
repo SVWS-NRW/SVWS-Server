@@ -135,7 +135,7 @@
 			selected.value = [];
 		}
 		if (neu === true)
-			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager().faecherManager().faecher(), props.getDatenmanager().daten());
+			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager());
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);

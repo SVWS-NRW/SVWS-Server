@@ -1,5 +1,6 @@
 import { shallowRef } from "vue";
-import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsdatenManager, GostFaecherManager, GostBlockungsergebnisManager, KursblockungAlgorithmusPermanent } from "@core";
+import type { GostBlockungsdatenManager, List } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsergebnisManager, KursblockungAlgorithmusPermanent } from "@core";
 import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
 	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
@@ -66,10 +67,10 @@ export class WorkerManagerKursblockung {
 	 * @param faecherListe   die Liste der Fächer des Abiturjahrgangs
 	 * @param blockung       die Daten der Kursblockung
 	 */
-	public constructor(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
-		this.faecherListe = faecherListe;
-		this.blockung = blockung;
-		this.datenManager = new GostBlockungsdatenManager(this.blockung, new GostFaecherManager(faecherListe));
+	public constructor(datenManager: GostBlockungsdatenManager) {
+		this.faecherListe = datenManager.faecherManager().faecher();
+		this.blockung = datenManager.daten();
+		this.datenManager = datenManager;
 		// Teste, ob der Algorithmus überhaupt mit den aktuellen Regeln möglich ist
 		new KursblockungAlgorithmusPermanent(this.datenManager);
 		this.usedWorkerThreads.value = 1;
