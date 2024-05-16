@@ -15,7 +15,7 @@ dependencies {
 
     implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
     
-    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
+    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java', '**/svws_nrw/schuldatei/*/data/**/*.java', '**/svws_nrw/schuldatei/*/utils/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
     
     javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java']) 
 }
