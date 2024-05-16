@@ -40,7 +40,7 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	public static readonly VERSION : number = 1;
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps
+	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand des Kürzels des PersonalTyps
 	 */
 	private static readonly _mapKuerzel : HashMap<string, PersonalTyp> = new HashMap<string, PersonalTyp>();
 
@@ -121,11 +121,11 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	}
 
 	/**
-	 * Gibt den PersonalTyp anhand der Bezeichnung zurück.
+	 * Gibt den PersonalTyp anhand des Kürzels  zurück.
 	 *
-	 * @param kuerzel   die Bezeichnung des Personal-Typs
+	 * @param kuerzel   das Kürzel des Personal-Typs
 	 *
-	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
+	 * @return der Personal-Typ oder null, falls das Kürzel ungültig ist
 	 */
 	public static fromKuerzel(kuerzel : string | null) : PersonalTyp | null {
 		return PersonalTyp.getMapKuerzel().get(kuerzel);
