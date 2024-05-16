@@ -42,7 +42,7 @@
 	});
 
 	const inputPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.values().find(i => i.kuerzel === data.value.personalTyp) || PersonalTyp.SONSTIGE,
+		get: () => PersonalTyp.fromKuerzel(data.value.personalTyp) || PersonalTyp.SONSTIGE,
 		set: (value) => void props.patch({ personalTyp: value.kuerzel })
 	});
 
