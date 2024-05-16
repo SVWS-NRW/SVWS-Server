@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.schuldatei.v1.data.Schuldatei;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiKataloge;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiKatalogeintrag;
 import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheit;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,26 +18,41 @@ import jakarta.validation.constraints.NotNull;
 public final class SchuldateiManager {
 
 	/** Die Daten der Schuldatei */
-	private final @NotNull Schuldatei schuldatei;
+	private final @NotNull Schuldatei _schuldatei;
+
+	/** Die Kataloge zu der Schuldatei */
+	private final @NotNull SchuldateiKataloge _kataloge;
+
+	/** Die Kataloge zu der Schuldatei anhand ihrer Namen */
+	private final @NotNull Map<@NotNull String, @NotNull SchuldateiKatalogManager> _mapKataloge = new HashMap<>();
 
 	/** Eine Map mit allen Organisationseinheiten, welche ihrer Schulnummer zugeordnet sind */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheit> mapOrganisationseinheitenBySchulnummer = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheit> _mapOrganisationseinheitenBySchulnummer = new HashMap<>();
 
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen
 	 * Organisationseinheiten der Schuldatei.
 	 *
-	 * @param daten   die Liste mit den Organisationseinheiten der Schuldatei
+	 * @param schuldatei   die Schuldatei
+	 * @param kataloge     die Kataloge zu der Schuldatei
 	 */
-	public SchuldateiManager(final @NotNull Schuldatei daten) {
-		this.schuldatei = daten;
+	public SchuldateiManager(final @NotNull Schuldatei schuldatei, final @NotNull SchuldateiKataloge kataloge) {
+		this._schuldatei = schuldatei;
+		this._kataloge = kataloge;
+		// Durchwandere die Katalog-Einträge und erzeuge die zugehörigen Katalog-Manager
+		for (final @NotNull SchuldateiKatalogeintrag eintrag : kataloge.katalog) {
+			final SchuldateiKatalogManager katalog = _mapKataloge.computeIfAbsent(eintrag.katalog, (final @NotNull String k) -> new SchuldateiKatalogManager(k));
+			if (katalog != null) {
+				katalog.addEintrag(eintrag);
+			}
+		}
 		// Durchwandere die Organisationseinheiten
 		for (final @NotNull SchuldateiOrganisationseinheit organisationseinheit : schuldatei.organisationseinheit) {
 			// Prüfe, ob die Schulnummer schonmal eingelesen wurde. In diesem Fall sind die Daten der Schuldatei inkonsistent
-			if (mapOrganisationseinheitenBySchulnummer.containsKey(organisationseinheit.schulnummer))
+			if (_mapOrganisationseinheitenBySchulnummer.containsKey(organisationseinheit.schulnummer))
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")");
-			mapOrganisationseinheitenBySchulnummer.put(organisationseinheit.schulnummer, organisationseinheit);
+			_mapOrganisationseinheitenBySchulnummer.put(organisationseinheit.schulnummer, organisationseinheit);
 		}
 	}
 
@@ -46,7 +63,7 @@ public final class SchuldateiManager {
 	 * @return die Liste aller Organisationseinheiten der Schuldatei
 	 */
 	public @NotNull List<@NotNull SchuldateiOrganisationseinheit> getList() {
-		return this.schuldatei.organisationseinheit;
+		return this._schuldatei.organisationseinheit;
 	}
 
 
@@ -58,7 +75,7 @@ public final class SchuldateiManager {
 	 * @return die Organisationseinheit
 	 */
 	public SchuldateiOrganisationseinheit getOrganisationsheinheitBySchulnummer(final @NotNull Integer schulnummer) {
-		return this.mapOrganisationseinheitenBySchulnummer.get(schulnummer);
+		return this._mapOrganisationseinheitenBySchulnummer.get(schulnummer);
 	}
 
 }

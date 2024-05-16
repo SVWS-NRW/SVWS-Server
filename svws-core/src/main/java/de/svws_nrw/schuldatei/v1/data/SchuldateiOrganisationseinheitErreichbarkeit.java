@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * der Schuldatei.
  */
 @XmlRootElement
-@Schema(description = "die Grunddaten einer Organisationseinheit der Schuldatei.")
+@Schema(description = "eine Erreichbarkeit einer Organisationseinheit der Schuldatei.")
 @TranspilerDTO
 public class SchuldateiOrganisationseinheitErreichbarkeit {
 

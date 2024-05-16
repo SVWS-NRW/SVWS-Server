@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.schuldatei.v1.data.Schuldatei;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiKataloge;
 import de.svws_nrw.schuldatei.v1.utils.SchuldateiManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,6 +20,9 @@ public final class SchuldateiReader {
 	/** Der Dateipfad in den Ressourcen, wo die lokale Version der Schuldatei liegt */
 	public static final @NotNull String filenameSchuldatei = "de/svws_nrw/schuldatei/v1/data/Schuldatei.json";
 
+	/** Der Dateipfad in den Ressourcen, wo die lokale Version der Katalgeinträge der Schuldatei liegt */
+	public static final @NotNull String filenameSchuldateiKataloge = "de/svws_nrw/schuldatei/v1/data/SchuldateiKataloge.json";
+
 
 	/**
 	 * Erstellt einen neuen {@link SchuldateiManager} mithilfe der Daten aus
@@ -28,10 +32,12 @@ public final class SchuldateiReader {
 	 */
 	public static SchuldateiManager getManagerLokal() {
 		try {
-			final String json = ResourceUtils.text(filenameSchuldatei);
 			final ObjectMapper mapper = new ObjectMapper();
-			final Schuldatei daten = mapper.readValue(json, Schuldatei.class);
-			return new SchuldateiManager(daten);
+			final String jsonSchuldatei = ResourceUtils.text(filenameSchuldatei);
+			final Schuldatei schuldatei = mapper.readValue(jsonSchuldatei, Schuldatei.class);
+			final String jsonSchuldateiKataloge = ResourceUtils.text(filenameSchuldateiKataloge);
+			final SchuldateiKataloge schuldateiKataloge = mapper.readValue(jsonSchuldateiKataloge, SchuldateiKataloge.class);
+			return new SchuldateiManager(schuldatei, schuldateiKataloge);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			return null;
 		}

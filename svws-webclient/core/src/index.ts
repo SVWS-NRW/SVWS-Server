@@ -691,6 +691,8 @@ export type { Consumer } from './java/util/function/Consumer';
 export type { JavaFunction } from './java/util/function/JavaFunction';
 export type { Predicate } from './java/util/function/Predicate';
 export { Schuldatei } from './schuldatei/v1/data/Schuldatei';
+export { SchuldateiKataloge } from './schuldatei/v1/data/SchuldateiKataloge';
+export { SchuldateiKatalogeintrag } from './schuldatei/v1/data/SchuldateiKatalogeintrag';
 export { SchuldateiOrganisationseinheit } from './schuldatei/v1/data/SchuldateiOrganisationseinheit';
 export { SchuldateiOrganisationseinheitAdresse } from './schuldatei/v1/data/SchuldateiOrganisationseinheitAdresse';
 export { SchuldateiOrganisationseinheitEigenschaft } from './schuldatei/v1/data/SchuldateiOrganisationseinheitEigenschaft';
@@ -699,4 +701,5 @@ export { SchuldateiOrganisationseinheitGliederung } from './schuldatei/v1/data/S
 export { SchuldateiOrganisationseinheitGrunddaten } from './schuldatei/v1/data/SchuldateiOrganisationseinheitGrunddaten';
 export { SchuldateiOrganisationseinheitMerkmal } from './schuldatei/v1/data/SchuldateiOrganisationseinheitMerkmal';
 export { SchuldateiOrganisationseinheitSchulform } from './schuldatei/v1/data/SchuldateiOrganisationseinheitSchulform';
+export { SchuldateiKatalogManager } from './schuldatei/v1/utils/SchuldateiKatalogManager';
 export { SchuldateiManager } from './schuldatei/v1/utils/SchuldateiManager';
