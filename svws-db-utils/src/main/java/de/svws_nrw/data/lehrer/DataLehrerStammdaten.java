@@ -138,7 +138,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			}
 	    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge());
 	    			case "personalTyp" -> {
-		        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false, null));
+		        		final PersonalTyp p = PersonalTyp.fromKuerzel(JSONMapper.convertToString(value, false, false, null));
 		        		if (p == null)
 		        			throw new ApiOperationException(Status.CONFLICT);
 		            	lehrer.PersonTyp = p;

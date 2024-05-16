@@ -77,7 +77,7 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 		for (final @NotNull LehrerListeEintrag l : this.liste.list()) {
 			this._mapKlasseIstSichtbar.put(l.istSichtbar, l.id, l);
 			this._mapLehrerIstStatistikrelevant.put(l.istRelevantFuerStatistik, l.id, l);
-			final PersonalTyp personalTyp = PersonalTyp.fromBezeichnung(l.personTyp);
+			final PersonalTyp personalTyp = PersonalTyp.fromKuerzel(l.personTyp);
 			if (personalTyp != null)
 				this._mapKlasseHatPersonaltyp.put(personalTyp, l.id, l);
 		}
@@ -123,7 +123,7 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 	public PersonalTyp datenGetPersonalTyp() {
 		if ((this._daten == null) || (this._daten.personalTyp == null))
 			return null;
-		return PersonalTyp.fromBezeichnung(this._daten.personalTyp);
+		return PersonalTyp.fromKuerzel(this._daten.personalTyp);
 	}
 
 
@@ -208,7 +208,7 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 		if (this.personaltypen.auswahlExists()) {
 			if ((eintrag.personTyp == null) || (eintrag.personTyp.isEmpty()))
 				return false;
-			final PersonalTyp personalTyp = PersonalTyp.fromBezeichnung(eintrag.personTyp);
+			final PersonalTyp personalTyp = PersonalTyp.fromKuerzel(eintrag.personTyp);
 			if ((personalTyp == null) || (!this.personaltypen.auswahlHas(personalTyp)))
 				return false;
 		}

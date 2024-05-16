@@ -87,7 +87,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		for (const l of this.liste.list()) {
 			this._mapKlasseIstSichtbar.put(l.istSichtbar, l.id, l);
 			this._mapLehrerIstStatistikrelevant.put(l.istRelevantFuerStatistik, l.id, l);
-			const personalTyp : PersonalTyp | null = PersonalTyp.fromBezeichnung(l.personTyp);
+			const personalTyp : PersonalTyp | null = PersonalTyp.fromKuerzel(l.personTyp);
 			if (personalTyp !== null)
 				this._mapKlasseHatPersonaltyp.put(personalTyp, l.id, l);
 		}
@@ -128,7 +128,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	public datenGetPersonalTyp() : PersonalTyp | null {
 		if ((this._daten === null) || (this._daten.personalTyp === null))
 			return null;
-		return PersonalTyp.fromBezeichnung(this._daten.personalTyp);
+		return PersonalTyp.fromKuerzel(this._daten.personalTyp);
 	}
 
 	/**
@@ -207,7 +207,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		if (this.personaltypen.auswahlExists()) {
 			if ((eintrag.personTyp === null) || (JavaString.isEmpty(eintrag.personTyp)))
 				return false;
-			const personalTyp : PersonalTyp | null = PersonalTyp.fromBezeichnung(eintrag.personTyp);
+			const personalTyp : PersonalTyp | null = PersonalTyp.fromKuerzel(eintrag.personTyp);
 			if ((personalTyp === null) || (!this.personaltypen.auswahlHas(personalTyp)))
 				return false;
 		}

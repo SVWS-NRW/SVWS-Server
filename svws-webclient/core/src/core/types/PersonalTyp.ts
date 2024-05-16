@@ -42,7 +42,7 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps
 	 */
-	private static readonly _mapBezeichnungen : HashMap<string, PersonalTyp> = new HashMap<string, PersonalTyp>();
+	private static readonly _mapKuerzel : HashMap<string, PersonalTyp> = new HashMap<string, PersonalTyp>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps
@@ -108,27 +108,27 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	}
 
 	/**
-	 * Gibt eine Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
+	 * Gibt eine Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
+	 * @return die Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
-	private static getMapBezeichnungen() : HashMap<string, PersonalTyp> {
-		if (PersonalTyp._mapBezeichnungen.size() === 0)
+	private static getMapKuerzel() : HashMap<string, PersonalTyp> {
+		if (PersonalTyp._mapKuerzel.size() === 0)
 			for (const p of PersonalTyp.values())
-				PersonalTyp._mapBezeichnungen.put(p.kuerzel, p);
-		return PersonalTyp._mapBezeichnungen;
+				PersonalTyp._mapKuerzel.put(p.kuerzel, p);
+		return PersonalTyp._mapKuerzel;
 	}
 
 	/**
 	 * Gibt den PersonalTyp anhand der Bezeichnung zurück.
 	 *
-	 * @param bezeichnung   die Bezeichnung des Personal-Typs
+	 * @param kuerzel   die Bezeichnung des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
 	 */
-	public static fromBezeichnung(bezeichnung : string | null) : PersonalTyp | null {
-		return PersonalTyp.getMapBezeichnungen().get(bezeichnung);
+	public static fromKuerzel(kuerzel : string | null) : PersonalTyp | null {
+		return PersonalTyp.getMapKuerzel().get(kuerzel);
 	}
 
 	/**

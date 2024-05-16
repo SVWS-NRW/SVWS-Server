@@ -34,7 +34,7 @@ public enum PersonalTyp {
 
 
 	/** Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps */
-	private static final @NotNull HashMap<@NotNull String, @NotNull PersonalTyp> _mapBezeichnungen = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull String, @NotNull PersonalTyp> _mapKuerzel = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps */
 	private static final @NotNull HashMap<@NotNull Integer, @NotNull PersonalTyp> _mapID = new HashMap<>();
@@ -91,28 +91,28 @@ public enum PersonalTyp {
 
 
 	/**
-	 * Gibt eine Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
+	 * Gibt eine Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
+	 * @return die Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull PersonalTyp> getMapBezeichnungen() {
-		if (_mapBezeichnungen.size() == 0)
+	private static @NotNull HashMap<@NotNull String, @NotNull PersonalTyp> getMapKuerzel() {
+		if (_mapKuerzel.size() == 0)
 			for (final PersonalTyp p : PersonalTyp.values())
-				_mapBezeichnungen.put(p.kuerzel, p);
-		return _mapBezeichnungen;
+				_mapKuerzel.put(p.kuerzel, p);
+		return _mapKuerzel;
 	}
 
 
 	/**
 	 * Gibt den PersonalTyp anhand der Bezeichnung zurück.
 	 *
-	 * @param bezeichnung   die Bezeichnung des Personal-Typs
+	 * @param kuerzel   die Bezeichnung des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
 	 * */
-	public static PersonalTyp fromBezeichnung(final String bezeichnung) {
-		return getMapBezeichnungen().get(bezeichnung);
+	public static PersonalTyp fromKuerzel(final String kuerzel) {
+		return getMapKuerzel().get(kuerzel);
 	}
 
 
