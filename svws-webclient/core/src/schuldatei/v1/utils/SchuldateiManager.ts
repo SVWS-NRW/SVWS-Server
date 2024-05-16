@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchuldateiEintrag } from '../../../schuldatei/v1/data/SchuldateiEintrag';
 import { HashMap } from '../../../java/util/HashMap';
+import { Schuldatei } from '../../../schuldatei/v1/data/Schuldatei';
 import { SchuldateiOrganisationseinheit } from '../../../schuldatei/v1/data/SchuldateiOrganisationseinheit';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -9,9 +9,9 @@ import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentExce
 export class SchuldateiManager extends JavaObject {
 
 	/**
-	 * Die Liste mit allen Einträgen der Schuldatei
+	 * Die Daten der Schuldatei
 	 */
-	private readonly listEintraege : List<SchuldateiEintrag>;
+	private readonly schuldatei : Schuldatei;
 
 	/**
 	 * Eine Map mit allen Organisationseinheiten, welche ihrer Schulnummer zugeordnet sind
@@ -25,11 +25,10 @@ export class SchuldateiManager extends JavaObject {
 	 *
 	 * @param daten   die Liste mit den Organisationseinheiten der Schuldatei
 	 */
-	public constructor(daten : List<SchuldateiEintrag>) {
+	public constructor(daten : Schuldatei) {
 		super();
-		this.listEintraege = daten;
-		for (const eintrag of daten) {
-			const organisationseinheit : SchuldateiOrganisationseinheit = eintrag.organisationseinheit;
+		this.schuldatei = daten;
+		for (const organisationseinheit of this.schuldatei.organisationseinheit) {
 			if (this.mapOrganisationseinheitenBySchulnummer.containsKey(organisationseinheit.schulnummer))
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")")
 			this.mapOrganisationseinheitenBySchulnummer.put(organisationseinheit.schulnummer, organisationseinheit);
@@ -37,12 +36,12 @@ export class SchuldateiManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Liste aller Einträge der Schuldatei zurück.
+	 * Gibt die Liste aller Organisationseinheiten der Schuldatei zurück.
 	 *
-	 * @return die Liste aller Einträge der Schuldatei
+	 * @return die Liste aller Organisationseinheiten der Schuldatei
 	 */
-	public getList() : List<SchuldateiEintrag> {
-		return this.listEintraege;
+	public getList() : List<SchuldateiOrganisationseinheit> {
+		return this.schuldatei.organisationseinheit;
 	}
 
 	/**

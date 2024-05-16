@@ -690,7 +690,7 @@ export type { BiFunction } from './java/util/function/BiFunction';
 export type { Consumer } from './java/util/function/Consumer';
 export type { JavaFunction } from './java/util/function/JavaFunction';
 export type { Predicate } from './java/util/function/Predicate';
-export { SchuldateiEintrag } from './schuldatei/v1/data/SchuldateiEintrag';
+export { Schuldatei } from './schuldatei/v1/data/Schuldatei';
 export { SchuldateiOrganisationseinheit } from './schuldatei/v1/data/SchuldateiOrganisationseinheit';
 export { SchuldateiOrganisationseinheitAdresse } from './schuldatei/v1/data/SchuldateiOrganisationseinheitAdresse';
 export { SchuldateiOrganisationseinheitEigenschaft } from './schuldatei/v1/data/SchuldateiOrganisationseinheitEigenschaft';
