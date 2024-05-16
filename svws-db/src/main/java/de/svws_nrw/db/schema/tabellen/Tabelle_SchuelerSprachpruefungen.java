@@ -112,7 +112,7 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 	).setRevision(SchemaRevisionen.REV_12);
 
 	/** Die Definition des Non-Unique-Index SchuelerSprachpruefungen_IDX2 */
-	public SchemaTabelleIndex unique_SchuelerSprachpruefungen_IDX2 = addIndex("SchuelerSprachpruefungen_IDX2",
+	public SchemaTabelleIndex index_SchuelerSprachpruefungen_IDX2 = addIndex("SchuelerSprachpruefungen_IDX2",
 		col_Schueler_ID,
 		col_Sprache
 	)
