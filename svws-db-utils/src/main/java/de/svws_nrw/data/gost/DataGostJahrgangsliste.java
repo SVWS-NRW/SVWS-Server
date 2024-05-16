@@ -244,7 +244,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						DTOSchuelerLernabschnittsdaten.class, schuelerIDs, schuljahresabschnittIDs);
 				final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
 				final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapLernabschnitte = lernabschnitte.stream().collect(Collectors.groupingBy(l -> l.Schueler_ID));
-				final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
+				final List<DTOSchuelerLeistungsdaten> leistungsdaten = lernabschnittIDs.isEmpty() ? new ArrayList<>()
+						: conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
 				final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
 
 				for (final long schueler_id : schuelerIDs) {
