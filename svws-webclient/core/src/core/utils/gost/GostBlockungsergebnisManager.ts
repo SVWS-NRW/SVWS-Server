@@ -27,6 +27,7 @@ import { PairNN } from '../../../core/adt/PairNN';
 import { DTOUtils } from '../../../core/utils/DTOUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
@@ -4812,8 +4813,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 * <br>(1) Wenn der Schüler den Ziel-Kurs nicht wählen darf (falsche Fachwahlen), dann passiert nichts.
-	 * <br>(2) Wenn ein Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
-	 * <br>(3) Der Schüler wird ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
+	 * <br>(2) Wenn der Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
+	 * <br>(3) Der Schüler ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
 	 * <br>(4) Der Schüler wird einem neuen Kurs hinzugefügt und wird ggf. im neuen Kurs fixiert.
 	 *
 	 * @param kursSchuelerZuordnungen           Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
@@ -4859,6 +4860,45 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listEntfernen.add(z);
 		}
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler-Kerngruppe auf mehrere Kurse zu verteilen.
+	 * <br>(1) Die SuS werden entsprechende der Methode {@link #kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN} verschoben.
+	 * <br>(2) Falls "zielKurseLeeren", werden alle SuS aus dem Ziel-Kurs entfernt, die nicht zur Kerngruppe gehören.
+	 *
+	 * @param idQuellKurs                       Der Quell-Kurs definiert die Kerngruppe.
+	 * @param idZielKurse                       Alle Ziel-Kurs-Schülermengen werden der Kerngruppe angeglichen.
+	 * @param verschiebeFixierteDesQuellkurses  Falls TRUE, dann werden Fixierungen im Quell-Kurs gelöst, andernfalls wird der Schüler nicht verschoben.
+	 * @param inZielKursenFixieren              Falls TRUE, wird nach der Verschiebung der Schüler im Ziel-Kurs fixiert.
+	 * @param zielKurseLeeren                   Falls TRUE, werden alle SuS aus dem Ziel-Kurs entfernt, die nicht zur Kerngruppe gehören.
+	 *
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
+	 */
+	private kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(idQuellKurs : number, idZielKurse : JavaSet<number>, verschiebeFixierteDesQuellkurses : boolean, inZielKursenFixieren : boolean, zielKurseLeeren : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const fachartSet : JavaSet<number> = new HashSet<number>();
+		for (const idZielKurs of idZielKurse) {
+			const kurs : GostBlockungsergebnisKurs = this.getKursE(idZielKurs);
+			const fachartID : number = GostKursart.getFachartID(kurs.fachID, kurs.kursart);
+			if (!fachartSet.add(fachartID)) {
+				const sKursQuelle : string | null = this._parent.toStringKursSimple(idQuellKurs);
+				const sFachartZiel : string | null = this._parent.toStringFachartSimpleByFachartID(fachartID);
+				throw new UserNotificationException("Die Kerngruppe des Kurses " + sKursQuelle! + " kann nicht auf zwei Kurse der Fachart " + sFachartZiel! + " verteilt werden!")
+			}
+		}
+		const idSchuelerKerngruppe : JavaSet<number> = this.getOfKursSchuelerIDmenge(idQuellKurs);
+		const kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
+		for (const idZielKurs of idZielKurse)
+			for (const idSchueler of idSchuelerKerngruppe)
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = this.kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN(kursSchuelerZuordnungen, verschiebeFixierteDesQuellkurses, inZielKursenFixieren);
+		if (zielKurseLeeren)
+			for (const idZielKurs of idZielKurse)
+				for (const idSchueler of this.getOfKursSchuelerIDmenge(idZielKurs))
+					if (!idSchuelerKerngruppe.contains(idSchueler))
+						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
 		return u;
 	}
 

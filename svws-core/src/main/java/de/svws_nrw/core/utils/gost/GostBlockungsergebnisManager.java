@@ -37,6 +37,7 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Geschlecht;
@@ -5396,8 +5397,8 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 * <br>(1) Wenn der Schüler den Ziel-Kurs nicht wählen darf (falsche Fachwahlen), dann passiert nichts.
-	 * <br>(2) Wenn ein Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
-	 * <br>(3) Der Schüler wird ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
+	 * <br>(2) Wenn der Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
+	 * <br>(3) Der Schüler ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
 	 * <br>(4) Der Schüler wird einem neuen Kurs hinzugefügt und wird ggf. im neuen Kurs fixiert.
 	 *
 	 * @param kursSchuelerZuordnungen           Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
@@ -5408,6 +5409,8 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN(final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen, final boolean verschiebeFixierteDesQuellkurses, final boolean fixiereImZielkurs) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		// Der Sonderfall von Kurs X zu Kurs X funktioniert auch, da zuerst die "listEntfernen" abgearbeitet wird und dann erst die "listHinzufuegen".
 
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
 			final @NotNull GostBlockungKurs kursNeu = _parent.kursGet(z.idKurs);
@@ -5425,7 +5428,7 @@ public class GostBlockungsergebnisManager {
 				if ((regelFixiertAlt != null) && (!verschiebeFixierteDesQuellkurses))
 					continue;
 
-				// (3a)
+				// (3)
 				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursAlt.id, z.idSchueler));
 				if (regelFixiertAlt != null)
 					u.regelUpdates.listEntfernen.add(regelFixiertAlt);
@@ -5456,6 +5459,52 @@ public class GostBlockungsergebnisManager {
 			if (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listEntfernen.add(z);
 		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler-Kerngruppe auf mehrere Kurse zu verteilen.
+	 * <br>(1) Die SuS werden entsprechende der Methode {@link #kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN} verschoben.
+	 * <br>(2) Falls "zielKurseLeeren", werden alle SuS aus dem Ziel-Kurs entfernt, die nicht zur Kerngruppe gehören.
+	 *
+	 * @param idQuellKurs                       Der Quell-Kurs definiert die Kerngruppe.
+	 * @param idZielKurse                       Alle Ziel-Kurs-Schülermengen werden der Kerngruppe angeglichen.
+	 * @param verschiebeFixierteDesQuellkurses  Falls TRUE, dann werden Fixierungen im Quell-Kurs gelöst, andernfalls wird der Schüler nicht verschoben.
+	 * @param inZielKursenFixieren              Falls TRUE, wird nach der Verschiebung der Schüler im Ziel-Kurs fixiert.
+	 * @param zielKurseLeeren                   Falls TRUE, werden alle SuS aus dem Ziel-Kurs entfernt, die nicht zur Kerngruppe gehören.
+	 *
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
+	 */
+	private @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(final long idQuellKurs, final @NotNull Set<@NotNull Long> idZielKurse, final boolean verschiebeFixierteDesQuellkurses, final boolean inZielKursenFixieren, final boolean zielKurseLeeren) {
+		// Datenkonsistenz überprüfen.
+		final @NotNull Set<@NotNull Long> fachartSet = new HashSet<>();
+		for (final long idZielKurs : idZielKurse) {
+			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idZielKurs);
+			final long fachartID = GostKursart.getFachartID(kurs.fachID, kurs.kursart);
+			if (!fachartSet.add(fachartID)) {
+				final String sKursQuelle = _parent.toStringKursSimple(idQuellKurs);
+				final String sFachartZiel = _parent.toStringFachartSimpleByFachartID(fachartID);
+				throw new UserNotificationException("Die Kerngruppe des Kurses " + sKursQuelle + " kann nicht auf zwei Kurse der Fachart " + sFachartZiel + " verteilt werden!");
+			}
+		}
+
+		// (1) Verschieben
+		final @NotNull Set<@NotNull Long> idSchuelerKerngruppe = getOfKursSchuelerIDmenge(idQuellKurs);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
+		for (final long idZielKurs : idZielKurse)
+			for (final long idSchueler : idSchuelerKerngruppe)
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
+
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN(kursSchuelerZuordnungen, verschiebeFixierteDesQuellkurses, inZielKursenFixieren);
+
+		// (2) Lösche alle SuS aus dem Ziel-Kurs, die nicht zur Kerngruppe gehören.
+		if  (zielKurseLeeren)
+			for (final long idZielKurs : idZielKurse)
+				for (final long idSchueler : getOfKursSchuelerIDmenge(idZielKurs))
+					if (!idSchuelerKerngruppe.contains(idSchueler))
+						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
 
 		return u;
 	}
