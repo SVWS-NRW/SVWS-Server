@@ -29,125 +29,108 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		super(defaultState);
 	}
 
-
 	/**
 	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und Schülers und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 * @param {number | undefined} idSchueler   die ID des Schülers
+	 * @param {boolean} isEntering              gibt an, ob die Route neu betreten wird
 	 */
-	public async reload(idSchuljahresabschnitt: number, idSchueler: number | undefined): Promise<void> {
-        const schuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
+	public async reload(idSchuljahresabschnitt: number, idSchueler: number | undefined, isEntering: boolean): Promise<void> {
+		let schuelerListeManager = this.schuelerListeManager;
 
-        // Erzeuge neuen SchuelerListeManager mit default SchuelerStatus Filter
-        const schuelerListeManager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-        schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
-        schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird
+		if (isEntering) {
+			const schuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
 
-		// bisher ausgewählte Filter übernehmen, damit sie nicht verloren gehen
-		schuelerListeManager.useFilter(this.schuelerListeManager);
+			schuelerListeManager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
+			schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+			schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+			schuelerListeManager.useFilter(this.schuelerListeManager);
+		}
 
-        // Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
-        const auswahlSchueler = this.getSchuelerAuswahl(idSchueler, schuelerListeManager);
-        const schuelerStammdaten = await this.loadSchuelerStammdaten(auswahlSchueler);
-        schuelerListeManager.setDaten(schuelerStammdaten);
+		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
+		const schuelerAuswahl = await this.getSchuelerAuswahl(idSchueler, schuelerListeManager, isEntering);
+		const schuelerStammdaten = await this.loadSchuelerStammdaten(schuelerAuswahl);
+		schuelerListeManager.setDaten(schuelerStammdaten);
+		schuelerListeManager.filterInvalidateCache()
 
-        // Lade view
-        const view = this.getCurrentViewOrDefault();
-        this.setPatchedDefaultState({
-            idSchuljahresabschnitt,
-            schuelerListeManager,
-            view
-        });
+		// Lade view
+		const view = this.getCurrentViewOrDefault(schuelerListeManager);
+
+		this.setPatchedDefaultState({
+			idSchuljahresabschnitt,
+			schuelerListeManager,
+			view
+		});
 	}
 
-
-    /**
-     * Lädt das {@link SchuelerListe} Objekt von der API, für die übergebene Schuljahresabschnitt ID
-     *
-     * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-     *
-     * @returns Gibt SchuelerListe zurück
-     */
-    private async loadSchuelerListe(idSchuljahresabschnitt: number): Promise<SchuelerListe>{
-        // Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den SchülerListeManager
-        const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-        const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-        return SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
-    }
-
+	/**
+	 * Lädt das {@link SchuelerListe} Objekt von der API, für die übergebene Schuljahresabschnitt ID
+	 *
+	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @returns Gibt SchuelerListe zurück
+	 */
+	private async loadSchuelerListe(idSchuljahresabschnitt: number): Promise<SchuelerListe> {
+		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den SchülerListeManager
+		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		return SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
+	}
 
 	/**
 	 * Liefert die bisher ausgewählte View oder die Default View {@link RouteSchuelerIndividualdaten}
-     *
-     * @returns aktuelle View oder Default View
+	 *
+	 * @returns aktuelle View oder Default View
 	 */
-	private getCurrentViewOrDefault(): RouteNode<any, any> | undefined {
-        // Setze ggf. den Tab in der Schüler-Applikation und setze den neu erzeugten Routing-State
-        const auswahlSchuelerVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
-        if (auswahlSchuelerVorher) {
-            return this._state.value.view;
-        } else {
-            return routeSchuelerIndividualdaten;
-        }
-    }
-
+	private getCurrentViewOrDefault(schuelerManager: SchuelerListeManager): RouteNode<any, any> | undefined {
+		if (schuelerManager.hasDaten() && schuelerManager.auswahl()) {
+			return this._state.value.view;
+		} else {
+			return routeSchuelerIndividualdaten;
+		}
+	}
 
 	/**
 	 * Liefert den aktuell ausgewählten {@link SchuelerListeEintrag} oder <code>null</code> falls kein Schüler ausgewählt ist.
 	 *
-	 * @param {number | undefined} idSchueler     ID des Schülers
-	 * @param {SchuelerListeManager} targetAuswahlManager   SchuelerListeManager
+	 * @param {number | undefined} idSchueler          ID des Schülers
+	 * @param {SchuelerListeManager} schuelerManager   SchuelerListeManager
+	 * @param {boolean} isEntering                     gibt an ob die Route das erste mal betreten wird
 	 *
 	 * @returns den ausgewählten {@link SchuelerListeEintrag} oder <code>null</code>
 	 */
-    private getSchuelerAuswahl(idSchueler: number | undefined, targetAuswahlManager: SchuelerListeManager): SchuelerListeEintrag | null {
-        let auswahlSchueler;
+	private async getSchuelerAuswahl(idSchueler: number | undefined, schuelerManager: SchuelerListeManager, isEntering: boolean): Promise<SchuelerListeEintrag | null> {
+		if (schuelerManager.filtered().isEmpty())
+			return null;
 
-        if (idSchueler !== undefined) {
-            // Hier wird der ausgewählte Schüler geholt
-            auswahlSchueler = targetAuswahlManager.liste.get(idSchueler);
+		let auswahlSchueler;
+		if (isEntering) {
+			auswahlSchueler = schuelerManager.filtered().get(0);
+		} else if (idSchueler === undefined) {
+			return null;
+		} else {
+			// Wenn ein Schüler ausgewählt ist, wird dieser zurückgegeben, falls keine Auswahl vorliegt, wird der erste Eintrag aus der gefilterten Schülerliste zurückgegeben
+			auswahlSchueler = schuelerManager.liste.get(idSchueler) !== null ? schuelerManager.liste.get(idSchueler) : schuelerManager.filtered().get(0);
+		}
 
-        } else if (!targetAuswahlManager.filtered().isEmpty()) {
-            // Ermittle einen ggf. zuvor ausgewählten Schüler und versucht diesen erneut zu holen
-			const auswahlSchuelerVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
-			if (auswahlSchuelerVorher && targetAuswahlManager.liste.has(auswahlSchuelerVorher.id)) {
-                auswahlSchueler = targetAuswahlManager.liste.getOrException(auswahlSchuelerVorher.id);
-            }
-        }
+		return auswahlSchueler;
+	}
 
-        // Wenn kein Schüler ausgewählt/gefunden wurde, wird entweder der oberste Eintrag aus der Schüler Liste oder null zurückgegeben
-        if (!auswahlSchueler) {
-            auswahlSchueler = targetAuswahlManager.filtered().isEmpty() ? null : targetAuswahlManager.filtered().get(0);
-        }
-
-        return auswahlSchueler
-    }
-
-
-    /**
-     * Lädt das {@link SchuelerStammdaten} Objekt zum übergebenen {@link SchuelerListeEintrag}.
-     * Die Methode liefert <code>null</code>, wenn der Parameter <code>schuelerEintrag</code> <code>null</code> ist.
-     *
-     * @param {SchuelerListeEintrag | null} schuelerEintrag     Eintrag des Schülers
-     *
-     * @returns Gibt Stammdaten des Schülers oder <code>null</code> zurück
-     */
-    private async loadSchuelerStammdaten(schuelerEintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
-        if (schuelerEintrag === null)
-            return null;
-
-        return await api.server.getSchuelerStammdaten(api.schema, schuelerEintrag.id);
-    }
-
-
-    /**
-	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	/**
+	 * Lädt das {@link SchuelerStammdaten} Objekt zum übergebenen {@link SchuelerListeEintrag}.
+	 * Die Methode liefert <code>null</code>, wenn der Parameter <code>schuelerEintrag</code> <code>null</code> ist.
 	 *
-	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 * @param {SchuelerListeEintrag | null} schuelerEintrag     Eintrag des Schülers
+	 *
+	 * @returns Gibt Stammdaten des Schülers oder <code>null</code> zurück
 	 */
-	get idSchuljahresabschnitt(): number {
-		return this._state.value.idSchuljahresabschnitt;
+	private async loadSchuelerStammdaten(schuelerEintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
+		if (schuelerEintrag === null)
+			return null;
+
+		return await api.server.getSchuelerStammdaten(api.schema, schuelerEintrag.id);
 	}
 
 
