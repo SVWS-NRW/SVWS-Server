@@ -49,7 +49,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 		let restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre === null)
 			return null;
-		if (schulform as unknown !== Schulform.GY as unknown)
+		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgangsUtils.istGymOb(jahrgang)))
 			restjahre += 3;
 		return aktuellesSchuljahr + restjahre!;
 	}

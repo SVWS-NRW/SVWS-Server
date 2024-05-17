@@ -51,7 +51,7 @@ public final class GostAbiturjahrUtils {
 		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre == null)
 			return null;
-		if (schulform != Schulform.GY)
+		if ((schulform != Schulform.GY) && (!JahrgangsUtils.istGymOb(jahrgang)))
 			restjahre += 3;
 		return aktuellesSchuljahr + restjahre;
 	}
