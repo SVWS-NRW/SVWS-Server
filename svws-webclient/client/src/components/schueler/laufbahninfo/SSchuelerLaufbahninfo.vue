@@ -122,7 +122,7 @@
 					{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
 					{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang" },
 					{ key: "belegungBisAbschnitt", label: "Halbjahr", tooltip: "belegt bis Abschnitt", divider: true }]),
-			{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", span: 2 },
+			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "das erreichte Referenzniveau nach dem gemeinsamen europäischen Referenznahmen", span: 2 },
 		]}
 	);
 
@@ -136,7 +136,7 @@
 				? [] : [{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 }]),
 			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
 			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 2 },
-			{ key: "referenzniveau", label: "GeR", tooltip: "Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde", minWidth: 3 },
+			{ key: "referenzniveau", label: "Referenzniveau", tooltip: "Das Kürzel des Referenzniveau nach dem gemeinsamen europäischen Referenznahmen, welches durch die Prüfung erreicht wurde", minWidth: 3 },
 			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 3, },
 			{ key: "ersetzteSprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
 		]
