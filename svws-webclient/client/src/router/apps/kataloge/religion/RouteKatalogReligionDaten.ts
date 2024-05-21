@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, ReligionEintrag, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogReligion, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
@@ -20,18 +20,18 @@ export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligi
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogReligion.data.auswahl === undefined)
+		if (routeKatalogReligion.data.religionListeManager.auswahlID() === null)
 			return routeKatalogReligion.getRoute(undefined)
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): ReligionDatenProps {
 		return {
+			religionListeManager: () => routeKatalogReligion.data.religionListeManager,
 			patch: routeKatalogReligion.data.patch,
-			auswahl: routeKatalogReligion.data.auswahl || new ReligionEintrag(),
 		};
 	}
 

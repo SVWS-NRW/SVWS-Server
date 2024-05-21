@@ -11,18 +11,19 @@
 		</template>
 		<template #header />
 		<template #content>
-			<div class="container">
-				<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" clickable selectable v-model="selected">
-					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag">
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-						</s-religionen-neu-modal>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table :clicked="religionListeManager().auswahl()" @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns clickable selectable v-model="selected" :filter-open="true">
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
+				</template>
+				<template #actions>
+					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag">
+						<svws-ui-button type="icon" @click="openModal()">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+					</s-religionen-neu-modal>
+				</template>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -31,15 +32,23 @@
 
 	import type { ReligionEintrag } from "@core";
 	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<ReligionenAuswahlProps>();
 	const selected = ref<ReligionEintrag[]>([]);
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "text", label: "Bezeichnung", sortable: true, span: 2 }
+		{ key: "text", label: "Bezeichnung", sortable: true, span: 3 }
 	];
+
+	const filterNurSichtbare = computed<boolean>({
+		get: () => props.religionListeManager().filterNurSichtbar(),
+		set: (value) => {
+			props.religionListeManager().setFilterNurSichtbar(value);
+			void props.setFilter();
+		}
+	});
 
 	async function doDeleteEintraege() {
 		await props.deleteEintraege(selected.value);

@@ -1,4 +1,5 @@
-import type { ReligionEintrag } from "@core";
+import type { ReligionEintrag} from "@core";
+import { ReligionListeManager } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -9,13 +10,11 @@ import { routeKatalogReligionDaten } from "./RouteKatalogReligionDaten";
 import { routeKatalogReligion } from "./RouteKatalogReligionen";
 
 interface RouteStateKatalogeReligionen extends RouteStateInterface {
-	auswahl: ReligionEintrag | undefined;
-	mapKatalogeintraege: Map<number, ReligionEintrag>;
+	religionListeManager: ReligionListeManager;
 }
 
 const defaultState = <RouteStateKatalogeReligionen> {
-	auswahl: undefined,
-	mapKatalogeintraege: new Map(),
+	religionListeManager: new ReligionListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeKatalogReligionDaten,
 };
 
@@ -25,27 +24,41 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		super(defaultState);
 	}
 
-	get auswahl(): ReligionEintrag | undefined {
-		return this._state.value.auswahl;
+	get religionListeManager(): ReligionListeManager {
+		return this._state.value.religionListeManager;
 	}
 
-	get mapKatalogeintraege(): Map<number, ReligionEintrag> {
-		return new Map(this._state.value.mapKatalogeintraege);
+	public async ladeListeIntern() {
+		const listKatalogeintraege = await api.server.getReligionen(api.schema);
+		// Bestimme die Fachdaten vorher, um ggf. eine neue ID für das Routing zurückzugeben
+		const hatteAuswahl = (this.religionListeManager.auswahlID() !== null) ? this.religionListeManager.auswahl() : null;
+		const religionListeManager = new ReligionListeManager(-1, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
+		// Wählen nun ein Fach aus, dabei wird sich ggf. an der alten Auswahl orientiert
+		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
+			let auswahl = religionListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
+			if ((auswahl === null) && (religionListeManager.liste.size() > 0))
+				auswahl = religionListeManager.liste.list().get(0);
+			if (auswahl !== null)
+				religionListeManager.setDaten(auswahl);
+		} else {
+			if (religionListeManager.liste.size() > 0) {
+				const auswahl = religionListeManager.liste.list().get(0);
+				religionListeManager.setDaten(auswahl);
+			}
+		}
+		return { religionListeManager };
 	}
 
 	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getReligionen(api.schema);
-		const mapKatalogeintraege = new Map<number, ReligionEintrag>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+		const o = await this.ladeListeIntern();
+		this.setPatchedDefaultState(o);
+		return o.religionListeManager.auswahlID();
 	}
 
 	setEintrag = (eintrag: ReligionEintrag) => {
-		this.setPatchedState({
-			auswahl: this.mapKatalogeintraege.get(eintrag.id)
-		})
+		const religionListeManager = this.religionListeManager;
+		religionListeManager.setDaten(eintrag);
+		this.setPatchedState({religionListeManager});
 	}
 
 	gotoEintrag = async (eintrag: ReligionEintrag) => {
@@ -55,30 +68,49 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 	addEintrag = async (eintrag: Partial<ReligionEintrag>) => {
 		delete eintrag.id;
 		const res = await api.server.createReligion(eintrag, api.schema);
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(res.id, res);
-		this.setPatchedState({ mapKatalogeintraege });
+		const religionListeManager = this.religionListeManager;
+		religionListeManager.liste.auswahlAdd(res);
+		this.setPatchedState({ religionListeManager });
 		await RouteManager.doRoute({ name: routeKatalogReligionDaten.name, params: { id: res.id } });
 	}
 
 	patch = async (data : Partial<ReligionEintrag>) => {
-		if (this.auswahl === undefined)
+		const id = this.religionListeManager.auswahlID();
+		if (id === null)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchReligion(data, api.schema, this.auswahl.id)
+		await api.server.patchReligion(data, api.schema, id);
+		const auswahl = this.religionListeManager.auswahl();
+		Object.assign(auswahl, data);
+		this.religionListeManager.setDaten(auswahl);
+		this.setPatchedState({ religionListeManager: this.religionListeManager });
 	}
 
 	deleteEintraege = async (eintraege: Iterable<ReligionEintrag>) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
 		const listID = new ArrayList<number>;
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
 		if (listID.isEmpty())
 			return;
 		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
+		const religionListeManager = this.religionListeManager;
 		for (const eintrag of religionen)
-			mapKatalogeintraege.delete(eintrag.id);
-		let auswahl = this.auswahl;
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
-	}}
+			religionListeManager.liste.auswahlRemoveByKey(eintrag.id);
+		const id = religionListeManager.auswahlID();
+		if (id !== null && !religionListeManager.liste.auswahlHasKey(id))
+			await this.setFilter();
+		this.setPatchedState({religionListeManager});
+	}
+
+	setFilter = async () => {
+		if (!this.religionListeManager.hasDaten()) {
+			const listFiltered = this.religionListeManager.filtered();
+			if (!listFiltered.isEmpty()) {
+				await this.gotoEintrag(listFiltered.get(0));
+				return;
+			}
+		}
+		const religionListeManager = this.religionListeManager;
+		this.setPatchedState({ religionListeManager });
+	}
+
+}

@@ -39,30 +39,29 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			await this.data.ladeListe();
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
+		if (to_params.id === "") {
 			await this.data.ladeListe();
 		} else {
 			const id = parseInt(to_params.id);
-			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined && this.data.auswahl !== undefined) {
+			const eintrag = this.data.religionListeManager.liste.get(id);
+			if (eintrag === null && this.data.religionListeManager.auswahlID() !== null) {
 				await this.data.ladeListe();
-				return this.getRoute(this.data.auswahl.id);
-			}
-			else if (eintrag)
+				return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
+			} else if (eintrag !== null)
 				this.data.setEintrag(eintrag);
 		}
-		if (to.name === this.name && this.data.auswahl !== undefined)
-			return this.getRoute(this.data.auswahl.id);
+		if (to.name === this.name && this.data.religionListeManager.auswahlID() !== null)
+			return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
 	}
 
 	public getRoute(id: number|undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): ReligionenAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			religionListeManager: () => this.data.religionListeManager,
+			setFilter: this.data.setFilter,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			abschnitte: api.mapAbschnitte.value,
@@ -76,7 +75,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 
 	public getProps(to: RouteLocationNormalized): ReligionenAppProps {
 		return {
-			auswahl: this.data.auswahl,
+			religionListeManager: () => this.data.religionListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
@@ -103,7 +102,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.religionListeManager.auswahlID() } });
 		this.data.setView(node, this.children);
 	}
 }

@@ -580,6 +580,8 @@ export { KursListeManager } from './core/utils/kurse/KursListeManager';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
+export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
+export { ReligionUtils } from './core/utils/religion/ReligionUtils';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';

@@ -1,8 +1,8 @@
-import type { ReligionEintrag } from "@core";
+import type { ReligionListeManager } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface ReligionenAppProps {
-	auswahl: ReligionEintrag | undefined;
+	religionListeManager: () => ReligionListeManager;
 	setTab: (value: AuswahlChildData) => Promise<void>;
 	tab: AuswahlChildData;
 	tabs: AuswahlChildData[];

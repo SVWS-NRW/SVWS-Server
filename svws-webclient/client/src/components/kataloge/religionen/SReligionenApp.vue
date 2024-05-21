@@ -22,8 +22,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { ReligionenAppProps } from "./SReligionenAppProps";
 
 	const props = defineProps<ReligionenAppProps>();
+	const auswahl = computed(() => props.religionListeManager().auswahl());
 
 </script>

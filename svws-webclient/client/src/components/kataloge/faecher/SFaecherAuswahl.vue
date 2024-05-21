@@ -31,7 +31,6 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import type { FachDaten } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
