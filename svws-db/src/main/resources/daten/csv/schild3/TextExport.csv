@@ -103,9 +103,9 @@ Schueler;Foerderschwerpunkt2_ID;Förderschwerpunkt 2;S;;;Bezeichnung;SELECT K.Be
 Schueler;Foerderschwerpunkt_ID;Förderschwerpunkt 1;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
 Schueler;GU_ID;eindeutige Nummer (GUID);S;;;;;ALLE
 Schueler;Geburtsdatum;Geburtsdatum;D;;;;;ALLE
-Schueler;GeburtslandMutter;Geburtsland Mutter;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
-Schueler;GeburtslandSchueler;Geburtsland;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
-Schueler;GeburtslandVater;Geburtsland Vater;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
+Schueler;GeburtslandMutter;Geburtsland Mutter;S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
+Schueler;GeburtslandSchueler;Geburtsland;S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
+Schueler;GeburtslandVater;Geburtsland Vater;S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
 Schueler;Geburtsname;Geburtsname;S;;;;;ALLE
 Schueler;Geburtsort;Geburtsort;S;;;;;ALLE
 Schueler;Geloescht;Gelöscht?;B;;;;;ALLE
@@ -202,7 +202,7 @@ Schueler;SchulwechselNr;Aufnehmende Schule: Schulnr.;S;;;;;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(Strassenname,' ',HausNr) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
 Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
-Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
+Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
 Schueler;Status;Status;I;;;;;ALLE
