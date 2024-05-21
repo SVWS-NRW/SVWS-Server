@@ -122,8 +122,8 @@
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
-	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager , GostBlockungsergebnisKursSchuelerZuordnungUpdate} from '@core';
+	import { ArrayList, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
@@ -361,53 +361,12 @@
 
 	async function uebertragen() {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		const zielSet = new HashSet<number>();
+		for (const k of _kurseZurUebertragung.value)
+			zielSet.add(k.id);
+		if (kurs === undefined || zielSet.isEmpty())
 			return;
-		const kursSchueler = props.getErgebnismanager().getOfSchuelerMengeGefiltert(kurs.id, -1, -1, 0, "");
-		const update = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
-		const setRegelKurs = new HashSet<number>();
-		for (const s of kursSchueler) {
-			if (!props.fixierteVerschieben() && props.getDatenmanager().schuelerGetIstFixiertInKurs(s.id, kurs.id))
-				continue;
-			for (const k of _kurseZurUebertragung.value) {
-				if (!props.getErgebnismanager().getOfSchuelerHatFachwahl(s.id, k.fachID, k.kursart))
-					continue;
-				const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(s.id, k.fachID);
-				if (alter_kurs?.id === k.id)
-					continue;
-				if (alter_kurs !== null) {
-					const zuordnungAlt = new GostBlockungsergebnisKursSchuelerZuordnung();
-					zuordnungAlt.idSchueler = s.id;
-					zuordnungAlt.idKurs = alter_kurs.id;
-					update.listEntfernen.add(zuordnungAlt);
-				}
-				const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-				zuordnung.idSchueler = s.id;
-				zuordnung.idKurs = k.id;
-				update.listHinzuzufuegen.add(zuordnung);
-				setRegelKurs.add(k.id);
-			}
-		}
-		// nur wenn am Ende fixiert werden soll, Fixierung aktualisieren, sonst lösen
-		update.regelUpdates = (props.inZielkursFixieren() && props.allowRegeln)
-			? props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setRegelKurs)
-			: props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setRegelKurs)
-		// wenn Zielkurse geleert werden sollen, dann alle oder nur listRegelKurse, also die tatsächlich genutzten?
-		if (zielkurseLeeren.value === true) {
-			for (const k of _kurseZurUebertragung.value) {
-				for (const s of k.schueler) {
-					const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-					zuordnung.idKurs = k.id;
-					zuordnung.idSchueler = s;
-					update.listEntfernen.add(zuordnung);
-				}
-			}
-		}
-		// es sollen optional noch die Regeln der Zielkurse entfernt werden
-		// sind das Schüler Sperrungen/Fixierungen?
-		// Betrifft das dann auch nur die tatsächlich genutzten oder alle?
-		// kann ich dann die weiteren GostBlockungRegelUpdate mergen?
-		// Oder muss ich dafür eine zweite Anfrage an die Api schicken?
+		const update = props.getErgebnismanager().kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(kurs.id, zielSet, props.fixierteVerschieben(), props.inZielkursFixieren(), zielkurseLeeren.value);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 

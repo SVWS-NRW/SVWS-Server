@@ -5477,7 +5477,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 */
-	private @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(final long idQuellKurs, final @NotNull Set<@NotNull Long> idZielKurse, final boolean verschiebeFixierteDesQuellkurses, final boolean inZielKursenFixieren, final boolean zielKurseLeeren) {
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(final long idQuellKurs, final @NotNull Set<@NotNull Long> idZielKurse, final boolean verschiebeFixierteDesQuellkurses, final boolean inZielKursenFixieren, final boolean zielKurseLeeren) {
 		// Datenkonsistenz überprüfen.
 		final @NotNull Set<@NotNull Long> fachartSet = new HashSet<>();
 		for (final long idZielKurs : idZielKurse) {

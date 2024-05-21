@@ -4877,7 +4877,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 */
-	private kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(idQuellKurs : number, idZielKurse : JavaSet<number>, verschiebeFixierteDesQuellkurses : boolean, inZielKursenFixieren : boolean, zielKurseLeeren : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+	public kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(idQuellKurs : number, idZielKurse : JavaSet<number>, verschiebeFixierteDesQuellkurses : boolean, inZielKursenFixieren : boolean, zielKurseLeeren : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const fachartSet : JavaSet<number> = new HashSet<number>();
 		for (const idZielKurs of idZielKurse) {
 			const kurs : GostBlockungsergebnisKurs = this.getKursE(idZielKurs);
