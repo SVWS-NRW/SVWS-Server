@@ -76,7 +76,7 @@
 					</div>
 					<div class="svws-ui-td flex-grow justify-end" role="cell">
 						<svws-ui-button @click="deleteAuswahl()" type="trash" :disabled="auswahl.size === 0" />
-						<svws-ui-button v-if="props.manager().fachGetMenge().size() > 0" @click="addLeistung(props.manager().fachGetMenge().get(0).id)" type="icon" title="Raum hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+						<svws-ui-button v-if="props.manager().fachGetMenge().size() > 0" @click="addLeistung(props.manager().fachGetMenge().get(0).id)" type="icon" title="Neue Leistungsdaten hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 					</div>
 				</div>
 			</template>
