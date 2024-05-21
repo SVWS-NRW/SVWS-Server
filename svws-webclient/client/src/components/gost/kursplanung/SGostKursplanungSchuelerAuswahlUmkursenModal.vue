@@ -106,7 +106,6 @@
 						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben {{ allowRegeln ? 'und Fixierung anpassen':'' }}</svws-ui-checkbox>
 						<svws-ui-checkbox v-if="allowRegeln" :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
 						<svws-ui-checkbox v-model="zielkurseLeeren">Zielkurse leeren</svws-ui-checkbox>
-						<svws-ui-checkbox v-model="regelnAufheben">auch Regeln in Zielkursen aufheben</svws-ui-checkbox>
 					</div>
 				</div>
 			</div>
@@ -145,7 +144,6 @@
 	const _kurseZurUebertragung = ref<GostBlockungsergebnisKurs[]>([]);
 
 	const zielkurseLeeren = ref<boolean>(false);
-	const regelnAufheben = ref<boolean>(false);
 
 	function setKurs() {
 		const filter = props.schuelerFilter();
