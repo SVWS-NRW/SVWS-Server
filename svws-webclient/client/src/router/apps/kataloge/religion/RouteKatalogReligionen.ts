@@ -39,18 +39,18 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			await this.data.ladeListe();
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === "") {
+		if ((to_params.id === undefined) || (to_params.id === "")) {
 			await this.data.ladeListe();
 		} else {
 			const id = parseInt(to_params.id);
 			const eintrag = this.data.religionListeManager.liste.get(id);
-			if (eintrag === null && this.data.religionListeManager.auswahlID() !== null) {
+			if ((eintrag === null) && (this.data.religionListeManager.auswahlID() !== null)) {
 				await this.data.ladeListe();
 				return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
 			} else if (eintrag !== null)
 				this.data.setEintrag(eintrag);
 		}
-		if (to.name === this.name && this.data.religionListeManager.auswahlID() !== null)
+		if ((to.name === this.name) && (this.data.religionListeManager.auswahlID() !== null))
 			return this.getRoute(this.data.religionListeManager.auswahlID() ?? undefined);
 	}
 
@@ -102,7 +102,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.religionListeManager.auswahlID() } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.religionListeManager.auswahlID() ?? undefined } });
 		this.data.setView(node, this.children);
 	}
 }

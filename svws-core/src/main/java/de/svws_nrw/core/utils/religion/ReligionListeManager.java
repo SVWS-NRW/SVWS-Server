@@ -16,7 +16,7 @@ import de.svws_nrw.core.utils.AuswahlManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Manager zum Verwalten der ReligionEintrags-Listen.
+ * Ein Manager zum Verwalten des Kataloges der Religionen.
  */
 public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @NotNull ReligionEintrag, @NotNull ReligionEintrag> {
 
@@ -35,21 +35,21 @@ public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @N
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Auswahl bezieht
+	 * @param schuljahresabschnitt         der Schuljahresabschnitt, auf den sich die Auswahl bezieht
 	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform     die Schulform der Schule
-	 * @param religionen    die Liste der ReligionEintragen
+	 * @param schulform                    die Schulform der Schule
+	 * @param religionen                   die Liste der Katalog-Einträge
 	 */
 	public ReligionListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<@NotNull ReligionEintrag> religionen) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, _religionToId, _religionToId, Arrays.asList());
-		initFaecher();
+		initEintrage();
 	}
 
 
-	private void initFaecher() {
+	private void initEintrage() {
 		for (final @NotNull ReligionEintrag r : this.liste.list()) {
 			this._mapReligionEintragIstSichtbar.put(r.istSichtbar, r.id, r);
 			if (r.kuerzel != null)
@@ -116,21 +116,9 @@ public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @N
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
 			if ("kuerzel".equals(field)) {
-				if ((a.kuerzel == null) || (b.kuerzel == null)) {
-					if ((a.kuerzel == null) && (b.kuerzel == null))
-						cmp = 0;
-					else
-						cmp = (a.kuerzel == null) ? -1 : 1;
-				} else
-					cmp = a.kuerzel.compareTo(b.kuerzel);
+				cmp = ReligionUtils.comparator.compare(a, b);
 			} else if ("text".equals(field)) {
-				if ((a.text == null) || (b.text == null)) {
-					if ((a.text == null) && (b.text == null))
-						cmp = 0;
-					else
-						cmp = (a.text == null) ? -1 : 1;
-				} else
-				cmp = a.text.compareTo(b.text);
+				cmp = ReligionUtils.comparatorText.compare(a, b);
 			} else
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
 			if (cmp == 0)

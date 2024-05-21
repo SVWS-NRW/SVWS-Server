@@ -8,7 +8,7 @@ import type { Comparator } from '../../../java/util/Comparator';
 export class ReligionUtils extends JavaObject {
 
 	/**
-	 * Ein Default-Comparator für den Vergleich von Religionen in Religionslisten.
+	 * Ein Default-Comparator für den Vergleich von Religion-Einträgen.
 	 */
 	public static readonly comparator : Comparator<ReligionEintrag> = { compare : (a: ReligionEintrag, b: ReligionEintrag) => {
 		if ((a.kuerzel === null) || (b.kuerzel === null)) {
@@ -16,7 +16,20 @@ export class ReligionUtils extends JavaObject {
 				return 0;
 			return (a.kuerzel === null) ? -1 : 1;
 		}
-		let cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	/**
+	 * Ein Comparator für den Vergleich von Religion-Einträgen anhand ihres Textes.
+	 */
+	public static readonly comparatorText : Comparator<ReligionEintrag> = { compare : (a: ReligionEintrag, b: ReligionEintrag) => {
+		if ((a.text === null) || (b.text === null)) {
+			if ((a.text === null) && (b.text === null))
+				return 0;
+			return (a.text === null) ? -1 : 1;
+		}
+		const cmp : number = JavaString.compareTo(a.text, b.text);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 

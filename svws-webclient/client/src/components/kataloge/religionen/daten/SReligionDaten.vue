@@ -27,14 +27,15 @@
 
 	const props = defineProps<ReligionDatenProps>();
 
+	const auswahl = computed(() => props.religionListeManager().auswahl());
+
 	const inputStatistikKuerzel = computed<Religion | undefined>({
-		get: () => Religion.getByKuerzel(props.religionListeManager().auswahl().kuerzel ?? null) || undefined,
+		get: () => Religion.getByKuerzel(auswahl.value.kuerzel ?? null) || undefined,
 		set: (value) => void props.patch({ kuerzel: value?.daten.kuerzel || null })
 	});
 
 	function getStatistikText(r : Religion) : string {
 		return r.daten.kuerzel + ' : ' + r.daten.bezeichnung;
 	}
-	const auswahl = computed(() => props.religionListeManager().auswahl());
 
 </script>

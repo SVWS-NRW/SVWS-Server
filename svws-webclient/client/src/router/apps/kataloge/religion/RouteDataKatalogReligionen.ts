@@ -30,10 +30,10 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 
 	public async ladeListeIntern() {
 		const listKatalogeintraege = await api.server.getReligionen(api.schema);
-		// Bestimme die Fachdaten vorher, um ggf. eine neue ID für das Routing zurückzugeben
+		// Bestimme den Eintrag von vorher, um ggf. eine neue ID für das Routing zurückzugeben
 		const hatteAuswahl = (this.religionListeManager.auswahlID() !== null) ? this.religionListeManager.auswahl() : null;
 		const religionListeManager = new ReligionListeManager(-1, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
-		// Wählen nun ein Fach aus, dabei wird sich ggf. an der alten Auswahl orientiert
+		// Wählen nun einen Eintrag aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
 			let auswahl = religionListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
 			if ((auswahl === null) && (religionListeManager.liste.size() > 0))
@@ -49,7 +49,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		return { religionListeManager };
 	}
 
-	public async ladeListe() {
+	public async ladeListe() : Promise<number | null> {
 		const o = await this.ladeListeIntern();
 		this.setPatchedDefaultState(o);
 		return o.religionListeManager.auswahlID();
@@ -58,7 +58,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 	setEintrag = (eintrag: ReligionEintrag) => {
 		const religionListeManager = this.religionListeManager;
 		religionListeManager.setDaten(eintrag);
-		this.setPatchedState({religionListeManager});
+		this.setPatchedState({ religionListeManager });
 	}
 
 	gotoEintrag = async (eintrag: ReligionEintrag) => {
