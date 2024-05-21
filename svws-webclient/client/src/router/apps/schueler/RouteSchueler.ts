@@ -70,8 +70,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 				const listFiltered = this.data.schuelerListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;
-				else
-					return this.getChildRoute(listFiltered.get(0).id, from);
+				return this.getChildRoute(listFiltered.get(0).id, from);
 			}
 			return this.getRoute();
 		}

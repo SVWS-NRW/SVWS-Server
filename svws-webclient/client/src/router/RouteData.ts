@@ -103,13 +103,26 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 
 	/**
 	 * Setter für die aktuelle Ansicht/Child Route. Das Setzen der Ansicht triggert die Reaktivität
-	 * des States. Ist dies nicht gewünscht, so kann alternativ die Methode setPatchedState
-	 * mit gesetztem view-Attribut aufgerufen werden.
+	 * des States.
 	 *
 	 * @param value        die zu setzende Ansicht
 	 * @param validViews   die Menge der gültigen Ansichten
 	 */
 	public setView(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
+		if (validViews.includes(value))
+			this.setPatchedState(<RouteState>{ view: value });
+		else
+			throw new DeveloperNotificationException("Die gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	/**
+	 * Setter für die aktuelle Ansicht/Child Route. Das Setzen der Ansicht ist nicht reaktiv.
+	 * Ist eine Reaktivität gewünscht, so muss die Methode setView aufgerufen werden.
+	 *
+	 * @param value        die zu setzende Ansicht
+	 * @param validViews   die Menge der gültigen Ansichten
+	 */
+	public setViewNonReactive(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
 		if (validViews.includes(value))
 			this.setPatchedState(<RouteState>{ view: value });
 		else

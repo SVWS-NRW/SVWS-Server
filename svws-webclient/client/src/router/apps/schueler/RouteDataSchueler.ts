@@ -9,7 +9,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { RouteNode } from "~/router/RouteNode";
+import { type RouteNode } from "~/router/RouteNode";
 
 
 interface RouteStateSchueler extends RouteStateInterface {
@@ -105,17 +105,12 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		if (schuelerManager.filtered().isEmpty())
 			return null;
 
-		let auswahlSchueler;
-		if (isEntering) {
-			auswahlSchueler = schuelerManager.filtered().get(0);
-		} else if (idSchueler === undefined) {
-			return null;
-		} else {
-			// Wenn ein Schüler ausgewählt ist, wird dieser zurückgegeben, falls keine Auswahl vorliegt, wird der erste Eintrag aus der gefilterten Schülerliste zurückgegeben
-			auswahlSchueler = schuelerManager.liste.get(idSchueler) !== null ? schuelerManager.liste.get(idSchueler) : schuelerManager.filtered().get(0);
-		}
+		// Wenn keine Schüler-ID ausgewählt ist, dann gebe null zurück oder beim Einsteigen in die Route den ersten Schüler der gefilterten Liste
+		if (idSchueler === undefined)
+			return (isEntering) ? schuelerManager.filtered().get(0) : null;
 
-		return auswahlSchueler;
+		// Wenn ein Schüler ausgewählt ist, wird dieser zurückgegeben, falls keine Auswahl vorliegt, wird der erste Eintrag aus der gefilterten Schülerliste zurückgegeben
+		return schuelerManager.liste.get(idSchueler) !== null ? schuelerManager.liste.get(idSchueler) : schuelerManager.filtered().get(0);
 	}
 
 	/**
