@@ -14,7 +14,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerLaufbahninfo } from "../../schueler/laufbahninfo/RouteSchuelerLaufbahninfo";
+import { routeSchuelerSprachen } from "../../schueler/sprachen/RouteSchuelerSprachen";
 import {routeApp} from "~/router/apps/RouteApp";
 
 
@@ -88,7 +88,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
 
 	gotoSprachenfolge = async (idSchueler: number) =>
-		await RouteManager.doRoute(routeSchuelerLaufbahninfo.getRoute(idSchueler));
+		await RouteManager.doRoute(routeSchuelerSprachen.getRoute(idSchueler));
 
 	importLaufbahnplanung = async (data: FormData): Promise<SimpleOperationResponse> => {
 		api.status.start();

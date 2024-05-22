@@ -5,19 +5,19 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateSchuelerLaufbahninfo extends RouteStateInterface {
+interface RouteStateSchuelerSprachen extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
 	sprachbelegungen: List<Sprachbelegung>;
 	sprachpruefungen: List<Sprachpruefung>;
 }
 
-const defaultState = <RouteStateSchuelerLaufbahninfo> {
+const defaultState = <RouteStateSchuelerSprachen> {
 	auswahl: undefined,
 	sprachbelegungen: new ArrayList<Sprachbelegung>(),
 	sprachpruefungen: new ArrayList<Sprachpruefung>(),
 };
 
-export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerLaufbahninfo> {
+export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprachen> {
 
 	public constructor() {
 		super(defaultState);
@@ -29,7 +29,7 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur den Sprachen abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
@@ -162,4 +162,3 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 	}
 
 }
-

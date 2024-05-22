@@ -102,12 +102,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
+	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
 	import type { DataTableColumn } from "@ui";
 	import type { Sprachbelegung , Sprachpruefung} from '@core';
 	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note, Schulgliederung, Sprachpruefungniveau } from '@core';
 
-	const props = defineProps<SchuelerLaufbahninfoProps>();
+	const props = defineProps<SchuelerSprachenProps>();
 
 	const auswahl = ref([]);
 	const auswahlPr = ref([]);

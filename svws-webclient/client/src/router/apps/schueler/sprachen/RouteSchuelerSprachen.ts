@@ -5,20 +5,20 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { RouteDataSchuelerLaufbahninfo } from "~/router/apps/schueler/laufbahninfo/RouteDataSchuelerLaufbahninfo";
-import { type SchuelerLaufbahninfoProps } from "~/components/schueler/laufbahninfo/SchuelerLaufbahninfoProps";
+import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
+import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SchuelerSprachenProps";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
 
-const SSchuelerLaufbahninfo = () => import("~/components/schueler/laufbahninfo/SSchuelerLaufbahninfo.vue");
+const SSchuelerSprachen = () => import("~/components/schueler/sprachen/SSchuelerSprachen.vue");
 
-export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufbahninfo, RouteSchueler> {
+export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.laufbahninfo", "laufbahninfo", SSchuelerLaufbahninfo, new RouteDataSchuelerLaufbahninfo());
+		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.sprachen", "sprachen", SSchuelerSprachen, new RouteDataSchuelerSprachen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Laufbahn";
+		super.text = "Sprachen";
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -46,7 +46,7 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerLaufbahninfoProps {
+	public getProps(to: RouteLocationNormalized): SchuelerSprachenProps {
 		return {
 			sprachbelegungen: () => this.data.sprachbelegungen,
 			sprachpruefungen: () => this.data.sprachpruefungen,
@@ -65,5 +65,5 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 
 }
 
-export const routeSchuelerLaufbahninfo = new RouteSchuelerLaufbahninfo();
+export const routeSchuelerSprachen = new RouteSchuelerSprachen();
 
