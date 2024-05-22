@@ -101,8 +101,6 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.hatMasernimpfnachweis = schueler.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = schueler.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = schueler.MeisterBafoeg;
-		// Bemerkungen
-		daten.bemerkungen = schueler.Bemerkungen;
 		return daten;
 	};
 
@@ -342,10 +340,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("keineAuskunftAnDritte", (conn, schueler, value, map) -> schueler.KeineAuskunft = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("erhaeltSchuelerBAFOEG", (conn, schueler, value, map) -> schueler.Bafoeg = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("erhaeltMeisterBAFOEG", (conn, schueler, value, map) -> schueler.MeisterBafoeg = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istDuplikat", (conn, schueler, value, map) -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false)),
-
-		// Bemerkungen
-		Map.entry("bemerkungen", (conn, schueler, value, map) -> schueler.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Bemerkungen.datenlaenge()))
+			Map.entry("istDuplikat", (conn, schueler, value, map) -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false))
 	);
 
 	@Override

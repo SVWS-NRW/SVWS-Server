@@ -204,11 +204,4 @@ public class SchuelerStammdaten {
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public boolean erhaeltMeisterBAFOEG;
 
-
-	// Bemerkungen
-
-	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
-	@Schema(description = "ggf. Bemerkungen", example = "eine Bemerkung")
-	public String bemerkungen;
-
 }

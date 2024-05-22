@@ -408,7 +408,8 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Text für Bemerkungen zum Schüler Memofeld");
+		.setJavaComment("DEPRECATED: Text für Bemerkungen zum Schüler Memofeld")
+		.setVeraltet(SchemaRevisionen.REV_15);
 
 	/** Die Definition der Tabellenspalte BeginnBildungsgang */
 	public SchemaTabelleSpalte col_BeginnBildungsgang = add("BeginnBildungsgang", SchemaDatentypen.DATE, false)

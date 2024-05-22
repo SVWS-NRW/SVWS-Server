@@ -222,11 +222,6 @@ export class SchuelerStammdaten extends JavaObject {
 	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
 
-	/**
-	 * Textfeld mit Bemerkungen zum Schülerdatensatz.
-	 */
-	public bemerkungen : string | null = null;
-
 
 	public constructor() {
 		super();
@@ -319,7 +314,6 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.erhaeltMeisterBAFOEG === "undefined")
 			 throw new Error('invalid json format, missing attribute erhaeltMeisterBAFOEG');
 		result.erhaeltMeisterBAFOEG = obj.erhaeltMeisterBAFOEG;
-		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
 		return result;
 	}
 
@@ -369,7 +363,6 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"keineAuskunftAnDritte" : ' + obj.keineAuskunftAnDritte + ',';
 		result += '"erhaeltSchuelerBAFOEG" : ' + obj.erhaeltSchuelerBAFOEG + ',';
 		result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG + ',';
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -508,9 +501,6 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (typeof obj.erhaeltMeisterBAFOEG !== "undefined") {
 			result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG + ',';
-		}
-		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

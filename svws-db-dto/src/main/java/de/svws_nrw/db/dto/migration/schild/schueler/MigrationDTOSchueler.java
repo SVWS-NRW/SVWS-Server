@@ -804,7 +804,7 @@ public final class MigrationDTOSchueler {
 	@JsonProperty
 	public String AbschlussDatum;
 
-	/** Text für Bemerkungen zum Schüler Memofeld */
+	/** DEPRECATED: Text für Bemerkungen zum Schüler Memofeld */
 	@Column(name = "Bemerkungen")
 	@JsonProperty
 	public String Bemerkungen;

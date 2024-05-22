@@ -1190,6 +1190,30 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Bestimmt für die übergebene DTOKlasse die nächste verfügbare Datenbank-ID
+	 *
+	 * @param tableName   der Name der Tabelle mit Autoinkrement
+	 *
+	 * @return die nächste verfügbare ID
+	 */
+	public long transactionGetNextIDByTablename(final String tableName) {
+		if (tableName == null)
+			throw new NullPointerException("Der angebene Tabellenname ist null.");
+		final Tabelle_Schema_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_Schema_AutoInkremente();
+		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
+		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
+		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");
+		q.setParameter("tableName", tableName);
+		try {
+			final Long currentID = (Long) q.getSingleResult();
+			return currentID == null ? 1 : currentID + 1;
+		} catch (@SuppressWarnings("unused") final NoResultException e) {
+			return 1;
+		}
+	}
+
+
+	/**
 	 * Generische Methode zum Speichern von Daten
 	 *
 	 * @param t       Typ der zu speichernden Daten

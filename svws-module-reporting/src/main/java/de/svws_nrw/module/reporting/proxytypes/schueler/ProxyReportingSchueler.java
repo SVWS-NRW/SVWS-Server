@@ -62,7 +62,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.anmeldedatum,
 			schuelerStammdaten.aufnahmedatum,
 			null,
-			schuelerStammdaten.bemerkungen,
 			schuelerStammdaten.druckeKonfessionAufZeugnisse,
 			schuelerStammdaten.emailPrivat,
 			schuelerStammdaten.emailSchule,

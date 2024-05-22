@@ -6,7 +6,6 @@
 		<s-card-schueler-migrationshintergrund :schueler-liste-manager="schuelerListeManager" :patch="patch" />
 		<s-card-schueler-statusdaten :schueler-liste-manager="schuelerListeManager" :patch="patch" :map-fahrschuelerarten="mapFahrschuelerarten"
 			:map-haltestellen="mapHaltestellen" :map-schulen="mapSchulen" :schulform="schulform" />
-		<s-card-schueler-bemerkungen :schueler-liste-manager="schuelerListeManager" :patch="patch" />
 	</div>
 </template>
 
