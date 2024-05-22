@@ -69,7 +69,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		delete eintrag.id;
 		const res = await api.server.createReligion(eintrag, api.schema);
 		const religionListeManager = this.religionListeManager;
-		religionListeManager.liste.auswahlAdd(res);
+		religionListeManager.liste.add(res);
 		this.setPatchedState({ religionListeManager });
 		await RouteManager.doRoute({ name: routeKatalogReligionDaten.name, params: { id: res.id } });
 	}
@@ -86,7 +86,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 	}
 
 	deleteEintraege = async (eintraege: Iterable<ReligionEintrag>) => {
-		const listID = new ArrayList<number>;
+		const listID = new ArrayList<number>();
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
 		if (listID.isEmpty())
@@ -94,11 +94,11 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
 		const religionListeManager = this.religionListeManager;
 		for (const eintrag of religionen)
-			religionListeManager.liste.auswahlRemoveByKey(eintrag.id);
+			religionListeManager.liste.remove(eintrag);
 		const id = religionListeManager.auswahlID();
 		if (id !== null && !religionListeManager.liste.auswahlHasKey(id))
 			await this.setFilter();
-		this.setPatchedState({religionListeManager});
+		this.setPatchedState({ religionListeManager });
 	}
 
 	setFilter = async () => {
