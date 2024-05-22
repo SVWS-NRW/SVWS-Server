@@ -31,11 +31,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		super.children = [
 			routeSchuelerLernabschnittAllgemein,
 			routeSchuelerLernabschnittLeistungen,
+			routeSchuelerLernabschnittGostKlausuren,
 			routeSchuelerLernabschnittVersetzungAbschluss,
 			routeSchuelerLernabschnittKonferenz,
 			routeSchuelerLernabschnittZeugnisdruck,
 			routeSchuelerLernabschnittNachpruefung,
-			routeSchuelerLernabschnittGostKlausuren,
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}

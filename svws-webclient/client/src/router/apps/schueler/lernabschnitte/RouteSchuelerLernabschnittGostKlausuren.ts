@@ -16,10 +16,10 @@ const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/
 export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.gostKlausuren", "gostKlausuren", SSchuelerLernabschnittGostKlausuren);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Gost-Klausuren";
+		super.text = "Klausuren";
 		super.children = [
 		];
 		this.isHidden = (params?: RouteParams) => {
