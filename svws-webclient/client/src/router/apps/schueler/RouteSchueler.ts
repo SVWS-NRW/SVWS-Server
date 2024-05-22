@@ -23,6 +23,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
+import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -40,9 +41,10 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			routeSchuelerIndividualdaten,
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
+			routeSchuelerKAoA,
 			routeSchuelerSchulbesuch,
 			routeSchuelerLernabschnitte,
-			routeSchuelerKAoA,
+			routeSchuelerAbschluesse,
 			routeSchuelerSprachen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan

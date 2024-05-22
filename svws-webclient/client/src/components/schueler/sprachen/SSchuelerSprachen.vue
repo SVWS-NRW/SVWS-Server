@@ -1,8 +1,5 @@
 <template>
 	<div class="page--content">
-		<svws-ui-todo v-if="serverMode !== ServerMode.STABLE" title="Abschlüsse und Berechtigungen an aktueller Schule">
-			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
-		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
 			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
 				<template #cell(sprache)="{ value }">
