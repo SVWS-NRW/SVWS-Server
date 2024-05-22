@@ -1,5 +1,6 @@
 package de.svws_nrw.data.klassen;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.svws_nrw.core.types.klassen.Klassenart;
@@ -8,6 +9,7 @@ import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -69,7 +71,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static KlassenDaten dtoMapper(final Schulform schulform, final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte,
+	public static KlassenDaten mapDTO(final Schulform schulform, final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte,
 			final DTOKlassen klasse, final List<DTOKlassenLeitung> klassenLeitungen,
 			final List<DTOSchueler> schueler, final Map<String, DTOKlassen> mapKlassenVorher, final Map<String, DTOKlassen> mapKlassenNachher) throws ApiOperationException {
 		final KlassenDaten daten = new KlassenDaten();
@@ -174,7 +176,7 @@ public final class DataKlassendaten extends DataManager<Long> {
     			? new HashMap<>()
     			: conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.FolgeAbschnitt_ID, DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Erstelle das Core-DTO-Objekt für die Klasse
-		return dtoMapper(schule.Schulform, mapSchuljahresabschnitte, klasse, klassenLeitungen, dtoSchueler, klassenVorher, klassenNachher);
+		return mapDTO(schule.Schulform, mapSchuljahresabschnitte, klasse, klassenLeitungen, dtoSchueler, klassenVorher, klassenNachher);
 	}
 
 
@@ -190,12 +192,23 @@ public final class DataKlassendaten extends DataManager<Long> {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine ID für die Klasse übergeben.");
 		// Bestimme die Schüler der Klasse
-		final List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", id, DTOSchuelerLernabschnittsdaten.class)
-			.stream().filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).toList();
-		final List<DTOSchueler> dtoSchueler = schuelerIDs == null || schuelerIDs.isEmpty() ? new ArrayList<>()
+		final List<Long> schuelerIDs = getSchuelerIDsByKlassenID(id);
+		final List<DTOSchueler> dtoSchueler = schuelerIDs.isEmpty() ? new ArrayList<>()
 			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		// Erstelle das Core-DTO-Objekt für die Klasse
 		return getFromIDInternal(id, dtoSchueler);
+	}
+
+	/**
+	 * @param id ID der Klasse
+	 *
+	 * @return List von Schüler IDs die der Klasse zugeordnet sind
+	 */
+	public List<Long> getSchuelerIDsByKlassenID(final Long id) {
+		return conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", id, DTOSchuelerLernabschnittsdaten.class).stream()
+			.filter(sla -> sla.WechselNr == 0)
+			.map(sla -> sla.Schueler_ID)
+			.toList();
 	}
 
 
@@ -469,6 +482,75 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		throw new UnsupportedOperationException("Das Löschen von Klassen ist zur Zeit noch nicht implementiert.");
+	}
+
+
+	/**
+	 * Löscht mehrere Klassen und gibt das Ergebnis der Lösch-Operationen als Liste von {@link SimpleOperationResponse} zurück.
+	 *
+	 * @param ids IDs der zu löschenden Klassen
+	 *
+	 * @return Response, mit einer Liste von {@link SimpleOperationResponse} zu den angefragten Lösch-Operationen.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<SimpleOperationResponse> responses = new ArrayList<>();
+		final List<DTOKlassen> deleteDTOs = new ArrayList<>();
+
+		// Vorbedingungen zum Löschen der Klassen prüfen.
+		ids.forEach(id -> responses.add(checkDeletePreConditions(id, deleteDTOs)));
+
+		if (!deleteDTOs.isEmpty()) {
+			for (final DTOKlassen dtoKlasse : deleteDTOs) {
+				this.conn.transactionRemove(dtoKlasse);
+			}
+
+			final boolean deleted = this.conn.transactionCommit();
+			if (!deleted) {
+				// Wenn ein unerwarteter DB Fehler auftritt, werden alle Lösch-Operationen in der DB zurückgerollt
+				this.conn.transactionRollback();
+				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			}
+
+			final List<Long> deletedIds = deleteDTOs.stream().map(dto -> dto.ID).toList();
+			responses.forEach(response -> response.success = deletedIds.contains(response.id));
+		}
+
+		return Response.ok().entity(responses).build();
+	}
+
+	/**
+	 * Methode prüft, ob alle Vorbedingungen zum Löschen der Klasse erfüllt sind.
+	 * Bei Erfüllung der Vorbedingungen wird das {@link DTOKlassen} der Liste <code>deleteDTOs</code> hinzugefügt.
+	 * Es wird ein {@link SimpleOperationResponse} zurückgegeben.
+	 *
+	 * @param id         ID der Klasse, die gelöscht werden soll
+	 * @param deleteDTOs Liste der erlaubten Klassen, die gelöscht werden können
+	 *
+	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
+	 */
+	private SimpleOperationResponse checkDeletePreConditions(final Long id, final List<DTOKlassen> deleteDTOs) {
+		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
+
+		// DTO Objekt holen und prüfen, ob die ID in der DB existiert
+		final DTOKlassen dtoKlasse = conn.queryByKey(DTOKlassen.class, id);
+		if (dtoKlasse == null) {
+			operationResponse.log.add("Klasse (ID: %d) wurde nicht gefunden.".formatted(id));
+			return operationResponse;
+		}
+
+		// Klasse darf keine verknüpften Schüler (Lernabschnittsdaten) mehr haben
+		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(id);
+		if (!schuelerIds.isEmpty()) {
+			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler."
+				.formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
+		}
+
+		// Vorbedingungen zum Löschen wurden erfüllt. Klasse wird der Liste, der zum Löschen freigegebenen Klassen, hinzugefügt.
+		if (operationResponse.log.isEmpty()) {
+			deleteDTOs.add(dtoKlasse);
+		}
+
+		return operationResponse;
 	}
 
 }

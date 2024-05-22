@@ -101,7 +101,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
     	// Erstelle die Einträge für die Liste der Klassen
     	final @NotNull List<@NotNull KlassenDaten> daten = new ArrayList<>();
     	for (final DTOKlassen k : klassen) {
-    		daten.add(DataKlassendaten.dtoMapper(schule.Schulform, mapSchuljahresabschnitte, k, klassenLeitungen.computeIfAbsent(k.ID, l -> new ArrayList<>()),
+    		daten.add(DataKlassendaten.mapDTO(schule.Schulform, mapSchuljahresabschnitte, k, klassenLeitungen.computeIfAbsent(k.ID, l -> new ArrayList<>()),
     				mapKlassenSchueler.computeIfAbsent(k.ID, l -> new ArrayList<>()), klassenVorher, klassenNachher));
     	}
     	daten.sort((a, b) -> Long.compare(a.sortierung, b.sortierung));

@@ -1,35 +1,54 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-content-card title="Alle Klassen">
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-button>TODO</svws-ui-button>
-					<svws-ui-spacing />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
-			<svws-ui-content-card :title="'Klassen ' + strKlassen">
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-button>TODO</svws-ui-button>
-					<svws-ui-spacing />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+		<div class="flex flex-col gap-y-16 lg:gap-y-16">
+			<svws-ui-action-button title="Löschen"
+								   description="Ausgewählte Klassen werden gelöscht."
+								   icon="i-ri-delete-bin-line"
+								   :action-function="deleteKlassen"
+								   action-label="Löschen"
+								   :is-loading="loading"
+								   :is-active="currentAction === 'delete'"
+								   @click="toggleDeleteKlassen" />
+
+			<log-box :logs :status>
+				<template #button>
+					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
+				</template>
+			</log-box>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import {computed, ref} from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
+	import {List} from "@core";
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 
-	const strKlassen = computed<string>(() => {
-		const liste = props.klassenListeManager().liste.auswahl();
-		let s = "";
-		for (const kl of liste)
-			s += (s.length > 0 ? ", " : "") + kl.kuerzel;
-		return s;
-	});
+	const currentAction = ref<string>('');
+	const loading = ref<boolean>(false);
+	const logs = ref<List<string> | undefined>();
+	const status = ref<boolean | undefined>();
+
+	function toggleDeleteKlassen() {
+		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
+		// clearLog();
+	}
+
+	const clearLog = () => {
+		loading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
+	}
+
+	const deleteKlassen = async () => {
+		loading.value = true;
+
+		await props.klassenListeManager().deleteKlassen()
+
+		loading.value = false;
+	}
 
 </script>

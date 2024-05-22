@@ -7,6 +7,7 @@
 						<h2 class="svws-headline">
 							Gruppenprozesse
 						</h2>
+						<span class="svws-subline">{{ selectedKlassen }}</span>
 					</template>
 					<template v-else>
 						<h2 class="svws-headline">
@@ -41,6 +42,14 @@
 	const props = defineProps<KlassenAppProps>();
 
 	const istGruppenprozess = computed<boolean>(() => props.klassenListeManager().liste.auswahlSize() > 0);
+
+	const selectedKlassen = computed<string>(() => {
+		const liste = props.klassenListeManager().liste.auswahlSortiert();
+		let str = "";
+		for (const kl of liste)
+			str += (str.length > 0 ? ", " : "") + kl.kuerzel;
+		return str;
+	});
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';

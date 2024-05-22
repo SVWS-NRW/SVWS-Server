@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
@@ -177,6 +178,33 @@ public class APIKlassen {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
     }
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Klassen.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Klassen.",
+		description = """
+			Entfernt mehrere Klassen. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen der Klassen erfüllt
+			sind und der SVWS-Benutzer die notwendige Berechtigung hat.
+			""")
+	@ApiResponse(responseCode = "204", description = "Die Lösch-Operationen wurden ausgeführt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassen zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteKlassen(@PathParam("schema") final String schema,
+		@RequestBody(description = "Die IDs der zu löschenden Klassen", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+		@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
 
 
     /**

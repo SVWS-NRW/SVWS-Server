@@ -7220,6 +7220,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteKlassen für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/delete/multiple
+	 *
+	 * Entfernt mehrere Klassen. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen der Klassen erfüllt
+sind und der SVWS-Benutzer die notwendige Berechtigung hat.
+
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Lösch-Operationen wurden ausgeführt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassen zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async deleteKlassen(data : List<number>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/klassen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKurse für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Kurse unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.

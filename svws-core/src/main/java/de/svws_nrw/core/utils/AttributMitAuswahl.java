@@ -271,6 +271,19 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 
 
 	/**
+	 * Gibt eine sortierte Liste der in der Auswahl ausgewählten Werte für dieses Attribut zurück.
+	 * Ist die Liste leer, so ist keine Auswahl vorhanden.
+	 *
+	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
+	 */
+	public @NotNull List<@NotNull V> auswahlSorted() {
+		final List<V> list = this.auswahl();
+		list.sort(this._comparator);
+		return list;
+	}
+
+
+	/**
 	 * Gibt die Liste der in der Auswahl enthaltenen Schlüssel für dieses Attribut zurück.
 	 * Ist die Liste leer, so ist kein Auswahl vorhanden.
 	 *

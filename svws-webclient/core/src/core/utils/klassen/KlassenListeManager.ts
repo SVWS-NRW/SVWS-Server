@@ -273,6 +273,15 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
+	/**
+	 * Die Methode löscht nach Prüfung der Vorbedingungen, die ausgewählten Klassen.
+	 *
+	 * @return Liste mit Log-Messages zu den ausgeführten Lösch-Operationen. Wenn es keine Fehler gab, ist die Liste leer.
+	 */
+	public deleteKlassen() : List<string | null> | null {
+		return new ArrayList<string | null>();
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
 	}

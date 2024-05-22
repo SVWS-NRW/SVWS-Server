@@ -20,6 +20,10 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class SimpleOperationResponse {
 
+	/** ID des zugehörigen Objektes. */
+	@Schema(description = "ID des zugehörigen Objektes.", example = "11")
+	public Long id = null;
+
 	/** Gibt an, ob die Operation erfolgreich war. */
 	@Schema(description = "Gibt an, ob die Operation erfolgreich war.", example = "true")
 	public boolean success = false;

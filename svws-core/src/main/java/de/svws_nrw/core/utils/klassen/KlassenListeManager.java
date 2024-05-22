@@ -268,4 +268,14 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
+
+	/**
+	 * Die Methode löscht nach Prüfung der Vorbedingungen, die ausgewählten Klassen.
+	 *
+	 * @return Liste mit Log-Messages zu den ausgeführten Lösch-Operationen. Wenn es keine Fehler gab, ist die Liste leer.
+	 */
+	public List<String> deleteKlassen() {
+		//TODO: implement method
+		return new ArrayList<>();
+	}
 }

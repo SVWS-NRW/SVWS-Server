@@ -5,6 +5,11 @@ import type { List } from '../../java/util/List';
 export class SimpleOperationResponse extends JavaObject {
 
 	/**
+	 * ID des zugehörigen Objektes.
+	 */
+	public id : number | null = null;
+
+	/**
 	 * Gibt an, ob die Operation erfolgreich war.
 	 */
 	public success : boolean = false;
@@ -30,6 +35,7 @@ export class SimpleOperationResponse extends JavaObject {
 	public static transpilerFromJSON(json : string): SimpleOperationResponse {
 		const obj = JSON.parse(json);
 		const result = new SimpleOperationResponse();
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
 		if (typeof obj.success === "undefined")
 			 throw new Error('invalid json format, missing attribute success');
 		result.success = obj.success;
@@ -43,6 +49,7 @@ export class SimpleOperationResponse extends JavaObject {
 
 	public static transpilerToJSON(obj : SimpleOperationResponse) : string {
 		let result = '{';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		result += '"success" : ' + obj.success + ',';
 		if (!obj.log) {
 			result += '"log" : []';
@@ -63,6 +70,9 @@ export class SimpleOperationResponse extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SimpleOperationResponse>) : string {
 		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		}
 		if (typeof obj.success !== "undefined") {
 			result += '"success" : ' + obj.success + ',';
 		}
