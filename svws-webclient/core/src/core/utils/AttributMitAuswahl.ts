@@ -133,6 +133,39 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	}
 
 	/**
+	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
+	 *
+	 * @param value  der hinzuzufügende Wert
+	 */
+	public add(value : V) : void {
+		const key : K = this._toID.apply(value);
+		this._values.add(value);
+		this._values.sort(this._comparator);
+		this._mapValuesByKey.put(key, value);
+		if (this._eventHandlerAuswahlGeandert !== null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+	/**
+	 * Entfernt den Wert als zulässigen Wert für das Attribut.
+	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
+	 * wird dieser aus der Auswahl entfernt.
+	 *
+	 * @param value   der zu entferndende Wert
+	 */
+	public remove(value : V) : void {
+		const key : K = this._toID.apply(value);
+		const index : number = this._values.indexOf(value);
+		if (index < 0)
+			return;
+		this._values.remove(index);
+		this._mapValuesByKey.remove(key);
+		this._mapAuswahlValuesByKey.remove(key);
+		if (this._eventHandlerAuswahlGeandert !== null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+	/**
 	 * Gibt die Liste der in der Auswahl ausgewählten Werte für dieses Attribut zurück.
 	 * Ist die Liste leer, so ist keine Auswahl vorhanden.
 	 *

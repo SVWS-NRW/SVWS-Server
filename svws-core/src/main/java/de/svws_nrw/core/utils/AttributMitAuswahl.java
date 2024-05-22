@@ -137,6 +137,41 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 
 
 	/**
+	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
+	 *
+	 * @param value  der hinzuzufügende Wert
+	 */
+	public void add(@NotNull final V value) {
+		final @NotNull K key = _toID.apply(value);
+		this._values.add(value);
+		this._values.sort(this._comparator);
+		this._mapValuesByKey.put(key, value);
+		if (_eventHandlerAuswahlGeandert != null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+
+	/**
+	 * Entfernt den Wert als zulässigen Wert für das Attribut.
+	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
+	 * wird dieser aus der Auswahl entfernt.
+	 *
+	 * @param value   der zu entferndende Wert
+	 */
+	public void remove(@NotNull final V value) {
+		final @NotNull K key = _toID.apply(value);
+		final int index = this._values.indexOf(value);
+		if (index < 0)
+			return;
+		this._values.remove(index);
+		this._mapValuesByKey.remove(key);
+		this._mapAuswahlValuesByKey.remove(key);
+		if (_eventHandlerAuswahlGeandert != null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+
+	/**
 	 * Gibt die Liste der in der Auswahl ausgewählten Werte für dieses Attribut zurück.
 	 * Ist die Liste leer, so ist keine Auswahl vorhanden.
 	 *
