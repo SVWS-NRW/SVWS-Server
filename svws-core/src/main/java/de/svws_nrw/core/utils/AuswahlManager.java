@@ -63,6 +63,9 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/** Ein Handler für das Ereignis, dass die Mehrfachauswahl angepasst wurde */
 	private final @NotNull Runnable _eventHandlerMehrfachauswahlChanged = () -> this.onMehrfachauswahlChanged();
 
+	/** Ein Handler für das Ereignis, dass die Liste mit der Mehrfachauswahl angepasst wurde */
+	private final @NotNull Runnable _eventHandlerListeChanged = () -> this.onListeChangedInternal();
+
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
 	protected @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order;
 
@@ -97,6 +100,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		this._listeToId = listeToId;
 		this._datenToId = datenToId;
 		this.liste = new AttributMitAuswahl<>(values, _listeToId, listComparator, _eventHandlerMehrfachauswahlChanged);
+		this.liste.setEventHandlerListeGeaendert(_eventHandlerListeChanged);
 		this._filterPermitAuswahl = true;
 	}
 
@@ -163,13 +167,38 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 
 
 	/**
+	 * Die Methode wird aufgerufen, wenn eine Änderung an der Liste mit den verfügbaren Daten
+	 * eine Änderung vorgenommen wird.
+	 */
+	private void onListeChangedInternal() {
+		final TID idAuswahl = auswahlID();
+		if (idAuswahl != null) {
+			if (this.liste.get(idAuswahl) == null)
+				setDaten(null);
+			else
+				setDaten(daten());
+		}
+		this.onListeChanged();
+	}
+
+
+	/**
+	 * Diese Methode kann überschrieben werden.
+	 * Sie wird aufgerufen, wenn eine Änderung an der Liste der für die Mehrfachauswahl
+	 * zulässigen Werte stattgefunden hat.
+	 */
+	protected void onListeChanged() {
+		// die Methode kann abgeleitet werden, um auf Änderungen an der Liste zu reagieren.
+	}
+
+
+	/**
 	 * Diese Methode kann überschrieben werden.
 	 * Sie wird aufgerufen, wenn eine Änderung an der Mehrfachauswahl stattgefunden hat.
 	 */
 	protected void onMehrfachauswahlChanged() {
 		// die Methode kann abgeleitet werden, um auf Änderungen an der Mehrfachauswahl zu reagieren.
 	}
-
 
 
 	/**
@@ -280,20 +309,20 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 * @throws DeveloperNotificationException   falls die Daten nicht in der Auswahlliste vorhanden ist
 	 */
 	public void setDaten(final TDaten daten) throws DeveloperNotificationException {
-		// Die Daten werden zurückgesetzt und damit ist keine Auswahl mehr vorhanden
 		if (daten == null) {
+			// Die Daten werden zurückgesetzt und damit ist keine Auswahl mehr vorhanden
 			this._daten = null;
-			return;
+		} else {
+			// Bestimme den Auswahl-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler beim Aufruf vor...
+			final @NotNull TAuswahl eintrag = this.liste.getOrException(this._datenToId.apply(daten));
+			// Passe ggf. die Daten in der Auswahlliste an ... (beim Patchen der Daten)
+			final boolean updateEintrag = this.onSetDaten(eintrag, daten);
+			// ... und setze die neue Daten
+			this._daten = daten;
+			// ... und berechne ggf. die Sortierung der Liste neu
+			if (updateEintrag)
+				this.orderSet(this.orderGet());
 		}
-		// Bestimme den Auswahl-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler beim Aufruf vor...
-		final @NotNull TAuswahl eintrag = this.liste.getOrException(this._datenToId.apply(daten));
-		// Passe ggf. die Daten in der Auswahlliste an ... (beim Patchen der Daten)
-		final boolean updateEintrag = this.onSetDaten(eintrag, daten);
-		// ... und setze die neue Daten
-		this._daten = daten;
-		// ... und berechne ggf. die Sortierung der Liste neu
-		if (updateEintrag)
-			this.orderSet(this.orderGet());
 		// ... und triggere, dass der Filter neu angewendet wird
 		this._filtered = null;
 	}

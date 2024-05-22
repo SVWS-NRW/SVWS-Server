@@ -12,9 +12,9 @@ import type { Comparator } from '../../java/util/Comparator';
 export class AttributMitAuswahl<K, V> extends JavaObject {
 
 	/**
-	 * Eine Menge der zulässigen Werte
+	 * Die Menge der zulässigen Werte
 	 */
-	private readonly _values : List<V> = new ArrayList<V>();
+	private _values : List<V> = new ArrayList<V>();
 
 	/**
 	 * Eine Map mit der Menge der zulässigen Werte
@@ -37,9 +37,14 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	private readonly _comparator : Comparator<V>;
 
 	/**
-	 * Ein Handler für das Ergebnis, dass die Auswahl verändert wurde
+	 * Ein Handler für das Ereignis, dass die Auswahl verändert wurde
 	 */
 	private readonly _eventHandlerAuswahlGeandert : Runnable | null;
+
+	/**
+	 * Ein Handler für das Ereignis, dass die zugrundeliegende Liste verändert wurde
+	 */
+	private _eventHandlerListeGeaendert : Runnable | null = null;
 
 
 	/**
@@ -61,6 +66,16 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		for (const v of this._values)
 			this._mapValuesByKey.put(toId.apply(v), v);
 		this._eventHandlerAuswahlGeandert = eventHandler;
+	}
+
+	/**
+	 * Setzt den Event-Handler für das Ereignis, dass die zugrundeliegende Liste verändert
+	 * wurde.
+	 *
+	 * @param eventHandler   der Event-Handler
+	 */
+	setEventHandlerListeGeaendert(eventHandler : Runnable | null) : void {
+		this._eventHandlerListeGeaendert = eventHandler;
 	}
 
 	/**
@@ -136,14 +151,68 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
 	 *
 	 * @param value  der hinzuzufügende Wert
+	 *
+	 * @return true, wenn ein Wert entfernt wurde
 	 */
-	public add(value : V) : void {
+	private addInternal(value : V) : boolean {
 		const key : K = this._toID.apply(value);
-		this._values.add(value);
+		if (this._mapValuesByKey.containsKey(key))
+			return false;
+		const values : List<V> = new ArrayList<V>();
+		values.addAll(this._values);
+		values.add(value);
+		this._values = values;
 		this._values.sort(this._comparator);
 		this._mapValuesByKey.put(key, value);
-		if (this._eventHandlerAuswahlGeandert !== null)
-			this._eventHandlerAuswahlGeandert.run();
+		return true;
+	}
+
+	/**
+	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
+	 *
+	 * @param value  der hinzuzufügende Wert
+	 */
+	public add(value : V) : void {
+		if ((this.addInternal(value)) && (this._eventHandlerListeGeaendert !== null))
+			this._eventHandlerListeGeaendert.run();
+	}
+
+	/**
+	 * Fügt weitere zulässige Werte für das Attribut hinzu.
+	 *
+	 * @param values  die hinzuzufügenden Werte
+	 */
+	public addAll(values : List<V>) : void {
+		let added : boolean = false;
+		for (const value of values)
+			added = added || this.addInternal(value);
+		if ((added) && (this._eventHandlerListeGeaendert !== null))
+			this._eventHandlerListeGeaendert.run();
+	}
+
+	/**
+	 * Entfernt den Wert als zulässigen Wert für das Attribut.
+	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
+	 * wird dieser aus der Auswahl entfernt.
+	 *
+	 * @param value   der zu entferndende Wert
+	 *
+	 * @return true, falls der Wert entfernt wurde
+	 */
+	private removeInternal(value : V) : boolean {
+		const key : K = this._toID.apply(value);
+		const values : List<V> = new ArrayList<V>();
+		for (const v of this._values) {
+			if (JavaObject.equalsTranspiler(key, (this._toID.apply(v))))
+				continue;
+			values.add(v);
+		}
+		if (values.size() === this._values.size())
+			return false;
+		this._values = values;
+		this._mapValuesByKey.remove(key);
+		this._mapAuswahlValuesByKey.remove(key);
+		return true;
 	}
 
 	/**
@@ -154,13 +223,29 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @param value   der zu entferndende Wert
 	 */
 	public remove(value : V) : void {
-		const key : K = this._toID.apply(value);
-		const index : number = this._values.indexOf(value);
-		if (index < 0)
+		if (!this.removeInternal(value))
 			return;
-		this._values.remove(index);
-		this._mapValuesByKey.remove(key);
-		this._mapAuswahlValuesByKey.remove(key);
+		if (this._eventHandlerListeGeaendert !== null)
+			this._eventHandlerListeGeaendert.run();
+		if (this._eventHandlerAuswahlGeandert !== null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+	/**
+	 * Entfernt die angegebenen Werte als zulässigen Werte für das Attribut.
+	 * Sollte die Werte zusätzlich zu der Auswahl gehören, so werden diese
+	 * aus der Auswahl entfernt.
+	 *
+	 * @param values   die zu entferndende Werte
+	 */
+	public removeAll(values : List<V>) : void {
+		let removed : boolean = false;
+		for (const value of values)
+			removed = removed || this.removeInternal(value);
+		if (!removed)
+			return;
+		if (this._eventHandlerListeGeaendert !== null)
+			this._eventHandlerListeGeaendert.run();
 		if (this._eventHandlerAuswahlGeandert !== null)
 			this._eventHandlerAuswahlGeandert.run();
 	}

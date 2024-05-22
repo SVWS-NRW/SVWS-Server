@@ -95,10 +95,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		const religionListeManager = this.religionListeManager;
 		for (const eintrag of religionen)
 			religionListeManager.liste.remove(eintrag);
-		const id = religionListeManager.auswahlID();
-		if (id !== null && !religionListeManager.liste.auswahlHasKey(id))
-			await this.setFilter();
-		this.setPatchedState({ religionListeManager });
+		await this.setFilter();
 	}
 
 	setFilter = async () => {

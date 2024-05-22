@@ -20,8 +20,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 
-	/** Eine Menge der zulässigen Werte */
-	private final @NotNull List<@NotNull V> _values = new ArrayList<>();
+	/** Die Menge der zulässigen Werte */
+	private @NotNull List<@NotNull V> _values = new ArrayList<>();
 
 	/** Eine Map mit der Menge der zulässigen Werte */
 	private final @NotNull Map<@NotNull K, @NotNull V> _mapValuesByKey = new HashMap<>();
@@ -35,8 +35,11 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	/** Ein Comparator für das Sortieren der enthaltenen Objekte */
 	private final @NotNull Comparator<@NotNull V> _comparator;
 
-	/** Ein Handler für das Ergebnis, dass die Auswahl verändert wurde */
+	/** Ein Handler für das Ereignis, dass die Auswahl verändert wurde */
 	private final Runnable _eventHandlerAuswahlGeandert;
+
+	/** Ein Handler für das Ereignis, dass die zugrundeliegende Liste verändert wurde */
+	private Runnable _eventHandlerListeGeaendert = null;
 
 
 	/**
@@ -58,6 +61,17 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 		for (final @NotNull V v : this._values)
 			this._mapValuesByKey.put(toId.apply(v), v);
 		this._eventHandlerAuswahlGeandert = eventHandler;
+	}
+
+
+	/**
+	 * Setzt den Event-Handler für das Ereignis, dass die zugrundeliegende Liste verändert
+	 * wurde.
+	 *
+	 * @param eventHandler   der Event-Handler
+	 */
+	void setEventHandlerListeGeaendert(final Runnable eventHandler) {
+		this._eventHandlerListeGeaendert = eventHandler;
 	}
 
 
@@ -89,7 +103,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return der Wert oder null, falls kein Wert enthalten ist.
 	 */
-	public V get(@NotNull final K key) {
+	public V get(final @NotNull K key) {
 		return this._mapValuesByKey.get(key);
 	}
 
@@ -104,7 +118,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel nicht zulässig ist
 	 */
-	public @NotNull V getOrException(@NotNull final K key) throws DeveloperNotificationException {
+	public @NotNull V getOrException(final @NotNull K key) throws DeveloperNotificationException {
 		final V value = this.get(key);
 		if (value == null)
 			throw new DeveloperNotificationException("Kein gültiger Schlüsselwert.");
@@ -119,7 +133,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return true, falls der Schlüssel erlaubt ist
 	 */
-	public boolean has(@NotNull final K key) {
+	public boolean has(final @NotNull K key) {
 		return this._mapValuesByKey.containsKey(key);
 	}
 
@@ -131,7 +145,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return true, falls der Wert vorhanden ist
 	 */
-	public boolean hasValue(@NotNull final V value) {
+	public boolean hasValue(final @NotNull V value) {
 		return this._mapValuesByKey.containsKey(this._toID.apply(value));
 	}
 
@@ -140,14 +154,71 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
 	 *
 	 * @param value  der hinzuzufügende Wert
+	 *
+	 * @return true, wenn ein Wert entfernt wurde
 	 */
-	public void add(@NotNull final V value) {
+	private boolean addInternal(final @NotNull V value) {
 		final @NotNull K key = _toID.apply(value);
-		this._values.add(value);
+		if (this._mapValuesByKey.containsKey(key))
+			return false;
+		final @NotNull List<@NotNull V> values = new ArrayList<>();
+		values.addAll(this._values);
+		values.add(value);
+		this._values = values;
 		this._values.sort(this._comparator);
 		this._mapValuesByKey.put(key, value);
-		if (_eventHandlerAuswahlGeandert != null)
-			this._eventHandlerAuswahlGeandert.run();
+		return true;
+	}
+
+
+	/**
+	 * Fügt einen weiteren zulässigen Wert für das Attribut hinzu.
+	 *
+	 * @param value  der hinzuzufügende Wert
+	 */
+	public void add(final @NotNull V value) {
+		if ((addInternal(value)) && (_eventHandlerListeGeaendert != null))
+			this._eventHandlerListeGeaendert.run();
+	}
+
+
+	/**
+	 * Fügt weitere zulässige Werte für das Attribut hinzu.
+	 *
+	 * @param values  die hinzuzufügenden Werte
+	 */
+	public void addAll(final @NotNull List<@NotNull V> values) {
+		boolean added = false;
+		for (final @NotNull V value : values)
+			added = added || addInternal(value);
+		if ((added) && (_eventHandlerListeGeaendert != null))
+			this._eventHandlerListeGeaendert.run();
+	}
+
+
+	/**
+	 * Entfernt den Wert als zulässigen Wert für das Attribut.
+	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
+	 * wird dieser aus der Auswahl entfernt.
+	 *
+	 * @param value   der zu entferndende Wert
+	 *
+	 * @return true, falls der Wert entfernt wurde
+	 */
+	private boolean removeInternal(final @NotNull V value) {
+		final @NotNull K key = _toID.apply(value);
+		final @NotNull List<@NotNull V> values = new ArrayList<>();
+		for (final @NotNull V v : this._values) {
+			if (key.equals(_toID.apply(v)))
+				continue;
+			values.add(v);
+		}
+		if (values.size() == this._values.size())
+			return false;
+		this._values = values;
+		this._mapValuesByKey.remove(key);
+		this._mapAuswahlValuesByKey.remove(key);
+		return true;
 	}
 
 
@@ -158,14 +229,31 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @param value   der zu entferndende Wert
 	 */
-	public void remove(@NotNull final V value) {
-		final @NotNull K key = _toID.apply(value);
-		final int index = this._values.indexOf(value);
-		if (index < 0)
+	public void remove(final @NotNull V value) {
+		if (!removeInternal(value))
 			return;
-		this._values.remove(index);
-		this._mapValuesByKey.remove(key);
-		this._mapAuswahlValuesByKey.remove(key);
+		if (_eventHandlerListeGeaendert != null)
+			this._eventHandlerListeGeaendert.run();
+		if (_eventHandlerAuswahlGeandert != null)
+			this._eventHandlerAuswahlGeandert.run();
+	}
+
+
+	/**
+	 * Entfernt die angegebenen Werte als zulässigen Werte für das Attribut.
+	 * Sollte die Werte zusätzlich zu der Auswahl gehören, so werden diese
+	 * aus der Auswahl entfernt.
+	 *
+	 * @param values   die zu entferndende Werte
+	 */
+	public void removeAll(final @NotNull List<@NotNull V> values) {
+		boolean removed = false;
+		for (final @NotNull V value : values)
+			removed = removed || removeInternal(value);
+		if (!removed)
+			return;
+		if (_eventHandlerListeGeaendert != null)
+			this._eventHandlerListeGeaendert.run();
 		if (_eventHandlerAuswahlGeandert != null)
 			this._eventHandlerAuswahlGeandert.run();
 	}

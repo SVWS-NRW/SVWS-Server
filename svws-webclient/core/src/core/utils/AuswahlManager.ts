@@ -75,6 +75,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	private readonly _eventHandlerMehrfachauswahlChanged : Runnable = { run : () => this.onMehrfachauswahlChanged() };
 
 	/**
+	 * Ein Handler für das Ereignis, dass die Liste mit der Mehrfachauswahl angepasst wurde
+	 */
+	private readonly _eventHandlerListeChanged : Runnable = { run : () => this.onListeChangedInternal() };
+
+	/**
 	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.
 	 */
 	protected _order : List<Pair<string, boolean>>;
@@ -108,6 +113,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		this._listeToId = listeToId;
 		this._datenToId = datenToId;
 		this.liste = new AttributMitAuswahl(values, this._listeToId, listComparator, this._eventHandlerMehrfachauswahlChanged);
+		this.liste.setEventHandlerListeGeaendert(this._eventHandlerListeChanged);
 		this._filterPermitAuswahl = true;
 	}
 
@@ -163,6 +169,30 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * Ereignis tritt auf bevor die alte gefilterte Liste ungültig wird.
 	 */
 	protected onFilterChanged() : void {
+		// empty block
+	}
+
+	/**
+	 * Die Methode wird aufgerufen, wenn eine Änderung an der Liste mit den verfügbaren Daten
+	 * eine Änderung vorgenommen wird.
+	 */
+	private onListeChangedInternal() : void {
+		const idAuswahl : TID | null = this.auswahlID();
+		if (idAuswahl !== null) {
+			if (this.liste.get(idAuswahl) === null)
+				this.setDaten(null);
+			else
+				this.setDaten(this.daten());
+		}
+		this.onListeChanged();
+	}
+
+	/**
+	 * Diese Methode kann überschrieben werden.
+	 * Sie wird aufgerufen, wenn eine Änderung an der Liste der für die Mehrfachauswahl
+	 * zulässigen Werte stattgefunden hat.
+	 */
+	protected onListeChanged() : void {
 		// empty block
 	}
 
@@ -275,13 +305,13 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public setDaten(daten : TDaten | null) : void {
 		if (daten === null) {
 			this._daten = null;
-			return;
+		} else {
+			const eintrag : TAuswahl = this.liste.getOrException(this._datenToId.apply(daten));
+			const updateEintrag : boolean = this.onSetDaten(eintrag, daten);
+			this._daten = daten;
+			if (updateEintrag)
+				this.orderSet(this.orderGet());
 		}
-		const eintrag : TAuswahl = this.liste.getOrException(this._datenToId.apply(daten));
-		const updateEintrag : boolean = this.onSetDaten(eintrag, daten);
-		this._daten = daten;
-		if (updateEintrag)
-			this.orderSet(this.orderGet());
 		this._filtered = null;
 	}
 
