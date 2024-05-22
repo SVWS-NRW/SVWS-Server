@@ -804,23 +804,27 @@ public class APISchueler {
     // TODO rework this
 
 	@PATCH
-	@Path("/{id : \\d+}/vermerke")
-	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachbelegung.",
-		description = "Passt die Sprachbelegung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. "
+	@Path("/{id : \\d+}/vermerke/{vid : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Schülers.",
+		description = "Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Sprachbelegung integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Vermerke integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Vermerkdaten der Schüler zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchSchuelerVermerke(@PathParam("id") final long id,
+	public Response patchSchuelerVermerke(		@PathParam("schema") final String schema,
+												@PathParam("id") final long id,
+												@PathParam("vid") final long vid,
 												@RequestBody(description = "Der Patch für die Vermerke", required = true, content =
 												@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 												@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(id, is),
+		System.out.println("--> " +  id + " " + vid);
+		System.out.println("Inputstream patch Object " + is);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(vid, is),
 			// TODO SEC Prüfen
-			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
 

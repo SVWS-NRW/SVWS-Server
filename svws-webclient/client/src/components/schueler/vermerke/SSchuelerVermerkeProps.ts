@@ -1,6 +1,7 @@
-import {List, Schueler, SchuelerVermerke} from "@core";
+import {List, Schueler, SchuelerVermerke, VermerkartEintrag} from "@core";
 
 export interface SchuelerVermerkeProps {
 	data: List<SchuelerVermerke>;
-	patch: (data : Partial<SchuelerVermerke>) => Promise<void>;
+	mapVermerkArten: Map<number, VermerkartEintrag>;
+	patch: (data : Partial<SchuelerVermerke>, id : number) => Promise<void>;
 }

@@ -177,7 +177,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 						throw new ApiOperationException(Status.NOT_FOUND, "Betrieb mit der ID " + VermerkArt_ID + " wurde nicht gefunden.");
 					vermerk.VermerkArt_ID = VermerkArt_ID;
 				}
-
+				case "Bemerkung" -> vermerk.Bemerkung = JSONMapper.convertToString(value, true, true, null);
 				case "AngelegtVon" -> vermerk.AngelegtVon = JSONMapper.convertToString(value, true, true, null);
 				case "GeaendertVon" -> vermerk.GeaendertVon = JSONMapper.convertToString(value, true, true, null);
 
