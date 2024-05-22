@@ -92,9 +92,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		if (listID.isEmpty())
 			return;
 		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
-		const religionListeManager = this.religionListeManager;
-		for (const eintrag of religionen)
-			religionListeManager.liste.remove(eintrag);
+		this.religionListeManager.liste.removeAll(religionen);
 		await this.setFilter();
 	}
 
