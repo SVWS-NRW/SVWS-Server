@@ -9,7 +9,7 @@
 					<div class="flex flex-row w-full place-content-center">
 						<span class="text-headline-sm pb-2 pr-2">im Kurs</span>
 						<span class="w-32">
-							<svws-ui-select :items="schuelerFilter().getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="schuelerFilter().kurs || setKurs()" @update:model-value="kurs => schuelerFilter().kurs = kurs ?? undefined" headless />
+							<svws-ui-select :items="schuelerFilter().getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="toRaw(schuelerFilter().kurs) || setKurs()" @update:model-value="kurs => schuelerFilter().kurs = kurs ?? undefined" headless />
 						</span>
 					</div>
 					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
@@ -103,8 +103,8 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">
-						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben {{ allowRegeln ? 'und Fixierung anpassen':'' }}</svws-ui-checkbox>
-						<svws-ui-checkbox v-if="allowRegeln" :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
+						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben {{ allowRegeln ? 'und Fixierung entfernen':'' }}</svws-ui-checkbox>
+						<svws-ui-checkbox :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren" :disabled="!allowRegeln">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
 						<svws-ui-checkbox v-model="zielkurseLeeren">Zielkurse leeren</svws-ui-checkbox>
 					</div>
 				</div>
@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, toRaw } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager , GostBlockungsergebnisKursSchuelerZuordnungUpdate} from '@core';
@@ -148,23 +148,30 @@
 	function setKurs() {
 		const filter = props.schuelerFilter();
 		if (filter.kurs === undefined) {
-			if (filter.fach === undefined) {
-				const kurse = props.getErgebnismanager().getKursmenge();
-				const k = (kurse.size() > 0) ? kurse.getFirst() : null;
-				if (k === null)
-					filter.kurs = new GostBlockungKurs();
-				else filter.kurs = props.getErgebnismanager().getKursG(k.id);
-			} else {
-				const kurse = props.getErgebnismanager().getOfFachKursmenge(filter.fach);
-				const k = (kurse.size() > 0) ? kurse.getFirst() : null;
-				if (k === null) {
+			const kurse = new ArrayList<GostBlockungsergebnisKurs>();
+			if (filter.fach !== undefined) {
+				if (filter.kursart !== undefined) {
+					for (const kurs of props.getErgebnismanager().getOfFachKursmenge(filter.fach))
+						if (kurs.kursart === filter.kursart.id)
+							kurse.add(kurs);
+				} else
+					kurse.addAll(props.getErgebnismanager().getOfFachKursmenge(filter.fach));
+			} else
+				kurse.addAll(props.getErgebnismanager().getKursmenge());
+			const k = (kurse.size() > 0) ? kurse.getFirst() : null;
+			if (k === null) {
+				if (filter.kursart !== undefined) {
+					filter.kursart = undefined;
+					return setKurs();
+				}
+				if (filter.fach !== undefined) {
 					filter.fach = undefined;
 					return setKurs();
 				}
-				else filter.kurs = props.getErgebnismanager().getKursG(k.id);
-			}
-			return filter.kurs;
+			}	else
+				filter.kurs = props.getErgebnismanager().getKursG(k.id);
 		}
+		return filter.kurs;
 	}
 
 	const kursart = computed(() => {
