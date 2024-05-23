@@ -11,12 +11,15 @@ export class ReligionUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Religion-Einträgen.
 	 */
 	public static readonly comparator : Comparator<ReligionEintrag> = { compare : (a: ReligionEintrag, b: ReligionEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
 		if ((a.kuerzel === null) || (b.kuerzel === null)) {
 			if ((a.kuerzel === null) && (b.kuerzel === null))
 				return 0;
 			return (a.kuerzel === null) ? -1 : 1;
 		}
-		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
