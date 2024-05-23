@@ -5446,8 +5446,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				return +1;
 			const aFachID : number = GostKursart.getFachID(a!);
 			const bFachID : number = GostKursart.getFachID(b!);
-			const aFach : GostFach = this._parent.faecherManager().getOrException(aFachID);
-			const bFach : GostFach = this._parent.faecherManager().getOrException(bFachID);
+			const aFach : GostFach | null = this._parent.faecherManager().get(aFachID);
+			const bFach : GostFach | null = this._parent.faecherManager().get(bFachID);
 			return GostFaecherManager.comp.compare(aFach, bFach);
 		} };
 		return comp;
@@ -5457,8 +5457,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const comp : Comparator<number> = { compare : (a: number, b: number) => {
 			const aFachID : number = GostKursart.getFachID(a!);
 			const bFachID : number = GostKursart.getFachID(b!);
-			const aFach : GostFach = this._parent.faecherManager().getOrException(aFachID);
-			const bFach : GostFach = this._parent.faecherManager().getOrException(bFachID);
+			const aFach : GostFach | null = this._parent.faecherManager().get(aFachID);
+			const bFach : GostFach | null = this._parent.faecherManager().get(bFachID);
 			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach !== 0)
 				return cmpFach;
@@ -5475,8 +5475,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private createComparatorKursFachKursartNummer() : Comparator<GostBlockungsergebnisKurs> {
 		const comp : Comparator<GostBlockungsergebnisKurs> = { compare : (a: GostBlockungsergebnisKurs, b: GostBlockungsergebnisKurs) => {
-			const aFach : GostFach = this._parent.faecherManager().getOrException(a.fachID);
-			const bFach : GostFach = this._parent.faecherManager().getOrException(b.fachID);
+			const aFach : GostFach | null = this._parent.faecherManager().get(a.fachID);
+			const bFach : GostFach | null = this._parent.faecherManager().get(b.fachID);
 			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach !== 0)
 				return cmpFach;
@@ -5497,8 +5497,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				return -1;
 			if (a.kursart > b.kursart)
 				return +1;
-			const aFach : GostFach = this._parent.faecherManager().getOrException(a.fachID);
-			const bFach : GostFach = this._parent.faecherManager().getOrException(b.fachID);
+			const aFach : GostFach | null = this._parent.faecherManager().get(a.fachID);
+			const bFach : GostFach | null = this._parent.faecherManager().get(b.fachID);
 			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach !== 0)
 				return cmpFach;

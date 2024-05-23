@@ -6141,8 +6141,8 @@ public class GostBlockungsergebnisManager {
 
 			final long aFachID = GostKursart.getFachID(a);
 			final long bFachID = GostKursart.getFachID(b);
-			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(aFachID);
-			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(bFachID);
+			final GostFach aFach = _parent.faecherManager().get(aFachID);
+			final GostFach bFach = _parent.faecherManager().get(bFachID);
 			return GostFaecherManager.comp.compare(aFach, bFach);
 		};
 
@@ -6153,8 +6153,8 @@ public class GostBlockungsergebnisManager {
 		final @NotNull Comparator<@NotNull Long> comp = (final @NotNull Long a, final @NotNull Long b) -> {
 			final long aFachID = GostKursart.getFachID(a);
 			final long bFachID = GostKursart.getFachID(b);
-			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(aFachID);
-			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(bFachID);
+			final GostFach aFach = _parent.faecherManager().get(aFachID);
+			final GostFach bFach = _parent.faecherManager().get(bFachID);
 			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach != 0) return cmpFach;
 
@@ -6169,8 +6169,8 @@ public class GostBlockungsergebnisManager {
 
 	private @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> createComparatorKursFachKursartNummer() {
 		final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> comp = (final @NotNull GostBlockungsergebnisKurs a, final @NotNull GostBlockungsergebnisKurs b) -> {
-			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(a.fachID);
-			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(b.fachID);
+			final GostFach aFach = _parent.faecherManager().get(a.fachID);
+			final GostFach bFach = _parent.faecherManager().get(b.fachID);
 			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach != 0) return cmpFach;
 
@@ -6189,8 +6189,8 @@ public class GostBlockungsergebnisManager {
 			if (a.kursart < b.kursart) return -1;
 			if (a.kursart > b.kursart) return +1;
 
-			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(a.fachID);
-			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(b.fachID);
+			final GostFach aFach = _parent.faecherManager().get(a.fachID);
+			final GostFach bFach = _parent.faecherManager().get(b.fachID);
 			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach != 0) return cmpFach;
 

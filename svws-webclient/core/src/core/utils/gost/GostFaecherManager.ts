@@ -19,7 +19,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
 	 */
-	public static readonly comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => GostFachbereich.compareGostFach(a, b) };
+	public static readonly comp : Comparator<GostFach | null> = { compare : (a: GostFach | null, b: GostFach | null) => GostFachbereich.compareGostFach(a, b) };
 
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
