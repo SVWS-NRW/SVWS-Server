@@ -705,3 +705,4 @@ export { SchuldateiOrganisationseinheitMerkmal } from './schuldatei/v1/data/Schu
 export { SchuldateiOrganisationseinheitSchulform } from './schuldatei/v1/data/SchuldateiOrganisationseinheitSchulform';
 export { SchuldateiKatalogManager } from './schuldatei/v1/utils/SchuldateiKatalogManager';
 export { SchuldateiManager } from './schuldatei/v1/utils/SchuldateiManager';
+export { SchuldateiOrganisationseinheitManager } from './schuldatei/v1/utils/SchuldateiOrganisationseinheitManager';

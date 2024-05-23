@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.schuldatei.v1.SchuldateiReader;
-import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheit;
 
 /**
  * Tests für den {@link SchuldateiManager}.
@@ -21,9 +20,9 @@ class TestSchuldateiManager {
 	@Test
 	@DisplayName("Prüfe exemplarisch den Zugriff auf eine Organisationsheit")
 	void testSchuleXY() {
-		final SchuldateiOrganisationseinheit msb = manager.getOrganisationsheinheitBySchulnummer(1016);
-		assertEquals("NRW", msb.bundeslandkennung);
-		assertEquals("3", msb.oeart);
+		final SchuldateiOrganisationseinheitManager msb = manager.getOrganisationsheinheitManager(1016);
+		assertEquals("NRW", msb.getBundeslandkennung());
+		assertEquals("3", msb.getArt());
 	}
 
 
