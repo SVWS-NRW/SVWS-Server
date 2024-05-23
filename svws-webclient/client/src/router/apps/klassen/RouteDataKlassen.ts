@@ -114,6 +114,61 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
+	deleteKlassen = async ()  => {
+		const ids = new ArrayList<number>();
+		for (const klasse of this.klassenListeManager.liste.auswahlSorted()) {
+			ids.add(klasse.id);
+		}
+
+		const operationResponses = await api.server.deleteKlassen(ids, api.schema);
+
+		const klassenToRemove = new ArrayList<KlassenDaten>();
+		const logMessages = new ArrayList<string | null>();
+		let status = true;
+		for (const response of operationResponses) {
+			if (response.success && response.id) {
+				const klasse = this.klassenListeManager.liste.get(response.id);
+				logMessages.add(`Klasse ${klasse?.kuerzel} (ID: ${response.id}) wurde erfolgreich gelöscht.`);
+				klassenToRemove.add(klasse);
+			} else {
+				status = false;
+				logMessages.addAll(response.log)
+			}
+		}
+
+		if (!klassenToRemove.isEmpty()) {
+			// const klassen = new ArrayList(this.klassenListeManager.liste.list());
+			const klassen = new ArrayList(this.klassenListeManager.liste.list());
+			klassen.removeAll(klassenToRemove);
+
+			//TODO: Problem beim reloaden der Auswahlliste fixen
+
+			this.klassenListeManager.setDaten(null);
+			// this.klassenListeManager.liste.setValues(klassen);
+
+			// const manager = new KlassenListeManager(this._state.value.idSchuljahresabschnitt,
+			// 	-1,
+			// 	this.klassenListeManager.schuljahresabschnitte.list(),
+			// 	this.klassenListeManager.schulform(),
+			// 	klassen,
+			// 	this.klassenListeManager.schueler.list(),
+			// 	this.klassenListeManager.jahrgaenge.list(),
+			// 	this.klassenListeManager.lehrer.list())
+
+			// if (status) {
+			// 	console.log("ADLDJW A", manager.filtered().get(0))
+			// 	manager.setDaten(manager.filtered().get(0));
+			// 	manager.liste.auswahlAddByKey(manager.filtered().get(0).id)
+			// } else {
+			// 	console.log("Bestehende Auswahl übernehmen!")
+			// }
+
+			this.setPatchedDefaultState({klassenListeManager: this.klassenListeManager});
+		}
+
+		return [status, logMessages];
+	}
+
 	patch = async (data : Partial<KlassenDaten>) => {
 		if (!this.klassenListeManager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");

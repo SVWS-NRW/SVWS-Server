@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-	import {computed, ref} from "vue";
+	import {ref} from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
 	import {List} from "@core";
 
@@ -29,12 +29,12 @@
 
 	const currentAction = ref<string>('');
 	const loading = ref<boolean>(false);
-	const logs = ref<List<string> | undefined>();
+	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
 	function toggleDeleteKlassen() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
-		// clearLog();
+		clearLog();
 	}
 
 	const clearLog = () => {
@@ -46,7 +46,9 @@
 	const deleteKlassen = async () => {
 		loading.value = true;
 
-		await props.klassenListeManager().deleteKlassen()
+		const [delStatus, logMessages] = await props.deleteKlassen();
+		logs.value = logMessages;
+		status.value = delStatus;
 
 		loading.value = false;
 	}

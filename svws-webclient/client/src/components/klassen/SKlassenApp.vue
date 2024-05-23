@@ -44,7 +44,7 @@
 	const istGruppenprozess = computed<boolean>(() => props.klassenListeManager().liste.auswahlSize() > 0);
 
 	const selectedKlassen = computed<string>(() => {
-		const liste = props.klassenListeManager().liste.auswahlSortiert();
+		const liste = props.klassenListeManager().liste.auswahlSorted();
 		let str = "";
 		for (const kl of liste)
 			str += (str.length > 0 ? ", " : "") + kl.kuerzel;

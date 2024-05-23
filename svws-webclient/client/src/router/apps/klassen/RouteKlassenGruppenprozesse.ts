@@ -28,6 +28,7 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
 			klassenListeManager: () => routeKlassen.data.klassenListeManager,
+			deleteKlassen: routeKlassen.data.deleteKlassen,
 		};
 	}
 

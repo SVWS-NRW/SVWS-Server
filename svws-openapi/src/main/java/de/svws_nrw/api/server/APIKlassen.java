@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
@@ -195,7 +196,8 @@ public class APIKlassen {
 			Entfernt mehrere Klassen. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen der Klassen erfüllt
 			sind und der SVWS-Benutzer die notwendige Berechtigung hat.
 			""")
-	@ApiResponse(responseCode = "204", description = "Die Lösch-Operationen wurden ausgeführt.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+				content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassen zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKlassen(@PathParam("schema") final String schema,

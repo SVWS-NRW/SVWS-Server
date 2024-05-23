@@ -530,6 +530,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 */
 	private SimpleOperationResponse checkDeletePreConditions(final Long id, final List<DTOKlassen> deleteDTOs) {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
+		operationResponse.id = id;
 
 		// DTO Objekt holen und prüfen, ob die ID in der DB existiert
 		final DTOKlassen dtoKlasse = conn.queryByKey(DTOKlassen.class, id);
