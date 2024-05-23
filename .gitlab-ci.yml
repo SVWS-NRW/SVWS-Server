@@ -38,7 +38,7 @@ publish_maven:
         stage: publish
         rules:
             -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-                when: manual
+                when: on_success
         variables:
             SECURE_FILES_DOWNLOAD_PATH: '/'
         needs:
@@ -55,7 +55,7 @@ publish_all:
     stage: publish
     rules:
         -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-            when: manual
+            when: on_success
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
@@ -72,7 +72,7 @@ publish_dockerhub:
     stage: publish
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-          when: manual
+          when: on_success
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
@@ -90,7 +90,7 @@ publish_github:
     stage: publish
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-          when: manual
+          when: on_success
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
