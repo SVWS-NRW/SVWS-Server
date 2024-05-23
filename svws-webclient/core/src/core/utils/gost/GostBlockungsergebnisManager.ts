@@ -4898,7 +4898,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idZielKurs of idZielKurse)
 				for (const idSchueler of this.getOfKursSchuelerIDmenge(idZielKurs))
 					if (!idSchuelerKerngruppe.contains(idSchueler))
-						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
+						u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
 		return u;
 	}
 
@@ -4915,6 +4915,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const z of update.listEntfernen)
 			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+		this.stateRevalidateEverything();
 		for (const z of update.listHinzuzufuegen)
 			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
@@ -4995,6 +4996,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const z of update.listEntfernen)
 			if (this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
 				this.stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+		this.stateRevalidateEverything();
 		for (const z of update.listHinzuzufuegen)
 			if (!this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
 				this.stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);

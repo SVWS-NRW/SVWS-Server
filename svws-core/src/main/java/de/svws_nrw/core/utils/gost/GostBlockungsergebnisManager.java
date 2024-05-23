@@ -5496,15 +5496,16 @@ public class GostBlockungsergebnisManager {
 		for (final long idZielKurs : idZielKurse)
 			for (final long idSchueler : idSchuelerKerngruppe)
 				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
-
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN(kursSchuelerZuordnungen, verschiebeFixierteDesQuellkurses, inZielKursenFixieren);
 
 		// (2) Lösche alle SuS aus dem Ziel-Kurs, die nicht zur Kerngruppe gehören.
+		// Hinweis: S. werden aus dem Kurs potentiell entfernt, aber NICHT die zugehörigen Regeln,
+		//          denn das Erkennen einer Regelverletzung ist hier wichtig.
 		if  (zielKurseLeeren)
 			for (final long idZielKurs : idZielKurse)
 				for (final long idSchueler : getOfKursSchuelerIDmenge(idZielKurs))
 					if (!idSchuelerKerngruppe.contains(idSchueler))
-						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
+						u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
 
 		return u;
 	}
@@ -5525,6 +5526,8 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listEntfernen)
 			if (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)) // vorsichtshalber!
 				stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+
+		stateRevalidateEverything(); // Revalidierung nötig, da sonst Kurs-Schüler-Zuordnung nicht aktuell!
 
 		// SuS hinzufügen
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listHinzuzufuegen)
@@ -5625,6 +5628,8 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listEntfernen)
 			if (getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene)) // vorsichtshalber!
 				stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+
+		stateRevalidateEverything(); // Revalidierung nötig, da sonst Kurs-Schienen-Zuordnung nicht aktuell!
 
 		// Kurse in Schienen setzen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listHinzuzufuegen)
