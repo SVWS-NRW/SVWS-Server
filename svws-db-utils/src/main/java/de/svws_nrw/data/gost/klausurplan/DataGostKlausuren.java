@@ -88,10 +88,10 @@ public final class DataGostKlausuren extends DataManager<Long> {
 			data.faecher.addAll(DataGostFaecher.getFaecherManager(conn, jg.abiturjahr).faecher());
 			data.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg.abiturjahr).getAllSchueler());
 
-			for (GostHalbjahr gj : GostHalbjahr.values()) {
-				Schuljahresabschnitt sja = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahr), gj.halbjahr);
+			for (final GostHalbjahr gj : GostHalbjahr.values()) {
+				final Schuljahresabschnitt sja = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahr), gj.halbjahr);
 				if (sja != null)
-					data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, false));
+					data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 
 		}
