@@ -656,7 +656,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		// Aktualisiere die Zuordnungen ...
 		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
-		update.regelUpdates.listEntfernen = regelUpdates;
+		update.regelUpdates.listHinzuzufuegen = regelUpdates;
 		this.ergebnismanager.kursSchuelerUpdateExecute(update);
 		this.commit();
 		return true;
@@ -670,7 +670,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
 			return;
 		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
-		update.regelUpdates.listEntfernen = regelUpdates;
+		update.regelUpdates.listHinzuzufuegen = regelUpdates;
 		this.ergebnismanager.kursSchuelerUpdateExecute(update);
 		this.commit();
 	});
@@ -786,7 +786,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;;
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.idsHauptdaten = new ArrayList<number>();
 		reportingParameter.idsHauptdaten.add(this.ergebnismanager.getErgebnis().id);
 		reportingParameter.einzelausgabeHauptdaten = false;
