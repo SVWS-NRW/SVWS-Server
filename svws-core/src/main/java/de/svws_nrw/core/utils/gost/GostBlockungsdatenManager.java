@@ -1706,7 +1706,7 @@ public class GostBlockungsdatenManager {
 	 *
 	 * @return die {@link GostBlockungRegel} anhand des {@link LongArrayKey}-Schlüssels, oder NULL falls keine existiert.
 	 */
-	public GostBlockungRegel regelGetByLongArrayKeyOrNull(@NotNull final LongArrayKey key) {
+	public GostBlockungRegel regelGetByLongArrayKeyOrNull(final @NotNull LongArrayKey key) {
 		return _map_multikey_regeln.get(key);
 	}
 
