@@ -9,7 +9,6 @@ import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
-import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;

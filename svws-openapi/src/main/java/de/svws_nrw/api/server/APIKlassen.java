@@ -185,6 +185,7 @@ public class APIKlassen {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Klassen.
 	 *
 	 * @param schema       das Datenbankschema
+	 * @param is           der InputStream, mit der Liste von zu löschenden IDs
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen

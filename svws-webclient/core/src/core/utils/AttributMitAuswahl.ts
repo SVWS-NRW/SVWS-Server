@@ -267,7 +267,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
 	 */
 	public auswahlSorted() : List<V> {
-		const list : List<V | null> | null = this.auswahl();
+		const list : List<V> = this.auswahl();
 		list.sort(this._comparator);
 		return list;
 	}
