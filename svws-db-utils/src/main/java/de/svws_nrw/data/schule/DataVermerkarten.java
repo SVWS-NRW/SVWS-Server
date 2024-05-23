@@ -118,7 +118,13 @@ public final class DataVermerkarten extends DataManager<Long> {
 			if ((patch_id == null) || (Long.compare(patch_id, dto.ID) != 0))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
 		}),
-		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Vermerkart.col_Bezeichnung.datenlaenge())),
+		Map.entry("bezeichnung", (conn, dto, value, map) -> {
+			final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Vermerkart.col_Bezeichnung.datenlaenge());
+			final List<DTOVermerkArt> arten = conn.queryNamed("DTOVermerkArt.bezeichnung", bezeichnung, DTOVermerkArt.class);
+			if (!arten.isEmpty())
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung '%s' wird bereits für eine andere Vermerkart genutzt.".formatted(bezeichnung));
+			dto.Bezeichnung = bezeichnung;
+		}),
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, false)),
 		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false))
 	);
