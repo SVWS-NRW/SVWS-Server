@@ -7,7 +7,13 @@ import java.util.Map;
 
 import de.svws_nrw.schuldatei.v1.data.SchuldateiKatalogeintrag;
 import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheit;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitAdresse;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitEigenschaft;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitErreichbarkeit;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitGliederung;
 import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitGrunddaten;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitMerkmal;
+import de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitSchulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -25,6 +31,15 @@ public class SchuldateiOrganisationseinheitManager {
 	/** Cache: Eine Map der Grunddaten anhand des Schuljahres */
 	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitGrunddaten> _mapGrunddatenBySchuljahr = new HashMap<>();
 
+	/** Cache: Eine Map der Schulform anhand des Schuljahres */
+	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulformBySchuljahr = new HashMap<>();
+
+	/** Cache: Eine Map der SchulformASD anhand des Schuljahres */
+	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulformASDBySchuljahr = new HashMap<>();
+
+	/** Cache: Eine Map der Schulart anhand des Schuljahres */
+	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulartBySchuljahr = new HashMap<>();
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit der übergebenen Organisationseinheit und
@@ -36,27 +51,61 @@ public class SchuldateiOrganisationseinheitManager {
 	public SchuldateiOrganisationseinheitManager(final @NotNull SchuldateiManager managerSchuldatei, final @NotNull SchuldateiOrganisationseinheit organisationseinheit) {
 		this._managerSchuldatei = managerSchuldatei;
 		this._organisationseinheit = organisationseinheit;
+		this.validate(organisationseinheit);
+	}
+
+
+	/**
+	 * Validiere die Daten der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validate(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
 		if ((organisationseinheit.oeart != null) && (!_managerSchuldatei.katalogOrganisationseinheitarten.hatEintrag(organisationseinheit.oeart)))
 			throw new IllegalArgumentException("Die Art " + organisationseinheit.oeart + " der Organisationseinheit mit der Schulnummer " + organisationseinheit.schulnummer + " hat keinen zugehörigen Katalog-Eintrag.");
-		// Durchwandere die Einträge für die Grunddaten
+		validateGrunddaten(organisationseinheit);
+		validateAdressen(organisationseinheit);
+		validateMerkmale(organisationseinheit);
+		validateErreichbarkeiten(organisationseinheit);
+		validateEigenschaften(organisationseinheit);
+		validateGliederungen(organisationseinheit);
+	}
+
+
+
+	/**
+	 * Validiere die Grunddaten der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateGrunddaten(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten : this._organisationseinheit.grunddaten) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
 			if (this._organisationseinheit.schulnummer.intValue() != grunddaten.schulnummer)
 				throw new IllegalArgumentException("Die Schulnummer " + grunddaten.schulnummer + " bei den Grunddaten passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
+
 			// Prüfe den Rechtsstatus
 			if (!_managerSchuldatei.katalogRechtsstatus.hatEintrag(grunddaten.rechtsstatus))
 				throw new IllegalArgumentException("Der Rechtstatus " + grunddaten.rechtsstatus + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+
 			/* TODO Aktuell enthält die vollständige Schuldatei nicht alle Organisationseinheiten bezüglich Schulträger
 			// Prüfe, ob die Organisationseinheit für den Schulträger existiert, sofern eine angeben ist
 			if ((grunddaten.schultraegernummer != 0) && (_managerSchuldatei.getOrganisationsheinheitManager(grunddaten.schultraegernummer) == null))
 				throw new IllegalArgumentException("Der Schulträger " + grunddaten.schultraegernummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
 			*/
+
 			// Prüfe die Art der Trägerschaft
 			if ((grunddaten.artdertraegerschaft != 0) && (!_managerSchuldatei.katalogArtDerTraegerschaft.hatEintrag(grunddaten.artdertraegerschaft)))
 				throw new IllegalArgumentException("Die Art der Trägerschaft " + grunddaten.artdertraegerschaft + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+
 			// Prüfe den Schulbetriebsschlüssel
 			if (!_managerSchuldatei.katalogSchulbetriebsschluessel.hatEintrag(grunddaten.schulbetriebsschluessel))
 				throw new IllegalArgumentException("Der Schulbetriebsschlüssel " + grunddaten.schulbetriebsschluessel + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+
 			/* TODO Aktuell ist die Zuordnung von obereschulaufsicht noch nicht umsetzbar
 			// Prüfe, ob die Organisationseinheit für die obere Schulaufsicht existiert, sofern eine angeben ist
 			if ((grunddaten.obereschulaufsicht != 0) && (_managerSchuldatei.getOrganisationsheinheitManager(grunddaten.obereschulaufsicht) == null))
@@ -67,16 +116,137 @@ public class SchuldateiOrganisationseinheitManager {
 			if ((grunddaten.untereschulaufsicht != 0) && (_managerSchuldatei.getOrganisationsheinheitManager(grunddaten.untereschulaufsicht) == null))
 				throw new IllegalArgumentException("Die untere Schulaufsicht " + grunddaten.untereschulaufsicht + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
 			*/
+
 			/* TODO
 			// Prüfe, ob die Organisationseinheit für das ZfsL existiert, sofern eines angeben ist
 			if ((grunddaten.zfsl != 0) && (_managerSchuldatei.getOrganisationsheinheitManager(grunddaten.zfsl) == null))
 				throw new IllegalArgumentException("Das ZfsL " + grunddaten.zfsl + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
 			*/
+
 			// TODO Validiere internatsbetrieb (null oder zukünftig: Katalog-Eintrag)
 			// TODO Validiere internatsplaetze (null oder > 0)
-			// TODO Validiere die Schulformen
+
+			// Validiere die Einträge bezüglich der Schulform
+			validateSchulform(grunddaten);
 		}
-		// TODO Validiere weitere Einträge der Organisationseinheit
+	}
+
+
+	/**
+	 * Bestimmt die Informationen zu der Schulform aus den Grunddaten. Diese bestehen aus
+	 * drei Werte:
+	 * <ol>
+	 *   <li>die allgemeine Schulform</li>
+	 *   <li>die speziellere Schulform (auch SchulformASD)</li>
+	 *   <li>die Schulart, mit weiteren Information zu der Schule</li>
+	 * </ol>
+	 *
+	 * @param grunddaten   die Grunddaten
+	 *
+	 * @return ein Array mit den drei Werten zur Schulform
+	 */
+	private static @NotNull String @NotNull [] getSchulformInfo(final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten) {
+		final @NotNull String @NotNull [] sf = { "", "", "" };
+		for (final @NotNull SchuldateiOrganisationseinheitSchulform schulform : grunddaten.schulform) {
+			if ("Schulform".equals(schulform.schulformcode)) {
+				sf[0] = schulform.schulformwert;
+			} else if ("SchulformASD".equals(schulform.schulformcode)) {
+				sf[1] = schulform.schulformwert;
+			} else if ("Schulart".equals(schulform.schulformcode)) {
+				sf[2] = schulform.schulformwert;
+			}
+		}
+		return sf;
+	}
+
+
+	/**
+	 * Validiere die Schulform der übergebenen Grunddaten der Organisationseinheit
+	 *
+	 * @param grunddaten   die Grundaten der Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateSchulform(final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten) throws IllegalArgumentException {
+		final @NotNull String @NotNull [] sf = getSchulformInfo(grunddaten);
+		if (sf[0].isBlank() || sf[1].isBlank())
+			throw new IllegalArgumentException("Die Schulform ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht gesetzt.");
+		if (_managerSchuldatei.katalogSchulformen.getEintraege(sf[0]).isEmpty())
+			throw new IllegalArgumentException("Die Schulform '" + sf[0] + "' ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht im Katalog enthalten.");
+		if (!_managerSchuldatei.katalogSchulformen.hatEintrag(sf[1]))
+			throw new IllegalArgumentException("Die SchulformASD '" + sf[1] + "' ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht im Katalog enthalten.");
+		if (!_managerSchuldatei.katalogSchularten.hatEintrag(sf[2]))
+			throw new IllegalArgumentException("Die Schulart '" + sf[2] + "' ist bei der Organisationseinheit mit der Schulnummer " + grunddaten.schulnummer + " nicht im Katalog enthalten.");
+	}
+
+
+	/**
+	 * Validiere die Adressen der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateAdressen(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
+		for (final @NotNull SchuldateiOrganisationseinheitAdresse adresse : this._organisationseinheit.adressen) {
+			// TODO
+		}
+	}
+
+
+	/**
+	 * Validiere die Merkmale der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateMerkmale(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
+		for (final @NotNull SchuldateiOrganisationseinheitMerkmal merkmal : this._organisationseinheit.merkmal) {
+			// TODO
+		}
+	}
+
+
+	/**
+	 * Validiere die Erreichbarkeiten der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateErreichbarkeiten(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
+		for (final @NotNull SchuldateiOrganisationseinheitErreichbarkeit erreichbarkeit : this._organisationseinheit.erreichbarkeiten) {
+			// TODO
+		}
+	}
+
+
+	/**
+	 * Validiere die Eigenschaften der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateEigenschaften(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
+		for (final @NotNull SchuldateiOrganisationseinheitEigenschaft eigenschaft : this._organisationseinheit.oe_eigenschaften) {
+			// TODO
+		}
+	}
+
+
+	/**
+	 * Validiere die Gliederungen der übergebenen Organisationseinheit
+	 *
+	 * @param organisationseinheit   die Organisationseinheit.
+	 *
+	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
+	 */
+	private void validateGliederungen(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
+		for (final @NotNull SchuldateiOrganisationseinheitGliederung gliederung : this._organisationseinheit.gliederung) {
+			// TODO
+		}
 	}
 
 
@@ -185,6 +355,11 @@ public class SchuldateiOrganisationseinheitManager {
 				eintrag = other;
 		}
 		_mapGrunddatenBySchuljahr.put(schuljahr, eintrag);
+		// Bestimme nun die Informationen zu der Schulform und speicher diese in den zugehörigen Maps
+		final @NotNull String @NotNull [] sf = getSchulformInfo(eintrag);
+		_mapSchulformBySchuljahr.put(schuljahr, sf[0]);
+		_mapSchulformASDBySchuljahr.put(schuljahr, sf[1]);
+		_mapSchulartBySchuljahr.put(schuljahr, sf[2]);
 		return eintrag;
 	}
 
@@ -461,6 +636,64 @@ public class SchuldateiOrganisationseinheitManager {
 	public int getInternatsplaetze(final int schuljahr) throws IllegalArgumentException {
 		final SchuldateiOrganisationseinheitGrunddaten grunddaten = this.getGrunddaten(schuljahr);
 		return grunddaten.internatsplaetze == null ? 0 : grunddaten.internatsplaetze;
+	}
+
+
+	/**
+	 * Gibt die Schulform der Organisationseinheit zurück, sofern diese in dem
+	 * angegebenen Schuljahr existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return die Schulform
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public @NotNull String getSchulform(final int schuljahr) throws IllegalArgumentException {
+		if (!_mapSchulformBySchuljahr.containsKey(schuljahr))
+			this.getGrunddaten(schuljahr);
+		final String result = _mapSchulformBySchuljahr.get(schuljahr);
+		if (result == null)
+			throw new IllegalArgumentException("Es konnte keine Schulform für die Organisationseinheit mit der Schulnummer " + _organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.");
+		return result;
+	}
+
+
+	/**
+	 * Gibt die SchulformASD der Organisationseinheit zurück, sofern diese in dem
+	 * angegebenen Schuljahr existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return die SchulformASD
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public @NotNull String getSchulformASD(final int schuljahr) throws IllegalArgumentException {
+		if (!_mapSchulformASDBySchuljahr.containsKey(schuljahr))
+			this.getGrunddaten(schuljahr);
+		final String result = _mapSchulformASDBySchuljahr.get(schuljahr);
+		if (result == null)
+			throw new IllegalArgumentException("Es konnte keine SchulformASD für die Organisationseinheit mit der Schulnummer " + _organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.");
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Schulart der Organisationseinheit zurück, sofern diese in dem
+	 * angegebenen Schuljahr existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return die Schulart
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public @NotNull String getSchulart(final int schuljahr) throws IllegalArgumentException {
+		if (!_mapSchulartBySchuljahr.containsKey(schuljahr))
+			this.getGrunddaten(schuljahr);
+		final String result = _mapSchulartBySchuljahr.get(schuljahr);
+		return (result == null) ? "" : result;
 	}
 
 }

@@ -64,7 +64,7 @@ export class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
-		result += '"schulnummer" : ' + obj.schulnummer! + ',';
+		result += '"schulnummer" : ' + obj.schulnummer + ',';
 		result += '"schulformcode" : ' + JSON.stringify(obj.schulformcode!) + ',';
 		result += '"schulformwert" : ' + JSON.stringify(obj.schulformwert!) + ',';
 		result = result.slice(0, -1);

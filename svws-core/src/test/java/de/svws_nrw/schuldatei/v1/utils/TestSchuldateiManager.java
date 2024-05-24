@@ -24,6 +24,9 @@ class TestSchuldateiManager {
 		assertEquals("NRW", msb.getBundeslandkennung());
 		assertEquals("3", msb.getArt());
 		assertEquals("Düsseldorf, MSB", msb.getKurzbezeichnung(2024));
+		assertEquals("0A", msb.getSchulform(2024));
+		assertEquals("0A", msb.getSchulformASD(2024));
+		assertEquals("", msb.getSchulart(2024));
 	}
 
 

@@ -20,7 +20,7 @@ public class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
-	public @NotNull Integer schulnummer = 0;
+	public int schulnummer = 0;
 
 	/** Schulformcode */
 	@Schema(description = "Schulformcode", example = "Schulform")
