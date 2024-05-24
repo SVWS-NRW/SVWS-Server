@@ -71,7 +71,7 @@ Lehrer;ID;Einsatzstatus;S;;x;Einsatzstatus;select LA.Einsatzstatus from LehrerAb
 Lehrer;ID;Unterrichtsstunden;S;;x;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Mehrleistungsstunden;S;;x;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Minderleistungsstunden;S;;x;EntlastungStd;select LA.EntlastungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% and LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Reststunden;S;;x;RestStd;select LA.RestStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
