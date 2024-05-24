@@ -13,7 +13,7 @@ export class SchuelerVermerke extends JavaObject {
 	public schueler_id : number = 0;
 
 	/**
-	 * ID der Vermerkart beim Vermerk beim Schüler
+	 * AdressID des Betriebeeintrags beim Schüler
 	 */
 	public VermerkArt_ID : number = 0;
 

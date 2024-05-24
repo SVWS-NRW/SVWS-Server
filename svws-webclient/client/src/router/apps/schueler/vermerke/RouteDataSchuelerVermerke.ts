@@ -1,7 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import type {List, SchuelerListeEintrag} from "@core";
-import {DeveloperNotificationException, SchuelerVermerke} from "@core";
+import {DeveloperNotificationException, Schueler, SchuelerVermerke} from "@core";
 import {api} from "~/router/Api";
 
 import type { VermerkartEintrag } from "@core";
@@ -48,6 +48,12 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchSchuelerVermerke(data, api.schema, this.auswahl.id, vid)
 		await this.ladeDaten(this.auswahl);
+	}
+
+	create = async (data: SchuelerVermerke, id: number) => {
+		console.log("try to create");
+		await api.server.createVermerk(data, api.schema, id)
+
 	}
 
 

@@ -193,14 +193,13 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * Erstellt einen neuen Schülerbetrieb
 	 *
 	 * @param schueler_id 		ID des Schülers, für den ein Schülerbetrieb erstellt wird.
-	 * @param vermerkArt_id		ID des Vermerkes
 	 * @param is				das JSON-Objekt mit den Daten
 	 *
 	 * @return Eine Response mit dem neuen Schülerbetrieb
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response create(final long schueler_id, final long vermerkArt_id, final InputStream is) throws ApiOperationException {
+	public Response create(final long schueler_id, final InputStream is) throws ApiOperationException {
 		DTOSchuelerVermerke s_vermerk = null;
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
@@ -208,9 +207,6 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 			if (schueler == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
 
-			final DTOVermerkArt betrieb = conn.queryByKey(DTOVermerkArt.class, vermerkArt_id);
-			if (betrieb == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Vermerkart mit der ID " + vermerkArt_id + " wurde nicht gefunden.");
 
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "SchuelerVermerke");
@@ -233,11 +229,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 						if (sid != schueler_id)
 							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
-					case "vermerkArt_id" -> {
-						final Long bid = JSONMapper.convertToLong(value, true);
-						if ((bid == null) || (bid != vermerkArt_id))
-							throw new ApiOperationException(Status.BAD_REQUEST, "VermerkArt_id aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
-					}
+
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}

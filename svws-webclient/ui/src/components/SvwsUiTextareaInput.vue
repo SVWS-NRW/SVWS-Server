@@ -13,7 +13,7 @@
 			'flex-grow': span === 'grow'
 		}">
 		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
-			:required="required" :disabled="disabled" class="textarea-input--control" />
+			:required="required" :disabled="disabled" class="textarea-input--control" :rows="rows"/>
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
@@ -91,8 +91,8 @@
 	const textarea = ref<HTMLTextAreaElement | null>(null);
 	watch([data], () => nextTick(() => {
 		if (textarea.value !== null) {
-			textarea.value.style.height = '1px';
-			textarea.value.style.height = `${textarea.value.scrollHeight}px`;
+			console.log(`max(${textarea.value.scrollHeight}px, ${props.minHeight})`)
+			textarea.value.style.height = `${textarea.value.scrollHeight > textarea.value.clientHeight ? textarea.value.scrollHeight :  {}}px`;
 		}
 	}), { immediate: true })
 

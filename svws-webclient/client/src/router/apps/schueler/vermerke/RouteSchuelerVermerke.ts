@@ -54,8 +54,10 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			data: this.data.data,
 			mapVermerkArten: this.data.mapVermerkArten,
 			patch: this.data.patch,
-		 };
-	}
+			create: this.data.create
+			}
+		};
+
 
 }
 

@@ -221,3 +221,5 @@ hr {
 .i-ri-zoom-in-line {@apply bg-[url(remixicon/icons/System/zoom-in-line.svg)] bg-no-repeat bg-center }
 .i-ri-zoom-out-line {@apply bg-[url(remixicon/icons/System/zoom-out-line.svg)] bg-no-repeat bg-center }
 .i-ri-play-line {@apply bg-[url(remixicon/icons/Media/play-line.svg)] bg-no-repeat bg-center}
+.i-ri-message-line {@apply bg-[url(remixicon/icons/Communication/message-line.svg)] bg-no-repeat bg-center}
+.i-ri-chat-new-line {@apply bg-[url(remixicon/icons/Communication/chat-new-line.svg)] bg-no-repeat bg-center}

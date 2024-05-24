@@ -828,6 +828,37 @@ public class APISchueler {
 	}
 
 
+	/**
+	 *
+	 * Erzeugt einen SchuelerKAoADaten-Eintrag und gibt diesen zurück
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param schuelerid die Schueler-ID
+	 * @param is         die neuen Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_200 und die angelegten SchuelerKAoADaten, wenn erfolgreich. <br>
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei
+	 *         fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 *
+	 */
+	@POST
+	@Path("/{id : \\d+}/vermerke")
+	@Operation(summary = "Erstellt einen neuen Vermerk Eintrag", description = "Erstellt einen neuen Vermerk Eintrag"
+		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Vermerkdaten "
+		+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Vermerke des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerVermerke.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.")
+	public Response createVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerid,
+									@RequestBody(description = "Der Vermerk", required = true, content =
+									@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
+								  @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).create(schuelerid, is),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
+	}
+
 
 
 
