@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuldateiOrganisationseinheitGrunddaten } from '../../../schuldatei/v1/data/SchuldateiOrganisationseinheitGrunddaten';
 import { SchuldateiKatalogeintrag } from '../../../schuldatei/v1/data/SchuldateiKatalogeintrag';
 import { HashMap } from '../../../java/util/HashMap';
+import { SchuldateiOrganisationseinheitAdressManager } from '../../../schuldatei/v1/utils/SchuldateiOrganisationseinheitAdressManager';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { SchuldateiManager } from '../../../schuldatei/v1/utils/SchuldateiManager';
@@ -24,6 +25,11 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	private readonly _organisationseinheit : SchuldateiOrganisationseinheit;
 
 	/**
+	 * Die Manager für die Adressenn anhand ihrer ID
+	 */
+	private readonly _mapAdressManagerByID : JavaMap<number, SchuldateiOrganisationseinheitAdressManager> = new HashMap<number, SchuldateiOrganisationseinheitAdressManager>();
+
+	/**
 	 * Cache: Eine Map der Grunddaten anhand des Schuljahres
 	 */
 	private readonly _mapGrunddatenBySchuljahr : JavaMap<number, SchuldateiOrganisationseinheitGrunddaten> = new HashMap<number, SchuldateiOrganisationseinheitGrunddaten>();
@@ -42,6 +48,16 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 * Cache: Eine Map der Schulart anhand des Schuljahres
 	 */
 	private readonly _mapSchulartBySchuljahr : JavaMap<number, string> = new HashMap<number, string>();
+
+	/**
+	 * Cache: Eine Map der Adress-Manager anhand des Schuljahres
+	 */
+	private readonly _mapAdressenBySchuljahr : JavaMap<number, List<SchuldateiOrganisationseinheitAdressManager>> = new HashMap<number, List<SchuldateiOrganisationseinheitAdressManager>>();
+
+	/**
+	 * Cache: Eine Map des Hauptstandortes anhand des Schuljahres
+	 */
+	private readonly _mapHauptstandortBySchuljahr : JavaMap<number, SchuldateiOrganisationseinheitAdressManager> = new HashMap<number, SchuldateiOrganisationseinheitAdressManager>();
 
 
 	/**
@@ -85,7 +101,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	private validateGrunddaten(organisationseinheit : SchuldateiOrganisationseinheit) : void {
 		for (const grunddaten of this._organisationseinheit.grunddaten) {
-			if (this._organisationseinheit.schulnummer! !== grunddaten.schulnummer)
+			if (this._organisationseinheit.schulnummer !== grunddaten.schulnummer)
 				throw new IllegalArgumentException("Die Schulnummer " + grunddaten.schulnummer + " bei den Grunddaten passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".")
 			if (!this._managerSchuldatei.katalogRechtsstatus.hatEintrag(grunddaten.rechtsstatus))
 				throw new IllegalArgumentException("Der Rechtstatus " + grunddaten.rechtsstatus + " bei den Grunddaten der Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.")
@@ -154,7 +170,9 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	private validateAdressen(organisationseinheit : SchuldateiOrganisationseinheit) : void {
 		for (const adresse of this._organisationseinheit.adressen) {
-			// empty block
+			if (this._mapAdressManagerByID.containsKey(adresse.id))
+				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer " + organisationseinheit.schulnummer + " hat Duplikate.")
+			this._mapAdressManagerByID.put(adresse.id, new SchuldateiOrganisationseinheitAdressManager(this._managerSchuldatei, this, adresse));
 		}
 	}
 
@@ -520,7 +538,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt den Dienststellenschlüssel der Organisationseinheit zurück,
+	 * Gibt den Dienststellenschlüssel/Personalbereich der Organisationseinheit zurück,
 	 * welcher in dem angegebenen Schuljahr zugeordnet ist.
 	 *
 	 * @param schuljahr   das Schuljahr
@@ -629,6 +647,56 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 			this.getGrunddaten(schuljahr);
 		const result : string | null = this._mapSchulartBySchuljahr.get(schuljahr);
 		return (result === null) ? "" : result;
+	}
+
+	/**
+	 * Bestimmt die Liste der Adress-Manager für das Schuljahr anhand der vorhandenen Adress-Einträge und
+	 * erzeugt einen Cache für den schnellen Zugriff auf diese Adressen.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return die Adress-Manager für die Adressen des Schuljahres
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public getAdressManager(schuljahr : number) : List<SchuldateiOrganisationseinheitAdressManager> {
+		let listManager : List<SchuldateiOrganisationseinheitAdressManager> | null = this._mapAdressenBySchuljahr.get(schuljahr);
+		if (listManager !== null)
+			return listManager;
+		listManager = new ArrayList();
+		for (const eintrag of this._organisationseinheit.adressen)
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+				listManager.add(this._mapAdressManagerByID.get(eintrag.id));
+		if (listManager.isEmpty())
+			throw new IllegalArgumentException("Es konnten keine Adressen für das Schuljahr " + schuljahr + "/" + (schuljahr + 1) + " gefunden werden.")
+		this._mapAdressenBySchuljahr.put(schuljahr, listManager);
+		let managerHauptstandort : SchuldateiOrganisationseinheitAdressManager | null = null;
+		for (const managerOther of listManager) {
+			if ((managerOther.istHauptstandort()) && ((managerHauptstandort === null) || SchuldateiUtils.istFrueher(managerHauptstandort.getGueltigBis(), managerOther.getGueltigBis())))
+				managerHauptstandort = managerOther;
+		}
+		if (managerHauptstandort !== null)
+			this._mapHauptstandortBySchuljahr.put(schuljahr, managerHauptstandort);
+		return listManager;
+	}
+
+	/**
+	 * Gibt den Adress-Manager für den Hauptstandort der Organisationseinheit in
+	 * dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return der Adress-Manager für den Hauptstandort
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public getHauptstandort(schuljahr : number) : SchuldateiOrganisationseinheitAdressManager {
+		if (!this._mapHauptstandortBySchuljahr.containsKey(schuljahr))
+			this.getAdressManager(schuljahr);
+		const result : SchuldateiOrganisationseinheitAdressManager | null = this._mapHauptstandortBySchuljahr.get(schuljahr);
+		if (result === null)
+			throw new IllegalArgumentException("Es konnte kein Hauptstandort für die Organisationseinheit mit der Schulnummer " + this._organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.")
+		return result;
 	}
 
 	transpilerCanonicalName(): string {

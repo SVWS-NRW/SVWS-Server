@@ -140,7 +140,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheit) : string {
 		let result = '{';
-		result += '"schulnummer" : ' + obj.schulnummer! + ',';
+		result += '"schulnummer" : ' + obj.schulnummer + ',';
 		result += '"bundeslandkennung" : ' + ((!obj.bundeslandkennung) ? 'null' : JSON.stringify(obj.bundeslandkennung)) + ',';
 		result += '"xscid" : ' + ((!obj.xscid) ? 'null' : JSON.stringify(obj.xscid)) + ',';
 		result += '"oeart" : ' + ((!obj.oeart) ? 'null' : JSON.stringify(obj.oeart)) + ',';

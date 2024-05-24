@@ -706,5 +706,6 @@ export { SchuldateiOrganisationseinheitMerkmal } from './schuldatei/v1/data/Schu
 export { SchuldateiOrganisationseinheitSchulform } from './schuldatei/v1/data/SchuldateiOrganisationseinheitSchulform';
 export { SchuldateiKatalogManager } from './schuldatei/v1/utils/SchuldateiKatalogManager';
 export { SchuldateiManager } from './schuldatei/v1/utils/SchuldateiManager';
+export { SchuldateiOrganisationseinheitAdressManager } from './schuldatei/v1/utils/SchuldateiOrganisationseinheitAdressManager';
 export { SchuldateiOrganisationseinheitManager } from './schuldatei/v1/utils/SchuldateiOrganisationseinheitManager';
 export { SchuldateiUtils } from './schuldatei/v1/utils/SchuldateiUtils';

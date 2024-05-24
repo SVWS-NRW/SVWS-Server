@@ -63,8 +63,8 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
     @Schema(description = "Zentrum für schulpraktische Lehrerausbildung ZFSL", example = "503010")
     public int zfsl = 0;
 
-    /** Dienststellenschlüssel der Organisationseinheit */
-    @Schema(description = "Dienststellenschlüssel der Organisationseinheit", example = "M005")
+    /** Dienststellenschlüssel bzw. Personalbereich der Organisationseinheit */
+    @Schema(description = "Dienststellenschlüssel (Personalbereich) der Organisationseinheit", example = "M005")
     public int dienststellenschluessel = 0;
 
     /** Personalteilbereich der Organisationseinheit */

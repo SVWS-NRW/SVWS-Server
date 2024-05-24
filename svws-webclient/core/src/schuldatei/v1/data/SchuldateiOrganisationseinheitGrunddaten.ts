@@ -61,7 +61,7 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	public zfsl : number = 0;
 
 	/**
-	 * Dienststellenschlüssel der Organisationseinheit
+	 * Dienststellenschlüssel bzw. Personalbereich der Organisationseinheit
 	 */
 	public dienststellenschluessel : number = 0;
 

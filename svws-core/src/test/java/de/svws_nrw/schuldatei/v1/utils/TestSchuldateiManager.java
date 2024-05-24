@@ -27,7 +27,15 @@ class TestSchuldateiManager {
 		assertEquals("0A", msb.getSchulform(2024));
 		assertEquals("0A", msb.getSchulformASD(2024));
 		assertEquals("", msb.getSchulart(2024));
+		final SchuldateiOrganisationseinheitManager schule100015 = manager.getOrganisationsheinheitManager(100015);
+		final SchuldateiOrganisationseinheitAdressManager schule10015adr1 = schule100015.getHauptstandort(2019);
+		final SchuldateiOrganisationseinheitAdressManager schule10015adr2 = schule100015.getHauptstandort(2020);
+		final SchuldateiOrganisationseinheitAdressManager schule10015adr3 = schule100015.getHauptstandort(2022);
+		final SchuldateiOrganisationseinheitAdressManager schule10015adr4 = schule100015.getHauptstandort(2023);
+		assertEquals(1855, schule10015adr1.getID());
+		assertEquals(1857, schule10015adr2.getID());
+		assertEquals(1857, schule10015adr3.getID());
+		assertEquals(1856, schule10015adr4.getID());
 	}
-
 
 }

@@ -21,7 +21,7 @@ public class SchuldateiOrganisationseinheit {
 
 	/** Die Schulnummer der Organisationseinheit. */
 	@Schema(description = "die Schulnummer der Organisationseinheit", example = "100001")
-	public @NotNull Integer schulnummer = 0;
+	public int schulnummer = 0;
 
 	/** Die Bundeslandkennung (NRW) */
 	@Schema(description = "die Bundeslandkennung", example = "NRW")

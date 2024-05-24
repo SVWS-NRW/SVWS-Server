@@ -26,7 +26,7 @@ export class SchuldateiUtils extends JavaObject {
 	 *     die Datumsangabe fehlerhaft ist
 	 */
 	private static splitDate(date : string) : Array<number> {
-		const dmy : Array<string> = date.split(".");
+		const dmy : Array<string> = date.split("\\.");
 		if (dmy.length !== 3)
 			throw new IllegalArgumentException("Der Datumswert '" + date! + "' ist fehlerhaft.")
 		try {
@@ -35,7 +35,7 @@ export class SchuldateiUtils extends JavaObject {
 			if ((result[0] < 1) || (result[0] > 31))
 				throw new NumberFormatException("Die Angabe des Tages ist fehlerhaft.")
 			result[1] = JavaInteger.parseInt(dmy[1]);
-			if ((result[0] < 1) || (result[0] > 12))
+			if ((result[1] < 1) || (result[1] > 12))
 				throw new NumberFormatException("Die Angabe des Monats ist fehlerhaft.")
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
@@ -87,16 +87,17 @@ export class SchuldateiUtils extends JavaObject {
 	 * @throws IllegalArgumentException falls die Formatierung der Datumswerte im Schuldatei-Eintrag fehlerhaft sind
 	 */
 	public static pruefeSchuljahr(schuljahr : number, eintrag : SchuldateiEintrag) : boolean {
-		let success : boolean = true;
 		if ((eintrag.gueltigab !== null) && (!JavaString.isBlank(eintrag.gueltigab))) {
 			const dmy : Array<number> = SchuldateiUtils.splitDate(eintrag.gueltigab);
-			success = (dmy[2] <= schuljahr) || ((dmy[2] === schuljahr + 1) && (dmy[1] < 8));
+			if (!((dmy[2] <= schuljahr) || ((dmy[2] === schuljahr + 1) && (dmy[1] < 8))))
+				return false;
 		}
 		if ((eintrag.gueltigbis !== null) && (!JavaString.isBlank(eintrag.gueltigbis))) {
 			const dmy : Array<number> = SchuldateiUtils.splitDate(eintrag.gueltigbis);
-			success = (dmy[2] >= schuljahr + 1) || ((dmy[2] === schuljahr) && (dmy[1] > 7));
+			if (!((dmy[2] >= schuljahr + 1) || ((dmy[2] === schuljahr) && (dmy[1] > 7))))
+				return false;
 		}
-		return success;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {

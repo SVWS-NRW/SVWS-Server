@@ -28,6 +28,10 @@ public class SchuldateiOrganisationseinheitManager {
 	/** Das Datenobjekt für die Schuldatei */
 	private final @NotNull SchuldateiOrganisationseinheit _organisationseinheit;
 
+	/** Die Manager für die Adressenn anhand ihrer ID */
+	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitAdressManager> _mapAdressManagerByID = new HashMap<>();
+
+
 	/** Cache: Eine Map der Grunddaten anhand des Schuljahres */
 	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitGrunddaten> _mapGrunddatenBySchuljahr = new HashMap<>();
 
@@ -39,6 +43,12 @@ public class SchuldateiOrganisationseinheitManager {
 
 	/** Cache: Eine Map der Schulart anhand des Schuljahres */
 	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulartBySchuljahr = new HashMap<>();
+
+	/** Cache: Eine Map der Adress-Manager anhand des Schuljahres */
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull SchuldateiOrganisationseinheitAdressManager>> _mapAdressenBySchuljahr = new HashMap<>();
+
+	/** Cache: Eine Map des Hauptstandortes anhand des Schuljahres */
+	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitAdressManager> _mapHauptstandortBySchuljahr = new HashMap<>();
 
 
 	/**
@@ -85,7 +95,7 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateGrunddaten(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten : this._organisationseinheit.grunddaten) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (this._organisationseinheit.schulnummer.intValue() != grunddaten.schulnummer)
+			if (this._organisationseinheit.schulnummer != grunddaten.schulnummer)
 				throw new IllegalArgumentException("Die Schulnummer " + grunddaten.schulnummer + " bei den Grunddaten passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
 
 			// Prüfe den Rechtsstatus
@@ -189,7 +199,10 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	private void validateAdressen(final @NotNull SchuldateiOrganisationseinheit organisationseinheit) throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitAdresse adresse : this._organisationseinheit.adressen) {
-			// TODO
+			// Prüfe, ob die ID für die Organisationseinheit eindeutig ist und erzeuge den Adress-Manager. Dieser validiert auch die Adresse.
+			if (_mapAdressManagerByID.containsKey(adresse.id))
+				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer " + organisationseinheit.schulnummer + " hat Duplikate.");
+			_mapAdressManagerByID.put(adresse.id, new SchuldateiOrganisationseinheitAdressManager(_managerSchuldatei, this, adresse));
 		}
 	}
 
@@ -349,8 +362,7 @@ public class SchuldateiOrganisationseinheitManager {
 		// ... und übernehme den Eintrag aus dem Ergebnis, dessen Gültigkeit noch am längsten währt.
 		@NotNull SchuldateiOrganisationseinheitGrunddaten eintrag = grunddaten.get(0);
 		for (int i = 1; i < grunddaten.size(); i++) {
-			@NotNull
-			final SchuldateiOrganisationseinheitGrunddaten other = grunddaten.get(0);
+			final @NotNull SchuldateiOrganisationseinheitGrunddaten other = grunddaten.get(0);
 			if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, other.gueltigbis))
 				eintrag = other;
 		}
@@ -579,7 +591,7 @@ public class SchuldateiOrganisationseinheitManager {
 
 
 	/**
-	 * Gibt den Dienststellenschlüssel der Organisationseinheit zurück,
+	 * Gibt den Dienststellenschlüssel/Personalbereich der Organisationseinheit zurück,
 	 * welcher in dem angegebenen Schuljahr zugeordnet ist.
 	 *
 	 * @param schuljahr   das Schuljahr
@@ -694,6 +706,63 @@ public class SchuldateiOrganisationseinheitManager {
 			this.getGrunddaten(schuljahr);
 		final String result = _mapSchulartBySchuljahr.get(schuljahr);
 		return (result == null) ? "" : result;
+	}
+
+
+	/**
+	 * Bestimmt die Liste der Adress-Manager für das Schuljahr anhand der vorhandenen Adress-Einträge und
+	 * erzeugt einen Cache für den schnellen Zugriff auf diese Adressen.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return die Adress-Manager für die Adressen des Schuljahres
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public @NotNull List<@NotNull SchuldateiOrganisationseinheitAdressManager> getAdressManager(final int schuljahr) throws IllegalArgumentException {
+		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
+		List<@NotNull SchuldateiOrganisationseinheitAdressManager> listManager = _mapAdressenBySchuljahr.get(schuljahr);
+		if (listManager != null)
+			return listManager;
+		// Wenn nicht, dann bestimme alle Adressen, welche in dem Zeitraum gültig sind ...
+		listManager = new ArrayList<>();
+		for (final @NotNull SchuldateiOrganisationseinheitAdresse eintrag : this._organisationseinheit.adressen)
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+				listManager.add(_mapAdressManagerByID.get(eintrag.id));
+		if (listManager.isEmpty())
+			throw new IllegalArgumentException("Es konnten keine Adressen für das Schuljahr " + schuljahr + "/" + (schuljahr + 1) + " gefunden werden.");
+		// ... und übernehme diese in den Cache
+		_mapAdressenBySchuljahr.put(schuljahr, listManager);
+		// ... und bestimme den Eintrag mit dem Hauptstandort aus der Liste, dessen Gültigkeit noch am längsten währt.
+		SchuldateiOrganisationseinheitAdressManager managerHauptstandort = null;
+		for (final @NotNull SchuldateiOrganisationseinheitAdressManager managerOther : listManager) {
+			if ((managerOther.istHauptstandort()) && ((managerHauptstandort == null) || SchuldateiUtils.istFrueher(managerHauptstandort.getGueltigBis(), managerOther.getGueltigBis())))
+				managerHauptstandort = managerOther;
+		}
+		if (managerHauptstandort != null)
+			_mapHauptstandortBySchuljahr.put(schuljahr, managerHauptstandort);
+		// Gebe die Liste der Adress-Manager zurück.
+		return listManager;
+	}
+
+
+	/**
+	 * Gibt den Adress-Manager für den Hauptstandort der Organisationseinheit in
+	 * dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return der Adress-Manager für den Hauptstandort
+	 *
+	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
+	 */
+	public @NotNull SchuldateiOrganisationseinheitAdressManager getHauptstandort(final int schuljahr) throws IllegalArgumentException {
+		if (!_mapHauptstandortBySchuljahr.containsKey(schuljahr))
+			this.getAdressManager(schuljahr);
+		final SchuldateiOrganisationseinheitAdressManager result = _mapHauptstandortBySchuljahr.get(schuljahr);
+		if (result == null)
+			throw new IllegalArgumentException("Es konnte kein Hauptstandort für die Organisationseinheit mit der Schulnummer " + _organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.");
+		return result;
 	}
 
 }

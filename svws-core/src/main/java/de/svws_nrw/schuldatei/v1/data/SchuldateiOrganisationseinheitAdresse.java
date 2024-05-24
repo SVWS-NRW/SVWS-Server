@@ -16,58 +16,58 @@ public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
 	/** Die ID des Adress-Eintrags. */
 	@Schema(description = "die ID des Adress-Eintrags", example = "4711")
-	public Integer id;
+	public int id = 0;
 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
-	public @NotNull Integer schulnummer = 0;
+	public int schulnummer = 0;
 
 	/** Die Nummer der Liegenschaft der Organisationseinheit */
 	@Schema(description = "Die Nummer der Liegenschaft der Organisationseinheit", example = "1")
-	public @NotNull Integer liegenschaft = 0;
+	public int liegenschaft = 0;
 
     /** Straße der Adresse der Organisationseinheit */
     @Schema(description = "Straße der Adresse der Organisationseinheit")
-    public String strasse;
+    public @NotNull String strasse = "";
 
     /** Postleitzahl der Schule */
     @Schema(description = "Postleitzahl der Adresse der Organisationseinheit")
-    public String postleitzahl;
+    public @NotNull String postleitzahl = "";
 
     /** Ort der Schule */
     @Schema(description = "Ort der Adresse der Organisationseinheit")
-    public String ort;
+    public @NotNull String ort = "";
 
     /** Regionalschlüssel der Schule */
     @Schema(description = "Regionalschlüssel der Adresse der Organisationseinheit")
-    public String regionalschluessel;
+    public @NotNull String regionalschluessel = "";
 
     /** Qualität der Verortung */
     @Schema(description = "Qualität der Verortung")
-    public Long qualitaetverortung;
+    public long qualitaetverortung;
 
     /** Koordinatenrechtswert der Adresse */
     @Schema(description = "Koordinatenrechtswert der Adresse")
-    public Long koordinaterechtswert;
+    public long koordinaterechtswert;
 
     /** Koordinatenhochwert der Adresse */
     @Schema(description = "Koordinatenhochwert der Adresse")
-    public Long koordinatehochwert;
+    public long koordinatehochwert;
 
 	/** Der Adresstyp */
 	@Schema(description = "Adresstypid der Adresse", example = "1")
-	public String  adresstypeid;
+	public Integer adresstypeid = null;
 
 	/** Das Standortkennzeichen */
 	@Schema(description = "Standortkennzeichen des Teilstandorts", example = "01")
-	public String standortkennzeichen;
+	public int standortkennzeichen = 0;
 
 	/** Das Adresskennzeichnen des Teilstandorts (ein Buchstabe) */
 	@Schema(description = "Adresskennzeichen des Teilstandors", example = "A")
 	public @NotNull String adresskennzeichen = "";
 
 	/** Hauptstandortadresse */
-	@Schema(description = "Hauptstandortadresse (bisher nicht beleget)", example = "")
+	@Schema(description = "Hauptstandortadresse", example = "")
 	public @NotNull String hauptstandortadresse = "";
 
 
