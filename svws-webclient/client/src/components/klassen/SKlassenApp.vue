@@ -1,37 +1,37 @@
 <template>
-	<template v-if="klassenListeManager().hasDaten()">
-		<header class="svws-ui-header">
-			<div class="svws-ui-header--title">
-				<div class="svws-headline-wrapper">
-					<template v-if="istGruppenprozess">
-						<h2 class="svws-headline">
-							Gruppenprozesse
-						</h2>
-						<span class="svws-subline">{{ selectedKlassen }}</span>
-					</template>
-					<template v-else>
-						<h2 class="svws-headline">
-							<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
-							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID:
-								{{ klassenListeManager().daten().id }}
-							</svws-ui-badge>
-						</h2>
-						<span class="svws-subline">
-							{{ lehrerkuerzel }}
-						</span>
-					</template>
-				</div>
+<!--	<template >-->
+	<header class="svws-ui-header">
+		<div class="svws-ui-header--title">
+			<div class="svws-headline-wrapper">
+				<template v-if="istGruppenprozess">
+					<h2 class="svws-headline">
+						Gruppenprozesse
+					</h2>
+					<span class="svws-subline">{{ selectedKlassen }}</span>
+				</template>
+				<template v-else>
+					<h2 class="svws-headline">
+						<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID:
+							{{ klassenListeManager().daten().id }}
+						</svws-ui-badge>
+					</h2>
+					<span class="svws-subline">
+						{{ lehrerkuerzel }}
+					</span>
+				</template>
 			</div>
-			<div class="svws-ui-header--actions" />
-		</header>
-		<svws-ui-router-tab-bar :routes="istGruppenprozess ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
-			<router-view />
-		</svws-ui-router-tab-bar>
-	</template>
-	<div v-else class="app--content--placeholder">
-		<span class="icon i-ri-team-line" />
-	</div>
+		</div>
+		<div class="svws-ui-header--actions" />
+	</header>
+	<svws-ui-router-tab-bar :routes="istGruppenprozess ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+		<router-view />
+	</svws-ui-router-tab-bar>
+<!--	</template>-->
+<!--	<div v-else class="app&#45;&#45;content&#45;&#45;placeholder">-->
+<!--		<span class="icon i-ri-team-line" />-->
+<!--	</div>-->
 </template>
 
 <script setup lang="ts">
@@ -41,7 +41,9 @@
 
 	const props = defineProps<KlassenAppProps>();
 
-	const istGruppenprozess = computed<boolean>(() => props.klassenListeManager().liste.auswahlSize() > 0);
+	const istGruppenprozess = computed<boolean>(() => {
+		return props.klassenListeManager().liste.auswahlSize() > 0 || !props.klassenListeManager().hasDaten()
+	});
 
 	const selectedKlassen = computed<string>(() => {
 		const liste = props.klassenListeManager().liste.auswahlSorted();

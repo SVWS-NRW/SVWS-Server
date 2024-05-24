@@ -77,8 +77,9 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 				result = auswahl.id;
 			}
 		}
+
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt });
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt});
 		return result;
 	}
 
@@ -114,7 +115,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	deleteKlassen = async ()  => {
+	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]>  => {
 		const ids = new ArrayList<number>();
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted()) {
 			ids.add(klasse.id);
@@ -137,33 +138,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		if (!klassenToRemove.isEmpty()) {
-			// const klassen = new ArrayList(this.klassenListeManager.liste.list());
-			const klassen = new ArrayList(this.klassenListeManager.liste.list());
-			klassen.removeAll(klassenToRemove);
-
-			//TODO: Problem beim reloaden der Auswahlliste fixen
-
-			this.klassenListeManager.setDaten(null);
-			// this.klassenListeManager.liste.setValues(klassen);
-
-			// const manager = new KlassenListeManager(this._state.value.idSchuljahresabschnitt,
-			// 	-1,
-			// 	this.klassenListeManager.schuljahresabschnitte.list(),
-			// 	this.klassenListeManager.schulform(),
-			// 	klassen,
-			// 	this.klassenListeManager.schueler.list(),
-			// 	this.klassenListeManager.jahrgaenge.list(),
-			// 	this.klassenListeManager.lehrer.list())
-
-			// if (status) {
-			// 	console.log("ADLDJW A", manager.filtered().get(0))
-			// 	manager.setDaten(manager.filtered().get(0));
-			// 	manager.liste.auswahlAddByKey(manager.filtered().get(0).id)
-			// } else {
-			// 	console.log("Bestehende Auswahl übernehmen!")
-			// }
-
-			this.setPatchedDefaultState({klassenListeManager: this.klassenListeManager});
+			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
 
 		return [status, logMessages];
@@ -190,6 +165,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoEintrag = async (eintrag: KlassenDaten) => {
+		if (eintrag === null)
+			return
 		await RouteManager.doRoute(this.view.getRoute(eintrag.id));
 	}
 

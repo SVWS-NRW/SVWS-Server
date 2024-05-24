@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table clickable :clicked="klassenListeManager().hasDaten() ? klassenListeManager().auswahl() : null" @update:clicked="gotoEintrag"
+			<svws-ui-table :clickable="klassenListeManager().liste.auswahlSize() === 0" :clicked="clickedEintrag" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
@@ -36,7 +36,7 @@
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { ServerMode } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import { computed, ref, shallowRef } from "vue";
+	import {computed, onMounted, ref, shallowRef} from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
@@ -126,16 +126,36 @@
 	}
 
 	const selectedItems = shallowRef<KlassenDaten[]>([]);
+	const clickedEintrag = computed(() => {
+		return props.klassenListeManager().liste.auswahlSize() > 0 ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
+	})
+
+	onMounted(() => {
+		const arr: KlassenDaten[] = [];
+		for(const item of props.klassenListeManager().liste.auswahl()){
+			arr.push(item);
+		}
+		setAuswahl(arr)
+	})
 
 	async function setAuswahl(items : KlassenDaten[]) {
+		selectedItems.value = [];
 		const auswahl = props.klassenListeManager().liste;
 		for (const vorhanden of [ ... auswahl.auswahl() ])
 			if (!items.includes(vorhanden))
 				auswahl.auswahlRemove(vorhanden);
 		for (const item of items)
-			auswahl.auswahlAdd(item);
+			if (props.klassenListeManager().liste.hasValue(item))
+				auswahl.auswahlAdd(item);
 		selectedItems.value = [ ... auswahl.auswahl() ];
-		await props.setGruppenprozess(selectedItems.value.length > 0);
+
+		console.log("SELECTED Items: ", selectedItems)
+		console.log("SELECTED Items Manager: ", props.klassenListeManager().liste.auswahl())
+		if (selectedItems.value.length > 0)
+			props.klassenListeManager().setDaten(null);
+
+		await props.setGruppenprozess(selectedItems.value.length > 0 || !props.klassenListeManager().hasDaten());
+
 	}
 
 	function lehrerkuerzel(list: number[]) {
