@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Information zu einer Schulform einer Organisationseinheit.")
 @TranspilerDTO
-public class SchuldateiOrganisationseinheitSchulform {
+public class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 
 	/** Die ID des Schulform-Eintrages. */
 	@Schema(description = "die ID des Schulform-Eintrages", example = "4711")
@@ -30,17 +30,6 @@ public class SchuldateiOrganisationseinheitSchulform {
 	@Schema(description = "Schulformwert", example = "08")
 	public @NotNull String schulformwert = "";
 
-	/** Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
-    public String gueltigab;
-
-    /** Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
-    public String gueltigbis;
-
-    /** Gibt das Änderungsdatum des Eintrags an*/
-    @Schema(description = "Gibt das Änderungsdatum des Eintrags an")
-    public String geaendertam;
 
     /**
      * Erstellt eine neue Schulform für eine Organiationseinheit der Schuldatei

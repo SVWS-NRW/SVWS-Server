@@ -49,12 +49,12 @@ export class SchuldateiManager extends JavaObject {
 	/**
 	 * Der Katalog der Schulträger
 	 */
-	public readonly katalogTraeger : SchuldateiKatalogManager;
+	public readonly katalogArtDerTraegerschaft : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Betriebsschlüssel
 	 */
-	public readonly katalogBetriebsschluessel : SchuldateiKatalogManager;
+	public readonly katalogSchulbetriebsschluessel : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Kommunikationsgruppen
@@ -122,8 +122,8 @@ export class SchuldateiManager extends JavaObject {
 		this.katalogErreichbarkeiten = this.getKatalogFromMap("Erreichbarkeit");
 		this.katalogSchulformen = this.getKatalogFromMap("Schulform");
 		this.katalogLiegenschaftsarten = this.getKatalogFromMap("LiegenschaftArt");
-		this.katalogTraeger = this.getKatalogFromMap("Traeger");
-		this.katalogBetriebsschluessel = this.getKatalogFromMap("Betriebsschluessel");
+		this.katalogArtDerTraegerschaft = this.getKatalogFromMap("Traeger");
+		this.katalogSchulbetriebsschluessel = this.getKatalogFromMap("Betriebsschluessel");
 		this.katalogKommunikationsgruppen = this.getKatalogFromMap("Kommunikationsgruppe");
 		this.katalogHeimInternat = this.getKatalogFromMap("HeimInternat");
 		this.katalogSchularten = this.getKatalogFromMap("Schulart");

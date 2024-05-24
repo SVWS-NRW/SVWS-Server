@@ -1,6 +1,6 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchuldateiEintrag } from '../../../schuldatei/v1/data/SchuldateiEintrag';
 
-export class SchuldateiKatalogeintrag extends JavaObject {
+export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 
 	/**
 	 * Der Katalog, welchem der Eintrag zugeordnet ist
@@ -22,21 +22,6 @@ export class SchuldateiKatalogeintrag extends JavaObject {
 	 */
 	public bezeichnung : string = "";
 
-	/**
-	 * Gibt an, ab wann der Eintrag gültig ist
-	 */
-	public gueltigab : string | null = null;
-
-	/**
-	 * Gibt an, bis wann der Eintrag gültig ist
-	 */
-	public gueltigbis : string | null = null;
-
-	/**
-	 * Das Änderungsdatum der letzten Änderung des Eintrags an
-	 */
-	public geaendertam : string | null = null;
-
 
 	/**
 	 * Erstellt einen neuen Eintrag zu einer Adresse einer Organisationseinheit der Schuldatei
@@ -51,12 +36,15 @@ export class SchuldateiKatalogeintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.schuldatei.v1.data.SchuldateiKatalogeintrag'].includes(name);
+		return ['de.svws_nrw.schuldatei.v1.data.SchuldateiEintrag', 'de.svws_nrw.schuldatei.v1.data.SchuldateiKatalogeintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiKatalogeintrag {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiKatalogeintrag();
+		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		if (typeof obj.katalog === "undefined")
 			 throw new Error('invalid json format, missing attribute katalog');
 		result.katalog = obj.katalog;
@@ -69,21 +57,18 @@ export class SchuldateiKatalogeintrag extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuldateiKatalogeintrag) : string {
 		let result = '{';
+		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"katalog" : ' + JSON.stringify(obj.katalog!) + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		result += '"wert" : ' + JSON.stringify(obj.wert!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -91,6 +76,15 @@ export class SchuldateiKatalogeintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiKatalogeintrag>) : string {
 		let result = '{';
+		if (typeof obj.gueltigab !== "undefined") {
+			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		}
+		if (typeof obj.gueltigbis !== "undefined") {
+			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		}
+		if (typeof obj.geaendertam !== "undefined") {
+			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		}
 		if (typeof obj.katalog !== "undefined") {
 			result += '"katalog" : ' + JSON.stringify(obj.katalog!) + ',';
 		}
@@ -102,15 +96,6 @@ export class SchuldateiKatalogeintrag extends JavaObject {
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (typeof obj.gueltigab !== "undefined") {
-			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		}
-		if (typeof obj.gueltigbis !== "undefined") {
-			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		}
-		if (typeof obj.geaendertam !== "undefined") {
-			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

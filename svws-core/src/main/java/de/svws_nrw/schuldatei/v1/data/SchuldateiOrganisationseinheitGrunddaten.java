@@ -17,15 +17,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Grunddaten einer Organisationseinheit der Schuldatei.")
 @TranspilerDTO
-public class SchuldateiOrganisationseinheitGrunddaten {
+public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag {
 
 	/** Die ID der Grunddaten. */
 	@Schema(description = "die ID dieses Eintrags", example = "4711")
-	public Integer id;
+	public Integer id = null;
 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
-	public @NotNull Integer schulnummer = 0;
+	public int schulnummer = 0;
 
 	/** Die Kurzbezeichnung der Organisationseinheit */
 	@Schema(description = "die Kurzbezeichnung der Organisationseinheit", example = "Düsseldorf, MSB")
@@ -33,67 +33,56 @@ public class SchuldateiOrganisationseinheitGrunddaten {
 
 	/** Der Rechtsstatus der Organisationseinheit 1=öffentlich, 2=privat*/
 	@Schema(description = "Der Rechtsstatus der Organisationseinheit", example = "1")
-	public String rechtsstatus;
+	public int rechtsstatus;
 
     /** Schulträgernummer der Organisationseinheit */
     @Schema(description = "Schulträgernummer der Organisationseinheit")
-    public String schultraegernummer;
+    public int schultraegernummer = 0;
 
     /** Art der Trägerschaft der Schule */
     @Schema(description = "Art der Trägerschaft des Schulträgers", example = "00")
-    public String artdertraegerschaft;
+    public int artdertraegerschaft = 0;
 
     /** Betriebsschlüssel der Schule */
     @Schema(description = "Betriebsschlüssel der Schule")
-    public String schulbetriebsschluessel;
+    public int schulbetriebsschluessel = 0;
 
     /** Kapitel der Schule */
     @Schema(description = "Kapitel der Schule")
-    public String kapitel;
+    public int kapitel = 0;
 
     /** Obere Schulaufsicht der Schule */
     @Schema(description = "Obere Schulaufsicht der Schule", example = "001")
-    public String obereschulaufsicht;
+    public int obereschulaufsicht = 0;
 
     /** Untere Schulaufsicht der Schule */
     @Schema(description = "Untere Schulaufsicht der Schule")
-    public String untereschulaufsicht;
+    public int untereschulaufsicht = 0;
 
     /** Zentrum für schulpraktische Lehrerausbildung ZFSL */
     @Schema(description = "Zentrum für schulpraktische Lehrerausbildung ZFSL", example = "503010")
-    public String zfsl;
+    public int zfsl = 0;
 
     /** Dienststellenschlüssel der Organisationseinheit */
     @Schema(description = "Dienststellenschlüssel der Organisationseinheit", example = "M005")
-    public String dienststellenschluessel;
+    public int dienststellenschluessel = 0;
 
     /** Personalteilbereich der Organisationseinheit */
     @Schema(description = "Personalteilbereich der Organisationseinheit", example = "2160")
-    public String ptb;
+    public String ptb = null;
 
     /** Gibt an ob die Schule Internatsbetrieb hat */
     @Schema(description = "Gibt die Art des Internatbetriebs an")
-    public String internatsbetrieb;
+    public String internatsbetrieb = null;
 
     /** Anzahl der Internatsplätze */
     @Schema(description = "Anzahl der Internatsplätze")
-    public Integer internatsplaetze;
-
-	/** Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
-    public String gueltigab;
-
-    /** Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
-    public String gueltigbis;
-
-    /** Gibt das Änderungsdatum des Eintrags an*/
-    @Schema(description = "Gibt das Änderungsdatum des Eintrags an")
-    public String geaendertam;
+    public Integer internatsplaetze = null;
 
 	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))
 	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
+
 
     /**
      * Erstellt neue Grunddaten für eine Organiationseinheit der Schuldatei

@@ -1,6 +1,6 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchuldateiEintrag } from '../../../schuldatei/v1/data/SchuldateiEintrag';
 
-export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
+export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEintrag {
 
 	/**
 	 * Die ID des Erreichbarkeits-Eintrags.
@@ -32,21 +32,6 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
 	 */
 	public codewert : string | null = null;
 
-	/**
-	 * Gibt die Gültigkeit ab welchem Schuljahr an
-	 */
-	public gueltigab : string | null = null;
-
-	/**
-	 * Gibt die Gültigkeit bis zu welchem Schuljahr an
-	 */
-	public gueltigbis : string | null = null;
-
-	/**
-	 * Gibt das Änderungsdatum des Eintrags an
-	 */
-	public geaendertam : string | null = null;
-
 
 	/**
 	 * Erstellt einen neuen Eintrag zur Erreichbarkeit einer Organisationseinheit der Schuldatei
@@ -61,12 +46,15 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitErreichbarkeit'].includes(name);
+		return ['de.svws_nrw.schuldatei.v1.data.SchuldateiOrganisationseinheitErreichbarkeit', 'de.svws_nrw.schuldatei.v1.data.SchuldateiEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitErreichbarkeit {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheitErreichbarkeit();
+		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
 		if (typeof obj.schulnummer === "undefined")
 			 throw new Error('invalid json format, missing attribute schulnummer');
@@ -77,23 +65,20 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
 		result.kommgruppe = typeof obj.kommgruppe === "undefined" ? null : obj.kommgruppe === null ? null : obj.kommgruppe;
 		result.codekey = typeof obj.codekey === "undefined" ? null : obj.codekey === null ? null : obj.codekey;
 		result.codewert = typeof obj.codewert === "undefined" ? null : obj.codewert === null ? null : obj.codewert;
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheitErreichbarkeit) : string {
 		let result = '{';
+		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		result += '"schulnummer" : ' + obj.schulnummer! + ',';
 		result += '"liegenschaft" : ' + obj.liegenschaft! + ',';
 		result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe) + ',';
 		result += '"codekey" : ' + ((!obj.codekey) ? 'null' : JSON.stringify(obj.codekey)) + ',';
 		result += '"codewert" : ' + ((!obj.codewert) ? 'null' : JSON.stringify(obj.codewert)) + ',';
-		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,6 +86,15 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitErreichbarkeit>) : string {
 		let result = '{';
+		if (typeof obj.gueltigab !== "undefined") {
+			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		}
+		if (typeof obj.gueltigbis !== "undefined") {
+			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		}
+		if (typeof obj.geaendertam !== "undefined") {
+			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		}
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
@@ -118,15 +112,6 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends JavaObject {
 		}
 		if (typeof obj.codewert !== "undefined") {
 			result += '"codewert" : ' + ((!obj.codewert) ? 'null' : JSON.stringify(obj.codewert)) + ',';
-		}
-		if (typeof obj.gueltigab !== "undefined") {
-			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		}
-		if (typeof obj.gueltigbis !== "undefined") {
-			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		}
-		if (typeof obj.geaendertam !== "undefined") {
-			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

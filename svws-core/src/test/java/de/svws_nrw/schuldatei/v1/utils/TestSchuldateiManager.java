@@ -23,6 +23,7 @@ class TestSchuldateiManager {
 		final SchuldateiOrganisationseinheitManager msb = manager.getOrganisationsheinheitManager(1016);
 		assertEquals("NRW", msb.getBundeslandkennung());
 		assertEquals("3", msb.getArt());
+		assertEquals("Düsseldorf, MSB", msb.getKurzbezeichnung(2024));
 	}
 
 

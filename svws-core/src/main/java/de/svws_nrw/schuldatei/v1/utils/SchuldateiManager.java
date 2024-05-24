@@ -39,10 +39,10 @@ public final class SchuldateiManager {
 	public final @NotNull SchuldateiKatalogManager katalogLiegenschaftsarten;
 
 	/** Der Katalog der Schulträger */
-	public final @NotNull SchuldateiKatalogManager katalogTraeger;
+	public final @NotNull SchuldateiKatalogManager katalogArtDerTraegerschaft;
 
 	/** Der Katalog der Betriebsschlüssel */
-	public final @NotNull SchuldateiKatalogManager katalogBetriebsschluessel;
+	public final @NotNull SchuldateiKatalogManager katalogSchulbetriebsschluessel;
 
 	/** Der Katalog der Kommunikationsgruppen */
 	public final @NotNull SchuldateiKatalogManager katalogKommunikationsgruppen;
@@ -110,8 +110,8 @@ public final class SchuldateiManager {
 		katalogErreichbarkeiten = getKatalogFromMap("Erreichbarkeit");
 		katalogSchulformen = getKatalogFromMap("Schulform");
 		katalogLiegenschaftsarten = getKatalogFromMap("LiegenschaftArt");
-		katalogTraeger = getKatalogFromMap("Traeger");
-		katalogBetriebsschluessel = getKatalogFromMap("Betriebsschluessel");
+		katalogArtDerTraegerschaft = getKatalogFromMap("Traeger");
+		katalogSchulbetriebsschluessel = getKatalogFromMap("Betriebsschluessel");
 		katalogKommunikationsgruppen = getKatalogFromMap("Kommunikationsgruppe");
 		katalogHeimInternat = getKatalogFromMap("HeimInternat");
 		katalogSchularten = getKatalogFromMap("Schulart");

@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Katalog-Eintrag eines Katalogs der Schuldatei.")
 @TranspilerDTO
-public class SchuldateiKatalogeintrag {
+public class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 
     /** Der Katalog, welchem der Eintrag zugeordnet ist */
     @Schema(description = "der Katalog, welchem der Eintrag zugeordnet ist")
@@ -29,18 +29,6 @@ public class SchuldateiKatalogeintrag {
     /** Die Bezeichnung */
     @Schema(description = "die Bezeichnung")
     public @NotNull String bezeichnung = "";
-
-	/** Gibt an, ab wann der Eintrag gültig ist */
-    @Schema(description = "gibt an, ab wann der Eintrag gültig ist")
-    public String gueltigab;
-
-    /** Gibt an, bis wann der Eintrag gültig ist */
-    @Schema(description = "gibt an, bis wann der Eintrag gültig ist")
-    public String gueltigbis;
-
-    /** Das Änderungsdatum der letzten Änderung des Eintrags an*/
-    @Schema(description = "das Änderungsdatum der letzten Änderung des Eintrags")
-    public String geaendertam;
 
 
     /**

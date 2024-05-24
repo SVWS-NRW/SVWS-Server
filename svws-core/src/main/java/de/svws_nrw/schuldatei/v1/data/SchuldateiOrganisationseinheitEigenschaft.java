@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die zusätzliche Eigenschaft einer Organisationseinheit der Schuldatei.")
 @TranspilerDTO
-public class SchuldateiOrganisationseinheitEigenschaft {
+public class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag {
 
 	/** Die ID des Eigenschafts-Eintrags. */
 	@Schema(description = "Die ID des Eigenschafts-Eintrags", example = "4711")
@@ -33,18 +33,6 @@ public class SchuldateiOrganisationseinheitEigenschaft {
     /** Detail */
     @Schema(description = "Detail")
     public String detail;
-
-	/** Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
-    public String gueltigab;
-
-    /** Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
-    public String gueltigbis;
-
-    /** Gibt das Änderungsdatum des Eintrags an*/
-    @Schema(description = "Gibt das Änderungsdatum des Eintrags an")
-    public String geaendertam;
 
 
     /**

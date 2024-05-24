@@ -24,6 +24,9 @@ public class SchuldateiKatalogManager {
 	/** Eine Map von dem Wert der Katalog-Einträge auf diese */
 	private final @NotNull Map<@NotNull String, @NotNull SchuldateiKatalogeintrag> _mapEintragByWert = new HashMap<>();
 
+	/** Eine Map von dem Wert (als Integer) der Katalog-Einträge auf diese */
+	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiKatalogeintrag> _mapEintragByIntegerWert = new HashMap<>();
+
 	/** Eine Map von dem Schlüssel der Katalog-Einträge auf eine Menge von zugeordneten Katalog-Einträgen */
 	private final @NotNull Map<@NotNull String, @NotNull Set<@NotNull SchuldateiKatalogeintrag>> _mapEintraegeBySchluessel = new HashMap<>();
 
@@ -50,6 +53,11 @@ public class SchuldateiKatalogManager {
 		if (this._mapEintragByWert.containsKey(eintrag.wert))
 			throw new IllegalArgumentException("Katalog " + this._name + ": Es existiert bereits ein anderer Katalog-Eintrag mit dem angegebenen Wert " + eintrag.wert + ".");
 		this._mapEintragByWert.put(eintrag.wert, eintrag);
+		try {
+			this._mapEintragByIntegerWert.put(Integer.parseInt(eintrag.wert), eintrag);
+		} catch (final @NotNull NumberFormatException nfe) {
+			// ignoriere den Eintrag
+		}
 		// ... in der Map der Einträge anhand des Schlüssels
 		Set<@NotNull SchuldateiKatalogeintrag> tmpSetEintraege = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
 		if (tmpSetEintraege == null) {
@@ -99,6 +107,18 @@ public class SchuldateiKatalogManager {
 
 
 	/**
+	 * Gibt zurück, ob ein Katalog-Eintrag für den Wert existiert.
+	 *
+	 * @param wert   der zu prüfende Wert
+	 *
+	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
+	 */
+	public boolean hatEintrag(final int wert) {
+		return this._mapEintragByIntegerWert.containsKey(wert);
+	}
+
+
+	/**
 	 * Gibt den Katalog-Eintrag zu dem Wert zurück, sofern der Wert gültig ist.
 	 *
 	 * @param wert   der Wert des gesuchten Katalog-Eintrags
@@ -107,6 +127,18 @@ public class SchuldateiKatalogManager {
 	 */
 	public SchuldateiKatalogeintrag getEintrag(final String wert) {
 		return this._mapEintragByWert.get(wert);
+	}
+
+
+	/**
+	 * Gibt den Katalog-Eintrag zu dem Wert zurück, sofern der Wert gültig ist.
+	 *
+	 * @param wert   der Wert des gesuchten Katalog-Eintrags
+	 *
+	 * @return der Katalog-Eintrag oder null, wenn es keinen für den Wert gibt.
+	 */
+	public SchuldateiKatalogeintrag getEintrag(final int wert) {
+		return this._mapEintragByIntegerWert.get(wert);
 	}
 
 

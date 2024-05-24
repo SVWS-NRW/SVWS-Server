@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "eine Erreichbarkeit einer Organisationseinheit der Schuldatei.")
 @TranspilerDTO
-public class SchuldateiOrganisationseinheitErreichbarkeit {
+public class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEintrag {
 
 	/** Die ID des Erreichbarkeits-Eintrags. */
 	@Schema(description = "die ID des Erreichbarkeits-Eintrags", example = "4711")
@@ -37,18 +37,6 @@ public class SchuldateiOrganisationseinheitErreichbarkeit {
     /** codewert des Eintrags */
     @Schema(description = "codewert des Eintrags", example = "01234/1243501")
     public String codewert;
-
-	/** Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
-    public String gueltigab;
-
-    /** Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
-    public String gueltigbis;
-
-    /** Gibt das Änderungsdatum des Eintrags an*/
-    @Schema(description = "Gibt das Änderungsdatum des Eintrags an")
-    public String geaendertam;
 
 
     /**
