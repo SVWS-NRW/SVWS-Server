@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
@@ -542,6 +543,42 @@ public class APIGostKlausuren {
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
 	}
 
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der gymnasialen Oberstufe
+     * als GZip-komprimiertes JSON.
+     *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+     *
+     * @return die Blockungsdaten
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip")
+    @Operation(summary = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus.",
+               description = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID",
+    	content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+    	schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.",
+			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.",
+			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter interner Fehler aufgetreten.",
+			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response getGostKlausurenMetaCollectionOberstufeGZip(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr,
+			@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> DataGostKlausuren.getAllDataGZip(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr)),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Klausurtermine eines Abiturjahrgangs
 	 * in einem bestimmten Schuljahr der Gymnasialen Oberstufe.
@@ -805,6 +842,35 @@ public class APIGostKlausuren {
 	public Response getGostKlausurenSchuelerraumstundenTermin(@PathParam("schema") final String schema, @PathParam("termin") final long termin,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurraumstunde(conn).get(termin),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der für den Klausurraummanager benötigten Daten.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param terminIds die IDs der Schülerklausurtermine
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Collection mit benötigten Daten
+	 */
+	@GET
+	@Path("/raumstunden")
+	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getGostKlausurenSchuelerraumstundenSktids(@PathParam("schema") final String schema,
+			@RequestBody(description = "die IDs der Klausurtermine", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> terminIds,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenBySchuelerklausurterminids(terminIds)).build(),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,

@@ -4,7 +4,7 @@ import { StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException, GostKlausurenMetaDataCollection } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
 import { computed } from "vue";
 
@@ -147,7 +147,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			Object.assign(result, {abschnitt});
 			if (!this.hatKursklausurManager) {
-				const klausurdaten = await api.server.getGostKlausurenMetaCollectionOberstufe(api.schema, this.abiturjahr, halbjahr.id);
+				const klausurdatenGzip = await api.server.getGostKlausurenMetaCollectionOberstufeGZip(api.schema, this.abiturjahr, halbjahr.id);
+				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+				const klausurdaten = GostKlausurenMetaDataCollection.transpilerFromJSON(await klausurdatenBlob.text());
 				const faecherManager = new GostFaecherManager(klausurdaten.faecher);
 				const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, klausurdaten.klausurdata.vorgaben);
 				const kursklausurmanager = new GostKursklausurManager(klausurvorgabenmanager, klausurdaten.klausurdata.kursklausuren, klausurdaten.klausurdata.termine, klausurdaten.klausurdata.schuelerklausuren, klausurdaten.klausurdata.schuelerklausurtermine);
@@ -428,10 +430,16 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return true;
 	}
 
-	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
+	erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>): Promise<GostKlausurraumManager> => {
 		api.status.start();
-		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-		const manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, termin);
+		let manager;
+		if (termin instanceof GostKlausurtermin) {
+			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
+			manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, termin);
+		} else {
+			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenSktids(termin, api.schema);
+			manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, new GostKlausurtermin());
+		}
 		manager.setStundenplanManager(this.stundenplanmanager);
 		api.status.stop();
 		return manager;

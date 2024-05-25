@@ -396,7 +396,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) throws ApiOperationException {
+	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenByIdTermin(final Long idTermin) throws ApiOperationException {
 		GostKlausurtermin termin = DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin);
 		List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuId(conn, termin);
 		List<Long> terminIDs = termine.stream().map(t -> t.id).toList();
@@ -410,10 +410,32 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		return retCollection;
 	}
 
+	/**
+	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
+	 * Gost-Halbjahr zurück.
+	 *
+	 * @param idSkts die ID des Klausurtermins
+	 *
+	 * @return die Liste der Klausurraumstunden
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts) throws ApiOperationException {
+		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idSkts);
+		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
+		retCollection.idsSchuelerklausurtermine = idSkts;
+		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
+		if (retCollection.raeume.isEmpty())
+			return retCollection;
+		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);
+		retCollection.sktRaumstunden = DataGostKlausurenSchuelerklausurraumstunde.getSchuelerklausurterminraumstundenZuKlausurraumstunden(conn, retCollection.raumstunden);
+		return retCollection;
+	}
+
 	@Override
 	public Response get(final Long idTermin) throws ApiOperationException {
 		// Schuelerklausurraumstunden zu einem Klausurtermin
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerklausurraumstunden(idTermin)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerklausurraumstundenByIdTermin(idTermin)).build();
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
@@ -34,6 +35,23 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 */
 	public DataGostKlausuren(final DBEntityManager conn, final int abiturjahr) {
 		super(conn);
+	}
+
+	/**
+	 * Gibt die Blockungsdaten für die Blockung mit der angegebenen ID als GZip-Json
+	 * zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 *
+	 * @return die DataCollection
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response getAllDataGZip(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
+		final GostKlausurenMetaDataCollection coll = getAllData(conn, abiturjahr, halbjahr);
+		return JSONMapper.gzipFileResponseFromObject(coll, "klausurdaten_%d_%d.json.gz".formatted(abiturjahr, halbjahr.id));
 	}
 
 	/**
