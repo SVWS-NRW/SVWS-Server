@@ -13,6 +13,10 @@
 					</h2>
 					<span class="svws-subline">{{ inputKlasse === null ? '–' : inputKlasse }}</span>
 				</div>
+				<div v-if="schuelerListeManager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
+					<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
+					<span class="text-error content-center"> Keine Auskunft an Dritte </span>
+				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
