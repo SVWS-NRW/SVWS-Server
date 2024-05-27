@@ -9,7 +9,6 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
-import { routeSchueler } from "../schueler/RouteSchueler";
 
 interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
@@ -188,7 +187,6 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		if (jahrgang === undefined)
 			throw new DeveloperNotificationException("Der neu erstelle Abiturjahrgang konnte nicht geladen werden.");
 		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten);
-		await routeSchueler.data.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		this.setPatchedDefaultState(daten);
 		await RouteManager.doRoute(routeGost.getRoute(jahrgang.abiturjahr));
 	}
