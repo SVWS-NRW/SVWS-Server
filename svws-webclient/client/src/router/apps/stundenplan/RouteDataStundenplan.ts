@@ -245,6 +245,23 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
+	removeAufsicht = async (aufsichtID: number) => {
+		api.status.start();
+		const pausenaufsicht = await api.server.deleteStundenplanPausenaufsicht(api.schema, aufsichtID);
+		this.stundenplanManager.pausenaufsichtRemoveById(pausenaufsicht.id);
+		this.commit();
+		api.status.stop();
+	}
+
+	patchAufsicht = async (aufsicht: Partial<StundenplanPausenaufsicht>, id: number) => {
+		api.status.start();
+		const _aufsicht = this.stundenplanManager.pausenaufsichtGetByIdOrException(id);
+		await api.server.patchStundenplanPausenaufsicht(aufsicht, api.schema, id);
+		this.stundenplanManager.pausenaufsichtPatchAttributes(Object.assign(_aufsicht, aufsicht));
+		this.commit();
+		api.status.stop();
+	}
+
 	addAufsichtsbereich = async (aufsichtsbereich: Partial<StundenplanAufsichtsbereich>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)

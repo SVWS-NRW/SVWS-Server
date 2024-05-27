@@ -1,4 +1,4 @@
-import type { List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit } from "@core";
+import type { List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit } from "@core";
 
 export interface StundenplanPausenProps {
 	stundenplanManager: () => StundenplanManager;
@@ -12,6 +12,9 @@ export interface StundenplanPausenProps {
 	removeAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
 	importAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
 	listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
+	wochentyp: () => number;
+	removeAufsicht: (aufsichtID: number) => Promise<void>;
+	patchAufsicht: (aufsicht: Partial<StundenplanPausenaufsicht>, id: number) => Promise<void>;
 	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 }
 

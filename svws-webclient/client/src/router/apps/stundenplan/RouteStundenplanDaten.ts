@@ -37,6 +37,16 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 			listJahrgaenge: routeStundenplan.data.listJahrgaenge,
 			addJahrgang: routeStundenplan.data.addJahrgang,
 			removeJahrgang: routeStundenplan.data.removeJahrgang,
+			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
+			addPausenzeit: routeStundenplan.data.addPausenzeit,
+			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
+			importPausenzeiten: routeStundenplan.data.importPausenzeiten,
+			listPausenzeiten: () => routeStundenplan.data.listPausenzeiten,
+			patchAufsichtsbereich: routeStundenplan.data.patchAufsichtsbereich,
+			addAufsichtsbereich: routeStundenplan.data.addAufsichtsbereich,
+			removeAufsichtsbereiche: routeStundenplan.data.removeAufsichtsbereiche,
+			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
+			listAufsichtsbereiche: () => routeStundenplan.data.listAufsichtsbereiche,
 			gotoKatalog: routeStundenplan.data.gotoKatalog,
 		};
 	}

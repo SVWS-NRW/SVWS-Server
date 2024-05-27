@@ -1,4 +1,4 @@
-import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanManager, StundenplanRaum } from "@core";
+import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;
@@ -11,5 +11,15 @@ export interface StundenplanDatenProps {
 	listJahrgaenge: List<JahrgangsDaten>;
 	addJahrgang: (id: number) => Promise<void>;
 	removeJahrgang: (id: number) => Promise<void>;
+	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
+	addPausenzeit: (pausenzeit: Partial<StundenplanPausenzeit>) => Promise<void>;
+	removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
+	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
+	listPausenzeiten: () => List<StundenplanPausenzeit>;
+	patchAufsichtsbereich: (daten: Partial<StundenplanAufsichtsbereich>, id: number) => Promise<void>;
+	addAufsichtsbereich: (aufsichtsbereich: StundenplanAufsichtsbereich) => Promise<void>;
+	removeAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
+	importAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
+	listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
 	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 }
