@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Betriebsdtaen einer Schülers in einem Betriebss.
+ * Sie beschreibt die Daten eines Vermerkes eines Schüelers.
  */
 @XmlRootElement
 @Schema(description = "Die Vermerkdaten eines Schülers.")
@@ -21,11 +21,11 @@ public class SchuelerVermerke {
 	@Schema(description = "TODO", example = "4713")
 	public long schueler_id;
 
-	/** AdressID des Betriebeeintrags beim Schüler */
+	/** TODO */
 	@Schema(description = "TODO", example = "4")
 	public long VermerkArt_ID;
 
-	/** ID der Beschäftigungsart des Schülers */
+	/** TODO */
 	@Schema(description = "TODO", example = "2")
 	public String Datum;
 

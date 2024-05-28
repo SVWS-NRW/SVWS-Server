@@ -38,9 +38,9 @@ public enum BenutzerKompetenz {
     	13, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Löschen", null
     )),
 
-	/** Es werden Rechte zum Ändern der Schüler Vermerk-Daten benötigt. */
+	/** Es werden Rechte zum Ändern der Schüler Vermerke benötigt. */
 	SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN(new BenutzerKompetenzKatalogEintrag(
-		14, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Vermerk-Daten ändern", null
+		14, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Vermerke ändern", null
 	)),
 
     /** Es werden Rechte zum Ändern der Schüler KAoA-Daten benötigt. */

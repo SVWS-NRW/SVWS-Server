@@ -13,12 +13,12 @@ export class SchuelerVermerke extends JavaObject {
 	public schueler_id : number = 0;
 
 	/**
-	 * AdressID des Betriebeeintrags beim Schüler
+	 * TODO
 	 */
 	public VermerkArt_ID : number = 0;
 
 	/**
-	 * ID der Beschäftigungsart des Schülers
+	 * TODO
 	 */
 	public Datum : string | null = null;
 
