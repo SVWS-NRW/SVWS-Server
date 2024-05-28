@@ -1,72 +1,63 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="" class="col-span-full">
+			<svws-ui-button class="newVermerkContainer" @click="createVermerk">
+				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
+				<span class="icon i-ri-chat-new-line"/>
+			</svws-ui-button>
 
-			<div style="display: flex; width: 100%; justify-content: space-between; margin-bottom: 1rem">
-				<p class="header">Vermerke</p>
-				<svws-ui-button style="padding: 0.5rem 1rem" @click="() => {addNew = true}">
-					<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
-					<span class="icon i-ri-chat-new-line"/></svws-ui-button>
+			<div v-for="(d, index) in data" :key="d.id" >
+				<s-card-schueler-vermerke :data="d" :mapVermerkArten="mapVermerkArten" :patch="patch" :deleteVermerk="deleteChain" :key= "index + forceUpdateKey" />
 			</div>
 
-			<div v-if="addNew">
-				<p>Neuer Vermerk</p>
-				<s-card-schueler-vermerke
-					v-if="newVermerk"
-					:data="newVermerk"
-					:newVermerk="true"
-					:mapVermerkArten="mapVermerkArten"
-					:patch="patch"
-				/>
-
-			</div>
-
-
-
-			<div v-for="(d, index) in data">
-				<s-card-schueler-vermerke
-					:data="d"
-					:new="false"
-					:newVermerk="false"
-					:mapVermerkArten="mapVermerkArten"
-					:patch="patch"
-				/>
-			</div>
-
-			<div style="display: flex; width: 100%; justify-content: end; margin-bottom: 1rem">
-				<svws-ui-button style="padding: 0.5rem 1rem">
-					<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
-					<span class="icon i-ri-chat-new-line"/></svws-ui-button>
-			</div>
+			<svws-ui-button v-if="data.size() > 3" class="newVermerkContainer">
+				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
+				<span class="icon i-ri-chat-new-line"/>
+			</svws-ui-button>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
-import type {SchuelerVermerkeProps} from "./SSchuelerVermerkeProps";
-import SCardSchuelerVermerke from "~/components/schueler/vermerke/SCardSchuelerVermerke.vue";
-import {ref} from "vue";
-import {SchuelerVermerke, VermerkartEintrag} from "@core";
 
-const props = defineProps<SchuelerVermerkeProps>();
-const addNew = ref<boolean>(false);
+	import type {SchuelerVermerkeProps} from "./SSchuelerVermerkeProps";
+	import { ref, watch } from "vue";
 
-const newVermerk = ref<SchuelerVermerke>(new SchuelerVermerke())
+	const props = defineProps<SchuelerVermerkeProps>();
 
+	const forceUpdateKey = ref<number>(0);
+
+	// Falls sich die Props ändern muss die Liste neu gerändert werden.
+	watch(() => props.data, (first, second) => {
+		if (first.size() != second.size()) {
+			forceUpdateKey.value += 1;
+		}
+    });
+
+	const deleteChain = (idVermerk: number) => {
+		props.deleteVermerk(idVermerk);
+	}
+
+	const createVermerk = () => {
+		props.create()
+	}
 
 </script>
 
-
 <style scoped>
-.icon {
-	width: 1.3rem;
-	height: 1.3rem;
-	display: block;
-}
 
-.header {
-	font-size: 1.125rem;
-	line-height: 1.33;
-	font-weight: 700;
-}
+	.icon {
+		@apply w-6;
+		@apply h-6;
+		@apply block;
+	}
+
+	.newVermerkContainer {
+		@apply ml-auto;
+		@apply mr-0;
+		@apply p-3;
+		@apply mb-8;
+		@apply min-h-10;
+	}
+
 </style>

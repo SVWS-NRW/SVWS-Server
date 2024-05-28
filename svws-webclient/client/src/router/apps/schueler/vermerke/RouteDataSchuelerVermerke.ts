@@ -26,41 +26,38 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu Vermerk-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
 	get data(): List<SchuelerVermerke> {
-		// if (this._state.value.data === undefined)
-		// 	throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.data
 	}
 
 	get mapVermerkArten(): Map<number, VermerkartEintrag> {
-		// if (this._state.value.data === undefined)
-		// 	throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.mapVermerkArten
 	}
 
 
-	patch = async (data : Partial<SchuelerVermerke>, vid: number) => {
+	patch = async (data : Partial<SchuelerVermerke>, idVermerk: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchSchuelerVermerke(data, api.schema, this.auswahl.id, vid)
+		await api.server.patchSchuelerVermerke(data, api.schema, this.auswahl.id, idVermerk)
 		await this.ladeDaten(this.auswahl);
 	}
 
-	create = async (data: SchuelerVermerke, id: number) => {
-		console.log("try to create");
-		await api.server.createVermerk(data, api.schema, id)
+	create = async () => {
+		await api.server.createVermerk(api.schema, this.auswahl.id)
+		await this.ladeDaten(this.auswahl);
+	}
 
+	deleteVermerk = async (idVermerk: number) => {
+		await api.server.deleteSchuelerVermerk(api.schema, this.auswahl.id, idVermerk)
+		await this.ladeDaten(this.auswahl);
 	}
 
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
-
-		// if (auswahl === this._state.value.auswahl)
-		// 	return;
 		if ((auswahl === null) || (auswahl === undefined))
 			this.setPatchedDefaultState({});
 		else {

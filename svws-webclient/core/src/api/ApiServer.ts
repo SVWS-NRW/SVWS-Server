@@ -9452,20 +9452,42 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: SchuelerVermerke
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.
 	 *
-	 * @param {SchuelerVermerke} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Die Vermerke des Schülers
 	 */
-	public async createVermerk(data : SchuelerVermerke, schema : string, id : number) : Promise<SchuelerVermerke> {
+	public async createVermerk(schema : string, id : number) : Promise<SchuelerVermerke> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerVermerke.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return SchuelerVermerke.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke/{idVermerk : \d+}
+	 *
+	 * Löscht einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die KAOADaten des Schülers wurden gelöscht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
+	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idVermerk - der Pfad-Parameter idVermerk
+	 */
+	public async deleteSchuelerVermerk(schema : string, id : number, idVermerk : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke/{idVermerk : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idVermerk\s*(:[^{}]+({[^{}]+})*)?}/g, idVermerk.toString());
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 

@@ -91,7 +91,6 @@
 	const textarea = ref<HTMLTextAreaElement | null>(null);
 	watch([data], () => nextTick(() => {
 		if (textarea.value !== null) {
-			console.log(`max(${textarea.value.scrollHeight}px, ${props.minHeight})`)
 			textarea.value.style.height = `${textarea.value.scrollHeight > textarea.value.clientHeight ? textarea.value.scrollHeight :  {}}px`;
 		}
 	}), { immediate: true })

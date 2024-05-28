@@ -181,7 +181,6 @@ public final class DBBenutzerUtils {
 	 */
 	public static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		final Benutzer user = getSVWSUser(request, mode);
-
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
 		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)))
 			throw new ApiOperationException(Status.FORBIDDEN);

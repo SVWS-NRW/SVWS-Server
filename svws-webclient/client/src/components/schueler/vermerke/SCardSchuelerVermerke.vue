@@ -1,155 +1,144 @@
 <template>
-	<div class="card" style="margin-bottom: 3rem">
-		<!--		<svws-ui-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" class="col-span-full" />-->
+	<svws-ui-action-button class="actionButtonElement" @click="() => {isActive = !isActive;	updateDataFromPRops();}" icon="i-ri-message-line" :title="getTitle()" :description="getDescription()" :is-active="isActive" >
+		<svws-ui-input-wrapper class="card">
+			<svws-ui-textarea-input	v-model="innerData.Bemerkung" :autoresize="true" :rows="4" @change="(newVal) => innerPatch(String(newVal), innerData.id)" />
 
-		<!-- HIER WIRD GEBAUT -->
-
-
-		<div class="innerLaylout">
-			<div style="width: 8%">
-				<span class="icon i-ri-message-line"/>
+			<div class="selectElement">
+				<p class="labelVermerkart">Vermerkart:</p>
+				<svws-ui-select v-model="aktuelleVermerkArt" :headless="false"	:items="[...props.mapVermerkArten.values()]" :item-text="(item) => item.bezeichnung"
+					@update:modelValue="(newVal: VermerkartEintrag) => {patch({VermerkArt_ID: newVal.id}, innerData.id)}"
+				/>
 			</div>
-
-
-			<div style="width: 80%">
-				<div>
-					<svws-ui-textarea-input
-						v-model="data.Bemerkung"
-						:autoresize="true"
-						rows="10"
-						class="vermerkTextArea"
-						@change="
-					(newVal) => {
-						patching = true;
-						patch({ Bemerkung: newVal }, data.id);
-					}
-				"
-					></svws-ui-textarea-input>
-
-					<div class="selectElement">
-						<p style="margin-top: auto; margin-bottom: auto; margin-right: 1rem;">Vermerkart:</p>
-						<svws-ui-select
-							v-model="aktuelleVermerkArt"
-							:headless="false"
-							:items="[...props.mapVermerkArten.values()]"
-							:item-text="
-							(item) => {
-								return item.bezeichnung;
-							}
-						"
-							@update:modelValue="(newVal: VermerkartEintrag) => { patch({VermerkArt_ID: newVal.id}, data.id)}"
-						></svws-ui-select>
+			<div style="width: 100%; display:flex; ">
+				<div style="width: 80%">
+					<p class="profileName">{{ data.AngelegtVon }}</p>
+					<div v-if="patching" class="subTextContainer">
+						<svws-ui-spinner :spinning="true" />
+					</div>
+					<div v-else class="subTextContainer">
+						<p v-if="data.GeaendertVon">	
+							Zuletzt bearbeitet von {{ data.GeaendertVon }} am {{ formatDate(String(data.Datum))}}
+						</p>
+						<p v-else>
+							Erstellt am	{{ formatDate(String(data.Datum)) }}
+						</p>
 					</div>
 				</div>
-				<p class="profileName">{{ data.AngelegtVon }}</p>
-
-				<div v-if="patching" class="subTextContainer">
-					<svws-ui-spinner :spinning="true"/>
+				<div style="width: 20%; margin-bottom: 0px; margin-top: auto;">
+					<svws-ui-button	type="danger" class="deleteButton"	@click="deleteVermerk(innerData.id)">
+						Löschen
+					</svws-ui-button>
 				</div>
-				<div v-else class="subTextContainer">
-					<p v-if="data.GeaendertVon" class="changeProfileName">
-						Zuletzt bearbeitet von {{ data.GeaendertVon }} am {{ data.Datum }}
-					</p>
-					<p v-else class="changeProfileName">Erstellt am {{ data.Datum }} </p>
-				</div>
-
-
 			</div>
-
-			<div style="width: 10%; padding-top: 1rem; display: flex; justify-content: end">
-				<span class="trashIcon i-ri-delete-bin-line"></span>
-
-			</div>
-		</div>
-
-
-	</div>
+		</svws-ui-input-wrapper>
+	</svws-ui-action-button>
 </template>
 
 <script setup lang="ts">
-import {
-	Herkunftsarten,
-	List,
-	SchuelerVermerke,
-	VermerkartEintrag,
-} from "@core";
 
-import {computed, ref} from "vue";
-// const emit = defineEmits(['patch'])
+	import { SchuelerVermerke, VermerkartEintrag } from "@core";
+	import { computed,  ref } from "vue";
 
-const props = defineProps<{
-	data: SchuelerVermerke;
-	mapVermerkArten: Map<number, VermerkartEintrag>;
-	patch: (data: Partial<SchuelerVermerke>, vid: number) => {};
-}>();
+	const isActive = ref<boolean>(false);
 
-const patching = ref<boolean>(false);
+	const props = defineProps<{
+		data: SchuelerVermerke;
+		mapVermerkArten: Map<number, VermerkartEintrag>;
+		patch: (data: Partial<SchuelerVermerke>, idVermerk: number) => {};
+		deleteVermerk: (idVermerk: number) => {};
+	}>();
 
-const aktuelleVermerkArt = computed({
-	get: () => {
-		patching.value = false;
-		return [...props.mapVermerkArten.values()].find((elem) => {
-			return elem.id == props.data.VermerkArt_ID;
-		});
-	},
+	const innerData = ref<SchuelerVermerke>(props.data);
 
-	set: (newVal) => {
-		return newVal;
-	},
-});
+	const updateDataFromPRops = () => {
+		innerData.value = props.data
+	};
+
+	const patching = ref<boolean>(false);
+
+	const innerPatch = (newVal: string, id: number) => {
+		patching.value = true
+		props.patch({ Bemerkung: newVal || "" }, id)
+	};
+
+	const formatDate = (date: string) => {
+		return date.split("-").reverse().join(".")
+	};
+
+	const aktuelleVermerkArt = computed({
+		get: () => {
+			patching.value = false;
+			return [...props.mapVermerkArten.values()].find(
+				(elem) => elem.id == props.data.VermerkArt_ID
+			);
+		},
+		set: (newVal) => {
+			return newVal;
+		},
+	});
+
+	const getTitle = () => {
+		let title = aktuelleVermerkArt.value?.bezeichnung || ""
+		title += ': ' + (props.data.Bemerkung?.length == 0 ? 'Neuer Vermerk' : props.data.Bemerkung)
+		return title
+	}
+
+	const getDescription = () => {
+		return (props.data.GeaendertVon || props.data.AngelegtVon) + ' - ' + formatDate(String(props.data.Datum))
+	}
+
 </script>
 
 <style scoped>
-.icon {
-	width: 4rem;
-	height: 4rem;
-	display: block;
-	margin: auto;
 
-}
+	:deep(.svws-title) {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		width: 100rem;
+	}
 
-.trashIcon {
-	width: 2rem;
-	height: 2rem;
-	margin-left: 1rem;
-}
+	.actionButtonElement {
+		@apply mb-5;
+		@apply bg-blue-100;
+	}
 
-.profileName {
-	font-size: 1.5rem;
-	padding-left: 1rem;
-	margin-top: 1rem;
-}
+	.icon-xxl {
+		@apply m-auto;
+		@apply inline-block ;
+	} 
 
-.changeProfileName {
-	font-size: 1rem;
-	padding-left: 1rem;
-}
+	.profileName {
+		@apply text-headline-md;
+		@apply mb-1;
+	}
 
-.card {
-	background: rgba(37, 146, 234, 0.21);
-	border-radius: 15px;
-	padding: 2rem;
-}
+	.card {
+		@apply px-6;
+	}
 
-.innerLaylout {
-	display: flex;
-	width: 100%;
-}
+	.innerLaylout {
+		@apply flex;
+		@apply w-full;
+	}
 
-.selectElement {
-	padding-left: 1rem;
-	margin-top: 0.5rem;
-	display: flex;
-	width: 50rem;
-}
+	.selectElement {
+		@apply flex;
+		@apply w-144;
+	}
 
-.vermerkTextArea {
-	padding: 0rem 1rem;
-	font-size: 2rem;
-}
+	.subTextContainer {
+		@apply min-h-8;
+	}
 
-.subTextContainer {
-	min-height: 2rem;
-	margin-bottom: 1rem;
-}
+	.labelVermerkart {
+		@apply my-auto;
+		@apply mr-4;
+	}
+
+	.deleteButton {
+		@apply ml-auto; 
+		@apply mr-0;
+	}
+
 </style>

@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteDataSchuelerVermerke";
-
 import type { SchuelerVermerkeProps } from "~/components/schueler/vermerke/SSchuelerVermerkeProps";
 import { routeApp } from "../../RouteApp";
 
@@ -28,7 +27,6 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (this.parent === undefined)
@@ -54,10 +52,10 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			data: this.data.data,
 			mapVermerkArten: this.data.mapVermerkArten,
 			patch: this.data.patch,
-			create: this.data.create
+			create: this.data.create,
+			deleteVermerk: this.data.deleteVermerk
 			}
 		};
-
 
 }
 
