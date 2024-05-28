@@ -4,9 +4,9 @@
 		<template #modalTitle>Ungültige Kurszuordnungen</template>
 		<template #modalDescription>
 			Sollen folgende fehlerhafte Kurs-Schüler-Zuordnungen entfernt werden?
-			<svws-ui-table selectable v-model="selected" :items="zuordnungen" disable-footer>
-				<template #cell(name)="{value: id}"> {{ getErgebnismanager().getOfSchuelerNameVorname(id) }} </template>
-				<template #cell(kurs)="{value: kurs}"> {{ getErgebnismanager().getOfKursName(kurs.id) }} </template>
+			<svws-ui-table selectable v-model="selected" :items="zuordnungen" disable-footer :columns="[{key: 'idKurs', label: 'Kurs',}, {key: 'idSchueler', label: 'Schüler'}]">
+				<template #cell(idSchueler)="{value: id}"> {{ getErgebnismanager().getOfSchuelerNameVorname(id) }} </template>
+				<template #cell(idKurs)="{value: kurs}"> {{ getErgebnismanager().getOfKursName(kurs.id) }} </template>
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
