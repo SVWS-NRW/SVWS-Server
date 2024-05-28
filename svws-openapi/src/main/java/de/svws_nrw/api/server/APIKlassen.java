@@ -205,7 +205,7 @@ public class APIKlassen {
 		@RequestBody(description = "Die IDs der zu löschenden Klassen", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 		@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKlassendaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
 			request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 

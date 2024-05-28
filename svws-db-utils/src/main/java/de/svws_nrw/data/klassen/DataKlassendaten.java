@@ -3,6 +3,7 @@ package de.svws_nrw.data.klassen;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.klassen.Klassenart;
 import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
@@ -493,61 +494,45 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 */
 	public Response deleteMultiple(final List<Long> ids) {
 		final List<SimpleOperationResponse> responses = new ArrayList<>();
-		final List<DTOKlassen> deleteDTOs = new ArrayList<>();
+
+		final List<DTOKlassen> klassen = this.conn.queryNamed("DTOKlassen.id.multiple", ids, DTOKlassen.class)
+			.stream().toList();
 
 		// Vorbedingungen zum Löschen der Klassen prüfen.
-		ids.forEach(id -> responses.add(checkDeletePreConditions(id, deleteDTOs)));
+		klassen.forEach(klasse -> responses.add(checkDeletePreConditions(klasse)));
 
-		if (!deleteDTOs.isEmpty()) {
-			for (final DTOKlassen dtoKlasse : deleteDTOs) {
-				this.conn.transactionRemove(dtoKlasse);
+		for (final DTOKlassen klasse : klassen) {
+			final SimpleOperationResponse operationResponse = responses.stream()
+				.filter(response -> response.id == klasse.ID)
+				.findFirst()
+				.orElseThrow(() -> new DeveloperNotificationException(
+					"Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(klasse.ID)));
+
+			if (operationResponse.log.isEmpty()) {
+				operationResponse.success = this.conn.transactionRemove(klasse);
 			}
-
-			final boolean deleted = this.conn.transactionCommit();
-			if (!deleted) {
-				// Wenn ein unerwarteter DB Fehler auftritt, werden alle Lösch-Operationen in der DB zurückgerollt
-				this.conn.transactionRollback();
-				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-			}
-
-			final List<Long> deletedIds = deleteDTOs.stream().map(dto -> dto.ID).toList();
-			responses.forEach(response -> response.success = deletedIds.contains(response.id));
 		}
 
 		return Response.ok().entity(responses).build();
 	}
 
 	/**
-	 * Methode prüft, ob alle Vorbedingungen zum Löschen der Klasse erfüllt sind.
-	 * Bei Erfüllung der Vorbedingungen wird das {@link DTOKlassen} der Liste <code>deleteDTOs</code> hinzugefügt.
+	 * Methode prüft, ob alle Vorbedingungen zum Löschen einer Klasse erfüllt sind.
 	 * Es wird ein {@link SimpleOperationResponse} zurückgegeben.
 	 *
-	 * @param id         ID der Klasse, die gelöscht werden soll
-	 * @param deleteDTOs Liste der erlaubten Klassen, die gelöscht werden können
+	 * @param dtoKlasse  Die Klasse, die gelöscht werden soll
 	 *
 	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
 	 */
-	private SimpleOperationResponse checkDeletePreConditions(final Long id, final List<DTOKlassen> deleteDTOs) {
+	private SimpleOperationResponse checkDeletePreConditions(@NotNull final DTOKlassen dtoKlasse) {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
-		operationResponse.id = id;
-
-		// DTO Objekt holen und prüfen, ob die ID in der DB existiert
-		final DTOKlassen dtoKlasse = conn.queryByKey(DTOKlassen.class, id);
-		if (dtoKlasse == null) {
-			operationResponse.log.add("Klasse (ID: %d) wurde nicht gefunden.".formatted(id));
-			return operationResponse;
-		}
+		operationResponse.id = dtoKlasse.ID;
 
 		// Klasse darf keine verknüpften Schüler (Lernabschnittsdaten) mehr haben
-		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(id);
+		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(dtoKlasse.ID);
 		if (!schuelerIds.isEmpty()) {
 			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler."
 				.formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
-		}
-
-		// Vorbedingungen zum Löschen wurden erfüllt. Klasse wird der Liste, der zum Löschen freigegebenen Klassen, hinzugefügt.
-		if (operationResponse.log.isEmpty()) {
-			deleteDTOs.add(dtoKlasse);
 		}
 
 		return operationResponse;
