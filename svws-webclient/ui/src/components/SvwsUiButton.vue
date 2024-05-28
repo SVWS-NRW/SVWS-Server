@@ -180,6 +180,10 @@
 	&:hover,
 	&:focus {
 		@apply bg-error text-white;
+	.icon, .icon-sm, .icon-lg {
+		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+	}
 	}
 
 	&:focus-visible {

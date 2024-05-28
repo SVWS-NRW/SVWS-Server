@@ -46,7 +46,7 @@
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :get-ergebnismanager="getErgebnismanager" v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
-								<span class="icon-sm icon-error i-ri-error-warning-line" /> Ungültige Kurszuordnungen
+								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Kurszuordnungen
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-irrlaeufer>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-slot="{ openModal }"
