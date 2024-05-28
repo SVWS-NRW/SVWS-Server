@@ -14,7 +14,16 @@
 		</Teleport>
 		<div>
 			<svws-ui-table :items="stundenplanManager().lehrerGetMengeAsList()" :columns="[{key: 'nachname', label: 'Name'}]">
-				<template #cell(nachname)="{value}">{{ value }}</template>
+				<template #cell(nachname)="{rowData: lehrer}">
+					<div class="svws-ui-badge select-none group"
+						@dragstart="onDrag(lehrer)" @dragend="onDrag(undefined)"
+						:class="dragData ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
+						<span class="rounded-sm ">
+							<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+						</span>
+						<span class="my-0.5">{{ lehrer.nachname }}</span>
+					</div>
+				</template>
 			</svws-ui-table>
 		</div>
 		<div v-if="stundenplanManager().pausenzeitGetMengeAsList().size()" class="svws-ui-stundenplan">
@@ -34,16 +43,27 @@
 				<!-- Zeige die Unterrichte und Pausenaufsichten des Stundenplans -->
 				<div v-for="wochentag in wochentagRange" :key="wochentag.id">
 					<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-					<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.id" class="border rounded-md my-2 mx-1 cursor-pointer" :class="{'bg-green-400/50': selectedPausenzeit?.id === pause.id}" :style="posPause(pause)" @click="selectPausenzeit(pause)">
-						<div class="font-bold m-1"> {{ pause.bezeichnung }} </div>
-						<div class="font-bold m-1"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} </div>
-						<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'bg-green-400': hatAufsichtsbereich(pause.id, aufsichtsbereich.id)}" @click.stop="selectPausenaufsicht(pause.id, aufsichtsbereich.id)">
-							<div class="flex gap-3">
-								<div>{{ aufsichtsbereich.kuerzel }}</div>
-								<div>
-									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id).value" :key="lehrer.id" class="flex gap-3"><span>{{ lehrer.kuerzel }}</span> <span v-if="hatAufsichtsbereich(pause.id, aufsichtsbereich.id)" class="icon-sm icon-error i-ri-delete-bin-line inline-block" @click="delAufsicht(lehrer.id, aufsichtsbereich.id)" /></div>
+					<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.id" class="border rounded-md my-2 mx-1 cursor-pointer" :style="posPause(pause)"
+						@dragover="setDragOverPausenzeit(pause)" @dragleave="unsetDragOverPausenzeit"
+						@click="selectPausenzeit(pause)">
+						<div class="font-bold px-2 py-1" :class="{'bg-green-400/50': dragOverPausenzeit?.id === pause.id}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
+						<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
+						<div v-if="wochentypen().size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold">
+							<div>Bereich</div>
+							<div v-for="typ in wochentypen()" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsString(typ) }}</div>
+						</div>
+						<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+							@dragover.prevent="setDragOverBereich(aufsichtsbereich)" @dragleave.stop="dragOverBereich = undefined">
+							<div>{{ aufsichtsbereich.kuerzel }} </div>
+							<div v-for="typ in wochentypen()" :key="typ" @drop="onDrop(typ)"
+								@dragover.prevent="dragOverWochentyp = typ" @dragleave.stop="dragOverWochentyp = undefined"
+								:class="{'bg-green-400': (dragOverPausenzeit?.id === pause.id) && (dragOverBereich?.id === aufsichtsbereich.id) && (!dragOverBereichGesperrt) && (dragOverWochentyp === typ), 'bg-red-400/50': (dragOverPausenzeit?.id === pause.id) && (dragOverBereich?.id === aufsichtsbereich.id) && dragOverBereichGesperrt && dragOverWochentyp === typ}">
+								<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="flex gap-3 group hover:bg-slate-100 px-2 rounded-md" :class="{'bg-red-400': lehrer.id === dragData?.id}">
+									<span>{{ lehrer.kuerzel }}</span>
+									<span class="icon-sm icon-error i-ri-delete-bin-line inline-block opacity-0 group-hover:opacity-100" @click="delAufsicht(lehrer.id, aufsichtsbereich.id, typ, pause.id)" />
 								</div>
 							</div>
+							<svws-ui-spinner v-if="apiStatus.pending && aufsichtsbereich.id === dragOverBereich?.id && dragOverPausenzeit?.id === pause.id" spinning />
 						</div>
 					</div>
 				</div>
@@ -56,8 +76,9 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, ref } from "vue";
-	import type { Wochentag, List, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanLehrer, StundenplanKlasse } from "@core";
-	import { ArrayList, DateUtils } from "@core";
+	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht } from "@core";
+	import type { StundenplanLehrer, StundenplanAufsichtsbereich } from "@core";
+	import { ArrayList } from "@core";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 
 	const props = defineProps<StundenplanPausenProps>();
@@ -66,10 +87,59 @@
 	onMounted(() => isMounted.value = true);
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
-	const zeit = ref<StundenplanPausenzeit | undefined>();
 	const selectedPausenzeit = ref<StundenplanPausenzeit|undefined>();
 	const selectedPausenaufsichtSet = ref<Set<number>>(new Set());
 	const wochentypAnzeige = ref<number>(0);
+	const dragData = ref<StundenplanLehrer|undefined>(undefined);
+	const dragOverAufsichten = ref<List<StundenplanPausenaufsicht>>(new ArrayList());
+	const dragOverPausenzeit = ref<StundenplanPausenzeit>();
+	const dragOverBereich = ref<StundenplanAufsichtsbereich>();
+	const dragOverBereichGesperrt = ref<boolean>(false);
+	const dragOverWochentyp = ref<number>();
+
+	function onDrag(data: StundenplanLehrer|undefined) {
+		dragData.value = data;
+	}
+
+	function setDragOverPausenzeit(pause: StundenplanPausenzeit) {
+		if (pause.id === dragOverPausenzeit.value?.id)
+			return;
+		dragOverPausenzeit.value = pause;
+		dragOverAufsichten.value = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pause.id);
+	}
+
+	function unsetDragOverPausenzeit() {
+		dragOverPausenzeit.value = undefined;
+		dragOverAufsichten.value = new ArrayList();
+	}
+
+	function setDragOverBereich(bereich: StundenplanAufsichtsbereich) {
+		if ((dragOverBereich.value?.id === bereich.id) || (dragData.value === undefined))
+			return;
+		dragOverBereich.value = bereich;
+		for (const aufsicht of dragOverAufsichten.value)
+			if ((aufsicht.idLehrer === dragData.value.id) && (aufsicht.bereiche.contains(bereich.id)) && ((dragOverWochentyp.value === aufsicht.wochentyp) || (aufsicht.wochentyp === 0) || ((aufsicht.wochentyp) !== 0 && (dragOverWochentyp.value === 0)))) {
+				dragOverBereichGesperrt.value = true;
+				return;
+			}
+		dragOverBereichGesperrt.value = false;
+	}
+
+	async function onDrop(wochentyp: number) {
+		if ((dragData.value === undefined) || dragOverBereichGesperrt.value || (dragOverBereich.value === undefined) || (dragOverPausenzeit.value === undefined))
+			return;
+		const bereiche = new ArrayList<number>();
+		bereiche.add(dragOverBereich.value.id);
+		for (const aufsicht of dragOverAufsichten.value)
+			if ((aufsicht.idLehrer === dragData.value.id) && (wochentyp === dragOverWochentyp.value)) {
+				bereiche.addAll(aufsicht.bereiche);
+				unsetDragOverPausenzeit();
+				await props.patchAufsicht({bereiche}, aufsicht.id);
+				return;
+			}
+		await props.addAufsicht({idLehrer: dragData.value.id, idPausenzeit: dragOverPausenzeit.value.id, bereiche, wochentyp});
+		unsetDragOverPausenzeit();
+	}
 
 	function wochentypen(): List<number> {
 		let modell = props.stundenplanManager().getWochenTypModell();
@@ -105,20 +175,20 @@
 			selectedPausenzeit.value = pause;
 	}
 
-	const hatAufsicht = (pauseID: number, aufsichtsbereichID: number) => computed(() => {
+	const hatAufsicht = (pauseID: number, aufsichtsbereichID: number, typ: number) => computed(() => {
 		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
 		let lehrer = new ArrayList<StundenplanLehrer>();
 		for (const a of aufsichten)
 			for (const b of a.bereiche)
-				if (b === aufsichtsbereichID)
+				if (b === aufsichtsbereichID && typ === a.wochentyp)
 					lehrer.add(props.stundenplanManager().lehrerGetByIdOrException(a.idLehrer));
 		return lehrer;
 	})
 
-	async function delAufsicht(lehrerID: number, aufsichtsbereichID: number) {
-		for (const a of selectedPausenaufsichtSet.value) {
-			const aufsicht = props.stundenplanManager().pausenaufsichtGetByIdOrException(a);
-			if (aufsicht.idLehrer === lehrerID) {
+	async function delAufsicht(lehrerID: number, aufsichtsbereichID: number, wochentyp: number, pauseID: number) {
+		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
+		for (const aufsicht of aufsichten) {
+			if ((aufsicht.idLehrer === lehrerID) && (aufsicht.wochentyp === wochentyp) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
 				if (aufsicht.bereiche.size() === 1)
 					await props.removeAufsicht(aufsicht.id);
 				else {
@@ -132,108 +202,16 @@
 		}
 	}
 
-	function selectPausenaufsicht(pauseID: number, aufsichtsbereichID: number) {
-		if (selectedPausenzeit.value?.id !== pauseID)
-			selectedPausenzeit.value = props.stundenplanManager().pausenzeitGetByIdOrException(pauseID);
-		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
-		const setA = new Set();
-		for (const a of aufsichten)
-			for (const b of a.bereiche)
-				if (b === aufsichtsbereichID) {
-					if (selectedPausenaufsichtSet.value.has(a.id)) {
-						selectedPausenaufsichtSet.value.delete(a.id)
-					}
-					else {
-						selectedPausenaufsichtSet.value.add(a.id);
-					}
-				}
-	}
-
-	function hatAufsichtsbereich(pauseID: number, aufsichtsbereichID: number) {
-		for (const a of selectedPausenaufsichtSet.value) {
-			const aufsicht = props.stundenplanManager().pausenaufsichtGetByIdOrException(a);
-			if (aufsicht.idPausenzeit === pauseID && aufsicht.bereiche.contains(aufsichtsbereichID))
-				return true;
-		}
-		return false;
-	}
-
-	const items = computed(() => [...props.stundenplanManager().pausenzeitGetMengeAsList()]);
-
-	const colsPausenzeiten = [
-		{key: 'wochentag', label: 'Wochentag', span: 1},
-		{key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
-	]
-
-	async function patchPausenBeginn(minuten: string, id: number) {
-		const beginn = DateUtils.gibMinutenOfZeitAsString(minuten);
-		await props.patchPausenzeit({beginn}, id);
-	}
-
-	async function patchPausenEnde(minuten: string, id: number) {
-		const ende = DateUtils.gibMinutenOfZeitAsString(minuten);
-		await props.patchPausenzeit({ende}, id);
-	}
-
-	const listPausenzeitenRest = computed(() => {
-		const moeglich = new ArrayList<StundenplanPausenzeit>();
-		for (const e of props.listPausenzeiten())
-			if (!props.stundenplanManager().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende))
-				moeglich.add(e);
-		return moeglich;
-	})
-
-	const bereich = ref<StundenplanAufsichtsbereich | undefined>();
-	const selectedAufsichtsbereiche = ref<StundenplanAufsichtsbereich[]>([]);
-
-	const listAufsichtsbereiche = computed(() => [...props.stundenplanManager().aufsichtsbereichGetMengeAsList()]);
-
-	const colsAufsichtsbereiche = [
-		{key: 'kuerzel', label: 'Kürzel', span: 1},
-		{key: 'beschreibung', label: 'Beschreibung', span: 3}
-	]
-
-	const listAufsichtsbereicheRest = computed(() => {
-		const moeglich = new ArrayList<StundenplanAufsichtsbereich>();
-		for (const e of props.listAufsichtsbereiche())
-			if (!props.stundenplanManager().aufsichtsbereichExistsByKuerzel(e.kuerzel))
-				moeglich.add(e);
-		return moeglich;
-	})
-
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
-	const wochentagRange = computed(() => {
-		const p = props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange();
-		return p;
-	});
-
-	const zeitrasterRange = computed(() => {
-		return props.stundenplanManager().zeitrasterGetStundenRangeOhneLeere();
-	});
-
-	const zeitrasterRows = computed(() => {
-		// TODO: Pausenzeiten, wenn Zeitachse deaktiviert ist
-		// props.manager().pausenzeitGetMengeByWochentagOrEmptyList(1).size() || 0
-		return zeitrasterRange.value.length;
-	});
+	const wochentagRange = computed(() => props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
 
 	const getPausenzeitenWochentag = (wochentag: Wochentag) => computed<List<StundenplanPausenzeit>>(() => {
 		const zeiten = props.stundenplanManager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id);
 		return zeiten
 	})
 
-
-	const getPausenaufsichtenPausenzeit = (pause: StundenplanPausenzeit) => computed<List<StundenplanPausenaufsicht>>(() => {
-		const a = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pause.id);
-		return a
-	})
-
 	const beginn = computed(() => {
 		return props.stundenplanManager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
-	});
-
-	const ende = computed(() => {
-		return props.stundenplanManager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
 	});
 
 	function posPause(pause: StundenplanPausenzeit): string {
@@ -246,29 +224,6 @@
 		}
 		return "grid-row-start: " + (Math.round(rowStart) + 1) + "; grid-row-end: " + (Math.round(rowEnd) + 1) + "; grid-column: 1;";
 	}
-
-	function aufsichtsbereiche(pausenaufsicht: StundenplanPausenaufsicht): string {
-		let result = "";
-		for (const idBereich of pausenaufsicht.bereiche) {
-			const bereich = props.stundenplanManager().aufsichtsbereichGetByIdOrException(idBereich);
-			if (result !== "")
-				result += ",";
-			result += bereich.kuerzel;
-		}
-		return result;
-	}
-
-	function getStringAufsichten(pause: StundenplanPausenzeit) {
-		const pausenaufsichten = getPausenaufsichtenPausenzeit(pause);
-		let text = "";
-		for (const pausenaufsicht of pausenaufsichten.value) {
-			if (text !== '')
-				text += ', ';
-			text += props.stundenplanManager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel;
-		}
-		return text;
-	}
-
 
 </script>
 

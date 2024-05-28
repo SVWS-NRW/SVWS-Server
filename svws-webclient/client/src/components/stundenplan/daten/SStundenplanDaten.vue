@@ -61,6 +61,9 @@
 					<template #cell(ende)="{ rowData }">
 						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
 					</template>
+					<template #cell(klassen)="{ rowData }">
+						<svws-ui-multi-select :model-value="[...rowData.klassen]" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
+					</template>
 					<template #actions>
 						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeitenRest">
@@ -182,7 +185,9 @@
 
 	const colsPausenzeiten = [
 		{key: 'wochentag', label: 'Wochentag', span: 1},
-		{key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
+		{key: 'beginn', label: 'Beginn', span: 1},
+		{key: 'ende', label: 'Ende', span: 1},
+		{key: 'klassen', label: 'Nur in Klassen', span: 2},
 	]
 
 	async function patchPausenBeginn(minuten: string, id: number) {
@@ -193,6 +198,13 @@
 	async function patchPausenEnde(minuten: string, id: number) {
 		const ende = DateUtils.gibMinutenOfZeitAsString(minuten);
 		await props.patchPausenzeit({ende}, id);
+	}
+
+	async function patchPausenKlassen(ids: number[], id: number) {
+		const klassen = new ArrayList<number>();
+		for (const klassenID of ids)
+			klassen.add(klassenID);
+		await props.patchPausenzeit({klassen}, id);
 	}
 
 	const listPausenzeitenRest = computed(() => {
@@ -210,7 +222,7 @@
 
 	const colsAufsichtsbereiche = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1},
-		{key: 'beschreibung', label: 'Beschreibung', span: 3}
+		{key: 'beschreibung', label: 'Beschreibung', span: 3},
 	]
 
 	const listAufsichtsbereicheRest = computed(() => {

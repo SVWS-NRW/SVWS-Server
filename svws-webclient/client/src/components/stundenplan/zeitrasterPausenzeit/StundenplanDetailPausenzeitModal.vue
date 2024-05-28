@@ -35,7 +35,7 @@
 		listLehrer: List<LehrerListeEintrag>;
 		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 		wochentypen: number;
-		addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
+		addAufsicht: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -75,7 +75,7 @@
 				bereiche.add(aufsichtsbereich.id);
 		const wochentyp = refWochentyp.value?.content && 'typ' in refWochentyp.value.content ? refWochentyp.value.content.typ : 0;
 		if (typeof wochentyp === 'number')
-			await props.addAufsichtUndBereich({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
+			await props.addAufsicht({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
 		showModal().value = false;
 	}
 

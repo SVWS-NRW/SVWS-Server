@@ -237,7 +237,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	addAufsichtUndBereich = async (data: Partial<StundenplanPausenaufsicht>) => {
+	addAufsicht = async (data: Partial<StundenplanPausenaufsicht>) => {
 		api.status.start();
 		const pausenaufsicht = await api.server.addStundenplanPausenaufsicht(data, api.schema);
 		this.stundenplanManager.pausenaufsichtAdd(pausenaufsicht);

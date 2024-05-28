@@ -21,7 +21,7 @@
 			</template>
 			<template #actions>
 				<svws-ui-button @click="remove" type="trash" :disabled="selected.length === 0" />
-				<stundenplan-detail-pausenzeit-modal v-slot="{ openModal }" :pausenzeit="item" :list-lehrer="listLehrer" :list-aufsichtsbereiche="listAufsichtsbereiche" :add-aufsicht-und-bereich="addAufsichtUndBereich" :wochentypen="stundenplanManager().getWochenTypModell()">
+				<stundenplan-detail-pausenzeit-modal v-slot="{ openModal }" :pausenzeit="item" :list-lehrer="listLehrer" :list-aufsichtsbereiche="listAufsichtsbereiche" :add-aufsicht-und-bereich="addAufsicht" :wochentypen="stundenplanManager().getWochenTypModell()">
 					<svws-ui-button @click="openModal()" type="icon" title="Pausenaufsicht hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</stundenplan-detail-pausenzeit-modal>
 			</template>
@@ -41,7 +41,7 @@
 		removePausenzeiten: (multi: Iterable<StundenplanPausenzeit>) => Promise<void>;
 		listLehrer: List<LehrerListeEintrag>;
 		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
-		addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
+		addAufsicht: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	}>();
 
 	const selected = ref<StundenplanPausenaufsicht[]>([]);

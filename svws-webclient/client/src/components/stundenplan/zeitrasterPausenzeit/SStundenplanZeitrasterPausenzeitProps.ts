@@ -11,7 +11,7 @@ export interface StundenplanZeitrasterPausenzeitProps {
 	removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	importZeitraster: undefined | (() => Promise<void>);
 	listLehrer: List<LehrerListeEintrag>;
-	addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
+	addAufsicht: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	selected: () => Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
 	schulform: Schulform;

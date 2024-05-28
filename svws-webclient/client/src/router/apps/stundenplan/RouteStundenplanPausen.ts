@@ -6,6 +6,7 @@ import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenpl
 
 import type { StundenplanPausenProps } from "~/components/stundenplan/pausen/StundenplanPausenProps";
 import { routeApp } from "../RouteApp";
+import { api } from "~/router/Api";
 
 const StundenplanPausen = () => import("~/components/stundenplan/pausen/StundenplanPausen.vue");
 
@@ -39,8 +40,10 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
 			listAufsichtsbereiche: () => routeStundenplan.data.listAufsichtsbereiche,
 			wochentyp: () => 0,
+			addAufsicht: routeStundenplan.data.addAufsicht,
 			removeAufsicht: routeStundenplan.data.removeAufsicht,
 			patchAufsicht: routeStundenplan.data.patchAufsicht,
+			apiStatus: api.status,
 			gotoKatalog: routeStundenplan.data.gotoKatalog,
 		};
 	}
