@@ -2,9 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Sprachenfolge" class="">
 			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
-				<template #cell(sprache)="{ value }">
-					<svws-ui-select title="Sprache" headless :model-value="value" @update:model-value="sprache=> patchSprachbelegung({sprache}, value)" :items="sprachen(value).value" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" />
-				</template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
 				<template #cell(reihenfolge)="{ rowData }">
 					<svws-ui-input-number title="Reihenfolge" headless :model-value="rowData.reihenfolge" @update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge}, rowData.sprache)" :min="1" :max="9" />
 				</template>
@@ -46,15 +44,15 @@
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
 					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <span class="icon i-ri-search-line" /></svws-ui-button>
 					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><span class="icon i-ri-calculator-line" /></svws-ui-button>
-					<svws-ui-button v-if="verfuegbareSprachen.length" @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
+					<div v-if="verfuegbareSprachen.length" class="w-1/4">
+						<svws-ui-select title="Eine neue Sprache hinzufügen" removable headless :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)" :items="verfuegbareSprachen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachen" />
+					</div>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
 			<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
-				<template #cell(sprache)="{ value }">
-					<svws-ui-select title="Sprache" headless :model-value="value" @update:model-value="sprache => patchSprachpruefung({sprache}, value)" :items="sprachen(value).value" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" />
-				</template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
 				<template #cell(typ)="{ rowData }">
 					<svws-ui-select title="Typ" headless :items="typ" :item-text="i=> i.key"
 						:model-value="rowData.istHSUPruefung ? typ[0] : rowData.istFeststellungspruefung ? typ[1] : undefined"
@@ -88,7 +86,9 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
-					<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
+					<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4">
+						<svws-ui-select title="Eine neue Sprachprüfung hinzufügen" removable headless :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache)" :items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
+					</div>
 				</template>
 				<!-- -->
 			</svws-ui-table>
@@ -99,15 +99,18 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
+	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn, SvwsUiSelect } from "@ui";
 	import type { Sprachbelegung , Sprachpruefung} from '@core';
-	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note, Schulgliederung, Sprachpruefungniveau } from '@core';
+	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, Note, Schulgliederung, Sprachpruefungniveau } from '@core';
 
 	const props = defineProps<SchuelerSprachenProps>();
 
 	const auswahl = ref([]);
 	const auswahlPr = ref([]);
+	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>> | null>(null);
+	const selectSprachenPruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>> | null>(null);
 
 	const colsSprachenfolge = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
@@ -164,8 +167,6 @@
 		}
 		return sprachen;
 	})
-
-	const sprachen = (s: string) => computed(() => [s, ...verfuegbareSprachen.value])
 
 	const sprachJahrgaengeVon = computed(() => {
 		const schulform = props.schuelerListeManager().schulform();
@@ -250,11 +251,13 @@
 		//ermittel Sprache
 	}
 
-	async function hinzufuegen() {
-		if (verfuegbareSprachen.value.length === 0)
+	async function hinzufuegen(sprache: undefined | null | string) {
+		if (verfuegbareSprachen.value.length === 0 || selectSprachen.value === null || !sprache) {
+			selectSprachen.value?.reset();
 			return;
+		}
 		const data: Partial<Sprachbelegung> = {};
-		data.sprache = verfuegbareSprachen.value[0];
+		data.sprache = sprache;
 		data.reihenfolge = props.sprachbelegungen().size() + 1;
 		data.belegungVonAbschnitt = 1;
 		data.belegungBisAbschnitt = 2;
@@ -262,17 +265,21 @@
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
 			data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
 		await props.addSprachbelegung(data);
+		selectSprachen.value.reset();
 	}
 
-	async function hinzufuegenPruefungen() {
-		if (verfuegbareSprachenPruefungen.value.length === 0)
+	async function hinzufuegenPruefung(sprache: undefined | null | string) {
+		if (verfuegbareSprachenPruefungen.value.length === 0 || selectSprachenPruefung.value === null || !sprache) {
+			selectSprachenPruefung.value?.reset();
 			return;
+		}
 		const data: Partial<Sprachpruefung> = {};
-		data.sprache = verfuegbareSprachenPruefungen.value[0];
+		data.sprache = sprache;
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
 		await props.addSprachpruefung(data);
+		selectSprachenPruefung.value.reset();
 	}
 
 	async function removePruefungen() {
