@@ -1,30 +1,26 @@
 <template>
 	<div class="page--content">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
-				<div :class="{'flex gap-2': showExtraWTM}">
-					<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
-					<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
+		<div class="page--content-flex-column">
+			<div class="content-card">
+				<div class="content-card--header content-card--headline">Allgemein</div>
+				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
+					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
+					<div :class="{'flex gap-2': showExtraWTM}">
+						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
+						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
+					</div>
+					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
+					<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 				</div>
-				<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
-				<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager="stundenplanManager" />
-		<svws-ui-spacing :size="1" />
-		<svws-ui-content-card>
+			</div>
+			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager="stundenplanManager" />
 			<svws-ui-action-button title="Jahrgänge" :is-active="actionJahrgaenge" @click="()=>actionJahrgaenge = !actionJahrgaenge" icon="i-ri-archive-line">
-				<div class="col-span-full">
-					<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
-						<template #cell(id)="{value}">
-							<svws-ui-checkbox type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
-						</template>
-					</svws-ui-table>
-				</div>
+				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
+					<template #cell(id)="{value}">
+						<svws-ui-checkbox type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
+					</template>
+				</svws-ui-table>
 			</svws-ui-action-button>
-		</svws-ui-content-card>
-		<svws-ui-content-card>
 			<svws-ui-action-button title="Räume" :is-active="actionRaeume" @click="()=>actionRaeume = !actionRaeume" icon="i-ri-archive-line">
 				<svws-ui-table :columns="colsRaeume" :items="items" v-model:clicked="raum" selectable v-model="selected" count>
 					<template #cell(kuerzel)="{ rowData }">
@@ -48,8 +44,8 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-action-button>
-		</svws-ui-content-card>
-		<svws-ui-content-card>
+		</div>
+		<div class="page--content-flex-column">
 			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
 				<svws-ui-table :columns="colsPausenzeiten" :items="itemsPausenzeit" v-model:clicked="zeit" selectable v-model="selectedPausenzeiten" count>
 					<template #cell(wochentag)="{ rowData }">
@@ -76,8 +72,6 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-action-button>
-		</svws-ui-content-card>
-		<svws-ui-content-card>
 			<svws-ui-action-button title="Aufsichtsbereiche" :is-active="actionAufsichtsbereiche" @click="()=>actionAufsichtsbereiche = !actionAufsichtsbereiche" icon="i-ri-archive-line">
 				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" selectable v-model="selectedAufsichtsbereiche" count>
 					<template #cell(kuerzel)="{ rowData }">
@@ -98,7 +92,7 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-action-button>
-		</svws-ui-content-card>
+		</div>
 	</div>
 </template>
 
@@ -237,9 +231,11 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
-		grid-template-columns: 1fr 1fr;
-		grid-auto-columns: max-content;
+		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row
+	}
+
+	.page--content-flex-column {
+		@apply h-full overflow-y-auto w-full xl:w-1/2 flex flex-col gap-8
 	}
 
 </style>
