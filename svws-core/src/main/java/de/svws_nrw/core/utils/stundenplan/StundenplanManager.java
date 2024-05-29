@@ -4176,25 +4176,40 @@ public class StundenplanManager {
 	}
 
 
-	/**
-	 * Liefert zum übergebenen Wochentyp einen passenden String.
-	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
-	 *
-	 * @return zum übergebenen Wochentyp einen passenden String.
-	 */
-	public @NotNull String stundenplanGetWochenTypAsString(final int wochenTyp) {
-		if (wochenTyp <= 0)
-			return "Alle Wochen";
+    /**
+     * Liefert zum übergebenen Wochentyp einen passenden verkürzten String.
+     * <br>Beispiel: 0 -> "Alle", 1 -> "A", ...
+     * <br>Laufzeit: O(1)
+     *
+     * @param wochenTyp  Der umzuwandelnde Wochentyp.
+     *
+     * @return zum übergebenen Wochentyp einen passenden String.
+     */
+    public @NotNull String stundenplanGetWochenTypAsStringKurz(final int wochenTyp) {
+        if (wochenTyp <= 0)
+            return "Alle";
 
-		final int zahl = wochenTyp - 1; // 0-basierter Wochentyp
-		final int z2 = zahl / 26;       // 2. Stelle im 26. System
-		final int z1 = zahl - z2 * 26;  // 1. Stelle im 26. System
+        final int zahl = wochenTyp - 1; // 0-basierter Wochentyp
+        final int z2 = zahl / 26;       // 2. Stelle im 26. System
+        final int z1 = zahl - z2 * 26;  // 1. Stelle im 26. System
 
-		return StringUtils.numberToLetterIndex1(z2) + StringUtils.numberToLetterIndex0(z1) + "-Woche";
-	}
+        return StringUtils.numberToLetterIndex1(z2) + StringUtils.numberToLetterIndex0(z1);
+    }
+
+    /**
+     * Liefert zum übergebenen Wochentyp einen passenden String.
+     * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
+     * <br>Laufzeit: O(1)
+     *
+     * @param wochenTyp  Der umzuwandelnde Wochentyp.
+     *
+     * @return zum übergebenen Wochentyp einen passenden String.
+     */
+    public @NotNull String stundenplanGetWochenTypAsString(final int wochenTyp) {
+        if (wochenTyp <= 0)
+            return "Alle Wochen";
+        return stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
+    }
 
 	/**
 	 * Liefert die Datenbank-ID des Stundenplans.

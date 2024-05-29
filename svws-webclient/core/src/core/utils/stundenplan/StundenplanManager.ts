@@ -3904,6 +3904,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert zum übergebenen Wochentyp einen passenden verkürzten String.
+	 * <br>Beispiel: 0 -> "Alle", 1 -> "A", ...
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
+	 *
+	 * @return zum übergebenen Wochentyp einen passenden String.
+	 */
+	public stundenplanGetWochenTypAsStringKurz(wochenTyp : number) : string {
+		if (wochenTyp <= 0)
+			return "Alle";
+		const zahl : number = wochenTyp - 1;
+		const z2 : number = Math.trunc(zahl / 26);
+		const z1 : number = zahl - z2 * 26;
+		return StringUtils.numberToLetterIndex1(z2)! + StringUtils.numberToLetterIndex0(z1)!;
+	}
+
+	/**
 	 * Liefert zum übergebenen Wochentyp einen passenden String.
 	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
 	 * <br>Laufzeit: O(1)
@@ -3915,10 +3933,7 @@ export class StundenplanManager extends JavaObject {
 	public stundenplanGetWochenTypAsString(wochenTyp : number) : string {
 		if (wochenTyp <= 0)
 			return "Alle Wochen";
-		const zahl : number = wochenTyp - 1;
-		const z2 : number = Math.trunc(zahl / 26);
-		const z1 : number = zahl - z2 * 26;
-		return StringUtils.numberToLetterIndex1(z2)! + StringUtils.numberToLetterIndex0(z1)! + "-Woche";
+		return this.stundenplanGetWochenTypAsStringKurz(wochenTyp)! + "-Woche";
 	}
 
 	/**
