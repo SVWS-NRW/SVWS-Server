@@ -511,6 +511,8 @@ public final class DBRootManager {
 				logger.logLn(0, " [Fehler]");
 				if (e instanceof final DBException dbe)
 					throw dbe;
+				if (e instanceof final SVWSKonfigurationException ske)
+					throw new DBException("Ein unerwarteter Fehler ist beim Zugriff auf die SVWS-Konfiguration nach dem Erstellen des Datenbank-Schemas aufgetreten: " + ske.getMessage(), ske.getCause());
 				throw new DBException("Ein unerwarteter Fehler ist beim Erstellen des Datenbank-Schemas aufgetreten.", e);
 			} finally {
 				logger.modifyIndent(-2);
