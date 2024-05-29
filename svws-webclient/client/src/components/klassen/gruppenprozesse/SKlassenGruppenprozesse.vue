@@ -8,8 +8,11 @@
 								   action-label="Löschen"
 								   :is-loading="loading"
 								   :is-active="currentAction === 'delete'"
-								   @click="toggleDeleteKlassen" />
-
+								   :actionDisabled="!preConditionCheck[0]"
+								   @click="toggleDeleteKlassen" >
+				<span style="color: red" v-if="!preConditionCheck[0]" v-for="message in preConditionCheck[1]">{{message}}<br></span>
+				<span v-else>Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+			</svws-ui-action-button>
 			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
@@ -21,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import {ref} from "vue";
+	import {ref, computed} from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
 	import {List} from "@core";
 
@@ -32,9 +35,15 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
+	const preConditionCheck = computed(() => {
+		if (currentAction.value === 'delete')
+			return props.deleteKlassenCheck();
+
+		return [false, []];
+	})
+
 	function toggleDeleteKlassen() {
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
-		clearLog();
 	}
 
 	const clearLog = () => {
@@ -49,6 +58,7 @@
 		const [delStatus, logMessages] = await props.deleteKlassen();
 		logs.value = logMessages;
 		status.value = delStatus;
+		currentAction.value = '';
 
 		loading.value = false;
 	}

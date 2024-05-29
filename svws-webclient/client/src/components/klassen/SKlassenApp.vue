@@ -1,9 +1,8 @@
 <template>
-<!--	<template >-->
 	<header class="svws-ui-header">
 		<div class="svws-ui-header--title">
 			<div class="svws-headline-wrapper">
-				<template v-if="istGruppenprozess">
+				<template v-if="props.gruppenprozesseEnabled">
 					<h2 class="svws-headline">
 						Gruppenprozesse
 					</h2>
@@ -25,13 +24,9 @@
 		</div>
 		<div class="svws-ui-header--actions" />
 	</header>
-	<svws-ui-router-tab-bar :routes="istGruppenprozess ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+	<svws-ui-router-tab-bar :routes="props.gruppenprozesseEnabled ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 		<router-view />
 	</svws-ui-router-tab-bar>
-<!--	</template>-->
-<!--	<div v-else class="app&#45;&#45;content&#45;&#45;placeholder">-->
-<!--		<span class="icon i-ri-team-line" />-->
-<!--	</div>-->
 </template>
 
 <script setup lang="ts">
@@ -40,10 +35,6 @@
 	import { computed } from "vue";
 
 	const props = defineProps<KlassenAppProps>();
-
-	const istGruppenprozess = computed<boolean>(() => {
-		return props.klassenListeManager().liste.auswahlSize() > 0 || !props.klassenListeManager().hasDaten()
-	});
 
 	const selectedKlassen = computed<string>(() => {
 		const liste = props.klassenListeManager().liste.auswahlSorted();

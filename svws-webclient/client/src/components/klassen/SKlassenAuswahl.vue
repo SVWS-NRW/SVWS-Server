@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="klassenListeManager().liste.auswahlSize() === 0" :clicked="clickedEintrag" @update:clicked="gotoEintrag"
+			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
@@ -127,34 +127,22 @@
 
 	const selectedItems = shallowRef<KlassenDaten[]>([]);
 	const clickedEintrag = computed(() => {
-		return props.klassenListeManager().liste.auswahlSize() > 0 ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
+		return props.klassenListeManager().liste.auswahlExists() ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
 	})
 
 	onMounted(() => {
-		const arr: KlassenDaten[] = [];
-		for(const item of props.klassenListeManager().liste.auswahl()){
-			arr.push(item);
-		}
-		setAuswahl(arr)
+		setAuswahl([... props.klassenListeManager().liste.auswahl()])
 	})
 
 	async function setAuswahl(items : KlassenDaten[]) {
-		selectedItems.value = [];
-		const auswahl = props.klassenListeManager().liste;
-		for (const vorhanden of [ ... auswahl.auswahl() ])
-			if (!items.includes(vorhanden))
-				auswahl.auswahlRemove(vorhanden);
+		props.klassenListeManager().liste.auswahlClear();
 		for (const item of items)
 			if (props.klassenListeManager().liste.hasValue(item))
-				auswahl.auswahlAdd(item);
-		selectedItems.value = [ ... auswahl.auswahl() ];
+				props.klassenListeManager().liste.auswahlAdd(item);
 
-		console.log("SELECTED Items: ", selectedItems)
-		console.log("SELECTED Items Manager: ", props.klassenListeManager().liste.auswahl())
-		if (selectedItems.value.length > 0)
-			props.klassenListeManager().setDaten(null);
+		selectedItems.value = [ ... props.klassenListeManager().liste.auswahl() ]
 
-		await props.setGruppenprozess(selectedItems.value.length > 0 || !props.klassenListeManager().hasDaten());
+		await props.setGruppenprozess(selectedItems.value.length > 0);
 
 	}
 

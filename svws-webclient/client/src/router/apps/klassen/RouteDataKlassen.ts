@@ -18,6 +18,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
+	gruppenprozesseEnabled: boolean;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -27,6 +28,7 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
 	oldView: undefined,
+	gruppenprozesseEnabled: false,
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -45,6 +47,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
+	}
+
+	get gruppenprozesseEnabled(): boolean {
+		return this._state.value.gruppenprozesseEnabled;
 	}
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -79,7 +85,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt});
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled});
 		return result;
 	}
 
@@ -101,18 +107,38 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	public async setEintrag(klasse: KlassenDaten | null) {
 		if ((klasse === null) && (!this.klassenListeManager.hasDaten()))
 			return;
+
 		if ((klasse === null) || (this.klassenListeManager.liste.list().isEmpty())) {
 			this.klassenListeManager.setDaten(null);
 			this.commit();
 			return;
 		}
-		if ((klasse !== null) && (this.klassenListeManager.hasDaten() && (klasse.id === this.klassenListeManager.auswahl().id)))
+
+		if (this.klassenListeManager.hasDaten() && (klasse.id === this.klassenListeManager.auswahl().id))
 			return;
+
 		let daten = this.klassenListeManager.liste.get(klasse.id);
 		if (daten === null)
 			daten = this.klassenListeManager.filtered().isEmpty() ? null : this.klassenListeManager.filtered().get(0);
+
 		this.klassenListeManager.setDaten(daten);
 		this.commit();
+	}
+
+	public deleteKlassenCheck = (): [boolean, ArrayList<string>] => {
+		const errorLog: ArrayList<string> = new ArrayList();
+
+		if (!this.klassenListeManager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Klasse zum Löschen ausgewählt.')
+		}
+
+		for (const klasse of this.klassenListeManager.liste.auswahlSorted()) {
+			if (klasse.schueler.size() > 0) {
+				errorLog.add(`Klasse ${klasse.kuerzel} (ID: ${klasse.id}) kann nicht gelöscht werden, weil es noch verknüpfte Schüler gibt.`);
+			}
+		}
+
+		return [errorLog.isEmpty(), errorLog];
 	}
 
 	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]>  => {
@@ -138,6 +164,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		if (!klassenToRemove.isEmpty()) {
+			this._state.value.klassenListeManager.liste.auswahlClear();
+			this._state.value.klassenListeManager.setDaten(null);
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
 
@@ -167,6 +195,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	gotoEintrag = async (eintrag: KlassenDaten) => {
 		if (eintrag === null)
 			return
+
+		if (!this._state.value.klassenListeManager.liste.auswahlExists())
+			this._state.value.gruppenprozesseEnabled = false;
+
 		await RouteManager.doRoute(this.view.getRoute(eintrag.id));
 	}
 
@@ -175,16 +207,19 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	setGruppenprozess = async (value: boolean) => {
-		if (((value === true) && (this._state.value.oldView !== undefined))
-			|| ((value === false) && (this._state.value.oldView === undefined))) {
+		this._state.value.gruppenprozesseEnabled = value;
+
+		if (value && this._state.value.view === routeKlasseGruppenprozesse) {
 			this.commit();
 			return;
 		}
+
 		if (value) {
 			this._state.value.oldView = this._state.value.view;
 			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));
 			return;
 		}
+
 		const view = this._state.value.oldView ?? routeKlasseDaten;
 		this._state.value.oldView = undefined;
 		await RouteManager.doRoute(view.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));

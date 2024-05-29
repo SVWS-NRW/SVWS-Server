@@ -111,6 +111,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			tabs: this.getTabs(),
 			tabsGruppenprozesse: this.getTabsGruppenprozesse(),
 			tabsHidden: this.children_hidden().value,
+			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
 		};
 	}
 

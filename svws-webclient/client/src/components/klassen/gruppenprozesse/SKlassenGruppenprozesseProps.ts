@@ -5,5 +5,6 @@ export interface KlassenGruppenprozesseProps {
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
 	klassenListeManager: () => KlassenListeManager;
-	deleteKlassen: () => Promise<[boolean, ArrayList<string | null>]>
+	deleteKlassen: () => Promise<[boolean, ArrayList<string | null>]>;
+	deleteKlassenCheck: () => [boolean, ArrayList<string>];
 }

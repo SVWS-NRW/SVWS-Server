@@ -8,4 +8,5 @@ export interface KlassenAppProps {
 	tabs: AuswahlChildData[];
 	tabsGruppenprozesse: AuswahlChildData[];
 	tabsHidden: boolean[];
+	gruppenprozesseEnabled: boolean;
 }
