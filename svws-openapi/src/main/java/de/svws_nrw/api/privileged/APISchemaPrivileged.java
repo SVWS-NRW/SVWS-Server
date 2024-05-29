@@ -5,6 +5,7 @@ import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
@@ -1225,8 +1226,11 @@ public class APISchemaPrivileged {
 	    		final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
 	    		final Benutzer user2 = Benutzer.create(dbconfig);
 	    		try (DBEntityManager conn2 = user2.getEntityManager()) {
-					if (!config.createOrUpdateSchema(schema, kennwort.user, kennwort.password, false))
-						throw new ApiOperationException(Status.BAD_REQUEST, "Benutzername oder Kennwort konnten für das Schema nicht gesetzt werden.");
+	    			try {
+	    				config.createOrUpdateSchema(schema, kennwort.user, kennwort.password, false);
+	    			} catch (final SVWSKonfigurationException ske) {
+						throw new ApiOperationException(Status.BAD_REQUEST, "Benutzername oder Kennwort konnten für das Schema nicht gesetzt werden: " + ske.getMessage());
+	    			}
 					return Response.status(Status.NO_CONTENT).build();
 	    		}
 			} catch (final Exception e) {

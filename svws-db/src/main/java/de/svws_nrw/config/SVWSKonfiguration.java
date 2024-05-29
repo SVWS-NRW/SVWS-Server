@@ -250,20 +250,19 @@ public final class SVWSKonfiguration {
 	 * wurde isXMLConfig gesetzt. Dann wird das XML-Format gewählt. Ist der Dateiname null oder leer, so wird
 	 * der Default-Name DEFAULT_CONFIG_FILENAME bzw. DEFAULT_CONFIG_FILENAME_XML verwendet.
 	 *
-	 * @return true, falls die Konfiguration erfolgreich geschrieben wurde, sonst false.
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Schreiben auftritt
 	 */
-	public static boolean write() {
+	public static void write() throws SVWSKonfigurationException {
 		try {
 			if (instanceConfig.dto == null)
-				return false;
+				throw new SVWSKonfigurationException("Es existiert noch keine Konfiguration.");
 			if (instanceConfig.dto.isXMLConfig) {
 				writeXML(instanceConfig.dto.filepath);
 			} else {
 				writeJSON(instanceConfig.dto.filepath);
 			}
-			return true;
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			return false;
+		} catch (final IOException e) {
+			throw new SVWSKonfigurationException("Die Konfigurationsdatei '" + instanceConfig.getFilename() + "' konnte nicht geschrieben werden.", e);
 		}
 	}
 
@@ -755,11 +754,15 @@ public final class SVWSKonfiguration {
 	 * @param userPassword    das Kennwort des Schema-Admin-Benutzers
 	 * @param userSVWSLogin   true, false die Authentifizierung über die DB erfolgt, sonst false
 	 *
-	 * @return true im Erfolgsfalls, sonst false
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Erstellen oder Aktualisieren der Schema-Konfiguration auftritt
 	 */
-	public boolean createOrUpdateSchema(final String schemaName, final String userName, final String userPassword, final boolean userSVWSLogin) {
-		if ((dto == null) || (schemaName == null) || ("".equals(schemaName)) || (userName == null) || ("".equals(userName)))
-			return false;
+	public void createOrUpdateSchema(final String schemaName, final String userName, final String userPassword, final boolean userSVWSLogin) throws SVWSKonfigurationException {
+		if (dto == null)
+			throw new SVWSKonfigurationException("Es ist keine Konfiguration geladen. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+		if ((schemaName == null) || ("".equals(schemaName)))
+			throw new SVWSKonfigurationException("Es ist kein Schemaname angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+		if ((userName == null) || ("".equals(userName)))
+			throw new SVWSKonfigurationException("Es ist kein Benutzername angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
 		String password = userPassword;
 		if (password == null)
 			password = "";
@@ -783,7 +786,7 @@ public final class SVWSKonfiguration {
 			config.password = password;
 			config.svwslogin = userSVWSLogin;
 		}
-		return write();
+		write();
 	}
 
 
@@ -794,13 +797,15 @@ public final class SVWSKonfiguration {
 	 * @param schemaName   der Name des Datenbank-Schemas, welches aus der
 	 *                     Konfiguration entfernt werden soll
 	 *
-	 * @return true, falls die Konfiguration erfolgreich entfernt wurde oder nicht vorhanden ist, ansonsten false
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Entfernen der Schema-Konfiguration auftritt.
 	 */
-	public boolean removeSchema(final String schemaName) {
-		if ((dto == null) || (schemaName == null) || ("".equals(schemaName)))
-			return false;
+	public void removeSchema(final String schemaName) throws SVWSKonfigurationException {
+		if (dto == null)
+			throw new SVWSKonfigurationException("Es ist keine Konfiguration geladen. Das Entfernen der Schema-Konfiguration ist daher nicht möglich.");
+		if ((schemaName == null) || ("".equals(schemaName)))
+			throw new SVWSKonfigurationException("Es ist kein Schemaname angegeben. Das Entfernen der Schema-Konfiguration ist daher nicht möglich.");
 		if (!dto.dbconfigs.containsKey(schemaName))
-			return true;
+			return;
 		// Entferne das schema aus der Konfiguration
 		dto.dbconfigs.remove(schemaName);
 		for (final SVWSKonfigurationSchemaDTO config : dto.dbKonfiguration.schemata) {
@@ -812,7 +817,7 @@ public final class SVWSKonfiguration {
 		// Entferne Flags, dass das Scheme deaktiviert ist
 		schemataDeactivated.remove(schemaName);
 		// Persistiere die Änderungen in der Konfigurationsdatei
-		return write();
+		write();
 	}
 
 

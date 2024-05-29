@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -648,8 +649,10 @@ public final class DBSchemaManager {
 	 * @param logger               ein Logger, welcher das Erstellen loggt.
 	 *
 	 * @return true, falls das SVWS-Schema erfolgreich erzeugt wurde.
+	 *
+	 * @throws SVWSKonfigurationException falls ein Fehler beim Zugriff auf die Konfiguration auftritt
 	 */
-	public static boolean recycleSchema(final DBConfig tgtConfig, final long maxUpdateRevision, final Logger logger) {
+	public static boolean recycleSchema(final DBConfig tgtConfig, final long maxUpdateRevision, final Logger logger) throws SVWSKonfigurationException {
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = maxUpdateRevision;
 		if (rev < 0)

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
@@ -458,7 +459,11 @@ public final class DBMigrationManager {
 				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
 				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
 				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
-				SVWSKonfiguration.get().removeSchema(tgtSchema);
+				try {
+					SVWSKonfiguration.get().removeSchema(tgtSchema);
+				} catch (final SVWSKonfigurationException ske) {
+					logger.logLn("-> " + ske.getMessage());
+				}
 				throw e;
 			} catch (final Exception e) {
 				// Entferne das Schema aus der svwsconfig.json, damit es nicht mehr beim Start berücksichtigt wird.
@@ -466,7 +471,11 @@ public final class DBMigrationManager {
 				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
 				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
 				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
-				SVWSKonfiguration.get().removeSchema(tgtSchema);
+				try {
+					SVWSKonfiguration.get().removeSchema(tgtSchema);
+				} catch (final SVWSKonfigurationException ske) {
+					logger.logLn("-> " + ske.getMessage());
+				}
 				throw new DBException(e);
 			}
 

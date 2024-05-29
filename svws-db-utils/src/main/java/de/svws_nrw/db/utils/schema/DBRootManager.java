@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
@@ -257,8 +258,10 @@ public final class DBRootManager {
 	 * @param nameSchema   das Schema, auf dem der neue Benutzer seine Rechte bekommen soll
 	 *
 	 * @return true, wenn das Schema und der Benutzer erstellt wurden, sonst false
+	 *
+	 * @throws SVWSKonfigurationException falls ein Fehler beim Erstellen oder Anpassen der SVWS-Konfiguration auftritt
 	 */
-	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema) {
+	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema) throws SVWSKonfigurationException {
 		// Erstelle zunächst das DB-Schema
 		if (!createDBSchema(nameSchema))
 			return false;
@@ -268,7 +271,8 @@ public final class DBRootManager {
 			return false;
 		}
 		// Aktualisieren der DB-Konfiguration
-		return SVWSKonfiguration.get().createOrUpdateSchema(nameSchema, nameUser, pwUser, false);
+		SVWSKonfiguration.get().createOrUpdateSchema(nameSchema, nameUser, pwUser, false);
+		return true;
 	}
 
 
@@ -294,15 +298,17 @@ public final class DBRootManager {
 	 *
 	 * @return true, falls das Schema erfolgreich entfernt wurde oder nicht
 	 *         existierte, sonst false
+	 *
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Entfernen der SVWS-Konfiguration auftritt
 	 */
-	public boolean dropDBSchemaIfExists(final String nameSchema) {
+	public boolean dropDBSchemaIfExists(final String nameSchema) throws SVWSKonfigurationException {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
 			return false;
 		final String name = DTOInformationSchema.getSchemanameCaseDB(conn, nameSchema);
 		if (name == null)
 			return true;
 		// Entferne das Schema aus der Datenbank
-		boolean success = switch (conn.getDBDriver()) {
+		final boolean success = switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + name + "`") > Integer.MIN_VALUE;
 			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + name + "]") > Integer.MIN_VALUE;
 			default -> false;
@@ -316,9 +322,9 @@ public final class DBRootManager {
 		}
 		// Aktualisieren der DB-Konfiguration
 		if (success)
-			success = SVWSKonfiguration.get().removeSchema(nameSchema);
+			SVWSKonfiguration.get().removeSchema(nameSchema);
 		if (!success)
-			success = SVWSKonfiguration.get().removeSchema(name);
+			SVWSKonfiguration.get().removeSchema(name);
 		return success;
 	}
 

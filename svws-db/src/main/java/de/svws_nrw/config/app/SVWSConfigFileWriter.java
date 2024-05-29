@@ -7,6 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBDriver;
@@ -67,7 +68,7 @@ public class SVWSConfigFileWriter {
 			// Schreibe die Konfiguration in die angegeben Datei
 			config.setFilename(outputFile);
 			SVWSKonfiguration.write();
-		} catch (NumberFormatException | IOException e) {
+		} catch (NumberFormatException | IOException | SVWSKonfigurationException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}
 	}

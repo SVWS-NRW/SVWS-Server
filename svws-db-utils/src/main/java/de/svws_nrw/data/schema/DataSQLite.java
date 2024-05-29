@@ -2,9 +2,11 @@ package de.svws_nrw.data.schema;
 
 import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -151,8 +153,14 @@ public final class DataSQLite {
 			}
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
-			if (!hatSchemaConfig)
-				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+			try {
+				if (!hatSchemaConfig)
+					SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+			} catch (final SVWSKonfigurationException e) {
+				logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
+				final SimpleOperationResponse daten = simpleResponse(false, log);
+				return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			}
     	}
 
 		logger.logLn("Import abgeschlossen.");

@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schema;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.logger.LogConsumerConsole;
@@ -83,8 +84,13 @@ public final class DataMigration {
 			}
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
-			if (!hatSchemaConfig)
-				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+			try {
+				if (!hatSchemaConfig)
+					SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+			} catch (final SVWSKonfigurationException e) {
+				logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
+			}
     	}
 		logger.logLn("Migration abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);
@@ -165,8 +171,14 @@ public final class DataMigration {
 		}
 
 		// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
-		if (!hatSchemaConfig)
-			SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+		try {
+			if (!hatSchemaConfig)
+				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+		} catch (final SVWSKonfigurationException e) {
+			logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
+			final SimpleOperationResponse daten = simpleResponse(false, log);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		}
 
 		logger.logLn("Migration abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);
