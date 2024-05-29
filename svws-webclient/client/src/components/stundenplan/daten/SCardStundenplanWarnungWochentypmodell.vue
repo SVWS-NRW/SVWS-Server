@@ -2,16 +2,11 @@
 	<svws-ui-modal :show="showModal" type="danger" size="medium">
 		<template #modalTitle>Achtung</template>
 		<template #modalContent>
-			<template v-if="stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) < 1">
-				Die Umstellung des Wochentyp-Modells auf den Wert {{ wochenTypModell }} {{ wochenTypModell <= 4 ? `(${modelle[wochenTypModell]})` : '' }}
-				führt dazu, dass Unterricht mit den Wochentypen größer als {{ wochenTypModell }} {{ wochenTypModell <= 4 ? `(${modelle[wochenTypModell]})` : '' }} zu Unterricht in allen Wochen umgewandelt wird.
-			</template>
-			<template v-if="stundenplanManager().kalenderwochenzuordnungGetAnzahl() > 0">
-				<br>Die Änderunge des Wochentyp-Modells auf den Wert {{ wochenTypModell }} {{ wochenTypModell <= 4 ? `(${modelle[wochenTypModell]})` : '' }} führt dazu, dass alle Kalenderwochenzuordnungen gelöscht werden.
-			</template>
+			Die Umstellung des Wochentyp-Modells auf den Wert {{ wochenTypModell }} {{ wochenTypModell <= 4 ? `(${modelle[wochenTypModell]})` : '' }}
+			führt dazu, dass Unterricht mit den Wochentypen größer als {{ stundenplanManager().getWochenTypModell() }} {{ stundenplanManager().getWochenTypModell() <= 4 ? `(${modelle[stundenplanManager().getWochenTypModell()]})` : '' }} zu Unterricht in allen Wochen umgewandelt wird.
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="emit('change', false)"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="emit('change', undefined)"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="emit('change', true)"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>

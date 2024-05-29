@@ -6,14 +6,14 @@
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
 					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
 					<div :class="{'flex gap-2': showExtraWTM}">
-						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
+						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
 					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
 					<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 				</div>
 			</div>
-			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager="stundenplanManager" />
+			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager />
 			<svws-ui-action-button title="Jahrgänge" :is-active="actionJahrgaenge" @click="()=>actionJahrgaenge = !actionJahrgaenge" icon="i-ri-archive-line">
 				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
 					<template #cell(id)="{value}">
@@ -136,17 +136,20 @@
 	}
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
-		if ((wochenTypModell !== null) && (wochenTypModell !== undefined) && (wochenTypModell !== 1)) {
-			if (((props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) < 1) && (wochenTypModell === 0)) || wtmOK.value === true) {
-				await props.patch({wochenTypModell});
-				wtmOK.value === undefined;
-			}
-			else if (wtmOK.value === false)
-				select.value?.reset(true);
-			else {
-				newWTM.value = wochenTypModell;
-				wtmOK.value = false;
-			}
+		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1))
+			return;
+		if (((props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) === 0)) || (wtmOK.value === true)) {
+			await props.patch({wochenTypModell});
+			wtmOK.value === undefined;
+			newWTM.value = -1;
+		}
+		else if (wtmOK.value === false) {
+			select.value?.reset(true);
+			wtmOK.value = undefined;
+			newWTM.value = -1;
+		} else {
+			newWTM.value = wochenTypModell;
+			wtmOK.value = false;
 		}
 	}
 
