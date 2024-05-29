@@ -116,13 +116,8 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 	private static final Map<String, DataBasicMapper<DTOSchuelerSprachenfolge>> patchMappings = Map.ofEntries(
 		Map.entry("sprache", (conn, dto, value, map) -> {
 			final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
-			if ((patchSprache == null) || (patchSprache.isBlank()))
+			if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
 				throw new ApiOperationException(Status.BAD_REQUEST);
-			if (!patchSprache.equals(dto.Sprache)) {
-				if (!ZulaessigesFach.getListFremdsprachenKuerzelAtomar().contains(patchSprache))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-				dto.Sprache = patchSprache;
-			}
 		}),
 		Map.entry("reihenfolge", (conn, dto, value, map) -> dto.ReihenfolgeNr = JSONMapper.convertToIntegerInRange(value, true, 0, 9)),
 		Map.entry("belegungVonJahrgang", (conn, dto, value, map) -> {
