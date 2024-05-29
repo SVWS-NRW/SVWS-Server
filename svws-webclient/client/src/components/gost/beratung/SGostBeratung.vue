@@ -2,9 +2,9 @@
 	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full relative">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
-				<svws-ui-button :type="!istManuellerModus ? 'transparent' : 'danger'" @click="switchManuellerModus" title="Modus wechseln">
-					<span class="icon i-ri-loop-right-line" />
-					Modus: <span>{{ istManuellerModus ? 'manuell' : 'normal' }}</span>
+				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
+					<span class="icon-sm i-ri-loop-right-line" />
+					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen="resetFachwahlen" />
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen v-if="jahrgangsdaten().abiturjahr !== -1" :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
@@ -14,7 +14,7 @@
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung="gotoKursblockung"
-			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus" :faecher-anzeigen="'alle'"
+			:abiturdaten-manager="abiturdatenManager" :modus="modus" :faecher-anzeigen="'alle'"
 			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
@@ -59,10 +59,20 @@
 
 	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
 
-	const istManuellerModus = ref(false);
+	const modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
 
-	function switchManuellerModus() {
-		istManuellerModus.value = !istManuellerModus.value;
+	function switchModus() {
+		switch (modus.value) {
+			case 'normal':
+				modus.value = 'hochschreiben';
+				break;
+			case 'hochschreiben':
+				modus.value = 'manuell';
+				break;
+			case 'manuell':
+				modus.value = 'normal';
+				break;
+		}
 	}
 
 	const lehrer = computed<Map<number, LehrerListeEintrag>>(() => {
