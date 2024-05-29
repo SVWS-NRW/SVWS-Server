@@ -131,8 +131,14 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	}
 
 
-	public async setSchueler(idSchueler: number) : Promise<void> {
-		if (idSchueler === this._state.value.idSchueler)
+	/**
+	 * Lädt die Informationen zu den Lernabschnitten anhand der übergebenen Schüler-ID
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 * @param force        gibt an, ob das Laden erzwungen werden soll, obwohl die ID bereits geladen ist
+	 */
+	public async setSchueler(idSchueler: number, force: boolean = false) : Promise<void> {
+		if ((!force) && (idSchueler === this._state.value.idSchueler))
 			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);

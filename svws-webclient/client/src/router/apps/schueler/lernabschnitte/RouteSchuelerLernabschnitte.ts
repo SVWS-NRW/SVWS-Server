@@ -40,14 +40,13 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (to_params.id === undefined)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben."));
 		const id = parseInt(to_params.id);
-		if (this.data.idSchueler !== id)
-			await this.data.setSchueler(id);
+		await this.data.setSchueler(id, isEntering);
 		if (to_params.abschnitt !== undefined) {
 			const idSchuljahresabschnitt = parseInt(to_params.abschnitt);
 			const wechselNr = (to_params.wechselNr === undefined) ? 0 : parseInt(to_params.wechselNr);
