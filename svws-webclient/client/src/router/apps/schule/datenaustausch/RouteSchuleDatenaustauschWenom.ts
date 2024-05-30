@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -19,9 +19,11 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteSchuleDa
 		super.text = "Webnotenmanager";
 	}
 
-	public async enter() {
-		return routeSchuleDatenaustausch.data.ladeCredentials();
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			return routeSchuleDatenaustausch.data.ladeCredentials();
 	}
+
 
 	public getRoute() : RouteLocationRaw {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
