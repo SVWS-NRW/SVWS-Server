@@ -86,6 +86,12 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, lehrer.id, stundenplan.daten.zeitraster);
+		// Füge ggf. noch die Klassen der Puasenzeiten hinzu
+		final Set<Long> weitereKlassenIDs = new HashSet<>();
+		weitereKlassenIDs.addAll(stundenplan.daten.pausenzeiten.stream().map(p -> p.klassen).flatMap(Collection::stream).toList());
+		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
+		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
+				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());
 		// Füge ggf. noch die Schüler der Klassen zu der Schülerliste hinzu
 		final Set<Long> schuelerIDs = new HashSet<>();
 		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.klassen.stream().flatMap(k -> k.schueler.stream()).toList());
@@ -180,7 +186,6 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 				.filter(s -> schuelerIDs.contains(s.id)).toList());
 		final Set<Long> weitereKlassenIDs = new HashSet<>();
 		weitereKlassenIDs.addAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.idKlasse).toList());
-		weitereKlassenIDs.addAll(stundenplan.daten.pausenzeiten.stream().map(p -> p.klassen).flatMap(Collection::stream).toList());
 		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
 		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
 				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());

@@ -1,7 +1,6 @@
 package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +142,6 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		final Set<Long> weitereKlassenIDs = new HashSet<>();
 		weitereKlassenIDs.add(lernabschnitt.Klassen_ID); // Ergänze die Information zum Schüler, dessen Stundenplan angezeigt wird
 		weitereKlassenIDs.addAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.idKlasse).toList());
-		weitereKlassenIDs.addAll(stundenplan.daten.pausenzeiten.stream().map(p -> p.klassen).flatMap(Collection::stream).toList());
 		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
 		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
 				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());
