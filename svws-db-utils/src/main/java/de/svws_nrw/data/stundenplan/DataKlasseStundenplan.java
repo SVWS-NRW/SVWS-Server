@@ -2,6 +2,7 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -174,6 +175,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 				.filter(s -> schuelerIDs.contains(s.id)).toList());
 		final Set<Long> weitereKlassenIDs = new HashSet<>();
 		weitereKlassenIDs.addAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.idKlasse).toList());
+		weitereKlassenIDs.addAll(stundenplan.daten.pausenzeiten.stream().map(p -> p.klassen).flatMap(Collection::stream).toList());
 		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
 		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
 				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());
