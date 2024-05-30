@@ -88,10 +88,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		return {
 			serverMode: api.mode,
 			kursListeManager: () => this.data.kursListeManager,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
 		};

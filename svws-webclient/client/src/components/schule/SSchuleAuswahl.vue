@@ -3,6 +3,9 @@
 		<template #headline>
 			<span class="line-clamp-2">Schule</span>
 		</template>
+		<template #abschnitt>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+		</template>
 		<template #header />
 		<template #content>
 			<div class="secondary-menu--navigation">

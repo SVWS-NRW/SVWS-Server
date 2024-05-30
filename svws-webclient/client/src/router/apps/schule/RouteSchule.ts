@@ -69,6 +69,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {
 		return {
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			setChild: this.setChild,
 			child: this.getChild(),
 			children: this.getChildData(),

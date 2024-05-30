@@ -1,12 +1,10 @@
-import type { FoerderschwerpunktEintrag, Schuljahresabschnitt } from "@core";
+import type { FoerderschwerpunktEintrag } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface FoerderschwerpunkteAuswahlProps {
 	auswahl: FoerderschwerpunktEintrag | undefined;
 	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
 	gotoEintrag: (eintrag: FoerderschwerpunktEintrag) => Promise<void>;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	returnToKataloge: () => Promise<void>;
 }

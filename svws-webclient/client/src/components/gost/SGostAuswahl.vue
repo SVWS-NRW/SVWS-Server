@@ -2,8 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline><span class="select-none">Oberstufe</span></template>
 		<template #abschnitt>
-			<abschnitt-auswahl v-if="serverMode !== ServerMode.STABLE" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
-			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false">
@@ -57,7 +56,6 @@
 	import { computed } from "vue";
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 	import type { GostJahrgang } from "@core";
-	import { ServerMode } from "@core";
 
 	const props = defineProps<GostAuswahlProps>();
 

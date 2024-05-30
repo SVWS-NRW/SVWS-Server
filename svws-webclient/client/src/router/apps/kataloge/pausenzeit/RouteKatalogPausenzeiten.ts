@@ -64,10 +64,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			addEintraege: this.data.addEintraege,
 			deleteEintraege: this.data.deleteEintraege,

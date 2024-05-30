@@ -1,14 +1,12 @@
-import type { Aufsichtsbereich, Schuljahresabschnitt, StundenplanManager } from "@core";
+import type { Aufsichtsbereich, StundenplanManager } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface AufsichtsbereicheAuswahlProps {
 	auswahl: Aufsichtsbereich | undefined;
 	addEintrag: (religion: Aufsichtsbereich) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<Aufsichtsbereich>) => Promise<void>;
 	gotoEintrag: (eintrag: Aufsichtsbereich) => Promise<void>;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	returnToKataloge: () => Promise<void>;
 	stundenplanManager: () => StundenplanManager;
 }

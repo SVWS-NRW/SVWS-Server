@@ -6,6 +6,9 @@
 				<span>Vermerkarten </span>
 			</nav>
 		</template>
+		<template #abschnitt>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+		</template>
 		<template #header />
 		<template #content>
 			<div class="container">

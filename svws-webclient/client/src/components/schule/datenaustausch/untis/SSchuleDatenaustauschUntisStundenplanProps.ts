@@ -1,8 +1,7 @@
-import type { Schuljahresabschnitt, SimpleOperationResponse } from "@core";
+import type { SimpleOperationResponse } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface SchuleDatenaustauschUntisStundenplanProps {
 	importUntisStundenplanGPU001: (formData: FormData, ignoreMissing: boolean) => Promise<SimpleOperationResponse>;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 }

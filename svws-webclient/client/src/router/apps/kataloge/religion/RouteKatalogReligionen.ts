@@ -64,10 +64,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			setFilter: this.data.setFilter,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			returnToKataloge: routeKataloge.returnToKataloge
 		};

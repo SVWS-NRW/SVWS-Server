@@ -6,6 +6,9 @@
 				<span>Betriebe</span>
 			</nav>
 		</template>
+		<template #abschnitt>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+		</template>
 		<template #header />
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>

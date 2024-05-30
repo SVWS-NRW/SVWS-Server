@@ -102,10 +102,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		return {
 			serverMode: api.mode,
 			schuelerListeManager: () => this.data.schuelerListeManager,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			gotoSchueler: this.data.gotoSchueler,
 			setFilter: this.data.setFilter,
 		};

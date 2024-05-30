@@ -63,10 +63,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleDatenaustauschAuswahlProps {
 		return {
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoSchule: routeSchule.gotoSchule,
 			// Props für die Navigation
 			setChild: this.setChild,

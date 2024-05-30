@@ -1,4 +1,5 @@
-import type { ReligionEintrag, ReligionListeManager, Schuljahresabschnitt } from "@core";
+import type { ReligionEintrag, ReligionListeManager } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface ReligionenAuswahlProps {
 	religionListeManager: () => ReligionListeManager;
@@ -6,9 +7,6 @@ export interface ReligionenAuswahlProps {
 	addEintrag: (religion: Partial<ReligionEintrag>) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<ReligionEintrag>) => Promise<void>;
 	gotoEintrag: (religion: ReligionEintrag) => Promise<void>;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	returnToKataloge: () => Promise<void>;
 }

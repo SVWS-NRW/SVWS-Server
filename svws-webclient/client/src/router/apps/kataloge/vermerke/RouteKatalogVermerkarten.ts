@@ -60,11 +60,11 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 
 	public getAuswahlProps(to: RouteLocationNormalized): VermerkeAuswahlProps {
 		return {
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
-			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
 			returnToKataloge: routeKataloge.returnToKataloge
 		};

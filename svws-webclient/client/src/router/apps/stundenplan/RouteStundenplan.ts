@@ -80,10 +80,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: () =>this.data.mapKatalogeintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			addEintrag: this.data.addEintrag,
 			removeEintraege: this.data.removeEintraege,
 		};

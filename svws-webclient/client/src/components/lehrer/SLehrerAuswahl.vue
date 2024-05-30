@@ -4,8 +4,7 @@
 			<span>Lehrkräfte</span>
 		</template>
 		<template #abschnitt>
-			<abschnitt-auswahl v-if="serverMode !== ServerMode.STABLE" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
-			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
 			<svws-ui-table clickable :clicked="lehrerListeManager().hasDaten() ? lehrerListeManager().auswahl() : null" @update:clicked="gotoLehrer"
@@ -31,7 +30,7 @@
 
 	import { computed, ref, shallowRef } from "vue";
 	import { type SortByAndOrder } from "@ui";
-	import { ServerMode, type PersonalTyp, type LehrerListeEintrag } from "@core";
+	import { type PersonalTyp, type LehrerListeEintrag } from "@core";
 	import { type LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();

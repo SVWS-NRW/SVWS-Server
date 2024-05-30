@@ -6,6 +6,9 @@
 				<span title="Benutzer">Benutzer</span>
 			</nav>
 		</template>
+		<template #abschnitt>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll>

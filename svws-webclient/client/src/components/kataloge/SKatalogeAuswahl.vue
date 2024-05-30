@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Kataloge</template>
 		<template #abschnitt>
-			<span class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
+			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #header />
 		<template #content>

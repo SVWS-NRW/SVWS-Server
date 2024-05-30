@@ -1,7 +1,6 @@
 import type { RouteParams, RouteLocationRaw, RouteLocationNormalized } from "vue-router";
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";
 import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZeitrasterAuswahlProps";
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp} from "../../RouteApp";
@@ -44,10 +43,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 
 	public getAuswahlProps(to: RouteLocationNormalized): ZeitrasterAuswahlProps {
 		return {
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			returnToKataloge: routeKataloge.returnToKataloge
 		};
 	}

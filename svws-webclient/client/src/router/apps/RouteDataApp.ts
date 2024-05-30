@@ -1,10 +1,11 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import { type OrtKatalogEintrag, type OrtsteilKatalogEintrag, type Schuljahresabschnitt } from "@core";
+import { Schuljahresabschnitt, type OrtKatalogEintrag, type OrtsteilKatalogEintrag } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager, routerManager } from "../RouteManager";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 
 interface RouteStateApp extends RouteStateInterface {
@@ -56,6 +57,19 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		locationRaw.name = node!.name;
 		locationRaw.params = params;
 		await RouteManager.doRoute(locationRaw);
+	}
+
+	/**
+	 * Getter für die Informationen, welche für eine Schuljahresabschnittsauswahl benötigt werden.
+	 */
+	public getSchuljahresabschnittsauswahl(istAktiv: boolean) : AbschnittAuswahlDaten {
+		return <AbschnittAuswahlDaten>{
+			aktiv: istAktiv, // && api.mode !== ServerMode.STABLE,
+			abschnitte: api.mapAbschnitte.value,
+			aktuell: this.aktAbschnitt.value,
+			schule: api.mapAbschnitte.value.get(api.schuleStammdaten.idSchuljahresabschnitt) ?? new Schuljahresabschnitt(),
+			set: this.setAbschnitt,
+		};
 	}
 
 	/**

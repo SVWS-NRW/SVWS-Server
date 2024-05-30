@@ -82,10 +82,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
 		return {
 			fachListeManager: () => this.data.fachListeManager,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
 			returnToKataloge: routeKataloge.returnToKataloge,

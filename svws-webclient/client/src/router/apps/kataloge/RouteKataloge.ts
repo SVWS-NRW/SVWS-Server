@@ -62,10 +62,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): KatalogeAuswahlProps {
 		return {
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			setChild: this.setChild,
 			child: this.getChild(),
 			children: this.getChildData(),

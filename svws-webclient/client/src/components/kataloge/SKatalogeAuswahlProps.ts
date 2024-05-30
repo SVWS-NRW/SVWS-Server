@@ -1,11 +1,8 @@
-import type { Schuljahresabschnitt } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface KatalogeAuswahlProps {
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	setChild: (value: AuswahlChildData) => Promise<void>;
 	child: AuswahlChildData;
 	children: AuswahlChildData[];

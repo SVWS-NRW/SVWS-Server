@@ -27,9 +27,7 @@ export class RouteSchuleDatenaustauschUntisStundenplan extends RouteNode<any, Ro
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisStundenplanProps {
 		return {
 			importUntisStundenplanGPU001: routeSchuleDatenaustauschUntis.data.importUntisStundenplanGPU001,
-			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 		};
 	}
 }

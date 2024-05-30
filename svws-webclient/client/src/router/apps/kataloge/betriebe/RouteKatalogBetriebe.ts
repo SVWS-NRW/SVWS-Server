@@ -67,6 +67,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 
 	public getAuswahlProps(to: RouteLocationNormalized): BetriebeAuswahlProps {
 		return {
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			mapBeschaeftigungsarten: this.data.mapBeschaeftigungsarten,

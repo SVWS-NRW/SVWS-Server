@@ -1,4 +1,6 @@
 // Components
+export type { AbschnittAuswahlDaten, AbschnittAuswahlProps } from './components/abschnittauswahl/AbschnittAuswahlProps'
+export { default as AbschnittAuswahl } from './components/abschnittauswahl/AbschnittAuswahl.vue'
 export type { SchuelerLaufbahnplanungProps } from './components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps'
 export { default as SSchuelerLaufbahnplanung } from './components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue'
 export type { StundenplanAnsichtProps, StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from './components/stundenplan/StundenplanAnsichtProps'

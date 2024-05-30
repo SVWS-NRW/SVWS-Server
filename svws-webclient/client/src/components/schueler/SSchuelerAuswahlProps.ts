@@ -1,12 +1,10 @@
-import type { SchuelerListeEintrag, Schuljahresabschnitt, SchuelerListeManager, ServerMode } from "@core";
+import type { SchuelerListeEintrag, SchuelerListeManager, ServerMode } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface SchuelerAuswahlProps {
 	serverMode: ServerMode;
 	schuelerListeManager: () => SchuelerListeManager;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoSchueler: (value: SchuelerListeEintrag | null) => Promise<void>;
 	setFilter: () => Promise<void>;
 }

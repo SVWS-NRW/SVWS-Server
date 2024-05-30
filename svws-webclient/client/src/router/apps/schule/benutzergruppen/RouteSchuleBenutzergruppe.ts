@@ -67,6 +67,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzergruppeAuswahlProps {
 		return {
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			auswahl: () => this.data.auswahl,
 			mapBenutzergruppe: this.data.mapBenutzergruppe,
 			gotoBenutzergruppe: this.data.gotoBenutzergruppe,

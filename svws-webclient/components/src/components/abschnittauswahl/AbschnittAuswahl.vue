@@ -1,11 +1,11 @@
 <template>
-	<div class="inline-flex gap-3 items-center">
-		<svws-ui-tooltip :indicator="false" v-if="aktSchulabschnitt !== aktAbschnitt.id" position="bottom-start">
-			<span class="cursor-pointer" :class="{'text-error text-headline-md -mr-1': aktSchulabschnitt !== aktAbschnitt.id, 'opacity-50 hover:opacity-100 text-base pt-1': aktSchulabschnitt === aktAbschnitt.id}">
+	<div v-if="daten().aktiv" class="inline-flex gap-3 items-center">
+		<svws-ui-tooltip :indicator="false" v-if="daten().schule.id !== daten().aktuell.id" position="bottom-start">
+			<span class="cursor-pointer" :class="{'text-error text-headline-md -mr-1': daten().schule.id !== daten().aktuell.id, 'opacity-50 hover:opacity-100 text-base pt-1': daten().schule.id === daten().aktuell.id}">
 				<span class="icon i-ri-alert-line inline-block icon-error -my-1.5 -mr-1 hover:icon-error relative -top-0.5" />
 			</span>
 			<template #content>
-				<span v-if="aktSchulabschnitt === aktAbschnitt.id">
+				<span v-if="daten().schule.id === daten().aktuell.id">
 					Der ausgewählte Abschnitt ist der aktuell geltende Schulabschnitt.
 				</span>
 				<span v-else>
@@ -13,26 +13,23 @@
 				</span>
 			</template>
 		</svws-ui-tooltip>
-		<svws-ui-select :headless="!disableHeadless" :model-value="aktAbschnitt" @update:model-value="abschnitt => setAbschnitt(abschnitt!)"
-			:items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id"
-			:class="{'opacity-50 hover:opacity-100 focus-within:opacity-100': aktSchulabschnitt === aktAbschnitt.id}" :highlight-item="abschnitt" />
+		<svws-ui-select :headless="!disableHeadless" :model-value="daten().aktuell" @update:model-value="abschnitt => daten().set(abschnitt!)"
+			:items="daten().abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="daten().schule.id !== daten().aktuell.id"
+			:class="{'opacity-50 hover:opacity-100 focus-within:opacity-100': daten().schule.id === daten().aktuell.id}" :highlight-item="abschnitt" />
 	</div>
+	<span v-else class="text-base font-bold opacity-50 select-none">{{ daten().aktuell.schuljahr + "." + daten().aktuell.abschnitt }}</span>
 </template>
 
 
 <script setup lang="ts">
-	import type { Schuljahresabschnitt } from '../../../../core/src/core/data/schule/Schuljahresabschnitt';
 
-	const props = defineProps<{
-		abschnitte: Map<number, Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-		aktSchulabschnitt: number;
-		disableHeadless?: boolean;
-	}>();
+	import type { Schuljahresabschnitt } from '../../../../core/src/core/data/schule/Schuljahresabschnitt';
+	import type { AbschnittAuswahlProps } from './AbschnittAuswahlProps';
+
+	const props = defineProps<AbschnittAuswahlProps>();
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const abschnitt = props.abschnitte.get(props.aktSchulabschnitt);
+	const abschnitt = props.daten().abschnitte.get(props.daten().schule.id);
 	const aktBezeichnung = `${abschnitt?.schuljahr}.${abschnitt?.abschnitt}`;
 
 	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);

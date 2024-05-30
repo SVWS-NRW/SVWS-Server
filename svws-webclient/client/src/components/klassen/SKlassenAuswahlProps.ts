@@ -1,12 +1,10 @@
-import type { KlassenDaten, Schuljahresabschnitt, KlassenListeManager, ServerMode } from "@core";
+import type { KlassenDaten, KlassenListeManager, ServerMode } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface KlassenAuswahlProps {
 	serverMode: ServerMode;
 	klassenListeManager: () => KlassenListeManager;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoEintrag: (eintrag: KlassenDaten) => Promise<void>;
 	setGruppenprozess: (value : boolean) => Promise<void>;
 	setFilter: () => Promise<void>;

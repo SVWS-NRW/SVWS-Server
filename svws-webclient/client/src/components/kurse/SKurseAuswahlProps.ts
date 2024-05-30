@@ -1,12 +1,10 @@
-import type { KursDaten, KursListeManager, Schuljahresabschnitt, ServerMode } from "@core";
+import type { KursDaten, KursListeManager, ServerMode } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface KurseAuswahlProps {
 	serverMode: ServerMode;
 	kursListeManager: () => KursListeManager;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
-	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoEintrag: (eintrag: KursDaten) => Promise<void>;
 	setFilter: () => Promise<void>;
 }

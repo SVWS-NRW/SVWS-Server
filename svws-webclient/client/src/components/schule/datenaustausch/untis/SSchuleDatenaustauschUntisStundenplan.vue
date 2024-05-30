@@ -2,7 +2,7 @@
 	<div class="page--content overflow-hidden flex flex-col">
 		<div class="flex flex-col items-start gap-2">
 			<svws-ui-input-wrapper>
-				<abschnitt-auswahl :disable-headless="true" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="a => setAbschnitt(a)" :akt-schulabschnitt="aktSchulabschnitt" />
+				<abschnitt-auswahl :disable-headless="true" :daten="schuljahresabschnittsauswahl" />
 				<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
 				<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
 				<svws-ui-tooltip>
@@ -45,9 +45,9 @@
 
 	const bezeichnung = ref<string>(`Import ${new Date().toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin', hour: 'numeric', minute: 'numeric'})}`);
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const gueltigAb = ref<string>(getGueltigAb(props.aktAbschnitt));
+	const gueltigAb = ref<string>(getGueltigAb(props.schuljahresabschnittsauswahl().aktuell));
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const abschnitt = ref<Schuljahresabschnitt>(props.aktAbschnitt);
+	const abschnitt = ref<Schuljahresabschnitt>(props.schuljahresabschnittsauswahl().aktuell);
 	const file = ref<File | null>(null);
 	const ignoreMissing = ref<boolean>(true);
 
@@ -90,7 +90,7 @@
 		loading.value = false;
 		gueltigAb.value = '';
 		bezeichnung.value = '';
-		abschnitt.value = props.aktAbschnitt;
+		abschnitt.value = props.schuljahresabschnittsauswahl().aktuell;
 		file.value = null;
 	}
 
