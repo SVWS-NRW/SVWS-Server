@@ -32,7 +32,7 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<span>...</span>
+									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, 28 ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<span v-else class="opacity-50">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
@@ -131,6 +131,9 @@
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
 	import {DateUtils } from "@core";
+	import { RouteManager } from '~/router/RouteManager';
+	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
+
 
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;
