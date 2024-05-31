@@ -66,34 +66,8 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static GostKlausurenMetaDataCollection getAllData(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
-//		final List<Integer> jahrgaenge = new ArrayList<>();
-//		jahrgaenge.add(abiturjahr);
-//		switch (halbjahr) {
-//			case GostHalbjahr.EF1, GostHalbjahr.EF2 -> {
-//				jahrgaenge.add(abiturjahr - 1);
-//				jahrgaenge.add(abiturjahr - 2);
-//			}
-//			case GostHalbjahr.Q11, GostHalbjahr.Q12 -> {
-//				jahrgaenge.add(abiturjahr - 1);
-//				jahrgaenge.add(abiturjahr + 1);
-//			}
-//			case GostHalbjahr.Q21, GostHalbjahr.Q22 -> {
-//				jahrgaenge.add(abiturjahr + 1);
-//				jahrgaenge.add(abiturjahr + 2);
-//			}
-//		}
 
 		final List<GostJahrgang> jahrgaenge = DataGostJahrgangsliste.getGostJahrgangsliste(conn);
-
-//		final List<DTOGostJahrgangsdaten> jahrgangsdaten = conn.query("SELECT gj FROM DTOGostJahrgangsdaten WHERE Abi_Jahrgang != -1", DTOGostJahrgangsdaten.class).getResultList();
-
-//		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
-//		final List<DTOSchuljahresabschnitte> abschnitte = conn.query("SELECT sja FROM DTOSchuljahresabschnitte sja WHERE sja.Jahr = :jahr AND sja.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
-//				.setParameter("jahr", schuljahr)
-//				.setParameter("abschnitt", halbjahr.halbjahr)
-//				.getResultList();
-//		if (abschnitte.size() != 1)
-//			throw new ApiOperationException(Status.NOT_FOUND, "Schuljahresabschnitt nicht gefunden.");
 
 		final GostKlausurenMetaDataCollection data = new GostKlausurenMetaDataCollection();
 		for (final GostJahrgang jg : jahrgaenge) {
@@ -114,7 +88,6 @@ public final class DataGostKlausuren extends DataManager<Long> {
 
 		}
 
-//		data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, abschnitte.getFirst().ID, true));
 		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
 		return data;
 	}

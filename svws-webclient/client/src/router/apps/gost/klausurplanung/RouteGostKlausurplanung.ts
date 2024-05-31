@@ -72,7 +72,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return true;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe die Parameter zunächst allgemein
 			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array || to_params.kw instanceof Array)
@@ -108,6 +108,10 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		} catch(e: unknown) {
 			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
+	}
+
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset(); // Hiermit geht auch die Information verloren, welches die letzte ausgewählte Sub-Route war. Dies könnte ggf. über das Sichern der view vermieden werden
 	}
 
 	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
