@@ -1822,6 +1822,32 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
+	 *
+	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 */
+	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetByJahrAndKWOrClosest(final int jahr, final int kalenderwoche) {
+		final StundenplanKalenderwochenzuordnung kwz = _kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
+
+		// Datum innerhalb von "First" und "Last"?
+		if (kwz != null)
+			return kwz;
+
+		// Datum kleiner First?
+		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+		if ((jahr < kwzFirst.jahr) || ((jahr == kwzFirst.jahr) && (kalenderwoche < kwzFirst.kw)))
+			return kwzFirst;
+
+		// Datum größer Last
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+	}
+
+	/**
 	 * Liefert das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
@@ -1835,19 +1861,8 @@ public class StundenplanManager {
 
 		final int kwJahr = e[6];
 		final int kw = e[5];
-		final StundenplanKalenderwochenzuordnung kwz = _kwz_by_jahr_and_kw.getOrNull(kwJahr, kw);
 
-		// Datum innerhalb von "First" und "Last"?
-		if (kwz != null)
-			return kwz;
-
-		// Datum kleiner First?
-		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
-		if ((kwJahr < kwzFirst.jahr) || ((kwJahr == kwzFirst.jahr) && (kw < kwzFirst.kw)))
-			return kwzFirst;
-
-		// Datum größer Last
-		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+		return kalenderwochenzuordnungGetByJahrAndKWOrClosest(kwJahr, kw);
 	}
 
 	/**

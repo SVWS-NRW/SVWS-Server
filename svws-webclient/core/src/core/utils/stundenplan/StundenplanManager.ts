@@ -1767,6 +1767,26 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
+	 *
+	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 */
+	public kalenderwochenzuordnungGetByJahrAndKWOrClosest(jahr : number, kalenderwoche : number) : StundenplanKalenderwochenzuordnung {
+		const kwz : StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
+		if (kwz !== null)
+			return kwz;
+		const kwzFirst : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
+		if ((jahr < kwzFirst.jahr) || ((jahr === kwzFirst.jahr) && (kalenderwoche < kwzFirst.kw)))
+			return kwzFirst;
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
+	}
+
+	/**
 	 * Liefert das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
@@ -1779,13 +1799,7 @@ export class StundenplanManager extends JavaObject {
 		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
 		const kwJahr : number = e[6];
 		const kw : number = e[5];
-		const kwz : StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(kwJahr, kw);
-		if (kwz !== null)
-			return kwz;
-		const kwzFirst : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
-		if ((kwJahr < kwzFirst.jahr) || ((kwJahr === kwzFirst.jahr) && (kw < kwzFirst.kw)))
-			return kwzFirst;
-		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
+		return this.kalenderwochenzuordnungGetByJahrAndKWOrClosest(kwJahr, kw);
 	}
 
 	/**
