@@ -9,7 +9,7 @@
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop="onDrop">
+		<div class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop="onDrop" @dragover.prevent="() => true">
 			<div class="fixed flex items-center justify-center h-3/4 w-64 z-20 pointer-events-none"><span :class="dragFromPausenzeit === undefined ? '':'icon-lg icon-error opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
 			<svws-ui-table :items="stundenplanManager().lehrerGetMengeAsList()" :columns="[{key: 'nachname', label: 'Name'}]" disable-header :no-data="false" type="navigation">
 				<template #cell(nachname)="{rowData: lehrer}">
@@ -27,30 +27,30 @@
 				<!-- Die Überschriften des Stundenplan -->
 				<div class="svws-ui-stundenplan--head">
 					<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-					<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center inline-flex items-center justify-center">
-						<div> {{ wochentage[wochentag.id] }} </div>
+					<div v-for="wochentag in stundenplanManager().pausenzeitGetWochentageAlsEnumRange()" :key="wochentag.id" class="font-bold text-center inline-flex items-center justify-center">
+						<div> {{ wochentag.beschreibung }} </div>
 					</div>
 				</div>
 				<!-- Die Daten des Stundenplans -->
 				<div class="svws-ui-stundenplan--body">
 					<!-- Zeige die Unterrichte und Pausenaufsichten des Stundenplans -->
-					<div v-for="wochentag in wochentagRange" :key="wochentag.id">
+					<div v-for="wochentag in stundenplanManager().pausenzeitGetWochentageAlsEnumRange()" :key="wochentag.id">
 						<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 						<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.hashCode()" class="border rounded-md my-2 mx-1" :style="posPause(pause)">
-							<div class="font-bold px-2 py-1" :class="{'bg-primary/10': dragOverPausenzeit?.pauseID === pause.id}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
+							<div class="font-bold px-2 py-1"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen().size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center">
+							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center">
 								<div>Bereich</div>
-								<div v-for="typ in wochentypen()" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}</div>
+								<div v-for="typ in wochentypen" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}</div>
 							</div>
 							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
-								<div v-for="typ in wochentypen()" :key="typ"
+								<div v-for="typ in wochentypen" :key="typ"
 									@drop="onDrop" class="rounded-md" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave.stop="dragOverPausenzeit = undefined"
 									:class="{'bg-green-400': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && !bereichGesperrtTyp, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && bereichGesperrtTyp}">
 									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'bg-red-400 cursor-grabbing': lehrer.id === dragLehrer?.id, 'cursor-grab': !dragLehrer}"
-										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" @dragend="dragFromPausenzeit = undefined" draggable="true">
+										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" draggable="true">
 										<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 										<span>{{ lehrer.kuerzel }}</span>
 									</div>
@@ -153,11 +153,12 @@
 	}
 
 	async function onDrop() {
-		if (bereichGesperrtTyp.value || dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
+		if (bereichGesperrtTyp.value)
+			return dragReset();
+		await delAufsicht();
+		if (dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
 			return dragReset();
 		const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
-		if (dragFromPausenzeit.value !== undefined)
-			await delAufsicht(dragLehrer.value.id, dragFromPausenzeit.value.aufsichtsbereichID, dragFromPausenzeit.value.typ, dragFromPausenzeit.value.pauseID);
 		const bereiche = new ArrayList<number>();
 		bereiche.add(aufsichtsbereichID);
 		for (const aufsicht of dragOverAufsichten.value)
@@ -170,7 +171,7 @@
 		return dragReset();
 	}
 
-	function wochentypen(): List<number> {
+	const wochentypen = computed<List<number>>(() => {
 		let modell = props.stundenplanManager().getWochenTypModell();
 		if (modell <= 1)
 			modell = 0;
@@ -178,7 +179,7 @@
 		for (let n = 0; n <= modell; n++)
 			result.add(n);
 		return result;
-	}
+	})
 
 	const klasse = computed<StundenplanKlasse | undefined>({
 		get: () => {
@@ -199,10 +200,14 @@
 		return lehrer;
 	})
 
-	async function delAufsicht(lehrerID: number, aufsichtsbereichID: number, wochentyp: number, pauseID: number) {
+	async function delAufsicht() {
+		if (dragFromPausenzeit.value === undefined || dragLehrer.value === undefined)
+			return;
+		const { pauseID, aufsichtsbereichID, typ } = dragFromPausenzeit.value;
+		const { id: lehrerID } = dragLehrer.value;
 		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
 		for (const aufsicht of aufsichten) {
-			if ((aufsicht.idLehrer === lehrerID) && (aufsicht.wochentyp === wochentyp) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
+			if ((aufsicht.idLehrer === lehrerID) && (aufsicht.wochentyp === typ) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
 				if (aufsicht.bereiche.size() === 1)
 					await props.removeAufsicht(aufsicht.id);
 				else {
@@ -215,9 +220,6 @@
 			}
 		}
 	}
-
-	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
-	const wochentagRange = computed(() => props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
 
 	const getPausenzeitenWochentag = (wochentag: Wochentag) => computed<Array<StundenplanPausenzeit>>(() => {
 		if (klasse.value !== undefined)
@@ -246,15 +248,15 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-			@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row gap-2
-		}
+		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row gap-2;
+	}
 
 	.svws-ui-stundenplan--head, .svws-ui-stundenplan--body {
-		@apply  grid auto-cols-fr border-none pt-0;
+		@apply grid auto-cols-fr border-none pt-0;
 		grid-template-columns: initial;
 	}
 
-	.svws-ui-tr {
+	.svws-ui-table.svws-type-navigation .svws-ui-tbody .svws-ui-tr {
 		@apply w-full;
 	}
 
