@@ -11,13 +11,13 @@
 		</Teleport>
 		<div class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop="onDrop">
 			<div class="fixed flex items-center justify-center h-3/4 w-64 z-20 pointer-events-none"><span :class="dragFromPausenzeit === undefined ? '':'icon-lg icon-error opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
-			<svws-ui-table :items="stundenplanManager().lehrerGetMengeAsList()" :columns="[{key: 'nachname', label: 'Name'}]" disable-header>
+			<svws-ui-table :items="stundenplanManager().lehrerGetMengeAsList()" :columns="[{key: 'nachname', label: 'Name'}]" disable-header :no-data="false" type="navigation">
 				<template #cell(nachname)="{rowData: lehrer}">
-					<div class="svws-ui-badge select-none group"
+					<div class="svws-ui-badge select-none group flex place-items-center w-full"
 						@dragstart="onDrag(lehrer)" @dragover.prevent="() => true"
-						:class="dragData ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
-						<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
-						<span class="my-0.5 truncate"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+						:class="dragLehrer ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
+						<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
+						<span class="truncate"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
 					</div>
 				</template>
 			</svws-ui-table>
@@ -36,24 +36,22 @@
 					<!-- Zeige die Unterrichte und Pausenaufsichten des Stundenplans -->
 					<div v-for="wochentag in wochentagRange" :key="wochentag.id">
 						<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-						<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.hashCode()" class="border rounded-md my-2 mx-1" :style="posPause(pause)"
-							@dragover.prevent="dragOverPausenzeit = pause" @dragleave.stop="dragOverPausenzeit = undefined"
-							@click="selectPausenzeit(pause)">
-							<div class="font-bold px-2 py-1" :class="{'bg-primary/10': dragOverPausenzeit?.id === pause.id}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
+						<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.hashCode()" class="border rounded-md my-2 mx-1" :style="posPause(pause)">
+							<div class="font-bold px-2 py-1" :class="{'bg-primary/10': dragOverPausenzeit?.pauseID === pause.id}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen().size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold">
+							<div v-if="wochentypen().size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center">
 								<div>Bereich</div>
 								<div v-for="typ in wochentypen()" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}</div>
 							</div>
-							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
-								@dragover.prevent="setDragOverBereich(aufsichtsbereich)" @dragleave.stop="dragOverBereich = undefined">
+							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen()" :key="typ"
-									@drop="onDrop" class="rounded-md" @dragover.prevent="dragOverWochentyp = typ" @dragleave.stop="dragOverWochentyp = undefined"
-									:class="{'bg-green-400': (dragOverPausenzeit?.id === pause.id) && (dragOverBereich?.id === aufsichtsbereich.id) && (!dragOverBereichGesperrt) && (dragOverWochentyp === typ), 'bg-red-400/50': (dragOverPausenzeit?.id === pause.id) && (dragOverBereich?.id === aufsichtsbereich.id) && dragOverBereichGesperrt && dragOverWochentyp === typ}">
-									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md" :class="{'bg-red-400 cursor-grabbing': lehrer.id === dragData?.id, 'cursor-grab': !dragData}"
+									@drop="onDrop" class="rounded-md" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave.stop="dragOverPausenzeit = undefined"
+									:class="{'bg-green-400': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && !bereichGesperrtTyp, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && bereichGesperrtTyp}">
+									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'bg-red-400 cursor-grabbing': lehrer.id === dragLehrer?.id, 'cursor-grab': !dragLehrer}"
 										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" @dragend="dragFromPausenzeit = undefined" draggable="true">
+										<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 										<span>{{ lehrer.kuerzel }}</span>
 									</div>
 								</div>
@@ -71,8 +69,10 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
-	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer, StundenplanAufsichtsbereich } from "@core";
+	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
 	import { ArrayList } from "@core";
+
+	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
 
 	const props = defineProps<StundenplanPausenProps>();
 
@@ -80,61 +80,94 @@
 	onMounted(() => isMounted.value = true);
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
-	const selectedPausenzeit = ref<StundenplanPausenzeit|undefined>();
-	const selectedPausenaufsichtSet = ref<Set<number>>(new Set());
-	const wochentypAnzeige = ref<number>(0);
-	const dragData = ref<StundenplanLehrer|undefined>(undefined);
-	const dragFromPausenzeit = ref<{pauseID: number; aufsichtsbereichID: number; typ: number}|undefined>(undefined);
-	const dragOverPausenzeit = ref<StundenplanPausenzeit>();
-	const dragOverAufsichten = (pause: StundenplanPausenzeit) => computed<List<StundenplanPausenaufsicht>>(() => {
-		if (dragOverPausenzeit.value !== undefined)
-			return props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(dragOverPausenzeit.value.id)
-		return new ArrayList();
-	});
-	const dragOverBereich = ref<StundenplanAufsichtsbereich>();
-	const dragOverBereichGesperrt = ref<boolean>(false);
-	const dragOverWochentyp = ref<number>();
+	const dragLehrer = ref<StundenplanLehrer|undefined>(undefined);
+	const dragFromPausenzeit = ref<PausenzeitBereichTyp>();
+	const dragOverPausenzeit = ref<PausenzeitBereichTyp>();
 
-
-	function onDrag(data: StundenplanLehrer|undefined, fromPausenzeit?: {pauseID: number; aufsichtsbereichID: number; typ: number}) {
-		dragData.value = data;
+	function onDrag(data: StundenplanLehrer|undefined, fromPausenzeit?: PausenzeitBereichTyp) {
+		dragLehrer.value = data;
 		dragFromPausenzeit.value = fromPausenzeit;
 	}
 
-	function setDragOverBereich(bereich: StundenplanAufsichtsbereich) {
-		if ((dragOverBereich.value?.id === bereich.id) || (dragData.value === undefined) || (dragOverPausenzeit.value === undefined))
-			return;
-		dragOverBereich.value = bereich;
-		for (const aufsicht of dragOverAufsichten(dragOverPausenzeit.value).value)
-			if ((aufsicht.idLehrer === dragData.value.id) && (aufsicht.bereiche.contains(bereich.id))
-				&& ((dragOverWochentyp.value === aufsicht.wochentyp) || (aufsicht.wochentyp === 0) || ((aufsicht.wochentyp) !== 0 && (dragOverWochentyp.value === 0)))) {
-				dragOverBereichGesperrt.value = true;
+	function setDragOver(pauseID: number, aufsichtsbereichID: number, typ: number) {
+		if (dragOverPausenzeit.value !== undefined) {
+			const { pauseID: pID, aufsichtsbereichID: aID, typ: t } = dragOverPausenzeit.value;
+			if (pauseID === pID && aufsichtsbereichID === aID && typ === t)
 				return;
-			}
-		dragOverBereichGesperrt.value = false;
+		}
+		dragOverPausenzeit.value = { pauseID, aufsichtsbereichID, typ };
+	}
+
+	const dragOverAufsichten = computed<List<StundenplanPausenaufsicht>>(() => {
+		if (dragOverPausenzeit.value !== undefined)
+			return props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(dragOverPausenzeit.value.pauseID);
+		return new ArrayList();
+	});
+
+	const dragOverAufsichtenBereich = computed<List<StundenplanPausenaufsicht>>(() => {
+		const list = new ArrayList<StundenplanPausenaufsicht>();
+		for (const a of dragOverAufsichten.value)
+			for (const b of a.bereiche)
+				if (b === dragOverPausenzeit.value?.aufsichtsbereichID)
+					list.add(a);
+		return list;
+	})
+
+	const dragOverAufsichtenBereichTyp = computed<List<StundenplanPausenaufsicht>>(() => {
+		const list = new ArrayList<StundenplanPausenaufsicht>();
+		for (const a of dragOverAufsichtenBereich.value)
+			if (a.wochentyp === dragOverPausenzeit.value?.typ)
+				list.add(a);
+		return list;
+	})
+
+	const bereichGesperrt = computed<boolean>(() => {
+		if (dragFromPausenzeit.value?.pauseID === dragOverPausenzeit.value?.pauseID)
+			return false;
+		for (const a of dragOverAufsichtenBereich.value)
+			if (a.idLehrer === dragLehrer.value?.id && a.wochentyp === 0)
+				return true;
+		return false;
+	})
+
+	const bereichGesperrtTyp = computed<boolean>(() => {
+		if (bereichGesperrt.value === true)
+			return true;
+		for (const a of dragOverAufsichtenBereichTyp.value)
+			if (a.idLehrer === dragLehrer.value?.id && a.wochentyp === dragOverPausenzeit.value?.typ)
+				return true;
+		return false;
+	})
+
+	const isDraggingOver = (pauseID: number, aufsichtsbereichID: number, typ: number) => computed(() => {
+		if (dragOverPausenzeit.value === undefined)
+			return false;
+		const { pauseID: pID, aufsichtsbereichID: aID, typ: t } = dragOverPausenzeit.value;
+		return (pauseID === pID && aufsichtsbereichID === aID && typ === t);
+	})
+
+	function dragReset() {
+		dragOverPausenzeit.value = undefined;
+		dragFromPausenzeit.value = undefined;
+		dragLehrer.value = undefined;
 	}
 
 	async function onDrop() {
-		if ((dragFromPausenzeit.value !== undefined) && (dragData.value !== undefined)) {
-			const { aufsichtsbereichID, typ, pauseID } = dragFromPausenzeit.value;
-			await delAufsicht(dragData.value.id, aufsichtsbereichID, typ, pauseID);
-		}
-		if (dragOverBereichGesperrt.value || (dragData.value === undefined) || (dragOverBereich.value === undefined) || (dragOverPausenzeit.value === undefined) || (dragOverWochentyp.value === undefined)) {
-			dragOverPausenzeit.value = undefined;
-			return;
-		}
+		if (bereichGesperrtTyp.value || dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
+			return dragReset();
+		const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
+		if (dragFromPausenzeit.value !== undefined)
+			await delAufsicht(dragLehrer.value.id, dragFromPausenzeit.value.aufsichtsbereichID, dragFromPausenzeit.value.typ, dragFromPausenzeit.value.pauseID);
 		const bereiche = new ArrayList<number>();
-		bereiche.add(dragOverBereich.value.id);
-		for (const aufsicht of dragOverAufsichten(dragOverPausenzeit.value).value)
-			if ((aufsicht.idLehrer === dragData.value.id) && (dragOverWochentyp.value === aufsicht.wochentyp)) {
+		bereiche.add(aufsichtsbereichID);
+		for (const aufsicht of dragOverAufsichten.value)
+			if (aufsicht.idLehrer === dragLehrer.value.id) {
 				bereiche.addAll(aufsicht.bereiche);
-				dragOverPausenzeit.value = undefined;
 				await props.patchAufsicht({bereiche}, aufsicht.id);
-				return;
+				return dragReset();
 			}
-		await props.addAufsicht({idLehrer: dragData.value.id, idPausenzeit: dragOverPausenzeit.value.id, bereiche, wochentyp: dragOverWochentyp.value});
-		dragOverPausenzeit.value = undefined;
-		dragData.value = undefined;
+		await props.addAufsicht({idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche, wochentyp: typ});
+		return dragReset();
 	}
 
 	function wochentypen(): List<number> {
@@ -155,19 +188,6 @@
 		},
 		set: (value) => _klasse.value = value
 	});
-
-	function selectPausenzeit(pause: StundenplanPausenzeit) {
-		for (const a of selectedPausenaufsichtSet.value)
-			if (props.stundenplanManager().pausenaufsichtGetByIdOrException(a).idPausenzeit === pause.id) {
-				selectedPausenaufsichtSet.value.clear();
-				break;
-			}
-		if (selectedPausenzeit.value?.id === pause.id) {
-			selectedPausenzeit.value = undefined;
-			selectedPausenaufsichtSet.value.clear();
-		} else
-			selectedPausenzeit.value = pause;
-	}
 
 	const hatAufsicht = (pauseID: number, aufsichtsbereichID: number, typ: number) => computed(() => {
 		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
@@ -225,13 +245,17 @@
 
 <style lang="postcss" scoped>
 
-.page--content {
-		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row gap-2
-	}
+	.page--content {
+			@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row gap-2
+		}
 
 	.svws-ui-stundenplan--head, .svws-ui-stundenplan--body {
 		@apply  grid auto-cols-fr border-none pt-0;
 		grid-template-columns: initial;
+	}
+
+	.svws-ui-tr {
+		@apply w-full;
 	}
 
 </style>
