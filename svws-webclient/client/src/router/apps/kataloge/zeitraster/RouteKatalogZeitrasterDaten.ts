@@ -1,9 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeitProps";
 import type { LehrerListeEintrag} from "@core";
+import type { RouteKatalogZeitraster} from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteKatalogZeitraster} from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
@@ -35,7 +35,6 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<any, RouteKatalogZeit
 			addZeitraster: routeKatalogZeitraster.data.addZeitraster,
 			removeZeitraster: routeKatalogZeitraster.data.removeZeitraster,
 			importZeitraster: undefined,//routeKatalogZeitraster.data.importZeitraster,
-			addAufsicht: async ()=>{},//routeKatalogZeitraster.data.addAufsicht,
 			selected: () => routeKatalogZeitraster.data.selected,
 			setSelection: routeKatalogZeitraster.data.setSelection,
 			schulform: api.schulform,

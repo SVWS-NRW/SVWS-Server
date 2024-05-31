@@ -40,7 +40,7 @@
 							@dragover.prevent="dragOverPausenzeit = pause" @dragleave.stop="dragOverPausenzeit = undefined"
 							@click="selectPausenzeit(pause)">
 							<div class="font-bold px-2 py-1" :class="{'bg-primary/10': dragOverPausenzeit?.id === pause.id}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
-							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-50 font-bold"> {{ [...pause.klassen].map(k => stundenplanManager().klasseGetByIdOrException(k).kuerzel + " ") }} </div>
+							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
 							<div v-if="wochentypen().size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold">
 								<div>Bereich</div>
@@ -102,7 +102,7 @@
 	}
 
 	function setDragOverBereich(bereich: StundenplanAufsichtsbereich) {
-		if ((dragOverBereich.value?.id === bereich.id) || (dragData.value === undefined))
+		if ((dragOverBereich.value?.id === bereich.id) || (dragData.value === undefined) || (dragOverPausenzeit.value === undefined))
 			return;
 		dragOverBereich.value = bereich;
 		for (const aufsicht of dragOverAufsichten(dragOverPausenzeit.value).value)

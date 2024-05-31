@@ -25,7 +25,7 @@
 	const modelle = ['keins', null, 'AB-Wochen', 'ABC-Wochen', 'ABCD-Wochen', 'weitere'];
 
 	const emit = defineEmits<{
-		change: [val: boolean];
+		change: [val: boolean | undefined];
 	}>()
 
 	const _showModal = ref<boolean>(true);

@@ -4,7 +4,6 @@ import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/daten
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -46,11 +45,9 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		return this.getRoute();
 	}
 
-	public async enter() {
-		return this.setChild(this.defaultChild!);
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			return this.setChild(this.defaultChild!);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
