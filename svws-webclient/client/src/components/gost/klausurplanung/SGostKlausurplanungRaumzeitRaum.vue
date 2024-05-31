@@ -3,7 +3,8 @@
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
-			'bg-red-200': raum.idTermin !== raummanager().getHauptTermin().id,
+			'border-red-500': raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse,
+			'bg-red-200': raum.idTermin !== raummanager().getHauptTermin().id, // TODO Priorität und warum überhaupt???
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
@@ -16,7 +17,12 @@
 					:items="raeumeVerfuegbar"
 					:class="raum.idStundenplanRaum === null ? 'bg-yellow-300 rounded' : ''" />
 				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
-					<span class="icon i-ri-alert-fill" />
+					<svws-ui-tooltip>
+						<template #content>
+							Derzeitige Raumbelegung überschreitet die Raumkapazität
+						</template>
+						<span class="icon icon-error i-ri-alert-fill" />
+					</svws-ui-tooltip>
 				</span>
 			</div>
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
