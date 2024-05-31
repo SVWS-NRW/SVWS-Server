@@ -47,7 +47,8 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 		} else if ((kw === undefined) && (kwAlt !== undefined)) {
 			return this.getRoute(abiturjahr, halbjahr.id, kwAlt);
 		} else if (kw !== undefined) {
-			routeGostKlausurplanung.data.kalenderwoche.value = routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByJahrAndKWOrException(2019, kw);
+			if (routeGostKlausurplanung.data.kalenderwoche.value.jahr === -1)
+				routeGostKlausurplanung.data.kalenderwoche.value = routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByJahrAndKWOrClosest(new Date().getUTCFullYear(), kw);
 		}
 	}
 
