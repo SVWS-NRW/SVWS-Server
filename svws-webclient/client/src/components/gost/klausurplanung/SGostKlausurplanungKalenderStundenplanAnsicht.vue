@@ -49,7 +49,7 @@
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20">
+						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20 pointer-events-none">
 							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
 								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag, stunde) }}</span>
