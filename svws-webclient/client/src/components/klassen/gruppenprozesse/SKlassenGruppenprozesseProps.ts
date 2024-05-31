@@ -1,10 +1,9 @@
 import type { Schulform,  KlassenListeManager, List, Schulgliederung } from "@core";
-import {ArrayList} from "@core";
 
 export interface KlassenGruppenprozesseProps {
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
 	klassenListeManager: () => KlassenListeManager;
-	deleteKlassen: () => Promise<[boolean, ArrayList<string | null>]>;
-	deleteKlassenCheck: () => [boolean, ArrayList<string>];
+	deleteKlassen: () => Promise<[boolean, List<string | null>]>;
+	deleteKlassenCheck: () => [boolean, List<string>];
 }

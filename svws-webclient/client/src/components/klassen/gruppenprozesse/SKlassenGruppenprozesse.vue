@@ -1,17 +1,15 @@
 <template>
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
-			<svws-ui-action-button title="Löschen"
-								   description="Ausgewählte Klassen werden gelöscht."
-								   icon="i-ri-delete-bin-line"
-								   :action-function="deleteKlassen"
-								   action-label="Löschen"
-								   :is-loading="loading"
-								   :is-active="currentAction === 'delete'"
-								   :actionDisabled="!preConditionCheck[0]"
-								   @click="toggleDeleteKlassen" >
-				<span style="color: red" v-if="!preConditionCheck[0]" v-for="message in preConditionCheck[1]">{{message}}<br></span>
-				<span v-else>Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+			<svws-ui-action-button title="Löschen" description="Ausgewählte Klassen werden gelöscht." icon="i-ri-delete-bin-line"
+				:action-function="deleteKlassen" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
+				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKlassen">
+				<span v-if="preConditionCheck[0] == true">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+				<template v-else>
+					<template v-for="message in preConditionCheck[1]" :key="message">
+						<span class="text-error"> {{ message }} <br> </span>
+					</template>
+				</template>
 			</svws-ui-action-button>
 			<log-box :logs :status>
 				<template #button>
@@ -26,7 +24,7 @@
 
 	import {ref, computed} from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
-	import {List} from "@core";
+	import type { List } from "@core";
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 
@@ -38,7 +36,6 @@
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete')
 			return props.deleteKlassenCheck();
-
 		return [false, []];
 	})
 

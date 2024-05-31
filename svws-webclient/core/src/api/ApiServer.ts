@@ -7222,9 +7222,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteKlassen für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/delete/multiple
 	 *
-	 * Entfernt mehrere Klassen. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen der Klassen erfüllt
-sind und der SVWS-Benutzer die notwendige Berechtigung hat.
-
+	 * Entfernt mehrere Klassen. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernender Klassen erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.

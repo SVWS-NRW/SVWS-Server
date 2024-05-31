@@ -34,7 +34,6 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
-	import { ServerMode } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import {computed, onMounted, ref, shallowRef} from "vue";
 
@@ -131,7 +130,7 @@
 	})
 
 	onMounted(() => {
-		setAuswahl([... props.klassenListeManager().liste.auswahl()])
+		void setAuswahl([... props.klassenListeManager().liste.auswahl()]);
 	})
 
 	async function setAuswahl(items : KlassenDaten[]) {
@@ -139,11 +138,8 @@
 		for (const item of items)
 			if (props.klassenListeManager().liste.hasValue(item))
 				props.klassenListeManager().liste.auswahlAdd(item);
-
 		selectedItems.value = [ ... props.klassenListeManager().liste.auswahl() ]
-
 		await props.setGruppenprozess(selectedItems.value.length > 0);
-
 	}
 
 	function lehrerkuerzel(list: number[]) {

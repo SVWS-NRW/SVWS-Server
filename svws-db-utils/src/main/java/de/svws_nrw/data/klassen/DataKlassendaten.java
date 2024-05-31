@@ -61,19 +61,17 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 *
 	 * @param schulform                  die Schulform
 	 * @param mapSchuljahresabschnitte   die Map mit den Schuljahresabschnitten der Schule
-	 * @param klasse			         die Klasse
-	 * @param klassenLeitungen	         die Leitungen der Klasse
-	 * @param schueler			         die Schüler der Klasse
+	 * @param klasse                     die Klasse
+	 * @param klassenLeitungen           die Leitungen der Klasse
+	 * @param schueler                   die Schüler der Klasse
 	 * @param mapKlassenVorher           die Klassen im vorigen Schuljahresabschnitt, sofern in der DB vorhanden
 	 * @param mapKlassenNachher          die Klassen im folgenden Schuljahresabschnitt, sofern in der DB bereits angelegt
 	 *
 	 * @return Core-DTO mit allen Klasseninformationen
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static KlassenDaten mapDTO(final Schulform schulform, final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte,
-			final DTOKlassen klasse, final List<DTOKlassenLeitung> klassenLeitungen,
-			final List<DTOSchueler> schueler, final Map<String, DTOKlassen> mapKlassenVorher, final Map<String, DTOKlassen> mapKlassenNachher) throws ApiOperationException {
+			final DTOKlassen klasse, final List<DTOKlassenLeitung> klassenLeitungen, final List<DTOSchueler> schueler,
+			final Map<String, DTOKlassen> mapKlassenVorher, final Map<String, DTOKlassen> mapKlassenNachher) {
 		final KlassenDaten daten = new KlassenDaten();
 		daten.id = klasse.ID;
 		daten.idSchuljahresabschnitt = klasse.Schuljahresabschnitts_ID;
@@ -183,8 +181,9 @@ public final class DataKlassendaten extends DataManager<Long> {
 	/**
 	 * Gibt die Daten einer Klasse zu deren ID zurück.
 	 *
-	 * @param id	Die ID der Klasse.
-	 * @return		Die Daten der KLasse zur ID.
+	 * @param id   Die ID der Klasse.
+	 *
+	 * @return die Daten der Klasse zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -199,10 +198,13 @@ public final class DataKlassendaten extends DataManager<Long> {
 		return getFromIDInternal(id, dtoSchueler);
 	}
 
+
 	/**
-	 * @param id ID der Klasse
+	 * Bestimmt die IDs der Schüler, welche zu der übergebenen ID der Klasse gehören.
 	 *
-	 * @return List von Schüler IDs die der Klasse zugeordnet sind
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die List von Schüler IDs, welche der Klasse zugeordnet sind
 	 */
 	public List<Long> getSchuelerIDsByKlassenID(final Long id) {
 		return conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", id, DTOSchuelerLernabschnittsdaten.class).stream()
@@ -215,8 +217,9 @@ public final class DataKlassendaten extends DataManager<Long> {
 	/**
 	 * Gibt die Daten einer Klasse zu deren ID ohne Schülerliste zurück.
 	 *
-	 * @param id	Die ID der Klasse.
-	 * @return		Die Daten der KLasse zur ID ohne Schülerliste.
+	 * @param id   Die ID der Klasse.
+	 *
+	 * @return die Daten der KLasse zur ID ohne Schülerliste.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -231,9 +234,9 @@ public final class DataKlassendaten extends DataManager<Long> {
 	/**
 	 * Gibt eine Liste von Klassen zu einer SchuljahresabschnittsID zurück.
 	 *
-	 * @param id			Die ID des Schuljahresabschnitts.
+	 * @param id   Die ID des Schuljahresabschnitts.
 	 *
-	 * @return				Die Daten der Klasse zum Schuljahresabschnitt.
+	 * @return die Daten der Klasse zum Schuljahresabschnitt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -488,39 +491,35 @@ public final class DataKlassendaten extends DataManager<Long> {
 	/**
 	 * Löscht mehrere Klassen und gibt das Ergebnis der Lösch-Operationen als Liste von {@link SimpleOperationResponse} zurück.
 	 *
-	 * @param ids IDs der zu löschenden Klassen
+	 * @param ids   die IDs der zu löschenden Klassen
 	 *
-	 * @return Response, mit einer Liste von {@link SimpleOperationResponse} zu den angefragten Lösch-Operationen.
+	 * @return die Response mit einer Liste von {@link SimpleOperationResponse} zu den angefragten Lösch-Operationen.
 	 */
 	public Response deleteMultiple(final List<Long> ids) {
+		// Bestimme die Datenbank-DTOs der Klassen
+		final List<DTOKlassen> klassen = this.conn.queryNamed("DTOKlassen.id.multiple", ids, DTOKlassen.class).stream().toList();
+
+		// Prüfe ob das Löschen der Klassen erlaubt ist
 		final List<SimpleOperationResponse> responses = new ArrayList<>();
-
-		final List<DTOKlassen> klassen = this.conn.queryNamed("DTOKlassen.id.multiple", ids, DTOKlassen.class)
-			.stream().toList();
-
-		// Vorbedingungen zum Löschen der Klassen prüfen.
 		klassen.forEach(klasse -> responses.add(checkDeletePreConditions(klasse)));
 
+		// Lösche die Klassen und gib den Erfolg in der Response zurück
+		final Map<Long, SimpleOperationResponse> mapResponses = responses.stream().collect(Collectors.toMap(r -> r.id, r -> r));
 		for (final DTOKlassen klasse : klassen) {
-			final SimpleOperationResponse operationResponse = responses.stream()
-				.filter(response -> response.id == klasse.ID)
-				.findFirst()
-				.orElseThrow(() -> new DeveloperNotificationException(
-					"Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(klasse.ID)));
-
-			if (operationResponse.log.isEmpty()) {
+			final SimpleOperationResponse operationResponse = mapResponses.get(klasse.ID);
+			if (operationResponse == null)
+				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(klasse.ID));
+			if (operationResponse.log.isEmpty())
 				operationResponse.success = this.conn.transactionRemove(klasse);
-			}
 		}
-
 		return Response.ok().entity(responses).build();
 	}
 
 	/**
-	 * Methode prüft, ob alle Vorbedingungen zum Löschen einer Klasse erfüllt sind.
-	 * Es wird ein {@link SimpleOperationResponse} zurückgegeben.
+	 * Diese Methode prüft, ob alle Vorbedingungen zum Löschen einer Klasse erfüllt sind.
+	 * Es wird eine {@link SimpleOperationResponse} zurückgegeben.
 	 *
-	 * @param dtoKlasse  Die Klasse, die gelöscht werden soll
+	 * @param dtoKlasse   das DTO der Klasse, die gelöscht werden soll
 	 *
 	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
 	 */
@@ -528,12 +527,10 @@ public final class DataKlassendaten extends DataManager<Long> {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
 		operationResponse.id = dtoKlasse.ID;
 
-		// Klasse darf keine verknüpften Schüler (Lernabschnittsdaten) mehr haben
+		// Die Klasse darf keine Schüler beinhalten. Dies kann an zugeordneten Lernabschnittsdaten geprüft werden
 		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(dtoKlasse.ID);
-		if (!schuelerIds.isEmpty()) {
-			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler."
-				.formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
-		}
+		if (!schuelerIds.isEmpty())
+			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler.".formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
 
 		return operationResponse;
 	}

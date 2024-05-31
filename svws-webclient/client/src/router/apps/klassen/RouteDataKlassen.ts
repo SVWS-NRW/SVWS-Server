@@ -127,25 +127,18 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	public deleteKlassenCheck = (): [boolean, ArrayList<string>] => {
 		const errorLog: ArrayList<string> = new ArrayList();
-
-		if (!this.klassenListeManager.liste.auswahlExists()) {
+		if (!this.klassenListeManager.liste.auswahlExists())
 			errorLog.add('Es wurde keine Klasse zum Löschen ausgewählt.')
-		}
-
-		for (const klasse of this.klassenListeManager.liste.auswahlSorted()) {
-			if (klasse.schueler.size() > 0) {
-				errorLog.add(`Klasse ${klasse.kuerzel} (ID: ${klasse.id}) kann nicht gelöscht werden, weil es noch verknüpfte Schüler gibt.`);
-			}
-		}
-
+		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
+			if (klasse.schueler.size() > 0)
+				errorLog.add(`Klasse ${klasse.kuerzel} (ID: ${klasse.id}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
 		return [errorLog.isEmpty(), errorLog];
 	}
 
 	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]>  => {
 		const ids = new ArrayList<number>();
-		for (const klasse of this.klassenListeManager.liste.auswahlSorted()) {
+		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
 			ids.add(klasse.id);
-		}
 
 		const operationResponses = await api.server.deleteKlassen(ids, api.schema);
 
@@ -159,7 +152,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 				klassenToRemove.add(klasse);
 			} else {
 				status = false;
-				logMessages.addAll(response.log)
+				logMessages.addAll(response.log);
 			}
 		}
 
@@ -193,12 +186,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoEintrag = async (eintrag: KlassenDaten) => {
-		if (eintrag === null)
-			return
-
+		if ((eintrag === null) || (eintrag === undefined))
+			return;
 		if (!this._state.value.klassenListeManager.liste.auswahlExists())
 			this._state.value.gruppenprozesseEnabled = false;
-
 		await RouteManager.doRoute(this.view.getRoute(eintrag.id));
 	}
 
@@ -208,18 +199,15 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	setGruppenprozess = async (value: boolean) => {
 		this._state.value.gruppenprozesseEnabled = value;
-
 		if (value && this._state.value.view === routeKlasseGruppenprozesse) {
 			this.commit();
 			return;
 		}
-
 		if (value) {
 			this._state.value.oldView = this._state.value.view;
 			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));
 			return;
 		}
-
 		const view = this._state.value.oldView ?? routeKlasseDaten;
 		this._state.value.oldView = undefined;
 		await RouteManager.doRoute(view.getRoute(this._state.value.klassenListeManager.auswahlID() ?? -1));
