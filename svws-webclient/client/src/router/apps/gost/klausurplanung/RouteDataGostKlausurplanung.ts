@@ -376,8 +376,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			this.kursklausurmanager.kursklausurAddAll(result.kursklausuren);
 			this.kursklausurmanager.schuelerklausurAddAll(result.schuelerklausuren);
 			this.kursklausurmanager.schuelerklausurterminAddAll(result.schuelerklausurtermine);
-			this.commit();
 		} finally {
+			this.commit();
 			api.status.stop();
 		}
 	}

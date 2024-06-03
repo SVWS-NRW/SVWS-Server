@@ -394,10 +394,12 @@ public class GostKursklausurManager {
 	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() { // ggf. neuer Manager
 		_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.clear();
 		for (final @NotNull GostSchuelerklausur sk : _schuelerklausurmenge) {
-			final GostSchuelerklausurTermin sktLast = schuelerklausurterminaktuellBySchuelerklausur(sk.id);
-			if (sktLast.folgeNr > 0) {
-				final GostKlausurvorgabe v = vorgabeBySchuelerklausurTermin(sktLast);
-				Map4DUtils.getOrCreateArrayList(_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin != null ? sktLast.idTermin : -1).add(sktLast);
+			if (_schuelerklausurterminmenge_by_idSchuelerklausur.containsKey(sk.id)) {
+				final GostSchuelerklausurTermin sktLast = schuelerklausurterminaktuellBySchuelerklausur(sk.id);
+				if (sktLast.folgeNr > 0) {
+					final GostKlausurvorgabe v = vorgabeBySchuelerklausurTermin(sktLast);
+					Map4DUtils.getOrCreateArrayList(_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin != null ? sktLast.idTermin : -1).add(sktLast);
+				}
 			}
 		}
 	}

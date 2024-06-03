@@ -402,10 +402,12 @@ export class GostKursklausurManager extends JavaObject {
 	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
 		this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.clear();
 		for (const sk of this._schuelerklausurmenge) {
-			const sktLast : GostSchuelerklausurTermin | null = this.schuelerklausurterminaktuellBySchuelerklausur(sk.id);
-			if (sktLast.folgeNr > 0) {
-				const v : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausurTermin(sktLast);
-				Map4DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
+			if (this._schuelerklausurterminmenge_by_idSchuelerklausur.containsKey(sk.id)) {
+				const sktLast : GostSchuelerklausurTermin | null = this.schuelerklausurterminaktuellBySchuelerklausur(sk.id);
+				if (sktLast.folgeNr > 0) {
+					const v : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausurTermin(sktLast);
+					Map4DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
+				}
 			}
 		}
 	}

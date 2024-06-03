@@ -212,7 +212,8 @@
 			if (err instanceof OpenApiError) {
 				modalError.value = await err.response?.text();
 				modal.value = true;
-			}
+			} else
+				throw err;
 		}
 	}
 
