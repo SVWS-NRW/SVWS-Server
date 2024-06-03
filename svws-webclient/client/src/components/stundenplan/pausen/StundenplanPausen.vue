@@ -162,7 +162,7 @@
 		const bereiche = new ArrayList<number>();
 		bereiche.add(aufsichtsbereichID);
 		for (const aufsicht of dragOverAufsichten.value)
-			if (aufsicht.idLehrer === dragLehrer.value.id) {
+			if (aufsicht.idLehrer === dragLehrer.value.id && aufsicht.wochentyp === typ) {
 				bereiche.addAll(aufsicht.bereiche);
 				await props.patchAufsicht({bereiche}, aufsicht.id);
 				return dragReset();
