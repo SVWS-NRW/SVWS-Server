@@ -186,7 +186,7 @@ public final class DataENMDaten extends DataManager<Long> {
     	// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
     	final List<Long> idsLeistungen = schuelerabschnitte.stream().map(a -> a.leistungID).toList();
     	final List<DTOSchuelerTeilleistung> listTeilleistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
-    			: conn.queryNamed("DTOSchuelerTeilleistung.leistung_id.multiple", idsLeistungen, DTOSchuelerTeilleistung.class);
+    			: conn.queryList(DTOSchuelerTeilleistung.QUERY_LIST_BY_LEISTUNG_ID, DTOSchuelerTeilleistung.class, idsLeistungen);
     	final Map<Long, List<DTOSchuelerTeilleistung>> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
     	final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
     	final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
@@ -386,7 +386,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	private static Map<Long, DTOSchueler> getSchuelerListe(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
-		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOSchueler.class);
+		final List<DTOSchueler> schueler = conn.queryList(DTOSchueler.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchueler.class, schule.Schuljahresabschnitts_ID);
 		if (schueler.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return schueler.stream()
@@ -409,7 +409,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	private static Map<String, DTOKlassen> getKlassenListe(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schule.Schuljahresabschnitts_ID);
 		if (klassen.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
@@ -417,12 +417,12 @@ public final class DataENMDaten extends DataManager<Long> {
 
 	private static Map<Long, List<DTOKlassenLeitung>> getKlassenleitungen(final DBEntityManager conn, final Map<String, DTOKlassen> mapKlassen) {
 		final List<Long> klassenIDs = mapKlassen.values().stream().map(kl -> kl.ID).toList();
-		return conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class).stream()
+		return conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, klassenIDs).stream()
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}
 
 	private static Map<Long, DTOKurs> getKurse(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
-		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKurs.class);
+		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, schule.Schuljahresabschnitts_ID);
 		if (kurse == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return conn.queryAll(DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
@@ -538,7 +538,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = listLernabschnitte.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 
 		// Bestimme die Fachbemerkungen zu den Lernabschnitten und erzeuge eine Map für die Abschnitts-ID
-		final List<DTOSchuelerPSFachBemerkungen> listLernabschnittsbemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id.multiple", idsLernabschnitte, DTOSchuelerPSFachBemerkungen.class);
+		final List<DTOSchuelerPSFachBemerkungen> listLernabschnittsbemerkungen = conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, idsLernabschnitte);
 		final Map<Long, DTOSchuelerPSFachBemerkungen> mapLernabschnittsbemerkungen = listLernabschnittsbemerkungen.isEmpty() ? new HashMap<>()
 				: listLernabschnittsbemerkungen.stream().collect(Collectors.toMap(b -> b.Abschnitt_ID, b -> b));
 

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Datenschutz")
-@NamedQuery(name = "DTOKatalogDatenschutz.all", query = "SELECT e FROM DTOKatalogDatenschutz e")
-@NamedQuery(name = "DTOKatalogDatenschutz.id", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.id.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.bezeichnung", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.bezeichnung.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.sichtbar", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.sichtbar.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.schluessel", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.schluessel.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.sortierung", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.sortierung.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.beschreibung", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.beschreibung.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.personart", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt = :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.personart.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.primaryKeyQuery", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogDatenschutz.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogDatenschutz.all.migration", query = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "Sortierung", "Beschreibung", "PersonArt"})
 public final class DTOKatalogDatenschutz {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogDatenschutz e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonArt */
+	public static final String QUERY_BY_PERSONART = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonArt */
+	public static final String QUERY_LIST_BY_PERSONART = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt IN ?1";
 
 	/** Eindeutige ID für den Datensatz */
 	@Id

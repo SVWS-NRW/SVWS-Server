@@ -71,13 +71,12 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 			return new ArrayList<>();
 		}
 
-		final List<DTOSchueler> filteredDtoSchuelers = conn.queryNamed("DTOSchueler.all", DTOSchueler.class).getResultStream()
-				.filter(SCHUELER_FILTER).toList();
+		final List<DTOSchueler> filteredDtoSchuelers = conn.queryAll(DTOSchueler.class).stream().filter(SCHUELER_FILTER).toList();
 		final Map<Long, DTOSchueler> schuelerBySchuelerIds = filteredDtoSchuelers.stream()
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
-		final List<DTOSchuelerErzieherAdresse> dtoSchuelerErzieherAdresseResult = conn.queryNamed(
-				"DTOSchuelerErzieherAdresse.schueler_id.multiple",
-				filteredDtoSchuelers.stream().map(s -> s.ID).toList(), DTOSchuelerErzieherAdresse.class);
+		final List<DTOSchuelerErzieherAdresse> dtoSchuelerErzieherAdresseResult = conn.queryList(
+				DTOSchuelerErzieherAdresse.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class,
+				filteredDtoSchuelers.stream().map(s -> s.ID).toList());
 		final Map<Long, DTOSchuelerErzieherAdresse> erzieherBySchuelerID = new HashMap<>();
 		for (DTOSchuelerErzieherAdresse schuelerErzAdresse : dtoSchuelerErzieherAdresseResult) {
 			// map schuelerErzAdressen zu ihren SchuelerIDs, jeweils nur der Eintrag mit der höchsten
@@ -129,14 +128,13 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 	 *         zugeordnet sind
 	 */
 	private Map<Long, Set<String>> getCategoriesBySchuelerId(final Map<Long, SchuelerStatus> schuelerStatusByID) {
-		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
-				aktuellerSchuljahresabschnitt.ID, DTOKlassen.class);
+		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID,
+				DTOKlassen.class, aktuellerSchuljahresabschnitt.ID);
 		final Map<Long, DTOKlassen> klassenById = dtoKlassenQueryResult.stream()
 				.collect(Collectors.toMap(s -> s.ID, Function.identity()));
-		final List<DTOSchuelerLernabschnittsdaten> dtoSchuelerLernabschnittsdatenQueryResult = conn.queryNamed(
-				"DTOSchuelerLernabschnittsdaten.klassen_id.multiple", klassenById.keySet(),
-				DTOSchuelerLernabschnittsdaten.class);
-		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
+		final List<DTOSchuelerLernabschnittsdaten> dtoSchuelerLernabschnittsdatenQueryResult = conn.queryList(
+				DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, klassenById.keySet());
+		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryList(DTOJahrgang.QUERY_BY_SICHTBAR, DTOJahrgang.class, true)
 				.stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
 
 		final Map<Long, Set<String>> result = new HashMap<>();
@@ -161,8 +159,8 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 						kategorienUtil.formatErzieherJahrgang(jahrgangKrzByJahrgangId.get(dtoKlassen.Jahrgang_ID)));
 			}
 		}
-		final List<DTOKurs> dtoKursResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
-				aktuellerSchuljahresabschnitt.ID, DTOKurs.class);
+		final List<DTOKurs> dtoKursResult = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class,
+				aktuellerSchuljahresabschnitt.ID);
 		final Map<Long, DTOKurs> kursNameById = dtoKursResult.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final List<DTOKursSchueler> dtoKursSchuelerQueryResult = kursNameById.isEmpty() ? new ArrayList<>()
 				: conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursNameById.keySet());

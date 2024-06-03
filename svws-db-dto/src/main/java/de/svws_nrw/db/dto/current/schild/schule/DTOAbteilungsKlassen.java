@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,20 +26,44 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abt_Kl")
-@NamedQuery(name = "DTOAbteilungsKlassen.all", query = "SELECT e FROM DTOAbteilungsKlassen e")
-@NamedQuery(name = "DTOAbteilungsKlassen.id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.abteilung_id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.abteilung_id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.klassen_id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID = :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.klassen_id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.sichtbar", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.sichtbar.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.primaryKeyQuery", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOAbteilungsKlassen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAbteilungsKlassen.all.migration", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abteilung_ID", "Klassen_ID", "Sichtbar"})
 public final class DTOAbteilungsKlassen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOAbteilungsKlassen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abteilung_ID */
+	public static final String QUERY_BY_ABTEILUNG_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abteilung_ID */
+	public static final String QUERY_LIST_BY_ABTEILUNG_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Klassen_ID */
+	public static final String QUERY_BY_KLASSEN_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Klassen_ID */
+	public static final String QUERY_LIST_BY_KLASSEN_ID = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar IN ?1";
 
 	/** ID der Klassenzugehörigkeit zu einer Abteilung */
 	@Id

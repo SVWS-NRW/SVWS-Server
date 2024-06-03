@@ -123,7 +123,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public static DTOGostBlockungZwischenergebnis pruefeNurVorlageErgebnis(final DBEntityManager conn, final DTOGostBlockung blockung) throws ApiOperationException {
 		if (blockung == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Blockung nicht gefunden.");
-		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id", blockung.ID, DTOGostBlockungZwischenergebnis.class);
+		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungZwischenergebnis.class, blockung.ID);
 		if ((ergebnisse == null) || (ergebnisse.isEmpty()))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein Vorlage-Ergebnis für die Blockung in der Datenbank vorhanden.");
 		if (ergebnisse.size() > 1)
@@ -170,14 +170,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(dtoMapper.apply(blockung), faecherManager);
 
 		// Schienen hinzufügen.
-		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID, DTOGostBlockungSchiene.class);
+		final List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, blockung.ID);
 		final List<GostBlockungSchiene> schieneListeAdd = new ArrayList<>();
 		for (final DTOGostBlockungSchiene schiene : schienen)
 			schieneListeAdd.add(DataGostBlockungSchiene.dtoMapper.apply(schiene));
 		manager.schieneAddListe(schieneListeAdd);
 
 		// Kurse hinzufügen.
-		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
+		final List<DTOGostBlockungKurs> kurse = conn.queryList(DTOGostBlockungKurs.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungKurs.class, blockung.ID);
 		final List<GostBlockungKurs> kursListeAdd = new ArrayList<>();
 		for (final DTOGostBlockungKurs kurs : kurse) {
 			if (faecherManager.get(kurs.Fach_ID) == null)
@@ -189,10 +189,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Kurs-Lehrer hinzufügen
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
 		if (!kursIDs.isEmpty()) {
-			final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDs, DTOGostBlockungKurslehrer.class);
+			final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryList(DTOGostBlockungKurslehrer.QUERY_LIST_BY_BLOCKUNG_KURS_ID, DTOGostBlockungKurslehrer.class, kursIDs);
 			final List<Long> kurslehrerIDs = kurslehrerListe.stream().map(kl -> kl.Lehrer_ID).distinct().toList();
 			if (!kurslehrerIDs.isEmpty()) {
-				final Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", kurslehrerIDs, DTOLehrer.class)
+				final Map<Long, DTOLehrer> mapLehrer = conn.queryByKeyList(DTOLehrer.class, kurslehrerIDs)
 						.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 				final Map<Long, DTOLehrerAbschnittsdaten> mapLehrerabschnittsdaten = conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOLehrerAbschnittsdaten.class, kurslehrerIDs, lehrerSchuljahresabschnitt.id)
 					.stream().collect(Collectors.toMap(l -> l.Lehrer_ID, l -> l));
@@ -215,11 +215,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 
 		// Regeln hinzufügen.
-		final List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID, DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> regeln = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class, blockung.ID);
 		if (!regeln.isEmpty()) {
 			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
-			final List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryNamed(
-					"DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+			final List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
+					DTOGostBlockungRegelParameter.class, regelIDs);
 			final Map<Long, List<DTOGostBlockungRegelParameter>> regelParams = regelParamsDB.stream()
 					.collect(Collectors.groupingBy(r -> r.Regel_ID));
 			final List<GostBlockungRegel> regelListeAdd = new ArrayList<>();
@@ -622,8 +622,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		long idSchieneDuplikat = dbSchienenID == null ? 0 : dbSchienenID.MaxID + 1;
 		final HashMap<Long, Long> mapSchienenIDs = new HashMap<>();
-		final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungSchiene.class);
+		final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungSchiene.class, ergebnisOriginal.Blockung_ID);
 		for (final DTOGostBlockungSchiene schieneOriginal : schienenOriginal) {
 			final DTOGostBlockungSchiene schieneDuplikat = new DTOGostBlockungSchiene(idSchieneDuplikat, idBlockungDuplikat, schieneOriginal.Nummer, schieneOriginal.Bezeichnung, schieneOriginal.Wochenstunden);
 			mapSchienenIDs.put(schieneOriginal.ID, schieneDuplikat.ID);
@@ -635,8 +635,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 		long idKursDuplikat = dbKurseID == null ? 0 : dbKurseID.MaxID + 1;
 		final HashMap<Long, Long> mapKursIDs = new HashMap<>();
-		final List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungKurs.class);
+		final List<DTOGostBlockungKurs> kurseOriginal = conn.queryList(DTOGostBlockungKurs.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungKurs.class, ergebnisOriginal.Blockung_ID);
 		final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).toList();
 		for (final DTOGostBlockungKurs kursOriginal : kurseOriginal) {
 			final DTOGostBlockungKurs kursDuplikat = new DTOGostBlockungKurs(idKursDuplikat, idBlockungDuplikat, kursOriginal.Fach_ID,
@@ -649,7 +649,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		// Dupliziere die KursLehrer
 		if (!kursIDsOriginal.isEmpty()) {
-			final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDsOriginal, DTOGostBlockungKurslehrer.class);
+			final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryList(DTOGostBlockungKurslehrer.QUERY_LIST_BY_BLOCKUNG_KURS_ID,
+					DTOGostBlockungKurslehrer.class, kursIDsOriginal);
 			for (final DTOGostBlockungKurslehrer kurslehrerOriginal : kurslehrerListeOriginal) {
 				idKursDuplikat = mapKursIDs.get(kurslehrerOriginal.Blockung_Kurs_ID);
 				final DTOGostBlockungKurslehrer kurslehrerDuplikat = new DTOGostBlockungKurslehrer(idKursDuplikat,
@@ -663,8 +664,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 		final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
 		final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
-		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class,
+				ergebnisOriginal.Blockung_ID);
 		final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
 		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
 		    mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
@@ -676,7 +677,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		// Dupliziere die RegelParameter
 		if (!regelIDsOriginal.isEmpty()) {
-			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDsOriginal, DTOGostBlockungRegelParameter.class);
+			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID, DTOGostBlockungRegelParameter.class, regelIDsOriginal);
 			for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
 				idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
 				// Passe den Parameter an...
@@ -701,8 +702,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionPersist(ergebnisDuplikat);
 		conn.transactionFlush();
 		// Dupliziere Kurs-Schienen-Zuordnung
-		final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
-				DTOGostBlockungZwischenergebnisKursSchiene.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal =
+				conn.queryList(DTOGostBlockungZwischenergebnisKursSchiene.QUERY_BY_ZWISCHENERGEBNIS_ID,
+				DTOGostBlockungZwischenergebnisKursSchiene.class, idErgebnisOriginal);
 		for (final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneOriginal : zuordnungKursSchieneListeOriginal) {
 			idKursDuplikat = mapKursIDs.get(zuordnungKursSchieneOriginal.Blockung_Kurs_ID);
 			idSchieneDuplikat = mapSchienenIDs.get(zuordnungKursSchieneOriginal.Schienen_ID);
@@ -712,8 +714,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 		conn.transactionFlush();
 		// Dupliziere Kurs-Schüler-Zuordnung
-		final List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", idErgebnisOriginal,
-				DTOGostBlockungZwischenergebnisKursSchueler.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal =
+				conn.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_ZWISCHENERGEBNIS_ID,
+				DTOGostBlockungZwischenergebnisKursSchueler.class, idErgebnisOriginal);
 		for (final DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerOriginal : zuordnungKursSchuelerListeOriginal) {
 			idKursDuplikat = mapKursIDs.get(zuordnungKursSchuelerOriginal.Blockung_Kurs_ID);
 			final DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerDuplikat = new DTOGostBlockungZwischenergebnisKursSchueler(
@@ -773,8 +776,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		long idSchieneDuplikat = dbSchienenID == null ? 0 : dbSchienenID.MaxID + 1;
 		final HashMap<Long, Long> mapSchienenIDs = new HashMap<>();
-		final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungSchiene.class);
+		final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungSchiene.class, ergebnisOriginal.Blockung_ID);
 		for (final DTOGostBlockungSchiene schieneOriginal : schienenOriginal) {
 			final DTOGostBlockungSchiene schieneDuplikat = new DTOGostBlockungSchiene(idSchieneDuplikat, idBlockungDuplikat, schieneOriginal.Nummer, schieneOriginal.Bezeichnung, schieneOriginal.Wochenstunden);
 			mapSchienenIDs.put(schieneOriginal.ID, schieneDuplikat.ID);
@@ -787,8 +790,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		long idKursDuplikat = dbKurseID == null ? 0 : dbKurseID.MaxID + 1;
 		final HashMap<Long, Long> mapKursIDs = new HashMap<>();
 		final HashMap<Long, DTOGostBlockungKurs> mapKurseHochgeschrieben = new HashMap<>();
-		final List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungKurs.class);
+		final List<DTOGostBlockungKurs> kurseOriginal = conn.queryList(DTOGostBlockungKurs.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungKurs.class, ergebnisOriginal.Blockung_ID);
 		final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).toList();
 		for (final DTOGostBlockungKurs kursOriginal : kurseOriginal) {
 			final DTOGostBlockungKurs kursDuplikat = new DTOGostBlockungKurs(idKursDuplikat, idBlockungDuplikat, kursOriginal.Fach_ID,
@@ -802,7 +805,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		// Dupliziere die KursLehrer
 		if (!kursIDsOriginal.isEmpty()) {
-			final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDsOriginal, DTOGostBlockungKurslehrer.class);
+			final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryList(DTOGostBlockungKurslehrer.QUERY_LIST_BY_BLOCKUNG_KURS_ID,
+					DTOGostBlockungKurslehrer.class, kursIDsOriginal);
 			for (final DTOGostBlockungKurslehrer kurslehrerOriginal : kurslehrerListeOriginal) {
 				idKursDuplikat = mapKursIDs.get(kurslehrerOriginal.Blockung_Kurs_ID);
 				final DTOGostBlockungKurslehrer kurslehrerDuplikat = new DTOGostBlockungKurslehrer(idKursDuplikat,
@@ -816,8 +820,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 		final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
 		final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
-		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", ergebnisOriginal.Blockung_ID,
-				DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungRegel.class, ergebnisOriginal.Blockung_ID);
 		final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
 		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
 		    mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
@@ -829,7 +833,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		// Dupliziere die RegelParameter
 		if (!regelIDsOriginal.isEmpty()) {
-			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDsOriginal, DTOGostBlockungRegelParameter.class);
+			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
+					DTOGostBlockungRegelParameter.class, regelIDsOriginal);
 			for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
 				idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
 				// Passe den Parameter an...
@@ -854,8 +859,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionPersist(ergebnisDuplikat);
 		conn.transactionFlush();
 		// Dupliziere Kurs-Schienen-Zuordnung
-		final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
-				DTOGostBlockungZwischenergebnisKursSchiene.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryList(
+				DTOGostBlockungZwischenergebnisKursSchiene.QUERY_BY_ZWISCHENERGEBNIS_ID,
+				DTOGostBlockungZwischenergebnisKursSchiene.class, idErgebnisOriginal);
 		for (final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneOriginal : zuordnungKursSchieneListeOriginal) {
 			idKursDuplikat = mapKursIDs.get(zuordnungKursSchieneOriginal.Blockung_Kurs_ID);
 			idSchieneDuplikat = mapSchienenIDs.get(zuordnungKursSchieneOriginal.Schienen_ID);
@@ -867,8 +873,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Ermittle die Fachwahlen des Abiturjahrgangs
 		final GostFachwahlManager managerFachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockungDuplikat.Abi_Jahrgang)).getFachwahlManager(blockungDuplikat.Halbjahr);
 		// Dupliziere Kurs-Schüler-Zuordnung
-		final List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", idErgebnisOriginal,
-				DTOGostBlockungZwischenergebnisKursSchueler.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryList(
+				DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_ZWISCHENERGEBNIS_ID,
+				DTOGostBlockungZwischenergebnisKursSchueler.class, idErgebnisOriginal);
 		for (final DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerOriginal : zuordnungKursSchuelerListeOriginal) {
 			idKursDuplikat = mapKursIDs.get(zuordnungKursSchuelerOriginal.Blockung_Kurs_ID);
 			final DTOGostBlockungKurs kurs = mapKurseHochgeschrieben.get(idKursDuplikat);
@@ -955,12 +962,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// TODO weitere Kurslehrer ermitteln
 
 		// Lese die Leistungsdaten zu den Kursen ein
-		final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryNamed(
-				"DTOSchuelerLeistungsdaten.kurs_id.multiple", mapKurse.keySet(), DTOSchuelerLeistungsdaten.class);
+		final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_KURS_ID,
+				DTOSchuelerLeistungsdaten.class, mapKurse.keySet());
 		final List<Long> listLernabschnittIDs = listLeistungsdaten.stream().map(ld -> ld.Abschnitt_ID).toList();
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = listLernabschnittIDs.isEmpty()
 				? new HashMap<>()
-				: conn.queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", listLernabschnittIDs, DTOSchuelerLernabschnittsdaten.class)
+				: conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, listLernabschnittIDs)
 					.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
 
 		// Prüfe, ob jeweils der Schüler des Lernabschnittes ein Entlassdatum eingetragen hat, welches vor dem Lernabschnitt liegt - inkonsistente Daten?!
@@ -999,7 +1006,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<DTOGostJahrgangFaecher> faecher = conn.queryList("SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = ?1 AND e.Fach_ID IN ?2",
 					DTOGostJahrgangFaecher.class, abiturjahr, setFachIDs);
 			final List<Long> faecherCheckIDs = faecher.stream().map(f -> f.Fach_ID).toList();
-			final List<DTOFach> faecherCheck = conn.queryNamed("DTOFach.id.multiple", setFachIDs, DTOFach.class);
+			final List<DTOFach> faecherCheck = conn.queryByKeyList(DTOFach.class, setFachIDs);
 			for (final DTOFach dtoFach : faecherCheck) {
 				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().containsKey(dtoFach.StatistikFach))) {
 					dtoFach.IstOberstufenFach = true;
@@ -1009,7 +1016,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			setFachIDs.removeAll(faecherCheckIDs);
 			if (!setFachIDs.isEmpty()) {
 				// wenn nicht, dann füge sie hinzu und setze ggf. das Flag als Fach der Oberstufe...
-				final List<DTOFach> faecherAdd = conn.queryNamed("DTOFach.id.multiple", setFachIDs, DTOFach.class);
+				final List<DTOFach> faecherAdd = conn.queryByKeyList(DTOFach.class, setFachIDs);
 				for (final DTOFach dtoFach : faecherAdd) {
 					if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach)) {
 						dtoFach.IstOberstufenFach = true;

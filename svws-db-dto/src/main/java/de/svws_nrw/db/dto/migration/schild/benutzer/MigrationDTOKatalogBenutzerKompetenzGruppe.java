@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kompetenzgruppen")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.all", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_id", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_id.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_spalte", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte = :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_spalte.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte IN :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_zeile", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile = :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_zeile.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile IN :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN :value")
-@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.all.migration", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IS NOT NULL")
 @JsonPropertyOrder({"KG_ID", "KG_Bezeichnung", "KG_Spalte", "KG_Zeile"})
 public final class MigrationDTOKatalogBenutzerKompetenzGruppe {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KG_ID */
+	public static final String QUERY_BY_KG_ID = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KG_ID */
+	public static final String QUERY_LIST_BY_KG_ID = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KG_Bezeichnung */
+	public static final String QUERY_BY_KG_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KG_Bezeichnung */
+	public static final String QUERY_LIST_BY_KG_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KG_Spalte */
+	public static final String QUERY_BY_KG_SPALTE = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KG_Spalte */
+	public static final String QUERY_LIST_BY_KG_SPALTE = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KG_Zeile */
+	public static final String QUERY_BY_KG_ZEILE = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KG_Zeile */
+	public static final String QUERY_LIST_BY_KG_ZEILE = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile IN ?1";
 
 	/** ID der Kompetenzgruppe */
 	@Id

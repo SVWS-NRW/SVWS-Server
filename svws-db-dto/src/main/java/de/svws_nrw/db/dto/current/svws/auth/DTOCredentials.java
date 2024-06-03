@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Credentials")
-@NamedQuery(name = "DTOCredentials.all", query = "SELECT e FROM DTOCredentials e")
-@NamedQuery(name = "DTOCredentials.id", query = "SELECT e FROM DTOCredentials e WHERE e.ID = :value")
-@NamedQuery(name = "DTOCredentials.id.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOCredentials.benutzername", query = "SELECT e FROM DTOCredentials e WHERE e.Benutzername = :value")
-@NamedQuery(name = "DTOCredentials.benutzername.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.Benutzername IN :value")
-@NamedQuery(name = "DTOCredentials.benutzernamepseudonym", query = "SELECT e FROM DTOCredentials e WHERE e.BenutzernamePseudonym = :value")
-@NamedQuery(name = "DTOCredentials.benutzernamepseudonym.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.BenutzernamePseudonym IN :value")
-@NamedQuery(name = "DTOCredentials.initialkennwort", query = "SELECT e FROM DTOCredentials e WHERE e.Initialkennwort = :value")
-@NamedQuery(name = "DTOCredentials.initialkennwort.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.Initialkennwort IN :value")
-@NamedQuery(name = "DTOCredentials.passwordhash", query = "SELECT e FROM DTOCredentials e WHERE e.PasswordHash = :value")
-@NamedQuery(name = "DTOCredentials.passwordhash.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.PasswordHash IN :value")
-@NamedQuery(name = "DTOCredentials.rsapublickey", query = "SELECT e FROM DTOCredentials e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name = "DTOCredentials.rsapublickey.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name = "DTOCredentials.rsaprivatekey", query = "SELECT e FROM DTOCredentials e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name = "DTOCredentials.rsaprivatekey.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name = "DTOCredentials.aes", query = "SELECT e FROM DTOCredentials e WHERE e.AES = :value")
-@NamedQuery(name = "DTOCredentials.aes.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.AES IN :value")
-@NamedQuery(name = "DTOCredentials.primaryKeyQuery", query = "SELECT e FROM DTOCredentials e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOCredentials.primaryKeyQuery.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOCredentials.all.migration", query = "SELECT e FROM DTOCredentials e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PasswordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
 public final class DTOCredentials {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOCredentials e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOCredentials e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOCredentials e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOCredentials e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOCredentials e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOCredentials e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzername */
+	public static final String QUERY_BY_BENUTZERNAME = "SELECT e FROM DTOCredentials e WHERE e.Benutzername = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzername */
+	public static final String QUERY_LIST_BY_BENUTZERNAME = "SELECT e FROM DTOCredentials e WHERE e.Benutzername IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernamePseudonym */
+	public static final String QUERY_BY_BENUTZERNAMEPSEUDONYM = "SELECT e FROM DTOCredentials e WHERE e.BenutzernamePseudonym = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernamePseudonym */
+	public static final String QUERY_LIST_BY_BENUTZERNAMEPSEUDONYM = "SELECT e FROM DTOCredentials e WHERE e.BenutzernamePseudonym IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Initialkennwort */
+	public static final String QUERY_BY_INITIALKENNWORT = "SELECT e FROM DTOCredentials e WHERE e.Initialkennwort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Initialkennwort */
+	public static final String QUERY_LIST_BY_INITIALKENNWORT = "SELECT e FROM DTOCredentials e WHERE e.Initialkennwort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PasswordHash */
+	public static final String QUERY_BY_PASSWORDHASH = "SELECT e FROM DTOCredentials e WHERE e.PasswordHash = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PasswordHash */
+	public static final String QUERY_LIST_BY_PASSWORDHASH = "SELECT e FROM DTOCredentials e WHERE e.PasswordHash IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPublicKey */
+	public static final String QUERY_BY_RSAPUBLICKEY = "SELECT e FROM DTOCredentials e WHERE e.RSAPublicKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPublicKey */
+	public static final String QUERY_LIST_BY_RSAPUBLICKEY = "SELECT e FROM DTOCredentials e WHERE e.RSAPublicKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPrivateKey */
+	public static final String QUERY_BY_RSAPRIVATEKEY = "SELECT e FROM DTOCredentials e WHERE e.RSAPrivateKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPrivateKey */
+	public static final String QUERY_LIST_BY_RSAPRIVATEKEY = "SELECT e FROM DTOCredentials e WHERE e.RSAPrivateKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AES */
+	public static final String QUERY_BY_AES = "SELECT e FROM DTOCredentials e WHERE e.AES = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AES */
+	public static final String QUERY_LIST_BY_AES = "SELECT e FROM DTOCredentials e WHERE e.AES IN ?1";
 
 	/** ID des Datensatzes für die SVWS internen Account-Credentials */
 	@Id

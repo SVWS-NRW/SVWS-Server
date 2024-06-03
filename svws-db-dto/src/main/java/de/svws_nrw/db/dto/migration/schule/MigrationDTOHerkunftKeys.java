@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,14 +18,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunft_Keys")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.all", query = "SELECT e FROM MigrationDTOHerkunftKeys e")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.kuerzel", query = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftKeys.all.migration", query = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
 public final class MigrationDTOHerkunftKeys {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOHerkunftKeys e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOHerkunftKeys e WHERE e.Kuerzel IN ?1";
 
 	/** Das Kürzel der Herkunft */
 	@Id

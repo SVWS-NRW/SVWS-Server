@@ -71,7 +71,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 
 	private DTOGostBlockungKurslehrer getKurslehrer(final DTOGostBlockungKurs kurs, final Long idLehrer) throws ApiOperationException {
 		if (idLehrer == null) {
-			final List<DTOGostBlockungKurslehrer> tmp = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class);
+			final List<DTOGostBlockungKurslehrer> tmp = conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungKurslehrer.class, idKurs);
 			if (tmp.isEmpty())
 				throw new ApiOperationException(Status.NOT_FOUND);
 			if (tmp.size() > 1)
@@ -136,7 +136,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
     			case "nachname" -> throw new ApiOperationException(Status.BAD_REQUEST);
     			case "reihenfolge" -> {
     				final int tmp = JSONMapper.convertToInteger(value, false);
-    				final Set<Integer> reihenfolgen = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class).stream()
+    				final Set<Integer> reihenfolgen = conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungKurslehrer.class, idKurs).stream()
     					.map(kl -> kl.Reihenfolge).filter(Objects::nonNull).collect(Collectors.toSet());
     				if (reihenfolgen.contains(tmp))
     					throw new ApiOperationException(Status.CONFLICT);
@@ -193,7 +193,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		if (kurslehrer != null)
 			throw new ApiOperationException(Status.CONFLICT);
 		// Bestimme den niedrigsten Wert für Reihenfolge, der noch nicht genutzt ist und setze diese als Default
-		final Set<Integer> reihenfolgen = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class).stream()
+		final Set<Integer> reihenfolgen = conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungKurslehrer.class, idKurs).stream()
 			.map(kl -> kl.Reihenfolge).filter(Objects::nonNull).collect(Collectors.toSet());
 		int min;
 		for (min = 1; true; min++)

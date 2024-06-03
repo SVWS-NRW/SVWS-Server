@@ -88,7 +88,7 @@ public final class DataKursliste extends DataManager<Long> {
 			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) {
     	final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
     		? conn.queryAll(DTOKurs.class)
-    		: conn.queryNamed("DTOKurs.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOKurs.class);
+    		: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
     	if (kurse.isEmpty())
     		return new ArrayList<>();
     	// Erstelle die Liste der Kurse
@@ -100,8 +100,7 @@ public final class DataKursliste extends DataManager<Long> {
     	final List<DTOKursSchueler> listKursSchueler =
     			conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-    	final Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new HashMap<>()
-    			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+    	final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
     	final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
     	for (final DTOKursSchueler ks : listKursSchueler) {
     		final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);

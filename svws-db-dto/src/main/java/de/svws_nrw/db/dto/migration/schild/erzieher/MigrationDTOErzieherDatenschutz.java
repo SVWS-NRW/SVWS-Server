@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,17 +28,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOErzieherDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ErzieherDatenschutz")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.all", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.erzieherid", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID = :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.erzieherid.multiple", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID IN :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.datenschutzid", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.DatenschutzID = :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.datenschutzid.multiple", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.DatenschutzID IN :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.status", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.Status = :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.status.multiple", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.Status IN :value")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID = ?1 AND e.DatenschutzID = ?2")
-@NamedQuery(name = "MigrationDTOErzieherDatenschutz.all.migration", query = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID IS NOT NULL AND e.DatenschutzID IS NOT NULL")
 @JsonPropertyOrder({"ErzieherID", "DatenschutzID", "Status"})
 public final class MigrationDTOErzieherDatenschutz {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOErzieherDatenschutz e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID = ?1 AND e.DatenschutzID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID IS NOT NULL AND e.DatenschutzID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ErzieherID */
+	public static final String QUERY_BY_ERZIEHERID = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ErzieherID */
+	public static final String QUERY_LIST_BY_ERZIEHERID = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.ErzieherID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatenschutzID */
+	public static final String QUERY_BY_DATENSCHUTZID = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.DatenschutzID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatenschutzID */
+	public static final String QUERY_LIST_BY_DATENSCHUTZID = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.DatenschutzID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Status */
+	public static final String QUERY_BY_STATUS = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.Status = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Status */
+	public static final String QUERY_LIST_BY_STATUS = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.Status IN ?1";
 
 	/** ErzieherID des Datenschutzeintrags */
 	@Id

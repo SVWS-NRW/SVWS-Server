@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOProtokollLoginPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Logins")
-@NamedQuery(name = "MigrationDTOProtokollLogin.all", query = "SELECT e FROM MigrationDTOProtokollLogin e")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_userid", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_userid.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IN :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_logintime", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime = :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_logintime.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime IN :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_logofftime", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime = :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.li_logofftime.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime IN :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.schulnreigner", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOProtokollLogin.primaryKeyQuery", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2")
-@NamedQuery(name = "MigrationDTOProtokollLogin.all.migration", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL")
 @JsonPropertyOrder({"LI_UserID", "LI_LoginTime", "LI_LogoffTime", "SchulnrEigner"})
 public final class MigrationDTOProtokollLogin {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOProtokollLogin e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LI_UserID */
+	public static final String QUERY_BY_LI_USERID = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LI_UserID */
+	public static final String QUERY_LIST_BY_LI_USERID = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LI_LoginTime */
+	public static final String QUERY_BY_LI_LOGINTIME = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LI_LoginTime */
+	public static final String QUERY_LIST_BY_LI_LOGINTIME = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LI_LogoffTime */
+	public static final String QUERY_BY_LI_LOGOFFTIME = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LI_LogoffTime */
+	public static final String QUERY_LIST_BY_LI_LOGOFFTIME = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner IN ?1";
 
 	/** UserID des Logins */
 	@Id

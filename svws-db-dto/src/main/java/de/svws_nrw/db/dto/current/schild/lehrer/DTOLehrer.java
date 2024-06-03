@@ -17,7 +17,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,92 +42,260 @@ import de.svws_nrw.csv.converter.current.PersonalTypConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Lehrer")
-@NamedQuery(name = "DTOLehrer.all", query = "SELECT e FROM DTOLehrer e")
-@NamedQuery(name = "DTOLehrer.id", query = "SELECT e FROM DTOLehrer e WHERE e.ID = :value")
-@NamedQuery(name = "DTOLehrer.id.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrer.gu_id", query = "SELECT e FROM DTOLehrer e WHERE e.GU_ID = :value")
-@NamedQuery(name = "DTOLehrer.gu_id.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "DTOLehrer.kuerzel", query = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOLehrer.kuerzel.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOLehrer.kuerzellid", query = "SELECT e FROM DTOLehrer e WHERE e.kuerzelLID = :value")
-@NamedQuery(name = "DTOLehrer.kuerzellid.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.kuerzelLID IN :value")
-@NamedQuery(name = "DTOLehrer.nachname", query = "SELECT e FROM DTOLehrer e WHERE e.Nachname = :value")
-@NamedQuery(name = "DTOLehrer.nachname.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Nachname IN :value")
-@NamedQuery(name = "DTOLehrer.vorname", query = "SELECT e FROM DTOLehrer e WHERE e.Vorname = :value")
-@NamedQuery(name = "DTOLehrer.vorname.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Vorname IN :value")
-@NamedQuery(name = "DTOLehrer.persontyp", query = "SELECT e FROM DTOLehrer e WHERE e.PersonTyp = :value")
-@NamedQuery(name = "DTOLehrer.persontyp.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.PersonTyp IN :value")
-@NamedQuery(name = "DTOLehrer.sortierung", query = "SELECT e FROM DTOLehrer e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOLehrer.sortierung.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOLehrer.sichtbar", query = "SELECT e FROM DTOLehrer e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOLehrer.sichtbar.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOLehrer.aenderbar", query = "SELECT e FROM DTOLehrer e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "DTOLehrer.aenderbar.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "DTOLehrer.fuerexport", query = "SELECT e FROM DTOLehrer e WHERE e.FuerExport = :value")
-@NamedQuery(name = "DTOLehrer.fuerexport.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.FuerExport IN :value")
-@NamedQuery(name = "DTOLehrer.statistikrelevant", query = "SELECT e FROM DTOLehrer e WHERE e.statistikRelevant = :value")
-@NamedQuery(name = "DTOLehrer.statistikrelevant.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.statistikRelevant IN :value")
-@NamedQuery(name = "DTOLehrer.strassenname", query = "SELECT e FROM DTOLehrer e WHERE e.Strassenname = :value")
-@NamedQuery(name = "DTOLehrer.strassenname.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Strassenname IN :value")
-@NamedQuery(name = "DTOLehrer.hausnr", query = "SELECT e FROM DTOLehrer e WHERE e.HausNr = :value")
-@NamedQuery(name = "DTOLehrer.hausnr.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.HausNr IN :value")
-@NamedQuery(name = "DTOLehrer.hausnrzusatz", query = "SELECT e FROM DTOLehrer e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name = "DTOLehrer.hausnrzusatz.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name = "DTOLehrer.ort_id", query = "SELECT e FROM DTOLehrer e WHERE e.Ort_ID = :value")
-@NamedQuery(name = "DTOLehrer.ort_id.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Ort_ID IN :value")
-@NamedQuery(name = "DTOLehrer.ortsteil_id", query = "SELECT e FROM DTOLehrer e WHERE e.Ortsteil_ID = :value")
-@NamedQuery(name = "DTOLehrer.ortsteil_id.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Ortsteil_ID IN :value")
-@NamedQuery(name = "DTOLehrer.telefon", query = "SELECT e FROM DTOLehrer e WHERE e.telefon = :value")
-@NamedQuery(name = "DTOLehrer.telefon.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.telefon IN :value")
-@NamedQuery(name = "DTOLehrer.telefonmobil", query = "SELECT e FROM DTOLehrer e WHERE e.telefonMobil = :value")
-@NamedQuery(name = "DTOLehrer.telefonmobil.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.telefonMobil IN :value")
-@NamedQuery(name = "DTOLehrer.emailprivat", query = "SELECT e FROM DTOLehrer e WHERE e.eMailPrivat = :value")
-@NamedQuery(name = "DTOLehrer.emailprivat.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.eMailPrivat IN :value")
-@NamedQuery(name = "DTOLehrer.emaildienstlich", query = "SELECT e FROM DTOLehrer e WHERE e.eMailDienstlich = :value")
-@NamedQuery(name = "DTOLehrer.emaildienstlich.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.eMailDienstlich IN :value")
-@NamedQuery(name = "DTOLehrer.staatsangehoerigkeit", query = "SELECT e FROM DTOLehrer e WHERE e.staatsangehoerigkeit = :value")
-@NamedQuery(name = "DTOLehrer.staatsangehoerigkeit.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.staatsangehoerigkeit IN :value")
-@NamedQuery(name = "DTOLehrer.geburtsdatum", query = "SELECT e FROM DTOLehrer e WHERE e.Geburtsdatum = :value")
-@NamedQuery(name = "DTOLehrer.geburtsdatum.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Geburtsdatum IN :value")
-@NamedQuery(name = "DTOLehrer.geschlecht", query = "SELECT e FROM DTOLehrer e WHERE e.Geschlecht = :value")
-@NamedQuery(name = "DTOLehrer.geschlecht.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Geschlecht IN :value")
-@NamedQuery(name = "DTOLehrer.anrede", query = "SELECT e FROM DTOLehrer e WHERE e.Anrede = :value")
-@NamedQuery(name = "DTOLehrer.anrede.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Anrede IN :value")
-@NamedQuery(name = "DTOLehrer.amtsbezeichnung", query = "SELECT e FROM DTOLehrer e WHERE e.Amtsbezeichnung = :value")
-@NamedQuery(name = "DTOLehrer.amtsbezeichnung.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Amtsbezeichnung IN :value")
-@NamedQuery(name = "DTOLehrer.titel", query = "SELECT e FROM DTOLehrer e WHERE e.Titel = :value")
-@NamedQuery(name = "DTOLehrer.titel.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Titel IN :value")
-@NamedQuery(name = "DTOLehrer.faecher", query = "SELECT e FROM DTOLehrer e WHERE e.Faecher = :value")
-@NamedQuery(name = "DTOLehrer.faecher.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Faecher IN :value")
-@NamedQuery(name = "DTOLehrer.identnrteil1", query = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil1 = :value")
-@NamedQuery(name = "DTOLehrer.identnrteil1.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil1 IN :value")
-@NamedQuery(name = "DTOLehrer.identnrteil2sernr", query = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil2SerNr = :value")
-@NamedQuery(name = "DTOLehrer.identnrteil2sernr.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil2SerNr IN :value")
-@NamedQuery(name = "DTOLehrer.panr", query = "SELECT e FROM DTOLehrer e WHERE e.PANr = :value")
-@NamedQuery(name = "DTOLehrer.panr.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.PANr IN :value")
-@NamedQuery(name = "DTOLehrer.personalnrlbv", query = "SELECT e FROM DTOLehrer e WHERE e.personalNrLBV = :value")
-@NamedQuery(name = "DTOLehrer.personalnrlbv.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.personalNrLBV IN :value")
-@NamedQuery(name = "DTOLehrer.verguetungsschluessel", query = "SELECT e FROM DTOLehrer e WHERE e.verguetungsSchluessel = :value")
-@NamedQuery(name = "DTOLehrer.verguetungsschluessel.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.verguetungsSchluessel IN :value")
-@NamedQuery(name = "DTOLehrer.datumzugang", query = "SELECT e FROM DTOLehrer e WHERE e.DatumZugang = :value")
-@NamedQuery(name = "DTOLehrer.datumzugang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.DatumZugang IN :value")
-@NamedQuery(name = "DTOLehrer.grundzugang", query = "SELECT e FROM DTOLehrer e WHERE e.GrundZugang = :value")
-@NamedQuery(name = "DTOLehrer.grundzugang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.GrundZugang IN :value")
-@NamedQuery(name = "DTOLehrer.datumabgang", query = "SELECT e FROM DTOLehrer e WHERE e.DatumAbgang = :value")
-@NamedQuery(name = "DTOLehrer.datumabgang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.DatumAbgang IN :value")
-@NamedQuery(name = "DTOLehrer.grundabgang", query = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang = :value")
-@NamedQuery(name = "DTOLehrer.grundabgang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang IN :value")
-@NamedQuery(name = "DTOLehrer.kennworttools", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools = :value")
-@NamedQuery(name = "DTOLehrer.kennworttools.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools IN :value")
-@NamedQuery(name = "DTOLehrer.kennworttoolsaktuell", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell = :value")
-@NamedQuery(name = "DTOLehrer.kennworttoolsaktuell.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell IN :value")
-@NamedQuery(name = "DTOLehrer.credentialid", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID = :value")
-@NamedQuery(name = "DTOLehrer.credentialid.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID IN :value")
-@NamedQuery(name = "DTOLehrer.primaryKeyQuery", query = "SELECT e FROM DTOLehrer e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOLehrer.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrer.all.migration", query = "SELECT e FROM DTOLehrer e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "KennwortTools", "KennwortToolsAktuell", "CredentialID"})
 public final class DTOLehrer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLehrer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrer e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrer e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrer e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrer e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrer e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GU_ID */
+	public static final String QUERY_BY_GU_ID = "SELECT e FROM DTOLehrer e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GU_ID */
+	public static final String QUERY_LIST_BY_GU_ID = "SELECT e FROM DTOLehrer e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzelLID */
+	public static final String QUERY_BY_KUERZELLID = "SELECT e FROM DTOLehrer e WHERE e.kuerzelLID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzelLID */
+	public static final String QUERY_LIST_BY_KUERZELLID = "SELECT e FROM DTOLehrer e WHERE e.kuerzelLID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Nachname */
+	public static final String QUERY_BY_NACHNAME = "SELECT e FROM DTOLehrer e WHERE e.Nachname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Nachname */
+	public static final String QUERY_LIST_BY_NACHNAME = "SELECT e FROM DTOLehrer e WHERE e.Nachname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Vorname */
+	public static final String QUERY_BY_VORNAME = "SELECT e FROM DTOLehrer e WHERE e.Vorname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Vorname */
+	public static final String QUERY_LIST_BY_VORNAME = "SELECT e FROM DTOLehrer e WHERE e.Vorname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonTyp */
+	public static final String QUERY_BY_PERSONTYP = "SELECT e FROM DTOLehrer e WHERE e.PersonTyp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonTyp */
+	public static final String QUERY_LIST_BY_PERSONTYP = "SELECT e FROM DTOLehrer e WHERE e.PersonTyp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOLehrer e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOLehrer e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOLehrer e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOLehrer e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOLehrer e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOLehrer e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FuerExport */
+	public static final String QUERY_BY_FUEREXPORT = "SELECT e FROM DTOLehrer e WHERE e.FuerExport = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FuerExport */
+	public static final String QUERY_LIST_BY_FUEREXPORT = "SELECT e FROM DTOLehrer e WHERE e.FuerExport IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes statistikRelevant */
+	public static final String QUERY_BY_STATISTIKRELEVANT = "SELECT e FROM DTOLehrer e WHERE e.statistikRelevant = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes statistikRelevant */
+	public static final String QUERY_LIST_BY_STATISTIKRELEVANT = "SELECT e FROM DTOLehrer e WHERE e.statistikRelevant IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Strassenname */
+	public static final String QUERY_BY_STRASSENNAME = "SELECT e FROM DTOLehrer e WHERE e.Strassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Strassenname */
+	public static final String QUERY_LIST_BY_STRASSENNAME = "SELECT e FROM DTOLehrer e WHERE e.Strassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNr */
+	public static final String QUERY_BY_HAUSNR = "SELECT e FROM DTOLehrer e WHERE e.HausNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNr */
+	public static final String QUERY_LIST_BY_HAUSNR = "SELECT e FROM DTOLehrer e WHERE e.HausNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNrZusatz */
+	public static final String QUERY_BY_HAUSNRZUSATZ = "SELECT e FROM DTOLehrer e WHERE e.HausNrZusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNrZusatz */
+	public static final String QUERY_LIST_BY_HAUSNRZUSATZ = "SELECT e FROM DTOLehrer e WHERE e.HausNrZusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort_ID */
+	public static final String QUERY_BY_ORT_ID = "SELECT e FROM DTOLehrer e WHERE e.Ort_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort_ID */
+	public static final String QUERY_LIST_BY_ORT_ID = "SELECT e FROM DTOLehrer e WHERE e.Ort_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ortsteil_ID */
+	public static final String QUERY_BY_ORTSTEIL_ID = "SELECT e FROM DTOLehrer e WHERE e.Ortsteil_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ortsteil_ID */
+	public static final String QUERY_LIST_BY_ORTSTEIL_ID = "SELECT e FROM DTOLehrer e WHERE e.Ortsteil_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes telefon */
+	public static final String QUERY_BY_TELEFON = "SELECT e FROM DTOLehrer e WHERE e.telefon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes telefon */
+	public static final String QUERY_LIST_BY_TELEFON = "SELECT e FROM DTOLehrer e WHERE e.telefon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes telefonMobil */
+	public static final String QUERY_BY_TELEFONMOBIL = "SELECT e FROM DTOLehrer e WHERE e.telefonMobil = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes telefonMobil */
+	public static final String QUERY_LIST_BY_TELEFONMOBIL = "SELECT e FROM DTOLehrer e WHERE e.telefonMobil IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes eMailPrivat */
+	public static final String QUERY_BY_EMAILPRIVAT = "SELECT e FROM DTOLehrer e WHERE e.eMailPrivat = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes eMailPrivat */
+	public static final String QUERY_LIST_BY_EMAILPRIVAT = "SELECT e FROM DTOLehrer e WHERE e.eMailPrivat IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes eMailDienstlich */
+	public static final String QUERY_BY_EMAILDIENSTLICH = "SELECT e FROM DTOLehrer e WHERE e.eMailDienstlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes eMailDienstlich */
+	public static final String QUERY_LIST_BY_EMAILDIENSTLICH = "SELECT e FROM DTOLehrer e WHERE e.eMailDienstlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes staatsangehoerigkeit */
+	public static final String QUERY_BY_STAATSANGEHOERIGKEIT = "SELECT e FROM DTOLehrer e WHERE e.staatsangehoerigkeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes staatsangehoerigkeit */
+	public static final String QUERY_LIST_BY_STAATSANGEHOERIGKEIT = "SELECT e FROM DTOLehrer e WHERE e.staatsangehoerigkeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Geburtsdatum */
+	public static final String QUERY_BY_GEBURTSDATUM = "SELECT e FROM DTOLehrer e WHERE e.Geburtsdatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Geburtsdatum */
+	public static final String QUERY_LIST_BY_GEBURTSDATUM = "SELECT e FROM DTOLehrer e WHERE e.Geburtsdatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Geschlecht */
+	public static final String QUERY_BY_GESCHLECHT = "SELECT e FROM DTOLehrer e WHERE e.Geschlecht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Geschlecht */
+	public static final String QUERY_LIST_BY_GESCHLECHT = "SELECT e FROM DTOLehrer e WHERE e.Geschlecht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anrede */
+	public static final String QUERY_BY_ANREDE = "SELECT e FROM DTOLehrer e WHERE e.Anrede = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anrede */
+	public static final String QUERY_LIST_BY_ANREDE = "SELECT e FROM DTOLehrer e WHERE e.Anrede IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Amtsbezeichnung */
+	public static final String QUERY_BY_AMTSBEZEICHNUNG = "SELECT e FROM DTOLehrer e WHERE e.Amtsbezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Amtsbezeichnung */
+	public static final String QUERY_LIST_BY_AMTSBEZEICHNUNG = "SELECT e FROM DTOLehrer e WHERE e.Amtsbezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Titel */
+	public static final String QUERY_BY_TITEL = "SELECT e FROM DTOLehrer e WHERE e.Titel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Titel */
+	public static final String QUERY_LIST_BY_TITEL = "SELECT e FROM DTOLehrer e WHERE e.Titel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Faecher */
+	public static final String QUERY_BY_FAECHER = "SELECT e FROM DTOLehrer e WHERE e.Faecher = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Faecher */
+	public static final String QUERY_LIST_BY_FAECHER = "SELECT e FROM DTOLehrer e WHERE e.Faecher IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes identNrTeil1 */
+	public static final String QUERY_BY_IDENTNRTEIL1 = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes identNrTeil1 */
+	public static final String QUERY_LIST_BY_IDENTNRTEIL1 = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes identNrTeil2SerNr */
+	public static final String QUERY_BY_IDENTNRTEIL2SERNR = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil2SerNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes identNrTeil2SerNr */
+	public static final String QUERY_LIST_BY_IDENTNRTEIL2SERNR = "SELECT e FROM DTOLehrer e WHERE e.identNrTeil2SerNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PANr */
+	public static final String QUERY_BY_PANR = "SELECT e FROM DTOLehrer e WHERE e.PANr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PANr */
+	public static final String QUERY_LIST_BY_PANR = "SELECT e FROM DTOLehrer e WHERE e.PANr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes personalNrLBV */
+	public static final String QUERY_BY_PERSONALNRLBV = "SELECT e FROM DTOLehrer e WHERE e.personalNrLBV = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes personalNrLBV */
+	public static final String QUERY_LIST_BY_PERSONALNRLBV = "SELECT e FROM DTOLehrer e WHERE e.personalNrLBV IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes verguetungsSchluessel */
+	public static final String QUERY_BY_VERGUETUNGSSCHLUESSEL = "SELECT e FROM DTOLehrer e WHERE e.verguetungsSchluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes verguetungsSchluessel */
+	public static final String QUERY_LIST_BY_VERGUETUNGSSCHLUESSEL = "SELECT e FROM DTOLehrer e WHERE e.verguetungsSchluessel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumZugang */
+	public static final String QUERY_BY_DATUMZUGANG = "SELECT e FROM DTOLehrer e WHERE e.DatumZugang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumZugang */
+	public static final String QUERY_LIST_BY_DATUMZUGANG = "SELECT e FROM DTOLehrer e WHERE e.DatumZugang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GrundZugang */
+	public static final String QUERY_BY_GRUNDZUGANG = "SELECT e FROM DTOLehrer e WHERE e.GrundZugang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GrundZugang */
+	public static final String QUERY_LIST_BY_GRUNDZUGANG = "SELECT e FROM DTOLehrer e WHERE e.GrundZugang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumAbgang */
+	public static final String QUERY_BY_DATUMABGANG = "SELECT e FROM DTOLehrer e WHERE e.DatumAbgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumAbgang */
+	public static final String QUERY_LIST_BY_DATUMABGANG = "SELECT e FROM DTOLehrer e WHERE e.DatumAbgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GrundAbgang */
+	public static final String QUERY_BY_GRUNDABGANG = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GrundAbgang */
+	public static final String QUERY_LIST_BY_GRUNDABGANG = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KennwortTools */
+	public static final String QUERY_BY_KENNWORTTOOLS = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KennwortTools */
+	public static final String QUERY_LIST_BY_KENNWORTTOOLS = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KennwortToolsAktuell */
+	public static final String QUERY_BY_KENNWORTTOOLSAKTUELL = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KennwortToolsAktuell */
+	public static final String QUERY_LIST_BY_KENNWORTTOOLSAKTUELL = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes CredentialID */
+	public static final String QUERY_BY_CREDENTIALID = "SELECT e FROM DTOLehrer e WHERE e.CredentialID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes CredentialID */
+	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM DTOLehrer e WHERE e.CredentialID IN ?1";
 
 	/** Eindeutige ID zur Kennzeichnung des Lehrer-Datensatzes */
 	@Id

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,24 +18,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Lernplattformen")
-@NamedQuery(name = "DTOLernplattformen.all", query = "SELECT e FROM DTOLernplattformen e")
-@NamedQuery(name = "DTOLernplattformen.id", query = "SELECT e FROM DTOLernplattformen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOLernplattformen.id.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLernplattformen.bezeichnung", query = "SELECT e FROM DTOLernplattformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOLernplattformen.bezeichnung.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixlehrer", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixLehrer = :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixlehrer.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixLehrer IN :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixerzieher", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixErzieher = :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixerzieher.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixErzieher IN :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixschueler", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixSchueler = :value")
-@NamedQuery(name = "DTOLernplattformen.benutzernamesuffixschueler.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixSchueler IN :value")
-@NamedQuery(name = "DTOLernplattformen.konfiguration", query = "SELECT e FROM DTOLernplattformen e WHERE e.Konfiguration = :value")
-@NamedQuery(name = "DTOLernplattformen.konfiguration.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.Konfiguration IN :value")
-@NamedQuery(name = "DTOLernplattformen.primaryKeyQuery", query = "SELECT e FROM DTOLernplattformen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOLernplattformen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLernplattformen.all.migration", query = "SELECT e FROM DTOLernplattformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "BenutzernameSuffixLehrer", "BenutzernameSuffixErzieher", "BenutzernameSuffixSchueler", "Konfiguration"})
 public final class DTOLernplattformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLernplattformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLernplattformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLernplattformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLernplattformen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLernplattformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLernplattformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOLernplattformen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOLernplattformen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixLehrer */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixLehrer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixLehrer */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixLehrer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixErzieher */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixErzieher = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixErzieher */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixErzieher IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixSchueler */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixSchueler = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixSchueler */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM DTOLernplattformen e WHERE e.BenutzernameSuffixSchueler IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Konfiguration */
+	public static final String QUERY_BY_KONFIGURATION = "SELECT e FROM DTOLernplattformen e WHERE e.Konfiguration = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Konfiguration */
+	public static final String QUERY_LIST_BY_KONFIGURATION = "SELECT e FROM DTOLernplattformen e WHERE e.Konfiguration IN ?1";
 
 	/** ID des Datensatzes für die verwendete Lernplattform */
 	@Id

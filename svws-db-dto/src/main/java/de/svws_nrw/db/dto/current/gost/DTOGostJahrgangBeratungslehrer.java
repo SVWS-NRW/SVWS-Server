@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,15 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOGostJahrgangBeratungslehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Jahrgang_Beratungslehrer")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.all", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.abi_jahrgang", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.lehrer_id", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.lehrer_id.multiple", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.all.migration", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
 @JsonPropertyOrder({"Abi_Jahrgang", "Lehrer_ID"})
 public final class DTOGostJahrgangBeratungslehrer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostJahrgangBeratungslehrer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = ?1 AND e.Lehrer_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Lehrer_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
+	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abi_Jahrgang */
+	public static final String QUERY_LIST_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID IN ?1";
 
 	/** Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht  */
 	@Id

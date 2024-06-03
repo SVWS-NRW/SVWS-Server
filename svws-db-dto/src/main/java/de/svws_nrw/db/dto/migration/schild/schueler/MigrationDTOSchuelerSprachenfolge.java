@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,32 +18,80 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachenfolge")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.all", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.id", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.abschnittvon", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittVon = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.abschnittvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.abschnittbis", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittBis = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.abschnittbis.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.referenzniveau", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Referenzniveau = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.referenzniveau.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.fach_id", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.reihenfolge", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Reihenfolge = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.reihenfolge.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Reihenfolge IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangvon", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangVon = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangVon IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangbis", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis = :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangbis.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.all.migration", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "AbschnittVon", "AbschnittBis", "Referenzniveau", "SchulnrEigner", "Fach_ID", "Reihenfolge", "JahrgangVon", "JahrgangBis"})
 public final class MigrationDTOSchuelerSprachenfolge {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschnittVon */
+	public static final String QUERY_BY_ABSCHNITTVON = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschnittVon */
+	public static final String QUERY_LIST_BY_ABSCHNITTVON = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschnittBis */
+	public static final String QUERY_BY_ABSCHNITTBIS = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschnittBis */
+	public static final String QUERY_LIST_BY_ABSCHNITTBIS = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Referenzniveau */
+	public static final String QUERY_BY_REFERENZNIVEAU = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Referenzniveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Referenzniveau */
+	public static final String QUERY_LIST_BY_REFERENZNIVEAU = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Reihenfolge */
+	public static final String QUERY_BY_REIHENFOLGE = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Reihenfolge = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Reihenfolge */
+	public static final String QUERY_LIST_BY_REIHENFOLGE = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.Reihenfolge IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes JahrgangVon */
+	public static final String QUERY_BY_JAHRGANGVON = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes JahrgangVon */
+	public static final String QUERY_LIST_BY_JAHRGANGVON = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes JahrgangBis */
+	public static final String QUERY_BY_JAHRGANGBIS = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes JahrgangBis */
+	public static final String QUERY_LIST_BY_JAHRGANGBIS = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis IN ?1";
 
 	/** ID des Sprachenfolgeeintrags */
 	@Id

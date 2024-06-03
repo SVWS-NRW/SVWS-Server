@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,16 +18,32 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFotos")
-@NamedQuery(name = "DTOSchuelerFoto.all", query = "SELECT e FROM DTOSchuelerFoto e")
-@NamedQuery(name = "DTOSchuelerFoto.schueler_id", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerFoto.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoto.fotobase64", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 = :value")
-@NamedQuery(name = "DTOSchuelerFoto.fotobase64.multiple", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 IN :value")
-@NamedQuery(name = "DTOSchuelerFoto.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "DTOSchuelerFoto.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoto.all.migration", query = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "FotoBase64"})
 public final class DTOSchuelerFoto {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerFoto e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FotoBase64 */
+	public static final String QUERY_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FotoBase64 */
+	public static final String QUERY_LIST_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 IN ?1";
 
 	/** SchülerID zum Foto */
 	@Id

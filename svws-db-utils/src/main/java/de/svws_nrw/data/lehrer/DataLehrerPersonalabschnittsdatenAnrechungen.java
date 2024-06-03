@@ -68,7 +68,8 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> result = new ArrayList<>();
     	// Bestimme die Anrechungen für die Lehrerabschnittsdaten
-		final List<DTOLehrerAnrechnungsstunde> dtos = conn.queryNamed("DTOLehrerAnrechnungsstunde.abschnitt_id", idLehrerabschnittsdaten, DTOLehrerAnrechnungsstunde.class);
+		final List<DTOLehrerAnrechnungsstunde> dtos = conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_BY_ABSCHNITT_ID,
+				DTOLehrerAnrechnungsstunde.class, idLehrerabschnittsdaten);
     	if (dtos == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu

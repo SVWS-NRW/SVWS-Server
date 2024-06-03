@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOKursLehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KursLehrer")
-@NamedQuery(name = "DTOKursLehrer.all", query = "SELECT e FROM DTOKursLehrer e")
-@NamedQuery(name = "DTOKursLehrer.kurs_id", query = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "DTOKursLehrer.kurs_id.multiple", query = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "DTOKursLehrer.lehrer_id", query = "SELECT e FROM DTOKursLehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOKursLehrer.lehrer_id.multiple", query = "SELECT e FROM DTOKursLehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOKursLehrer.anteil", query = "SELECT e FROM DTOKursLehrer e WHERE e.Anteil = :value")
-@NamedQuery(name = "DTOKursLehrer.anteil.multiple", query = "SELECT e FROM DTOKursLehrer e WHERE e.Anteil IN :value")
-@NamedQuery(name = "DTOKursLehrer.primaryKeyQuery", query = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name = "DTOKursLehrer.all.migration", query = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
 @JsonPropertyOrder({"Kurs_ID", "Lehrer_ID", "Anteil"})
 public final class DTOKursLehrer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKursLehrer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID = ?1 AND e.Lehrer_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM DTOKursLehrer e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOKursLehrer e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOKursLehrer e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anteil */
+	public static final String QUERY_BY_ANTEIL = "SELECT e FROM DTOKursLehrer e WHERE e.Anteil = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anteil */
+	public static final String QUERY_LIST_BY_ANTEIL = "SELECT e FROM DTOKursLehrer e WHERE e.Anteil IN ?1";
 
 	/** ID des Kurses zu denen der Lehrer gehört */
 	@Id

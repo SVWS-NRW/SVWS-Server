@@ -152,7 +152,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
         final GostBlockungSchiene daten = dtoMapper.apply(schiene);
 
         // Passt die Schienen-Nummern bei den Regeln an.
-		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", schiene.Blockung_ID, DTOGostBlockungSchiene.class);
+		final List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, schiene.Blockung_ID);
 		for (final DTOGostBlockungSchiene tmp : schienen) {
 		    if (daten.id == tmp.ID) {
 	            conn.transactionRemove(tmp); // Entferne die Schiene
@@ -164,13 +164,13 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 
 		// Passe alle Regeln einem Parametern Schienenanzahl an.
 		// Bestimme alle Regeln der Blockung
-		final List<DTOGostBlockungRegel> dtoRegeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", schiene.Blockung_ID, DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> dtoRegeln = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class, schiene.Blockung_ID);
 		final Map<Long, DTOGostBlockungRegel> mapDTORegeln = dtoRegeln.stream().collect(Collectors.toMap(r -> r.ID, r -> r));
 		if (!dtoRegeln.isEmpty()) {
 			final List<Long> regelIDs = dtoRegeln.stream().map(r -> r.ID).toList();
 			// Bestimme die RegelParameter dieser Regeln
-			final List<DTOGostBlockungRegelParameter> dtoRegelParameter = conn
-					.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+			final List<DTOGostBlockungRegelParameter> dtoRegelParameter = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
+					DTOGostBlockungRegelParameter.class, regelIDs);
 			final Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = dtoRegelParameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
 			// Erstelle die Core-Types und prüfe auf neue Parameter-Werte (verwende hierbei den gleichen Algorithmus, wie im zugehörigen Daten-Manager..
 			final List<GostBlockungRegel> regeln = DataGostBlockungRegel.getBlockungsregeln(dtoRegeln, dtoRegelParameter);
@@ -244,7 +244,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		final long idSchiene = dbSchienenID == null ? 1 : dbSchienenID.MaxID + 1;
 		// Ermittle, ob bereits Schienen existieren
-		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
+		final List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, idBlockung);
     	int schienennummer = 1;
     	if ((schienen != null) && (!schienen.isEmpty())) { // Bestimme die erste freie Schienennummer
     		final Set<Integer> schienenIDs = schienen.stream().map(e -> e.Nummer).collect(Collectors.toSet());
@@ -270,7 +270,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	public Response deleteSchiene(final long idBlockung) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
-    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
+    	final List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, idBlockung);
     	if ((schienen == null) || (schienen.isEmpty()))
     		throw new ApiOperationException(Status.NOT_FOUND);
     	final Optional<DTOGostBlockungSchiene> optSchiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer));

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzerAllgemein")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.all", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.id", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.id.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.anzeigename", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName = :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.anzeigename.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID = :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerAllgemein.all.migration", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "AnzeigeName", "CredentialID"})
 public final class MigrationDTOBenutzerAllgemein {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOBenutzerAllgemein e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnzeigeName */
+	public static final String QUERY_BY_ANZEIGENAME = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnzeigeName */
+	public static final String QUERY_LIST_BY_ANZEIGENAME = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes CredentialID */
+	public static final String QUERY_BY_CREDENTIALID = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes CredentialID */
+	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID IN ?1";
 
 	/** Die ID des allgemeinen Benutzers */
 	@Id

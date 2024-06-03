@@ -58,7 +58,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<DTOSchuleOAuthSecrets> daten = conn.queryNamed("DTOSchuleOAuthSecrets.all", DTOSchuleOAuthSecrets.class).getResultList();
+		final List<DTOSchuleOAuthSecrets> daten = conn.queryAll(DTOSchuleOAuthSecrets.class);
 		final List<OAuth2ClientSecret> result = new ArrayList<>();
 		if (daten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -87,10 +87,8 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @return das DB-DTO zu den OAuth2-Secrets
 	 */
 	public DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
-		final List<DTOSchuleOAuthSecrets> dtoList = conn.queryNamed("DTOSchuleOAuthSecrets.id", typ.getId(), DTOSchuleOAuthSecrets.class);
-		if ((dtoList == null) || (dtoList.size() != 1))
-			return null;
-		return dtoList.get(0);
+		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
+		return (dto == null) ? null : dto;
 	}
 
 

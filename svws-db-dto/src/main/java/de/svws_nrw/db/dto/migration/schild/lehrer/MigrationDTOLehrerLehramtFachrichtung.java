@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOLehrerLehramtFachrichtungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtFachr")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.all", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.lehrer_id", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.fachrkrz", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrKrz = :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.fachrkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrKrz IN :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.fachranerkennungkrz", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrAnerkennungKrz = :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.fachranerkennungkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrAnerkennungKrz IN :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.schulnreigner", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1 AND e.FachrKrz = ?2")
-@NamedQuery(name = "MigrationDTOLehrerLehramtFachrichtung.all.migration", query = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IS NOT NULL AND e.FachrKrz IS NOT NULL")
 @JsonPropertyOrder({"Lehrer_ID", "FachrKrz", "FachrAnerkennungKrz", "SchulnrEigner"})
 public final class MigrationDTOLehrerLehramtFachrichtung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1 AND e.FachrKrz = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IS NOT NULL AND e.FachrKrz IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachrKrz */
+	public static final String QUERY_BY_FACHRKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachrKrz */
+	public static final String QUERY_LIST_BY_FACHRKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachrAnerkennungKrz */
+	public static final String QUERY_BY_FACHRANERKENNUNGKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrAnerkennungKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachrAnerkennungKrz */
+	public static final String QUERY_LIST_BY_FACHRANERKENNUNGKRZ = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.FachrAnerkennungKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLehramtFachrichtung e WHERE e.SchulnrEigner IN ?1";
 
 	/** LehrerID zu der die Fachrichtung gehört */
 	@Id

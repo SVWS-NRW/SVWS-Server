@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Berufskolleg_Anlagen")
-@NamedQuery(name = "DTOBerufskollegAnlagen.all", query = "SELECT e FROM DTOBerufskollegAnlagen e")
-@NamedQuery(name = "DTOBerufskollegAnlagen.id", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.id.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.kuerzel", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.kuerzel.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.bezeichnung", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.bezeichnung.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.gueltigvon", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigVon = :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.gueltigvon.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigVon IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.gueltigbis", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis = :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.gueltigbis.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.primaryKeyQuery", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOBerufskollegAnlagen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOBerufskollegAnlagen.all.migration", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
 public final class DTOBerufskollegAnlagen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOBerufskollegAnlagen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis IN ?1";
 
 	/** ID der Anlage */
 	@Id

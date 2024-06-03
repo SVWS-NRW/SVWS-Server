@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,26 +18,62 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EnmLernabschnittsdaten")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.all", query = "SELECT e FROM DTOEnmLernabschnittsdaten e")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.id", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.id.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstd", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstd.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstdu", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstdu.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tszeugnisbem", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tszeugnisbem.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsasv", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsasv.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsaue", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsaue.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEnmLernabschnittsdaten.all.migration", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsBemerkungVersetzung"})
 public final class DTOEnmLernabschnittsdaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOEnmLernabschnittsdaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsSumFehlStd */
+	public static final String QUERY_BY_TSSUMFEHLSTD = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsSumFehlStd */
+	public static final String QUERY_LIST_BY_TSSUMFEHLSTD = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsSumFehlStdU */
+	public static final String QUERY_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsSumFehlStdU */
+	public static final String QUERY_LIST_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsZeugnisBem */
+	public static final String QUERY_BY_TSZEUGNISBEM = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsZeugnisBem */
+	public static final String QUERY_LIST_BY_TSZEUGNISBEM = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsASV */
+	public static final String QUERY_BY_TSASV = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsASV */
+	public static final String QUERY_LIST_BY_TSASV = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsAUE */
+	public static final String QUERY_BY_TSAUE = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsAUE */
+	public static final String QUERY_LIST_BY_TSAUE = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsBemerkungVersetzung */
+	public static final String QUERY_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsBemerkungVersetzung */
+	public static final String QUERY_LIST_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN ?1";
 
 	/** ID der Lernabschnittsdaten */
 	@Id

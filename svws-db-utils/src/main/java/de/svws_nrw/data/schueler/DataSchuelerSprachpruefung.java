@@ -76,7 +76,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
     	if (schueler == null)
     		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
     	// Bestimme die Sprachprüfungen des Schülers
-		return conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", idSchueler, DTOSchuelerSprachpruefungen.class);
+		return conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, idSchueler);
 	}
 
 	private List<Sprachpruefung> getSprachpruefungen() throws ApiOperationException {

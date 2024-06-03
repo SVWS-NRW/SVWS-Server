@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,38 +26,98 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Fachgruppen")
-@NamedQuery(name = "DTOFachgruppen.all", query = "SELECT e FROM DTOFachgruppen e")
-@NamedQuery(name = "DTOFachgruppen.id", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOFachgruppen.id.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOFachgruppen.fachbereich", query = "SELECT e FROM DTOFachgruppen e WHERE e.Fachbereich = :value")
-@NamedQuery(name = "DTOFachgruppen.fachbereich.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.Fachbereich IN :value")
-@NamedQuery(name = "DTOFachgruppen.schildfgid", query = "SELECT e FROM DTOFachgruppen e WHERE e.SchildFgID = :value")
-@NamedQuery(name = "DTOFachgruppen.schildfgid.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.SchildFgID IN :value")
-@NamedQuery(name = "DTOFachgruppen.fg_bezeichnung", query = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Bezeichnung = :value")
-@NamedQuery(name = "DTOFachgruppen.fg_bezeichnung.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Bezeichnung IN :value")
-@NamedQuery(name = "DTOFachgruppen.fg_kuerzel", query = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Kuerzel = :value")
-@NamedQuery(name = "DTOFachgruppen.fg_kuerzel.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Kuerzel IN :value")
-@NamedQuery(name = "DTOFachgruppen.schulformen", query = "SELECT e FROM DTOFachgruppen e WHERE e.Schulformen = :value")
-@NamedQuery(name = "DTOFachgruppen.schulformen.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.Schulformen IN :value")
-@NamedQuery(name = "DTOFachgruppen.farber", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeR = :value")
-@NamedQuery(name = "DTOFachgruppen.farber.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeR IN :value")
-@NamedQuery(name = "DTOFachgruppen.farbeg", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeG = :value")
-@NamedQuery(name = "DTOFachgruppen.farbeg.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeG IN :value")
-@NamedQuery(name = "DTOFachgruppen.farbeb", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeB = :value")
-@NamedQuery(name = "DTOFachgruppen.farbeb.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeB IN :value")
-@NamedQuery(name = "DTOFachgruppen.sortierung", query = "SELECT e FROM DTOFachgruppen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOFachgruppen.sortierung.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOFachgruppen.fuerzeugnis", query = "SELECT e FROM DTOFachgruppen e WHERE e.FuerZeugnis = :value")
-@NamedQuery(name = "DTOFachgruppen.fuerzeugnis.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.FuerZeugnis IN :value")
-@NamedQuery(name = "DTOFachgruppen.gueltigvon", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigVon = :value")
-@NamedQuery(name = "DTOFachgruppen.gueltigvon.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigVon IN :value")
-@NamedQuery(name = "DTOFachgruppen.gueltigbis", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis = :value")
-@NamedQuery(name = "DTOFachgruppen.gueltigbis.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name = "DTOFachgruppen.primaryKeyQuery", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOFachgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOFachgruppen.all.migration", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Fachbereich", "SchildFgID", "FG_Bezeichnung", "FG_Kuerzel", "Schulformen", "FarbeR", "FarbeG", "FarbeB", "Sortierung", "FuerZeugnis", "gueltigVon", "gueltigBis"})
 public final class DTOFachgruppen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFachgruppen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFachgruppen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFachgruppen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachgruppen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOFachgruppen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFachgruppen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachbereich */
+	public static final String QUERY_BY_FACHBEREICH = "SELECT e FROM DTOFachgruppen e WHERE e.Fachbereich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachbereich */
+	public static final String QUERY_LIST_BY_FACHBEREICH = "SELECT e FROM DTOFachgruppen e WHERE e.Fachbereich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchildFgID */
+	public static final String QUERY_BY_SCHILDFGID = "SELECT e FROM DTOFachgruppen e WHERE e.SchildFgID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchildFgID */
+	public static final String QUERY_LIST_BY_SCHILDFGID = "SELECT e FROM DTOFachgruppen e WHERE e.SchildFgID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FG_Bezeichnung */
+	public static final String QUERY_BY_FG_BEZEICHNUNG = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FG_Bezeichnung */
+	public static final String QUERY_LIST_BY_FG_BEZEICHNUNG = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FG_Kuerzel */
+	public static final String QUERY_BY_FG_KUERZEL = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FG_Kuerzel */
+	public static final String QUERY_LIST_BY_FG_KUERZEL = "SELECT e FROM DTOFachgruppen e WHERE e.FG_Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulformen */
+	public static final String QUERY_BY_SCHULFORMEN = "SELECT e FROM DTOFachgruppen e WHERE e.Schulformen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulformen */
+	public static final String QUERY_LIST_BY_SCHULFORMEN = "SELECT e FROM DTOFachgruppen e WHERE e.Schulformen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FarbeR */
+	public static final String QUERY_BY_FARBER = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeR = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FarbeR */
+	public static final String QUERY_LIST_BY_FARBER = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeR IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FarbeG */
+	public static final String QUERY_BY_FARBEG = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeG = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FarbeG */
+	public static final String QUERY_LIST_BY_FARBEG = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeG IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FarbeB */
+	public static final String QUERY_BY_FARBEB = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FarbeB */
+	public static final String QUERY_LIST_BY_FARBEB = "SELECT e FROM DTOFachgruppen e WHERE e.FarbeB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachgruppen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFachgruppen e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FuerZeugnis */
+	public static final String QUERY_BY_FUERZEUGNIS = "SELECT e FROM DTOFachgruppen e WHERE e.FuerZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FuerZeugnis */
+	public static final String QUERY_LIST_BY_FUERZEUGNIS = "SELECT e FROM DTOFachgruppen e WHERE e.FuerZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis IN ?1";
 
 	/** ID des Fachgruppen-Core-Type, welcher auch ein Mapping zu den Fachgruppen von SchildNRW und Lupo bereitstellt */
 	@Id

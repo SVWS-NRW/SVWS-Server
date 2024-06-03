@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,32 +29,80 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerWiedervorlage")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.all", query = "SELECT e FROM DTOSchuelerWiedervorlage e")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.schueler_id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.bemerkung", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.angelegtam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.angelegtam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.wiedervorlageam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.wiedervorlageam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.erledigtam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.erledigtam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.user_id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.user_id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.sekretariat", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.sekretariat.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.typ", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.typ.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerWiedervorlage.all.migration", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Bemerkung", "AngelegtAm", "WiedervorlageAm", "ErledigtAm", "User_ID", "Sekretariat", "Typ", "NichtLoeschen"})
 public final class DTOSchuelerWiedervorlage {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerWiedervorlage e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AngelegtAm */
+	public static final String QUERY_BY_ANGELEGTAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AngelegtAm */
+	public static final String QUERY_LIST_BY_ANGELEGTAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WiedervorlageAm */
+	public static final String QUERY_BY_WIEDERVORLAGEAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WiedervorlageAm */
+	public static final String QUERY_LIST_BY_WIEDERVORLAGEAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ErledigtAm */
+	public static final String QUERY_BY_ERLEDIGTAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ErledigtAm */
+	public static final String QUERY_LIST_BY_ERLEDIGTAM = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes User_ID */
+	public static final String QUERY_BY_USER_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes User_ID */
+	public static final String QUERY_LIST_BY_USER_ID = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sekretariat */
+	public static final String QUERY_BY_SEKRETARIAT = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sekretariat */
+	public static final String QUERY_LIST_BY_SEKRETARIAT = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NichtLoeschen */
+	public static final String QUERY_BY_NICHTLOESCHEN = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NichtLoeschen */
+	public static final String QUERY_LIST_BY_NICHTLOESCHEN = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN ?1";
 
 	/** ID des Wiedervorlageeitrags beim Schüler */
 	@Id

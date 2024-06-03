@@ -164,15 +164,17 @@ public final class DataKlassendaten extends DataManager<Long> {
 		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(klasse.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt mit der ID %d für die Klasse mit der ID %d wurde nicht gefunden.".formatted(klasse.Schuljahresabschnitts_ID, klasse.ID));
-		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
+		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, klasse.ID);
     	// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
     	final Map<String, DTOKlassen> klassenVorher = (schuljahresabschnitt.VorigerAbschnitt_ID == null)
     			? new HashMap<>()
-    			: conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.VorigerAbschnitt_ID, DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
+    			: conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.VorigerAbschnitt_ID)
+    				.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
     	// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
     	final Map<String, DTOKlassen> klassenNachher = (schuljahresabschnitt.FolgeAbschnitt_ID == null)
     			? new HashMap<>()
-    			: conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.FolgeAbschnitt_ID, DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
+    			: conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.FolgeAbschnitt_ID)
+    				.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Erstelle das Core-DTO-Objekt für die Klasse
 		return mapDTO(schule.Schulform, mapSchuljahresabschnitte, klasse, klassenLeitungen, dtoSchueler, klassenVorher, klassenNachher);
 	}
@@ -193,7 +195,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		// Bestimme die Schüler der Klasse
 		final List<Long> schuelerIDs = getSchuelerIDsByKlassenID(id);
 		final List<DTOSchueler> dtoSchueler = schuelerIDs.isEmpty() ? new ArrayList<>()
-			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+			: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		// Erstelle das Core-DTO-Objekt für die Klasse
 		return getFromIDInternal(id, dtoSchueler);
 	}
@@ -207,10 +209,8 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 * @return die List von Schüler IDs, welche der Klasse zugeordnet sind
 	 */
 	public List<Long> getSchuelerIDsByKlassenID(final Long id) {
-		return conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", id, DTOSchuelerLernabschnittsdaten.class).stream()
-			.filter(sla -> sla.WechselNr == 0)
-			.map(sla -> sla.Schueler_ID)
-			.toList();
+		return conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, id)
+			.stream().filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).toList();
 	}
 
 
@@ -243,7 +243,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 	public List<KlassenDaten> getFromSchuljahresabschnittsIDOhneSchueler(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine ID für den Schuljahresabschnitt übergeben.");
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", id, DTOKlassen.class);
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, id);
 		if (klassen == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur SchuljahresabschnittsID " + id + " gefunden.");
 		final List<KlassenDaten> daten = new ArrayList<>();
@@ -497,7 +497,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 */
 	public Response deleteMultiple(final List<Long> ids) {
 		// Bestimme die Datenbank-DTOs der Klassen
-		final List<DTOKlassen> klassen = this.conn.queryNamed("DTOKlassen.id.multiple", ids, DTOKlassen.class).stream().toList();
+		final List<DTOKlassen> klassen = this.conn.queryByKeyList(DTOKlassen.class, ids).stream().toList();
 
 		// Prüfe ob das Löschen der Klassen erlaubt ist
 		final List<SimpleOperationResponse> responses = new ArrayList<>();

@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOHerkunftsartSchulformenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunftsart_Schulformen")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.all", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.herkunftsart_id", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.herkunftsart_id.multiple", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.schulform_kuerzel", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.schulform_kuerzel.multiple", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.kurzbezeichnung", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung = :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.kurzbezeichnung.multiple", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.bezeichnung", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = ?1 AND e.Schulform_Kuerzel = ?2")
-@NamedQuery(name = "MigrationDTOHerkunftsartSchulformen.all.migration", query = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Herkunftsart_ID", "Schulform_Kuerzel", "KurzBezeichnung", "Bezeichnung"})
 public final class MigrationDTOHerkunftsartSchulformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = ?1 AND e.Schulform_Kuerzel = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Herkunftsart_ID */
+	public static final String QUERY_BY_HERKUNFTSART_ID = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Herkunftsart_ID */
+	public static final String QUERY_LIST_BY_HERKUNFTSART_ID = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulform_Kuerzel */
+	public static final String QUERY_BY_SCHULFORM_KUERZEL = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulform_Kuerzel */
+	public static final String QUERY_LIST_BY_SCHULFORM_KUERZEL = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KurzBezeichnung */
+	public static final String QUERY_BY_KURZBEZEICHNUNG = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KurzBezeichnung */
+	public static final String QUERY_LIST_BY_KURZBEZEICHNUNG = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOHerkunftsartSchulformen e WHERE e.Bezeichnung IN ?1";
 
 	/** die ID der Herkunftsart */
 	@Id

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,38 +26,98 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schild_Verwaltung")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.all", query = "SELECT e FROM MigrationDTOSchildVerwaltung e")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.backupdatum", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.backupdatum.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.autoberechnung", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.autoberechnung.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumstatkue", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumstatkue.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumschildintern", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumschildintern.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.bescheinigung", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.bescheinigung.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.stammblatt", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.stammblatt.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datengeprueft", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datengeprueft.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.version", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.version.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.gu_id", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.gu_id.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.schulnreigner", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchildVerwaltung.all.migration", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"BackupDatum", "AutoBerechnung", "DatumStatkue", "DatumSchildIntern", "Bescheinigung", "Stammblatt", "DatenGeprueft", "Version", "GU_ID", "SchulnrEigner", "DatumLoeschfristHinweisDeaktiviert", "DatumLoeschfristHinweisDeaktiviertUserID", "DatumDatenGeloescht"})
 public final class MigrationDTOSchildVerwaltung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchildVerwaltung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BackupDatum */
+	public static final String QUERY_BY_BACKUPDATUM = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BackupDatum */
+	public static final String QUERY_LIST_BY_BACKUPDATUM = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AutoBerechnung */
+	public static final String QUERY_BY_AUTOBERECHNUNG = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AutoBerechnung */
+	public static final String QUERY_LIST_BY_AUTOBERECHNUNG = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumStatkue */
+	public static final String QUERY_BY_DATUMSTATKUE = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumStatkue */
+	public static final String QUERY_LIST_BY_DATUMSTATKUE = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumSchildIntern */
+	public static final String QUERY_BY_DATUMSCHILDINTERN = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumSchildIntern */
+	public static final String QUERY_LIST_BY_DATUMSCHILDINTERN = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bescheinigung */
+	public static final String QUERY_BY_BESCHEINIGUNG = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bescheinigung */
+	public static final String QUERY_LIST_BY_BESCHEINIGUNG = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stammblatt */
+	public static final String QUERY_BY_STAMMBLATT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stammblatt */
+	public static final String QUERY_LIST_BY_STAMMBLATT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatenGeprueft */
+	public static final String QUERY_BY_DATENGEPRUEFT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatenGeprueft */
+	public static final String QUERY_LIST_BY_DATENGEPRUEFT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Version */
+	public static final String QUERY_BY_VERSION = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Version */
+	public static final String QUERY_LIST_BY_VERSION = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GU_ID */
+	public static final String QUERY_BY_GU_ID = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GU_ID */
+	public static final String QUERY_LIST_BY_GU_ID = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumLoeschfristHinweisDeaktiviert */
+	public static final String QUERY_BY_DATUMLOESCHFRISTHINWEISDEAKTIVIERT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumLoeschfristHinweisDeaktiviert */
+	public static final String QUERY_LIST_BY_DATUMLOESCHFRISTHINWEISDEAKTIVIERT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumLoeschfristHinweisDeaktiviertUserID */
+	public static final String QUERY_BY_DATUMLOESCHFRISTHINWEISDEAKTIVIERTUSERID = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumLoeschfristHinweisDeaktiviertUserID */
+	public static final String QUERY_LIST_BY_DATUMLOESCHFRISTHINWEISDEAKTIVIERTUSERID = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumDatenGeloescht */
+	public static final String QUERY_BY_DATUMDATENGELOESCHT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumDatenGeloescht */
+	public static final String QUERY_LIST_BY_DATUMDATENGELOESCHT = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN ?1";
 
 	/** Wird das Dateum des letzten Backupo eingetragen. */
 	@Column(name = "BackupDatum")

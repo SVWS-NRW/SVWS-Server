@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,45 +28,119 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOEigeneImporteFelderPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte_Felder")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.all", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.import_id", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.import_id.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.field_id", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Field_ID = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.field_id.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Field_ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.tabledescription", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.TableDescription = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.tabledescription.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.TableDescription IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.fielddescription", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.FieldDescription = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.fielddescription.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.FieldDescription IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.srcposition", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.SrcPosition = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.srcposition.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.SrcPosition IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dsttable", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstTable = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dsttable.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstTable IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldName = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldName IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldtype", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldType = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldtype.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldType IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldisidentifier", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstfieldisidentifier.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookupdir", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupDir = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookupdir.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupDir IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookuptable", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTable = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookuptable.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTable IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookupfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupFieldName = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookupfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupFieldName IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookuptableidfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstlookuptableidfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstresultfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstResultFieldName = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstresultfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstResultFieldName IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstkeylookupinsert", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstkeylookupinsert.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstkeylookupnamecreateid", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstkeylookupnamecreateid.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstforcenumeric", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstForceNumeric = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.dstforcenumeric.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstForceNumeric IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID = ?1 AND e.Field_ID = ?2")
-@NamedQuery(name = "MigrationDTOEigeneImporteFelder.all.migration", query = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID IS NOT NULL AND e.Field_ID IS NOT NULL")
 @JsonPropertyOrder({"Import_ID", "Field_ID", "TableDescription", "FieldDescription", "SrcPosition", "DstTable", "DstFieldName", "DstFieldType", "DstFieldIsIdentifier", "DstLookupDir", "DstLookupTable", "DstLookupFieldName", "DstLookupTableIDFieldName", "DstResultFieldName", "DstKeyLookupInsert", "DstKeyLookupNameCreateID", "DstForceNumeric"})
 public final class MigrationDTOEigeneImporteFelder {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOEigeneImporteFelder e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID = ?1 AND e.Field_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID IS NOT NULL AND e.Field_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Import_ID */
+	public static final String QUERY_BY_IMPORT_ID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Import_ID */
+	public static final String QUERY_LIST_BY_IMPORT_ID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Import_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Field_ID */
+	public static final String QUERY_BY_FIELD_ID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Field_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Field_ID */
+	public static final String QUERY_LIST_BY_FIELD_ID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.Field_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TableDescription */
+	public static final String QUERY_BY_TABLEDESCRIPTION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.TableDescription = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TableDescription */
+	public static final String QUERY_LIST_BY_TABLEDESCRIPTION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.TableDescription IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FieldDescription */
+	public static final String QUERY_BY_FIELDDESCRIPTION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.FieldDescription = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FieldDescription */
+	public static final String QUERY_LIST_BY_FIELDDESCRIPTION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.FieldDescription IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SrcPosition */
+	public static final String QUERY_BY_SRCPOSITION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.SrcPosition = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SrcPosition */
+	public static final String QUERY_LIST_BY_SRCPOSITION = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.SrcPosition IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstTable */
+	public static final String QUERY_BY_DSTTABLE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstTable = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstTable */
+	public static final String QUERY_LIST_BY_DSTTABLE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstTable IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstFieldName */
+	public static final String QUERY_BY_DSTFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstFieldName */
+	public static final String QUERY_LIST_BY_DSTFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstFieldType */
+	public static final String QUERY_BY_DSTFIELDTYPE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldType = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstFieldType */
+	public static final String QUERY_LIST_BY_DSTFIELDTYPE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldType IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstFieldIsIdentifier */
+	public static final String QUERY_BY_DSTFIELDISIDENTIFIER = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstFieldIsIdentifier */
+	public static final String QUERY_LIST_BY_DSTFIELDISIDENTIFIER = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstLookupDir */
+	public static final String QUERY_BY_DSTLOOKUPDIR = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupDir = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstLookupDir */
+	public static final String QUERY_LIST_BY_DSTLOOKUPDIR = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupDir IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstLookupTable */
+	public static final String QUERY_BY_DSTLOOKUPTABLE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTable = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstLookupTable */
+	public static final String QUERY_LIST_BY_DSTLOOKUPTABLE = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTable IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstLookupFieldName */
+	public static final String QUERY_BY_DSTLOOKUPFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupFieldName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstLookupFieldName */
+	public static final String QUERY_LIST_BY_DSTLOOKUPFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupFieldName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstLookupTableIDFieldName */
+	public static final String QUERY_BY_DSTLOOKUPTABLEIDFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstLookupTableIDFieldName */
+	public static final String QUERY_LIST_BY_DSTLOOKUPTABLEIDFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstResultFieldName */
+	public static final String QUERY_BY_DSTRESULTFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstResultFieldName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstResultFieldName */
+	public static final String QUERY_LIST_BY_DSTRESULTFIELDNAME = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstResultFieldName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstKeyLookupInsert */
+	public static final String QUERY_BY_DSTKEYLOOKUPINSERT = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstKeyLookupInsert */
+	public static final String QUERY_LIST_BY_DSTKEYLOOKUPINSERT = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstKeyLookupNameCreateID */
+	public static final String QUERY_BY_DSTKEYLOOKUPNAMECREATEID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstKeyLookupNameCreateID */
+	public static final String QUERY_LIST_BY_DSTKEYLOOKUPNAMECREATEID = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DstForceNumeric */
+	public static final String QUERY_BY_DSTFORCENUMERIC = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstForceNumeric = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DstForceNumeric */
+	public static final String QUERY_LIST_BY_DSTFORCENUMERIC = "SELECT e FROM MigrationDTOEigeneImporteFelder e WHERE e.DstForceNumeric IN ?1";
 
 	/** externen Textimport Felder */
 	@Id

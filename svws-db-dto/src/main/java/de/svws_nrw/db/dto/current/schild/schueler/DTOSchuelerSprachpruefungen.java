@@ -16,7 +16,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,42 +39,110 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachpruefungen")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.all", query = "SELECT e FROM DTOSchuelerSprachpruefungen e")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.id", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.id.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.schueler_id", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.sprache", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Sprache = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.sprache.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Sprache IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.asdjahrgang", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.asdjahrgang.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.anspruchsniveau", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.anspruchsniveau.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.pruefungsdatum", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.pruefungsdatum.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.ersetztesprache", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.ersetztesprache.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.isthsupruefung", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.isthsupruefung.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.istfeststellungspruefung", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.istfeststellungspruefung.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.referenzniveau", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Referenzniveau = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.referenzniveau.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Referenzniveau IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.notepruefung", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung = :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.notepruefung.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachpruefungen.all.migration", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "ErsetzteSprache", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
 public final class DTOSchuelerSprachpruefungen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerSprachpruefungen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sprache */
+	public static final String QUERY_BY_SPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Sprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sprache */
+	public static final String QUERY_LIST_BY_SPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Sprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASDJahrgang */
+	public static final String QUERY_BY_ASDJAHRGANG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASDJahrgang */
+	public static final String QUERY_LIST_BY_ASDJAHRGANG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anspruchsniveau */
+	public static final String QUERY_BY_ANSPRUCHSNIVEAU = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anspruchsniveau */
+	public static final String QUERY_LIST_BY_ANSPRUCHSNIVEAU = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Pruefungsdatum */
+	public static final String QUERY_BY_PRUEFUNGSDATUM = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Pruefungsdatum */
+	public static final String QUERY_LIST_BY_PRUEFUNGSDATUM = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ErsetzteSprache */
+	public static final String QUERY_BY_ERSETZTESPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ErsetzteSprache */
+	public static final String QUERY_LIST_BY_ERSETZTESPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstHSUPruefung */
+	public static final String QUERY_BY_ISTHSUPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstHSUPruefung */
+	public static final String QUERY_LIST_BY_ISTHSUPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstFeststellungspruefung */
+	public static final String QUERY_BY_ISTFESTSTELLUNGSPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstFeststellungspruefung */
+	public static final String QUERY_LIST_BY_ISTFESTSTELLUNGSPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KannErstePflichtfremdspracheErsetzen */
+	public static final String QUERY_BY_KANNERSTEPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KannErstePflichtfremdspracheErsetzen */
+	public static final String QUERY_LIST_BY_KANNERSTEPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KannZweitePflichtfremdspracheErsetzen */
+	public static final String QUERY_BY_KANNZWEITEPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KannZweitePflichtfremdspracheErsetzen */
+	public static final String QUERY_LIST_BY_KANNZWEITEPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KannWahlpflichtfremdspracheErsetzen */
+	public static final String QUERY_BY_KANNWAHLPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KannWahlpflichtfremdspracheErsetzen */
+	public static final String QUERY_LIST_BY_KANNWAHLPFLICHTFREMDSPRACHEERSETZEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KannBelegungAlsFortgefuehrteSpracheErlauben */
+	public static final String QUERY_BY_KANNBELEGUNGALSFORTGEFUEHRTESPRACHEERLAUBEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KannBelegungAlsFortgefuehrteSpracheErlauben */
+	public static final String QUERY_LIST_BY_KANNBELEGUNGALSFORTGEFUEHRTESPRACHEERLAUBEN = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Referenzniveau */
+	public static final String QUERY_BY_REFERENZNIVEAU = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Referenzniveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Referenzniveau */
+	public static final String QUERY_LIST_BY_REFERENZNIVEAU = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Referenzniveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NotePruefung */
+	public static final String QUERY_BY_NOTEPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotePruefung */
+	public static final String QUERY_LIST_BY_NOTEPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN ?1";
 
 	/** ID des Sprachprüfungseintrags */
 	@Id

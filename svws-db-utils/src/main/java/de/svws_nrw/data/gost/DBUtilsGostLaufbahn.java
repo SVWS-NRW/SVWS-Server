@@ -145,9 +145,8 @@ public final class DBUtilsGostLaufbahn {
     	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
     	getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
-    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen =
-    			conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", id, DTOGostSchuelerFachbelegungen.class)
-    			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
+    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList("DTOGostSchuelerFachbelegungen.schueler_id",
+    			DTOGostSchuelerFachbelegungen.class, id).stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
     	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
     	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
@@ -304,7 +303,7 @@ public final class DBUtilsGostLaufbahn {
 			throw new ApiOperationException(Status.NOT_FOUND);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
     	final Map<Long, DTOGostJahrgangFachbelegungen> dtoFachwahlen =
-    			conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class)
+    			conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr)
     			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
     	final Abiturdaten abidaten = new Abiturdaten();
@@ -416,7 +415,7 @@ public final class DBUtilsGostLaufbahn {
     			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
     		conn.transactionFlush();
     		// Initialisiere die Laufbahnplanung mit Default-Einträgen
-        	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class);
+        	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr);
     		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
     		conn.transactionFlush();
     		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
@@ -476,13 +475,14 @@ public final class DBUtilsGostLaufbahn {
     	final Map<Long, Sprachendaten> mapSprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, schuelerIDs).stream().collect(Collectors.toMap(sd -> sd.schuelerID, sd -> sd));
     	final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = listAlleGostLernabschnittsIDs.isEmpty()
     			? new HashMap<>()
-    			: conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", listAlleGostLernabschnittsIDs, DTOSchuelerLeistungsdaten.class)
-    			.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
+    			: conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, listAlleGostLernabschnittsIDs)
+    					.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
     	listAlleGostLernabschnittsIDs.stream().forEach(id -> mapLeistungenByAbschnittID.computeIfAbsent(id, k -> new ArrayList<>()));
     	final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapSchuljahresabschnitte, mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten, mapJahrgaenge);
     	// Bestimme die allgemeinen Daten des Schülers und die Fachbelegungen für die Gymnasiale Obertufe und lege dabei ggf. Default-Werte an
     	getSchuelerOrInit(conn, schuelerIDs, abijahrgang);
-    	final List<DTOGostSchuelerFachbelegungen> listAlleFachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
+    	final List<DTOGostSchuelerFachbelegungen> listAlleFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
+    			DTOGostSchuelerFachbelegungen.class, schuelerIDs);
     	final Map<Long, Map<Long, DTOGostSchuelerFachbelegungen>> mapAlleFachwahlen = listAlleFachwahlen.stream().collect(Collectors.groupingBy(fw -> fw.Schueler_ID, Collectors.toMap(f -> f.Fach_ID, f -> f)));
 
     	// Erstelle die Abiturdaten aus den DTOs
@@ -664,7 +664,7 @@ public final class DBUtilsGostLaufbahn {
     	final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
     	// Bestimme alle Jahrgänge der Schule, welche als ASD-Jahrgang 'EF', 'Q1', 'Q2' haben
-    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryNamed("DTOJahrgang.asdjahrgang.multiple", List.of("EF", "Q1", "Q2"), DTOJahrgang.class);
+    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryList(DTOJahrgang.QUERY_LIST_BY_ASDJAHRGANG, DTOJahrgang.class, List.of("EF", "Q1", "Q2"));
     	final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
     	// Bestimme alle Schüler mit Geloescht <> '+' und (Schueler.Status <> 8 oder Schueler.Entlassjahrgang_ID.ASDJahrgang in ('EF', 'Q1', 'Q2')
     	final List<DTOSchueler> alleSchueler = conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Geloescht <> true AND (e.Status <> ?1 OR e.Entlassjahrgang_ID IN ?2)", DTOSchueler.class, SchuelerStatus.ABSCHLUSS, listJahrgaengeGostIDs);

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_UnterrichtRaum")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.all", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.id", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID = :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.unterricht_id", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID = :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.unterricht_id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID IN :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.raum_id", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Raum_ID = :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.raum_id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Raum_ID IN :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanUnterrichtRaum.all.migration", query = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Unterricht_ID", "Raum_ID"})
 public final class DTOStundenplanUnterrichtRaum {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOStundenplanUnterrichtRaum e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Unterricht_ID */
+	public static final String QUERY_BY_UNTERRICHT_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Unterricht_ID */
+	public static final String QUERY_LIST_BY_UNTERRICHT_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Raum_ID */
+	public static final String QUERY_BY_RAUM_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Raum_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Raum_ID */
+	public static final String QUERY_LIST_BY_RAUM_ID = "SELECT e FROM DTOStundenplanUnterrichtRaum e WHERE e.Raum_ID IN ?1";
 
 	/** Die eindeutige ID für die Zuordnung des Raumes zum Unterricht */
 	@Id

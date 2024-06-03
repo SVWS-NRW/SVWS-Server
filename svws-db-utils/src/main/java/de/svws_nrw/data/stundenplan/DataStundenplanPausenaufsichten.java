@@ -61,19 +61,19 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	public static List<StundenplanPausenaufsicht> getAufsichten(final DBEntityManager conn, final long idStundenplan) {
 		final List<StundenplanPausenaufsicht> daten = new ArrayList<>();
 		// Bestimme die Pausenzeiten des Stundenplans
-		final List<Long> pausenzeiten = conn.queryNamed("DTOStundenplanPausenzeit.stundenplan_id", idStundenplan, DTOStundenplanPausenzeit.class)
+		final List<Long> pausenzeiten = conn.queryList(DTOStundenplanPausenzeit.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanPausenzeit.class, idStundenplan)
 				.stream().map(p -> p.ID).toList();
 		if (pausenzeiten.isEmpty())
 			return daten;
 		// Bestimme die Aufsichten in dieser Pausenzeit
-		final List<DTOStundenplanPausenaufsichten> dtoAufsichten = conn.queryNamed("DTOStundenplanPausenaufsichten.pausenzeit_id.multiple",
-				pausenzeiten, DTOStundenplanPausenaufsichten.class);
+		final List<DTOStundenplanPausenaufsichten> dtoAufsichten = conn.queryList(DTOStundenplanPausenaufsichten.QUERY_LIST_BY_PAUSENZEIT_ID,
+				DTOStundenplanPausenaufsichten.class, pausenzeiten);
 		if (dtoAufsichten.isEmpty())
 			return daten;
 		// Bestimme die Zuordnung der Aufsichtsbereiche zu den Pausenaufsichten
-		final Map<Long, List<DTOStundenplanPausenaufsichtenBereiche>> mapBereiche = conn.queryNamed("DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id.multiple",
-				dtoAufsichten.stream().map(a -> a.ID).toList(), DTOStundenplanPausenaufsichtenBereiche.class)
-				.stream().collect(Collectors.groupingBy(b -> b.Pausenaufsicht_ID));
+		final Map<Long, List<DTOStundenplanPausenaufsichtenBereiche>> mapBereiche = conn.queryList(
+				DTOStundenplanPausenaufsichtenBereiche.QUERY_LIST_BY_PAUSENAUFSICHT_ID, DTOStundenplanPausenaufsichtenBereiche.class,
+				dtoAufsichten.stream().map(a -> a.ID).toList()).stream().collect(Collectors.groupingBy(b -> b.Pausenaufsicht_ID));
 		for (final DTOStundenplanPausenaufsichten dtoAufsicht : dtoAufsichten) {
 			final StundenplanPausenaufsicht aufsicht = new StundenplanPausenaufsicht();
 			aufsicht.id = dtoAufsicht.ID;
@@ -122,8 +122,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		if (dtoAufsicht == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenaufsicht mit der ID %d gefunden.".formatted(id));
 
-		final List<Long> bereiche = conn.queryNamed("DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id",
-				dtoAufsicht.ID, DTOStundenplanPausenaufsichtenBereiche.class).stream().map(b -> b.Aufsichtsbereich_ID).toList();
+		final List<Long> bereiche = conn.queryList(DTOStundenplanPausenaufsichtenBereiche.QUERY_BY_PAUSENAUFSICHT_ID,
+				DTOStundenplanPausenaufsichtenBereiche.class, dtoAufsicht.ID).stream().map(b -> b.Aufsichtsbereich_ID).toList();
 		final StundenplanPausenaufsicht daten = new StundenplanPausenaufsicht();
 		daten.id = dtoAufsicht.ID;
 		daten.idPausenzeit = dtoAufsicht.Pausenzeit_ID;
@@ -284,10 +284,10 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		final List<Long> idsPausenzeiten = conn.queryNamed("DTOStundenplanPausenaufsichten.primaryKeyQuery.multiple", ids, DTOStundenplanPausenaufsichten.class)
+		final List<Long> idsPausenzeiten = conn.queryByKeyList(DTOStundenplanPausenaufsichten.class, ids)
 				.stream().map(p -> p.Pausenzeit_ID).toList();
 		if (!idsPausenzeiten.isEmpty()) {
-			final List<DTOStundenplanPausenzeit> dtos = conn.queryNamed("DTOStundenplanPausenzeit.primaryKeyQuery.multiple", idsPausenzeiten, DTOStundenplanPausenzeit.class);
+			final List<DTOStundenplanPausenzeit> dtos = conn.queryByKeyList(DTOStundenplanPausenzeit.class, idsPausenzeiten);
 			for (final DTOStundenplanPausenzeit dto : dtos)
 				if (dto.Stundenplan_ID != this.idStundenplan)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag einer Pausenaufsicht gehört nicht zu dem angegebenen Stundenplan.");

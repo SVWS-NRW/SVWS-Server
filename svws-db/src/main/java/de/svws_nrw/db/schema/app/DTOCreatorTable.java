@@ -16,6 +16,7 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
+
 /**
  * Diese Klasse stellt Methoden zum Erstellen des Java Quellcodes
  * für eine DTO-Klasse zum Zugriff auf eine Tabelle der SVWS-Datenbank
@@ -250,54 +251,65 @@ public final class DTOCreatorTable {
 
 
 	/**
-	 * Generiert den Java Code für die "Named Queries", die als Annotation oberhalb der Klasse generiert werden.
+	 * Generiert den Code für einen Query-String und hängt diesen an den Stringbuilder an.
 	 *
-	 * @param rev   die Revision der Tabelle, für welche die "Named Queries" generiert werden
+	 * @param name      der Name der Query
+	 * @param query     die Query
+	 * @param comment   der JavaDoc-Kommentar für das Attribut
+	 *
+	 * @return der Query-String.
+	 */
+	private static String getQueryAttribute(final String name, final String query, final String comment) {
+		return "%1$s\t/** %2$s */%1$s\tpublic static final String QUERY_%3$s = \"%4$s\";%1$s".formatted(System.lineSeparator(), comment, name, query);
+	}
+
+
+	/**
+	 * Generiert den Java Code für Queries in statischen Attributen.
+	 *
+	 * @param rev   die Revision der Tabelle, für welche die Queries generiert werden
 	 *
 	 * @return der Java Code
 	 */
-	private String getCode4NamedQueries(final long rev) {
-		// alle Tabellen: Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle
-		String code
-			= "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".all\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e\")"
-			+ System.lineSeparator();
-		// alle Tabellen: Generiere Annotationen für NamedQueries für einzelne Attribute der Tabelle
-		for (final SchemaTabelleSpalte spalte : tabelle.getSpalten(rev)) {
-			if (spalte.javaAttributName().startsWith("-"))
-				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
-			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + "." + spalte.javaAttributName().toLowerCase() + "\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-				 + "e." + spalte.javaAttributName() + " = :value"
-				 + "\")" + System.lineSeparator();
-			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + "." + spalte.javaAttributName().toLowerCase() + ".multiple\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-					 + "e." + spalte.javaAttributName() + " IN :value"
-					 + "\")" + System.lineSeparator();
-		}
+	private String getCode4Queries(final long rev) {
+		final StringBuilder sb = new StringBuilder();
+		// alle Tabellen: Generiere Code für eine Query auf alle Datensätze der Tabelle
+		String query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e";
+		sb.append(getQueryAttribute("ALL", query, "Die Datenbankabfrage für alle DTOs"));
 		// nur für Tabellen mit Primärschlüssel...
 		if (!tabelle.pkSpalten().isEmpty()) {
-			// Generiere Code für eine parametrisierte NamedQuery mit den Spalten des Primärschlüssels als Parameter
-			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".primaryKeyQuery\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
+			// Generiere Code für eine parametrisierte Query mit den Spalten des Primärschlüssels als Parameter
+			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
 			final var iter = tabelle.pkSpalten().iterator();
 			for (int i = 0; i < tabelle.pkSpalten().size(); i++) {
 				final SchemaTabelleSpalte col = iter.next();
 				if (i > 0)
-					code += " AND ";
-				code += "e." + col.javaAttributName() + " = ?" + (i + 1);
+					query += " AND ";
+				query += "e." + col.javaAttributName() + " = ?" + (i + 1);
 			}
-			code += "\")" + System.lineSeparator();
-			// Generiere Code für eine parametrisierte NamedQuery mit einer Liste von Primärschlüsselwerten als Parameter, wenn es sich um ein DTO mit einem Primärschlüssel mit einem Attribute handelt
+			sb.append(getQueryAttribute("PK", query, "Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute"));
+			// Generiere Code für eine parametrisierte Query mit einer Liste von Primärschlüsselwerten als Parameter, wenn es sich um ein DTO mit einem Primärschlüssel mit einem Attribute handelt
 			if (tabelle.pkSpalten().size() == 1) {
 				final SchemaTabelleSpalte col = tabelle.pkSpalten().iterator().next();
-				code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".primaryKeyQuery.multiple\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-					+ "e." + col.javaAttributName() + " IN :value\")" + System.lineSeparator();
+				query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE e." + col.javaAttributName() + " IN ?1";
+				sb.append(getQueryAttribute("LIST_PK", query, "Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten"));
 			}
-			// Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle, welche für eine Migration Datensätze entfernt, die nicht der Primary-key-Constraint entsprechen
-			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".all.migration\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
-			code += tabelle.pkSpalten().stream()
-					.map(col -> "e." + col.javaAttributName() + " IS NOT NULL")
-					.collect(Collectors.joining(" AND "));
-			code += "\")" + System.lineSeparator();
+			// Generiere Code für eine Query auf alle Datensätze der Tabelle, welche für eine Migration Datensätze entfernt, die nicht der Primary-key-Constraint entsprechen
+			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
+					+ tabelle.pkSpalten().stream().map(col -> "e." + col.javaAttributName() + " IS NOT NULL").collect(Collectors.joining(" AND "))
+					+ "";
+			sb.append(getQueryAttribute("MIGRATION_ALL", query, "Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen"));
 		}
-		return code;
+		// alle Tabellen: Generiere Annotationen für Queries für einzelne Attribute der Tabelle
+		for (final SchemaTabelleSpalte spalte : tabelle.getSpalten(rev)) {
+			if (spalte.javaAttributName().startsWith("-"))
+				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
+			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE e." + spalte.javaAttributName() + " = ?1";
+			sb.append(getQueryAttribute("BY_" + spalte.javaAttributName().toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand des Attributes " + spalte.javaAttributName()));
+			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE e." + spalte.javaAttributName() + " IN ?1";
+			sb.append(getQueryAttribute("LIST_BY_" + spalte.javaAttributName().toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes " + spalte.javaAttributName()));
+		}
+		return sb.toString();
 	}
 
 
@@ -375,7 +387,6 @@ public final class DTOCreatorTable {
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
 		if (tabelle.pkSpalten().size() != 1)
 			sb.append("import jakarta.persistence.IdClass;" + System.lineSeparator());
-		sb.append("import jakarta.persistence.NamedQuery;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Table;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -404,11 +415,11 @@ public final class DTOCreatorTable {
 		}
 		sb.append("@Cacheable(DBEntityManager.use_db_caching)" + System.lineSeparator());
 		sb.append("@Table(name = \"" + tabelle.name() + "\")" + System.lineSeparator());
-		sb.append(getCode4NamedQueries(rev));
 		sb.append(tabelle.getSpalten(rev).stream()
 				.map(spalte -> "\"" + spalte.javaAttributName() + "\"")
 				.collect(Collectors.joining(", ", "@JsonPropertyOrder({", "})" + System.lineSeparator())));
 		sb.append("public final class " + tabelle.getJavaKlasse(rev) + " {" + System.lineSeparator());
+		sb.append(getCode4Queries(rev));
 		sb.append(System.lineSeparator());
 		sb.append(tabelle.getSpalten(rev).stream()
 				.map(spalte -> getCode4Attributes(spalte, rev, true))

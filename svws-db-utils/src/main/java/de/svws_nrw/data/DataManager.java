@@ -437,7 +437,7 @@ public abstract class DataManager<ID> {
 		final List<CoreData> daten = new ArrayList<>();
 		if (ids.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		final List<DTO> dtos = conn.queryNamed(dtoClass.getSimpleName() + ".primaryKeyQuery.multiple", ids, dtoClass);
+		final List<DTO> dtos = conn.queryByKeyList(dtoClass, ids);
 		if (dtos == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine DTOs mit den angegebenen IDs gefunden.");
 		for (final DTO dto : dtos) {

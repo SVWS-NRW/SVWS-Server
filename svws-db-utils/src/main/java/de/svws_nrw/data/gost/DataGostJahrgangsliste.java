@@ -186,7 +186,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		// Kopiere die Fächer der Gymnasialen Oberstufe aus der allgemeinen Vorlage
-		final List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
+		final List<DTOFach> faecher = conn.queryList(DTOFach.QUERY_BY_ISTOBERSTUFENFACH, DTOFach.class, true);
 		if (faecher == null)
 			throw new NullPointerException();
 		for (final DTOFach fach : faecher) {
@@ -201,7 +201,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		conn.transactionFlush();
 		// Kopiere die Informationen zu nicht möglichen und geforderten
 		// Fachkombinationen aus der Vorlage
-		final List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
+		final List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryList(DTOGostJahrgangFachkombinationen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachkombinationen.class, -1);
 		if (faecherKombis == null)
 			throw new NullPointerException();
 		if (!faecherKombis.isEmpty()) {
@@ -236,7 +236,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			if ((schueler != null) && (!schueler.isEmpty())) {
 				final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
 				final List<Integer> abschnitte = Arrays.asList(1, 2);
-				final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
+				final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryList(DTOSchuljahresabschnitte.QUERY_LIST_BY_ABSCHNITT, DTOSchuljahresabschnitte.class, abschnitte);
 				final List<Long> schuljahresabschnittIDs = schuljahresabschnitte.stream().map(a -> a.ID).toList();
 				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 				final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
@@ -245,7 +245,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
 				final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapLernabschnitte = lernabschnitte.stream().collect(Collectors.groupingBy(l -> l.Schueler_ID));
 				final List<DTOSchuelerLeistungsdaten> leistungsdaten = lernabschnittIDs.isEmpty() ? new ArrayList<>()
-						: conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
+						: conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, lernabschnittIDs);
 				final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
 
 				for (final long schueler_id : schuelerIDs) {

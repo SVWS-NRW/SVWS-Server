@@ -321,11 +321,11 @@ public class LupoMDB {
 		conn.transactionFlush();
 
 		logger.logLn("- die Beratungslehrer anhand der Klassenlehrerinformationen...");
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", abschnitt.ID, DTOKlassen.class)
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, abschnitt.ID)
 				.stream().filter(kl -> kl.Klasse.equals(klasse)).toList();
     	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
-		final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class)
-				.stream().collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
+		final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID,
+				DTOKlassenLeitung.class, klassenIDs).stream().collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 
 		final Map<Long, DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		logger.modifyIndent(2);
@@ -535,7 +535,8 @@ public class LupoMDB {
 				logger.logLn("  - Bestimme die zu bearbeitende Schüler-Menge aus der LuPO-Datei...");
 				final List<Long> schuelerIDs = schueler.stream().filter(s -> s.Schild_ID != null).map(s -> (long) s.Schild_ID).toList();
 				logger.logLn("  - Lese Schüler aus der DB ein, um diese mit den Daten der LuPO-Datei abzugleichen...");
-				final Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+				final Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryByKeyList(DTOSchueler.class, schuelerIDs)
+						.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 				logger.logLn("  - Lese die aktuellen Lernabschnitte der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei abzugleichen...");
 				final Map<Long, DTOSchuelerLernabschnittsdaten> mapSchuelerAktLernabschnitt = conn.query(
 						"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON l.Schueler_ID = s.ID AND l.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND l.Schueler_ID IN :value", DTOSchuelerLernabschnittsdaten.class)

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,30 +26,74 @@ import de.svws_nrw.csv.converter.current.DatumUhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessources")
-@NamedQuery(name = "DTODavRessource.all", query = "SELECT e FROM DTODavRessource e")
-@NamedQuery(name = "DTODavRessource.id", query = "SELECT e FROM DTODavRessource e WHERE e.ID = :value")
-@NamedQuery(name = "DTODavRessource.id.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessource.davressourcecollection_id", query = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID = :value")
-@NamedQuery(name = "DTODavRessource.davressourcecollection_id.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID IN :value")
-@NamedQuery(name = "DTODavRessource.uid", query = "SELECT e FROM DTODavRessource e WHERE e.UID = :value")
-@NamedQuery(name = "DTODavRessource.uid.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.UID IN :value")
-@NamedQuery(name = "DTODavRessource.lastmodified", query = "SELECT e FROM DTODavRessource e WHERE e.lastModified = :value")
-@NamedQuery(name = "DTODavRessource.lastmodified.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.lastModified IN :value")
-@NamedQuery(name = "DTODavRessource.kalendertyp", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp = :value")
-@NamedQuery(name = "DTODavRessource.kalendertyp.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp IN :value")
-@NamedQuery(name = "DTODavRessource.kalenderstart", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart = :value")
-@NamedQuery(name = "DTODavRessource.kalenderstart.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart IN :value")
-@NamedQuery(name = "DTODavRessource.kalenderende", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde = :value")
-@NamedQuery(name = "DTODavRessource.kalenderende.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde IN :value")
-@NamedQuery(name = "DTODavRessource.ressource", query = "SELECT e FROM DTODavRessource e WHERE e.ressource = :value")
-@NamedQuery(name = "DTODavRessource.ressource.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ressource IN :value")
-@NamedQuery(name = "DTODavRessource.geloeschtam", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam = :value")
-@NamedQuery(name = "DTODavRessource.geloeschtam.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam IN :value")
-@NamedQuery(name = "DTODavRessource.primaryKeyQuery", query = "SELECT e FROM DTODavRessource e WHERE e.ID = ?1")
-@NamedQuery(name = "DTODavRessource.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessource.all.migration", query = "SELECT e FROM DTODavRessource e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "DavRessourceCollection_ID", "UID", "lastModified", "KalenderTyp", "KalenderStart", "KalenderEnde", "ressource", "geloeschtam"})
 public final class DTODavRessource {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTODavRessource e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTODavRessource e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTODavRessource e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTODavRessource e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTODavRessource e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTODavRessource e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DavRessourceCollection_ID */
+	public static final String QUERY_BY_DAVRESSOURCECOLLECTION_ID = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DavRessourceCollection_ID */
+	public static final String QUERY_LIST_BY_DAVRESSOURCECOLLECTION_ID = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes UID */
+	public static final String QUERY_BY_UID = "SELECT e FROM DTODavRessource e WHERE e.UID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes UID */
+	public static final String QUERY_LIST_BY_UID = "SELECT e FROM DTODavRessource e WHERE e.UID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes lastModified */
+	public static final String QUERY_BY_LASTMODIFIED = "SELECT e FROM DTODavRessource e WHERE e.lastModified = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes lastModified */
+	public static final String QUERY_LIST_BY_LASTMODIFIED = "SELECT e FROM DTODavRessource e WHERE e.lastModified IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KalenderTyp */
+	public static final String QUERY_BY_KALENDERTYP = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KalenderTyp */
+	public static final String QUERY_LIST_BY_KALENDERTYP = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KalenderStart */
+	public static final String QUERY_BY_KALENDERSTART = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KalenderStart */
+	public static final String QUERY_LIST_BY_KALENDERSTART = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KalenderEnde */
+	public static final String QUERY_BY_KALENDERENDE = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KalenderEnde */
+	public static final String QUERY_LIST_BY_KALENDERENDE = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ressource */
+	public static final String QUERY_BY_RESSOURCE = "SELECT e FROM DTODavRessource e WHERE e.ressource = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ressource */
+	public static final String QUERY_LIST_BY_RESSOURCE = "SELECT e FROM DTODavRessource e WHERE e.ressource IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes geloeschtam */
+	public static final String QUERY_BY_GELOESCHTAM = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes geloeschtam */
+	public static final String QUERY_LIST_BY_GELOESCHTAM = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam IN ?1";
 
 	/** ID der Dav Ressource */
 	@Id

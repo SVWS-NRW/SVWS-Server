@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,14 +18,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Nationalitaeten_Keys")
-@NamedQuery(name = "DTONationalitaetenKeys.all", query = "SELECT e FROM DTONationalitaetenKeys e")
-@NamedQuery(name = "DTONationalitaetenKeys.destatiscode", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = :value")
-@NamedQuery(name = "DTONationalitaetenKeys.destatiscode.multiple", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
-@NamedQuery(name = "DTONationalitaetenKeys.primaryKeyQuery", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = ?1")
-@NamedQuery(name = "DTONationalitaetenKeys.primaryKeyQuery.multiple", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
-@NamedQuery(name = "DTONationalitaetenKeys.all.migration", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL")
 @JsonPropertyOrder({"DEStatisCode"})
 public final class DTONationalitaetenKeys {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTONationalitaetenKeys e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DEStatisCode */
+	public static final String QUERY_BY_DESTATISCODE = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DEStatisCode */
+	public static final String QUERY_LIST_BY_DESTATISCODE = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN ?1";
 
 	/** Der dreistellige Länder-Code des statistischen Bundesamtes (DESTATIS) */
 	@Id

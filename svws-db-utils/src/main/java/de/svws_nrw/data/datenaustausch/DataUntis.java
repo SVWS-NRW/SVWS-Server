@@ -101,7 +101,7 @@ public final class DataUntis {
 		// Bestimme die Fächer
 		final Map<String, FachDaten> mapFaecherByKuerzel = DataFaecherliste.getFaecherListe(conn).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
 		// Bestimme die Klassen des Schuljahresabschnitts
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.id, DTOKlassen.class);
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme die Kurse des Schuljahresabschnitts
 		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);

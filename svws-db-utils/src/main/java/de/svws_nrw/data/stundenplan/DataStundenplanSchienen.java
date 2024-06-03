@@ -73,7 +73,7 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	 * @return die Liste der Schienen
 	 */
 	public static List<StundenplanSchiene> getSchienen(final @NotNull DBEntityManager conn, final long idStundenplan) {
-		final List<DTOStundenplanSchienen> schienen = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", idStundenplan, DTOStundenplanSchienen.class);
+		final List<DTOStundenplanSchienen> schienen = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
 		final ArrayList<StundenplanSchiene> daten = new ArrayList<>();
 		for (final DTOStundenplanSchienen s : schienen)
 			daten.add(dtoMapper.apply(s));
@@ -96,7 +96,7 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 				.stream().collect(Collectors.toMap(s -> s.id, Function.identity()));
 		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId = new HashMap<>();
 		final List<DTOStundenplanUnterrichtSchiene> listSchienen = unterrichtIds.isEmpty() ? new ArrayList<>()
-				: conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtSchiene.class);
+				: conn.queryList(DTOStundenplanUnterrichtSchiene.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtSchiene.class, unterrichtIds);
 		for (final DTOStundenplanUnterrichtSchiene dtoSUS : listSchienen) {
 			final List<StundenplanSchiene> schienen = schienenByUnterrichtId.computeIfAbsent(dtoSUS.Unterricht_ID, id -> new ArrayList<>());
 			schienen.add(schienenById.get(dtoSUS.Schiene_ID));

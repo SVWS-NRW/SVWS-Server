@@ -293,19 +293,17 @@ public final class DataBenutzerDaten extends DataManager<Long> {
     @Override
     public Response get(final Long id) throws ApiOperationException {
         // Lese die Informationen zu den Gruppen ein
-        final List<Long> gruppenIDs = conn
-                .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
+        final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
                 .map(g -> g.Gruppe_ID).toList();
         final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
-                : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
+                : conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
         // Lese die Informationen zu den Kompetenzen ein
-        final List<Long> kompetenzIDs = conn.queryNamed("DTOBenutzerKompetenz.benutzer_id", id, DTOBenutzerKompetenz.class)
+        final List<Long> kompetenzIDs = conn.queryList(DTOBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOBenutzerKompetenz.class, id)
                 .stream().map(b -> b.Kompetenz_ID).sorted().toList();
         final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
-                : conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs,
-                        DTOBenutzergruppenKompetenz.class);
+                : conn.queryList(DTOBenutzergruppenKompetenz.QUERY_LIST_BY_GRUPPE_ID, DTOBenutzergruppenKompetenz.class, gruppenIDs);
         final Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()
                 .collect(Collectors.groupingBy(k -> k.Gruppe_ID));
         // Erstelle den Core-DTO für die API und gebe diesen zurück

@@ -254,7 +254,8 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 */
 	public static void transactionResetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
-    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", -1, DTOGostJahrgangFachbelegungen.class);
+    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
+    			DTOGostJahrgangFachbelegungen.class, -1);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
 		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
 			final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, dto.Fach_ID);
@@ -286,7 +287,8 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 */
 	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler) throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
-    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class);
+    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
+    			DTOGostJahrgangFachbelegungen.class, abijahr);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
 		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
 			final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);

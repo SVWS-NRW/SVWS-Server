@@ -76,11 +76,12 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
-		final List<DTOStundenplanPausenzeit> pausenzeiten = conn.queryNamed("DTOStundenplanPausenzeit.stundenplan_id", idStundenplan, DTOStundenplanPausenzeit.class);
+		final List<DTOStundenplanPausenzeit> pausenzeiten = conn.queryList(DTOStundenplanPausenzeit.QUERY_BY_STUNDENPLAN_ID,
+				DTOStundenplanPausenzeit.class, idStundenplan);
 		final List<Long> idsPausenzeiten = pausenzeiten.stream().map(p -> p.ID).toList();
 		final Map<Long, List<Long>> mapKlassen = idsPausenzeiten.isEmpty() ? new HashMap<>()
-				: conn.queryNamed("DTOStundenplanPausenzeitKlassenzuordnung.pausenzeit_id.multiple", idsPausenzeiten, DTOStundenplanPausenzeitKlassenzuordnung.class)
-					.stream().collect(Collectors.groupingBy(pkz -> pkz.Pausenzeit_ID, Collectors.mapping(pkz -> pkz.Klassen_ID, Collectors.toUnmodifiableList())));
+				: conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_LIST_BY_PAUSENZEIT_ID, DTOStundenplanPausenzeitKlassenzuordnung.class, idsPausenzeiten)
+				.stream().collect(Collectors.groupingBy(pkz -> pkz.Pausenzeit_ID, Collectors.mapping(pkz -> pkz.Klassen_ID, Collectors.toUnmodifiableList())));
 		final ArrayList<StundenplanPausenzeit> daten = new ArrayList<>();
 		for (final DTOStundenplanPausenzeit p : pausenzeiten) {
 			final StundenplanPausenzeit mapped = dtoMapper.apply(p);
@@ -105,7 +106,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		final DTOStundenplanPausenzeit pausenzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, id);
 		if (pausenzeit == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenzeit eines Stundenplans mit der ID %d gefunden.".formatted(id));
-		final List<Long> klassen = conn.queryNamed("DTOStundenplanPausenzeitKlassenzuordnung.pausenzeit_id", id, DTOStundenplanPausenzeitKlassenzuordnung.class)
+		final List<Long> klassen = conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_BY_PAUSENZEIT_ID, DTOStundenplanPausenzeitKlassenzuordnung.class, id)
 				.stream().map(pkz -> pkz.Klassen_ID).toList();
 		final StundenplanPausenzeit daten = dtoMapper.apply(pausenzeit);
 		daten.klassen.addAll(klassen);
@@ -134,7 +135,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 			if (klassen.size() != klassenVonStundenplan.size())
 				throw new ApiOperationException(Status.BAD_REQUEST, "Nicht alle angegebenen Klassen-IDs gehören zu Klassen des Schuljahresabschnittes des Stundenplans");
 			// Bestimme die bereits existierenden Klasseneinträge und vergleiche diese mit den geforderten
-			final List<DTOStundenplanPausenzeitKlassenzuordnung> existing = conn.queryNamed("DTOStundenplanPausenzeitKlassenzuordnung.pausenzeit_id", dto.ID, DTOStundenplanPausenzeitKlassenzuordnung.class);
+			final List<DTOStundenplanPausenzeitKlassenzuordnung> existing = conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_BY_PAUSENZEIT_ID,
+					DTOStundenplanPausenzeitKlassenzuordnung.class, dto.ID);
 			final Map<Long, DTOStundenplanPausenzeitKlassenzuordnung> mapExisting = existing.stream().collect(Collectors.toMap(pkl -> pkl.Klassen_ID, pkl -> pkl));
 			final Set<Long> idsKlassenNeu = new HashSet<>();
 			final Set<Long> idsKlassenVorhanden = new HashSet<>();
@@ -227,7 +229,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		if (ids.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
-		final List<DTOStundenplanPausenzeit> dtos = conn.queryNamed("DTOStundenplanPausenzeit.primaryKeyQuery.multiple", ids, DTOStundenplanPausenzeit.class);
+		final List<DTOStundenplanPausenzeit> dtos = conn.queryByKeyList(DTOStundenplanPausenzeit.class, ids);
 		for (final DTOStundenplanPausenzeit dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag gehört nicht zu dem angegebenen Stundenplan.");

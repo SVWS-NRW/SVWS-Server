@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,30 +18,74 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "NichtMoeglAbiFachKombi")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.all", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach1_id", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach1_id.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach2_id", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach2_id.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart1", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart1.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart2", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart2.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.pk", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.pk.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.sortierung", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.sortierung.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.phase", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.phase.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ = :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.all.migration", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL")
 @JsonPropertyOrder({"Fach1_ID", "Fach2_ID", "SchulnrEigner", "Kursart1", "Kursart2", "PK", "Sortierung", "Phase", "Typ"})
 public final class MigrationDTOFaecherNichtMoeglicheKombination {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach1_ID */
+	public static final String QUERY_BY_FACH1_ID = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach1_ID */
+	public static final String QUERY_LIST_BY_FACH1_ID = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach2_ID */
+	public static final String QUERY_BY_FACH2_ID = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach2_ID */
+	public static final String QUERY_LIST_BY_FACH2_ID = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart1 */
+	public static final String QUERY_BY_KURSART1 = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart1 */
+	public static final String QUERY_LIST_BY_KURSART1 = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart2 */
+	public static final String QUERY_BY_KURSART2 = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart2 */
+	public static final String QUERY_LIST_BY_KURSART2 = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PK */
+	public static final String QUERY_BY_PK = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PK */
+	public static final String QUERY_LIST_BY_PK = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Phase */
+	public static final String QUERY_BY_PHASE = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Phase */
+	public static final String QUERY_LIST_BY_PHASE = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN ?1";
 
 	/** FACH1ID für eine nicht mögliche Kombination */
 	@Column(name = "Fach1_ID")

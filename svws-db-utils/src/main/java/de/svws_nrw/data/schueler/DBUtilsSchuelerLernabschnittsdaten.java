@@ -139,7 +139,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
 		if (schuljahresabschnitte.isEmpty())
 			return false;
-		return conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnitte, DTOSchuljahresabschnitte.class).stream()
+		return conn.queryByKeyList(DTOSchuljahresabschnitte.class, schuljahresabschnitte).stream()
 				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.Abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.Abschnitt));
 	}
 

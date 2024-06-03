@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOBerufskollegFachklassenKeysPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Berufskolleg_Fachklassen_Keys")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.all", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.fachklassenindex", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.fachklassenindex.multiple", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IN :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.schluessel", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel = :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.schluessel.multiple", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel IN :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.schluessel2", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 = :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.schluessel2.multiple", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 IN :value")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = ?1 AND e.Schluessel = ?2 AND e.Schluessel2 = ?3")
-@NamedQuery(name = "MigrationDTOBerufskollegFachklassenKeys.all.migration", query = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IS NOT NULL AND e.Schluessel IS NOT NULL AND e.Schluessel2 IS NOT NULL")
 @JsonPropertyOrder({"FachklassenIndex", "Schluessel", "Schluessel2"})
 public final class MigrationDTOBerufskollegFachklassenKeys {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = ?1 AND e.Schluessel = ?2 AND e.Schluessel2 = ?3";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IS NOT NULL AND e.Schluessel IS NOT NULL AND e.Schluessel2 IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachklassenIndex */
+	public static final String QUERY_BY_FACHKLASSENINDEX = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachklassenIndex */
+	public static final String QUERY_LIST_BY_FACHKLASSENINDEX = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel2 */
+	public static final String QUERY_BY_SCHLUESSEL2 = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel2 */
+	public static final String QUERY_LIST_BY_SCHLUESSEL2 = "SELECT e FROM MigrationDTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 IN ?1";
 
 	/** Der Index, welcher der Fachklasse für die Zuordnung zum Bildungsgang zugeordnet ist */
 	@Id

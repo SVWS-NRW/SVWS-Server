@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOFachTeilleistungsartenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_FachTeilleistungen")
-@NamedQuery(name = "DTOFachTeilleistungsarten.all", query = "SELECT e FROM DTOFachTeilleistungsarten e")
-@NamedQuery(name = "DTOFachTeilleistungsarten.teilleistungsart_id", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.teilleistungsart_id.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.fach_id", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.fach_id.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.kursart", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart = :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.kursart.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
-@NamedQuery(name = "DTOFachTeilleistungsarten.primaryKeyQuery", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
-@NamedQuery(name = "DTOFachTeilleistungsarten.all.migration", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
 @JsonPropertyOrder({"Teilleistungsart_ID", "Fach_ID", "Kursart"})
 public final class DTOFachTeilleistungsarten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFachTeilleistungsarten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Teilleistungsart_ID */
+	public static final String QUERY_BY_TEILLEISTUNGSART_ID = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Teilleistungsart_ID */
+	public static final String QUERY_LIST_BY_TEILLEISTUNGSART_ID = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart */
+	public static final String QUERY_BY_KURSART = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
+	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart IN ?1";
 
 	/** Die eindeutige ID der Teilleistungsart – verweist auf die Teilleistungsart */
 	@Id

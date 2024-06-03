@@ -74,7 +74,7 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
     	if (schueler == null)
     		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
     	// Bestimme die Sprachbelegungen des Schülers
-		return conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", idSchueler, DTOSchuelerSprachenfolge.class);
+		return conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler);
 	}
 
 	private List<Sprachbelegung> getSprachbelegungen() throws ApiOperationException {

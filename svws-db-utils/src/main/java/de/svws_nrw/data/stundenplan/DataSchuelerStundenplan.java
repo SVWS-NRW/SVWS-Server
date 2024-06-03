@@ -89,8 +89,8 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
 		// Bestimme nun die Leistungsdaten zu dem Lernabschnitt
-		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
-				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
+				DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
 		if ((leistungsdaten == null) || (leistungsdaten.isEmpty()))
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 

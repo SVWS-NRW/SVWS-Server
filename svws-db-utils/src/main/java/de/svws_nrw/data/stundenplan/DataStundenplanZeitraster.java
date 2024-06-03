@@ -71,7 +71,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
-		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class);
+		final List<DTOStundenplanZeitraster> zeitraster = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOStundenplanZeitraster z : zeitraster)
 			daten.add(dtoMapper.apply(z));
@@ -238,7 +238,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		if (ids.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
-		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", ids, DTOStundenplanZeitraster.class);
+		final List<DTOStundenplanZeitraster> dtos = conn.queryByKeyList(DTOStundenplanZeitraster.class, ids);
 		for (final DTOStundenplanZeitraster dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");

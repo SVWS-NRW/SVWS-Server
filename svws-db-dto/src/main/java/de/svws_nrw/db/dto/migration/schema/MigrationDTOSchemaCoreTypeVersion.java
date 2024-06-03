@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schema_Core_Type_Versionen")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.all", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.nametabelle", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle = :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.nametabelle.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.name", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Name = :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.name.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Name IN :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.version", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version = :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.version.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version IN :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle = ?1")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.all.migration", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "Name", "Version"})
 public final class MigrationDTOSchemaCoreTypeVersion {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NameTabelle */
+	public static final String QUERY_BY_NAMETABELLE = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NameTabelle */
+	public static final String QUERY_LIST_BY_NAMETABELLE = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Name */
+	public static final String QUERY_BY_NAME = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Name = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Name */
+	public static final String QUERY_LIST_BY_NAME = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Name IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Version */
+	public static final String QUERY_BY_VERSION = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Version */
+	public static final String QUERY_LIST_BY_VERSION = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version IN ?1";
 
 	/** Gibt den Namen der Tabelle an, wo die Daten des Core-Types hinterlegt werden. */
 	@Id

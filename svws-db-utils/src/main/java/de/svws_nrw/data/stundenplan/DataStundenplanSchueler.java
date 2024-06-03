@@ -82,7 +82,7 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		// Bestimme alle Klassen-IDs der Schuljahresabschnitts
-		final List<Long> klassenIDs = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class)
+		final List<Long> klassenIDs = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, stundenplan.Schuljahresabschnitts_ID)
 				.stream().map(k -> k.ID).toList();
 		// Bestimme alle Schüler-IDs von SchuelerLernabschnittsdaten, wo die Klasse zugeordnet ist und der Schuljahresabschnitt übereinstimmt
 		final Set<Long> schuelerIDs = new HashSet<>();
@@ -93,14 +93,15 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 			schuelerIDs.addAll(lernabschnitte.stream().map(l -> l.Schueler_ID).toList());
 		}
 		// Bestimme alle Kurs-IDs der Unterrichte
-		final List<Long> kursIDs = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class).stream().map(k -> k.ID).toList();
+		final List<Long> kursIDs = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, stundenplan.Schuljahresabschnitts_ID)
+				.stream().map(k -> k.ID).toList();
 		if (!kursIDs.isEmpty()) {
 			final List<Long> kursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
 					.stream().map(ks -> ks.Schueler_ID).distinct().toList();
 			schuelerIDs.addAll(kursSchuelerIDs);
 		}
 		// Und bestimme nun die Schüler-Daten...
-		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+		final List<DTOSchueler> schuelerListe = conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		final ArrayList<StundenplanSchueler> daten = new ArrayList<>();
 		for (final DTOSchueler s : schuelerListe) {
 			// TODO Filtere alle Schüler, die ein Abgangsdatum haben, welches vor dem Beginn des Stundenplans liegt

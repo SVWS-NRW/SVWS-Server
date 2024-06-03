@@ -119,8 +119,8 @@ public final class DBUtilsSchueler {
 	 */
 	public static Sprachendaten getSchuelerSprachendaten(final DBEntityManager conn, final long id) {
         // Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
-        final List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
-        final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", id, DTOSchuelerSprachpruefungen.class);
+        final List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
+        final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, id);
         // ... und gibt sie als Sprachendaten-Objekt zurück.
         return dtoMapperSprachendaten(id, dtoSprachenfolge, dtoSprachpruefungen);
 	}
@@ -137,9 +137,9 @@ public final class DBUtilsSchueler {
 	 */
 	public static List<Sprachendaten> getSchuelerSprachendaten(final DBEntityManager conn, final List<Long> ids) {
         // Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
-        final Map<Long, List<DTOSchuelerSprachenfolge>> mapSprachenfolgen = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id.multiple", ids, DTOSchuelerSprachenfolge.class)
+        final Map<Long, List<DTOSchuelerSprachenfolge>> mapSprachenfolgen = conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, ids)
         		.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
-        final Map<Long, List<DTOSchuelerSprachpruefungen>> mapSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id.multiple", ids, DTOSchuelerSprachpruefungen.class)
+        final Map<Long, List<DTOSchuelerSprachpruefungen>> mapSprachpruefungen = conn.queryList(DTOSchuelerSprachpruefungen.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, ids)
         		.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
         // ... und gibt sie als Sprachendaten-Objekte zurück.
         return ids.stream().map(id -> dtoMapperSprachendaten(id, mapSprachenfolgen.computeIfAbsent(id, k -> new ArrayList<>()), mapSprachpruefungen.computeIfAbsent(id, k -> new ArrayList<>()))).toList();

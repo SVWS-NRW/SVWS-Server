@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,66 +29,182 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_AllgAdresse")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.all", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.adressart", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.adressArt = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.adressart.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.adressArt IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.name1", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name1 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.name1.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name1 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.name2", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name2 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.name2.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name2 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.strassenname", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.strassenname = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.strassenname.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.strassenname IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.hausnr", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnr = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.hausnr.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnr IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.hausnrzusatz", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.hausnrzusatz.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ort_id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ort_id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ortsteil_id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ortsteil_id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon1", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon1.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon2", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon2 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon2.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon2 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.fax", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.fax = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.fax.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.fax IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.email", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.email = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.email.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.email IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.bemerkungen", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bemerkungen = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.bemerkungen.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bemerkungen IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.sortierung", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.sortierung = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.sortierung.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.sortierung IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ausbildungsbetrieb", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ausbildungsbetrieb = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ausbildungsbetrieb.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ausbildungsbetrieb IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.bietetpraktika", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bietetPraktika = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.bietetpraktika.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bietetPraktika IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.branche", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.branche = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.branche.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.branche IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.zusatz1", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz1 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.zusatz1.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz1 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.zusatz2", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz2 = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.zusatz2.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz2 IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.sichtbar", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.sichtbar.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.aenderbar", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.aenderbar.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.massnahmentraeger", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Massnahmentraeger = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.massnahmentraeger.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Massnahmentraeger IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.belehrungisg", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.BelehrungISG = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.belehrungisg.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.BelehrungISG IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.gu_id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.GU_ID = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.gu_id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.erwfuehrungszeugnis", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ErwFuehrungszeugnis = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.erwfuehrungszeugnis.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ErwFuehrungszeugnis IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.extid", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID = :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.extid.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.all.migration", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "adressArt", "name1", "name2", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "ortsteil_id", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
 public final class DTOKatalogAllgemeineAdresse {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogAllgemeineAdresse e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes adressArt */
+	public static final String QUERY_BY_ADRESSART = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.adressArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes adressArt */
+	public static final String QUERY_LIST_BY_ADRESSART = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.adressArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes name1 */
+	public static final String QUERY_BY_NAME1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes name1 */
+	public static final String QUERY_LIST_BY_NAME1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes name2 */
+	public static final String QUERY_BY_NAME2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes name2 */
+	public static final String QUERY_LIST_BY_NAME2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.name2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes strassenname */
+	public static final String QUERY_BY_STRASSENNAME = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.strassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes strassenname */
+	public static final String QUERY_LIST_BY_STRASSENNAME = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.strassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes hausnr */
+	public static final String QUERY_BY_HAUSNR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hausnr */
+	public static final String QUERY_LIST_BY_HAUSNR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes hausnrzusatz */
+	public static final String QUERY_BY_HAUSNRZUSATZ = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hausnrzusatz */
+	public static final String QUERY_LIST_BY_HAUSNRZUSATZ = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ort_id */
+	public static final String QUERY_BY_ORT_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ort_id */
+	public static final String QUERY_LIST_BY_ORT_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ortsteil_id */
+	public static final String QUERY_BY_ORTSTEIL_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ortsteil_id */
+	public static final String QUERY_LIST_BY_ORTSTEIL_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes telefon1 */
+	public static final String QUERY_BY_TELEFON1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes telefon1 */
+	public static final String QUERY_LIST_BY_TELEFON1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes telefon2 */
+	public static final String QUERY_BY_TELEFON2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes telefon2 */
+	public static final String QUERY_LIST_BY_TELEFON2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes fax */
+	public static final String QUERY_BY_FAX = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.fax = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes fax */
+	public static final String QUERY_LIST_BY_FAX = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.fax IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bemerkungen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ausbildungsbetrieb */
+	public static final String QUERY_BY_AUSBILDUNGSBETRIEB = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ausbildungsbetrieb = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ausbildungsbetrieb */
+	public static final String QUERY_LIST_BY_AUSBILDUNGSBETRIEB = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ausbildungsbetrieb IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bietetPraktika */
+	public static final String QUERY_BY_BIETETPRAKTIKA = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bietetPraktika = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bietetPraktika */
+	public static final String QUERY_LIST_BY_BIETETPRAKTIKA = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.bietetPraktika IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes branche */
+	public static final String QUERY_BY_BRANCHE = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.branche = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes branche */
+	public static final String QUERY_LIST_BY_BRANCHE = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.branche IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes zusatz1 */
+	public static final String QUERY_BY_ZUSATZ1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes zusatz1 */
+	public static final String QUERY_LIST_BY_ZUSATZ1 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes zusatz2 */
+	public static final String QUERY_BY_ZUSATZ2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes zusatz2 */
+	public static final String QUERY_LIST_BY_ZUSATZ2 = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.zusatz2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Massnahmentraeger */
+	public static final String QUERY_BY_MASSNAHMENTRAEGER = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Massnahmentraeger = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Massnahmentraeger */
+	public static final String QUERY_LIST_BY_MASSNAHMENTRAEGER = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.Massnahmentraeger IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BelehrungISG */
+	public static final String QUERY_BY_BELEHRUNGISG = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.BelehrungISG = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BelehrungISG */
+	public static final String QUERY_LIST_BY_BELEHRUNGISG = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.BelehrungISG IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GU_ID */
+	public static final String QUERY_BY_GU_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GU_ID */
+	public static final String QUERY_LIST_BY_GU_ID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ErwFuehrungszeugnis */
+	public static final String QUERY_BY_ERWFUEHRUNGSZEUGNIS = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ErwFuehrungszeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ErwFuehrungszeugnis */
+	public static final String QUERY_LIST_BY_ERWFUEHRUNGSZEUGNIS = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ErwFuehrungszeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ExtID */
+	public static final String QUERY_BY_EXTID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ExtID */
+	public static final String QUERY_LIST_BY_EXTID = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID IN ?1";
 
 	/** ID der weiteren Adresse (Betriebe) */
 	@Id

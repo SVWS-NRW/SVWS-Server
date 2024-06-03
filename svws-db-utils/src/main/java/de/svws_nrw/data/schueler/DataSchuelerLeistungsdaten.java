@@ -103,7 +103,8 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 */
 	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) throws ApiOperationException {
     	// Bestimme die Leistungsdaten des Lernabschnitts
-    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", abschnittID, DTOSchuelerLeistungsdaten.class);
+    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
+    			DTOSchuelerLeistungsdaten.class, abschnittID);
     	if (leistungsdaten == null)
     		return false;
     	// Konvertiere sie und füge sie zur Liste hinzu

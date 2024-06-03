@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Zertifikate")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.all", query = "SELECT e FROM MigrationDTOKatalogZertifikate e")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.kuerzel", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.kuerzel.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.bezeichnung", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.schulnreigner", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = ?1")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOKatalogZertifikate.all.migration", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "Bezeichnung", "SchulnrEigner"})
 public final class MigrationDTOKatalogZertifikate {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOKatalogZertifikate e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner IN ?1";
 
 	/** Kürzel des Zertifikats */
 	@Id

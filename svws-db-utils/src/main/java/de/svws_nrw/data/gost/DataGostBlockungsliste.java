@@ -66,8 +66,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		if (blockungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
-		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
-				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
+		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
+				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
     	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -91,8 +91,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		if (blockungen.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
-		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
-				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
+		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
+				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
     	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,50 +26,134 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerGSDaten")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.all", query = "SELECT e FROM DTOSchuelerGrundschuldaten e")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.schueler_id", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sprachgebrauch", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sprachgebrauch.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_lesen", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_lesen.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_rechtschreiben", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_rechtschreiben.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sachunterricht", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sachunterricht.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_mathematik", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_mathematik.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_englisch", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_englisch.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_kunsttextil", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_kunsttextil.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_musik", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_musik.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sport", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sport.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_religion", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_religion.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_sprache", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_sprache.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_einfach", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_einfach.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.anrede_klassenlehrer", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.anrede_klassenlehrer.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.nachname_klassenlehrer", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.nachname_klassenlehrer.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.gs_klasse", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.gs_klasse.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.bemerkungen", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.bemerkungen.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerGrundschuldaten.all.migration", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Note_Sprachgebrauch", "Note_Lesen", "Note_Rechtschreiben", "Note_Sachunterricht", "Note_Mathematik", "Note_Englisch", "Note_KunstTextil", "Note_Musik", "Note_Sport", "Note_Religion", "Durchschnittsnote_Sprache", "Durchschnittsnote_Einfach", "Durchschnittsnote_Gewichtet", "Anrede_Klassenlehrer", "Nachname_Klassenlehrer", "GS_Klasse", "Bemerkungen", "Geschwisterkind"})
 public final class DTOSchuelerGrundschuldaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerGrundschuldaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Sprachgebrauch */
+	public static final String QUERY_BY_NOTE_SPRACHGEBRAUCH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Sprachgebrauch */
+	public static final String QUERY_LIST_BY_NOTE_SPRACHGEBRAUCH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Lesen */
+	public static final String QUERY_BY_NOTE_LESEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Lesen */
+	public static final String QUERY_LIST_BY_NOTE_LESEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Rechtschreiben */
+	public static final String QUERY_BY_NOTE_RECHTSCHREIBEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Rechtschreiben */
+	public static final String QUERY_LIST_BY_NOTE_RECHTSCHREIBEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Sachunterricht */
+	public static final String QUERY_BY_NOTE_SACHUNTERRICHT = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Sachunterricht */
+	public static final String QUERY_LIST_BY_NOTE_SACHUNTERRICHT = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Mathematik */
+	public static final String QUERY_BY_NOTE_MATHEMATIK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Mathematik */
+	public static final String QUERY_LIST_BY_NOTE_MATHEMATIK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Englisch */
+	public static final String QUERY_BY_NOTE_ENGLISCH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Englisch */
+	public static final String QUERY_LIST_BY_NOTE_ENGLISCH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_KunstTextil */
+	public static final String QUERY_BY_NOTE_KUNSTTEXTIL = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_KunstTextil */
+	public static final String QUERY_LIST_BY_NOTE_KUNSTTEXTIL = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Musik */
+	public static final String QUERY_BY_NOTE_MUSIK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Musik */
+	public static final String QUERY_LIST_BY_NOTE_MUSIK = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Sport */
+	public static final String QUERY_BY_NOTE_SPORT = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Sport */
+	public static final String QUERY_LIST_BY_NOTE_SPORT = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Note_Religion */
+	public static final String QUERY_BY_NOTE_RELIGION = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Note_Religion */
+	public static final String QUERY_LIST_BY_NOTE_RELIGION = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Durchschnittsnote_Sprache */
+	public static final String QUERY_BY_DURCHSCHNITTSNOTE_SPRACHE = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Durchschnittsnote_Sprache */
+	public static final String QUERY_LIST_BY_DURCHSCHNITTSNOTE_SPRACHE = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Durchschnittsnote_Einfach */
+	public static final String QUERY_BY_DURCHSCHNITTSNOTE_EINFACH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Durchschnittsnote_Einfach */
+	public static final String QUERY_LIST_BY_DURCHSCHNITTSNOTE_EINFACH = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Durchschnittsnote_Gewichtet */
+	public static final String QUERY_BY_DURCHSCHNITTSNOTE_GEWICHTET = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Durchschnittsnote_Gewichtet */
+	public static final String QUERY_LIST_BY_DURCHSCHNITTSNOTE_GEWICHTET = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anrede_Klassenlehrer */
+	public static final String QUERY_BY_ANREDE_KLASSENLEHRER = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anrede_Klassenlehrer */
+	public static final String QUERY_LIST_BY_ANREDE_KLASSENLEHRER = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Nachname_Klassenlehrer */
+	public static final String QUERY_BY_NACHNAME_KLASSENLEHRER = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Nachname_Klassenlehrer */
+	public static final String QUERY_LIST_BY_NACHNAME_KLASSENLEHRER = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GS_Klasse */
+	public static final String QUERY_BY_GS_KLASSE = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GS_Klasse */
+	public static final String QUERY_LIST_BY_GS_KLASSE = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Geschwisterkind */
+	public static final String QUERY_BY_GESCHWISTERKIND = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Geschwisterkind */
+	public static final String QUERY_LIST_BY_GESCHWISTERKIND = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN ?1";
 
 	/** SchülerID zum GS-Daten-Eintrag */
 	@Id

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,30 +26,74 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_KAoADaten")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.all", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.id", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.id.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.curriculum", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.curriculum.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.koordinator", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.koordinator.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.all.migration", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Curriculum", "Koordinator", "Berufsorientierungsbuero", "KooperationsvereinbarungAA", "NutzungReflexionsworkshop", "NutzungEntscheidungskompetenzI", "NutzungEntscheidungskompetenzII", "SchulnrEigner"})
 public final class MigrationDTOEigeneSchuleKAoADaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Curriculum */
+	public static final String QUERY_BY_CURRICULUM = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Curriculum */
+	public static final String QUERY_LIST_BY_CURRICULUM = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Koordinator */
+	public static final String QUERY_BY_KOORDINATOR = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Koordinator */
+	public static final String QUERY_LIST_BY_KOORDINATOR = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Berufsorientierungsbuero */
+	public static final String QUERY_BY_BERUFSORIENTIERUNGSBUERO = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Berufsorientierungsbuero */
+	public static final String QUERY_LIST_BY_BERUFSORIENTIERUNGSBUERO = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KooperationsvereinbarungAA */
+	public static final String QUERY_BY_KOOPERATIONSVEREINBARUNGAA = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KooperationsvereinbarungAA */
+	public static final String QUERY_LIST_BY_KOOPERATIONSVEREINBARUNGAA = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NutzungReflexionsworkshop */
+	public static final String QUERY_BY_NUTZUNGREFLEXIONSWORKSHOP = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NutzungReflexionsworkshop */
+	public static final String QUERY_LIST_BY_NUTZUNGREFLEXIONSWORKSHOP = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NutzungEntscheidungskompetenzI */
+	public static final String QUERY_BY_NUTZUNGENTSCHEIDUNGSKOMPETENZI = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NutzungEntscheidungskompetenzI */
+	public static final String QUERY_LIST_BY_NUTZUNGENTSCHEIDUNGSKOMPETENZI = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NutzungEntscheidungskompetenzII */
+	public static final String QUERY_BY_NUTZUNGENTSCHEIDUNGSKOMPETENZII = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NutzungEntscheidungskompetenzII */
+	public static final String QUERY_LIST_BY_NUTZUNGENTSCHEIDUNGSKOMPETENZII = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID des KAoA-Dateneintrags für die Schule */
 	@Id

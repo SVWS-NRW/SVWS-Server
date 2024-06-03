@@ -99,8 +99,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 */
 	public static void getErgebnisListe(final @NotNull DBEntityManager conn, @NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
 	    // Bestimme die Liste der Ergebnisse aus der Datenbank
-        final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
-                "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
+        final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID,
+        		DTOGostBlockungZwischenergebnis.class, datenManager.getID());
         if (ergebnisse == null)
             throw new ApiOperationException(Status.NOT_FOUND);
         final List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).toList();
@@ -109,14 +109,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
         // Bestimme die Kurs-Schienen-Zuordnungen für alle Zwischenergebnisse
         final Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen =
-            conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", ergebnisIDs,
-                    DTOGostBlockungZwischenergebnisKursSchiene.class)
+            conn.queryList(DTOGostBlockungZwischenergebnisKursSchiene.QUERY_LIST_BY_ZWISCHENERGEBNIS_ID,
+                    DTOGostBlockungZwischenergebnisKursSchiene.class, ergebnisIDs)
                 .stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
 
         // Bestimme die Kurs-Schüler-Zuordnungen für alle Zwischenergebnisse
         final Map<Long, List<DTOGostBlockungZwischenergebnisKursSchueler>> mapKursSchueler =
-            conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id.multiple", ergebnisIDs,
-                    DTOGostBlockungZwischenergebnisKursSchueler.class)
+            conn.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_LIST_BY_ZWISCHENERGEBNIS_ID,
+                    DTOGostBlockungZwischenergebnisKursSchueler.class, ergebnisIDs)
                 .stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
 
 	    // Durchwandere alle Ergebnisse
@@ -165,7 +165,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
         // Bestimme alle Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
         final List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
-                .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
+                .queryList(DTOGostBlockungZwischenergebnisKursSchiene.QUERY_BY_ZWISCHENERGEBNIS_ID, DTOGostBlockungZwischenergebnisKursSchiene.class, ergebnis.ID);
 
         final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
         for (final DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
@@ -175,7 +175,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
         // Bestimme alle Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
     	final List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
-    			.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+    			.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_ZWISCHENERGEBNIS_ID, DTOGostBlockungZwischenergebnisKursSchueler.class, ergebnis.ID);
 
         final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
         for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
@@ -483,7 +483,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler in dem Abiturjahrgang gefunden.");
 		final Set<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toSet());
 		// Bestimme alle Kurse der Blockung
-		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
+		final List<DTOGostBlockungKurs> kurse = conn.queryList(DTOGostBlockungKurs.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungKurs.class, blockung.ID);
 		if (kurse.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Kurse in der Blockung gefunden.");
 		final Set<Long> kursIDs = kurse.stream().map(k -> k.ID).collect(Collectors.toSet());
@@ -693,8 +693,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		mapKursIDs.put(kurs.id, id);
 		// Bestimme die Kurslehrer, sofern bereits festgelegt
 		DTOGostBlockungKurslehrer kurslehrer = null;
-		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id",
-			kurs.id, DTOGostBlockungKurslehrer.class);
+		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID,
+			DTOGostBlockungKurslehrer.class, kurs.id);
 		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
 		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
 			if (dtoKurslehrer.Reihenfolge == 1) {
@@ -737,8 +737,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		mapKursIDs.put(kurs.id, dto.ID);
 		// Bestimme die Kurslehrer, sofern bereits festgelegt
 		DTOGostBlockungKurslehrer kurslehrer = null;
-		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id",
-				kurs.id, DTOGostBlockungKurslehrer.class);
+		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID,
+				DTOGostBlockungKurslehrer.class, kurs.id);
 		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
 		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
 			if (dtoKurslehrer.Reihenfolge == 1) {

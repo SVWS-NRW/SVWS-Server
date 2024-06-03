@@ -157,43 +157,61 @@ public class DTOCreatorView {
 
 
 	/**
-	 * Generiert den Java Code für die "Named Queries", die als Annotation oberhalb der Klasse generiert werden.
+	 * Generiert den Code für einen Query-String und hängt diesen an den Stringbuilder an.
 	 *
-	 * @param rev   die Datenbank-Revision, für welche die "Named Queries" generiert werden
+	 * @param name      der Name der Query
+	 * @param query     die Query
+	 * @param comment   der JavaDoc-Kommentar für das Attribut
+	 *
+	 * @return der Query-String.
+	 */
+	private static String getQueryAttribute(final String name, final String query, final String comment) {
+		return "%1$s\t/** %2$s */%1$s\tpublic static final String QUERY_%3$s = \"%4$s\";%1$s".formatted(System.lineSeparator(), comment, name, query);
+	}
+
+
+
+	/**
+	 * Generiert den Java Code für Queries in statischen Attributen.
+	 *
+	 * @param rev   die Revision der Tabelle, für welche die Queries generiert werden
 	 *
 	 * @return der Java Code
 	 */
-	private String getCode4NamedQueries(final long rev) {
+	private String getCode4Queries(final long rev) {
 		final String className = getJavaKlasse(rev);
-		// alle Views: Generiere Code für eine NamedQuery auf alle Datensätze der View
+		// alle Views: Generiere Code für eine Query auf alle Datensätze der View
 		final StringBuilder sb = new StringBuilder();
-		sb.append("@NamedQuery(name = \"" + className + ".all\", query = \"SELECT e FROM " + className + " e\")" + System.lineSeparator());
-		// alle Views: Generiere Annotationen für NamedQueries für einzelne Attribute der View
-		for (final ViewSpalte spalte : view.spalten) {
-			if (spalte.name.startsWith("-"))
-				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
-			sb.append("@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + "\", query = \"SELECT e FROM " + className + " e WHERE "
-				 + "e." + spalte.name + " = :value"
-				 + "\")" + System.lineSeparator());
-			sb.append("@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + ".multiple\", query = \"SELECT e FROM " + className + " e WHERE "
-					 + "e." + spalte.name + " IN :value"
-					 + "\")" + System.lineSeparator());
-		}
+		String query = "SELECT e FROM " + className + " e";
+		sb.append(getQueryAttribute("ALL", query, "Die Datenbankabfrage für alle DTOs"));
 		// nur für Views mit Primärschlüssel...
 		if (!view.pkSpalten.isEmpty()) {
-			// Generiere Code für eine parametrisierte NamedQuery mit den Spalten des Primärschlüssels als Parameter
-			sb.append("@NamedQuery(name = \"" + className + ".primaryKeyQuery\", query = \"SELECT e FROM " + className + " e WHERE ");
+			// Generiere Code für eine parametrisierte Query mit den Spalten des Primärschlüssels als Parameter
+			query = "SELECT e FROM " + className + " e WHERE ";
 			for (int i = 0; i < view.pkSpalten.size(); i++) {
 				final ViewSpalte col = view.pkSpalten.get(i);
 				if (i > 0)
-					sb.append(" AND ");
-				sb.append("e." + col.name + " = ?" + (i + 1));
+					query += " AND ";
+				query += "e." + col.name + " = ?" + (i + 1);
 			}
-			sb.append("\")" + System.lineSeparator());
+			sb.append(getQueryAttribute("PK", query, "Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute"));
+			if (view.pkSpalten.size() == 1) {
+				final ViewSpalte col = view.pkSpalten.iterator().next();
+				query = "SELECT e FROM " + className + " e WHERE e." + col.name + " IN ?1";
+				sb.append(getQueryAttribute("LIST_PK", query, "Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten"));
+			}
+		}
+		// alle Views: Generiere Annotationen für Queries für einzelne Attribute der View
+		for (final ViewSpalte spalte : view.spalten) {
+			if (spalte.name.startsWith("-"))
+				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
+			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " = ?1";
+			sb.append(getQueryAttribute("BY_" + spalte.name.toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand des Attributes " + spalte.name));
+			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " IN ?1";
+			sb.append(getQueryAttribute("LIST_BY_" + spalte.name.toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes " + spalte.name));
 		}
 		return sb.toString();
 	}
-
 
 
 	/**
@@ -254,7 +272,6 @@ public class DTOCreatorView {
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
 		if (view.pkSpalten.size() != 1)
 			sb.append("import jakarta.persistence.IdClass;" + System.lineSeparator());
-		sb.append("import jakarta.persistence.NamedQuery;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Table;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -283,11 +300,11 @@ public class DTOCreatorView {
 		}
 		sb.append("@Cacheable(DBEntityManager.use_db_caching)" + System.lineSeparator());
 		sb.append("@Table(name = \"" + view.name + "\")" + System.lineSeparator());
-		sb.append(getCode4NamedQueries(rev));
 		sb.append(view.spalten.stream()
 				.map(spalte -> "\"" + spalte.name + "\"")
 				.collect(Collectors.joining(", ", "@JsonPropertyOrder({", "})" + System.lineSeparator())));
 		sb.append("public final class " + className + " {" + System.lineSeparator());
+		sb.append(getCode4Queries(rev));
 		sb.append(System.lineSeparator());
 		sb.append(view.spalten.stream()
 				.map(spalte -> getCode4Attributes(spalte, true))

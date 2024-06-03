@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,15 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOHerkunftSchulformenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunft_Schulformen")
-@NamedQuery(name = "DTOHerkunftSchulformen.all", query = "SELECT e FROM DTOHerkunftSchulformen e")
-@NamedQuery(name = "DTOHerkunftSchulformen.herkunft_id", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID = :value")
-@NamedQuery(name = "DTOHerkunftSchulformen.herkunft_id.multiple", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID IN :value")
-@NamedQuery(name = "DTOHerkunftSchulformen.schulform_kuerzel", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Schulform_Kuerzel = :value")
-@NamedQuery(name = "DTOHerkunftSchulformen.schulform_kuerzel.multiple", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Schulform_Kuerzel IN :value")
-@NamedQuery(name = "DTOHerkunftSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID = ?1 AND e.Schulform_Kuerzel = ?2")
-@NamedQuery(name = "DTOHerkunftSchulformen.all.migration", query = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Herkunft_ID", "Schulform_Kuerzel"})
 public final class DTOHerkunftSchulformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOHerkunftSchulformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID = ?1 AND e.Schulform_Kuerzel = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Herkunft_ID */
+	public static final String QUERY_BY_HERKUNFT_ID = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Herkunft_ID */
+	public static final String QUERY_LIST_BY_HERKUNFT_ID = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Herkunft_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulform_Kuerzel */
+	public static final String QUERY_BY_SCHULFORM_KUERZEL = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Schulform_Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulform_Kuerzel */
+	public static final String QUERY_LIST_BY_SCHULFORM_KUERZEL = "SELECT e FROM DTOHerkunftSchulformen e WHERE e.Schulform_Kuerzel IN ?1";
 
 	/** die ID der Herkunft */
 	@Id

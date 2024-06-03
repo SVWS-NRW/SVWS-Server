@@ -70,7 +70,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOLehrer> lehrerliste = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> lehrerliste = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
 		final ArrayList<StundenplanLehrer> daten = new ArrayList<>();
 		for (final DTOLehrer l : lehrerliste) {
 			if ((l.DatumAbgang != null)) {

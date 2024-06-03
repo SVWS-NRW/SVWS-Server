@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,22 +26,50 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abt_Kl")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.all", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.id", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.id.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.abteilung_id", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.abteilung_id.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.klasse", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse = :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.klasse.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.sichtbar", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.sichtbar.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAbteilungsKlassen.all.migration", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abteilung_ID", "Klasse", "Sichtbar", "SchulnrEigner"})
 public final class MigrationDTOAbteilungsKlassen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOAbteilungsKlassen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abteilung_ID */
+	public static final String QUERY_BY_ABTEILUNG_ID = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abteilung_ID */
+	public static final String QUERY_LIST_BY_ABTEILUNG_ID = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Klasse */
+	public static final String QUERY_BY_KLASSE = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Klasse */
+	public static final String QUERY_LIST_BY_KLASSE = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID der Klassenzugehörigkeit zu einer Abteilung */
 	@Id

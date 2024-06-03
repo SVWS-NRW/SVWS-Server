@@ -118,9 +118,12 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 				.setParameter("skid", id)
 				.setMaxResults(1)
 				.getSingleResult();
-		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> raumstunden = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermineRaumstunden.schuelerklausurtermin_id", lastTermin.ID, DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class);
+		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> raumstunden = conn.queryList(
+				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_BY_SCHUELERKLAUSURTERMIN_ID,
+				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, lastTermin.ID);
 		conn.transactionRemoveAll(raumstunden);
-		final DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1);
+		final DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(
+				conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1);
 		conn.transactionPersist(newTermin);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(newTermin)).build();
 	}
@@ -154,7 +157,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurids(final DBEntityManager conn, final List<Long> listSkIds) throws ApiOperationException {
 		if (listSkIds.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", listSkIds, DTOGostKlausurenSchuelerklausurenTermine.class);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryList(
+				DTOGostKlausurenSchuelerklausurenTermine.QUERY_LIST_BY_SCHUELERKLAUSUR_ID, DTOGostKlausurenSchuelerklausurenTermine.class, listSkIds);
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -171,7 +175,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminids(final DBEntityManager conn, final List<Long> listSkIds) throws ApiOperationException {
 		if (listSkIds.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSkIds, DTOGostKlausurenSchuelerklausurenTermine.class);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listSkIds);
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -189,7 +193,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminids(final DBEntityManager conn, final List<Long> listTerminIds) throws ApiOperationException {
 		if (listTerminIds.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.termin_id.multiple", listTerminIds, DTOGostKlausurenSchuelerklausurenTermine.class);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryList(
+				DTOGostKlausurenSchuelerklausurenTermine.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenSchuelerklausurenTermine.class, listTerminIds);
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -207,7 +212,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(final DBEntityManager conn, final List<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
 		if (listSktrs.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSktrs.stream().map(skrs -> skrs.idSchuelerklausurtermin).distinct().toList(), DTOGostKlausurenSchuelerklausurenTermine.class);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class,
+				listSktrs.stream().map(skrs -> skrs.idSchuelerklausurtermin).distinct().toList());
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -223,7 +229,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> listSkts) {
 		if (listSkts.isEmpty())
 			return new ArrayList<>();
-		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSkts.stream().map(skt -> skt.id).toList(), DTOGostKlausurenSchuelerklausurenTermine.class);
+		return conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listSkts.stream().map(skt -> skt.id).toList());
 	}
 
 	/**
@@ -238,7 +244,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsById(final DBEntityManager conn, final List<Long> listIds) {
 		if (listIds.isEmpty())
 			return new ArrayList<>();
-		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listIds, DTOGostKlausurenSchuelerklausurenTermine.class);
+		return conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listIds);
 	}
 
 	/**

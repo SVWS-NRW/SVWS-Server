@@ -78,7 +78,7 @@ public final class LehrerWithCategoriesRepository implements IAdressbuchKontaktR
 		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
 			return new ArrayList<>();
 		}
-		final List<DTOLehrer> dtoLehrerResult = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> dtoLehrerResult = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
 		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return dtoLehrerResult.stream().map(e -> {
 				final AdressbuchEintrag a = new AdressbuchEintrag();
@@ -146,13 +146,13 @@ public final class LehrerWithCategoriesRepository implements IAdressbuchKontaktR
 		final Map<Long, Set<String>> result = new HashMap<>();
 		// Klassenlehrer, Klassenlehrer Jahrgang, Klassenlehrer Klasse
 
-		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
-				aktuellerSchuljahresabschnitt.ID, DTOKlassen.class);
+		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class,
+				aktuellerSchuljahresabschnitt.ID);
 		final Map<Long, DTOKlassen> klassenByKlassenId = dtoKlassenQueryResult.stream()
 				.collect(Collectors.toMap(k -> k.ID, k -> k));
-		final List<DTOKlassenLeitung> dtoKlassenLeitungQueryResult = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple",
-				klassenByKlassenId.keySet(), DTOKlassenLeitung.class);
-		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
+		final List<DTOKlassenLeitung> dtoKlassenLeitungQueryResult = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class,
+				klassenByKlassenId.keySet());
+		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryList(DTOJahrgang.QUERY_BY_SICHTBAR, DTOJahrgang.class, true)
 				.stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
 
 		for (final DTOKlassenLeitung kl : dtoKlassenLeitungQueryResult) {
@@ -166,16 +166,15 @@ public final class LehrerWithCategoriesRepository implements IAdressbuchKontaktR
 			categories.add(kategorienUtil.formatLehrerJahrgangsteam(jahrgang));
 		}
 
-		final List<DTOKurs> dtoKursQueryResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
-				aktuellerSchuljahresabschnitt.ID, DTOKurs.class);
+		final List<DTOKurs> dtoKursQueryResult = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class,
+				aktuellerSchuljahresabschnitt.ID);
 		for (final DTOKurs k : dtoKursQueryResult) {
 			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
 			final String jahrgang = jahrgangKrzByJahrgangId.get(k.Jahrgang_ID);
 			categories.add(kategorienUtil.formatLehrerJahrgangsteam(jahrgang));
 		}
 
-		final List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn
-				.queryNamed("DTOLehrerLehramtBefaehigung.all", DTOLehrerLehramtBefaehigung.class).getResultList();
+		final List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn.queryAll(DTOLehrerLehramtBefaehigung.class);
 		for (final DTOLehrerLehramtBefaehigung k : dtoLehrerLehramtBefaehigungQueryResult) {
 			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
 			categories.add(kategorienUtil.formatLehrerFachschaft(k.LehrbefKrz));

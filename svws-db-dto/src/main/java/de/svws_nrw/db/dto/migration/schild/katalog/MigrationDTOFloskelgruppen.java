@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Floskelgruppen")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.all", query = "SELECT e FROM MigrationDTOFloskelgruppen e")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.kuerzel", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.hauptgruppe", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe = :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.hauptgruppe.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.bezeichnung", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.farbe", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe = :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.farbe.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.schulnreigner", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = ?1")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOFloskelgruppen.all.migration", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "Hauptgruppe", "Bezeichnung", "Farbe", "SchulnrEigner"})
 public final class MigrationDTOFloskelgruppen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOFloskelgruppen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Hauptgruppe */
+	public static final String QUERY_BY_HAUPTGRUPPE = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Hauptgruppe */
+	public static final String QUERY_LIST_BY_HAUPTGRUPPE = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Farbe */
+	public static final String QUERY_BY_FARBE = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Farbe */
+	public static final String QUERY_LIST_BY_FARBE = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner IN ?1";
 
 	/** Kürzel der Floskelgruppe */
 	@Id

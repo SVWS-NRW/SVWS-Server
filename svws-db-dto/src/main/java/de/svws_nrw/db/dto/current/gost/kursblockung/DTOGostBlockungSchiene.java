@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Schienen")
-@NamedQuery(name = "DTOGostBlockungSchiene.all", query = "SELECT e FROM DTOGostBlockungSchiene e")
-@NamedQuery(name = "DTOGostBlockungSchiene.id", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.id.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.blockung_id", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.nummer", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Nummer = :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.nummer.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Nummer IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.bezeichnung", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.bezeichnung.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.wochenstunden", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden = :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungSchiene.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungSchiene.all.migration", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Nummer", "Bezeichnung", "Wochenstunden"})
 public final class DTOGostBlockungSchiene {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockungSchiene e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Blockung_ID */
+	public static final String QUERY_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Blockung_ID */
+	public static final String QUERY_LIST_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Nummer */
+	public static final String QUERY_BY_NUMMER = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Nummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Nummer */
+	public static final String QUERY_LIST_BY_NUMMER = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Nummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochenstunden */
+	public static final String QUERY_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochenstunden */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden IN ?1";
 
 	/** ID der Schiene in der Blockung (generiert) */
 	@Id

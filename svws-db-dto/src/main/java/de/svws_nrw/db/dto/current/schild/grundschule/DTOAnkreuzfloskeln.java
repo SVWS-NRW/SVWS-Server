@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,34 +26,86 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ankreuzfloskeln")
-@NamedQuery(name = "DTOAnkreuzfloskeln.all", query = "SELECT e FROM DTOAnkreuzfloskeln e")
-@NamedQuery(name = "DTOAnkreuzfloskeln.id", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.id.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.fach_id", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.fach_id.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.istasv", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.istasv.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.jahrgang", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.jahrgang.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.gliederung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.gliederung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.floskeltext", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.floskeltext.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.sortierung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.sortierung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.fachsortierung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.fachsortierung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.abschnitt", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.abschnitt.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.sichtbar", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.sichtbar.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.aktiv", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv = :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.aktiv.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOAnkreuzfloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Fach_ID", "IstASV", "Jahrgang", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
 public final class DTOAnkreuzfloskeln {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOAnkreuzfloskeln e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstASV */
+	public static final String QUERY_BY_ISTASV = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstASV */
+	public static final String QUERY_LIST_BY_ISTASV = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahrgang */
+	public static final String QUERY_BY_JAHRGANG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahrgang */
+	public static final String QUERY_LIST_BY_JAHRGANG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gliederung */
+	public static final String QUERY_BY_GLIEDERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gliederung */
+	public static final String QUERY_LIST_BY_GLIEDERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelText */
+	public static final String QUERY_BY_FLOSKELTEXT = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelText */
+	public static final String QUERY_LIST_BY_FLOSKELTEXT = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachSortierung */
+	public static final String QUERY_BY_FACHSORTIERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachSortierung */
+	public static final String QUERY_LIST_BY_FACHSORTIERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt */
+	public static final String QUERY_BY_ABSCHNITT = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt */
+	public static final String QUERY_LIST_BY_ABSCHNITT = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aktiv */
+	public static final String QUERY_BY_AKTIV = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aktiv */
+	public static final String QUERY_LIST_BY_AKTIV = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv IN ?1";
 
 	/** ID der Ankreuzfloskel */
 	@Id

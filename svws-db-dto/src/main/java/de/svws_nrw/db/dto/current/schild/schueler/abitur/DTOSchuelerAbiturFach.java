@@ -21,7 +21,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -51,94 +50,266 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAbiFaecher")
-@NamedQuery(name = "DTOSchuelerAbiturFach.all", query = "SELECT e FROM DTOSchuelerAbiturFach e")
-@NamedQuery(name = "DTOSchuelerAbiturFach.id", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.id.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.schueler_id", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fach_id", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fach_id.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachkuerzel", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachKuerzel = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachkuerzel.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachKuerzel IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachsortierung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachSortierung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachsortierung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachSortierung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.kurs_id", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.kurs_id.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.kursartallgemein", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.KursartAllgemein = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.kursartallgemein.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.KursartAllgemein IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachlehrer_id", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.fachlehrer_id.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.abiturfach", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.AbiturFach = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.abiturfach.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.AbiturFach IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj1_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj1_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj1_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj1_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj2_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj2_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj2_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.ef_hj2_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.facharbeit_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.facharbeit_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.facharbeit_markiertfuerabiturberechnung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.facharbeit_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_wochenstunden", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_wochenstunden.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_markiertfuerabiturberechnung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj1_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_wochenstunden", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_wochenstunden.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_markiertfuerabiturberechnung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q1_hj2_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_wochenstunden", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_wochenstunden.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_markiertfuerabiturberechnung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj1_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_wochenstunden", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_wochenstunden.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_notenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_notenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_markiertfuerabiturberechnung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_belegungart", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.q2_hj2_belegungart.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.zulassungpunktsumme", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.zulassungpunktsumme.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.zulassungnotenpunktdurchschnitt", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.zulassungnotenpunktdurchschnitt.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungnotenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungnotenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungpunktsummezwischenstand", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungpunktsummezwischenstand.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichabweichung", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichabweichung.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichbestehen", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichbestehen.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichfreiwillig", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichfreiwillig.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichnotenpunkte", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichnotenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichreihenfolge", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungmuendlichreihenfolge.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungpunktsummegesamt", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt = :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.pruefungpunktsummegesamt.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerAbiturFach.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerAbiturFach.all.migration", query = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Fach_ID", "FachKuerzel", "FachSortierung", "Kurs_ID", "KursartAllgemein", "Fachlehrer_ID", "AbiturFach", "EF_HJ1_Notenpunkte", "EF_HJ1_BelegungArt", "EF_HJ2_Notenpunkte", "EF_HJ2_BelegungArt", "Facharbeit_Notenpunkte", "Facharbeit_MarkiertFuerAbiturBerechnung", "Q1_HJ1_Wochenstunden", "Q1_HJ1_Notenpunkte", "-", "Q1_HJ1_MarkiertFuerAbiturBerechnung", "Q1_HJ1_BelegungArt", "Q1_HJ2_Wochenstunden", "Q1_HJ2_Notenpunkte", "-", "Q1_HJ2_MarkiertFuerAbiturBerechnung", "Q1_HJ2_BelegungArt", "Q2_HJ1_Wochenstunden", "Q2_HJ1_Notenpunkte", "-", "Q2_HJ1_MarkiertFuerAbiturBerechnung", "Q2_HJ1_BelegungArt", "Q2_HJ2_Wochenstunden", "Q2_HJ2_Notenpunkte", "-", "Q2_HJ2_MarkiertFuerAbiturBerechnung", "Q2_HJ2_BelegungArt", "ZulassungPunktsumme", "ZulassungNotenpunktdurchschnitt", "PruefungNotenpunkte", "PruefungPunktsummeZwischenstand", "PruefungMuendlichAbweichung", "PruefungMuendlichBestehen", "PruefungMuendlichFreiwillig", "PruefungMuendlichNotenpunkte", "PruefungMuendlichReihenfolge", "PruefungPunktsummeGesamt"})
 public final class DTOSchuelerAbiturFach {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerAbiturFach e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachKuerzel */
+	public static final String QUERY_BY_FACHKUERZEL = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachKuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachKuerzel */
+	public static final String QUERY_LIST_BY_FACHKUERZEL = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachKuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachSortierung */
+	public static final String QUERY_BY_FACHSORTIERUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachSortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachSortierung */
+	public static final String QUERY_LIST_BY_FACHSORTIERUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.FachSortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KursartAllgemein */
+	public static final String QUERY_BY_KURSARTALLGEMEIN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.KursartAllgemein = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KursartAllgemein */
+	public static final String QUERY_LIST_BY_KURSARTALLGEMEIN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.KursartAllgemein IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer_ID */
+	public static final String QUERY_BY_FACHLEHRER_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer_ID */
+	public static final String QUERY_LIST_BY_FACHLEHRER_ID = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbiturFach */
+	public static final String QUERY_BY_ABITURFACH = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.AbiturFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbiturFach */
+	public static final String QUERY_LIST_BY_ABITURFACH = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.AbiturFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ1_Notenpunkte */
+	public static final String QUERY_BY_EF_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_EF_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ1_BelegungArt */
+	public static final String QUERY_BY_EF_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_EF_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ2_Notenpunkte */
+	public static final String QUERY_BY_EF_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_EF_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ2_BelegungArt */
+	public static final String QUERY_BY_EF_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_EF_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Facharbeit_Notenpunkte */
+	public static final String QUERY_BY_FACHARBEIT_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Facharbeit_Notenpunkte */
+	public static final String QUERY_LIST_BY_FACHARBEIT_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Facharbeit_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_FACHARBEIT_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Facharbeit_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_FACHARBEIT_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_Wochenstunden */
+	public static final String QUERY_BY_Q1_HJ1_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q1_HJ1_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_Notenpunkte */
+	public static final String QUERY_BY_Q1_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q1_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q1_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q1_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_BelegungArt */
+	public static final String QUERY_BY_Q1_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_Q1_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_Wochenstunden */
+	public static final String QUERY_BY_Q1_HJ2_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q1_HJ2_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_Notenpunkte */
+	public static final String QUERY_BY_Q1_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q1_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q1_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q1_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_BelegungArt */
+	public static final String QUERY_BY_Q1_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_Q1_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_Wochenstunden */
+	public static final String QUERY_BY_Q2_HJ1_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q2_HJ1_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_Notenpunkte */
+	public static final String QUERY_BY_Q2_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q2_HJ1_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q2_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q2_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_BelegungArt */
+	public static final String QUERY_BY_Q2_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_Q2_HJ1_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_Wochenstunden */
+	public static final String QUERY_BY_Q2_HJ2_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q2_HJ2_WOCHENSTUNDEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_Notenpunkte */
+	public static final String QUERY_BY_Q2_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q2_HJ2_NOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q2_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q2_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_BelegungArt */
+	public static final String QUERY_BY_Q2_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_Q2_HJ2_BELEGUNGART = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungPunktsumme */
+	public static final String QUERY_BY_ZULASSUNGPUNKTSUMME = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungPunktsumme */
+	public static final String QUERY_LIST_BY_ZULASSUNGPUNKTSUMME = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungNotenpunktdurchschnitt */
+	public static final String QUERY_BY_ZULASSUNGNOTENPUNKTDURCHSCHNITT = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungNotenpunktdurchschnitt */
+	public static final String QUERY_LIST_BY_ZULASSUNGNOTENPUNKTDURCHSCHNITT = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungNotenpunkte */
+	public static final String QUERY_BY_PRUEFUNGNOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungNotenpunkte */
+	public static final String QUERY_LIST_BY_PRUEFUNGNOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungPunktsummeZwischenstand */
+	public static final String QUERY_BY_PRUEFUNGPUNKTSUMMEZWISCHENSTAND = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungPunktsummeZwischenstand */
+	public static final String QUERY_LIST_BY_PRUEFUNGPUNKTSUMMEZWISCHENSTAND = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichAbweichung */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHABWEICHUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichAbweichung */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHABWEICHUNG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichBestehen */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHBESTEHEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichBestehen */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHBESTEHEN = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichFreiwillig */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHFREIWILLIG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichFreiwillig */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHFREIWILLIG = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichNotenpunkte */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHNOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichNotenpunkte */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHNOTENPUNKTE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichReihenfolge */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHREIHENFOLGE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichReihenfolge */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHREIHENFOLGE = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungPunktsummeGesamt */
+	public static final String QUERY_BY_PRUEFUNGPUNKTSUMMEGESAMT = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungPunktsummeGesamt */
+	public static final String QUERY_LIST_BY_PRUEFUNGPUNKTSUMMEGESAMT = "SELECT e FROM DTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt IN ?1";
 
 	/** Eine eindeutige ID für die Abitur-Fach-Informationen des Schülers */
 	@Id

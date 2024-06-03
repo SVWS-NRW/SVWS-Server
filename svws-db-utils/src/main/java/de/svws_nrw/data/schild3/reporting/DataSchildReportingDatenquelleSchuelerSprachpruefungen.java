@@ -29,11 +29,8 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen extend
 
 	@Override
     List<SchildReportingSchuelerSprachpruefungen> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
-
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        final Map<Long, DTOSchueler> schueler = conn
-                .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
-                .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+        final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
@@ -43,7 +40,8 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen extend
 		final ArrayList<SchildReportingSchuelerSprachpruefungen> result = new ArrayList<>();
 		for (final Long schuelerID : params) {
 			// Die Sprachprüfungsdaten der Schüler sammeln.
-			final List<DTOSchuelerSprachpruefungen> schuelerSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", schuelerID, DTOSchuelerSprachpruefungen.class);
+			final List<DTOSchuelerSprachpruefungen> schuelerSprachpruefungen = conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID,
+					DTOSchuelerSprachpruefungen.class, schuelerID);
 
 			if ((schuelerSprachpruefungen != null) && (!schuelerSprachpruefungen.isEmpty())) {
 				// Nur wenn zum Schüler Sprachprüfungen vorhanden sind, werden diese zurückgegeben. Andernfalls wird ein leerer Vektor zurückgegeben.

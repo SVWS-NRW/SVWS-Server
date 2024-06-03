@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,18 +26,38 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzergruppen")
-@NamedQuery(name = "DTOBenutzergruppe.all", query = "SELECT e FROM DTOBenutzergruppe e")
-@NamedQuery(name = "DTOBenutzergruppe.id", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = :value")
-@NamedQuery(name = "DTOBenutzergruppe.id.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOBenutzergruppe.bezeichnung", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOBenutzergruppe.bezeichnung.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOBenutzergruppe.istadmin", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin = :value")
-@NamedQuery(name = "DTOBenutzergruppe.istadmin.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin IN :value")
-@NamedQuery(name = "DTOBenutzergruppe.primaryKeyQuery", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOBenutzergruppe.primaryKeyQuery.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOBenutzergruppe.all.migration", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "IstAdmin"})
 public final class DTOBenutzergruppe {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOBenutzergruppe e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAdmin */
+	public static final String QUERY_BY_ISTADMIN = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAdmin */
+	public static final String QUERY_LIST_BY_ISTADMIN = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin IN ?1";
 
 	/** Die ID der Benutzergruppe */
 	@Id

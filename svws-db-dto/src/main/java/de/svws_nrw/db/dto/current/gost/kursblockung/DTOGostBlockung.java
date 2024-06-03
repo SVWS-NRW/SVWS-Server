@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,22 +31,50 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung")
-@NamedQuery(name = "DTOGostBlockung.all", query = "SELECT e FROM DTOGostBlockung e")
-@NamedQuery(name = "DTOGostBlockung.id", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostBlockung.id.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockung.name", query = "SELECT e FROM DTOGostBlockung e WHERE e.Name = :value")
-@NamedQuery(name = "DTOGostBlockung.name.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Name IN :value")
-@NamedQuery(name = "DTOGostBlockung.abi_jahrgang", query = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name = "DTOGostBlockung.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostBlockung.halbjahr", query = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr = :value")
-@NamedQuery(name = "DTOGostBlockung.halbjahr.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr IN :value")
-@NamedQuery(name = "DTOGostBlockung.istaktiv", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv = :value")
-@NamedQuery(name = "DTOGostBlockung.istaktiv.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv IN :value")
-@NamedQuery(name = "DTOGostBlockung.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockung.all.migration", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Name", "Abi_Jahrgang", "Halbjahr", "IstAktiv"})
 public final class DTOGostBlockung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockung e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Name */
+	public static final String QUERY_BY_NAME = "SELECT e FROM DTOGostBlockung e WHERE e.Name = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Name */
+	public static final String QUERY_LIST_BY_NAME = "SELECT e FROM DTOGostBlockung e WHERE e.Name IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
+	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abi_Jahrgang */
+	public static final String QUERY_LIST_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Halbjahr */
+	public static final String QUERY_BY_HALBJAHR = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Halbjahr */
+	public static final String QUERY_LIST_BY_HALBJAHR = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAktiv */
+	public static final String QUERY_BY_ISTAKTIV = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAktiv */
+	public static final String QUERY_LIST_BY_ISTAKTIV = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv IN ?1";
 
 	/** ID der Blockung (generiert) */
 	@Id

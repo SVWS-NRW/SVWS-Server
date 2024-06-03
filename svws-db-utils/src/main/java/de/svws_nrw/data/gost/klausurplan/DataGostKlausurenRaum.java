@@ -87,7 +87,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurraum> getKlausurraeumeZuTerminen(final DBEntityManager conn, final List<Long> terminIds) throws ApiOperationException {
-		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id.multiple", terminIds, DTOGostKlausurenRaeume.class);
+		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenRaeume.class, terminIds);
 		final List<GostKlausurraum> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeume r : raeume)
 			daten.add(dtoMapper.apply(r));

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,28 +26,68 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAnkreuzfloskeln")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.all", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.abschnitt_id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.floskel_id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.floskel_id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe1", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe1.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe2", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe2.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe3", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe3.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe4", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe4.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 = :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Floskel_ID", "Stufe1", "Stufe2", "Stufe3", "Stufe4", "Stufe5"})
 public final class DTOSchuelerAnkreuzfloskeln {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Floskel_ID */
+	public static final String QUERY_BY_FLOSKEL_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Floskel_ID */
+	public static final String QUERY_LIST_BY_FLOSKEL_ID = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stufe1 */
+	public static final String QUERY_BY_STUFE1 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stufe1 */
+	public static final String QUERY_LIST_BY_STUFE1 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stufe2 */
+	public static final String QUERY_BY_STUFE2 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stufe2 */
+	public static final String QUERY_LIST_BY_STUFE2 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stufe3 */
+	public static final String QUERY_BY_STUFE3 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stufe3 */
+	public static final String QUERY_LIST_BY_STUFE3 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stufe4 */
+	public static final String QUERY_BY_STUFE4 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stufe4 */
+	public static final String QUERY_LIST_BY_STUFE4 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stufe5 */
+	public static final String QUERY_BY_STUFE5 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stufe5 */
+	public static final String QUERY_LIST_BY_STUFE5 = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 IN ?1";
 
 	/** ID des Ankreuzfloskeleintrags */
 	@Id

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,30 +18,74 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "CredentialsLernplattformen")
-@NamedQuery(name = "DTOCredentialsLernplattformen.all", query = "SELECT e FROM DTOCredentialsLernplattformen e")
-@NamedQuery(name = "DTOCredentialsLernplattformen.id", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.id.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.lernplattformid", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.lernplattformid.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.benutzername", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.benutzername.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.benutzernamepseudonym", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.benutzernamepseudonym.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.initialkennwort", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.initialkennwort.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.pashwordhash", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.pashwordhash.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.rsapublickey", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.rsapublickey.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.rsaprivatekey", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.rsaprivatekey.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.aes", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES = :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.aes.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.primaryKeyQuery", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOCredentialsLernplattformen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOCredentialsLernplattformen.all.migration", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "LernplattformID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PashwordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
 public final class DTOCredentialsLernplattformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOCredentialsLernplattformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LernplattformID */
+	public static final String QUERY_BY_LERNPLATTFORMID = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LernplattformID */
+	public static final String QUERY_LIST_BY_LERNPLATTFORMID = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzername */
+	public static final String QUERY_BY_BENUTZERNAME = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzername */
+	public static final String QUERY_LIST_BY_BENUTZERNAME = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernamePseudonym */
+	public static final String QUERY_BY_BENUTZERNAMEPSEUDONYM = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernamePseudonym */
+	public static final String QUERY_LIST_BY_BENUTZERNAMEPSEUDONYM = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Initialkennwort */
+	public static final String QUERY_BY_INITIALKENNWORT = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Initialkennwort */
+	public static final String QUERY_LIST_BY_INITIALKENNWORT = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PashwordHash */
+	public static final String QUERY_BY_PASHWORDHASH = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PashwordHash */
+	public static final String QUERY_LIST_BY_PASHWORDHASH = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPublicKey */
+	public static final String QUERY_BY_RSAPUBLICKEY = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPublicKey */
+	public static final String QUERY_LIST_BY_RSAPUBLICKEY = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPrivateKey */
+	public static final String QUERY_BY_RSAPRIVATEKEY = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPrivateKey */
+	public static final String QUERY_LIST_BY_RSAPRIVATEKEY = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AES */
+	public static final String QUERY_BY_AES = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AES */
+	public static final String QUERY_LIST_BY_AES = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES IN ?1";
 
 	/** ID des Datensatzes für die externen Account-Credentials (Lernplattformen) */
 	@Id

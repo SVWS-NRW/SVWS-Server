@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@NamedQuery(name = "MigrationDTOMerkmale.all", query = "SELECT e FROM MigrationDTOMerkmale e")
-@NamedQuery(name = "MigrationDTOMerkmale.id", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.id.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schule", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schule.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schueler", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schueler.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.kurztext", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.kurztext.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.langtext", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.langtext.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schulnreigner", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOMerkmale.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.primaryKeyQuery", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOMerkmale.all.migration", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext", "SchulnrEigner"})
 public final class MigrationDTOMerkmale {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOMerkmale e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schule */
+	public static final String QUERY_BY_SCHULE = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schule */
+	public static final String QUERY_LIST_BY_SCHULE = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler */
+	public static final String QUERY_BY_SCHUELER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler */
+	public static final String QUERY_LIST_BY_SCHUELER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
+	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
+	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Langtext */
+	public static final String QUERY_BY_LANGTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Langtext */
+	public static final String QUERY_LIST_BY_LANGTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID des Merkmals das an der Schule vorhanden ist */
 	@Id

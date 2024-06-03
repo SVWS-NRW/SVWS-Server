@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOClientKonfigurationGlobalPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Client_Konfiguration_Global")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.all", query = "SELECT e FROM DTOClientKonfigurationGlobal e")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.appname", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.appname.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IN :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.schluessel", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel = :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.schluessel.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel IN :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.wert", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert = :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.wert.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert IN :value")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.primaryKeyQuery", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2")
-@NamedQuery(name = "DTOClientKonfigurationGlobal.all.migration", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
 @JsonPropertyOrder({"AppName", "Schluessel", "Wert"})
 public final class DTOClientKonfigurationGlobal {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOClientKonfigurationGlobal e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AppName */
+	public static final String QUERY_BY_APPNAME = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AppName */
+	public static final String QUERY_LIST_BY_APPNAME = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wert */
+	public static final String QUERY_BY_WERT = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wert */
+	public static final String QUERY_LIST_BY_WERT = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert IN ?1";
 
 	/** Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist */
 	@Id

@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,25 +28,59 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @IdClass(DTOLehrerLernplattformPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLernplattform")
-@NamedQuery(name = "DTOLehrerLernplattform.all", query = "SELECT e FROM DTOLehrerLernplattform e")
-@NamedQuery(name = "DTOLehrerLernplattform.lehrerid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.lehrerid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.lernplattformid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.lernplattformid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.credentialid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.credentialid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungabgefragt", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungabgefragt.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungnutzung", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungnutzung.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungaudiokonferenz", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungaudiokonferenz.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungvideokonferenz", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz = :value")
-@NamedQuery(name = "DTOLehrerLernplattform.einwilligungvideokonferenz.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN :value")
-@NamedQuery(name = "DTOLehrerLernplattform.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = ?1 AND e.LernplattformID = ?2")
-@NamedQuery(name = "DTOLehrerLernplattform.all.migration", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IS NOT NULL AND e.LernplattformID IS NOT NULL")
 @JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz"})
 public final class DTOLehrerLernplattform {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerLernplattform e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = ?1 AND e.LernplattformID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IS NOT NULL AND e.LernplattformID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrerID */
+	public static final String QUERY_BY_LEHRERID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrerID */
+	public static final String QUERY_LIST_BY_LEHRERID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LernplattformID */
+	public static final String QUERY_BY_LERNPLATTFORMID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LernplattformID */
+	public static final String QUERY_LIST_BY_LERNPLATTFORMID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes CredentialID */
+	public static final String QUERY_BY_CREDENTIALID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes CredentialID */
+	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungAbgefragt */
+	public static final String QUERY_BY_EINWILLIGUNGABGEFRAGT = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungAbgefragt */
+	public static final String QUERY_LIST_BY_EINWILLIGUNGABGEFRAGT = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungNutzung */
+	public static final String QUERY_BY_EINWILLIGUNGNUTZUNG = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungNutzung */
+	public static final String QUERY_LIST_BY_EINWILLIGUNGNUTZUNG = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungAudiokonferenz */
+	public static final String QUERY_BY_EINWILLIGUNGAUDIOKONFERENZ = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungAudiokonferenz */
+	public static final String QUERY_LIST_BY_EINWILLIGUNGAUDIOKONFERENZ = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungVideokonferenz */
+	public static final String QUERY_BY_EINWILLIGUNGVIDEOKONFERENZ = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungVideokonferenz */
+	public static final String QUERY_LIST_BY_EINWILLIGUNGVIDEOKONFERENZ = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN ?1";
 
 	/** LehrerID für den Lernplattform-Datensatz */
 	@Id

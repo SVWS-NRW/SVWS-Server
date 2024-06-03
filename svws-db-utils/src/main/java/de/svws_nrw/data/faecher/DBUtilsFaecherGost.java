@@ -181,7 +181,7 @@ public final class DBUtilsFaecherGost {
 			);
 		}
 
-		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class)
+		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryList(DTOGostJahrgangFaecher.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFaecher.class, abiJahrgang)
 			.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
 		List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 			.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();

@@ -77,7 +77,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class);
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, stundenplan.Schuljahresabschnitts_ID);
 		if (klassen.isEmpty())
 			return new ArrayList<>();
 		final List<Long> klassenIDs = klassen.stream().map(k -> k.ID).toList();
@@ -185,8 +185,8 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		if (klassen.isEmpty())
 			return result;
 		final Map<Long, StundenplanKlasse> klasseById = klassen.stream().collect(Collectors.toMap(k -> k.id, Function.identity()));
-		final List<DTOStundenplanUnterrichtKlasse> unterrichtKlassen = conn.queryNamed(
-				"DTOStundenplanUnterrichtKlasse.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtKlasse.class);
+		final List<DTOStundenplanUnterrichtKlasse> unterrichtKlassen = conn.queryList(
+				DTOStundenplanUnterrichtKlasse.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtKlasse.class, unterrichtIds);
 		List<StundenplanKlasse> klassenByUnterrichtId;
 		for (final DTOStundenplanUnterrichtKlasse unterrichtKlasse : unterrichtKlassen) {
 			klassenByUnterrichtId = result.computeIfAbsent(unterrichtKlasse.Unterricht_ID, unterrichtId -> new ArrayList<>());

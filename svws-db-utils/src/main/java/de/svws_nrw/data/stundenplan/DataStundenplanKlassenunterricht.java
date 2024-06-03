@@ -118,8 +118,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		}
 		// Ergänze die Fachinformationen
 		if (!faecherIDs.isEmpty()) {
-			final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecherIDs, DTOFach.class)
-					.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			final Map<Long, DTOFach> mapFaecher = conn.queryByKeyList(DTOFach.class, faecherIDs).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			for (final StundenplanKlassenunterricht ku : daten) {
 				final DTOFach fach = mapFaecher.get(ku.idFach);
 				final DTOKlassen kl = mapKlassen.get(ku.idKlasse);
@@ -144,7 +143,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		// Klassen bestimmen
-		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class);
+		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, stundenplan.Schuljahresabschnitts_ID);
 		if (klassen.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Klassen für den Schuljahresabschnitt des Stundenplans mit der ID %d gefunden.".formatted(idStundenplan));
 		final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));

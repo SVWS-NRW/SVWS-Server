@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Raeume")
-@NamedQuery(name = "DTOStundenplanRaum.all", query = "SELECT e FROM DTOStundenplanRaum e")
-@NamedQuery(name = "DTOStundenplanRaum.id", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = :value")
-@NamedQuery(name = "DTOStundenplanRaum.id.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.stundenplan_id", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = :value")
-@NamedQuery(name = "DTOStundenplanRaum.stundenplan_id.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.kuerzel", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOStundenplanRaum.kuerzel.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.beschreibung", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "DTOStundenplanRaum.beschreibung.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.groesse", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse = :value")
-@NamedQuery(name = "DTOStundenplanRaum.groesse.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOStundenplanRaum.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanRaum.all.migration", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundenplan_ID", "Kuerzel", "Beschreibung", "Groesse"})
 public final class DTOStundenplanRaum {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOStundenplanRaum e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stundenplan_ID */
+	public static final String QUERY_BY_STUNDENPLAN_ID = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stundenplan_ID */
+	public static final String QUERY_LIST_BY_STUNDENPLAN_ID = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Groesse */
+	public static final String QUERY_BY_GROESSE = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Groesse */
+	public static final String QUERY_LIST_BY_GROESSE = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse IN ?1";
 
 	/** Die ID identifiziert einen Raumeintrag für einen Stundenplan eindeutig - hat keinen Bezug zur ID der Katalog-Tabelle */
 	@Id

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunft")
-@NamedQuery(name = "MigrationDTOHerkunft.all", query = "SELECT e FROM MigrationDTOHerkunft e")
-@NamedQuery(name = "MigrationDTOHerkunft.id", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOHerkunft.id.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.kuerzel", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOHerkunft.kuerzel.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.beschreibung", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "MigrationDTOHerkunft.beschreibung.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.gueltigvon", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigVon = :value")
-@NamedQuery(name = "MigrationDTOHerkunft.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigVon IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.gueltigbis", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigBis = :value")
-@NamedQuery(name = "MigrationDTOHerkunft.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigBis IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.primaryKeyQuery", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOHerkunft.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOHerkunft.all.migration", query = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Beschreibung", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOHerkunft {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOHerkunft e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOHerkunft e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOHerkunft e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOHerkunft e WHERE e.gueltigBis IN ?1";
 
 	/** Die ID der Herkunft */
 	@Id

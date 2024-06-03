@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,18 +26,38 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Zwischenergebnisse")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.all", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.id", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istaktiv", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv = :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istaktiv.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.all.migration", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "IstAktiv"})
 public final class DTOGostBlockungZwischenergebnis {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockungZwischenergebnis e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Blockung_ID */
+	public static final String QUERY_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Blockung_ID */
+	public static final String QUERY_LIST_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAktiv */
+	public static final String QUERY_BY_ISTAKTIV = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAktiv */
+	public static final String QUERY_LIST_BY_ISTAKTIV = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv IN ?1";
 
 	/** ID der Zwischenergebnisses einer Blockung (generiert) */
 	@Id

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Kursklausuren")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.all", query = "SELECT e FROM DTOGostKlausurenKursklausuren e")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.id", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.id.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.vorgabe_id", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Vorgabe_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.vorgabe_id.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Vorgabe_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.kurs_id", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.kurs_id.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.termin_id", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Termin_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Termin_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.bemerkungen", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.all.migration", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Vorgabe_ID", "Kurs_ID", "Termin_ID", "Startzeit", "Bemerkungen"})
 public final class DTOGostKlausurenKursklausuren {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenKursklausuren e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Vorgabe_ID */
+	public static final String QUERY_BY_VORGABE_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Vorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Vorgabe_ID */
+	public static final String QUERY_LIST_BY_VORGABE_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Vorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Termin_ID */
+	public static final String QUERY_BY_TERMIN_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Termin_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Termin_ID */
+	public static final String QUERY_LIST_BY_TERMIN_ID = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Termin_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Startzeit */
+	public static final String QUERY_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Startzeit */
+	public static final String QUERY_LIST_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen IN ?1";
 
 	/** ID der Kursklausur (generiert) */
 	@Id

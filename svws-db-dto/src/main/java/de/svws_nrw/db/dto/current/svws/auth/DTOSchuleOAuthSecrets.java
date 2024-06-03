@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuleOAuthSecrets")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.all", query = "SELECT e FROM DTOSchuleOAuthSecrets e")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.id", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.id.multiple", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.authserver", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.AuthServer = :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.authserver.multiple", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.AuthServer IN :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.clientid", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientID = :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.clientid.multiple", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientID IN :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.clientsecret", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientSecret = :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.clientsecret.multiple", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientSecret IN :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.primaryKeyQuery", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuleOAuthSecrets.all.migration", query = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "AuthServer", "ClientID", "ClientSecret"})
 public final class DTOSchuleOAuthSecrets {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuleOAuthSecrets e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AuthServer */
+	public static final String QUERY_BY_AUTHSERVER = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.AuthServer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AuthServer */
+	public static final String QUERY_LIST_BY_AUTHSERVER = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.AuthServer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ClientID */
+	public static final String QUERY_BY_CLIENTID = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ClientID */
+	public static final String QUERY_LIST_BY_CLIENTID = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ClientSecret */
+	public static final String QUERY_BY_CLIENTSECRET = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientSecret = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ClientSecret */
+	public static final String QUERY_LIST_BY_CLIENTSECRET = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.ClientSecret IN ?1";
 
 	/** ID des OAuth-Datensatzes */
 	@Id

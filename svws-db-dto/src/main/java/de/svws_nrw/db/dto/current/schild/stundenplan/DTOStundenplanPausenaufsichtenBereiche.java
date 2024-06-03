@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_PausenaufsichtenBereich")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.all", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID IN :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.all.migration", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Pausenaufsicht_ID", "Aufsichtsbereich_ID"})
 public final class DTOStundenplanPausenaufsichtenBereiche {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Pausenaufsicht_ID */
+	public static final String QUERY_BY_PAUSENAUFSICHT_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Pausenaufsicht_ID */
+	public static final String QUERY_LIST_BY_PAUSENAUFSICHT_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aufsichtsbereich_ID */
+	public static final String QUERY_BY_AUFSICHTSBEREICH_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aufsichtsbereich_ID */
+	public static final String QUERY_LIST_BY_AUFSICHTSBEREICH_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN ?1";
 
 	/** Die eindeutige ID für die Zuordnung des Aufsichtsbereichs zur Pausenaufsicht */
 	@Id

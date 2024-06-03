@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Jahrgangsdaten")
-@NamedQuery(name = "DTOGostJahrgangsdaten.all", query = "SELECT e FROM DTOGostJahrgangsdaten e")
-@NamedQuery(name = "DTOGostJahrgangsdaten.abi_jahrgang", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursgevorhanden", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEVorhanden = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursgevorhanden.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEVorhanden IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursgeersteshalbjahr", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEErstesHalbjahr = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursgeersteshalbjahr.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEErstesHalbjahr IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursswvorhanden", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWVorhanden = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursswvorhanden.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWVorhanden IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursswersteshalbjahr", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWErstesHalbjahr = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.zusatzkursswersteshalbjahr.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWErstesHalbjahr IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.textberatungsbogen", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextBeratungsbogen = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.textberatungsbogen.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextBeratungsbogen IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.textmailversand", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand = :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.textmailversand.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang = ?1")
-@NamedQuery(name = "DTOGostJahrgangsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostJahrgangsdaten.all.migration", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IS NOT NULL")
 @JsonPropertyOrder({"Abi_Jahrgang", "ZusatzkursGEVorhanden", "ZusatzkursGEErstesHalbjahr", "ZusatzkursSWVorhanden", "ZusatzkursSWErstesHalbjahr", "TextBeratungsbogen", "TextMailversand"})
 public final class DTOGostJahrgangsdaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostJahrgangsdaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
+	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abi_Jahrgang */
+	public static final String QUERY_LIST_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZusatzkursGEVorhanden */
+	public static final String QUERY_BY_ZUSATZKURSGEVORHANDEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEVorhanden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZusatzkursGEVorhanden */
+	public static final String QUERY_LIST_BY_ZUSATZKURSGEVORHANDEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEVorhanden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZusatzkursGEErstesHalbjahr */
+	public static final String QUERY_BY_ZUSATZKURSGEERSTESHALBJAHR = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEErstesHalbjahr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZusatzkursGEErstesHalbjahr */
+	public static final String QUERY_LIST_BY_ZUSATZKURSGEERSTESHALBJAHR = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursGEErstesHalbjahr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZusatzkursSWVorhanden */
+	public static final String QUERY_BY_ZUSATZKURSSWVORHANDEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWVorhanden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZusatzkursSWVorhanden */
+	public static final String QUERY_LIST_BY_ZUSATZKURSSWVORHANDEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWVorhanden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZusatzkursSWErstesHalbjahr */
+	public static final String QUERY_BY_ZUSATZKURSSWERSTESHALBJAHR = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWErstesHalbjahr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZusatzkursSWErstesHalbjahr */
+	public static final String QUERY_LIST_BY_ZUSATZKURSSWERSTESHALBJAHR = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.ZusatzkursSWErstesHalbjahr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TextBeratungsbogen */
+	public static final String QUERY_BY_TEXTBERATUNGSBOGEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextBeratungsbogen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TextBeratungsbogen */
+	public static final String QUERY_LIST_BY_TEXTBERATUNGSBOGEN = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextBeratungsbogen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TextMailversand */
+	public static final String QUERY_BY_TEXTMAILVERSAND = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TextMailversand */
+	public static final String QUERY_LIST_BY_TEXTMAILVERSAND = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand IN ?1";
 
 	/** Schuljahr, in welchem der Jahrgang das Abitur macht, oder -1 für die Vorlage für das Anlegen neuer Abiturjahrgänge. */
 	@Id

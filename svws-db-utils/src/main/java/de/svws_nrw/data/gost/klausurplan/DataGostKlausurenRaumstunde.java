@@ -79,7 +79,8 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	public static List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final DBEntityManager conn, final List<GostKlausurraum> listRaeume) {
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryNamed("DTOGostKlausurenRaumstunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.id).toList(), DTOGostKlausurenRaumstunden.class);
+		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryList(DTOGostKlausurenRaumstunden.QUERY_LIST_BY_KLAUSURRAUM_ID,
+				DTOGostKlausurenRaumstunden.class, listRaeume.stream().map(s -> s.id).toList());
 		return stunden.stream().map(dtoMapper::apply).toList();
 	}
 
@@ -92,7 +93,8 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 * @return die Liste der Klausurraumstunden
 	 */
 	public static List<GostKlausurraumstunde> getKlausurraumstundenZuRaumid(final DBEntityManager conn, final long idRaum) {
-		final List<DTOGostKlausurenRaumstunden> listKlausurraumstunden = conn.queryNamed("DTOGostKlausurenRaumstunden.klausurraum_id", idRaum, DTOGostKlausurenRaumstunden.class);
+		final List<DTOGostKlausurenRaumstunden> listKlausurraumstunden = conn.queryList(DTOGostKlausurenRaumstunden.QUERY_BY_KLAUSURRAUM_ID,
+				DTOGostKlausurenRaumstunden.class, idRaum);
 		return listKlausurraumstunden.stream().map(dtoMapper::apply).toList();
 	}
 
@@ -107,7 +109,8 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	public static List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final DBEntityManager conn, final List<GostSchuelerklausurterminraumstunde> listSktrs) {
 		if (listSktrs.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenRaumstunden> sks = conn.queryNamed("DTOGostKlausurenRaumstunden.id.multiple", listSktrs.stream().map(sktrs -> sktrs.idRaumstunde).toList(), DTOGostKlausurenRaumstunden.class);
+		final List<DTOGostKlausurenRaumstunden> sks = conn.queryByKeyList(DTOGostKlausurenRaumstunden.class,
+				listSktrs.stream().map(sktrs -> sktrs.idRaumstunde).toList());
 		return sks.stream().map(dtoMapper::apply).toList();
 	}
 

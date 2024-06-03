@@ -84,8 +84,8 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 	 * @return eine Liste mit den Fächerkombinationen
 	 */
 	public static @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationen(final DBEntityManager conn, final int abijahrgang) {
-		final List<DTOGostJahrgangFachkombinationen> kombis = conn
-				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abijahrgang, DTOGostJahrgangFachkombinationen.class);
+		final List<DTOGostJahrgangFachkombinationen> kombis = conn.queryList(DTOGostJahrgangFachkombinationen.QUERY_BY_ABI_JAHRGANG,
+				DTOGostJahrgangFachkombinationen.class, abijahrgang);
 		if (kombis == null)
 			return new ArrayList<>();
 		final List<GostJahrgangFachkombination> daten = new ArrayList<>();

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,26 +18,62 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EnmLeistungsdaten")
-@NamedQuery(name = "DTOEnmLeistungsdaten.all", query = "SELECT e FROM DTOEnmLeistungsdaten e")
-@NamedQuery(name = "DTOEnmLeistungsdaten.id", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.id.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrzquartal", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrzquartal.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsufehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tsufehlstd.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tslernentw", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tslernentw.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tswarnung", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung = :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.tswarnung.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOEnmLeistungsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEnmLeistungsdaten.all.migration", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "tsNotenKrz", "tsNotenKrzQuartal", "tsFehlStd", "tsuFehlStd", "tsLernentw", "tsWarnung"})
 public final class DTOEnmLeistungsdaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOEnmLeistungsdaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsNotenKrz */
+	public static final String QUERY_BY_TSNOTENKRZ = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsNotenKrz */
+	public static final String QUERY_LIST_BY_TSNOTENKRZ = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsNotenKrzQuartal */
+	public static final String QUERY_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsNotenKrzQuartal */
+	public static final String QUERY_LIST_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsFehlStd */
+	public static final String QUERY_BY_TSFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsFehlStd */
+	public static final String QUERY_LIST_BY_TSFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsuFehlStd */
+	public static final String QUERY_BY_TSUFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsuFehlStd */
+	public static final String QUERY_LIST_BY_TSUFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsLernentw */
+	public static final String QUERY_BY_TSLERNENTW = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsLernentw */
+	public static final String QUERY_LIST_BY_TSLERNENTW = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsWarnung */
+	public static final String QUERY_BY_TSWARNUNG = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsWarnung */
+	public static final String QUERY_LIST_BY_TSWARNUNG = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung IN ?1";
 
 	/** ID der Leistungsdaten */
 	@Id

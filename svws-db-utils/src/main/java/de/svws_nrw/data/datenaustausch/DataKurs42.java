@@ -253,7 +253,7 @@ public final class DataKurs42 {
 		// Bestimme die Fächer, die an der Schule vorhanden sind.
 		logger.logLn("-> Bestimme die Fächer der Schule aus der Datenbank...");
 		logger.modifyIndent(2);
-		final List<DTOFach> listeFaecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
+		final List<DTOFach> listeFaecher = conn.queryList(DTOFach.QUERY_BY_ISTOBERSTUFENFACH, DTOFach.class, true);
 		if ((listeFaecher == null) || (listeFaecher.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Fächer der Oberstufe nicht einlesen");
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte die Liste der Fächer der Oberstufe nicht einlesen.");

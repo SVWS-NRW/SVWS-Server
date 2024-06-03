@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Teilstandorte")
-@NamedQuery(name = "DTOTeilstandorte.all", query = "SELECT e FROM DTOTeilstandorte e")
-@NamedQuery(name = "DTOTeilstandorte.adrmerkmal", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name = "DTOTeilstandorte.adrmerkmal.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name = "DTOTeilstandorte.plz", query = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ = :value")
-@NamedQuery(name = "DTOTeilstandorte.plz.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ IN :value")
-@NamedQuery(name = "DTOTeilstandorte.ort", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort = :value")
-@NamedQuery(name = "DTOTeilstandorte.ort.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort IN :value")
-@NamedQuery(name = "DTOTeilstandorte.strassenname", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname = :value")
-@NamedQuery(name = "DTOTeilstandorte.strassenname.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname IN :value")
-@NamedQuery(name = "DTOTeilstandorte.hausnr", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr = :value")
-@NamedQuery(name = "DTOTeilstandorte.hausnr.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr IN :value")
-@NamedQuery(name = "DTOTeilstandorte.hausnrzusatz", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name = "DTOTeilstandorte.hausnrzusatz.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name = "DTOTeilstandorte.bemerkung", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOTeilstandorte.bemerkung.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOTeilstandorte.kuerzel", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOTeilstandorte.kuerzel.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOTeilstandorte.primaryKeyQuery", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
-@NamedQuery(name = "DTOTeilstandorte.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name = "DTOTeilstandorte.all.migration", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
 @JsonPropertyOrder({"AdrMerkmal", "PLZ", "Ort", "Strassenname", "HausNr", "HausNrZusatz", "Bemerkung", "Kuerzel"})
 public final class DTOTeilstandorte {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOTeilstandorte e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AdrMerkmal */
+	public static final String QUERY_BY_ADRMERKMAL = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AdrMerkmal */
+	public static final String QUERY_LIST_BY_ADRMERKMAL = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort */
+	public static final String QUERY_BY_ORT = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort */
+	public static final String QUERY_LIST_BY_ORT = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Strassenname */
+	public static final String QUERY_BY_STRASSENNAME = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Strassenname */
+	public static final String QUERY_LIST_BY_STRASSENNAME = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNr */
+	public static final String QUERY_BY_HAUSNR = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNr */
+	public static final String QUERY_LIST_BY_HAUSNR = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNrZusatz */
+	public static final String QUERY_BY_HAUSNRZUSATZ = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNrZusatz */
+	public static final String QUERY_LIST_BY_HAUSNRZUSATZ = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel IN ?1";
 
 	/** Adressmerkmal des Teilstandortes (A...Z) */
 	@Id

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLD_PSFachBem")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.all", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.id", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.id.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.abschnitt_id", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.asv", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.asv.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.lels", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.lels.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.aue", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.aue.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.esf", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.esf.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungfsp", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungfsp.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung = :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.all.migration", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "ASV", "LELS", "AUE", "ESF", "BemerkungFSP", "BemerkungVersetzung"})
 public final class DTOSchuelerPSFachBemerkungen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerPSFachBemerkungen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASV */
+	public static final String QUERY_BY_ASV = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASV */
+	public static final String QUERY_LIST_BY_ASV = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LELS */
+	public static final String QUERY_BY_LELS = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LELS */
+	public static final String QUERY_LIST_BY_LELS = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AUE */
+	public static final String QUERY_BY_AUE = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AUE */
+	public static final String QUERY_LIST_BY_AUE = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ESF */
+	public static final String QUERY_BY_ESF = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ESF */
+	public static final String QUERY_LIST_BY_ESF = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BemerkungFSP */
+	public static final String QUERY_BY_BEMERKUNGFSP = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BemerkungFSP */
+	public static final String QUERY_LIST_BY_BEMERKUNGFSP = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BemerkungVersetzung */
+	public static final String QUERY_BY_BEMERKUNGVERSETZUNG = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BemerkungVersetzung */
+	public static final String QUERY_LIST_BY_BEMERKUNGVERSETZUNG = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung IN ?1";
 
 	/** ID des Bemerkungseintrags */
 	@Id

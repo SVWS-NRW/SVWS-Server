@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Raumstunden_Aufsichten")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.all", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.id", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.id.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.raumstunde_id", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Raumstunde_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.raumstunde_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Raumstunde_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.lehrer_id", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.lehrer_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.startzeit", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Startzeit = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Startzeit IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.endzeit", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Endzeit = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.endzeit.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Endzeit IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.bemerkungen", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenRaumstundenAufsichten.all.migration", query = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Raumstunde_ID", "Lehrer_ID", "Startzeit", "Endzeit", "Bemerkungen"})
 public final class DTOGostKlausurenRaumstundenAufsichten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Raumstunde_ID */
+	public static final String QUERY_BY_RAUMSTUNDE_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Raumstunde_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Raumstunde_ID */
+	public static final String QUERY_LIST_BY_RAUMSTUNDE_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Raumstunde_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Startzeit */
+	public static final String QUERY_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Startzeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Startzeit */
+	public static final String QUERY_LIST_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Startzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Endzeit */
+	public static final String QUERY_BY_ENDZEIT = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Endzeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Endzeit */
+	public static final String QUERY_LIST_BY_ENDZEIT = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Endzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenRaumstundenAufsichten e WHERE e.Bemerkungen IN ?1";
 
 	/** ID der Klausuraufsicht (generiert) */
 	@Id

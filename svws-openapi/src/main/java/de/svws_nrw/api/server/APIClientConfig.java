@@ -62,7 +62,7 @@ public class APIClientConfig {
     public Response getClientConfig(@PathParam("schema") final String schema, @PathParam("app") final String app, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	final List<DTOClientKonfigurationBenutzer> configUser = conn.queryList("SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2", DTOClientKonfigurationBenutzer.class, conn.getUser().getId(), app);
-	    	final List<DTOClientKonfigurationGlobal> configGlobal = conn.queryNamed("DTOClientKonfigurationGlobal.appname", app, DTOClientKonfigurationGlobal.class);
+	    	final List<DTOClientKonfigurationGlobal> configGlobal = conn.queryList(DTOClientKonfigurationGlobal.QUERY_BY_APPNAME, DTOClientKonfigurationGlobal.class, app);
 	    	// Ansonsten: Lese aus der globalen Konfiguration
 	    	final BenutzerConfig config = new BenutzerConfig();
 	    	for (final DTOClientKonfigurationBenutzer cfg : configUser) {

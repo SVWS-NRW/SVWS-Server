@@ -51,10 +51,8 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         daten.id = k.ID;
         daten.bezeichnung = k.Bezeichnung;
         daten.istAdmin = k.IstAdmin;
-     // Lese die Kompetenzen der Gruppe ein
-        final List<Long> kompetenzIDs = conn
-                .queryNamed("DTOBenutzergruppenKompetenz.gruppe_id", k.ID,
-                        DTOBenutzergruppenKompetenz.class)
+        // Lese die Kompetenzen der Gruppe ein
+        final List<Long> kompetenzIDs = conn.queryList(DTOBenutzergruppenKompetenz.QUERY_BY_GRUPPE_ID, DTOBenutzergruppenKompetenz.class, k.ID)
                 .stream().map(g -> g.Kompetenz_ID).sorted().toList();
         for (final Long kompetenzID : kompetenzIDs)
             daten.kompetenzen.add(kompetenzID);
@@ -103,9 +101,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         final BenutzergruppenManager manager = new BenutzergruppenManager(benutzergruppe.ID, benutzergruppe.Bezeichnung);
         manager.setAdmin((benutzergruppe.IstAdmin != null) && benutzergruppe.IstAdmin);
         // Lese die Kompetenzen der Gruppe ein
-        final List<Long> kompetenzIDs = conn
-                .queryNamed("DTOBenutzergruppenKompetenz.gruppe_id", benutzergruppe.ID,
-                        DTOBenutzergruppenKompetenz.class)
+        final List<Long> kompetenzIDs = conn.queryList(DTOBenutzergruppenKompetenz.QUERY_BY_GRUPPE_ID, DTOBenutzergruppenKompetenz.class, benutzergruppe.ID)
                 .stream().map(g -> g.Kompetenz_ID).sorted().toList();
         for (final Long kompetenzID : kompetenzIDs)
             manager.addKompetenz(BenutzerKompetenz.getByID(kompetenzID));
@@ -333,7 +329,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         final DTOBenutzergruppe dto = getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!bids.isEmpty()) {
         	// Prüfe, ob die Benutzer mit den Ids existieren.
-        	final List<DTOBenutzer> benutzer = conn.queryNamed("DTOBenutzer.id.multiple", bids, DTOBenutzer.class);
+        	final List<DTOBenutzer> benutzer = conn.queryByKeyList(DTOBenutzer.class, bids);
         	if (benutzer.size() != bids.size())
         		throw new ApiOperationException(Status.NOT_FOUND, "Ein übergebener Benutzer existiert nicht!");
             for (final Long bid : bids) {
@@ -450,7 +446,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 		// In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
 		if (!user.IstAdmin) {
 			// Lese die Benutzergruppen_IDs des Users ein.
-			final List<Long> user_gruppen_ids = conn.queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(), DTOBenutzergruppenMitglied.class)
+			final List<Long> user_gruppen_ids = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, conn.getUser().getId())
 				.stream().map(g -> g.Gruppe_ID).sorted().toList();
 
 			// Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,16 +18,32 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schema_AutoInkremente")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.all", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.nametabelle", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle = :value")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.nametabelle.multiple", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.maxid", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID = :value")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.maxid.multiple", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID IN :value")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle = ?1")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.all.migration", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "MaxID"})
 public final class MigrationDTOSchemaAutoInkremente {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchemaAutoInkremente e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NameTabelle */
+	public static final String QUERY_BY_NAMETABELLE = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NameTabelle */
+	public static final String QUERY_LIST_BY_NAMETABELLE = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MaxID */
+	public static final String QUERY_BY_MAXID = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MaxID */
+	public static final String QUERY_LIST_BY_MAXID = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID IN ?1";
 
 	/** Gibt den Tabellennamen an, für dessen Auto-Inkrement der ID-Wert verwendet werden soll. */
 	@Id

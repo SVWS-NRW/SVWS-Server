@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOKursSchuelerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kurs_Schueler")
-@NamedQuery(name = "DTOKursSchueler.all", query = "SELECT e FROM DTOKursSchueler e")
-@NamedQuery(name = "DTOKursSchueler.kurs_id", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "DTOKursSchueler.kurs_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "DTOKursSchueler.schueler_id", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOKursSchueler.schueler_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOKursSchueler.lernabschnittwechselnr", query = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr = :value")
-@NamedQuery(name = "DTOKursSchueler.lernabschnittwechselnr.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr IN :value")
-@NamedQuery(name = "DTOKursSchueler.primaryKeyQuery", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3")
-@NamedQuery(name = "DTOKursSchueler.all.migration", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL")
 @JsonPropertyOrder({"Kurs_ID", "Schueler_ID", "LernabschnittWechselNr"})
 public final class DTOKursSchueler {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKursSchueler e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LernabschnittWechselNr */
+	public static final String QUERY_BY_LERNABSCHNITTWECHSELNR = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LernabschnittWechselNr */
+	public static final String QUERY_LIST_BY_LERNABSCHNITTWECHSELNR = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr IN ?1";
 
 	/** Die eindeutige ID des Kurses – verweist auf den Kurs */
 	@Id

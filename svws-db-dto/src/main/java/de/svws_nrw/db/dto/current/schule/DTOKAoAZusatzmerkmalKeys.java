@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,14 +18,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KAoA_Zusatzmerkmal_Keys")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.all", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.id", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.id.multiple", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.primaryKeyQuery", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKAoAZusatzmerkmalKeys.all.migration", query = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
 public final class DTOKAoAZusatzmerkmalKeys {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKAoAZusatzmerkmalKeys e WHERE e.ID IN ?1";
 
 	/** Die eindeutige ID des Zusatzmerkmals */
 	@Id

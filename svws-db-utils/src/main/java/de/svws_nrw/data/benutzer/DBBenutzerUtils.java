@@ -44,12 +44,12 @@ public final class DBBenutzerUtils {
 	public static void leseKompetenzen(final Benutzer user) {
 		user.getKompetenzen().clear();
 		try (DBEntityManager conn = user.getEntityManager()) {
-			final DTOViewBenutzer dbBenutzer = conn.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream().findFirst().orElse(null);
+			final DTOViewBenutzer dbBenutzer = conn.queryList(DTOViewBenutzer.QUERY_BY_BENUTZERNAME, DTOViewBenutzer.class, user.getUsername()).stream().findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return;
 			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin))
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
-			conn.queryNamed("DTOViewBenutzerKompetenz.benutzer_id", dbBenutzer.ID, DTOViewBenutzerKompetenz.class).stream()
+			conn.queryList(DTOViewBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOViewBenutzerKompetenz.class, dbBenutzer.ID).stream()
 				.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
 				.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
 				.forEach(komp -> user.getKompetenzen().add(komp));
@@ -75,7 +75,7 @@ public final class DBBenutzerUtils {
 			if (conn.useDBLogin())
 				return true;
 			final DTOViewBenutzerdetails dbBenutzer = conn
-					.queryNamed("DTOViewBenutzerdetails.benutzername", user.getUsername(), DTOViewBenutzerdetails.class).stream()
+					.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class, user.getUsername()).stream()
 					.findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return false;

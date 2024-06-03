@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,32 +18,80 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerKAoADaten")
-@NamedQuery(name = "DTOSchuelerKAoADaten.all", query = "SELECT e FROM DTOSchuelerKAoADaten e")
-@NamedQuery(name = "DTOSchuelerKAoADaten.id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.abschnitt_id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.jahrgang", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.jahrgang.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.kategorieid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.kategorieid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.merkmalid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.merkmalid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.zusatzmerkmalid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.zusatzmerkmalid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.anschlussoptionid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.anschlussoptionid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.berufsfeldid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.berufsfeldid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.sbo_ebene4id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.sbo_ebene4id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.bemerkung", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerKAoADaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerKAoADaten.all.migration", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Jahrgang", "KategorieID", "MerkmalID", "ZusatzmerkmalID", "AnschlussoptionID", "BerufsfeldID", "SBO_Ebene4ID", "Bemerkung"})
 public final class DTOSchuelerKAoADaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerKAoADaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahrgang */
+	public static final String QUERY_BY_JAHRGANG = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahrgang */
+	public static final String QUERY_LIST_BY_JAHRGANG = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KategorieID */
+	public static final String QUERY_BY_KATEGORIEID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KategorieID */
+	public static final String QUERY_LIST_BY_KATEGORIEID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MerkmalID */
+	public static final String QUERY_BY_MERKMALID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MerkmalID */
+	public static final String QUERY_LIST_BY_MERKMALID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZusatzmerkmalID */
+	public static final String QUERY_BY_ZUSATZMERKMALID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZusatzmerkmalID */
+	public static final String QUERY_LIST_BY_ZUSATZMERKMALID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnschlussoptionID */
+	public static final String QUERY_BY_ANSCHLUSSOPTIONID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnschlussoptionID */
+	public static final String QUERY_LIST_BY_ANSCHLUSSOPTIONID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BerufsfeldID */
+	public static final String QUERY_BY_BERUFSFELDID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BerufsfeldID */
+	public static final String QUERY_LIST_BY_BERUFSFELDID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SBO_Ebene4ID */
+	public static final String QUERY_BY_SBO_EBENE4ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SBO_Ebene4ID */
+	public static final String QUERY_LIST_BY_SBO_EBENE4ID = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung IN ?1";
 
 	/** ID des KAOA-Eintrags beim Schüler */
 	@Id

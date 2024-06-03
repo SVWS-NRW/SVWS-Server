@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,22 +26,50 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Texte")
-@NamedQuery(name = "DTOSchultexte.all", query = "SELECT e FROM DTOSchultexte e")
-@NamedQuery(name = "DTOSchultexte.id", query = "SELECT e FROM DTOSchultexte e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchultexte.id.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchultexte.kuerzel", query = "SELECT e FROM DTOSchultexte e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOSchultexte.kuerzel.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOSchultexte.inhalt", query = "SELECT e FROM DTOSchultexte e WHERE e.Inhalt = :value")
-@NamedQuery(name = "DTOSchultexte.inhalt.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.Inhalt IN :value")
-@NamedQuery(name = "DTOSchultexte.beschreibung", query = "SELECT e FROM DTOSchultexte e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "DTOSchultexte.beschreibung.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "DTOSchultexte.aenderbar", query = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "DTOSchultexte.aenderbar.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "DTOSchultexte.primaryKeyQuery", query = "SELECT e FROM DTOSchultexte e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchultexte.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchultexte.all.migration", query = "SELECT e FROM DTOSchultexte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Inhalt", "Beschreibung", "Aenderbar"})
 public final class DTOSchultexte {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchultexte e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchultexte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchultexte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchultexte e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchultexte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchultexte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOSchultexte e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOSchultexte e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Inhalt */
+	public static final String QUERY_BY_INHALT = "SELECT e FROM DTOSchultexte e WHERE e.Inhalt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Inhalt */
+	public static final String QUERY_LIST_BY_INHALT = "SELECT e FROM DTOSchultexte e WHERE e.Inhalt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOSchultexte e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOSchultexte e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar IN ?1";
 
 	/** ID des Textes unter Schulverwaltung Eigene Schule bearbeiten */
 	@Id

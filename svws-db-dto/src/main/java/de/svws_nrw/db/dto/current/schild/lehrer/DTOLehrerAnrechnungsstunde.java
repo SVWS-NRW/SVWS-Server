@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerAnrechnung")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.all", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.id", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID = :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.id.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.abschnitt_id", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.abschnitt_id.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungsgrundkrz", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungsgrundkrz.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungstd", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungstd.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.primaryKeyQuery", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrerAnrechnungsstunde.all.migration", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "AnrechnungsgrundKrz", "AnrechnungStd"})
 public final class DTOLehrerAnrechnungsstunde {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerAnrechnungsstunde e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnrechnungsgrundKrz */
+	public static final String QUERY_BY_ANRECHNUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnrechnungsgrundKrz */
+	public static final String QUERY_LIST_BY_ANRECHNUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnrechnungStd */
+	public static final String QUERY_BY_ANRECHNUNGSTD = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnrechnungStd */
+	public static final String QUERY_LIST_BY_ANRECHNUNGSTD = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN ?1";
 
 	/** ID für den Eintrag für die Anrechnungsstunden */
 	@Id

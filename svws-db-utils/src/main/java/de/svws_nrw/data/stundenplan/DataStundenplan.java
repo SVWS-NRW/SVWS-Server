@@ -149,7 +149,7 @@ public final class DataStundenplan extends DataManager<Long> {
 			if (dto.WochentypModell == wochentypmodell)
 				return;
 			// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
-			final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
+			final List<Long> idsZeitraster = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 					.stream().map(z -> z.ID).toList();
 			if (!idsZeitraster.isEmpty()) {
 				final List<DTOStundenplanUnterricht> unterrichte = conn.queryList("SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN ?1 AND e.Wochentyp > ?2", DTOStundenplanUnterricht.class, idsZeitraster, wochentypmodell);

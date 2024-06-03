@@ -11,7 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,82 +32,230 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLeistungsdaten")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.all", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abschnitt_id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abschnitt_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fach_id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.hochrechnung", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Hochrechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.hochrechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Hochrechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fachlehrer_id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fachlehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kursart", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kursart = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kursart.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kursart IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kursartallg", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.KursartAllg = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kursartallg.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.KursartAllg IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kurs_id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.kurs_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.notenkrz", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.notenkrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.notenkrzquartal", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.notenkrzquartal.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.warnung", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.warnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.warndatum", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warndatum = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.warndatum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warndatum IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abifach", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiFach = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abifach.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiFach IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.wochenstunden", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Wochenstunden = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.wochenstunden.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Wochenstunden IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abizeugnis", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiZeugnis = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abizeugnis.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiZeugnis IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.prognose", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prognose = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.prognose.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prognose IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fehlstd", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.FehlStd = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fehlstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.FehlStd IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.ufehlstd", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.uFehlStd = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.ufehlstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.uFehlStd IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.sortierung", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.sortierung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.lernentw", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Lernentw = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.lernentw.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Lernentw IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.gekoppelt", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gekoppelt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.gekoppelt.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gekoppelt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.vorherabgeschl", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.VorherAbgeschl = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.vorherabgeschl.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.VorherAbgeschl IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abschlussjahrgang", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbschlussJahrgang = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.abschlussjahrgang.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbschlussJahrgang IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.hochrechnungstatus", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.HochrechnungStatus = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.hochrechnungstatus.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.HochrechnungStatus IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.schulnr", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulNr = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.schulnr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulNr IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft_id", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.wochenstdzusatzkraft", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.WochenstdZusatzkraft = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.wochenstdzusatzkraft.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.WochenstdZusatzkraft IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.prf10fach", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prf10Fach = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.prf10fach.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prf10Fach IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.aufzeugnis", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AufZeugnis = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.aufzeugnis.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AufZeugnis IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.gewichtung", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gewichtung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.gewichtung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gewichtung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.noteabschlussba", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NoteAbschlussBA = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.noteabschlussba.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NoteAbschlussBA IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.umfang", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Umfang = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.umfang.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Umfang IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fachlehrer", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.fachlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft = :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Fach_ID", "Hochrechnung", "Fachlehrer_ID", "Kursart", "KursartAllg", "Kurs_ID", "NotenKrz", "NotenKrzQuartal", "Warnung", "Warndatum", "AbiFach", "Wochenstunden", "AbiZeugnis", "Prognose", "FehlStd", "uFehlStd", "Sortierung", "Lernentw", "Gekoppelt", "VorherAbgeschl", "AbschlussJahrgang", "HochrechnungStatus", "SchulNr", "Zusatzkraft_ID", "WochenstdZusatzkraft", "Prf10Fach", "AufZeugnis", "Gewichtung", "SchulnrEigner", "NoteAbschlussBA", "Umfang", "Fachlehrer", "Zusatzkraft"})
 public final class MigrationDTOSchuelerLeistungsdaten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Hochrechnung */
+	public static final String QUERY_BY_HOCHRECHNUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Hochrechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Hochrechnung */
+	public static final String QUERY_LIST_BY_HOCHRECHNUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Hochrechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer_ID */
+	public static final String QUERY_BY_FACHLEHRER_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer_ID */
+	public static final String QUERY_LIST_BY_FACHLEHRER_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart */
+	public static final String QUERY_BY_KURSART = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kursart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
+	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kursart IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KursartAllg */
+	public static final String QUERY_BY_KURSARTALLG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.KursartAllg = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KursartAllg */
+	public static final String QUERY_LIST_BY_KURSARTALLG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.KursartAllg IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NotenKrz */
+	public static final String QUERY_BY_NOTENKRZ = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotenKrz */
+	public static final String QUERY_LIST_BY_NOTENKRZ = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NotenKrzQuartal */
+	public static final String QUERY_BY_NOTENKRZQUARTAL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotenKrzQuartal */
+	public static final String QUERY_LIST_BY_NOTENKRZQUARTAL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Warnung */
+	public static final String QUERY_BY_WARNUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Warnung */
+	public static final String QUERY_LIST_BY_WARNUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Warndatum */
+	public static final String QUERY_BY_WARNDATUM = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warndatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Warndatum */
+	public static final String QUERY_LIST_BY_WARNDATUM = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warndatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbiFach */
+	public static final String QUERY_BY_ABIFACH = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbiFach */
+	public static final String QUERY_LIST_BY_ABIFACH = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochenstunden */
+	public static final String QUERY_BY_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochenstunden */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbiZeugnis */
+	public static final String QUERY_BY_ABIZEUGNIS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbiZeugnis */
+	public static final String QUERY_LIST_BY_ABIZEUGNIS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbiZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Prognose */
+	public static final String QUERY_BY_PROGNOSE = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prognose = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Prognose */
+	public static final String QUERY_LIST_BY_PROGNOSE = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prognose IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FehlStd */
+	public static final String QUERY_BY_FEHLSTD = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.FehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FehlStd */
+	public static final String QUERY_LIST_BY_FEHLSTD = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.FehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes uFehlStd */
+	public static final String QUERY_BY_UFEHLSTD = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.uFehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes uFehlStd */
+	public static final String QUERY_LIST_BY_UFEHLSTD = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.uFehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lernentw */
+	public static final String QUERY_BY_LERNENTW = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Lernentw = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernentw */
+	public static final String QUERY_LIST_BY_LERNENTW = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Lernentw IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gekoppelt */
+	public static final String QUERY_BY_GEKOPPELT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gekoppelt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gekoppelt */
+	public static final String QUERY_LIST_BY_GEKOPPELT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gekoppelt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VorherAbgeschl */
+	public static final String QUERY_BY_VORHERABGESCHL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.VorherAbgeschl = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VorherAbgeschl */
+	public static final String QUERY_LIST_BY_VORHERABGESCHL = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.VorherAbgeschl IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschlussJahrgang */
+	public static final String QUERY_BY_ABSCHLUSSJAHRGANG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbschlussJahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschlussJahrgang */
+	public static final String QUERY_LIST_BY_ABSCHLUSSJAHRGANG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AbschlussJahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HochrechnungStatus */
+	public static final String QUERY_BY_HOCHRECHNUNGSTATUS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.HochrechnungStatus = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HochrechnungStatus */
+	public static final String QUERY_LIST_BY_HOCHRECHNUNGSTATUS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.HochrechnungStatus IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulNr */
+	public static final String QUERY_BY_SCHULNR = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulNr */
+	public static final String QUERY_LIST_BY_SCHULNR = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zusatzkraft_ID */
+	public static final String QUERY_BY_ZUSATZKRAFT_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zusatzkraft_ID */
+	public static final String QUERY_LIST_BY_ZUSATZKRAFT_ID = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenstdZusatzkraft */
+	public static final String QUERY_BY_WOCHENSTDZUSATZKRAFT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.WochenstdZusatzkraft = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenstdZusatzkraft */
+	public static final String QUERY_LIST_BY_WOCHENSTDZUSATZKRAFT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.WochenstdZusatzkraft IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Prf10Fach */
+	public static final String QUERY_BY_PRF10FACH = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prf10Fach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Prf10Fach */
+	public static final String QUERY_LIST_BY_PRF10FACH = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Prf10Fach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AufZeugnis */
+	public static final String QUERY_BY_AUFZEUGNIS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AufZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AufZeugnis */
+	public static final String QUERY_LIST_BY_AUFZEUGNIS = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.AufZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gewichtung */
+	public static final String QUERY_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gewichtung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gewichtung */
+	public static final String QUERY_LIST_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Gewichtung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NoteAbschlussBA */
+	public static final String QUERY_BY_NOTEABSCHLUSSBA = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NoteAbschlussBA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NoteAbschlussBA */
+	public static final String QUERY_LIST_BY_NOTEABSCHLUSSBA = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NoteAbschlussBA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Umfang */
+	public static final String QUERY_BY_UMFANG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Umfang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Umfang */
+	public static final String QUERY_LIST_BY_UMFANG = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Umfang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer */
+	public static final String QUERY_BY_FACHLEHRER = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer */
+	public static final String QUERY_LIST_BY_FACHLEHRER = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Fachlehrer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zusatzkraft */
+	public static final String QUERY_BY_ZUSATZKRAFT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zusatzkraft */
+	public static final String QUERY_LIST_BY_ZUSATZKRAFT = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft IN ?1";
 
 	/** Eine eindeutige ID für die Leistungsdaten des Schülers */
 	@Id

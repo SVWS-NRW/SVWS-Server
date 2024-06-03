@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Adressart")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.all", query = "SELECT e FROM MigrationDTOKatalogAdressart e")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.id", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.id.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.bezeichnung", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.sortierung", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.sortierung.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.sichtbar", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.sichtbar.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.aenderbar", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.aenderbar.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.schulnreigner", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOKatalogAdressart.all.migration", query = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
 public final class MigrationDTOKatalogAdressart {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOKatalogAdressart e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogAdressart e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID der Adressart */
 	@Id

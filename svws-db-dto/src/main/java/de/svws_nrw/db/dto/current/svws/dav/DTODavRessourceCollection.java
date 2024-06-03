@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,26 +31,62 @@ import de.svws_nrw.csv.converter.current.DavRessourceCollectionTypConverterDeser
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessourceCollections")
-@NamedQuery(name = "DTODavRessourceCollection.all", query = "SELECT e FROM DTODavRessourceCollection e")
-@NamedQuery(name = "DTODavRessourceCollection.benutzer_id", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name = "DTODavRessourceCollection.benutzer_id.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.id", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = :value")
-@NamedQuery(name = "DTODavRessourceCollection.id.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.typ", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ = :value")
-@NamedQuery(name = "DTODavRessourceCollection.typ.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.anzeigename", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename = :value")
-@NamedQuery(name = "DTODavRessourceCollection.anzeigename.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.beschreibung", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "DTODavRessourceCollection.beschreibung.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.synctoken", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken = :value")
-@NamedQuery(name = "DTODavRessourceCollection.synctoken.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.geloeschtam", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = :value")
-@NamedQuery(name = "DTODavRessourceCollection.geloeschtam.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1")
-@NamedQuery(name = "DTODavRessourceCollection.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollection.all.migration", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"Benutzer_ID", "ID", "Typ", "Anzeigename", "Beschreibung", "SyncToken", "geloeschtam"})
 public final class DTODavRessourceCollection {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTODavRessourceCollection e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID */
+	public static final String QUERY_BY_BENUTZER_ID = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID */
+	public static final String QUERY_LIST_BY_BENUTZER_ID = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anzeigename */
+	public static final String QUERY_BY_ANZEIGENAME = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anzeigename */
+	public static final String QUERY_LIST_BY_ANZEIGENAME = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SyncToken */
+	public static final String QUERY_BY_SYNCTOKEN = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SyncToken */
+	public static final String QUERY_LIST_BY_SYNCTOKEN = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes geloeschtam */
+	public static final String QUERY_BY_GELOESCHTAM = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes geloeschtam */
+	public static final String QUERY_LIST_BY_GELOESCHTAM = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN ?1";
 
 	/** Die ID des Benutzers, zu dem der Datensatz gehört */
 	@Column(name = "Benutzer_ID")

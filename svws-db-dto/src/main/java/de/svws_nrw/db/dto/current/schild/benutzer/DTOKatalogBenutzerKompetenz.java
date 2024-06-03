@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kompetenzen")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.all", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_id", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID = :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_id.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_gruppe", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe = :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_gruppe.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe IN :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_bezeichnung", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung = :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.ko_bezeichnung.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung IN :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.primaryKeyQuery", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID = ?1")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN :value")
-@NamedQuery(name = "DTOKatalogBenutzerKompetenz.all.migration", query = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IS NOT NULL")
 @JsonPropertyOrder({"KO_ID", "KO_Gruppe", "KO_Bezeichnung"})
 public final class DTOKatalogBenutzerKompetenz {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogBenutzerKompetenz e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KO_ID */
+	public static final String QUERY_BY_KO_ID = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KO_ID */
+	public static final String QUERY_LIST_BY_KO_ID = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KO_Gruppe */
+	public static final String QUERY_BY_KO_GRUPPE = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KO_Gruppe */
+	public static final String QUERY_LIST_BY_KO_GRUPPE = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KO_Bezeichnung */
+	public static final String QUERY_BY_KO_BEZEICHNUNG = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KO_Bezeichnung */
+	public static final String QUERY_LIST_BY_KO_BEZEICHNUNG = "SELECT e FROM DTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung IN ?1";
 
 	/** ID für die Berechtigungskompetenz */
 	@Id

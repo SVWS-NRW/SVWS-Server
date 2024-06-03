@@ -71,27 +71,29 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	/**
 	 * Gibt alle SchuelerKAoADaten zum Schüler zurück
 	 *
-	 * @param aLong SchuelerID
+	 * @param id   SchuelerID
 	 *
 	 * @return Liste von SchuelerKAoADaten passend zum Schüler
 	 */
-	public List<SchuelerKAoADaten> getBySchuelerID(final Long aLong) {
-		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", aLong, DTOSchuelerLernabschnittsdaten.class);
+	public List<SchuelerKAoADaten> getBySchuelerID(final Long id) {
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
+				DTOSchuelerLernabschnittsdaten.class, id);
 		final List<Long> schuelerLernabschnittsdatenIds = schuelerLernabschnittsdaten.stream().map(sla -> sla.ID).toList();
-		final List<DTOSchuelerKAoADaten> daten = conn.queryNamed("DTOSchuelerKAoADaten.abschnitt_id.multiple", schuelerLernabschnittsdatenIds, DTOSchuelerKAoADaten.class);
+		final List<DTOSchuelerKAoADaten> daten = conn.queryList(DTOSchuelerKAoADaten.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOSchuelerKAoADaten.class, schuelerLernabschnittsdatenIds);
 		return daten.stream().map(mapSchuelerKAoADaten).toList();
 	}
 
 	/**
 	 * Gibt getBySchuelerID als Response zurück
 	 *
-	 * @param aLong SchuelerID
+	 * @param id   SchuelerID
 	 *
 	 * @return getBySchuelerID als Response
 	 */
-	public Response getBySchuelerIDAsResponse(final Long aLong) {
+	public Response getBySchuelerIDAsResponse(final Long id) {
 		try {
-			List<SchuelerKAoADaten> daten = this.getBySchuelerID(aLong);
+			List<SchuelerKAoADaten> daten = this.getBySchuelerID(id);
 			if (daten == null || daten.isEmpty())
 				daten = new ArrayList<>();
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

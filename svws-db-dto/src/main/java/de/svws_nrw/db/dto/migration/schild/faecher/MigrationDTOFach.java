@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,98 +29,278 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Faecher")
-@NamedQuery(name = "MigrationDTOFach.all", query = "SELECT e FROM MigrationDTOFach e")
-@NamedQuery(name = "MigrationDTOFach.id", query = "SELECT e FROM MigrationDTOFach e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOFach.id.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.kuerzel", query = "SELECT e FROM MigrationDTOFach e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOFach.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnung", query = "SELECT e FROM MigrationDTOFach e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnungzeugnis", query = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungZeugnis = :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnungzeugnis.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungZeugnis IN :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnungueberweisungszeugnis", query = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungUeberweisungsZeugnis = :value")
-@NamedQuery(name = "MigrationDTOFach.bezeichnungueberweisungszeugnis.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungUeberweisungsZeugnis IN :value")
-@NamedQuery(name = "MigrationDTOFach.zeugnisdatenquelle_id", query = "SELECT e FROM MigrationDTOFach e WHERE e.Zeugnisdatenquelle_ID = :value")
-@NamedQuery(name = "MigrationDTOFach.zeugnisdatenquelle_id.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Zeugnisdatenquelle_ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.fachgruppe_id", query = "SELECT e FROM MigrationDTOFach e WHERE e.Fachgruppe_ID = :value")
-@NamedQuery(name = "MigrationDTOFach.fachgruppe_id.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Fachgruppe_ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.statistikfach", query = "SELECT e FROM MigrationDTOFach e WHERE e.StatistikFach = :value")
-@NamedQuery(name = "MigrationDTOFach.statistikfach.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.StatistikFach IN :value")
-@NamedQuery(name = "MigrationDTOFach.istoberstufenfach", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstOberstufenFach = :value")
-@NamedQuery(name = "MigrationDTOFach.istoberstufenfach.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstOberstufenFach IN :value")
-@NamedQuery(name = "MigrationDTOFach.istfremdsprache", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstFremdsprache = :value")
-@NamedQuery(name = "MigrationDTOFach.istfremdsprache.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstFremdsprache IN :value")
-@NamedQuery(name = "MigrationDTOFach.sortierungallg", query = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungAllg = :value")
-@NamedQuery(name = "MigrationDTOFach.sortierungallg.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungAllg IN :value")
-@NamedQuery(name = "MigrationDTOFach.sortierungsekii", query = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungSekII = :value")
-@NamedQuery(name = "MigrationDTOFach.sortierungsekii.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungSekII IN :value")
-@NamedQuery(name = "MigrationDTOFach.istnachpruefungerlaubt", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstNachpruefungErlaubt = :value")
-@NamedQuery(name = "MigrationDTOFach.istnachpruefungerlaubt.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstNachpruefungErlaubt IN :value")
-@NamedQuery(name = "MigrationDTOFach.sichtbar", query = "SELECT e FROM MigrationDTOFach e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOFach.sichtbar.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOFach.aenderbar", query = "SELECT e FROM MigrationDTOFach e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "MigrationDTOFach.aenderbar.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "MigrationDTOFach.gewichtung", query = "SELECT e FROM MigrationDTOFach e WHERE e.Gewichtung = :value")
-@NamedQuery(name = "MigrationDTOFach.gewichtung.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Gewichtung IN :value")
-@NamedQuery(name = "MigrationDTOFach.unterichtssprache", query = "SELECT e FROM MigrationDTOFach e WHERE e.Unterichtssprache = :value")
-@NamedQuery(name = "MigrationDTOFach.unterichtssprache.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Unterichtssprache IN :value")
-@NamedQuery(name = "MigrationDTOFach.istschriftlichzk", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichZK = :value")
-@NamedQuery(name = "MigrationDTOFach.istschriftlichzk.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichZK IN :value")
-@NamedQuery(name = "MigrationDTOFach.istschriftlichba", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichBA = :value")
-@NamedQuery(name = "MigrationDTOFach.istschriftlichba.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichBA IN :value")
-@NamedQuery(name = "MigrationDTOFach.aufzeugnis", query = "SELECT e FROM MigrationDTOFach e WHERE e.AufZeugnis = :value")
-@NamedQuery(name = "MigrationDTOFach.aufzeugnis.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.AufZeugnis IN :value")
-@NamedQuery(name = "MigrationDTOFach.lernfelder", query = "SELECT e FROM MigrationDTOFach e WHERE e.Lernfelder = :value")
-@NamedQuery(name = "MigrationDTOFach.lernfelder.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Lernfelder IN :value")
-@NamedQuery(name = "MigrationDTOFach.schulnreigner", query = "SELECT e FROM MigrationDTOFach e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOFach.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichabilk", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiLK = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichabilk.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiLK IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichabigk", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiGK = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichabigk.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiGK IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichef1", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF1 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichef1.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF1 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichef2", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF2 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichef2.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF2 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq11", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ11 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq11.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ11 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq12", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ12 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq12.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ12 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq21", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ21 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq21.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ21 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq22", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ22 = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichq22.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ22 IN :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichalsneuefremdspracheinsekii", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAlsNeueFremdspracheInSekII = :value")
-@NamedQuery(name = "MigrationDTOFach.istmoeglichalsneuefremdspracheinsekii.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAlsNeueFremdspracheInSekII IN :value")
-@NamedQuery(name = "MigrationDTOFach.projektkursleitfach1_id", query = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach1_ID = :value")
-@NamedQuery(name = "MigrationDTOFach.projektkursleitfach1_id.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach1_ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.projektkursleitfach2_id", query = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach2_ID = :value")
-@NamedQuery(name = "MigrationDTOFach.projektkursleitfach2_id.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach2_ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenef1", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF1 = :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenef1.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF1 IN :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenef2", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF2 = :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenef2.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF2 IN :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenqualifikationsphase", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenQualifikationsphase = :value")
-@NamedQuery(name = "MigrationDTOFach.wochenstundenqualifikationsphase.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenQualifikationsphase IN :value")
-@NamedQuery(name = "MigrationDTOFach.mussschriftlichef1", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF1 = :value")
-@NamedQuery(name = "MigrationDTOFach.mussschriftlichef1.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF1 IN :value")
-@NamedQuery(name = "MigrationDTOFach.mussschriftlichef2", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF2 = :value")
-@NamedQuery(name = "MigrationDTOFach.mussschriftlichef2.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF2 IN :value")
-@NamedQuery(name = "MigrationDTOFach.mussmuendlich", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussMuendlich = :value")
-@NamedQuery(name = "MigrationDTOFach.mussmuendlich.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.MussMuendlich IN :value")
-@NamedQuery(name = "MigrationDTOFach.aufgabenfeld", query = "SELECT e FROM MigrationDTOFach e WHERE e.Aufgabenfeld = :value")
-@NamedQuery(name = "MigrationDTOFach.aufgabenfeld.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.Aufgabenfeld IN :value")
-@NamedQuery(name = "MigrationDTOFach.abgeschlfaecherholen", query = "SELECT e FROM MigrationDTOFach e WHERE e.AbgeschlFaecherHolen = :value")
-@NamedQuery(name = "MigrationDTOFach.abgeschlfaecherholen.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.AbgeschlFaecherHolen IN :value")
-@NamedQuery(name = "MigrationDTOFach.gewichtungfhr", query = "SELECT e FROM MigrationDTOFach e WHERE e.GewichtungFHR = :value")
-@NamedQuery(name = "MigrationDTOFach.gewichtungfhr.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.GewichtungFHR IN :value")
-@NamedQuery(name = "MigrationDTOFach.maxbemzeichen", query = "SELECT e FROM MigrationDTOFach e WHERE e.MaxBemZeichen = :value")
-@NamedQuery(name = "MigrationDTOFach.maxbemzeichen.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.MaxBemZeichen IN :value")
-@NamedQuery(name = "MigrationDTOFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFach e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOFach.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFach e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOFach.all.migration", query = "SELECT e FROM MigrationDTOFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "BezeichnungZeugnis", "BezeichnungUeberweisungsZeugnis", "Zeugnisdatenquelle_ID", "Fachgruppe_ID", "StatistikFach", "IstOberstufenFach", "IstFremdsprache", "SortierungAllg", "SortierungSekII", "IstNachpruefungErlaubt", "Sichtbar", "Aenderbar", "Gewichtung", "Unterichtssprache", "IstSchriftlichZK", "IstSchriftlichBA", "AufZeugnis", "Lernfelder", "SchulnrEigner", "IstMoeglichAbiLK", "IstMoeglichAbiGK", "IstMoeglichEF1", "IstMoeglichEF2", "IstMoeglichQ11", "IstMoeglichQ12", "IstMoeglichQ21", "IstMoeglichQ22", "IstMoeglichAlsNeueFremdspracheInSekII", "ProjektKursLeitfach1_ID", "ProjektKursLeitfach2_ID", "WochenstundenEF1", "WochenstundenEF2", "WochenstundenQualifikationsphase", "MussSchriftlichEF1", "MussSchriftlichEF2", "MussMuendlich", "Aufgabenfeld", "AbgeschlFaecherHolen", "GewichtungFHR", "MaxBemZeichen"})
 public final class MigrationDTOFach {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOFach e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFach e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOFach e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOFach e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFach e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFach e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BezeichnungZeugnis */
+	public static final String QUERY_BY_BEZEICHNUNGZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BezeichnungZeugnis */
+	public static final String QUERY_LIST_BY_BEZEICHNUNGZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BezeichnungUeberweisungsZeugnis */
+	public static final String QUERY_BY_BEZEICHNUNGUEBERWEISUNGSZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungUeberweisungsZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BezeichnungUeberweisungsZeugnis */
+	public static final String QUERY_LIST_BY_BEZEICHNUNGUEBERWEISUNGSZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.BezeichnungUeberweisungsZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeugnisdatenquelle_ID */
+	public static final String QUERY_BY_ZEUGNISDATENQUELLE_ID = "SELECT e FROM MigrationDTOFach e WHERE e.Zeugnisdatenquelle_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeugnisdatenquelle_ID */
+	public static final String QUERY_LIST_BY_ZEUGNISDATENQUELLE_ID = "SELECT e FROM MigrationDTOFach e WHERE e.Zeugnisdatenquelle_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachgruppe_ID */
+	public static final String QUERY_BY_FACHGRUPPE_ID = "SELECT e FROM MigrationDTOFach e WHERE e.Fachgruppe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachgruppe_ID */
+	public static final String QUERY_LIST_BY_FACHGRUPPE_ID = "SELECT e FROM MigrationDTOFach e WHERE e.Fachgruppe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes StatistikFach */
+	public static final String QUERY_BY_STATISTIKFACH = "SELECT e FROM MigrationDTOFach e WHERE e.StatistikFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes StatistikFach */
+	public static final String QUERY_LIST_BY_STATISTIKFACH = "SELECT e FROM MigrationDTOFach e WHERE e.StatistikFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstOberstufenFach */
+	public static final String QUERY_BY_ISTOBERSTUFENFACH = "SELECT e FROM MigrationDTOFach e WHERE e.IstOberstufenFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstOberstufenFach */
+	public static final String QUERY_LIST_BY_ISTOBERSTUFENFACH = "SELECT e FROM MigrationDTOFach e WHERE e.IstOberstufenFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstFremdsprache */
+	public static final String QUERY_BY_ISTFREMDSPRACHE = "SELECT e FROM MigrationDTOFach e WHERE e.IstFremdsprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstFremdsprache */
+	public static final String QUERY_LIST_BY_ISTFREMDSPRACHE = "SELECT e FROM MigrationDTOFach e WHERE e.IstFremdsprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SortierungAllg */
+	public static final String QUERY_BY_SORTIERUNGALLG = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungAllg = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SortierungAllg */
+	public static final String QUERY_LIST_BY_SORTIERUNGALLG = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungAllg IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SortierungSekII */
+	public static final String QUERY_BY_SORTIERUNGSEKII = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungSekII = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SortierungSekII */
+	public static final String QUERY_LIST_BY_SORTIERUNGSEKII = "SELECT e FROM MigrationDTOFach e WHERE e.SortierungSekII IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstNachpruefungErlaubt */
+	public static final String QUERY_BY_ISTNACHPRUEFUNGERLAUBT = "SELECT e FROM MigrationDTOFach e WHERE e.IstNachpruefungErlaubt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstNachpruefungErlaubt */
+	public static final String QUERY_LIST_BY_ISTNACHPRUEFUNGERLAUBT = "SELECT e FROM MigrationDTOFach e WHERE e.IstNachpruefungErlaubt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOFach e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOFach e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOFach e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM MigrationDTOFach e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gewichtung */
+	public static final String QUERY_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOFach e WHERE e.Gewichtung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gewichtung */
+	public static final String QUERY_LIST_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOFach e WHERE e.Gewichtung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Unterichtssprache */
+	public static final String QUERY_BY_UNTERICHTSSPRACHE = "SELECT e FROM MigrationDTOFach e WHERE e.Unterichtssprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Unterichtssprache */
+	public static final String QUERY_LIST_BY_UNTERICHTSSPRACHE = "SELECT e FROM MigrationDTOFach e WHERE e.Unterichtssprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstSchriftlichZK */
+	public static final String QUERY_BY_ISTSCHRIFTLICHZK = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichZK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstSchriftlichZK */
+	public static final String QUERY_LIST_BY_ISTSCHRIFTLICHZK = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichZK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstSchriftlichBA */
+	public static final String QUERY_BY_ISTSCHRIFTLICHBA = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichBA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstSchriftlichBA */
+	public static final String QUERY_LIST_BY_ISTSCHRIFTLICHBA = "SELECT e FROM MigrationDTOFach e WHERE e.IstSchriftlichBA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AufZeugnis */
+	public static final String QUERY_BY_AUFZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.AufZeugnis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AufZeugnis */
+	public static final String QUERY_LIST_BY_AUFZEUGNIS = "SELECT e FROM MigrationDTOFach e WHERE e.AufZeugnis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lernfelder */
+	public static final String QUERY_BY_LERNFELDER = "SELECT e FROM MigrationDTOFach e WHERE e.Lernfelder = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernfelder */
+	public static final String QUERY_LIST_BY_LERNFELDER = "SELECT e FROM MigrationDTOFach e WHERE e.Lernfelder IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFach e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOFach e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichAbiLK */
+	public static final String QUERY_BY_ISTMOEGLICHABILK = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiLK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichAbiLK */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHABILK = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiLK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichAbiGK */
+	public static final String QUERY_BY_ISTMOEGLICHABIGK = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiGK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichAbiGK */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHABIGK = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAbiGK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichEF1 */
+	public static final String QUERY_BY_ISTMOEGLICHEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichEF1 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichEF2 */
+	public static final String QUERY_BY_ISTMOEGLICHEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichEF2 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichEF2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichQ11 */
+	public static final String QUERY_BY_ISTMOEGLICHQ11 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ11 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichQ11 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHQ11 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ11 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichQ12 */
+	public static final String QUERY_BY_ISTMOEGLICHQ12 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ12 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichQ12 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHQ12 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ12 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichQ21 */
+	public static final String QUERY_BY_ISTMOEGLICHQ21 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ21 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichQ21 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHQ21 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ21 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichQ22 */
+	public static final String QUERY_BY_ISTMOEGLICHQ22 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ22 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichQ22 */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHQ22 = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichQ22 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMoeglichAlsNeueFremdspracheInSekII */
+	public static final String QUERY_BY_ISTMOEGLICHALSNEUEFREMDSPRACHEINSEKII = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAlsNeueFremdspracheInSekII = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstMoeglichAlsNeueFremdspracheInSekII */
+	public static final String QUERY_LIST_BY_ISTMOEGLICHALSNEUEFREMDSPRACHEINSEKII = "SELECT e FROM MigrationDTOFach e WHERE e.IstMoeglichAlsNeueFremdspracheInSekII IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ProjektKursLeitfach1_ID */
+	public static final String QUERY_BY_PROJEKTKURSLEITFACH1_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach1_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ProjektKursLeitfach1_ID */
+	public static final String QUERY_LIST_BY_PROJEKTKURSLEITFACH1_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach1_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ProjektKursLeitfach2_ID */
+	public static final String QUERY_BY_PROJEKTKURSLEITFACH2_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach2_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ProjektKursLeitfach2_ID */
+	public static final String QUERY_LIST_BY_PROJEKTKURSLEITFACH2_ID = "SELECT e FROM MigrationDTOFach e WHERE e.ProjektKursLeitfach2_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenstundenEF1 */
+	public static final String QUERY_BY_WOCHENSTUNDENEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenstundenEF1 */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDENEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenstundenEF2 */
+	public static final String QUERY_BY_WOCHENSTUNDENEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenstundenEF2 */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDENEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenEF2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenstundenQualifikationsphase */
+	public static final String QUERY_BY_WOCHENSTUNDENQUALIFIKATIONSPHASE = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenQualifikationsphase = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenstundenQualifikationsphase */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDENQUALIFIKATIONSPHASE = "SELECT e FROM MigrationDTOFach e WHERE e.WochenstundenQualifikationsphase IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MussSchriftlichEF1 */
+	public static final String QUERY_BY_MUSSSCHRIFTLICHEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MussSchriftlichEF1 */
+	public static final String QUERY_LIST_BY_MUSSSCHRIFTLICHEF1 = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MussSchriftlichEF2 */
+	public static final String QUERY_BY_MUSSSCHRIFTLICHEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MussSchriftlichEF2 */
+	public static final String QUERY_LIST_BY_MUSSSCHRIFTLICHEF2 = "SELECT e FROM MigrationDTOFach e WHERE e.MussSchriftlichEF2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MussMuendlich */
+	public static final String QUERY_BY_MUSSMUENDLICH = "SELECT e FROM MigrationDTOFach e WHERE e.MussMuendlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MussMuendlich */
+	public static final String QUERY_LIST_BY_MUSSMUENDLICH = "SELECT e FROM MigrationDTOFach e WHERE e.MussMuendlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aufgabenfeld */
+	public static final String QUERY_BY_AUFGABENFELD = "SELECT e FROM MigrationDTOFach e WHERE e.Aufgabenfeld = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aufgabenfeld */
+	public static final String QUERY_LIST_BY_AUFGABENFELD = "SELECT e FROM MigrationDTOFach e WHERE e.Aufgabenfeld IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbgeschlFaecherHolen */
+	public static final String QUERY_BY_ABGESCHLFAECHERHOLEN = "SELECT e FROM MigrationDTOFach e WHERE e.AbgeschlFaecherHolen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbgeschlFaecherHolen */
+	public static final String QUERY_LIST_BY_ABGESCHLFAECHERHOLEN = "SELECT e FROM MigrationDTOFach e WHERE e.AbgeschlFaecherHolen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GewichtungFHR */
+	public static final String QUERY_BY_GEWICHTUNGFHR = "SELECT e FROM MigrationDTOFach e WHERE e.GewichtungFHR = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GewichtungFHR */
+	public static final String QUERY_LIST_BY_GEWICHTUNGFHR = "SELECT e FROM MigrationDTOFach e WHERE e.GewichtungFHR IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MaxBemZeichen */
+	public static final String QUERY_BY_MAXBEMZEICHEN = "SELECT e FROM MigrationDTOFach e WHERE e.MaxBemZeichen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MaxBemZeichen */
+	public static final String QUERY_LIST_BY_MAXBEMZEICHEN = "SELECT e FROM MigrationDTOFach e WHERE e.MaxBemZeichen IN ?1";
 
 	/** Eindeutige ID zur Kennzeichnung des Fächer-Datensatzes */
 	@Id

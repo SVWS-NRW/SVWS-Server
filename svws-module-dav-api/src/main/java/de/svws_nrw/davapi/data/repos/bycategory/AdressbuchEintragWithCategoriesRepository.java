@@ -107,11 +107,8 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	 * @param conn die Datenbankverbindung
 	 */
 	private void querySchuljahresabschnitt(final DBEntityManager conn) {
-		final DTOEigeneSchule dtoEigeneSchule = conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class)
-				.getSingleResult();
-		final List<DTOSchuljahresabschnitte> dtoSchuljahresAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id",
-				dtoEigeneSchule.Schuljahresabschnitts_ID, DTOSchuljahresabschnitte.class);
-		aktuellerSchuljahresabschnitt = dtoSchuljahresAbschnitte.get(0);
+		final DTOEigeneSchule dtoEigeneSchule = conn.querySingle(DTOEigeneSchule.class);
+		aktuellerSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoEigeneSchule.Schuljahresabschnitts_ID);
 		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
 		abschnitt.abschnitt = aktuellerSchuljahresabschnitt.Abschnitt;
 		abschnitt.schuljahr = aktuellerSchuljahresabschnitt.Jahr;

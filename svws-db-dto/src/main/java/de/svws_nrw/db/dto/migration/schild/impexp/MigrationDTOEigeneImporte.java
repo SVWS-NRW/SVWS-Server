@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,38 +26,98 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte")
-@NamedQuery(name = "MigrationDTOEigeneImporte.all", query = "SELECT e FROM MigrationDTOEigeneImporte e")
-@NamedQuery(name = "MigrationDTOEigeneImporte.id", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.id.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.title", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.Title = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.title.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.Title IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.delimiterchar", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DelimiterChar = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.delimiterchar.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DelimiterChar IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.textquote", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.TextQuote = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.textquote.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.TextQuote IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.skiplines", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SkipLines = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.skiplines.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SkipLines IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.dateformat", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DateFormat = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.dateformat.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DateFormat IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.booleantrue", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.BooleanTrue = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.booleantrue.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.BooleanTrue IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.abkweiblich", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkWeiblich = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.abkweiblich.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkWeiblich IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.abkmaennlich", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkMaennlich = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.abkmaennlich.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkMaennlich IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.maintable", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.MainTable = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.maintable.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.MainTable IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.insertmode", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.InsertMode = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.insertmode.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.InsertMode IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.lookuptabledir", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.LookupTableDir = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.lookuptabledir.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.LookupTableDir IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.schueleridmode", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode = :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.schueleridmode.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOEigeneImporte.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOEigeneImporte.all.migration", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Title", "DelimiterChar", "TextQuote", "SkipLines", "DateFormat", "BooleanTrue", "AbkWeiblich", "AbkMaennlich", "MainTable", "InsertMode", "LookupTableDir", "SchuelerIDMode"})
 public final class MigrationDTOEigeneImporte {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOEigeneImporte e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Title */
+	public static final String QUERY_BY_TITLE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.Title = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Title */
+	public static final String QUERY_LIST_BY_TITLE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.Title IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DelimiterChar */
+	public static final String QUERY_BY_DELIMITERCHAR = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DelimiterChar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DelimiterChar */
+	public static final String QUERY_LIST_BY_DELIMITERCHAR = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DelimiterChar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TextQuote */
+	public static final String QUERY_BY_TEXTQUOTE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.TextQuote = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TextQuote */
+	public static final String QUERY_LIST_BY_TEXTQUOTE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.TextQuote IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SkipLines */
+	public static final String QUERY_BY_SKIPLINES = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SkipLines = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SkipLines */
+	public static final String QUERY_LIST_BY_SKIPLINES = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SkipLines IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DateFormat */
+	public static final String QUERY_BY_DATEFORMAT = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DateFormat = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DateFormat */
+	public static final String QUERY_LIST_BY_DATEFORMAT = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.DateFormat IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BooleanTrue */
+	public static final String QUERY_BY_BOOLEANTRUE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.BooleanTrue = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BooleanTrue */
+	public static final String QUERY_LIST_BY_BOOLEANTRUE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.BooleanTrue IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbkWeiblich */
+	public static final String QUERY_BY_ABKWEIBLICH = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkWeiblich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbkWeiblich */
+	public static final String QUERY_LIST_BY_ABKWEIBLICH = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkWeiblich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbkMaennlich */
+	public static final String QUERY_BY_ABKMAENNLICH = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkMaennlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbkMaennlich */
+	public static final String QUERY_LIST_BY_ABKMAENNLICH = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.AbkMaennlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MainTable */
+	public static final String QUERY_BY_MAINTABLE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.MainTable = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MainTable */
+	public static final String QUERY_LIST_BY_MAINTABLE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.MainTable IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes InsertMode */
+	public static final String QUERY_BY_INSERTMODE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.InsertMode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes InsertMode */
+	public static final String QUERY_LIST_BY_INSERTMODE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.InsertMode IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LookupTableDir */
+	public static final String QUERY_BY_LOOKUPTABLEDIR = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.LookupTableDir = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LookupTableDir */
+	public static final String QUERY_LIST_BY_LOOKUPTABLEDIR = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.LookupTableDir IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchuelerIDMode */
+	public static final String QUERY_BY_SCHUELERIDMODE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchuelerIDMode */
+	public static final String QUERY_LIST_BY_SCHUELERIDMODE = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode IN ?1";
 
 	/** ID des Importschemas für den externen Textimport */
 	@Id

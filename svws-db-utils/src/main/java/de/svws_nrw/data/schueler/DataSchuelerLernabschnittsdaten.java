@@ -149,14 +149,15 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		if (schueler_ids.isEmpty())
 			return new ArrayList<>();
 
-		final Map<Long, DTOSchueler> mapSchueler = conn.queryNamed("DTOSchueler.id.multiple", schueler_ids, DTOSchueler.class)
+		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schueler_ids)
 			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : schueler_ids)
 			if (mapSchueler.get(schuelerID) == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
 
 		// Hole alle Lernabschnitte der übergebenen Schüler-IDs und filtere sie auf den Schuljahresabschnitt und die Wechsel-Nr.
-		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", schueler_ids, DTOSchuelerLernabschnittsdaten.class).stream()
+		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID,
+				DTOSchuelerLernabschnittsdaten.class, schueler_ids).stream()
 			.filter(a -> (mitWechseln ? a.WechselNr >= 0 : a.WechselNr == 0))
 			.sorted(Comparator
 				.comparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
@@ -207,7 +208,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		if (aktuell == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
 		// Ermittle die Fachbemerkungen
-		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
+		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, aktuell.ID);
 		if (bemerkungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
 		if (bemerkungen.size() > 1)
@@ -503,7 +504,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		final DTOSchuelerLernabschnittsdaten dto = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", id, DTOSchuelerPSFachBemerkungen.class);
+		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, id);
 		final DTOSchuelerPSFachBemerkungen dtoFachBem = (dtoListFachBem.isEmpty())
 				? new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), id)
 				: dtoListFachBem.getFirst();

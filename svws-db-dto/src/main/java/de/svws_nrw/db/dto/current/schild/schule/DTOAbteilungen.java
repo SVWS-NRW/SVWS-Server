@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,30 +26,74 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abteilungen")
-@NamedQuery(name = "DTOAbteilungen.all", query = "SELECT e FROM DTOAbteilungen e")
-@NamedQuery(name = "DTOAbteilungen.id", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOAbteilungen.id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAbteilungen.bezeichnung", query = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOAbteilungen.bezeichnung.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOAbteilungen.schuljahresabschnitts_id", query = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name = "DTOAbteilungen.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name = "DTOAbteilungen.abteilungsleiter_id", query = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID = :value")
-@NamedQuery(name = "DTOAbteilungen.abteilungsleiter_id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID IN :value")
-@NamedQuery(name = "DTOAbteilungen.sichtbar", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOAbteilungen.sichtbar.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOAbteilungen.raum", query = "SELECT e FROM DTOAbteilungen e WHERE e.Raum = :value")
-@NamedQuery(name = "DTOAbteilungen.raum.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Raum IN :value")
-@NamedQuery(name = "DTOAbteilungen.email", query = "SELECT e FROM DTOAbteilungen e WHERE e.Email = :value")
-@NamedQuery(name = "DTOAbteilungen.email.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Email IN :value")
-@NamedQuery(name = "DTOAbteilungen.durchwahl", query = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl = :value")
-@NamedQuery(name = "DTOAbteilungen.durchwahl.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl IN :value")
-@NamedQuery(name = "DTOAbteilungen.sortierung", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOAbteilungen.sortierung.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOAbteilungen.primaryKeyQuery", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOAbteilungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOAbteilungen.all.migration", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Schuljahresabschnitts_ID", "AbteilungsLeiter_ID", "Sichtbar", "Raum", "Email", "Durchwahl", "Sortierung"})
 public final class DTOAbteilungen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOAbteilungen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOAbteilungen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schuljahresabschnitts_ID */
+	public static final String QUERY_BY_SCHULJAHRESABSCHNITTS_ID = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schuljahresabschnitts_ID */
+	public static final String QUERY_LIST_BY_SCHULJAHRESABSCHNITTS_ID = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbteilungsLeiter_ID */
+	public static final String QUERY_BY_ABTEILUNGSLEITER_ID = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbteilungsLeiter_ID */
+	public static final String QUERY_LIST_BY_ABTEILUNGSLEITER_ID = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Raum */
+	public static final String QUERY_BY_RAUM = "SELECT e FROM DTOAbteilungen e WHERE e.Raum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Raum */
+	public static final String QUERY_LIST_BY_RAUM = "SELECT e FROM DTOAbteilungen e WHERE e.Raum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM DTOAbteilungen e WHERE e.Email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM DTOAbteilungen e WHERE e.Email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Durchwahl */
+	public static final String QUERY_BY_DURCHWAHL = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Durchwahl */
+	public static final String QUERY_LIST_BY_DURCHWAHL = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung IN ?1";
 
 	/** ID der Abteilung */
 	@Id

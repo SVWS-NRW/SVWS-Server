@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,16 +18,32 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "TextExportVorlagen")
-@NamedQuery(name = "DTOTextExportVorlagen.all", query = "SELECT e FROM DTOTextExportVorlagen e")
-@NamedQuery(name = "DTOTextExportVorlagen.vorlagename", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = :value")
-@NamedQuery(name = "DTOTextExportVorlagen.vorlagename.multiple", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN :value")
-@NamedQuery(name = "DTOTextExportVorlagen.daten", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten = :value")
-@NamedQuery(name = "DTOTextExportVorlagen.daten.multiple", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten IN :value")
-@NamedQuery(name = "DTOTextExportVorlagen.primaryKeyQuery", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = ?1")
-@NamedQuery(name = "DTOTextExportVorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN :value")
-@NamedQuery(name = "DTOTextExportVorlagen.all.migration", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL")
 @JsonPropertyOrder({"VorlageName", "Daten"})
 public final class DTOTextExportVorlagen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOTextExportVorlagen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VorlageName */
+	public static final String QUERY_BY_VORLAGENAME = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VorlageName */
+	public static final String QUERY_LIST_BY_VORLAGENAME = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Daten */
+	public static final String QUERY_BY_DATEN = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Daten */
+	public static final String QUERY_LIST_BY_DATEN = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten IN ?1";
 
 	/** Name der Export-Textvorlage */
 	@Id

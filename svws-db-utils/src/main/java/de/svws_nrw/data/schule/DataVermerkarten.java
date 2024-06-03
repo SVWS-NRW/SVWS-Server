@@ -120,7 +120,7 @@ public final class DataVermerkarten extends DataManager<Long> {
 		}),
 		Map.entry("bezeichnung", (conn, dto, value, map) -> {
 			final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Vermerkart.col_Bezeichnung.datenlaenge());
-			final List<DTOVermerkArt> arten = conn.queryNamed("DTOVermerkArt.bezeichnung", bezeichnung, DTOVermerkArt.class);
+			final List<DTOVermerkArt> arten = conn.queryList(DTOVermerkArt.QUERY_BY_BEZEICHNUNG, DTOVermerkArt.class, bezeichnung);
 			if (!arten.isEmpty())
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung '%s' wird bereits für eine andere Vermerkart genutzt.".formatted(bezeichnung));
 			dto.Bezeichnung = bezeichnung;

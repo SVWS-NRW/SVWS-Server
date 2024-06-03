@@ -89,7 +89,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 		daten.sekIErsteSchulform = schueler.ErsteSchulform_SI;
 		daten.sekIIWechsel = schueler.JahrWechsel_SII;
 		// Informationen zu besonderen Merkmalen für die Statistik
-		final List<DTOSchuelerMerkmale> dtoMerkmale = conn.queryNamed("DTOSchuelerMerkmale.schueler_id", id, DTOSchuelerMerkmale.class);
+		final List<DTOSchuelerMerkmale> dtoMerkmale = conn.queryList(DTOSchuelerMerkmale.QUERY_BY_SCHUELER_ID, DTOSchuelerMerkmale.class, id);
 		for (final DTOSchuelerMerkmale dtoMerkmal : dtoMerkmale) {
 			final SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
 			merkmal.id = dtoMerkmal.ID;
@@ -98,7 +98,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 			daten.merkmale.add(merkmal);
 		}
 		// Informationen zu allen bisher besuchten Schulen
-		final List<DTOSchuelerAbgaenge> dtoBisherigeSchulen = conn.queryNamed("DTOSchuelerAbgaenge.schueler_id", id, DTOSchuelerAbgaenge.class);
+		final List<DTOSchuelerAbgaenge> dtoBisherigeSchulen = conn.queryList(DTOSchuelerAbgaenge.QUERY_BY_SCHUELER_ID, DTOSchuelerAbgaenge.class, id);
 		for (final DTOSchuelerAbgaenge dtoBisherigeSchule : dtoBisherigeSchulen) {
 			final SchuelerSchulbesuchSchule bisherigeSchule = new SchuelerSchulbesuchSchule();
 			bisherigeSchule.schulnummer = dtoBisherigeSchule.AbgangsSchulNr;

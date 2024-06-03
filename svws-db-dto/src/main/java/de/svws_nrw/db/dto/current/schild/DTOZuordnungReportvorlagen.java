@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,34 +18,86 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ZuordnungReportvorlagen")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.all", query = "SELECT e FROM DTOZuordnungReportvorlagen e")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.id", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.id.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.jahrgang_id", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.jahrgang_id.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschluss", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Abschluss = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschluss.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Abschluss IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschlussbb", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussBB = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschlussbb.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussBB IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschlussart", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussArt = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.abschlussart.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussArt IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.versetzungkrz", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.VersetzungKrz = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.versetzungkrz.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.VersetzungKrz IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.fachklasse_id", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.fachklasse_id.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.reportvorlage", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Reportvorlage = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.reportvorlage.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Reportvorlage IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.beschreibung", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Beschreibung = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.beschreibung.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Beschreibung IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.gruppe", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Gruppe = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.gruppe.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Gruppe IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.zeugnisart", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart = :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.zeugnisart.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.primaryKeyQuery", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOZuordnungReportvorlagen.all.migration", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Jahrgang_ID", "Abschluss", "AbschlussBB", "AbschlussArt", "VersetzungKrz", "Fachklasse_ID", "Reportvorlage", "Beschreibung", "Gruppe", "Zeugnisart"})
 public final class DTOZuordnungReportvorlagen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOZuordnungReportvorlagen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahrgang_ID */
+	public static final String QUERY_BY_JAHRGANG_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahrgang_ID */
+	public static final String QUERY_LIST_BY_JAHRGANG_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschluss */
+	public static final String QUERY_BY_ABSCHLUSS = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Abschluss = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschluss */
+	public static final String QUERY_LIST_BY_ABSCHLUSS = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Abschluss IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschlussBB */
+	public static final String QUERY_BY_ABSCHLUSSBB = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussBB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschlussBB */
+	public static final String QUERY_LIST_BY_ABSCHLUSSBB = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussBB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschlussArt */
+	public static final String QUERY_BY_ABSCHLUSSART = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschlussArt */
+	public static final String QUERY_LIST_BY_ABSCHLUSSART = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.AbschlussArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VersetzungKrz */
+	public static final String QUERY_BY_VERSETZUNGKRZ = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.VersetzungKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VersetzungKrz */
+	public static final String QUERY_LIST_BY_VERSETZUNGKRZ = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.VersetzungKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachklasse_ID */
+	public static final String QUERY_BY_FACHKLASSE_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachklasse_ID */
+	public static final String QUERY_LIST_BY_FACHKLASSE_ID = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Reportvorlage */
+	public static final String QUERY_BY_REPORTVORLAGE = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Reportvorlage = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Reportvorlage */
+	public static final String QUERY_LIST_BY_REPORTVORLAGE = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Reportvorlage IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gruppe */
+	public static final String QUERY_BY_GRUPPE = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Gruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gruppe */
+	public static final String QUERY_LIST_BY_GRUPPE = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Gruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeugnisart */
+	public static final String QUERY_BY_ZEUGNISART = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeugnisart */
+	public static final String QUERY_LIST_BY_ZEUGNISART = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart IN ?1";
 
 	/** ID des Datensatzes der einen Zeugnisreport einer Gruppe oder Klasse zuordnet */
 	@Id

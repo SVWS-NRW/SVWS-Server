@@ -79,7 +79,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", regel.ID, DTOGostBlockungRegelParameter.class);
+		final List<DTOGostBlockungRegelParameter> params = conn.queryList(DTOGostBlockungRegelParameter.QUERY_BY_REGEL_ID, DTOGostBlockungRegelParameter.class, regel.ID);
 		final GostBlockungRegel daten = dtoMapper.apply(regel, params);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -142,7 +142,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case SCHIENEN_NR -> {
-								final List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
+								final List<DTOGostBlockungSchiene> dtos = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, regel.Blockung_ID);
 								if ((dtos == null) || (dtos.isEmpty()))
 									throw new ApiOperationException(Status.BAD_REQUEST);
 								final Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
@@ -247,13 +247,13 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	    		paramValue = switch (paramType) {
 					case KURSART -> GostKursart.LK.id;
 					case KURS_ID -> {
-				    	final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
+				    	final List<DTOGostBlockungKurs> kurse = conn.queryList(DTOGostBlockungKurs.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungKurs.class, idBlockung);
 						if ((kurse == null) || (kurse.isEmpty()))
 							throw new ApiOperationException(Status.NOT_FOUND);
 						yield kurse.get(0).ID;
 					}
 					case SCHIENEN_NR -> {
-						final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min(Integer::compare);
+						final Optional<Integer> minSchiene = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, idBlockung).stream().map(s -> s.Nummer).min(Integer::compare);
 						if (minSchiene.isEmpty())
 							throw new ApiOperationException(Status.NOT_FOUND);
 						yield minSchiene.get();
@@ -357,8 +357,8 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			return new ArrayList<>();
 		try {
 	        // Bestimme schon vorhandene Regeln der Blockung
-	        final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID, DTOGostBlockungRegel.class)
-        		.stream().collect(Collectors.groupingBy(r -> r.Typ.typ));
+	        final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID,
+	        		DTOGostBlockungRegel.class, blockung.ID).stream().collect(Collectors.groupingBy(r -> r.Typ.typ));
 			// Bestimme die ID, ab welcher die Datensätze eingefügt werden
 			long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
 			// Bestimme die Schüler des Abiturjahrgangs, falls Regeln einen Schüler-Bezug haben
@@ -440,7 +440,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		// Bestimme die Regel-Parameter (diese werden beim Entfernen der Regel automatisch mit entfernt.
 		final GostBlockungRegel daten = new GostBlockungRegel();
 		daten.id = id;
-    	final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", id, DTOGostBlockungRegelParameter.class);
+    	final List<DTOGostBlockungRegelParameter> params = conn.queryList(DTOGostBlockungRegelParameter.QUERY_BY_REGEL_ID, DTOGostBlockungRegelParameter.class, id);
     	if (params == null)
     		throw new ApiOperationException(Status.NOT_FOUND);
     	params.sort((a, b) -> Integer.compare(a.Nummer, b.Nummer));
@@ -457,7 +457,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		if (regelIDs.isEmpty())
 			return;
 		// Bestimme die Regeln
-		final List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.id.multiple", regelIDs, DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> regeln = conn.queryByKeyList(DTOGostBlockungRegel.class, regelIDs);
 		if (regeln.size() != regelIDs.size())
     		throw new ApiOperationException(Status.NOT_FOUND, "Mindestens eine Regel wurde für die angegebenen IDs nicht gefunden.");
 		// Prüfe, ob alle eingelesenen Regeln die gleiche Blockungs-ID haben
@@ -576,11 +576,11 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 */
 	public List<GostBlockungRegel> getBlockungsregeln(final long idBlockung) {
 		// Bestimme alle Regeln der Blockung
-		final List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", idBlockung, DTOGostBlockungRegel.class);
+		final List<DTOGostBlockungRegel> regeln = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class, idBlockung);
 		// Bestimme die IDs dieser Regeln
 		final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
 		// Bestimme die RegelParameter dieser Regeln
-		final List<DTOGostBlockungRegelParameter> parameter = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+		final List<DTOGostBlockungRegelParameter> parameter = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID, DTOGostBlockungRegelParameter.class, regelIDs);
 		return getBlockungsregeln(regeln, parameter);
 	}
 
@@ -606,7 +606,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		if (regeln.isEmpty())
 			return;
 		final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
-		final List<DTOGostBlockungRegelParameter> regelParameter = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+		final List<DTOGostBlockungRegelParameter> regelParameter = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID, DTOGostBlockungRegelParameter.class, regelIDs);
 		final Map<Long, List<DTOGostBlockungRegelParameter>> mapRegelParameter = regelParameter.stream().collect(
 				Collectors.groupingBy(p -> p.Regel_ID, Collectors.collectingAndThen(Collectors.toCollection(ArrayList::new), l -> {
 					l.sort((final DTOGostBlockungRegelParameter a, final DTOGostBlockungRegelParameter b) -> Integer.compare(a.Nummer, b.Nummer));

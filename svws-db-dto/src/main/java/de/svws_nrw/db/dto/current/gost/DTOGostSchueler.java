@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,30 +29,74 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Schueler")
-@NamedQuery(name = "DTOGostSchueler.all", query = "SELECT e FROM DTOGostSchueler e")
-@NamedQuery(name = "DTOGostSchueler.schueler_id", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOGostSchueler.schueler_id.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOGostSchueler.datumberatung", query = "SELECT e FROM DTOGostSchueler e WHERE e.DatumBeratung = :value")
-@NamedQuery(name = "DTOGostSchueler.datumberatung.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.DatumBeratung IN :value")
-@NamedQuery(name = "DTOGostSchueler.datumruecklauf", query = "SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf = :value")
-@NamedQuery(name = "DTOGostSchueler.datumruecklauf.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf IN :value")
-@NamedQuery(name = "DTOGostSchueler.hatsportattest", query = "SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest = :value")
-@NamedQuery(name = "DTOGostSchueler.hatsportattest.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest IN :value")
-@NamedQuery(name = "DTOGostSchueler.kommentar", query = "SELECT e FROM DTOGostSchueler e WHERE e.Kommentar = :value")
-@NamedQuery(name = "DTOGostSchueler.kommentar.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Kommentar IN :value")
-@NamedQuery(name = "DTOGostSchueler.beratungslehrer_id", query = "SELECT e FROM DTOGostSchueler e WHERE e.Beratungslehrer_ID = :value")
-@NamedQuery(name = "DTOGostSchueler.beratungslehrer_id.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Beratungslehrer_ID IN :value")
-@NamedQuery(name = "DTOGostSchueler.pruefphase", query = "SELECT e FROM DTOGostSchueler e WHERE e.PruefPhase = :value")
-@NamedQuery(name = "DTOGostSchueler.pruefphase.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.PruefPhase IN :value")
-@NamedQuery(name = "DTOGostSchueler.besonderelernleistung_art", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Art = :value")
-@NamedQuery(name = "DTOGostSchueler.besonderelernleistung_art.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Art IN :value")
-@NamedQuery(name = "DTOGostSchueler.besonderelernleistung_punkte", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte = :value")
-@NamedQuery(name = "DTOGostSchueler.besonderelernleistung_punkte.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte IN :value")
-@NamedQuery(name = "DTOGostSchueler.primaryKeyQuery", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "DTOGostSchueler.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOGostSchueler.all.migration", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte"})
 public final class DTOGostSchueler {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostSchueler e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumBeratung */
+	public static final String QUERY_BY_DATUMBERATUNG = "SELECT e FROM DTOGostSchueler e WHERE e.DatumBeratung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumBeratung */
+	public static final String QUERY_LIST_BY_DATUMBERATUNG = "SELECT e FROM DTOGostSchueler e WHERE e.DatumBeratung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumRuecklauf */
+	public static final String QUERY_BY_DATUMRUECKLAUF = "SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumRuecklauf */
+	public static final String QUERY_LIST_BY_DATUMRUECKLAUF = "SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HatSportattest */
+	public static final String QUERY_BY_HATSPORTATTEST = "SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HatSportattest */
+	public static final String QUERY_LIST_BY_HATSPORTATTEST = "SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kommentar */
+	public static final String QUERY_BY_KOMMENTAR = "SELECT e FROM DTOGostSchueler e WHERE e.Kommentar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kommentar */
+	public static final String QUERY_LIST_BY_KOMMENTAR = "SELECT e FROM DTOGostSchueler e WHERE e.Kommentar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beratungslehrer_ID */
+	public static final String QUERY_BY_BERATUNGSLEHRER_ID = "SELECT e FROM DTOGostSchueler e WHERE e.Beratungslehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beratungslehrer_ID */
+	public static final String QUERY_LIST_BY_BERATUNGSLEHRER_ID = "SELECT e FROM DTOGostSchueler e WHERE e.Beratungslehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefPhase */
+	public static final String QUERY_BY_PRUEFPHASE = "SELECT e FROM DTOGostSchueler e WHERE e.PruefPhase = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefPhase */
+	public static final String QUERY_LIST_BY_PRUEFPHASE = "SELECT e FROM DTOGostSchueler e WHERE e.PruefPhase IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BesondereLernleistung_Art */
+	public static final String QUERY_BY_BESONDERELERNLEISTUNG_ART = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Art = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BesondereLernleistung_Art */
+	public static final String QUERY_LIST_BY_BESONDERELERNLEISTUNG_ART = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Art IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BesondereLernleistung_Punkte */
+	public static final String QUERY_BY_BESONDERELERNLEISTUNG_PUNKTE = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BesondereLernleistung_Punkte */
+	public static final String QUERY_LIST_BY_BESONDERELERNLEISTUNG_PUNKTE = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte IN ?1";
 
 	/** Gymnasiale Oberstufe - Schülerdaten: Die ID des Schülers in der Schülertabelle */
 	@Id

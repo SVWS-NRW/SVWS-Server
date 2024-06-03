@@ -51,7 +51,7 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abijahr, DTOGostJahrgangBeratungslehrer.class);
+		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangBeratungslehrer.class, abijahr);
 		if (dtosBeratungslehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<GostBeratungslehrer> daten = getBeratungslehrer(conn, dtosBeratungslehrer);
@@ -86,7 +86,7 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 		if ((dtosBeratungslehrer == null) || (dtosBeratungslehrer.isEmpty()))
 			return Collections.emptyList();
 		final List<Long> lehrerIDs = dtosBeratungslehrer.stream().map(l -> l.Lehrer_ID).toList();
-		final Map<Long, DTOLehrer> dtosLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrerIDs, DTOLehrer.class)
+		final Map<Long, DTOLehrer> dtosLehrer = conn.queryByKeyList(DTOLehrer.class, lehrerIDs)
 				.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		final ArrayList<GostBeratungslehrer> result = new ArrayList<>();
 		for (final DTOGostJahrgangBeratungslehrer dto : dtosBeratungslehrer)

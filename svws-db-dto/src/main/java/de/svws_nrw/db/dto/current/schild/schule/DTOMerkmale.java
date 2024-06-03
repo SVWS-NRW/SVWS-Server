@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,22 +26,50 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@NamedQuery(name = "DTOMerkmale.all", query = "SELECT e FROM DTOMerkmale e")
-@NamedQuery(name = "DTOMerkmale.id", query = "SELECT e FROM DTOMerkmale e WHERE e.ID = :value")
-@NamedQuery(name = "DTOMerkmale.id.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOMerkmale.schule", query = "SELECT e FROM DTOMerkmale e WHERE e.Schule = :value")
-@NamedQuery(name = "DTOMerkmale.schule.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Schule IN :value")
-@NamedQuery(name = "DTOMerkmale.schueler", query = "SELECT e FROM DTOMerkmale e WHERE e.Schueler = :value")
-@NamedQuery(name = "DTOMerkmale.schueler.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Schueler IN :value")
-@NamedQuery(name = "DTOMerkmale.kurztext", query = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext = :value")
-@NamedQuery(name = "DTOMerkmale.kurztext.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext IN :value")
-@NamedQuery(name = "DTOMerkmale.langtext", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext = :value")
-@NamedQuery(name = "DTOMerkmale.langtext.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext IN :value")
-@NamedQuery(name = "DTOMerkmale.primaryKeyQuery", query = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOMerkmale.all.migration", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext"})
 public final class DTOMerkmale {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOMerkmale e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOMerkmale e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schule */
+	public static final String QUERY_BY_SCHULE = "SELECT e FROM DTOMerkmale e WHERE e.Schule = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schule */
+	public static final String QUERY_LIST_BY_SCHULE = "SELECT e FROM DTOMerkmale e WHERE e.Schule IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler */
+	public static final String QUERY_BY_SCHUELER = "SELECT e FROM DTOMerkmale e WHERE e.Schueler = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler */
+	public static final String QUERY_LIST_BY_SCHUELER = "SELECT e FROM DTOMerkmale e WHERE e.Schueler IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
+	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
+	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Langtext */
+	public static final String QUERY_BY_LANGTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Langtext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Langtext */
+	public static final String QUERY_LIST_BY_LANGTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Langtext IN ?1";
 
 	/** ID des Merkmals das an der Schule vorhanden ist */
 	@Id

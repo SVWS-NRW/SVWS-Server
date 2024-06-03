@@ -330,13 +330,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
-				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
+				.queryList(DTOGostJahrgangFachkombinationen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachkombinationen.class, abidaten.abiturjahr);
 		if (kombis == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 		if (jahrgangsdaten == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG,
+				DTOGostJahrgangBeratungslehrer.class, abidaten.abiturjahr);
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -432,7 +433,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response exportGZip(final List<Long> ids) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final List<DTOSchueler> dtos = conn.queryNamed("DTOSchueler.primaryKeyQuery.multiple", ids, DTOSchueler.class);
+		final List<DTOSchueler> dtos = conn.queryByKeyList(DTOSchueler.class, ids);
 		if (dtos.size() != ids.size())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final String zipname = "Laufbahnplanungen.zip";
@@ -965,7 +966,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
 			return Response.status(Status.NO_CONTENT).build();
 		}
-		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", idSchueler, DTOGostSchuelerFachbelegungen.class);
+		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, idSchueler);
 		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen) {
 			fw.AbiturFach = null;
 			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id])

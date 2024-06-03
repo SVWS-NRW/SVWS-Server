@@ -67,7 +67,7 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	public static List<LehrerPersonalabschnittsdatenLehrerfunktion> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenLehrerfunktion> result = new ArrayList<>();
     	// Bestimme die Lehrerfunktionen für die Lehrerabschnittsdaten
-		final List<DTOLehrerFunktion> dtos = conn.queryNamed("DTOLehrerFunktion.abschnitt_id", idLehrerabschnittsdaten, DTOLehrerFunktion.class);
+		final List<DTOLehrerFunktion> dtos = conn.queryList(DTOLehrerFunktion.QUERY_BY_ABSCHNITT_ID, DTOLehrerFunktion.class, idLehrerabschnittsdaten);
     	if (dtos == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu

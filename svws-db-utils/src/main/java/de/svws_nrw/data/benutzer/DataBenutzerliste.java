@@ -65,12 +65,11 @@ public final class DataBenutzerliste extends DataManager<Long> {
 		final DTOBenutzergruppe benutzergruppe = conn.queryByKey(DTOBenutzergruppe.class, id);
 		if (benutzergruppe == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<Long> benutzerIDs = conn
-				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
+		final List<Long> benutzerIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_GRUPPE_ID, DTOBenutzergruppenMitglied.class, benutzergruppe.ID)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
 		final List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.isEmpty())
 		        ? Collections.emptyList()
-		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
+		        : conn.queryList(DTOViewBenutzerdetails.QUERY_LIST_PK, DTOViewBenutzerdetails.class, benutzerIDs);
 		if (benutzer == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle die Benutzerliste und sortiere sie

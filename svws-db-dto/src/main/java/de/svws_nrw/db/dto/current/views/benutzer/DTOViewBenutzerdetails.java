@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,26 +31,65 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "V_BenutzerDetails")
-@NamedQuery(name = "DTOViewBenutzerdetails.all", query = "SELECT e FROM DTOViewBenutzerdetails e")
-@NamedQuery(name = "DTOViewBenutzerdetails.id", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.id.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.credentialid", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.credentialID = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.credentialid.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.credentialID IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.typ", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Typ = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.typ.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Typ IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.typid", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.TypID = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.typid.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.TypID IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.anzeigename", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.AnzeigeName = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.anzeigename.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.AnzeigeName IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.benutzername", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Benutzername = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.benutzername.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Benutzername IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.passwordhash", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.PasswordHash = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.passwordhash.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.PasswordHash IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.istadmin", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.IstAdmin = :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.istadmin.multiple", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.IstAdmin IN :value")
-@NamedQuery(name = "DTOViewBenutzerdetails.primaryKeyQuery", query = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID = ?1")
 @JsonPropertyOrder({"ID", "credentialID", "Typ", "TypID", "AnzeigeName", "Benutzername", "PasswordHash", "IstAdmin"})
 public final class DTOViewBenutzerdetails {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOViewBenutzerdetails e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes credentialID */
+	public static final String QUERY_BY_CREDENTIALID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.credentialID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes credentialID */
+	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.credentialID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Typ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TypID */
+	public static final String QUERY_BY_TYPID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.TypID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TypID */
+	public static final String QUERY_LIST_BY_TYPID = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.TypID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnzeigeName */
+	public static final String QUERY_BY_ANZEIGENAME = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.AnzeigeName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnzeigeName */
+	public static final String QUERY_LIST_BY_ANZEIGENAME = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.AnzeigeName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzername */
+	public static final String QUERY_BY_BENUTZERNAME = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Benutzername = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzername */
+	public static final String QUERY_LIST_BY_BENUTZERNAME = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.Benutzername IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PasswordHash */
+	public static final String QUERY_BY_PASSWORDHASH = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.PasswordHash = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PasswordHash */
+	public static final String QUERY_LIST_BY_PASSWORDHASH = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.PasswordHash IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAdmin */
+	public static final String QUERY_BY_ISTADMIN = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.IstAdmin = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAdmin */
+	public static final String QUERY_LIST_BY_ISTADMIN = "SELECT e FROM DTOViewBenutzerdetails e WHERE e.IstAdmin IN ?1";
 
 	/** Die eindeutige ID des Benutzers */
 	@Id

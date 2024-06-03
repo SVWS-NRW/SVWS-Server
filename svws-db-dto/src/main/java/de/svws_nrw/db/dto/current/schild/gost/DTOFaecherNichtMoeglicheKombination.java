@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "NichtMoeglAbiFachKombi")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.all", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.fach1_id", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.fach1_id.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.fach2_id", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.fach2_id.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.kursart1", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.kursart1.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.kursart2", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.kursart2.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.pk", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.pk.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.sortierung", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.sortierung.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.phase", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Phase = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.phase.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.typ", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Typ = :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.typ.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.primaryKeyQuery", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
-@NamedQuery(name = "DTOFaecherNichtMoeglicheKombination.all.migration", query = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL")
 @JsonPropertyOrder({"Fach1_ID", "Fach2_ID", "Kursart1", "Kursart2", "PK", "Sortierung", "Phase", "Typ"})
 public final class DTOFaecherNichtMoeglicheKombination {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach1_ID */
+	public static final String QUERY_BY_FACH1_ID = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach1_ID */
+	public static final String QUERY_LIST_BY_FACH1_ID = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach2_ID */
+	public static final String QUERY_BY_FACH2_ID = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach2_ID */
+	public static final String QUERY_LIST_BY_FACH2_ID = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart1 */
+	public static final String QUERY_BY_KURSART1 = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart1 */
+	public static final String QUERY_LIST_BY_KURSART1 = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart2 */
+	public static final String QUERY_BY_KURSART2 = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart2 */
+	public static final String QUERY_LIST_BY_KURSART2 = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PK */
+	public static final String QUERY_BY_PK = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PK */
+	public static final String QUERY_LIST_BY_PK = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.PK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Phase */
+	public static final String QUERY_BY_PHASE = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Phase = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Phase */
+	public static final String QUERY_LIST_BY_PHASE = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM DTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN ?1";
 
 	/** FACH1ID für eine nicht mögliche Kombination */
 	@Column(name = "Fach1_ID")

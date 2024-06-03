@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,58 +26,158 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Schule")
-@NamedQuery(name = "MigrationDTOSchuleNRW.all", query = "SELECT e FROM MigrationDTOSchuleNRW e")
-@NamedQuery(name = "MigrationDTOSchuleNRW.id", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.id.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.name", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.name.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformkrz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformkrz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformbez", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulformbez.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.strassenname", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.strassenname.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.hausnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.hausnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.hausnrzusatz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.strasse", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.strasse.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.plz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.plz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.ort", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.ort.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.telefon", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.telefon.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.fax", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.fax.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.email", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.email.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulleiter", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulleiter.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.sortierung", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.sortierung.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.sichtbar", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.sichtbar.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.aenderbar", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.aenderbar.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr_sim", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr_sim.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.kuerzel", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.kuerzel.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.kurzbez", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.kurzbez.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuleNRW.all.migration", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulNr", "Name", "SchulformNr", "SchulformKrz", "SchulformBez", "Strassenname", "HausNr", "HausNrZusatz", "Strasse", "PLZ", "Ort", "Telefon", "Fax", "Email", "Schulleiter", "Sortierung", "Sichtbar", "Aenderbar", "SchulNr_SIM", "Kuerzel", "KurzBez", "SchulnrEigner"})
 public final class MigrationDTOSchuleNRW {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuleNRW e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulNr */
+	public static final String QUERY_BY_SCHULNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulNr */
+	public static final String QUERY_LIST_BY_SCHULNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Name */
+	public static final String QUERY_BY_NAME = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Name */
+	public static final String QUERY_LIST_BY_NAME = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulformNr */
+	public static final String QUERY_BY_SCHULFORMNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulformNr */
+	public static final String QUERY_LIST_BY_SCHULFORMNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulformKrz */
+	public static final String QUERY_BY_SCHULFORMKRZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulformKrz */
+	public static final String QUERY_LIST_BY_SCHULFORMKRZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulformBez */
+	public static final String QUERY_BY_SCHULFORMBEZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulformBez */
+	public static final String QUERY_LIST_BY_SCHULFORMBEZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Strassenname */
+	public static final String QUERY_BY_STRASSENNAME = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Strassenname */
+	public static final String QUERY_LIST_BY_STRASSENNAME = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNr */
+	public static final String QUERY_BY_HAUSNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNr */
+	public static final String QUERY_LIST_BY_HAUSNR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNrZusatz */
+	public static final String QUERY_BY_HAUSNRZUSATZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNrZusatz */
+	public static final String QUERY_LIST_BY_HAUSNRZUSATZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Strasse */
+	public static final String QUERY_BY_STRASSE = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Strasse */
+	public static final String QUERY_LIST_BY_STRASSE = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort */
+	public static final String QUERY_BY_ORT = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort */
+	public static final String QUERY_LIST_BY_ORT = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Telefon */
+	public static final String QUERY_BY_TELEFON = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Telefon */
+	public static final String QUERY_LIST_BY_TELEFON = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fax */
+	public static final String QUERY_BY_FAX = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fax */
+	public static final String QUERY_LIST_BY_FAX = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulleiter */
+	public static final String QUERY_BY_SCHULLEITER = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulleiter */
+	public static final String QUERY_LIST_BY_SCHULLEITER = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulNr_SIM */
+	public static final String QUERY_BY_SCHULNR_SIM = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulNr_SIM */
+	public static final String QUERY_LIST_BY_SCHULNR_SIM = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KurzBez */
+	public static final String QUERY_BY_KURZBEZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KurzBez */
+	public static final String QUERY_LIST_BY_KURZBEZ = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID des Eintrags der Schulen */
 	@Id

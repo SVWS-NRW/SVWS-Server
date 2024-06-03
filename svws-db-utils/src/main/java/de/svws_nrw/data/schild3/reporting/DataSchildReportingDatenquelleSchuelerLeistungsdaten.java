@@ -36,8 +36,7 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
     @Override
     List<SchildReportingSchuelerLeistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
         // Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
-        final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn
-                .queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", params, DTOSchuelerLernabschnittsdaten.class)
+        final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, params)
                 .stream().collect(Collectors.toMap(a -> a.ID, a -> a));
         for (final Long abschnittID : params)
             if (abschnitte.get(abschnittID) == null)
@@ -47,21 +46,19 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 		final ArrayList<SchildReportingSchuelerLeistungsdaten> result = new ArrayList<>();
 
 		// Aggregiere die benötigten Daten aus der Datenbank
-        final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", params, DTOSchuelerLeistungsdaten.class);
+        final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID,
+        		DTOSchuelerLeistungsdaten.class, params);
         if (leistungsdaten == null || leistungsdaten.isEmpty())
         	return result;
         final List<Long> idFaecher = leistungsdaten.stream().map(l -> l.Fach_ID).distinct().toList();
         final Map<Long, DTOFach> mapFaecher = (idFaecher.isEmpty()) ? Collections.emptyMap()
-        		: conn.queryNamed("DTOFach.id.multiple", idFaecher, DTOFach.class)
-        			.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+        		: conn.queryByKeyList(DTOFach.class, idFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
         final List<Long> idLehrer = leistungsdaten.stream().filter(l -> l.Fachlehrer_ID != null).map(l -> l.Fachlehrer_ID).distinct().toList();
         final Map<Long, DTOLehrer> mapLehrer = (idLehrer.isEmpty()) ? Collections.emptyMap()
-        		: conn.queryNamed("DTOLehrer.id.multiple", idLehrer, DTOLehrer.class)
-        			.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+        		: conn.queryByKeyList(DTOLehrer.class, idLehrer).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
         final List<Long> idKurse = leistungsdaten.stream().filter(l -> l.Kurs_ID != null).map(l -> l.Kurs_ID).distinct().toList();
         final Map<Long, DTOKurs> mapKurse = (idKurse.isEmpty()) ? Collections.emptyMap()
-        		: conn.queryNamed("DTOKurs.id.multiple", idKurse, DTOKurs.class)
-        			.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+        		: conn.queryByKeyList(DTOKurs.class, idKurse).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 
 		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %d konnte nicht für die Leistungsdaten mit der ID %d gefunden werden.";
 

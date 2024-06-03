@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,15 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOGostKlausurenSchuelerklausurenTermineRaumstundenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_SchuelerklausurenTermine_Raumstunden")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.all", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.schuelerklausurtermin_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.schuelerklausurtermin_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.raumstunde_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Raumstunde_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.raumstunde_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Raumstunde_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID = ?1 AND e.Raumstunde_ID = ?2")
-@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermineRaumstunden.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID IS NOT NULL AND e.Raumstunde_ID IS NOT NULL")
 @JsonPropertyOrder({"Schuelerklausurtermin_ID", "Raumstunde_ID"})
 public final class DTOGostKlausurenSchuelerklausurenTermineRaumstunden {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID = ?1 AND e.Raumstunde_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID IS NOT NULL AND e.Raumstunde_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schuelerklausurtermin_ID */
+	public static final String QUERY_BY_SCHUELERKLAUSURTERMIN_ID = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schuelerklausurtermin_ID */
+	public static final String QUERY_LIST_BY_SCHUELERKLAUSURTERMIN_ID = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Raumstunde_ID */
+	public static final String QUERY_BY_RAUMSTUNDE_ID = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Raumstunde_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Raumstunde_ID */
+	public static final String QUERY_LIST_BY_RAUMSTUNDE_ID = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Raumstunde_ID IN ?1";
 
 	/** ID des Schuelerklausurtermins */
 	@Id

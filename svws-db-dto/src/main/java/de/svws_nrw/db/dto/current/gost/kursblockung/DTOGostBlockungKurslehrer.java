@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOGostBlockungKurslehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Kurslehrer")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.all", query = "SELECT e FROM DTOGostBlockungKurslehrer e")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.blockung_kurs_id", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.lehrer_id", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.lehrer_id.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.reihenfolge", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge = :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.reihenfolge.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge IN :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.wochenstunden", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden = :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden IN :value")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name = "DTOGostBlockungKurslehrer.all.migration", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
 @JsonPropertyOrder({"Blockung_Kurs_ID", "Lehrer_ID", "Reihenfolge", "Wochenstunden"})
 public final class DTOGostBlockungKurslehrer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockungKurslehrer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = ?1 AND e.Lehrer_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Blockung_Kurs_ID */
+	public static final String QUERY_BY_BLOCKUNG_KURS_ID = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Blockung_Kurs_ID */
+	public static final String QUERY_LIST_BY_BLOCKUNG_KURS_ID = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Reihenfolge */
+	public static final String QUERY_BY_REIHENFOLGE = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Reihenfolge */
+	public static final String QUERY_LIST_BY_REIHENFOLGE = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochenstunden */
+	public static final String QUERY_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochenstunden */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden IN ?1";
 
 	/** ID des Kurses */
 	@Id

@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,25 +28,59 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @IdClass(DTOGostKlausurenTermineJahrgaengePK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Termine_Jahrgaenge")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.all", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.termin_id", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.abi_jahrgang", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.quartal", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Quartal = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.quartal.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Quartal IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.bezeichnung", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.bezeichnung.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.bemerkungen", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.isthaupttermin", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.IstHaupttermin = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.isthaupttermin.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.IstHaupttermin IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.nachschreiberzugelassen", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.NachschreiberZugelassen = :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.nachschreiberzugelassen.multiple", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.NachschreiberZugelassen IN :value")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID = ?1 AND e.Abi_Jahrgang = ?2")
-@NamedQuery(name = "DTOGostKlausurenTermineJahrgaenge.all.migration", query = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID IS NOT NULL AND e.Abi_Jahrgang IS NOT NULL")
 @JsonPropertyOrder({"Termin_ID", "Abi_Jahrgang", "Quartal", "Bezeichnung", "Bemerkungen", "IstHaupttermin", "NachschreiberZugelassen"})
 public final class DTOGostKlausurenTermineJahrgaenge {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID = ?1 AND e.Abi_Jahrgang = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID IS NOT NULL AND e.Abi_Jahrgang IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Termin_ID */
+	public static final String QUERY_BY_TERMIN_ID = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Termin_ID */
+	public static final String QUERY_LIST_BY_TERMIN_ID = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Termin_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
+	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abi_Jahrgang */
+	public static final String QUERY_LIST_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Quartal */
+	public static final String QUERY_BY_QUARTAL = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Quartal = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Quartal */
+	public static final String QUERY_LIST_BY_QUARTAL = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Quartal IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.Bemerkungen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstHaupttermin */
+	public static final String QUERY_BY_ISTHAUPTTERMIN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.IstHaupttermin = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstHaupttermin */
+	public static final String QUERY_LIST_BY_ISTHAUPTTERMIN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.IstHaupttermin IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NachschreiberZugelassen */
+	public static final String QUERY_BY_NACHSCHREIBERZUGELASSEN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.NachschreiberZugelassen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NachschreiberZugelassen */
+	public static final String QUERY_LIST_BY_NACHSCHREIBERZUGELASSEN = "SELECT e FROM DTOGostKlausurenTermineJahrgaenge e WHERE e.NachschreiberZugelassen IN ?1";
 
 	/** Termin_ID des Klausurtermins */
 	@Id

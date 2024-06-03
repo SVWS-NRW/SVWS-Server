@@ -135,7 +135,7 @@ public final class DBUtilsGost {
 	public static List<DTOSchuelerLernabschnittsdaten> getLernabschnitteFuerGostHalbjahrInAbschnitt(final DBEntityManager conn,
 			final GostHalbjahr halbjahr, final DTOSchuljahresabschnitte abschnitt) {
     	// Bestimme alle Jahrgänge der Schule, welche den passenden ASD-Jahrgang haben
-    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryNamed("DTOJahrgang.asdjahrgang", halbjahr.jahrgang, DTOJahrgang.class);
+    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryList(DTOJahrgang.QUERY_BY_ASDJAHRGANG, DTOJahrgang.class, halbjahr.jahrgang);
     	final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
     	// Bestimme die SchuelerLernabschnitte von Schülern der Stufe
     	return (listJahrgaengeGostIDs.isEmpty()) ? new ArrayList<>()
@@ -201,7 +201,8 @@ public final class DBUtilsGost {
 		if (!lernabschnitte.isEmpty()) {
 			final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnittsdaten = lernabschnitte.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 	    	// Bestimme die Schueler-Leistungsdaten zu den Lernabschnitten
-	    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", mapLernabschnittsdaten.keySet(), DTOSchuelerLeistungsdaten.class);
+	    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID,
+	    			DTOSchuelerLeistungsdaten.class, mapLernabschnittsdaten.keySet());
 	    	// ... und prüfe diese Lernabschnitte, ob sie Einträge für die gymnasiale Oberstufe beinhalten
 	    	for (final DTOSchuelerLeistungsdaten leistung : leistungsdaten) {
 	    		// Prüfe, ob es sich bei den Leistungsdaten um einen Kurs der gymnasialen Oberstufe handelt oder nicht ...
@@ -368,8 +369,8 @@ public final class DBUtilsGost {
 		final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
 		// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
-				.stream()
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
+				DTOSchuelerLernabschnittsdaten.class, id).stream()
 				.sorted((l1, l2) -> {
 					final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 					final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
@@ -412,7 +413,8 @@ public final class DBUtilsGost {
 				continue;
 			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
 				daten.bewertetesHalbjahr[halbjahr.id] = true;
-			final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+			final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
+					DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
 			if (leistungen.isEmpty())
 				daten.bewertetesHalbjahr[halbjahr.id] = false;
 			for (final DTOSchuelerLeistungsdaten leistung : leistungen)
@@ -463,8 +465,8 @@ public final class DBUtilsGost {
 			final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
 			// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
-			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
-					.stream()
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
+					DTOSchuelerLernabschnittsdaten.class, id).stream()
 					.sorted((l1, l2) -> {
 						final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 						final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
@@ -502,7 +504,8 @@ public final class DBUtilsGost {
 				if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
 					daten.bewertetesHalbjahr[halbjahr.id] = true;
 
-				final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+				final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
+						DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
 				if (leistungen.isEmpty())
 					daten.bewertetesHalbjahr[halbjahr.id] = false;
 				for (final DTOSchuelerLeistungsdaten leistung : leistungen)

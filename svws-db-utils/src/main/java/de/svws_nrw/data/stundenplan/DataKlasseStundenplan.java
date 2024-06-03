@@ -113,7 +113,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
 		final Map<Long, StundenplanLehrer> lehrerById = DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
 		final List<DTOStundenplanUnterrichtLehrer> unterrichtLehrerList = unterrichtIds.isEmpty() ? new ArrayList<>()
-				: conn.queryNamed("DTOStundenplanUnterrichtLehrer.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtLehrer.class);
+				: conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtLehrer.class, unterrichtIds);
 		final Map<Long, List<StundenplanLehrer>> lehrerByUnterrichtId = new HashMap<>();
 		unterrichtLehrerList.stream().forEach(ul -> {
 			final List<StundenplanLehrer> listLehrer = lehrerByUnterrichtId.computeIfAbsent(ul.Unterricht_ID, id -> new ArrayList<>());

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessourceCollectionsACL")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.all", query = "SELECT e FROM DTODavRessourceCollectionsACL e")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.benutzer_id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.benutzer_id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.ressourcecollection_id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID = :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.ressourcecollection_id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen = :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen IN :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN :value")
-@NamedQuery(name = "DTODavRessourceCollectionsACL.all.migration", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Benutzer_ID", "RessourceCollection_ID", "berechtigungen"})
 public final class DTODavRessourceCollectionsACL {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTODavRessourceCollectionsACL e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID */
+	public static final String QUERY_BY_BENUTZER_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID */
+	public static final String QUERY_LIST_BY_BENUTZER_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RessourceCollection_ID */
+	public static final String QUERY_BY_RESSOURCECOLLECTION_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RessourceCollection_ID */
+	public static final String QUERY_LIST_BY_RESSOURCECOLLECTION_ID = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes berechtigungen */
+	public static final String QUERY_BY_BERECHTIGUNGEN = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes berechtigungen */
+	public static final String QUERY_LIST_BY_BERECHTIGUNGEN = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen IN ?1";
 
 	/** ID des ACL Eintrags */
 	@Id

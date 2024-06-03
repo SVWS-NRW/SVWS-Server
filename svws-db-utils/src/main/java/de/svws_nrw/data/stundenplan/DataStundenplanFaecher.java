@@ -82,12 +82,12 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		// Bestimme zunächst alle Zeitraster-IDs des Stundenplans
-		final List<Long> zeitrasterIDs = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
+		final List<Long> zeitrasterIDs = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 				.stream().map(z -> z.ID).toList();
 		// Bestimme alle zunächst alle Fächer-IDs der Unterrichte ...
 		List<Long> faecherIDs = new ArrayList<>();
 		if (!zeitrasterIDs.isEmpty())
-			faecherIDs.addAll(conn.queryNamed("DTOStundenplanUnterricht.zeitraster_id.multiple", zeitrasterIDs, DTOStundenplanUnterricht.class)
+			faecherIDs.addAll(conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID, DTOStundenplanUnterricht.class, zeitrasterIDs)
 					.stream().map(u -> u.Fach_ID).filter(f -> f != null).toList());
 		// ... und dann der ggf. noch nicht zugeordneten Kurs- und Klassenunterrichte
 		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
@@ -95,7 +95,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		if (faecherIDs.isEmpty())
 			return new ArrayList<>();
 		// Bestimme nun die Fächer-Daten...
-		final List<DTOFach> faecherListe = conn.queryNamed("DTOFach.id.multiple", faecherIDs, DTOFach.class);
+		final List<DTOFach> faecherListe = conn.queryByKeyList(DTOFach.class, faecherIDs);
 		final ArrayList<StundenplanFach> daten = new ArrayList<>();
 		for (final DTOFach f : faecherListe) {
 			final StundenplanFach fach = dtoMapper.apply(f);

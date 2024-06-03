@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Floskelgruppen")
-@NamedQuery(name = "DTOFloskelgruppen.all", query = "SELECT e FROM DTOFloskelgruppen e")
-@NamedQuery(name = "DTOFloskelgruppen.kuerzel", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOFloskelgruppen.kuerzel.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOFloskelgruppen.hauptgruppe", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Hauptgruppe = :value")
-@NamedQuery(name = "DTOFloskelgruppen.hauptgruppe.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Hauptgruppe IN :value")
-@NamedQuery(name = "DTOFloskelgruppen.bezeichnung", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOFloskelgruppen.bezeichnung.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOFloskelgruppen.farbe", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe = :value")
-@NamedQuery(name = "DTOFloskelgruppen.farbe.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe IN :value")
-@NamedQuery(name = "DTOFloskelgruppen.primaryKeyQuery", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel = ?1")
-@NamedQuery(name = "DTOFloskelgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOFloskelgruppen.all.migration", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "Hauptgruppe", "Bezeichnung", "Farbe"})
 public final class DTOFloskelgruppen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFloskelgruppen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Hauptgruppe */
+	public static final String QUERY_BY_HAUPTGRUPPE = "SELECT e FROM DTOFloskelgruppen e WHERE e.Hauptgruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Hauptgruppe */
+	public static final String QUERY_LIST_BY_HAUPTGRUPPE = "SELECT e FROM DTOFloskelgruppen e WHERE e.Hauptgruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFloskelgruppen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFloskelgruppen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Farbe */
+	public static final String QUERY_BY_FARBE = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Farbe */
+	public static final String QUERY_LIST_BY_FARBE = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe IN ?1";
 
 	/** Kürzel der Floskelgruppe */
 	@Id

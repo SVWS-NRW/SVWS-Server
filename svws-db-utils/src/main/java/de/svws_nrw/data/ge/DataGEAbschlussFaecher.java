@@ -110,13 +110,13 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
     		throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme den Lernabschnitt anhand des angegebenen Schuljahres und des Abschnittes im Schuljahr
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, id)
 				.stream().filter(l -> (l.Schuljahresabschnitts_ID == idAbschnitt)).findFirst().orElse(null);
 		if (lernabschnitt == null)
     		throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme die Leistungsdaten aus dem Lernabschnitt
-		final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+		final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
 		if ((leistungen == null) || (leistungen.isEmpty()))
     		throw new ApiOperationException(Status.NOT_FOUND);
 

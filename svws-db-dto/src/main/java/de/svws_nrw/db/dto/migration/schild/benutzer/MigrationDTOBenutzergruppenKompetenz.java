@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,15 +20,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOBenutzergruppenKompetenzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzergruppenKompetenzen")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.all", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.gruppe_id", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.gruppe_id.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.kompetenz_id", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Kompetenz_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.kompetenz_id.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Kompetenz_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID = ?1 AND e.Kompetenz_ID = ?2")
-@NamedQuery(name = "MigrationDTOBenutzergruppenKompetenz.all.migration", query = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID IS NOT NULL AND e.Kompetenz_ID IS NOT NULL")
 @JsonPropertyOrder({"Gruppe_ID", "Kompetenz_ID"})
 public final class MigrationDTOBenutzergruppenKompetenz {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID = ?1 AND e.Kompetenz_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID IS NOT NULL AND e.Kompetenz_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gruppe_ID */
+	public static final String QUERY_BY_GRUPPE_ID = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gruppe_ID */
+	public static final String QUERY_LIST_BY_GRUPPE_ID = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Gruppe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kompetenz_ID */
+	public static final String QUERY_BY_KOMPETENZ_ID = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Kompetenz_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kompetenz_ID */
+	public static final String QUERY_LIST_BY_KOMPETENZ_ID = "SELECT e FROM MigrationDTOBenutzergruppenKompetenz e WHERE e.Kompetenz_ID IN ?1";
 
 	/** Die ID der Benutzergruppe */
 	@Id

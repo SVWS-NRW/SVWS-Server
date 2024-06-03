@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,98 +26,278 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAbiFaecher")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.all", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.id", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fach_id", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachkuerzel", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachKuerzel = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachkuerzel.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachKuerzel IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachsortierung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachSortierung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachsortierung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachSortierung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.kurs_id", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Kurs_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.kurs_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.kursartallgemein", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.KursartAllgemein = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.kursartallgemein.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.KursartAllgemein IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachlehrer_id", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachlehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.abiturfach", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.AbiturFach = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.abiturfach.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.AbiturFach IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj1_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj1_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj1_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj1_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj2_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj2_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj2_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.ef_hj2_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.facharbeit_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.facharbeit_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.facharbeit_markiertfuerabiturberechnung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.facharbeit_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_wochenstunden", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_wochenstunden.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_markiertfuerabiturberechnung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj1_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_wochenstunden", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_wochenstunden.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_markiertfuerabiturberechnung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q1_hj2_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_wochenstunden", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_wochenstunden.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_markiertfuerabiturberechnung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj1_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_wochenstunden", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_wochenstunden.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_notenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_notenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_markiertfuerabiturberechnung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_markiertfuerabiturberechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_belegungart", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.q2_hj2_belegungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.zulassungpunktsumme", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.zulassungpunktsumme.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.zulassungnotenpunktdurchschnitt", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.zulassungnotenpunktdurchschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungnotenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungnotenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungpunktsummezwischenstand", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungpunktsummezwischenstand.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichabweichung", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichabweichung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichbestehen", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichbestehen.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichfreiwillig", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichfreiwillig.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichnotenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichnotenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichreihenfolge", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungmuendlichreihenfolge.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungpunktsummegesamt", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.pruefungpunktsummegesamt.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachlehrer", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer = :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.fachlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerAbiturFach.all.migration", query = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Fach_ID", "FachKuerzel", "FachSortierung", "Kurs_ID", "KursartAllgemein", "Fachlehrer_ID", "AbiturFach", "EF_HJ1_Notenpunkte", "EF_HJ1_BelegungArt", "EF_HJ2_Notenpunkte", "EF_HJ2_BelegungArt", "Facharbeit_Notenpunkte", "Facharbeit_MarkiertFuerAbiturBerechnung", "Q1_HJ1_Wochenstunden", "Q1_HJ1_Notenpunkte", "-", "Q1_HJ1_MarkiertFuerAbiturBerechnung", "Q1_HJ1_BelegungArt", "Q1_HJ2_Wochenstunden", "Q1_HJ2_Notenpunkte", "-", "Q1_HJ2_MarkiertFuerAbiturBerechnung", "Q1_HJ2_BelegungArt", "Q2_HJ1_Wochenstunden", "Q2_HJ1_Notenpunkte", "-", "Q2_HJ1_MarkiertFuerAbiturBerechnung", "Q2_HJ1_BelegungArt", "Q2_HJ2_Wochenstunden", "Q2_HJ2_Notenpunkte", "-", "Q2_HJ2_MarkiertFuerAbiturBerechnung", "Q2_HJ2_BelegungArt", "ZulassungPunktsumme", "ZulassungNotenpunktdurchschnitt", "PruefungNotenpunkte", "PruefungPunktsummeZwischenstand", "PruefungMuendlichAbweichung", "PruefungMuendlichBestehen", "PruefungMuendlichFreiwillig", "PruefungMuendlichNotenpunkte", "PruefungMuendlichReihenfolge", "PruefungPunktsummeGesamt", "SchulnrEigner", "Fachlehrer"})
 public final class MigrationDTOSchuelerAbiturFach {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerAbiturFach e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachKuerzel */
+	public static final String QUERY_BY_FACHKUERZEL = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachKuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachKuerzel */
+	public static final String QUERY_LIST_BY_FACHKUERZEL = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachKuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachSortierung */
+	public static final String QUERY_BY_FACHSORTIERUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachSortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachSortierung */
+	public static final String QUERY_LIST_BY_FACHSORTIERUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.FachSortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurs_ID */
+	public static final String QUERY_BY_KURS_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Kurs_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurs_ID */
+	public static final String QUERY_LIST_BY_KURS_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Kurs_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KursartAllgemein */
+	public static final String QUERY_BY_KURSARTALLGEMEIN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.KursartAllgemein = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KursartAllgemein */
+	public static final String QUERY_LIST_BY_KURSARTALLGEMEIN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.KursartAllgemein IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer_ID */
+	public static final String QUERY_BY_FACHLEHRER_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer_ID */
+	public static final String QUERY_LIST_BY_FACHLEHRER_ID = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbiturFach */
+	public static final String QUERY_BY_ABITURFACH = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.AbiturFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbiturFach */
+	public static final String QUERY_LIST_BY_ABITURFACH = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.AbiturFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ1_Notenpunkte */
+	public static final String QUERY_BY_EF_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_EF_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ1_BelegungArt */
+	public static final String QUERY_BY_EF_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_EF_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ2_Notenpunkte */
+	public static final String QUERY_BY_EF_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_EF_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EF_HJ2_BelegungArt */
+	public static final String QUERY_BY_EF_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EF_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_EF_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.EF_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Facharbeit_Notenpunkte */
+	public static final String QUERY_BY_FACHARBEIT_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Facharbeit_Notenpunkte */
+	public static final String QUERY_LIST_BY_FACHARBEIT_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Facharbeit_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_FACHARBEIT_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Facharbeit_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_FACHARBEIT_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Facharbeit_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_Wochenstunden */
+	public static final String QUERY_BY_Q1_HJ1_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q1_HJ1_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_Notenpunkte */
+	public static final String QUERY_BY_Q1_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q1_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q1_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q1_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ1_BelegungArt */
+	public static final String QUERY_BY_Q1_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_Q1_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_Wochenstunden */
+	public static final String QUERY_BY_Q1_HJ2_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q1_HJ2_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_Notenpunkte */
+	public static final String QUERY_BY_Q1_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q1_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q1_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q1_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q1_HJ2_BelegungArt */
+	public static final String QUERY_BY_Q1_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q1_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_Q1_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q1_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_Wochenstunden */
+	public static final String QUERY_BY_Q2_HJ1_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q2_HJ1_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_Notenpunkte */
+	public static final String QUERY_BY_Q2_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q2_HJ1_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q2_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q2_HJ1_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ1_BelegungArt */
+	public static final String QUERY_BY_Q2_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ1_BelegungArt */
+	public static final String QUERY_LIST_BY_Q2_HJ1_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ1_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_Wochenstunden */
+	public static final String QUERY_BY_Q2_HJ2_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_Wochenstunden */
+	public static final String QUERY_LIST_BY_Q2_HJ2_WOCHENSTUNDEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Wochenstunden IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_Notenpunkte */
+	public static final String QUERY_BY_Q2_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_Notenpunkte */
+	public static final String QUERY_LIST_BY_Q2_HJ2_NOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_Notenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_BY_Q2_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_MarkiertFuerAbiturBerechnung */
+	public static final String QUERY_LIST_BY_Q2_HJ2_MARKIERTFUERABITURBERECHNUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_MarkiertFuerAbiturBerechnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Q2_HJ2_BelegungArt */
+	public static final String QUERY_BY_Q2_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Q2_HJ2_BelegungArt */
+	public static final String QUERY_LIST_BY_Q2_HJ2_BELEGUNGART = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Q2_HJ2_BelegungArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungPunktsumme */
+	public static final String QUERY_BY_ZULASSUNGPUNKTSUMME = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungPunktsumme */
+	public static final String QUERY_LIST_BY_ZULASSUNGPUNKTSUMME = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungPunktsumme IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungNotenpunktdurchschnitt */
+	public static final String QUERY_BY_ZULASSUNGNOTENPUNKTDURCHSCHNITT = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungNotenpunktdurchschnitt */
+	public static final String QUERY_LIST_BY_ZULASSUNGNOTENPUNKTDURCHSCHNITT = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.ZulassungNotenpunktdurchschnitt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungNotenpunkte */
+	public static final String QUERY_BY_PRUEFUNGNOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungNotenpunkte */
+	public static final String QUERY_LIST_BY_PRUEFUNGNOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungNotenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungPunktsummeZwischenstand */
+	public static final String QUERY_BY_PRUEFUNGPUNKTSUMMEZWISCHENSTAND = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungPunktsummeZwischenstand */
+	public static final String QUERY_LIST_BY_PRUEFUNGPUNKTSUMMEZWISCHENSTAND = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeZwischenstand IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichAbweichung */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHABWEICHUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichAbweichung */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHABWEICHUNG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichAbweichung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichBestehen */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHBESTEHEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichBestehen */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHBESTEHEN = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichBestehen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichFreiwillig */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHFREIWILLIG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichFreiwillig */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHFREIWILLIG = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichFreiwillig IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichNotenpunkte */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHNOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichNotenpunkte */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHNOTENPUNKTE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichNotenpunkte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungMuendlichReihenfolge */
+	public static final String QUERY_BY_PRUEFUNGMUENDLICHREIHENFOLGE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungMuendlichReihenfolge */
+	public static final String QUERY_LIST_BY_PRUEFUNGMUENDLICHREIHENFOLGE = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungMuendlichReihenfolge IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PruefungPunktsummeGesamt */
+	public static final String QUERY_BY_PRUEFUNGPUNKTSUMMEGESAMT = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PruefungPunktsummeGesamt */
+	public static final String QUERY_LIST_BY_PRUEFUNGPUNKTSUMMEGESAMT = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.PruefungPunktsummeGesamt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer */
+	public static final String QUERY_BY_FACHLEHRER = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer */
+	public static final String QUERY_LIST_BY_FACHLEHRER = "SELECT e FROM MigrationDTOSchuelerAbiturFach e WHERE e.Fachlehrer IN ?1";
 
 	/** Eine eindeutige ID für die Abitur-Fach-Informationen des Schülers */
 	@Id

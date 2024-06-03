@@ -1,5 +1,6 @@
 package de.svws_nrw.db;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,6 +18,7 @@ import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
@@ -1072,20 +1074,26 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
-	 * Erstellt eine Query für eine Liste aller DTOs anhand des Namens des übergebenen
-	 * Attributes der DTO-Klasse und eines Wertes für dieses Attribut.
+	 * Bestimmt den Query-String aus dem angebenen Attribut der DTO-Klasse
 	 *
-	 * @param <T>     die Klasse des Ergebnistyps
-	 * @param name    der Name der JPQL-Anfrage
-	 * @param value   der Wert des Attributes, für welchen die Query ausgeführt wird.
-	 * @param cl      das Klassen-Objekt für den Ergebnistyp
+	 * @param <T>              der Typ der DTO-Klasse
+	 * @param cl               die Klasse des DTOs
+	 * @param queryAttribute   das auszulesende Attribut der DTO-Klasse mit dem Query-String
 	 *
-	 * @return die Anfrage als {@link TypedQuery}
+	 * @return der Query-String
 	 */
-	public <T> List<T> queryNamed(final String name, final Object value, final Class<T> cl) {
-		return em.createNamedQuery(name, cl).setParameter("value", value).getResultList();
+	private static <T> String getQueryString(final Class<T> cl, final String queryAttribute) {
+		try {
+			final Field f = cl.getField(queryAttribute);
+			final Object obj = f.get(null);
+			if (obj instanceof final String s)
+				return s;
+			throw new NoSuchFieldException("Das angeforderte Attribut für die Query ist nicht vom Typ String.");
+		} catch (final Exception e) {
+			e.printStackTrace();
+			throw new DeveloperNotificationException("Der Datenbankzugriff ist fehlgeschlagen, da das Query-Attribut " + queryAttribute + " bei der Klasse " + cl.getCanonicalName() + " nicht vorhanden ist.");
+		}
 	}
-
 
 
 	/**
@@ -1098,9 +1106,22 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return die Liste mit den einzelnen Datensätzen
 	 */
 	public <T> List<T> queryAll(final Class<T> cl) {
-		return queryNamed(cl.getSimpleName() + ".all", cl).getResultList();
+		return queryList(getQueryString(cl, "QUERY_ALL"), cl);
 	}
 
+
+	/**
+	 * Stellt eine Datenbank-Anfrage für alle Datensätze vom angegebenen DTO-Typ
+     * und gibt eine Liste dieser Daten zurück.
+	 *
+	 * @param <T>     die DTO-Klasse
+	 * @param cl      das Klassen-Objekt für die DTO-Klasse
+	 *
+	 * @return die Liste mit den einzelnen Datensätzen
+	 */
+	public <T> List<T> migrationQueryAll(final Class<T> cl) {
+		return queryList(getQueryString(cl, "QUERY_MIGRATION_ALL"), cl);
+	}
 
 
 	/**
@@ -1133,11 +1154,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return der erste Datensatz oder null
 	 */
 	public <T> T queryByKey(final Class<T> cl, final Object... id) {
-		TypedQuery<T> q = queryNamed(cl.getSimpleName() + ".primaryKeyQuery", cl);
-		for (int i = 0; i < id.length; i++) {
-			q = q.setParameter(i + 1, id[i]);
-		}
-		final List<T> entries = q.getResultList();
+		final List<T> entries = queryList(getQueryString(cl, "QUERY_PK"), cl, id);
 		if (entries.isEmpty())
 			return null;
 		return entries.get(0);
@@ -1156,10 +1173,10 @@ public final class DBEntityManager implements AutoCloseable {
 	 *
 	 * @return doe Liste mit den Datensätzen
 	 */
-	public <T> List<T> queryByKeyList(final Class<T> cl, final List<?> ids) {
-		if (ids.isEmpty())
+	public <T> List<T> queryByKeyList(final Class<T> cl, final Collection<?> ids) {
+		if (ids == null || ids.isEmpty())
 			return new ArrayList<>();
-		return queryNamed(cl.getSimpleName() + ".primaryKeyQuery.multiple", ids, cl);
+		return queryList(getQueryString(cl, "QUERY_LIST_PK"), cl, ids);
 	}
 
 

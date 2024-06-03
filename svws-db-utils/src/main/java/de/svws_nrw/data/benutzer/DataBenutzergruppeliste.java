@@ -57,15 +57,12 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
      */
     public Response getBenutzergruppenMitBenutzerID(final Long id) {
         // Lese die Informationen zu den Gruppen ein
-        final List<Long> gruppenIDs = conn
-                .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
+        final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
                 .map(g -> g.Gruppe_ID).toList();
         final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
-                : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
-
+                : conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
         // Erstelle die Benutzerliste und sortiere sie
-     // Erstelle die Benutzerliste und sortiere sie
         final List<BenutzergruppeListeEintrag> daten = gruppen.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,34 +18,86 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "AllgAdrAnsprechpartner")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.all", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.name", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.name.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.email", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.email.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.titel", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.titel.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Adresse_ID", "Name", "Vorname", "Anrede", "Telefon", "Email", "Abteilung", "SchulnrEigner", "Titel", "GU_ID"})
 public final class MigrationDTOAnsprechpartnerAllgemeineAdresse {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Adresse_ID */
+	public static final String QUERY_BY_ADRESSE_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Adresse_ID */
+	public static final String QUERY_LIST_BY_ADRESSE_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Name */
+	public static final String QUERY_BY_NAME = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Name */
+	public static final String QUERY_LIST_BY_NAME = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Vorname */
+	public static final String QUERY_BY_VORNAME = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Vorname */
+	public static final String QUERY_LIST_BY_VORNAME = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Anrede */
+	public static final String QUERY_BY_ANREDE = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Anrede */
+	public static final String QUERY_LIST_BY_ANREDE = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Telefon */
+	public static final String QUERY_BY_TELEFON = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Telefon */
+	public static final String QUERY_LIST_BY_TELEFON = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abteilung */
+	public static final String QUERY_BY_ABTEILUNG = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abteilung */
+	public static final String QUERY_LIST_BY_ABTEILUNG = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Titel */
+	public static final String QUERY_BY_TITEL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Titel */
+	public static final String QUERY_LIST_BY_TITEL = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GU_ID */
+	public static final String QUERY_BY_GU_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GU_ID */
+	public static final String QUERY_LIST_BY_GU_ID = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN ?1";
 
 	/** ID des Ansprechpartners der Tabelle AllgAdresse (Betriebe) */
 	@Id

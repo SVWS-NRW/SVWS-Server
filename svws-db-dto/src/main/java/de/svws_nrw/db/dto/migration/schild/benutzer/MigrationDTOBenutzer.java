@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzer")
-@NamedQuery(name = "MigrationDTOBenutzer.all", query = "SELECT e FROM MigrationDTOBenutzer e")
-@NamedQuery(name = "MigrationDTOBenutzer.id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.typ", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.typ.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.allgemein_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.allgemein_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.lehrer_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.schueler_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.schueler_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.erzieher_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.erzieher_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.istadmin", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin = :value")
-@NamedQuery(name = "MigrationDTOBenutzer.istadmin.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOBenutzer.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzer.all.migration", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Typ", "Allgemein_ID", "Lehrer_ID", "Schueler_ID", "Erzieher_ID", "IstAdmin"})
 public final class MigrationDTOBenutzer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOBenutzer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Allgemein_ID */
+	public static final String QUERY_BY_ALLGEMEIN_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Allgemein_ID */
+	public static final String QUERY_LIST_BY_ALLGEMEIN_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Erzieher_ID */
+	public static final String QUERY_BY_ERZIEHER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Erzieher_ID */
+	public static final String QUERY_LIST_BY_ERZIEHER_ID = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAdmin */
+	public static final String QUERY_BY_ISTADMIN = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAdmin */
+	public static final String QUERY_LIST_BY_ISTADMIN = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin IN ?1";
 
 	/** Die ID des Benutzers */
 	@Id

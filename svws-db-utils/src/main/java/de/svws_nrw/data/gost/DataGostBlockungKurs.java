@@ -103,7 +103,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    if (schienenAnzahl == kurs.Schienenanzahl)
 	    	return;
 	    // Bestimme die Schienen der Blockung und sortiere die nach der Schienennummer
-	    List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", kurs.Blockung_ID, DTOGostBlockungSchiene.class);
+	    List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, kurs.Blockung_ID);
 	    if ((schienenAnzahl < 1) || (schienenAnzahl > schienen.size()))
 	    	throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl der Schienen für den Kurs ist entweder < 1 oder größer als die Anzahl der verfügbaren Schienen.");
 	    // Bestimme die aktuelle Schienenzuordnungen des Kurses
@@ -343,15 +343,16 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		// Passe nun die zugeordneten Schienen an und ordne die Hälfte der Schüler dem zweiten Kurs zu
-		final List<DTOGostBlockungZwischenergebnisKursSchiene> schienen = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchiene> schienen = conn.queryList(
+				DTOGostBlockungZwischenergebnisKursSchiene.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungZwischenergebnisKursSchiene.class, kurs.ID);
 		for (final DTOGostBlockungZwischenergebnisKursSchiene schiene : schienen)
 			conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(schiene.Zwischenergebnis_ID, kursNeu.ID, schiene.Schienen_ID));
 		conn.transactionFlush();
-		final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryList(
+				DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungZwischenergebnisKursSchueler.class, kurs.ID);
 		final Map<Long, DTOGostBlockungZwischenergebnisKursSchueler> mapKursSchueler = schuelerListe.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.Schueler_ID).toList();
-		final List<DTOSchueler> listSchuelerDTOs = schuelerIDs.isEmpty() ? new ArrayList<>()
-				: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+		final List<DTOSchueler> listSchuelerDTOs = schuelerIDs.isEmpty() ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		final Map<Long, DTOSchueler> mapSchuelerDTOs = listSchuelerDTOs.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (int i = 0; i < schuelerListe.size(); i++) { // Prüfe die Konsistenz der Daten in der Datenbank
 			final DTOGostBlockungZwischenergebnisKursSchueler schueler = schuelerListe.get(i);
@@ -415,7 +416,8 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
         if (vorlage == null)
         	throw new ApiOperationException(Status.BAD_REQUEST, "Der Kurs kann nicht aufgeteilt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 		// Verschiebe die Schüler des zweiten Kurses in den ersten Kurs
-		final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs2.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+		final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryList(
+				DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungZwischenergebnisKursSchueler.class, kurs2.ID);
 		for (final DTOGostBlockungZwischenergebnisKursSchueler schueler : schuelerListe) {
 			conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(schueler.Zwischenergebnis_ID, kurs1.ID, schueler.Schueler_ID));
 			conn.transactionFlush();

@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,24 +18,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schulleitung")
-@NamedQuery(name = "MigrationDTOSchulleitung.all", query = "SELECT e FROM MigrationDTOSchulleitung e")
-@NamedQuery(name = "MigrationDTOSchulleitung.id", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.id.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.leitungsfunktionid", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LeitungsfunktionID = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.leitungsfunktionid.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LeitungsfunktionID IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.funktionstext", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Funktionstext = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.funktionstext.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Funktionstext IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.lehrerid", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LehrerID = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.lehrerid.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LehrerID IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.von", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Von = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.von.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Von IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.bis", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Bis = :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.bis.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Bis IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchulleitung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchulleitung.all.migration", query = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "LeitungsfunktionID", "Funktionstext", "LehrerID", "Von", "Bis"})
 public final class MigrationDTOSchulleitung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchulleitung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LeitungsfunktionID */
+	public static final String QUERY_BY_LEITUNGSFUNKTIONID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LeitungsfunktionID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LeitungsfunktionID */
+	public static final String QUERY_LIST_BY_LEITUNGSFUNKTIONID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LeitungsfunktionID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Funktionstext */
+	public static final String QUERY_BY_FUNKTIONSTEXT = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Funktionstext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Funktionstext */
+	public static final String QUERY_LIST_BY_FUNKTIONSTEXT = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Funktionstext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrerID */
+	public static final String QUERY_BY_LEHRERID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LehrerID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrerID */
+	public static final String QUERY_LIST_BY_LEHRERID = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.LehrerID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Von */
+	public static final String QUERY_BY_VON = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Von = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Von */
+	public static final String QUERY_LIST_BY_VON = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Von IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bis */
+	public static final String QUERY_BY_BIS = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Bis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bis */
+	public static final String QUERY_LIST_BY_BIS = "SELECT e FROM MigrationDTOSchulleitung e WHERE e.Bis IN ?1";
 
 	/** ID der Schulleitungsfunktionseintrags */
 	@Id

@@ -130,7 +130,7 @@ public final class DataKursdaten extends DataManager<Long> {
 		final List<DTOKursSchueler> listKursSchueler = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
     	final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
-    			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+    			: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		for (final DTOSchueler dto : listSchueler)
 			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		return daten;

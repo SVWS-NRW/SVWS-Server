@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Textdateien")
-@NamedQuery(name = "DTOTextDateien.all", query = "SELECT e FROM DTOTextDateien e")
-@NamedQuery(name = "DTOTextDateien.id", query = "SELECT e FROM DTOTextDateien e WHERE e.ID = :value")
-@NamedQuery(name = "DTOTextDateien.id.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOTextDateien.bezeichnung", query = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOTextDateien.bezeichnung.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOTextDateien.text_id", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID = :value")
-@NamedQuery(name = "DTOTextDateien.text_id.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID IN :value")
-@NamedQuery(name = "DTOTextDateien.text_body", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body = :value")
-@NamedQuery(name = "DTOTextDateien.text_body.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body IN :value")
-@NamedQuery(name = "DTOTextDateien.sichtbar", query = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOTextDateien.sichtbar.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOTextDateien.sortierung", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOTextDateien.sortierung.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOTextDateien.primaryKeyQuery", query = "SELECT e FROM DTOTextDateien e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOTextDateien.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOTextDateien.all.migration", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Text_ID", "Text_Body", "Sichtbar", "Sortierung"})
 public final class DTOTextDateien {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOTextDateien e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOTextDateien e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOTextDateien e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOTextDateien e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOTextDateien e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOTextDateien e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Text_ID */
+	public static final String QUERY_BY_TEXT_ID = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Text_ID */
+	public static final String QUERY_LIST_BY_TEXT_ID = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Text_Body */
+	public static final String QUERY_BY_TEXT_BODY = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Text_Body */
+	public static final String QUERY_LIST_BY_TEXT_BODY = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung IN ?1";
 
 	/** ID des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Id

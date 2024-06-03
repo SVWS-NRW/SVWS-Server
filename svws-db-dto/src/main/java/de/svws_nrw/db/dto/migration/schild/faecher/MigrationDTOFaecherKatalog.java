@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,44 +26,116 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "FachKatalog")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.all", query = "SELECT e FROM MigrationDTOFaecherKatalog e")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.id", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.id.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzelasd", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzelasd.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.bezeichnung", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzel", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.aufgabenfeld", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.aufgabenfeld.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.fachgruppe", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.fachgruppe.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.jahrgangab", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.jahrgangab.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istfremdsprache", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istfremdsprache.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.isthkfs", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.isthkfs.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istausregufach", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istausregufach.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istersatzpflichtfs", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istersatzpflichtfs.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istkonfkoop", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.istkonfkoop.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.nursii", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.nursii.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.exportasd", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.exportasd.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigvon", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis = :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOFaecherKatalog.all.migration", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "KuerzelASD", "Bezeichnung", "Kuerzel", "Aufgabenfeld", "Fachgruppe", "JahrgangAb", "IstFremdsprache", "IstHKFS", "IstAusRegUFach", "IstErsatzPflichtFS", "IstKonfKoop", "NurSII", "ExportASD", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOFaecherKatalog {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOFaecherKatalog e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KuerzelASD */
+	public static final String QUERY_BY_KUERZELASD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KuerzelASD */
+	public static final String QUERY_LIST_BY_KUERZELASD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aufgabenfeld */
+	public static final String QUERY_BY_AUFGABENFELD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aufgabenfeld */
+	public static final String QUERY_LIST_BY_AUFGABENFELD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachgruppe */
+	public static final String QUERY_BY_FACHGRUPPE = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachgruppe */
+	public static final String QUERY_LIST_BY_FACHGRUPPE = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes JahrgangAb */
+	public static final String QUERY_BY_JAHRGANGAB = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes JahrgangAb */
+	public static final String QUERY_LIST_BY_JAHRGANGAB = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstFremdsprache */
+	public static final String QUERY_BY_ISTFREMDSPRACHE = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstFremdsprache */
+	public static final String QUERY_LIST_BY_ISTFREMDSPRACHE = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstHKFS */
+	public static final String QUERY_BY_ISTHKFS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstHKFS */
+	public static final String QUERY_LIST_BY_ISTHKFS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstAusRegUFach */
+	public static final String QUERY_BY_ISTAUSREGUFACH = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstAusRegUFach */
+	public static final String QUERY_LIST_BY_ISTAUSREGUFACH = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstErsatzPflichtFS */
+	public static final String QUERY_BY_ISTERSATZPFLICHTFS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstErsatzPflichtFS */
+	public static final String QUERY_LIST_BY_ISTERSATZPFLICHTFS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstKonfKoop */
+	public static final String QUERY_BY_ISTKONFKOOP = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstKonfKoop */
+	public static final String QUERY_LIST_BY_ISTKONFKOOP = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NurSII */
+	public static final String QUERY_BY_NURSII = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NurSII */
+	public static final String QUERY_LIST_BY_NURSII = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ExportASD */
+	public static final String QUERY_BY_EXPORTASD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ExportASD */
+	public static final String QUERY_LIST_BY_EXPORTASD = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis IN ?1";
 
 	/** ID des Faches */
 	@Id

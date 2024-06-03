@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOGostKlausurenNtaZeitenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_NtaZeiten")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.all", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.schueler_id", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.schueler_id.multiple", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.vorgabe_id", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Vorgabe_ID = :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.vorgabe_id.multiple", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Vorgabe_ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.zeitzugabe", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Zeitzugabe = :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.zeitzugabe.multiple", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Zeitzugabe IN :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.bemerkungen", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID = ?1 AND e.Vorgabe_ID = ?2")
-@NamedQuery(name = "DTOGostKlausurenNtaZeiten.all.migration", query = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID IS NOT NULL AND e.Vorgabe_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Vorgabe_ID", "Zeitzugabe", "Bemerkungen"})
 public final class DTOGostKlausurenNtaZeiten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenNtaZeiten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID = ?1 AND e.Vorgabe_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID IS NOT NULL AND e.Vorgabe_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Vorgabe_ID */
+	public static final String QUERY_BY_VORGABE_ID = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Vorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Vorgabe_ID */
+	public static final String QUERY_LIST_BY_VORGABE_ID = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Vorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeitzugabe */
+	public static final String QUERY_BY_ZEITZUGABE = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Zeitzugabe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeitzugabe */
+	public static final String QUERY_LIST_BY_ZEITZUGABE = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Zeitzugabe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenNtaZeiten e WHERE e.Bemerkungen IN ?1";
 
 	/** ID des Schülers */
 	@Id

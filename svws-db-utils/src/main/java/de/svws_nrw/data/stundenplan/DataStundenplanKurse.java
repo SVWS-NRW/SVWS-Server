@@ -80,7 +80,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class);
+		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, stundenplan.Schuljahresabschnitts_ID);
 		if (kurse.isEmpty())
 			return new ArrayList<>();
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
@@ -88,15 +88,15 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
 		// Lehrer bestimmen
-		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryNamed("DTOKursLehrer.kurs_id.multiple", kursIDs, DTOKursLehrer.class)
+		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryList(DTOKursLehrer.QUERY_LIST_BY_KURS_ID, DTOKursLehrer.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Lehrer_ID, Collectors.toList())));
 		// Fächer bestimmen
 		final List<Long> faecherIDs = kurse.stream().map(k -> k.Fach_ID).toList();
-		final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecherIDs, DTOFach.class).stream()
-				.collect(Collectors.toMap(f -> f.ID, f -> f));
+		final Map<Long, DTOFach> mapFaecher = conn.queryByKeyList(DTOFach.class, faecherIDs).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		// Map für Schienen-IDs bestimmen
-		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", idStundenplan, DTOStundenplanSchienen.class)
-				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
+		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID,
+				DTOStundenplanSchienen.class, idStundenplan).stream()
+				.collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Erstelle die Core-DTOs
 		final ArrayList<StundenplanKurs> daten = new ArrayList<>();
 		for (final DTOKurs k : kurse) {
@@ -178,8 +178,9 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			jahrgangsIDs.add(kurs.Jahrgang_ID);
 		}
 		// Schienen-IDs bestimmen
-		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", stundenplan.ID, DTOStundenplanSchienen.class)
-				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
+		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID,
+				DTOStundenplanSchienen.class, stundenplan.ID).stream()
+				.collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Schüler bestimmen
 		final List<Long> schuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kurs.ID)
 				.stream().map(ks -> ks.Schueler_ID).toList();

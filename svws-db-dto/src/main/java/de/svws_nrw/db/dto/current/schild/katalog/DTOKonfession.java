@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,28 +26,68 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Religion")
-@NamedQuery(name = "DTOKonfession.all", query = "SELECT e FROM DTOKonfession e")
-@NamedQuery(name = "DTOKonfession.id", query = "SELECT e FROM DTOKonfession e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKonfession.id.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKonfession.bezeichnung", query = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOKonfession.bezeichnung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOKonfession.statistikkrz", query = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz = :value")
-@NamedQuery(name = "DTOKonfession.statistikkrz.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz IN :value")
-@NamedQuery(name = "DTOKonfession.sortierung", query = "SELECT e FROM DTOKonfession e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOKonfession.sortierung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOKonfession.sichtbar", query = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOKonfession.sichtbar.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOKonfession.aenderbar", query = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "DTOKonfession.aenderbar.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "DTOKonfession.exportbez", query = "SELECT e FROM DTOKonfession e WHERE e.ExportBez = :value")
-@NamedQuery(name = "DTOKonfession.exportbez.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ExportBez IN :value")
-@NamedQuery(name = "DTOKonfession.zeugnisbezeichnung", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung = :value")
-@NamedQuery(name = "DTOKonfession.zeugnisbezeichnung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung IN :value")
-@NamedQuery(name = "DTOKonfession.primaryKeyQuery", query = "SELECT e FROM DTOKonfession e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKonfession.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKonfession.all.migration", query = "SELECT e FROM DTOKonfession e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar", "ExportBez", "ZeugnisBezeichnung"})
 public final class DTOKonfession {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKonfession e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKonfession e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKonfession e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKonfession e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKonfession e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKonfession e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes StatistikKrz */
+	public static final String QUERY_BY_STATISTIKKRZ = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes StatistikKrz */
+	public static final String QUERY_LIST_BY_STATISTIKKRZ = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKonfession e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKonfession e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ExportBez */
+	public static final String QUERY_BY_EXPORTBEZ = "SELECT e FROM DTOKonfession e WHERE e.ExportBez = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ExportBez */
+	public static final String QUERY_LIST_BY_EXPORTBEZ = "SELECT e FROM DTOKonfession e WHERE e.ExportBez IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZeugnisBezeichnung */
+	public static final String QUERY_BY_ZEUGNISBEZEICHNUNG = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZeugnisBezeichnung */
+	public static final String QUERY_LIST_BY_ZEUGNISBEZEICHNUNG = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung IN ?1";
 
 	/** ID der Religion */
 	@Id

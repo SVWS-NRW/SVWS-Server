@@ -108,7 +108,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	public static List<GostKursklausur> getKursklausurenZuVorgaben(final DBEntityManager conn, final List<GostKlausurvorgabe> vorgaben) throws ApiOperationException {
 		if (vorgaben.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
+		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_VORGABE_ID,
+				DTOGostKlausurenKursklausuren.class, vorgaben.stream().map(v -> v.idVorgabe).toList());
 		return DTOMapper.mapList(kursKlausurDTOs, dtoMapper);
 	}
 
@@ -140,7 +141,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		for (final long idTermin : idsTermin)
 			if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
-		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.termin_id.multiple", idsTermin, DTOGostKlausurenKursklausuren.class);
+		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_TERMIN_ID,
+				DTOGostKlausurenKursklausuren.class, idsTermin);
 		return DTOMapper.mapList(kursKlausurDTOs, dtoMapper);
 	}
 
@@ -189,7 +191,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	public static List<DTOGostKlausurenKursklausuren> getKursklausurenDTOsZuIds(final DBEntityManager conn, final List<Long> kkids) throws ApiOperationException {
 		if (kkids.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenKursklausuren> kks = conn.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", kkids,	DTOGostKlausurenKursklausuren.class);
+		final List<DTOGostKlausurenKursklausuren> kks = conn.queryByKeyList(DTOGostKlausurenKursklausuren.class, kkids);
 		if (kks.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Kursklausur-DTOs zu IDs nicht gefunden.");
 		return kks;
@@ -396,15 +398,14 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 
-		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.id).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
-				.collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
-		if (mapSchuelerklausuren.isEmpty()) {
+		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn.queryList(
+				DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID, DTOGostKlausurenSchuelerklausuren.class,
+						kursklausuren.stream().map(k -> k.id).toList()).stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
+		if (mapSchuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		}
 
 		final List<Long> kursIDs = kursklausuren.stream().map(k -> k.idKurs).distinct().toList();
-		final Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+		final Map<Long, DTOKurs> mapKurse = conn.queryByKeyList(DTOKurs.class, kursIDs).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 
 		for (final var k : kursklausuren) {
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(k.idVorgabe);

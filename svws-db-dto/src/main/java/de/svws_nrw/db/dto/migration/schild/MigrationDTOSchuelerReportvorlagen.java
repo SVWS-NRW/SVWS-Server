@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOSchuelerReportvorlagenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerReportvorlagen")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.all", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.user_id", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.user_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.reportvorlage", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage = :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.reportvorlage.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schueler_ids", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schueler_ids.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2")
-@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.all.migration", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL")
 @JsonPropertyOrder({"User_ID", "SchulnrEigner", "Reportvorlage", "Schueler_IDs"})
 public final class MigrationDTOSchuelerReportvorlagen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes User_ID */
+	public static final String QUERY_BY_USER_ID = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes User_ID */
+	public static final String QUERY_LIST_BY_USER_ID = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Reportvorlage */
+	public static final String QUERY_BY_REPORTVORLAGE = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Reportvorlage */
+	public static final String QUERY_LIST_BY_REPORTVORLAGE = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_IDs */
+	public static final String QUERY_BY_SCHUELER_IDS = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_IDs */
+	public static final String QUERY_LIST_BY_SCHUELER_IDS = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN ?1";
 
 	/** UserID des Users der die zugeordneten Reportvorlagen druckt */
 	@Id

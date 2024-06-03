@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,28 +26,68 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerVermerke")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.all", query = "SELECT e FROM MigrationDTOSchuelerVermerke e")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.vermerkart_id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.vermerkart_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.datum", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.bemerkung", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.bemerkung.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.angelegtvon", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.angelegtvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.geaendertvon", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon = :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.geaendertvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerVermerke.all.migration", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "VermerkArt_ID", "Datum", "Bemerkung", "SchulnrEigner", "AngelegtVon", "GeaendertVon"})
 public final class MigrationDTOSchuelerVermerke {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerVermerke e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VermerkArt_ID */
+	public static final String QUERY_BY_VERMERKART_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VermerkArt_ID */
+	public static final String QUERY_LIST_BY_VERMERKART_ID = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Datum */
+	public static final String QUERY_BY_DATUM = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Datum */
+	public static final String QUERY_LIST_BY_DATUM = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AngelegtVon */
+	public static final String QUERY_BY_ANGELEGTVON = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AngelegtVon */
+	public static final String QUERY_LIST_BY_ANGELEGTVON = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GeaendertVon */
+	public static final String QUERY_BY_GEAENDERTVON = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GeaendertVon */
+	public static final String QUERY_LIST_BY_GEAENDERTVON = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon IN ?1";
 
 	/** ID des Vermerkeintrages beim Schüler */
 	@Id

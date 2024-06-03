@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,30 +29,74 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFehlstunden")
-@NamedQuery(name = "DTOSchuelerFehlstunden.all", query = "SELECT e FROM DTOSchuelerFehlstunden e")
-@NamedQuery(name = "DTOSchuelerFehlstunden.id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.abschnitt_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.datum", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.datum.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.fach_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.fach_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.fehlstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.fehlstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.vonstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.vonstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.bisstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.bisstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.entschuldigt", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.entschuldigt.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerFehlstunden.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerFehlstunden.all.migration", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Datum", "Fach_ID", "FehlStd", "VonStd", "BisStd", "Entschuldigt", "Lehrer_ID"})
 public final class DTOSchuelerFehlstunden {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerFehlstunden e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Datum */
+	public static final String QUERY_BY_DATUM = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Datum */
+	public static final String QUERY_LIST_BY_DATUM = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FehlStd */
+	public static final String QUERY_BY_FEHLSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FehlStd */
+	public static final String QUERY_LIST_BY_FEHLSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VonStd */
+	public static final String QUERY_BY_VONSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VonStd */
+	public static final String QUERY_LIST_BY_VONSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BisStd */
+	public static final String QUERY_BY_BISSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BisStd */
+	public static final String QUERY_LIST_BY_BISSTD = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Entschuldigt */
+	public static final String QUERY_BY_ENTSCHULDIGT = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Entschuldigt */
+	public static final String QUERY_LIST_BY_ENTSCHULDIGT = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN ?1";
 
 	/** ID des Fehlstundeneintrags */
 	@Id

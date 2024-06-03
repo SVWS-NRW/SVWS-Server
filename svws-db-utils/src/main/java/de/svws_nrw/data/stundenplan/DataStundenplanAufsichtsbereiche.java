@@ -68,7 +68,8 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<StundenplanAufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
-		final List<DTOStundenplanAufsichtsbereich> aufsichtsbereiche = conn.queryNamed("DTOStundenplanAufsichtsbereich.stundenplan_id", idStundenplan, DTOStundenplanAufsichtsbereich.class);
+		final List<DTOStundenplanAufsichtsbereich> aufsichtsbereiche = conn.queryList(DTOStundenplanAufsichtsbereich.QUERY_BY_STUNDENPLAN_ID,
+				DTOStundenplanAufsichtsbereich.class, idStundenplan);
 		final ArrayList<StundenplanAufsichtsbereich> daten = new ArrayList<>();
 		for (final DTOStundenplanAufsichtsbereich a : aufsichtsbereiche)
 			daten.add(dtoMapper.apply(a));
@@ -172,7 +173,7 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		final List<DTOStundenplanAufsichtsbereich> dtos = conn.queryNamed("DTOStundenplanAufsichtsbereich.primaryKeyQuery.multiple", ids, DTOStundenplanAufsichtsbereich.class);
+		final List<DTOStundenplanAufsichtsbereich> dtos = conn.queryByKeyList(DTOStundenplanAufsichtsbereich.class, ids);
 		for (final DTOStundenplanAufsichtsbereich dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Aufsichtsbereich-Eintrag gehört nicht zu dem angegebenen Stundenplan.");

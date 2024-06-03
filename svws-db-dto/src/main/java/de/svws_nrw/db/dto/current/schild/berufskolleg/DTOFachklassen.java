@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,48 +26,128 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Fachklassen")
-@NamedQuery(name = "DTOFachklassen.all", query = "SELECT e FROM DTOFachklassen e")
-@NamedQuery(name = "DTOFachklassen.id", query = "SELECT e FROM DTOFachklassen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOFachklassen.id.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOFachklassen.bkindex", query = "SELECT e FROM DTOFachklassen e WHERE e.BKIndex = :value")
-@NamedQuery(name = "DTOFachklassen.bkindex.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.BKIndex IN :value")
-@NamedQuery(name = "DTOFachklassen.fks", query = "SELECT e FROM DTOFachklassen e WHERE e.FKS = :value")
-@NamedQuery(name = "DTOFachklassen.fks.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.FKS IN :value")
-@NamedQuery(name = "DTOFachklassen.ap", query = "SELECT e FROM DTOFachklassen e WHERE e.AP = :value")
-@NamedQuery(name = "DTOFachklassen.ap.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.AP IN :value")
-@NamedQuery(name = "DTOFachklassen.bezeichnung", query = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOFachklassen.bezeichnung.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOFachklassen.sortierung", query = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOFachklassen.sortierung.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOFachklassen.sichtbar", query = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOFachklassen.sichtbar.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOFachklassen.aenderbar", query = "SELECT e FROM DTOFachklassen e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "DTOFachklassen.aenderbar.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "DTOFachklassen.kennung", query = "SELECT e FROM DTOFachklassen e WHERE e.Kennung = :value")
-@NamedQuery(name = "DTOFachklassen.kennung.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Kennung IN :value")
-@NamedQuery(name = "DTOFachklassen.fks_ap_sim", query = "SELECT e FROM DTOFachklassen e WHERE e.FKS_AP_SIM = :value")
-@NamedQuery(name = "DTOFachklassen.fks_ap_sim.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.FKS_AP_SIM IN :value")
-@NamedQuery(name = "DTOFachklassen.bkindextyp", query = "SELECT e FROM DTOFachklassen e WHERE e.BKIndexTyp = :value")
-@NamedQuery(name = "DTOFachklassen.bkindextyp.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.BKIndexTyp IN :value")
-@NamedQuery(name = "DTOFachklassen.beschreibung_w", query = "SELECT e FROM DTOFachklassen e WHERE e.Beschreibung_W = :value")
-@NamedQuery(name = "DTOFachklassen.beschreibung_w.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Beschreibung_W IN :value")
-@NamedQuery(name = "DTOFachklassen.status", query = "SELECT e FROM DTOFachklassen e WHERE e.Status = :value")
-@NamedQuery(name = "DTOFachklassen.status.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Status IN :value")
-@NamedQuery(name = "DTOFachklassen.lernfelder", query = "SELECT e FROM DTOFachklassen e WHERE e.Lernfelder = :value")
-@NamedQuery(name = "DTOFachklassen.lernfelder.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Lernfelder IN :value")
-@NamedQuery(name = "DTOFachklassen.dqr_niveau", query = "SELECT e FROM DTOFachklassen e WHERE e.DQR_Niveau = :value")
-@NamedQuery(name = "DTOFachklassen.dqr_niveau.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.DQR_Niveau IN :value")
-@NamedQuery(name = "DTOFachklassen.ebene1klartext", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene1Klartext = :value")
-@NamedQuery(name = "DTOFachklassen.ebene1klartext.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene1Klartext IN :value")
-@NamedQuery(name = "DTOFachklassen.ebene2klartext", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene2Klartext = :value")
-@NamedQuery(name = "DTOFachklassen.ebene2klartext.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene2Klartext IN :value")
-@NamedQuery(name = "DTOFachklassen.ebene3klartext", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext = :value")
-@NamedQuery(name = "DTOFachklassen.ebene3klartext.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext IN :value")
-@NamedQuery(name = "DTOFachklassen.primaryKeyQuery", query = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOFachklassen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOFachklassen.all.migration", query = "SELECT e FROM DTOFachklassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class DTOFachklassen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFachklassen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFachklassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachklassen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BKIndex */
+	public static final String QUERY_BY_BKINDEX = "SELECT e FROM DTOFachklassen e WHERE e.BKIndex = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BKIndex */
+	public static final String QUERY_LIST_BY_BKINDEX = "SELECT e FROM DTOFachklassen e WHERE e.BKIndex IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FKS */
+	public static final String QUERY_BY_FKS = "SELECT e FROM DTOFachklassen e WHERE e.FKS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FKS */
+	public static final String QUERY_LIST_BY_FKS = "SELECT e FROM DTOFachklassen e WHERE e.FKS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AP */
+	public static final String QUERY_BY_AP = "SELECT e FROM DTOFachklassen e WHERE e.AP = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AP */
+	public static final String QUERY_LIST_BY_AP = "SELECT e FROM DTOFachklassen e WHERE e.AP IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOFachklassen e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOFachklassen e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kennung */
+	public static final String QUERY_BY_KENNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Kennung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kennung */
+	public static final String QUERY_LIST_BY_KENNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Kennung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FKS_AP_SIM */
+	public static final String QUERY_BY_FKS_AP_SIM = "SELECT e FROM DTOFachklassen e WHERE e.FKS_AP_SIM = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FKS_AP_SIM */
+	public static final String QUERY_LIST_BY_FKS_AP_SIM = "SELECT e FROM DTOFachklassen e WHERE e.FKS_AP_SIM IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BKIndexTyp */
+	public static final String QUERY_BY_BKINDEXTYP = "SELECT e FROM DTOFachklassen e WHERE e.BKIndexTyp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BKIndexTyp */
+	public static final String QUERY_LIST_BY_BKINDEXTYP = "SELECT e FROM DTOFachklassen e WHERE e.BKIndexTyp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung_W */
+	public static final String QUERY_BY_BESCHREIBUNG_W = "SELECT e FROM DTOFachklassen e WHERE e.Beschreibung_W = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung_W */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG_W = "SELECT e FROM DTOFachklassen e WHERE e.Beschreibung_W IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Status */
+	public static final String QUERY_BY_STATUS = "SELECT e FROM DTOFachklassen e WHERE e.Status = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Status */
+	public static final String QUERY_LIST_BY_STATUS = "SELECT e FROM DTOFachklassen e WHERE e.Status IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lernfelder */
+	public static final String QUERY_BY_LERNFELDER = "SELECT e FROM DTOFachklassen e WHERE e.Lernfelder = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernfelder */
+	public static final String QUERY_LIST_BY_LERNFELDER = "SELECT e FROM DTOFachklassen e WHERE e.Lernfelder IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DQR_Niveau */
+	public static final String QUERY_BY_DQR_NIVEAU = "SELECT e FROM DTOFachklassen e WHERE e.DQR_Niveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DQR_Niveau */
+	public static final String QUERY_LIST_BY_DQR_NIVEAU = "SELECT e FROM DTOFachklassen e WHERE e.DQR_Niveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene1Klartext */
+	public static final String QUERY_BY_EBENE1KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene1Klartext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene1Klartext */
+	public static final String QUERY_LIST_BY_EBENE1KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene1Klartext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene2Klartext */
+	public static final String QUERY_BY_EBENE2KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene2Klartext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene2Klartext */
+	public static final String QUERY_LIST_BY_EBENE2KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene2Klartext IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene3Klartext */
+	public static final String QUERY_BY_EBENE3KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene3Klartext */
+	public static final String QUERY_LIST_BY_EBENE3KLARTEXT = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext IN ?1";
 
 	/** ID der Fachklasse im schulinternen Katalog der Fachklassen nur BK und SBK */
 	@Id

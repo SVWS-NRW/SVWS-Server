@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,36 +26,92 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Kindergarten")
-@NamedQuery(name = "DTOKindergarten.all", query = "SELECT e FROM DTOKindergarten e")
-@NamedQuery(name = "DTOKindergarten.id", query = "SELECT e FROM DTOKindergarten e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKindergarten.id.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKindergarten.bezeichnung", query = "SELECT e FROM DTOKindergarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOKindergarten.bezeichnung.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOKindergarten.plz", query = "SELECT e FROM DTOKindergarten e WHERE e.PLZ = :value")
-@NamedQuery(name = "DTOKindergarten.plz.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.PLZ IN :value")
-@NamedQuery(name = "DTOKindergarten.ort", query = "SELECT e FROM DTOKindergarten e WHERE e.Ort = :value")
-@NamedQuery(name = "DTOKindergarten.ort.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Ort IN :value")
-@NamedQuery(name = "DTOKindergarten.strassenname", query = "SELECT e FROM DTOKindergarten e WHERE e.Strassenname = :value")
-@NamedQuery(name = "DTOKindergarten.strassenname.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Strassenname IN :value")
-@NamedQuery(name = "DTOKindergarten.hausnr", query = "SELECT e FROM DTOKindergarten e WHERE e.HausNr = :value")
-@NamedQuery(name = "DTOKindergarten.hausnr.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.HausNr IN :value")
-@NamedQuery(name = "DTOKindergarten.hausnrzusatz", query = "SELECT e FROM DTOKindergarten e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name = "DTOKindergarten.hausnrzusatz.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name = "DTOKindergarten.tel", query = "SELECT e FROM DTOKindergarten e WHERE e.Tel = :value")
-@NamedQuery(name = "DTOKindergarten.tel.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Tel IN :value")
-@NamedQuery(name = "DTOKindergarten.email", query = "SELECT e FROM DTOKindergarten e WHERE e.Email = :value")
-@NamedQuery(name = "DTOKindergarten.email.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Email IN :value")
-@NamedQuery(name = "DTOKindergarten.bemerkung", query = "SELECT e FROM DTOKindergarten e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOKindergarten.bemerkung.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOKindergarten.sichtbar", query = "SELECT e FROM DTOKindergarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOKindergarten.sichtbar.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOKindergarten.sortierung", query = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOKindergarten.sortierung.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOKindergarten.primaryKeyQuery", query = "SELECT e FROM DTOKindergarten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKindergarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKindergarten.all.migration", query = "SELECT e FROM DTOKindergarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "PLZ", "Ort", "Strassenname", "HausNr", "HausNrZusatz", "Tel", "Email", "Bemerkung", "Sichtbar", "Sortierung"})
 public final class DTOKindergarten {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKindergarten e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKindergarten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKindergarten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKindergarten e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKindergarten e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKindergarten e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKindergarten e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKindergarten e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM DTOKindergarten e WHERE e.PLZ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM DTOKindergarten e WHERE e.PLZ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort */
+	public static final String QUERY_BY_ORT = "SELECT e FROM DTOKindergarten e WHERE e.Ort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort */
+	public static final String QUERY_LIST_BY_ORT = "SELECT e FROM DTOKindergarten e WHERE e.Ort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Strassenname */
+	public static final String QUERY_BY_STRASSENNAME = "SELECT e FROM DTOKindergarten e WHERE e.Strassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Strassenname */
+	public static final String QUERY_LIST_BY_STRASSENNAME = "SELECT e FROM DTOKindergarten e WHERE e.Strassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNr */
+	public static final String QUERY_BY_HAUSNR = "SELECT e FROM DTOKindergarten e WHERE e.HausNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNr */
+	public static final String QUERY_LIST_BY_HAUSNR = "SELECT e FROM DTOKindergarten e WHERE e.HausNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HausNrZusatz */
+	public static final String QUERY_BY_HAUSNRZUSATZ = "SELECT e FROM DTOKindergarten e WHERE e.HausNrZusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HausNrZusatz */
+	public static final String QUERY_LIST_BY_HAUSNRZUSATZ = "SELECT e FROM DTOKindergarten e WHERE e.HausNrZusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Tel */
+	public static final String QUERY_BY_TEL = "SELECT e FROM DTOKindergarten e WHERE e.Tel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Tel */
+	public static final String QUERY_LIST_BY_TEL = "SELECT e FROM DTOKindergarten e WHERE e.Tel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM DTOKindergarten e WHERE e.Email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM DTOKindergarten e WHERE e.Email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOKindergarten e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOKindergarten e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKindergarten e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKindergarten e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung IN ?1";
 
 	/** ID des Kindergartens */
 	@Id

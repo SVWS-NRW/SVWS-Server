@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,30 +31,74 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Kurse")
-@NamedQuery(name = "DTOGostBlockungKurs.all", query = "SELECT e FROM DTOGostBlockungKurs e")
-@NamedQuery(name = "DTOGostBlockungKurs.id", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.id.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.blockung_id", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.fach_id", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.fach_id.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.kursart", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursart = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.kursart.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursart IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.kursnummer", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursnummer = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.kursnummer.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursnummer IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.istkoopkurs", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.IstKoopKurs = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.istkoopkurs.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.IstKoopKurs IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.bezeichnungsuffix", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.bezeichnungsuffix.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.schienenanzahl", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.schienenanzahl.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.wochenstunden", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden = :value")
-@NamedQuery(name = "DTOGostBlockungKurs.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungKurs.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungKurs.all.migration", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Fach_ID", "Kursart", "Kursnummer", "IstKoopKurs", "BezeichnungSuffix", "Schienenanzahl", "Wochenstunden"})
 public final class DTOGostBlockungKurs {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockungKurs e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Blockung_ID */
+	public static final String QUERY_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Blockung_ID */
+	public static final String QUERY_LIST_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart */
+	public static final String QUERY_BY_KURSART = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
+	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursart IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursnummer */
+	public static final String QUERY_BY_KURSNUMMER = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursnummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursnummer */
+	public static final String QUERY_LIST_BY_KURSNUMMER = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Kursnummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstKoopKurs */
+	public static final String QUERY_BY_ISTKOOPKURS = "SELECT e FROM DTOGostBlockungKurs e WHERE e.IstKoopKurs = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstKoopKurs */
+	public static final String QUERY_LIST_BY_ISTKOOPKURS = "SELECT e FROM DTOGostBlockungKurs e WHERE e.IstKoopKurs IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BezeichnungSuffix */
+	public static final String QUERY_BY_BEZEICHNUNGSUFFIX = "SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BezeichnungSuffix */
+	public static final String QUERY_LIST_BY_BEZEICHNUNGSUFFIX = "SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schienenanzahl */
+	public static final String QUERY_BY_SCHIENENANZAHL = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schienenanzahl */
+	public static final String QUERY_LIST_BY_SCHIENENANZAHL = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochenstunden */
+	public static final String QUERY_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochenstunden */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDEN = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden IN ?1";
 
 	/** ID des Kurses in der Blockung (generiert) */
 	@Id

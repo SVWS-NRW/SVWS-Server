@@ -128,10 +128,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		final var result = new ArrayList<SchuelerStammdaten>();
 		if (ids.isEmpty())
 			return result;
-		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.id.multiple", ids, DTOSchueler.class);
+		final List<DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, ids);
 		if (schueler == null || schueler.isEmpty())
 			return result;
-		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryNamed("DTOSchuelerFoto.schueler_id.multiple", ids, DTOSchuelerFoto.class)
+		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryByKeyList(DTOSchuelerFoto.class, ids)
 			.stream().collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
 		for (final DTOSchueler s : schueler) {
 			final var tmp = dtoMapper.apply(s);

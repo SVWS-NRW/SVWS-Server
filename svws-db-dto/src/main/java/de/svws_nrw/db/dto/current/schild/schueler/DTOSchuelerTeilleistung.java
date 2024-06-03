@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerEinzelleistungen")
-@NamedQuery(name = "DTOSchuelerTeilleistung.all", query = "SELECT e FROM DTOSchuelerTeilleistung e")
-@NamedQuery(name = "DTOSchuelerTeilleistung.id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.datum", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.datum.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.lehrer_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.art_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.art_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.bemerkung", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.leistung_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.leistung_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.notenkrz", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz = :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.notenkrz.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerTeilleistung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerTeilleistung.all.migration", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Datum", "Lehrer_ID", "Art_ID", "Bemerkung", "Leistung_ID", "NotenKrz"})
 public final class DTOSchuelerTeilleistung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerTeilleistung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Datum */
+	public static final String QUERY_BY_DATUM = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Datum */
+	public static final String QUERY_LIST_BY_DATUM = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Art_ID */
+	public static final String QUERY_BY_ART_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Art_ID */
+	public static final String QUERY_LIST_BY_ART_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Leistung_ID */
+	public static final String QUERY_BY_LEISTUNG_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Leistung_ID */
+	public static final String QUERY_LIST_BY_LEISTUNG_ID = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NotenKrz */
+	public static final String QUERY_BY_NOTENKRZ = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotenKrz */
+	public static final String QUERY_LIST_BY_NOTENKRZ = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz IN ?1";
 
 	/** ID der Teilleistung */
 	@Id

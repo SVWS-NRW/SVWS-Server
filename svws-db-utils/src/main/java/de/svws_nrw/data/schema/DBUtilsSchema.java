@@ -260,7 +260,7 @@ public final class DBUtilsSchema {
     public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
 		final Benutzer neu = getBenutzerFuerSVWSSchema(conn, schemaname);
 		try (DBEntityManager schemaConn = neu.getEntityManager()) {
-	    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryNamed("DTOViewBenutzerdetails.istadmin", true, DTOViewBenutzerdetails.class);
+	    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryList(DTOViewBenutzerdetails.QUERY_BY_ISTADMIN, DTOViewBenutzerdetails.class, true);
 	    	final List<BenutzerListeEintrag> result = new ArrayList<>();
 	    	for (final DTOViewBenutzerdetails admin : admins) {
 	    		final BenutzerListeEintrag b = new BenutzerListeEintrag();

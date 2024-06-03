@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,56 +29,152 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFoerderempfehlungen")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.all", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.gu_id", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.gu_id.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.abschnitt_id", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumangelegt", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAngelegt = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumangelegt.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAngelegt IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.klassen_id", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Klassen_ID = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.klassen_id.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.lehrer_id", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumaenderungschild", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchild = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumaenderungschild.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchild IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumaenderungschildweb", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchildWeb = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.datumaenderungschildweb.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchildWeb IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.inhaltl_prozessbez_komp", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Inhaltl_Prozessbez_Komp = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.inhaltl_prozessbez_komp.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Inhaltl_Prozessbez_Komp IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.methodische_komp", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Methodische_Komp = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.methodische_komp.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Methodische_Komp IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.lern_arbeitsverhalten", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lern_Arbeitsverhalten = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.lern_arbeitsverhalten.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lern_Arbeitsverhalten IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_inhaltl_prozessbez_komp", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Inhaltl_Prozessbez_Komp = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_inhaltl_prozessbez_komp.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Inhaltl_Prozessbez_Komp IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_methodische_komp", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Methodische_Komp = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_methodische_komp.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Methodische_Komp IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_lern_arbeitsverhalten", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Lern_Arbeitsverhalten = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.massn_lern_arbeitsverhalten.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Lern_Arbeitsverhalten IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.verantwortlichkeit_eltern", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Eltern = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.verantwortlichkeit_eltern.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Eltern IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.verantwortlichkeit_schueler", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Schueler = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.verantwortlichkeit_schueler.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Schueler IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.zeitrahmen_von_datum", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_von_Datum = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.zeitrahmen_von_datum.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_von_Datum IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.zeitrahmen_bis_datum", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_bis_Datum = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.zeitrahmen_bis_datum.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_bis_Datum IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.ueberpruefung_datum", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Ueberpruefung_Datum = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.ueberpruefung_datum.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Ueberpruefung_Datum IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.naechstes_beratungsgespraech", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Naechstes_Beratungsgespraech = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.naechstes_beratungsgespraech.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Naechstes_Beratungsgespraech IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.eingabefertig", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.EingabeFertig = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.eingabefertig.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.EingabeFertig IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.faecher", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Faecher = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.faecher.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Faecher IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.abgeschlossen", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen = :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.abgeschlossen.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID = ?1")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN :value")
-@NamedQuery(name = "DTOSchuelerFoerderempfehlung.all.migration", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"GU_ID", "Abschnitt_ID", "DatumAngelegt", "Klassen_ID", "Lehrer_ID", "DatumAenderungSchild", "DatumAenderungSchildWeb", "Inhaltl_Prozessbez_Komp", "Methodische_Komp", "Lern_Arbeitsverhalten", "Massn_Inhaltl_Prozessbez_Komp", "Massn_Methodische_Komp", "Massn_Lern_Arbeitsverhalten", "Verantwortlichkeit_Eltern", "Verantwortlichkeit_Schueler", "Zeitrahmen_von_Datum", "Zeitrahmen_bis_Datum", "Ueberpruefung_Datum", "Naechstes_Beratungsgespraech", "EingabeFertig", "Faecher", "Abgeschlossen"})
 public final class DTOSchuelerFoerderempfehlung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerFoerderempfehlung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GU_ID */
+	public static final String QUERY_BY_GU_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GU_ID */
+	public static final String QUERY_LIST_BY_GU_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumAngelegt */
+	public static final String QUERY_BY_DATUMANGELEGT = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAngelegt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumAngelegt */
+	public static final String QUERY_LIST_BY_DATUMANGELEGT = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAngelegt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Klassen_ID */
+	public static final String QUERY_BY_KLASSEN_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Klassen_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Klassen_ID */
+	public static final String QUERY_LIST_BY_KLASSEN_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Klassen_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumAenderungSchild */
+	public static final String QUERY_BY_DATUMAENDERUNGSCHILD = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchild = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumAenderungSchild */
+	public static final String QUERY_LIST_BY_DATUMAENDERUNGSCHILD = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchild IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumAenderungSchildWeb */
+	public static final String QUERY_BY_DATUMAENDERUNGSCHILDWEB = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchildWeb = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumAenderungSchildWeb */
+	public static final String QUERY_LIST_BY_DATUMAENDERUNGSCHILDWEB = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.DatumAenderungSchildWeb IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Inhaltl_Prozessbez_Komp */
+	public static final String QUERY_BY_INHALTL_PROZESSBEZ_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Inhaltl_Prozessbez_Komp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Inhaltl_Prozessbez_Komp */
+	public static final String QUERY_LIST_BY_INHALTL_PROZESSBEZ_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Inhaltl_Prozessbez_Komp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Methodische_Komp */
+	public static final String QUERY_BY_METHODISCHE_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Methodische_Komp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Methodische_Komp */
+	public static final String QUERY_LIST_BY_METHODISCHE_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Methodische_Komp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lern_Arbeitsverhalten */
+	public static final String QUERY_BY_LERN_ARBEITSVERHALTEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lern_Arbeitsverhalten = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lern_Arbeitsverhalten */
+	public static final String QUERY_LIST_BY_LERN_ARBEITSVERHALTEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Lern_Arbeitsverhalten IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Massn_Inhaltl_Prozessbez_Komp */
+	public static final String QUERY_BY_MASSN_INHALTL_PROZESSBEZ_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Inhaltl_Prozessbez_Komp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Massn_Inhaltl_Prozessbez_Komp */
+	public static final String QUERY_LIST_BY_MASSN_INHALTL_PROZESSBEZ_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Inhaltl_Prozessbez_Komp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Massn_Methodische_Komp */
+	public static final String QUERY_BY_MASSN_METHODISCHE_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Methodische_Komp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Massn_Methodische_Komp */
+	public static final String QUERY_LIST_BY_MASSN_METHODISCHE_KOMP = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Methodische_Komp IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Massn_Lern_Arbeitsverhalten */
+	public static final String QUERY_BY_MASSN_LERN_ARBEITSVERHALTEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Lern_Arbeitsverhalten = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Massn_Lern_Arbeitsverhalten */
+	public static final String QUERY_LIST_BY_MASSN_LERN_ARBEITSVERHALTEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Massn_Lern_Arbeitsverhalten IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Verantwortlichkeit_Eltern */
+	public static final String QUERY_BY_VERANTWORTLICHKEIT_ELTERN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Eltern = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Verantwortlichkeit_Eltern */
+	public static final String QUERY_LIST_BY_VERANTWORTLICHKEIT_ELTERN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Eltern IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Verantwortlichkeit_Schueler */
+	public static final String QUERY_BY_VERANTWORTLICHKEIT_SCHUELER = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Schueler = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Verantwortlichkeit_Schueler */
+	public static final String QUERY_LIST_BY_VERANTWORTLICHKEIT_SCHUELER = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Verantwortlichkeit_Schueler IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeitrahmen_von_Datum */
+	public static final String QUERY_BY_ZEITRAHMEN_VON_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_von_Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeitrahmen_von_Datum */
+	public static final String QUERY_LIST_BY_ZEITRAHMEN_VON_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_von_Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeitrahmen_bis_Datum */
+	public static final String QUERY_BY_ZEITRAHMEN_BIS_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_bis_Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeitrahmen_bis_Datum */
+	public static final String QUERY_LIST_BY_ZEITRAHMEN_BIS_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Zeitrahmen_bis_Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ueberpruefung_Datum */
+	public static final String QUERY_BY_UEBERPRUEFUNG_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Ueberpruefung_Datum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ueberpruefung_Datum */
+	public static final String QUERY_LIST_BY_UEBERPRUEFUNG_DATUM = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Ueberpruefung_Datum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Naechstes_Beratungsgespraech */
+	public static final String QUERY_BY_NAECHSTES_BERATUNGSGESPRAECH = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Naechstes_Beratungsgespraech = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Naechstes_Beratungsgespraech */
+	public static final String QUERY_LIST_BY_NAECHSTES_BERATUNGSGESPRAECH = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Naechstes_Beratungsgespraech IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EingabeFertig */
+	public static final String QUERY_BY_EINGABEFERTIG = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.EingabeFertig = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EingabeFertig */
+	public static final String QUERY_LIST_BY_EINGABEFERTIG = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.EingabeFertig IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Faecher */
+	public static final String QUERY_BY_FAECHER = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Faecher = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Faecher */
+	public static final String QUERY_LIST_BY_FAECHER = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Faecher IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abgeschlossen */
+	public static final String QUERY_BY_ABGESCHLOSSEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abgeschlossen */
+	public static final String QUERY_LIST_BY_ABGESCHLOSSEN = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen IN ?1";
 
 	/** GU_ID der Förderempfehlung (wird genutzt für Import Export) */
 	@Id

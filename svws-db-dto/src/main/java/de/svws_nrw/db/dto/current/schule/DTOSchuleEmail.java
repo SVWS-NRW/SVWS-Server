@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Email")
-@NamedQuery(name = "DTOSchuleEmail.all", query = "SELECT e FROM DTOSchuleEmail e")
-@NamedQuery(name = "DTOSchuleEmail.id", query = "SELECT e FROM DTOSchuleEmail e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuleEmail.id.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuleEmail.domain", query = "SELECT e FROM DTOSchuleEmail e WHERE e.Domain = :value")
-@NamedQuery(name = "DTOSchuleEmail.domain.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.Domain IN :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpserver", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPServer = :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpserver.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPServer IN :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpport", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPPort = :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpport.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPPort IN :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpstarttls", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPStartTLS = :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpstarttls.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPStartTLS IN :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpusetls", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPUseTLS = :value")
-@NamedQuery(name = "DTOSchuleEmail.smtpusetls.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPUseTLS IN :value")
-@NamedQuery(name = "DTOSchuleEmail.smtptrusttlshost", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPTrustTLSHost = :value")
-@NamedQuery(name = "DTOSchuleEmail.smtptrusttlshost.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPTrustTLSHost IN :value")
-@NamedQuery(name = "DTOSchuleEmail.primaryKeyQuery", query = "SELECT e FROM DTOSchuleEmail e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuleEmail.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuleEmail.all.migration", query = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Domain", "SMTPServer", "SMTPPort", "SMTPStartTLS", "SMTPUseTLS", "SMTPTrustTLSHost"})
 public final class DTOSchuleEmail {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuleEmail e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuleEmail e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuleEmail e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuleEmail e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Domain */
+	public static final String QUERY_BY_DOMAIN = "SELECT e FROM DTOSchuleEmail e WHERE e.Domain = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Domain */
+	public static final String QUERY_LIST_BY_DOMAIN = "SELECT e FROM DTOSchuleEmail e WHERE e.Domain IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPServer */
+	public static final String QUERY_BY_SMTPSERVER = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPServer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPServer */
+	public static final String QUERY_LIST_BY_SMTPSERVER = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPServer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPPort */
+	public static final String QUERY_BY_SMTPPORT = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPPort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPPort */
+	public static final String QUERY_LIST_BY_SMTPPORT = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPPort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPStartTLS */
+	public static final String QUERY_BY_SMTPSTARTTLS = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPStartTLS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPStartTLS */
+	public static final String QUERY_LIST_BY_SMTPSTARTTLS = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPStartTLS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPUseTLS */
+	public static final String QUERY_BY_SMTPUSETLS = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPUseTLS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPUseTLS */
+	public static final String QUERY_LIST_BY_SMTPUSETLS = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPUseTLS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPTrustTLSHost */
+	public static final String QUERY_BY_SMTPTRUSTTLSHOST = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPTrustTLSHost = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPTrustTLSHost */
+	public static final String QUERY_LIST_BY_SMTPTRUSTTLSHOST = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPTrustTLSHost IN ?1";
 
 	/** Die ID des Eintrags */
 	@Id

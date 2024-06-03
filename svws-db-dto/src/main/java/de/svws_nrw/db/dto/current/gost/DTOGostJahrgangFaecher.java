@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,33 +28,83 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @IdClass(DTOGostJahrgangFaecherPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Jahrgang_Faecher")
-@NamedQuery(name = "DTOGostJahrgangFaecher.all", query = "SELECT e FROM DTOGostJahrgangFaecher e")
-@NamedQuery(name = "DTOGostJahrgangFaecher.abi_jahrgang", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.fach_id", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.fach_id.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbaref1", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF1 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbaref1.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF1 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbaref2", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF2 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbaref2.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF2 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq11", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ11 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq11.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ11 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq12", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ12 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq12.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ12 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq21", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ21 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq21.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ21 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq22", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ22 = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarq22.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ22 IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarabigk", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiGK = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarabigk.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiGK IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarabilk", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiLK = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.waehlbarabilk.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiLK IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.wochenstundenqphase", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WochenstundenQPhase = :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.wochenstundenqphase.multiple", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WochenstundenQPhase IN :value")
-@NamedQuery(name = "DTOGostJahrgangFaecher.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = ?1 AND e.Fach_ID = ?2")
-@NamedQuery(name = "DTOGostJahrgangFaecher.all.migration", query = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Fach_ID IS NOT NULL")
 @JsonPropertyOrder({"Abi_Jahrgang", "Fach_ID", "WaehlbarEF1", "WaehlbarEF2", "WaehlbarQ11", "WaehlbarQ12", "WaehlbarQ21", "WaehlbarQ22", "WaehlbarAbiGK", "WaehlbarAbiLK", "WochenstundenQPhase"})
 public final class DTOGostJahrgangFaecher {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostJahrgangFaecher e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = ?1 AND e.Fach_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Fach_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abi_Jahrgang */
+	public static final String QUERY_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abi_Jahrgang */
+	public static final String QUERY_LIST_BY_ABI_JAHRGANG = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarEF1 */
+	public static final String QUERY_BY_WAEHLBAREF1 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF1 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarEF1 */
+	public static final String QUERY_LIST_BY_WAEHLBAREF1 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF1 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarEF2 */
+	public static final String QUERY_BY_WAEHLBAREF2 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarEF2 */
+	public static final String QUERY_LIST_BY_WAEHLBAREF2 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarEF2 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarQ11 */
+	public static final String QUERY_BY_WAEHLBARQ11 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ11 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarQ11 */
+	public static final String QUERY_LIST_BY_WAEHLBARQ11 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ11 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarQ12 */
+	public static final String QUERY_BY_WAEHLBARQ12 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ12 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarQ12 */
+	public static final String QUERY_LIST_BY_WAEHLBARQ12 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ12 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarQ21 */
+	public static final String QUERY_BY_WAEHLBARQ21 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ21 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarQ21 */
+	public static final String QUERY_LIST_BY_WAEHLBARQ21 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ21 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarQ22 */
+	public static final String QUERY_BY_WAEHLBARQ22 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ22 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarQ22 */
+	public static final String QUERY_LIST_BY_WAEHLBARQ22 = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarQ22 IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarAbiGK */
+	public static final String QUERY_BY_WAEHLBARABIGK = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiGK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarAbiGK */
+	public static final String QUERY_LIST_BY_WAEHLBARABIGK = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiGK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WaehlbarAbiLK */
+	public static final String QUERY_BY_WAEHLBARABILK = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiLK = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WaehlbarAbiLK */
+	public static final String QUERY_LIST_BY_WAEHLBARABILK = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WaehlbarAbiLK IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenstundenQPhase */
+	public static final String QUERY_BY_WOCHENSTUNDENQPHASE = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WochenstundenQPhase = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenstundenQPhase */
+	public static final String QUERY_LIST_BY_WOCHENSTUNDENQPHASE = "SELECT e FROM DTOGostJahrgangFaecher e WHERE e.WochenstundenQPhase IN ?1";
 
 	/** Schuljahr, in welchem der Jahrgang das Abitur macht */
 	@Id

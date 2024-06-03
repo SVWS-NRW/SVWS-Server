@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerMehrleistung")
-@NamedQuery(name = "DTOLehrerMehrleistung.all", query = "SELECT e FROM DTOLehrerMehrleistung e")
-@NamedQuery(name = "DTOLehrerMehrleistung.id", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.id.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.abschnitt_id", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.abschnitt_id.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungsgrundkrz", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz = :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungsgrundkrz.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz IN :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOLehrerMehrleistung.all.migration", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "MehrleistungsgrundKrz", "MehrleistungStd"})
 public final class DTOLehrerMehrleistung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerMehrleistung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MehrleistungsgrundKrz */
+	public static final String QUERY_BY_MEHRLEISTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MehrleistungsgrundKrz */
+	public static final String QUERY_LIST_BY_MEHRLEISTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MehrleistungStd */
+	public static final String QUERY_BY_MEHRLEISTUNGSTD = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MehrleistungStd */
+	public static final String QUERY_LIST_BY_MEHRLEISTUNGSTD = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd IN ?1";
 
 	/** ID für den Eintrag für die Mehrarbeitsstunden eines Lehrers */
 	@Id

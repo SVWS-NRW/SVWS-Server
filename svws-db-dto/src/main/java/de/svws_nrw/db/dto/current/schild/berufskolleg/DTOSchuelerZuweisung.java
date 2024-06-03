@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOSchuelerZuweisungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerZuweisungen")
-@NamedQuery(name = "DTOSchuelerZuweisung.all", query = "SELECT e FROM DTOSchuelerZuweisung e")
-@NamedQuery(name = "DTOSchuelerZuweisung.abschnitt_id", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.fach_id", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.fach_id.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.kursart", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart = :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.kursart.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart IN :value")
-@NamedQuery(name = "DTOSchuelerZuweisung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2")
-@NamedQuery(name = "DTOSchuelerZuweisung.all.migration", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL")
 @JsonPropertyOrder({"Abschnitt_ID", "Fach_ID", "Kursart"})
 public final class DTOSchuelerZuweisung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerZuweisung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart */
+	public static final String QUERY_BY_KURSART = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
+	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart IN ?1";
 
 	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
 	@Id

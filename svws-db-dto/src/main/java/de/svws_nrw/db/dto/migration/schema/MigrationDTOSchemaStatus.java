@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,16 +26,32 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schema_Status")
-@NamedQuery(name = "MigrationDTOSchemaStatus.all", query = "SELECT e FROM MigrationDTOSchemaStatus e")
-@NamedQuery(name = "MigrationDTOSchemaStatus.revision", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision = :value")
-@NamedQuery(name = "MigrationDTOSchemaStatus.revision.multiple", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IN :value")
-@NamedQuery(name = "MigrationDTOSchemaStatus.istainted", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.IsTainted = :value")
-@NamedQuery(name = "MigrationDTOSchemaStatus.istainted.multiple", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.IsTainted IN :value")
-@NamedQuery(name = "MigrationDTOSchemaStatus.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision = ?1")
-@NamedQuery(name = "MigrationDTOSchemaStatus.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IN :value")
-@NamedQuery(name = "MigrationDTOSchemaStatus.all.migration", query = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
 public final class MigrationDTOSchemaStatus {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchemaStatus e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Revision */
+	public static final String QUERY_BY_REVISION = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Revision */
+	public static final String QUERY_LIST_BY_REVISION = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.Revision IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IsTainted */
+	public static final String QUERY_BY_ISTAINTED = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.IsTainted = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IsTainted */
+	public static final String QUERY_LIST_BY_ISTAINTED = "SELECT e FROM MigrationDTOSchemaStatus e WHERE e.IsTainted IN ?1";
 
 	/** Die Revision des Datenbankschemas der SVWS-DB */
 	@Id

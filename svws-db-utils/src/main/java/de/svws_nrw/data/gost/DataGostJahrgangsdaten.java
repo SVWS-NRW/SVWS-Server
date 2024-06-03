@@ -135,7 +135,8 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     	if (abijahrgang >= 0) {
     		final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
 	    	final List<Integer> jahre = Arrays.asList(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
-	    	final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.jahr.multiple", jahre, DTOSchuljahresabschnitte.class);
+	    	final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryList(DTOSchuljahresabschnitte.QUERY_LIST_BY_JAHR,
+	    			DTOSchuljahresabschnitte.class, jahre);
 	    	for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
 	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
 	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
@@ -145,7 +146,8 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     	}
     	daten.anzahlKursblockungen = DataGostBlockungsliste.getAnzahlBlockungen(conn, daten.abiturjahr);
     	// Ergänze die Beratungslehrer
-    	final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", daten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+    	final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG,
+    			DTOGostJahrgangBeratungslehrer.class, daten.abiturjahr);
     	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
     	return daten;
 	}

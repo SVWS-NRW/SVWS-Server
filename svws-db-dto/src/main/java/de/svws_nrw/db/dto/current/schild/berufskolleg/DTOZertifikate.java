@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Zertifikate")
-@NamedQuery(name = "DTOZertifikate.all", query = "SELECT e FROM DTOZertifikate e")
-@NamedQuery(name = "DTOZertifikate.id", query = "SELECT e FROM DTOZertifikate e WHERE e.ID = :value")
-@NamedQuery(name = "DTOZertifikate.id.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOZertifikate.kuerzel", query = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOZertifikate.kuerzel.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOZertifikate.bezeichnung", query = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOZertifikate.bezeichnung.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOZertifikate.fach", query = "SELECT e FROM DTOZertifikate e WHERE e.Fach = :value")
-@NamedQuery(name = "DTOZertifikate.fach.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Fach IN :value")
-@NamedQuery(name = "DTOZertifikate.formatvorlage", query = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage = :value")
-@NamedQuery(name = "DTOZertifikate.formatvorlage.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage IN :value")
-@NamedQuery(name = "DTOZertifikate.primaryKeyQuery", query = "SELECT e FROM DTOZertifikate e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOZertifikate.primaryKeyQuery.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOZertifikate.all.migration", query = "SELECT e FROM DTOZertifikate e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "Fach", "Formatvorlage"})
 public final class DTOZertifikate {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOZertifikate e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOZertifikate e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOZertifikate e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOZertifikate e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOZertifikate e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOZertifikate e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach */
+	public static final String QUERY_BY_FACH = "SELECT e FROM DTOZertifikate e WHERE e.Fach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach */
+	public static final String QUERY_LIST_BY_FACH = "SELECT e FROM DTOZertifikate e WHERE e.Fach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Formatvorlage */
+	public static final String QUERY_BY_FORMATVORLAGE = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Formatvorlage */
+	public static final String QUERY_LIST_BY_FORMATVORLAGE = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage IN ?1";
 
 	/** ID des Zertifikats */
 	@Id

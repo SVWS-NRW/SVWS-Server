@@ -11,7 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,18 +28,38 @@ import de.svws_nrw.csv.converter.current.kursblockung.GostKursblockungRegelTypCo
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Regeln")
-@NamedQuery(name = "DTOGostBlockungRegel.all", query = "SELECT e FROM DTOGostBlockungRegel e")
-@NamedQuery(name = "DTOGostBlockungRegel.id", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostBlockungRegel.id.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungRegel.blockung_id", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = :value")
-@NamedQuery(name = "DTOGostBlockungRegel.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungRegel.typ", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ = :value")
-@NamedQuery(name = "DTOGostBlockungRegel.typ.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ IN :value")
-@NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostBlockungRegel.all.migration", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Typ"})
 public final class DTOGostBlockungRegel {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostBlockungRegel e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Blockung_ID */
+	public static final String QUERY_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Blockung_ID */
+	public static final String QUERY_LIST_BY_BLOCKUNG_ID = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Typ */
+	public static final String QUERY_BY_TYP = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Typ */
+	public static final String QUERY_LIST_BY_TYP = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ IN ?1";
 
 	/** ID der Regel (generiert) */
 	@Id

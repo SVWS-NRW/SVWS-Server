@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzerEmail")
-@NamedQuery(name = "MigrationDTOBenutzerMail.all", query = "SELECT e FROM MigrationDTOBenutzerMail e")
-@NamedQuery(name = "MigrationDTOBenutzerMail.benutzer_id", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.benutzer_id.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.email", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Email = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.email.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Email IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.emailname", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EmailName = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.emailname.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EmailName IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.smtpusername", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPUsername = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.smtpusername.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPUsername IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.smtppassword", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPPassword = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.smtppassword.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPPassword IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.emailsignature", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EMailSignature = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.emailsignature.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EMailSignature IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.heartbeatdate", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.HeartbeatDate = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.heartbeatdate.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.HeartbeatDate IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.computername", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName = :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.computername.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID = ?1")
-@NamedQuery(name = "MigrationDTOBenutzerMail.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name = "MigrationDTOBenutzerMail.all.migration", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IS NOT NULL")
 @JsonPropertyOrder({"Benutzer_ID", "Email", "EmailName", "SMTPUsername", "SMTPPassword", "EMailSignature", "HeartbeatDate", "ComputerName"})
 public final class MigrationDTOBenutzerMail {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOBenutzerMail e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID */
+	public static final String QUERY_BY_BENUTZER_ID = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID */
+	public static final String QUERY_LIST_BY_BENUTZER_ID = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Email */
+	public static final String QUERY_BY_EMAIL = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Email = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Email */
+	public static final String QUERY_LIST_BY_EMAIL = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Email IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EmailName */
+	public static final String QUERY_BY_EMAILNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EmailName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EmailName */
+	public static final String QUERY_LIST_BY_EMAILNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EmailName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPUsername */
+	public static final String QUERY_BY_SMTPUSERNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPUsername = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPUsername */
+	public static final String QUERY_LIST_BY_SMTPUSERNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPUsername IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPPassword */
+	public static final String QUERY_BY_SMTPPASSWORD = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPPassword = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPPassword */
+	public static final String QUERY_LIST_BY_SMTPPASSWORD = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.SMTPPassword IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EMailSignature */
+	public static final String QUERY_BY_EMAILSIGNATURE = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EMailSignature = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EMailSignature */
+	public static final String QUERY_LIST_BY_EMAILSIGNATURE = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.EMailSignature IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HeartbeatDate */
+	public static final String QUERY_BY_HEARTBEATDATE = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.HeartbeatDate = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HeartbeatDate */
+	public static final String QUERY_LIST_BY_HEARTBEATDATE = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.HeartbeatDate IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ComputerName */
+	public static final String QUERY_BY_COMPUTERNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ComputerName */
+	public static final String QUERY_LIST_BY_COMPUTERNAME = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName IN ?1";
 
 	/** Die ID des Benutzers, zu dem der Datensatz gehört  */
 	@Id

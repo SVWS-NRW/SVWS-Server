@@ -107,7 +107,7 @@ public final class DataLehrerliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<DTOLehrer> lehrer = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
     	if (lehrer == null)
     		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();

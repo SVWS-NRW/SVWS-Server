@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schulformen")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.all", query = "SELECT e FROM MigrationDTOAlleSchulformen e")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.id", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.id.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.kuerzel", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.kuerzel.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.nummer", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.nummer.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.bezeichnung", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.hatgymob", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.hatgymob.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigvon", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis = :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.all.migration", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Nummer", "Bezeichnung", "HatGymOb", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOAlleSchulformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOAlleSchulformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Nummer */
+	public static final String QUERY_BY_NUMMER = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Nummer */
+	public static final String QUERY_LIST_BY_NUMMER = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HatGymOb */
+	public static final String QUERY_BY_HATGYMOB = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HatGymOb */
+	public static final String QUERY_LIST_BY_HATGYMOB = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes gueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes gueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis IN ?1";
 
 	/** ID der Schulform */
 	@Id

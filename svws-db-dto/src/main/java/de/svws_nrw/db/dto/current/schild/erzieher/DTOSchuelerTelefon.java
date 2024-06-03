@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,26 +26,62 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerTelefone")
-@NamedQuery(name = "DTOSchuelerTelefon.all", query = "SELECT e FROM DTOSchuelerTelefon e")
-@NamedQuery(name = "DTOSchuelerTelefon.id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.schueler_id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.telefonart_id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.telefonart_id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.telefonnummer", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.telefonnummer.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.bemerkung", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.sortierung", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.sortierung.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.gesperrt", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt = :value")
-@NamedQuery(name = "DTOSchuelerTelefon.gesperrt.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerTelefon.all.migration", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "TelefonArt_ID", "Telefonnummer", "Bemerkung", "Sortierung", "Gesperrt"})
 public final class DTOSchuelerTelefon {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerTelefon e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TelefonArt_ID */
+	public static final String QUERY_BY_TELEFONART_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TelefonArt_ID */
+	public static final String QUERY_LIST_BY_TELEFONART_ID = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Telefonnummer */
+	public static final String QUERY_BY_TELEFONNUMMER = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Telefonnummer */
+	public static final String QUERY_LIST_BY_TELEFONNUMMER = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gesperrt */
+	public static final String QUERY_BY_GESPERRT = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gesperrt */
+	public static final String QUERY_LIST_BY_GESPERRT = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt IN ?1";
 
 	/** ID des Telefonnummerneintrags */
 	@Id

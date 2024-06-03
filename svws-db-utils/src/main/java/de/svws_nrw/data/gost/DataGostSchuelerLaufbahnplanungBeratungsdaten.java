@@ -98,10 +98,8 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 		if (schueler_ids == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler-IDs übergeben.");
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Map<Long, DTOGostSchueler> mapGostSchueler = conn
-			.queryNamed("DTOGostSchueler.schueler_id.multiple", schueler_ids, DTOGostSchueler.class)
+		final Map<Long, DTOGostSchueler> mapGostSchueler = conn.queryList(DTOGostSchueler.QUERY_LIST_BY_SCHUELER_ID, DTOGostSchueler.class, schueler_ids)
 			.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
-
 		final Map<Long, GostLaufbahnplanungBeratungsdaten> result = new HashMap<>();
 		for (final Long sID : schueler_ids) {
 			final var schueler = mapGostSchueler.get(sID);

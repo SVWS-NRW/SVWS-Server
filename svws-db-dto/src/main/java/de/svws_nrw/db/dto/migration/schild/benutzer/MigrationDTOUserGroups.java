@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,22 +18,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Usergroups")
-@NamedQuery(name = "MigrationDTOUserGroups.all", query = "SELECT e FROM MigrationDTOUserGroups e")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_id", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_id.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_bezeichnung", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_bezeichnung.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_kompetenzen", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen = :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_kompetenzen.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_nr", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr = :value")
-@NamedQuery(name = "MigrationDTOUserGroups.ug_nr.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.schulnreigner", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOUserGroups.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.primaryKeyQuery", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1")
-@NamedQuery(name = "MigrationDTOUserGroups.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN :value")
-@NamedQuery(name = "MigrationDTOUserGroups.all.migration", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IS NOT NULL")
 @JsonPropertyOrder({"UG_ID", "UG_Bezeichnung", "UG_Kompetenzen", "UG_Nr", "SchulnrEigner"})
 public final class MigrationDTOUserGroups {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOUserGroups e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes UG_ID */
+	public static final String QUERY_BY_UG_ID = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes UG_ID */
+	public static final String QUERY_LIST_BY_UG_ID = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes UG_Bezeichnung */
+	public static final String QUERY_BY_UG_BEZEICHNUNG = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes UG_Bezeichnung */
+	public static final String QUERY_LIST_BY_UG_BEZEICHNUNG = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes UG_Kompetenzen */
+	public static final String QUERY_BY_UG_KOMPETENZEN = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes UG_Kompetenzen */
+	public static final String QUERY_LIST_BY_UG_KOMPETENZEN = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes UG_Nr */
+	public static final String QUERY_BY_UG_NR = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes UG_Nr */
+	public static final String QUERY_LIST_BY_UG_NR = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID der Benutzergruppe */
 	@Id

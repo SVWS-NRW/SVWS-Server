@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,30 +26,74 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ortsteil")
-@NamedQuery(name = "MigrationDTOOrtsteil.all", query = "SELECT e FROM MigrationDTOOrtsteil e")
-@NamedQuery(name = "MigrationDTOOrtsteil.id", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.id.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.bezeichnung", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.ort_id", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Ort_ID = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.ort_id.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Ort_ID IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.plz", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.PLZ = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.plz.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.PLZ IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.sortierung", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.sortierung.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.sichtbar", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.sichtbar.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.aenderbar", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Aenderbar = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.aenderbar.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Aenderbar IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.schulnreigner", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.ortsteilschluessel", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel = :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.ortsteilschluessel.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.primaryKeyQuery", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOOrtsteil.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOOrtsteil.all.migration", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Ort_ID", "PLZ", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner", "OrtsteilSchluessel"})
 public final class MigrationDTOOrtsteil {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOOrtsteil e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort_ID */
+	public static final String QUERY_BY_ORT_ID = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Ort_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort_ID */
+	public static final String QUERY_LIST_BY_ORT_ID = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Ort_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.PLZ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.PLZ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Aenderbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.Aenderbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes OrtsteilSchluessel */
+	public static final String QUERY_BY_ORTSTEILSCHLUESSEL = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes OrtsteilSchluessel */
+	public static final String QUERY_LIST_BY_ORTSTEILSCHLUESSEL = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel IN ?1";
 
 	/** ID des Ortsteils */
 	@Id

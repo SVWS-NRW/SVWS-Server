@@ -77,7 +77,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getBetriebansprechpartner(final Long betrieb_id) throws ApiOperationException {
-		final List<DTOAnsprechpartnerAllgemeineAdresse> liste = conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.adresse_id", betrieb_id, DTOAnsprechpartnerAllgemeineAdresse.class);
+		final List<DTOAnsprechpartnerAllgemeineAdresse> liste = conn.queryList(DTOAnsprechpartnerAllgemeineAdresse.QUERY_BY_ADRESSE_ID, DTOAnsprechpartnerAllgemeineAdresse.class, betrieb_id);
 		if (liste == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<BetriebAnsprechpartner> daten = liste.stream().map(dtoMapper).toList();

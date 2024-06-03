@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,40 +31,104 @@ import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverter
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Jahrgaenge")
-@NamedQuery(name = "DTOJahrgang.all", query = "SELECT e FROM DTOJahrgang e")
-@NamedQuery(name = "DTOJahrgang.id", query = "SELECT e FROM DTOJahrgang e WHERE e.ID = :value")
-@NamedQuery(name = "DTOJahrgang.id.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOJahrgang.internkrz", query = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz = :value")
-@NamedQuery(name = "DTOJahrgang.internkrz.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz IN :value")
-@NamedQuery(name = "DTOJahrgang.gueltigvon", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon = :value")
-@NamedQuery(name = "DTOJahrgang.gueltigvon.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon IN :value")
-@NamedQuery(name = "DTOJahrgang.gueltigbis", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis = :value")
-@NamedQuery(name = "DTOJahrgang.gueltigbis.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis IN :value")
-@NamedQuery(name = "DTOJahrgang.asdjahrgang", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name = "DTOJahrgang.asdjahrgang.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name = "DTOJahrgang.asdbezeichnung", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung = :value")
-@NamedQuery(name = "DTOJahrgang.asdbezeichnung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung IN :value")
-@NamedQuery(name = "DTOJahrgang.sichtbar", query = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOJahrgang.sichtbar.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOJahrgang.sortierung", query = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOJahrgang.sortierung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOJahrgang.istchronologisch", query = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch = :value")
-@NamedQuery(name = "DTOJahrgang.istchronologisch.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch IN :value")
-@NamedQuery(name = "DTOJahrgang.kurzbezeichnung", query = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung = :value")
-@NamedQuery(name = "DTOJahrgang.kurzbezeichnung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung IN :value")
-@NamedQuery(name = "DTOJahrgang.sekundarstufe", query = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe = :value")
-@NamedQuery(name = "DTOJahrgang.sekundarstufe.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe IN :value")
-@NamedQuery(name = "DTOJahrgang.gliederung", query = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung = :value")
-@NamedQuery(name = "DTOJahrgang.gliederung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung IN :value")
-@NamedQuery(name = "DTOJahrgang.anzahlrestabschnitte", query = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte = :value")
-@NamedQuery(name = "DTOJahrgang.anzahlrestabschnitte.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte IN :value")
-@NamedQuery(name = "DTOJahrgang.folgejahrgang_id", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
-@NamedQuery(name = "DTOJahrgang.folgejahrgang_id.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
-@NamedQuery(name = "DTOJahrgang.primaryKeyQuery", query = "SELECT e FROM DTOJahrgang e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOJahrgang.primaryKeyQuery.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOJahrgang.all.migration", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID"})
 public final class DTOJahrgang {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOJahrgang e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOJahrgang e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOJahrgang e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOJahrgang e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOJahrgang e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOJahrgang e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes InternKrz */
+	public static final String QUERY_BY_INTERNKRZ = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes InternKrz */
+	public static final String QUERY_LIST_BY_INTERNKRZ = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GueltigVon */
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GueltigVon */
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GueltigBis */
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GueltigBis */
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASDJahrgang */
+	public static final String QUERY_BY_ASDJAHRGANG = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASDJahrgang */
+	public static final String QUERY_LIST_BY_ASDJAHRGANG = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASDBezeichnung */
+	public static final String QUERY_BY_ASDBEZEICHNUNG = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASDBezeichnung */
+	public static final String QUERY_LIST_BY_ASDBEZEICHNUNG = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstChronologisch */
+	public static final String QUERY_BY_ISTCHRONOLOGISCH = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstChronologisch */
+	public static final String QUERY_LIST_BY_ISTCHRONOLOGISCH = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurzbezeichnung */
+	public static final String QUERY_BY_KURZBEZEICHNUNG = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurzbezeichnung */
+	public static final String QUERY_LIST_BY_KURZBEZEICHNUNG = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sekundarstufe */
+	public static final String QUERY_BY_SEKUNDARSTUFE = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sekundarstufe */
+	public static final String QUERY_LIST_BY_SEKUNDARSTUFE = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gliederung */
+	public static final String QUERY_BY_GLIEDERUNG = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gliederung */
+	public static final String QUERY_LIST_BY_GLIEDERUNG = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnzahlRestabschnitte */
+	public static final String QUERY_BY_ANZAHLRESTABSCHNITTE = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnzahlRestabschnitte */
+	public static final String QUERY_LIST_BY_ANZAHLRESTABSCHNITTE = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Folgejahrgang_ID */
+	public static final String QUERY_BY_FOLGEJAHRGANG_ID = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Folgejahrgang_ID */
+	public static final String QUERY_LIST_BY_FOLGEJAHRGANG_ID = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID IN ?1";
 
 	/** Eindeutige ID zur Kennzeichnung des Jahrgangs-Datensatzes */
 	@Id

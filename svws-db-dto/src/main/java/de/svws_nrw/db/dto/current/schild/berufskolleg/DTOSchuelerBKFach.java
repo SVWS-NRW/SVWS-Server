@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,48 +26,128 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerBKFaecher")
-@NamedQuery(name = "DTOSchuelerBKFach.all", query = "SELECT e FROM DTOSchuelerBKFach e")
-@NamedQuery(name = "DTOSchuelerBKFach.id", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.id.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.schueler_id", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.schuljahresabschnitts_id", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fach_id", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fach_id.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachkrz", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachKrz = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachkrz.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachKrz IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachschriftlich", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlich = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachschriftlich.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlich IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachschriftlichba", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlichBA = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachschriftlichba.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlichBA IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.vornote", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Vornote = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.vornote.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Vornote IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteschriftlich", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteSchriftlich = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteschriftlich.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteSchriftlich IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.mdlpruefung", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefung = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.mdlpruefung.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefung IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.mdlpruefungfw", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefungFW = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.mdlpruefungfw.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefungFW IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.notemuendlich", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteMuendlich = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.notemuendlich.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteMuendlich IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteabschluss", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschluss = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteabschluss.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschluss IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteprfgesamt", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NotePrfGesamt = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteprfgesamt.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NotePrfGesamt IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fsortierung", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FSortierung = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fsortierung.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FSortierung IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachlehrer_id", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.fachlehrer_id.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteabschlussba", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschlussBA = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.noteabschlussba.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschlussBA IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.kursart", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Kursart = :value")
-@NamedQuery(name = "DTOSchuelerBKFach.kursart.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Kursart IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerBKFach.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerBKFach.all.migration", query = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "Fach_ID", "FachKrz", "FachSchriftlich", "FachSchriftlichBA", "Vornote", "NoteSchriftlich", "MdlPruefung", "MdlPruefungFW", "NoteMuendlich", "NoteAbschluss", "NotePrfGesamt", "FSortierung", "Fachlehrer_ID", "NoteAbschlussBA", "Kursart"})
 public final class DTOSchuelerBKFach {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerBKFach e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schuljahresabschnitts_ID */
+	public static final String QUERY_BY_SCHULJAHRESABSCHNITTS_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schuljahresabschnitts_ID */
+	public static final String QUERY_LIST_BY_SCHULJAHRESABSCHNITTS_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachKrz */
+	public static final String QUERY_BY_FACHKRZ = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachKrz */
+	public static final String QUERY_LIST_BY_FACHKRZ = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachSchriftlich */
+	public static final String QUERY_BY_FACHSCHRIFTLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachSchriftlich */
+	public static final String QUERY_LIST_BY_FACHSCHRIFTLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FachSchriftlichBA */
+	public static final String QUERY_BY_FACHSCHRIFTLICHBA = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlichBA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FachSchriftlichBA */
+	public static final String QUERY_LIST_BY_FACHSCHRIFTLICHBA = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FachSchriftlichBA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Vornote */
+	public static final String QUERY_BY_VORNOTE = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Vornote = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Vornote */
+	public static final String QUERY_LIST_BY_VORNOTE = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Vornote IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NoteSchriftlich */
+	public static final String QUERY_BY_NOTESCHRIFTLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteSchriftlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NoteSchriftlich */
+	public static final String QUERY_LIST_BY_NOTESCHRIFTLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteSchriftlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MdlPruefung */
+	public static final String QUERY_BY_MDLPRUEFUNG = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MdlPruefung */
+	public static final String QUERY_LIST_BY_MDLPRUEFUNG = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MdlPruefungFW */
+	public static final String QUERY_BY_MDLPRUEFUNGFW = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefungFW = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MdlPruefungFW */
+	public static final String QUERY_LIST_BY_MDLPRUEFUNGFW = "SELECT e FROM DTOSchuelerBKFach e WHERE e.MdlPruefungFW IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NoteMuendlich */
+	public static final String QUERY_BY_NOTEMUENDLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteMuendlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NoteMuendlich */
+	public static final String QUERY_LIST_BY_NOTEMUENDLICH = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteMuendlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NoteAbschluss */
+	public static final String QUERY_BY_NOTEABSCHLUSS = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschluss = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NoteAbschluss */
+	public static final String QUERY_LIST_BY_NOTEABSCHLUSS = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschluss IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NotePrfGesamt */
+	public static final String QUERY_BY_NOTEPRFGESAMT = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NotePrfGesamt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotePrfGesamt */
+	public static final String QUERY_LIST_BY_NOTEPRFGESAMT = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NotePrfGesamt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FSortierung */
+	public static final String QUERY_BY_FSORTIERUNG = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FSortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FSortierung */
+	public static final String QUERY_LIST_BY_FSORTIERUNG = "SELECT e FROM DTOSchuelerBKFach e WHERE e.FSortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachlehrer_ID */
+	public static final String QUERY_BY_FACHLEHRER_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fachlehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachlehrer_ID */
+	public static final String QUERY_LIST_BY_FACHLEHRER_ID = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Fachlehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes NoteAbschlussBA */
+	public static final String QUERY_BY_NOTEABSCHLUSSBA = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschlussBA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NoteAbschlussBA */
+	public static final String QUERY_LIST_BY_NOTEABSCHLUSSBA = "SELECT e FROM DTOSchuelerBKFach e WHERE e.NoteAbschlussBA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kursart */
+	public static final String QUERY_BY_KURSART = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Kursart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
+	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM DTOSchuelerBKFach e WHERE e.Kursart IN ?1";
 
 	/** ID des Facheintrags für den BKAbschlussReiter */
 	@Id

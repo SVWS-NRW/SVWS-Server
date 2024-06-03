@@ -10,7 +10,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,35 +28,89 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @IdClass(DTOFachgliederungenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Fach_Gliederungen")
-@NamedQuery(name = "DTOFachgliederungen.all", query = "SELECT e FROM DTOFachgliederungen e")
-@NamedQuery(name = "DTOFachgliederungen.fach_id", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "DTOFachgliederungen.fach_id.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "DTOFachgliederungen.gliederung", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung = :value")
-@NamedQuery(name = "DTOFachgliederungen.gliederung.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung IN :value")
-@NamedQuery(name = "DTOFachgliederungen.faechergruppe", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe = :value")
-@NamedQuery(name = "DTOFachgliederungen.faechergruppe.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe IN :value")
-@NamedQuery(name = "DTOFachgliederungen.gewichtungab", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB = :value")
-@NamedQuery(name = "DTOFachgliederungen.gewichtungab.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB IN :value")
-@NamedQuery(name = "DTOFachgliederungen.gewichtungbb", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB = :value")
-@NamedQuery(name = "DTOFachgliederungen.gewichtungbb.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB IN :value")
-@NamedQuery(name = "DTOFachgliederungen.schriftlichab", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB = :value")
-@NamedQuery(name = "DTOFachgliederungen.schriftlichab.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB IN :value")
-@NamedQuery(name = "DTOFachgliederungen.schriftlichbb", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB = :value")
-@NamedQuery(name = "DTOFachgliederungen.schriftlichbb.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB IN :value")
-@NamedQuery(name = "DTOFachgliederungen.gymosfach", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach = :value")
-@NamedQuery(name = "DTOFachgliederungen.gymosfach.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach IN :value")
-@NamedQuery(name = "DTOFachgliederungen.zeugnisbez", query = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez = :value")
-@NamedQuery(name = "DTOFachgliederungen.zeugnisbez.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez IN :value")
-@NamedQuery(name = "DTOFachgliederungen.lernfelder", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder = :value")
-@NamedQuery(name = "DTOFachgliederungen.lernfelder.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder IN :value")
-@NamedQuery(name = "DTOFachgliederungen.fachklasse_id", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name = "DTOFachgliederungen.fachklasse_id.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name = "DTOFachgliederungen.sortierung", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOFachgliederungen.sortierung.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOFachgliederungen.primaryKeyQuery", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Fachklasse_ID = ?2")
-@NamedQuery(name = "DTOFachgliederungen.all.migration", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Fachklasse_ID IS NOT NULL")
 @JsonPropertyOrder({"Fach_ID", "Gliederung", "Faechergruppe", "GewichtungAB", "GewichtungBB", "SchriftlichAB", "SchriftlichBB", "GymOSFach", "ZeugnisBez", "Lernfelder", "Fachklasse_ID", "Sortierung"})
 public final class DTOFachgliederungen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFachgliederungen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Fachklasse_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Fachklasse_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gliederung */
+	public static final String QUERY_BY_GLIEDERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gliederung */
+	public static final String QUERY_LIST_BY_GLIEDERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Faechergruppe */
+	public static final String QUERY_BY_FAECHERGRUPPE = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Faechergruppe */
+	public static final String QUERY_LIST_BY_FAECHERGRUPPE = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GewichtungAB */
+	public static final String QUERY_BY_GEWICHTUNGAB = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GewichtungAB */
+	public static final String QUERY_LIST_BY_GEWICHTUNGAB = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GewichtungBB */
+	public static final String QUERY_BY_GEWICHTUNGBB = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GewichtungBB */
+	public static final String QUERY_LIST_BY_GEWICHTUNGBB = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchriftlichAB */
+	public static final String QUERY_BY_SCHRIFTLICHAB = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchriftlichAB */
+	public static final String QUERY_LIST_BY_SCHRIFTLICHAB = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchriftlichBB */
+	public static final String QUERY_BY_SCHRIFTLICHBB = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchriftlichBB */
+	public static final String QUERY_LIST_BY_SCHRIFTLICHBB = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GymOSFach */
+	public static final String QUERY_BY_GYMOSFACH = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GymOSFach */
+	public static final String QUERY_LIST_BY_GYMOSFACH = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZeugnisBez */
+	public static final String QUERY_BY_ZEUGNISBEZ = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZeugnisBez */
+	public static final String QUERY_LIST_BY_ZEUGNISBEZ = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lernfelder */
+	public static final String QUERY_BY_LERNFELDER = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernfelder */
+	public static final String QUERY_LIST_BY_LERNFELDER = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachklasse_ID */
+	public static final String QUERY_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachklasse_ID */
+	public static final String QUERY_LIST_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung IN ?1";
 
 	/** ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Id

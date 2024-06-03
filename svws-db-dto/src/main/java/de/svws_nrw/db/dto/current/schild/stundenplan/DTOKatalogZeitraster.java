@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,22 +26,50 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Katalog_Zeitraster")
-@NamedQuery(name = "DTOKatalogZeitraster.all", query = "SELECT e FROM DTOKatalogZeitraster e")
-@NamedQuery(name = "DTOKatalogZeitraster.id", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = :value")
-@NamedQuery(name = "DTOKatalogZeitraster.id.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.tag", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag = :value")
-@NamedQuery(name = "DTOKatalogZeitraster.tag.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.stunde", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde = :value")
-@NamedQuery(name = "DTOKatalogZeitraster.stunde.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.beginn", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn = :value")
-@NamedQuery(name = "DTOKatalogZeitraster.beginn.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.ende", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende = :value")
-@NamedQuery(name = "DTOKatalogZeitraster.ende.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.primaryKeyQuery", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogZeitraster.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOKatalogZeitraster.all.migration", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Tag", "Stunde", "Beginn", "Ende"})
 public final class DTOKatalogZeitraster {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogZeitraster e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Tag */
+	public static final String QUERY_BY_TAG = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Tag */
+	public static final String QUERY_LIST_BY_TAG = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stunde */
+	public static final String QUERY_BY_STUNDE = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stunde */
+	public static final String QUERY_LIST_BY_STUNDE = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beginn */
+	public static final String QUERY_BY_BEGINN = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beginn */
+	public static final String QUERY_LIST_BY_BEGINN = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ende */
+	public static final String QUERY_BY_ENDE = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ende */
+	public static final String QUERY_LIST_BY_ENDE = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende IN ?1";
 
 	/** Eine ID, die einen Zeitraster-Eintrag eindeutig identifiziert */
 	@Id

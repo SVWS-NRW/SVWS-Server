@@ -264,9 +264,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 					+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		final List<Long> listAktSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte = listAktSchuljahresabschnitteIDs.isEmpty()
-				? new ArrayList<>()
-				: conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listAktSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
+		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, listAktSchuljahresabschnitteIDs);
 		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte = listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
 		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte =

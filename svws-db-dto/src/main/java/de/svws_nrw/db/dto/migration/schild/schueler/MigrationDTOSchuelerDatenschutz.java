@@ -11,7 +11,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,21 +31,47 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @IdClass(MigrationDTOSchuelerDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerDatenschutz")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.all", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.datenschutz_id", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.datenschutz_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.status", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status = :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.status.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.abgefragt", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.abgefragt.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
-@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.all.migration", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Datenschutz_ID", "Status", "SchulnrEigner", "Abgefragt"})
 public final class MigrationDTOSchuelerDatenschutz {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerDatenschutz e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Datenschutz_ID */
+	public static final String QUERY_BY_DATENSCHUTZ_ID = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Datenschutz_ID */
+	public static final String QUERY_LIST_BY_DATENSCHUTZ_ID = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Status */
+	public static final String QUERY_BY_STATUS = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Status */
+	public static final String QUERY_LIST_BY_STATUS = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abgefragt */
+	public static final String QUERY_BY_ABGEFRAGT = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abgefragt */
+	public static final String QUERY_LIST_BY_ABGEFRAGT = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt IN ?1";
 
 	/** Fremdschlüssel auf Tabelle Schueler */
 	@Id

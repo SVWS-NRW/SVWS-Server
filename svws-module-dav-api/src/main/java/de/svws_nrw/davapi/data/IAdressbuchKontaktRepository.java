@@ -110,7 +110,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @return die gesuchten Orte gemappt auf ihre ID
 	 */
 	static Map<Long, DTOOrt> queryOrteByOrtIds(final Set<Long> ortIds, final DBEntityManager conn) {
-		final List<DTOOrt> dtoOrtQueryResult = conn.queryNamed("DTOOrt.id.multiple", ortIds, DTOOrt.class);
+		final List<DTOOrt> dtoOrtQueryResult = conn.queryByKeyList(DTOOrt.class, ortIds);
 		return dtoOrtQueryResult.stream().collect(Collectors.toMap(o -> o.ID, Function.identity()));
 	}
 
@@ -164,6 +164,6 @@ public interface IAdressbuchKontaktRepository {
 	 * @return der Name der eigenen Schule
 	 */
 	static String getSchulname(final DBEntityManager conn) {
-		return conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class).getResultList().get(0).Bezeichnung1;
+		return conn.querySingle(DTOEigeneSchule.class).Bezeichnung1;
 	}
 }

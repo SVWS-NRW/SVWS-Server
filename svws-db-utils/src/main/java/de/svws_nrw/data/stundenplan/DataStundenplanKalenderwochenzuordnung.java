@@ -66,7 +66,8 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 	 * @return die Liste der Kalenderwochenzuordnungen
 	 */
 	public static List<StundenplanKalenderwochenzuordnung> getKalenderwochenzuordnungen(final @NotNull DBEntityManager conn, final long idStundenplan) {
-		final List<DTOStundenplanKalenderwochenZuordnung> zuordnungen = conn.queryNamed("DTOStundenplanKalenderwochenZuordnung.stundenplan_id", idStundenplan, DTOStundenplanKalenderwochenZuordnung.class);
+		final List<DTOStundenplanKalenderwochenZuordnung> zuordnungen = conn.queryList(DTOStundenplanKalenderwochenZuordnung.QUERY_BY_STUNDENPLAN_ID,
+				DTOStundenplanKalenderwochenZuordnung.class, idStundenplan);
 		final ArrayList<StundenplanKalenderwochenzuordnung> daten = new ArrayList<>();
 		for (final DTOStundenplanKalenderwochenZuordnung z : zuordnungen)
 			daten.add(dtoMapper.apply(z));

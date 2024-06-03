@@ -76,7 +76,8 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 	public static List<LehrerPersonalabschnittsdaten> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerPersonalabschnittsdaten> result = new ArrayList<>();
     	// Bestimme die Abschnittsdaten des Lehrers
-		final List<DTOLehrerAbschnittsdaten> abschnittsdaten = conn.queryNamed("DTOLehrerAbschnittsdaten.lehrer_id", idLehrer, DTOLehrerAbschnittsdaten.class);
+		final List<DTOLehrerAbschnittsdaten> abschnittsdaten = conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_LEHRER_ID,
+				DTOLehrerAbschnittsdaten.class, idLehrer);
     	if (abschnittsdaten == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu

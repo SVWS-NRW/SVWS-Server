@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,24 +26,56 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Zeitraster")
-@NamedQuery(name = "DTOStundenplanZeitraster.all", query = "SELECT e FROM DTOStundenplanZeitraster e")
-@NamedQuery(name = "DTOStundenplanZeitraster.id", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.id.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.stundenplan_id", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.stundenplan_id.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.tag", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.tag.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.stunde", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.stunde.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.beginn", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.beginn.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.ende", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende = :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.ende.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOStundenplanZeitraster.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOStundenplanZeitraster.all.migration", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundenplan_ID", "Tag", "Stunde", "Beginn", "Ende"})
 public final class DTOStundenplanZeitraster {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOStundenplanZeitraster e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stundenplan_ID */
+	public static final String QUERY_BY_STUNDENPLAN_ID = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stundenplan_ID */
+	public static final String QUERY_LIST_BY_STUNDENPLAN_ID = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Tag */
+	public static final String QUERY_BY_TAG = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Tag */
+	public static final String QUERY_LIST_BY_TAG = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stunde */
+	public static final String QUERY_BY_STUNDE = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stunde */
+	public static final String QUERY_LIST_BY_STUNDE = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beginn */
+	public static final String QUERY_BY_BEGINN = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beginn */
+	public static final String QUERY_LIST_BY_BEGINN = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Ende */
+	public static final String QUERY_BY_ENDE = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ende */
+	public static final String QUERY_LIST_BY_ENDE = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende IN ?1";
 
 	/** Eine ID, die einen Zeitraster-Eintrag eindeutig identifiziert - hat keinen Bezug zur ID der Katalog-Tabelle */
 	@Id

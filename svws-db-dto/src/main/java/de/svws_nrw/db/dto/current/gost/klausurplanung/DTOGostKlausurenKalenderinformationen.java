@@ -11,7 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,28 +32,68 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Kalenderinformationen")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.all", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.id", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.id.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bezeichnung", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bezeichnung.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startdatum", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startdatum.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startzeit", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.enddatum", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.enddatum.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.endzeit", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.endzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.istsperrtermin", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.istsperrtermin.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bemerkungen", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen = :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.all.migration", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Startdatum", "Startzeit", "Enddatum", "Endzeit", "IstSperrtermin", "Bemerkungen"})
 public final class DTOGostKlausurenKalenderinformationen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOGostKlausurenKalenderinformationen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Startdatum */
+	public static final String QUERY_BY_STARTDATUM = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Startdatum */
+	public static final String QUERY_LIST_BY_STARTDATUM = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Startzeit */
+	public static final String QUERY_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Startzeit */
+	public static final String QUERY_LIST_BY_STARTZEIT = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Enddatum */
+	public static final String QUERY_BY_ENDDATUM = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Enddatum */
+	public static final String QUERY_LIST_BY_ENDDATUM = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Endzeit */
+	public static final String QUERY_BY_ENDZEIT = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Endzeit */
+	public static final String QUERY_LIST_BY_ENDZEIT = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstSperrtermin */
+	public static final String QUERY_BY_ISTSPERRTERMIN = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstSperrtermin */
+	public static final String QUERY_LIST_BY_ISTSPERRTERMIN = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkungen */
+	public static final String QUERY_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
+	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen IN ?1";
 
 	/** ID der Kalenderinformation (generiert) */
 	@Id

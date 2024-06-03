@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,36 +29,92 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundentafel_Faecher")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.all", query = "SELECT e FROM MigrationDTOStundentafelFaecher e")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.stundentafel_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.stundentafel_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.fach_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.fach_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.kursartallg", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.kursartallg.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.wochenstd", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.wochenstd.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrer_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.epochenunterricht", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.epochenunterricht.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.sortierung", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.sortierung.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.sichtbar", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.sichtbar.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.gewichtung", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.gewichtung.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.schulnreigner", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz = :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.all.migration", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundentafel_ID", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "EpochenUnterricht", "Sortierung", "Sichtbar", "Gewichtung", "SchulnrEigner", "LehrerKrz"})
 public final class MigrationDTOStundentafelFaecher {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOStundentafelFaecher e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Stundentafel_ID */
+	public static final String QUERY_BY_STUNDENTAFEL_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Stundentafel_ID */
+	public static final String QUERY_LIST_BY_STUNDENTAFEL_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
+	public static final String QUERY_BY_FACH_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fach_ID */
+	public static final String QUERY_LIST_BY_FACH_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KursartAllg */
+	public static final String QUERY_BY_KURSARTALLG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KursartAllg */
+	public static final String QUERY_LIST_BY_KURSARTALLG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes WochenStd */
+	public static final String QUERY_BY_WOCHENSTD = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes WochenStd */
+	public static final String QUERY_LIST_BY_WOCHENSTD = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EpochenUnterricht */
+	public static final String QUERY_BY_EPOCHENUNTERRICHT = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EpochenUnterricht */
+	public static final String QUERY_LIST_BY_EPOCHENUNTERRICHT = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gewichtung */
+	public static final String QUERY_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gewichtung */
+	public static final String QUERY_LIST_BY_GEWICHTUNG = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrerKrz */
+	public static final String QUERY_BY_LEHRERKRZ = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrerKrz */
+	public static final String QUERY_LIST_BY_LEHRERKRZ = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz IN ?1";
 
 	/** ID des Facheintrags für die Stundentafel */
 	@Id

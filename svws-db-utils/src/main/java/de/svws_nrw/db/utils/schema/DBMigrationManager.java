@@ -588,7 +588,9 @@ public final class DBMigrationManager {
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
 			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
-				return srcConn.queryNamed("" + dtoName + ".all" + ((!tab.pkSpalten().isEmpty()) ? ".migration" : ""), dtoClass).getResultList();
+				if (!tab.pkSpalten().isEmpty())
+					srcConn.migrationQueryAll(dtoClass);
+				return srcConn.queryAll(dtoClass);
 			} catch (final PersistenceException e) {
 				lastError = e.getMessage();
 				return null;

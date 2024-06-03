@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,28 +18,68 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerAnrechnung")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.all", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.lehrer_id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt_id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungstd", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.jahr", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.jahr.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.schulnreigner", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.all.migration", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Lehrer_ID", "Abschnitt_ID", "AnrechnungsgrundKrz", "AnrechnungStd", "Jahr", "Abschnitt", "SchulnrEigner"})
 public final class MigrationDTOLehrerAnrechnungsstunde {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
+	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
+	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnrechnungsgrundKrz */
+	public static final String QUERY_BY_ANRECHNUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnrechnungsgrundKrz */
+	public static final String QUERY_LIST_BY_ANRECHNUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AnrechnungStd */
+	public static final String QUERY_BY_ANRECHNUNGSTD = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AnrechnungStd */
+	public static final String QUERY_LIST_BY_ANRECHNUNGSTD = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahr */
+	public static final String QUERY_BY_JAHR = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahr */
+	public static final String QUERY_LIST_BY_JAHR = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt */
+	public static final String QUERY_BY_ABSCHNITT = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt */
+	public static final String QUERY_LIST_BY_ABSCHNITT = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID für den Eintrag für die Anrechnungsstunden */
 	@Id

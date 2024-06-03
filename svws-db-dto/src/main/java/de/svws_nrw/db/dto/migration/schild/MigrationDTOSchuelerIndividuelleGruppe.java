@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,22 +26,50 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerListe")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.all", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.id", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.bezeichnung", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung = :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.erzeuger", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger = :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.erzeuger.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.privat", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Privat = :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.privat.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Privat IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppe.all.migration", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Erzeuger", "Privat", "SchulnrEigner"})
 public final class MigrationDTOSchuelerIndividuelleGruppe {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Erzeuger */
+	public static final String QUERY_BY_ERZEUGER = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Erzeuger */
+	public static final String QUERY_LIST_BY_ERZEUGER = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Privat */
+	public static final String QUERY_BY_PRIVAT = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Privat = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Privat */
+	public static final String QUERY_LIST_BY_PRIVAT = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.Privat IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppe e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID der individuellen Schülerliste */
 	@Id

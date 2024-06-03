@@ -288,7 +288,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabDTOsZuIds(final DBEntityManager conn, final List<Long> vids) throws ApiOperationException {
 		if (vids.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", vids, DTOGostKlausurenVorgaben.class);
+		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryByKeyList(DTOGostKlausurenVorgaben.class, vids);
 		if (vorgaben.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgabe-DTOs zu angegebenen IDs nicht gefunden.");
 		return vorgaben;
@@ -430,8 +430,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurvorgabe> copyVorgabenToJahrgang(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final int quartal) throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
-		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", abiturjahr, DTOGostKlausurenVorgaben.class);
+		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, -1);
+		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, abiturjahr);
 		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
@@ -473,7 +473,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurvorgabe> createDefaultVorgaben(final DBEntityManager conn, final GostHalbjahr halbjahr, final int quartal) throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
+		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, -1);
 		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);

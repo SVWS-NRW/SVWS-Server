@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,17 +20,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(DTOLehrerLehramtBefaehigungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtLehrbef")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.all", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrer_id", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrer_id.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefkrz", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefkrz.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN :value")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2")
-@NamedQuery(name = "DTOLehrerLehramtBefaehigung.all.migration", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL")
 @JsonPropertyOrder({"Lehrer_ID", "LehrbefKrz", "LehrbefAnerkennungKrz"})
 public final class DTOLehrerLehramtBefaehigung {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerLehramtBefaehigung e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
+	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
+	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrbefKrz */
+	public static final String QUERY_BY_LEHRBEFKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrbefKrz */
+	public static final String QUERY_LIST_BY_LEHRBEFKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrbefAnerkennungKrz */
+	public static final String QUERY_BY_LEHRBEFANERKENNUNGKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrbefAnerkennungKrz */
+	public static final String QUERY_LIST_BY_LEHRBEFANERKENNUNGKRZ = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN ?1";
 
 	/** LehrerID zu der die Lehrbefähigung gehört */
 	@Id

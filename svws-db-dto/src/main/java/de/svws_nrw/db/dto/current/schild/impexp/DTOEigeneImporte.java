@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,38 +26,98 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte")
-@NamedQuery(name = "DTOEigeneImporte.all", query = "SELECT e FROM DTOEigeneImporte e")
-@NamedQuery(name = "DTOEigeneImporte.id", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = :value")
-@NamedQuery(name = "DTOEigeneImporte.id.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEigeneImporte.title", query = "SELECT e FROM DTOEigeneImporte e WHERE e.Title = :value")
-@NamedQuery(name = "DTOEigeneImporte.title.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.Title IN :value")
-@NamedQuery(name = "DTOEigeneImporte.delimiterchar", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar = :value")
-@NamedQuery(name = "DTOEigeneImporte.delimiterchar.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar IN :value")
-@NamedQuery(name = "DTOEigeneImporte.textquote", query = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote = :value")
-@NamedQuery(name = "DTOEigeneImporte.textquote.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote IN :value")
-@NamedQuery(name = "DTOEigeneImporte.skiplines", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines = :value")
-@NamedQuery(name = "DTOEigeneImporte.skiplines.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines IN :value")
-@NamedQuery(name = "DTOEigeneImporte.dateformat", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat = :value")
-@NamedQuery(name = "DTOEigeneImporte.dateformat.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat IN :value")
-@NamedQuery(name = "DTOEigeneImporte.booleantrue", query = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue = :value")
-@NamedQuery(name = "DTOEigeneImporte.booleantrue.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue IN :value")
-@NamedQuery(name = "DTOEigeneImporte.abkweiblich", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich = :value")
-@NamedQuery(name = "DTOEigeneImporte.abkweiblich.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich IN :value")
-@NamedQuery(name = "DTOEigeneImporte.abkmaennlich", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich = :value")
-@NamedQuery(name = "DTOEigeneImporte.abkmaennlich.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich IN :value")
-@NamedQuery(name = "DTOEigeneImporte.maintable", query = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable = :value")
-@NamedQuery(name = "DTOEigeneImporte.maintable.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable IN :value")
-@NamedQuery(name = "DTOEigeneImporte.insertmode", query = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode = :value")
-@NamedQuery(name = "DTOEigeneImporte.insertmode.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode IN :value")
-@NamedQuery(name = "DTOEigeneImporte.lookuptabledir", query = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir = :value")
-@NamedQuery(name = "DTOEigeneImporte.lookuptabledir.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir IN :value")
-@NamedQuery(name = "DTOEigeneImporte.schueleridmode", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode = :value")
-@NamedQuery(name = "DTOEigeneImporte.schueleridmode.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode IN :value")
-@NamedQuery(name = "DTOEigeneImporte.primaryKeyQuery", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOEigeneImporte.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOEigeneImporte.all.migration", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Title", "DelimiterChar", "TextQuote", "SkipLines", "DateFormat", "BooleanTrue", "AbkWeiblich", "AbkMaennlich", "MainTable", "InsertMode", "LookupTableDir", "SchuelerIDMode"})
 public final class DTOEigeneImporte {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOEigeneImporte e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Title */
+	public static final String QUERY_BY_TITLE = "SELECT e FROM DTOEigeneImporte e WHERE e.Title = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Title */
+	public static final String QUERY_LIST_BY_TITLE = "SELECT e FROM DTOEigeneImporte e WHERE e.Title IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DelimiterChar */
+	public static final String QUERY_BY_DELIMITERCHAR = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DelimiterChar */
+	public static final String QUERY_LIST_BY_DELIMITERCHAR = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes TextQuote */
+	public static final String QUERY_BY_TEXTQUOTE = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TextQuote */
+	public static final String QUERY_LIST_BY_TEXTQUOTE = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SkipLines */
+	public static final String QUERY_BY_SKIPLINES = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SkipLines */
+	public static final String QUERY_LIST_BY_SKIPLINES = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DateFormat */
+	public static final String QUERY_BY_DATEFORMAT = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DateFormat */
+	public static final String QUERY_LIST_BY_DATEFORMAT = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BooleanTrue */
+	public static final String QUERY_BY_BOOLEANTRUE = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BooleanTrue */
+	public static final String QUERY_LIST_BY_BOOLEANTRUE = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbkWeiblich */
+	public static final String QUERY_BY_ABKWEIBLICH = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbkWeiblich */
+	public static final String QUERY_LIST_BY_ABKWEIBLICH = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbkMaennlich */
+	public static final String QUERY_BY_ABKMAENNLICH = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbkMaennlich */
+	public static final String QUERY_LIST_BY_ABKMAENNLICH = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes MainTable */
+	public static final String QUERY_BY_MAINTABLE = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes MainTable */
+	public static final String QUERY_LIST_BY_MAINTABLE = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes InsertMode */
+	public static final String QUERY_BY_INSERTMODE = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes InsertMode */
+	public static final String QUERY_LIST_BY_INSERTMODE = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LookupTableDir */
+	public static final String QUERY_BY_LOOKUPTABLEDIR = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LookupTableDir */
+	public static final String QUERY_LIST_BY_LOOKUPTABLEDIR = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchuelerIDMode */
+	public static final String QUERY_BY_SCHUELERIDMODE = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchuelerIDMode */
+	public static final String QUERY_LIST_BY_SCHUELERIDMODE = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode IN ?1";
 
 	/** ID des Importschemas für den externen Textimport */
 	@Id

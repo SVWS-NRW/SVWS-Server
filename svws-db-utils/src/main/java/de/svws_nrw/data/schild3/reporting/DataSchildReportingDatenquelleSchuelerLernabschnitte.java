@@ -34,9 +34,7 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 	@Override
     List<SchildReportingSchuelerLernabschnitt> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
         // Prüfe, ob die Schüler in der DB vorhanden sind
-        final Map<Long, DTOSchueler> schueler = conn
-                .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
-                .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+        final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
         for (final Long schuelerID : params)
             if (schueler.get(schuelerID) == null)
                 throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
@@ -45,20 +43,18 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 		final ArrayList<SchildReportingSchuelerLernabschnitt> result = new ArrayList<>();
 
         // Aggregiere die benötigten Daten aus der Datenbank
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", params, DTOSchuelerLernabschnittsdaten.class);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID,
+				DTOSchuelerLernabschnittsdaten.class, params);
         if (lernabschnittsdaten == null || lernabschnittsdaten.isEmpty())
             return result;
         final List<Long> idSchuljahresabschnitte = lernabschnittsdaten.stream().map(l -> l.Schuljahresabschnitts_ID).toList();
-        final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn
-                .queryNamed("DTOSchuljahresabschnitte.id.multiple", idSchuljahresabschnitte, DTOSchuljahresabschnitte.class)
+        final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, idSchuljahresabschnitte)
                 .stream().collect(Collectors.toMap(j -> j.ID, j -> j));
         final List<Long> idKlassen = lernabschnittsdaten.stream().map(l -> l.Klassen_ID).toList();
-        final Map<Long, DTOKlassen> mapKlassen = conn
-                .queryNamed("DTOKlassen.id.multiple", idKlassen, DTOKlassen.class)
+        final Map<Long, DTOKlassen> mapKlassen = conn.queryByKeyList(DTOKlassen.class, idKlassen)
                 .stream().collect(Collectors.toMap(k -> k.ID, k -> k));
         final List<Long> idJahrgaenge = lernabschnittsdaten.stream().map(l -> l.Jahrgang_ID).toList();
-        final Map<Long, DTOJahrgang> mapJahrgaenge = conn
-                .queryNamed("DTOJahrgang.id.multiple", idJahrgaenge, DTOJahrgang.class)
+        final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, idJahrgaenge)
                 .stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %d konnte nicht für die Lernabschnittsdaten mit der ID %d gefunden werden.";

@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,19 +20,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @IdClass(MigrationDTOClientKonfigurationBenutzerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Client_Konfiguration_Benutzer")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.all", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.benutzer_id", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.benutzer_id.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.appname", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName = :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.appname.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName IN :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.schluessel", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel = :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.schluessel.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel IN :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.wert", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert = :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.wert.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert IN :value")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3")
-@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.all.migration", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
 @JsonPropertyOrder({"Benutzer_ID", "AppName", "Schluessel", "Wert"})
 public final class MigrationDTOClientKonfigurationBenutzer {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID */
+	public static final String QUERY_BY_BENUTZER_ID = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID */
+	public static final String QUERY_LIST_BY_BENUTZER_ID = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AppName */
+	public static final String QUERY_BY_APPNAME = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AppName */
+	public static final String QUERY_LIST_BY_APPNAME = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wert */
+	public static final String QUERY_BY_WERT = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wert */
+	public static final String QUERY_LIST_BY_WERT = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert IN ?1";
 
 	/** Die ID des Datenbankbenutzers, für den der Client-Konfigurationsdatensatz gespeichert ist */
 	@Id

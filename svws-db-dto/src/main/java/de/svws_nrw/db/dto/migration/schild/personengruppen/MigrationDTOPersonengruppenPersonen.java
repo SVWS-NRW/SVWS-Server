@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,56 +18,152 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Personengruppen_Personen")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.all", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.schulnreigner", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.gruppe_id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.gruppe_id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.person_id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.person_id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personnr", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personnr.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personart", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personart.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personvorname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personvorname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personplz", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personplz.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personort", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personort.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrasse", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrasse.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrassenname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrassenname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnr", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnr.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnrzusatz", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.persontelefon", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.persontelefon.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personmobil", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personmobil.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personemail", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personemail.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.bemerkung", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.bemerkung.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.zusatzinfo", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.zusatzinfo.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.sortierung", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.sortierung.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personanrede", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personanrede.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personakadgrad", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personakadgrad.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN :value")
-@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.all.migration", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulnrEigner", "Gruppe_ID", "Person_ID", "PersonNr", "PersonArt", "PersonName", "PersonVorname", "PersonPLZ", "PersonOrt", "PersonStrasse", "PersonStrassenname", "PersonHausNr", "PersonHausNrZusatz", "PersonTelefon", "PersonMobil", "PersonEmail", "Bemerkung", "Zusatzinfo", "Sortierung", "PersonAnrede", "PersonAkadGrad"})
 public final class MigrationDTOPersonengruppenPersonen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Gruppe_ID */
+	public static final String QUERY_BY_GRUPPE_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gruppe_ID */
+	public static final String QUERY_LIST_BY_GRUPPE_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Person_ID */
+	public static final String QUERY_BY_PERSON_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Person_ID */
+	public static final String QUERY_LIST_BY_PERSON_ID = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonNr */
+	public static final String QUERY_BY_PERSONNR = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonNr */
+	public static final String QUERY_LIST_BY_PERSONNR = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonArt */
+	public static final String QUERY_BY_PERSONART = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonArt */
+	public static final String QUERY_LIST_BY_PERSONART = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonName */
+	public static final String QUERY_BY_PERSONNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonName */
+	public static final String QUERY_LIST_BY_PERSONNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonVorname */
+	public static final String QUERY_BY_PERSONVORNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonVorname */
+	public static final String QUERY_LIST_BY_PERSONVORNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonPLZ */
+	public static final String QUERY_BY_PERSONPLZ = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonPLZ */
+	public static final String QUERY_LIST_BY_PERSONPLZ = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonOrt */
+	public static final String QUERY_BY_PERSONORT = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonOrt */
+	public static final String QUERY_LIST_BY_PERSONORT = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonStrasse */
+	public static final String QUERY_BY_PERSONSTRASSE = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonStrasse */
+	public static final String QUERY_LIST_BY_PERSONSTRASSE = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonStrassenname */
+	public static final String QUERY_BY_PERSONSTRASSENNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonStrassenname */
+	public static final String QUERY_LIST_BY_PERSONSTRASSENNAME = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonHausNr */
+	public static final String QUERY_BY_PERSONHAUSNR = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonHausNr */
+	public static final String QUERY_LIST_BY_PERSONHAUSNR = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonHausNrZusatz */
+	public static final String QUERY_BY_PERSONHAUSNRZUSATZ = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonHausNrZusatz */
+	public static final String QUERY_LIST_BY_PERSONHAUSNRZUSATZ = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonTelefon */
+	public static final String QUERY_BY_PERSONTELEFON = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonTelefon */
+	public static final String QUERY_LIST_BY_PERSONTELEFON = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonMobil */
+	public static final String QUERY_BY_PERSONMOBIL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonMobil */
+	public static final String QUERY_LIST_BY_PERSONMOBIL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonEmail */
+	public static final String QUERY_BY_PERSONEMAIL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonEmail */
+	public static final String QUERY_LIST_BY_PERSONEMAIL = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zusatzinfo */
+	public static final String QUERY_BY_ZUSATZINFO = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zusatzinfo */
+	public static final String QUERY_LIST_BY_ZUSATZINFO = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonAnrede */
+	public static final String QUERY_BY_PERSONANREDE = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonAnrede */
+	public static final String QUERY_LIST_BY_PERSONANREDE = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonAkadGrad */
+	public static final String QUERY_BY_PERSONAKADGRAD = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonAkadGrad */
+	public static final String QUERY_LIST_BY_PERSONAKADGRAD = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN ?1";
 
 	/** ID des Personeneintrags zur Personengruppe */
 	@Id

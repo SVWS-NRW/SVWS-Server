@@ -179,7 +179,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
-    	final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryNamed("DTOSchuelerAllgemeineAdresse.schueler_id", schuelerID, DTOSchuelerAllgemeineAdresse.class);
+    	final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryList(DTOSchuelerAllgemeineAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerAllgemeineAdresse.class, schuelerID);
     	if (betriebe == null)
     		throw new ApiOperationException(Status.NOT_FOUND);
         final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();

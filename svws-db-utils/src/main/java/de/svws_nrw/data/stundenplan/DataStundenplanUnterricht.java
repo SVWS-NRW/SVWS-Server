@@ -63,27 +63,28 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	public static List<StundenplanUnterricht> getUnterrichte(final DBEntityManager conn, final long idStundenplan) {
 		final List<StundenplanUnterricht> daten = new ArrayList<>();
 		// Bestimme die Zeitraster-IDs des Stundenplans
-		final List<Long> zeitrasterIDs = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
+		final List<Long> zeitrasterIDs = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 				.stream().map(p -> p.ID).toList();
 		if (zeitrasterIDs.isEmpty())
 			return daten;
 		// Bestimme die Unterrichte der Zeitraster-Einträge
-		final List<DTOStundenplanUnterricht> dtoUnterrichte = conn.queryNamed("DTOStundenplanUnterricht.zeitraster_id.multiple", zeitrasterIDs, DTOStundenplanUnterricht.class);
+		final List<DTOStundenplanUnterricht> dtoUnterrichte = conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID,
+				DTOStundenplanUnterricht.class, zeitrasterIDs);
 		if (dtoUnterrichte.isEmpty())
 			return daten;
 		final List<Long> unterrichtIDs = dtoUnterrichte.stream().map(a -> a.ID).toList();
 		// Bestimme die Zuordnung der Räume zu den Unterrichts-Einträgen
-		final Map<Long, List<DTOStundenplanUnterrichtRaum>> mapRaeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtRaum.class)
-				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
+		final Map<Long, List<DTOStundenplanUnterrichtRaum>> mapRaeume = conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_LIST_BY_UNTERRICHT_ID,
+				DTOStundenplanUnterrichtRaum.class, unterrichtIDs).stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
 		// Bestimme die Zuordnung der Schienen zu den Unterrichts-Einträgen
-		final Map<Long, List<DTOStundenplanUnterrichtSchiene>> mapSchienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtSchiene.class)
-				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
+		final Map<Long, List<DTOStundenplanUnterrichtSchiene>> mapSchienen = conn.queryList(DTOStundenplanUnterrichtSchiene.QUERY_LIST_BY_UNTERRICHT_ID,
+				DTOStundenplanUnterrichtSchiene.class, unterrichtIDs).stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
 		// Bestimme die Zuordnung der Klassen zu den Unterrichts-Einträgen
-		final Map<Long, List<DTOStundenplanUnterrichtKlasse>> mapKlassen = conn.queryNamed("DTOStundenplanUnterrichtKlasse.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtKlasse.class)
-				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
+		final Map<Long, List<DTOStundenplanUnterrichtKlasse>> mapKlassen = conn.queryList(DTOStundenplanUnterrichtKlasse.QUERY_LIST_BY_UNTERRICHT_ID,
+				DTOStundenplanUnterrichtKlasse.class, unterrichtIDs).stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
 		// Bestimme die Zuordnung der Lehrer zu den Unterrichts-Einträgen
-		final Map<Long, List<DTOStundenplanUnterrichtLehrer>> mapLehrer = conn.queryNamed("DTOStundenplanUnterrichtLehrer.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtLehrer.class)
-				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
+		final Map<Long, List<DTOStundenplanUnterrichtLehrer>> mapLehrer = conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_LIST_BY_UNTERRICHT_ID,
+				DTOStundenplanUnterrichtLehrer.class, unterrichtIDs).stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
 		for (final DTOStundenplanUnterricht dtoUnterricht : dtoUnterrichte) {
 			final StundenplanUnterricht unterricht = new StundenplanUnterricht();
 			unterricht.id = dtoUnterricht.ID;
@@ -122,13 +123,13 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		final DTOStundenplanUnterricht dtoUnterricht = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 		if (dtoUnterricht == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
-		final List<Long> raeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtRaum.class)
+		final List<Long> raeume = conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtRaum.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Raum_ID).toList();
-		final List<Long> schienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtSchiene.class)
+		final List<Long> schienen = conn.queryList(DTOStundenplanUnterrichtSchiene.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtSchiene.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Schiene_ID).toList();
-		final List<Long> klassen = conn.queryNamed("DTOStundenplanUnterrichtKlasse.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtKlasse.class)
+		final List<Long> klassen = conn.queryList(DTOStundenplanUnterrichtKlasse.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtKlasse.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Klasse_ID).toList();
-		final List<Long> lehrer = conn.queryNamed("DTOStundenplanUnterrichtLehrer.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtLehrer.class)
+		final List<Long> lehrer = conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtLehrer.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Lehrer_ID).toList();
 		final StundenplanUnterricht daten = new StundenplanUnterricht();
 		daten.id = dtoUnterricht.ID;
@@ -383,9 +384,8 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanUnterricht.primaryKeyQuery.multiple", ids, DTOStundenplanUnterricht.class)
-				.stream().map(u -> u.Zeitraster_ID).toList();
-		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", idsZeitraster, DTOStundenplanZeitraster.class);
+		final List<Long> idsZeitraster = conn.queryByKeyList(DTOStundenplanUnterricht.class, ids).stream().map(u -> u.Zeitraster_ID).toList();
+		final List<DTOStundenplanZeitraster> dtos = conn.queryByKeyList(DTOStundenplanZeitraster.class, idsZeitraster);
 		for (final DTOStundenplanZeitraster dto : dtos)
 			if (dto.Stundenplan_ID != this.idStundenplan)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag eines Unterrichtes gehört nicht zu dem angegebenen Stundenplan.");

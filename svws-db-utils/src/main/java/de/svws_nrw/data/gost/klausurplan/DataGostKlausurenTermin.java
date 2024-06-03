@@ -105,7 +105,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	public static List<GostKlausurtermin> getKlausurtermineZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren) throws ApiOperationException {
 		if (kursKlausuren.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", kursKlausuren.stream().map(kk -> kk.idTermin).toList(), DTOGostKlausurenTermine.class);
+		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenTermine.class,
+				kursKlausuren.stream().map(kk -> kk.idTermin).toList());
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -132,7 +133,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 
 		// TODO Termine von Kursklausuren ergänzen
 
-		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", schuelerklausurTermine.stream().map(skt -> skt.idTermin).toList(), DTOGostKlausurenTermine.class);
+		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenTermine.class,
+				schuelerklausurTermine.stream().map(skt -> skt.idTermin).toList());
 		ergebnis.addAll(DTOMapper.mapList(terminDTOs, dtoMapper));
 		return new ArrayList<>(ergebnis);
 	}
@@ -152,7 +154,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 */
 	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
 		final GostHalbjahr ghj = halbjahr <= 0 ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
-		final List<DTOGostKlausurenTermine> terminDTOs = (halbjahr <= 0)
+		final List<DTOGostKlausurenTermine> terminDTOs = (ghj == null)
 			? conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
 				.setParameter("jgid", abiturjahr)
 				.getResultList()
@@ -178,7 +180,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		if (termin.datum == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
 
-		final List<GostKlausurtermin> termine = DTOMapper.mapList(conn.queryNamed("DTOGostKlausurenTermine.datum", termin.datum, DTOGostKlausurenTermine.class), dtoMapper);
+		final List<GostKlausurtermin> termine = DTOMapper.mapList(conn.queryList(DTOGostKlausurenTermine.QUERY_BY_DATUM, DTOGostKlausurenTermine.class, termin.datum), dtoMapper);
 //		termine.remove(termin);
 
 		return termine;
@@ -227,7 +229,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	public static List<DTOGostKlausurenTermine> getKlausurterminDTOsZuIds(final DBEntityManager conn, final List<Long> listIds) {
 		if (listIds.isEmpty())
 			return new ArrayList<>();
-		return conn.queryNamed("DTOGostKlausurenTermine.id.multiple", listIds, DTOGostKlausurenTermine.class);
+		return conn.queryByKeyList(DTOGostKlausurenTermine.class, listIds);
 	}
 
 

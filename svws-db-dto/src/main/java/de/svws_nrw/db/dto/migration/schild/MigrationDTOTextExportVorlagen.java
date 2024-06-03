@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,18 +18,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "TextExportVorlagen")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.all", query = "SELECT e FROM MigrationDTOTextExportVorlagen e")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.schulnreigner", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.vorlagename", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName = :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.vorlagename.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.daten", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten = :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.daten.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten IN :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName = ?1")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN :value")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.all.migration", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL")
 @JsonPropertyOrder({"SchulnrEigner", "VorlageName", "Daten"})
 public final class MigrationDTOTextExportVorlagen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOTextExportVorlagen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.SchulnrEigner IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes VorlageName */
+	public static final String QUERY_BY_VORLAGENAME = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes VorlageName */
+	public static final String QUERY_LIST_BY_VORLAGENAME = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Daten */
+	public static final String QUERY_BY_DATEN = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Daten */
+	public static final String QUERY_LIST_BY_DATEN = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten IN ?1";
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")

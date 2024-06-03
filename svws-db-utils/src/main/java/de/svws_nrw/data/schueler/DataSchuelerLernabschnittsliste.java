@@ -74,16 +74,17 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	if (schueler == null)
     		throw new ApiOperationException(Status.NOT_FOUND);
     	// Bestimme die Lernabschnitte
-    	final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class);
+    	final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
+    			DTOSchuelerLernabschnittsdaten.class, id);
     	if (abschnitte == null)
     		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
     	// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
     	final List<Long> klassenIDs = abschnitte.stream().filter(a -> a.Klassen_ID != null).map(a -> a.Klassen_ID).toList();
-    	final List<DTOKlassen> klassen = klassenIDs.isEmpty() ? new ArrayList<>() : conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
+    	final List<DTOKlassen> klassen = conn.queryByKeyList(DTOKlassen.class, klassenIDs);
     	final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
     	// Bestimme die Schuljahres-Abschnitte
     	final List<Long> schuljahresabschnittIDs = abschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).toList();
-    	final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnittIDs, DTOSchuljahresabschnitte.class);
+    	final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, schuljahresabschnittIDs);
     	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Konvertiere die Lenabschnitte, ergänze sie um die Klassen- und Schuljahresabschnittsinformationen und füge sie zur Liste hinzu
     	final ArrayList<SchuelerLernabschnittListeEintrag> daten = new ArrayList<>();

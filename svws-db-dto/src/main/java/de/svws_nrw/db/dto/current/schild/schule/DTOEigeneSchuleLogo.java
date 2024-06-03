@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,16 +18,32 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Logo")
-@NamedQuery(name = "DTOEigeneSchuleLogo.all", query = "SELECT e FROM DTOEigeneSchuleLogo e")
-@NamedQuery(name = "DTOEigeneSchuleLogo.eigeneschule_id", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID = :value")
-@NamedQuery(name = "DTOEigeneSchuleLogo.eigeneschule_id.multiple", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IN :value")
-@NamedQuery(name = "DTOEigeneSchuleLogo.logobase64", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.LogoBase64 = :value")
-@NamedQuery(name = "DTOEigeneSchuleLogo.logobase64.multiple", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.LogoBase64 IN :value")
-@NamedQuery(name = "DTOEigeneSchuleLogo.primaryKeyQuery", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID = ?1")
-@NamedQuery(name = "DTOEigeneSchuleLogo.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IN :value")
-@NamedQuery(name = "DTOEigeneSchuleLogo.all.migration", query = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IS NOT NULL")
 @JsonPropertyOrder({"EigeneSchule_ID", "LogoBase64"})
 public final class DTOEigeneSchuleLogo {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOEigeneSchuleLogo e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EigeneSchule_ID */
+	public static final String QUERY_BY_EIGENESCHULE_ID = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EigeneSchule_ID */
+	public static final String QUERY_LIST_BY_EIGENESCHULE_ID = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.EigeneSchule_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LogoBase64 */
+	public static final String QUERY_BY_LOGOBASE64 = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.LogoBase64 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LogoBase64 */
+	public static final String QUERY_LIST_BY_LOGOBASE64 = "SELECT e FROM DTOEigeneSchuleLogo e WHERE e.LogoBase64 IN ?1";
 
 	/** ID des Datensatzes der eigenen Schule */
 	@Id

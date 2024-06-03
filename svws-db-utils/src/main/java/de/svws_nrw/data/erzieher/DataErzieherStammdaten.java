@@ -106,7 +106,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
-		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
+		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class, schuelerID);
 		if (erzieher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<ErzieherStammdaten> daten = new ArrayList<>();

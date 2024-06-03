@@ -76,7 +76,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<StundenplanRaum> getRaeume(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
-		final List<DTOStundenplanRaum> raeume = conn.queryNamed("DTOStundenplanRaum.stundenplan_id", idStundenplan, DTOStundenplanRaum.class);
+		final List<DTOStundenplanRaum> raeume = conn.queryList(DTOStundenplanRaum.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanRaum.class, idStundenplan);
 		final ArrayList<StundenplanRaum> daten = new ArrayList<>();
 		for (final DTOStundenplanRaum r : raeume)
 			daten.add(dtoMapper.apply(r));
@@ -100,7 +100,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 				.collect(Collectors.toMap(r -> r.id, Function.identity()));
 		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = new HashMap<>();
 		final List<DTOStundenplanUnterrichtRaum> listRaeume = unterrichtIds.isEmpty() ? new ArrayList<>()
-				: conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtRaum.class);
+				: conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtRaum.class, unterrichtIds);
 		for (final DTOStundenplanUnterrichtRaum r : listRaeume) {
 			final List<StundenplanRaum> raeume = raeumeByUnterrichtId.computeIfAbsent(r.Unterricht_ID, id -> new ArrayList<>());
 			if (raumById.containsKey(r.Raum_ID))
@@ -256,7 +256,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		final List<DTOStundenplanRaum> dtos = conn.queryNamed("DTOStundenplanRaum.primaryKeyQuery.multiple", ids, DTOStundenplanRaum.class);
+		final List<DTOStundenplanRaum> dtos = conn.queryByKeyList(DTOStundenplanRaum.class, ids);
 		for (final DTOStundenplanRaum dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Raum-Eintrag gehört nicht zu dem angegebenen Stundenplan.");

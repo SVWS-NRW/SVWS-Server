@@ -64,7 +64,7 @@ public final class DataLehrerLehramt extends DataManager<Long> {
 	public static List<LehrerLehramtEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerLehramtEintrag> result = new ArrayList<>();
     	// Bestimme die Lehrämter des Lehrers
-		final List<DTOLehrerLehramt> daten = conn.queryNamed("DTOLehrerLehramt.lehrer_id", idLehrer, DTOLehrerLehramt.class);
+		final List<DTOLehrerLehramt> daten = conn.queryList(DTOLehrerLehramt.QUERY_BY_LEHRER_ID, DTOLehrerLehramt.class, idLehrer);
     	if (daten == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu

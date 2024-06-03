@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,20 +18,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuleCredentials")
-@NamedQuery(name = "DTOSchuleCredentials.all", query = "SELECT e FROM DTOSchuleCredentials e")
-@NamedQuery(name = "DTOSchuleCredentials.schulnummer", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = :value")
-@NamedQuery(name = "DTOSchuleCredentials.schulnummer.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN :value")
-@NamedQuery(name = "DTOSchuleCredentials.rsapublickey", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name = "DTOSchuleCredentials.rsapublickey.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name = "DTOSchuleCredentials.rsaprivatekey", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name = "DTOSchuleCredentials.rsaprivatekey.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name = "DTOSchuleCredentials.aes", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES = :value")
-@NamedQuery(name = "DTOSchuleCredentials.aes.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES IN :value")
-@NamedQuery(name = "DTOSchuleCredentials.primaryKeyQuery", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1")
-@NamedQuery(name = "DTOSchuleCredentials.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN :value")
-@NamedQuery(name = "DTOSchuleCredentials.all.migration", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
 @JsonPropertyOrder({"Schulnummer", "RSAPublicKey", "RSAPrivateKey", "AES"})
 public final class DTOSchuleCredentials {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuleCredentials e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulnummer */
+	public static final String QUERY_BY_SCHULNUMMER = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulnummer */
+	public static final String QUERY_LIST_BY_SCHULNUMMER = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPublicKey */
+	public static final String QUERY_BY_RSAPUBLICKEY = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPublicKey */
+	public static final String QUERY_LIST_BY_RSAPUBLICKEY = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes RSAPrivateKey */
+	public static final String QUERY_BY_RSAPRIVATEKEY = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes RSAPrivateKey */
+	public static final String QUERY_LIST_BY_RSAPRIVATEKEY = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AES */
+	public static final String QUERY_BY_AES = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AES */
+	public static final String QUERY_LIST_BY_AES = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES IN ?1";
 
 	/** ID für den Credential-Datensatz einer Schule (also auch für den PublicKey der anderen Schulen) */
 	@Id

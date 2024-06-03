@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,38 +31,98 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachenfolge")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.all", query = "SELECT e FROM DTOSchuelerSprachenfolge e")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.id", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.id.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.schueler_id", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.sprache", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.sprache.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.reihenfolgenr", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.reihenfolgenr.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangvon", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangvon.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangbis", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangbis.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittvon", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittvon.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittbis", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittbis.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.referenzniveau", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.referenzniveau.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.kleineslatinumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.kleineslatinumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.latinumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.latinumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.graecumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.graecumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht = :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.all.migration", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ReihenfolgeNr", "ASDJahrgangVon", "ASDJahrgangBis", "AbschnittVon", "AbschnittBis", "Referenzniveau", "KleinesLatinumErreicht", "LatinumErreicht", "GraecumErreicht", "HebraicumErreicht"})
 public final class DTOSchuelerSprachenfolge {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerSprachenfolge e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
+	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
+	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sprache */
+	public static final String QUERY_BY_SPRACHE = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sprache */
+	public static final String QUERY_LIST_BY_SPRACHE = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ReihenfolgeNr */
+	public static final String QUERY_BY_REIHENFOLGENR = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ReihenfolgeNr */
+	public static final String QUERY_LIST_BY_REIHENFOLGENR = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASDJahrgangVon */
+	public static final String QUERY_BY_ASDJAHRGANGVON = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASDJahrgangVon */
+	public static final String QUERY_LIST_BY_ASDJAHRGANGVON = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ASDJahrgangBis */
+	public static final String QUERY_BY_ASDJAHRGANGBIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ASDJahrgangBis */
+	public static final String QUERY_LIST_BY_ASDJAHRGANGBIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschnittVon */
+	public static final String QUERY_BY_ABSCHNITTVON = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschnittVon */
+	public static final String QUERY_LIST_BY_ABSCHNITTVON = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes AbschnittBis */
+	public static final String QUERY_BY_ABSCHNITTBIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbschnittBis */
+	public static final String QUERY_LIST_BY_ABSCHNITTBIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Referenzniveau */
+	public static final String QUERY_BY_REFERENZNIVEAU = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Referenzniveau */
+	public static final String QUERY_LIST_BY_REFERENZNIVEAU = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes KleinesLatinumErreicht */
+	public static final String QUERY_BY_KLEINESLATINUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes KleinesLatinumErreicht */
+	public static final String QUERY_LIST_BY_KLEINESLATINUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes LatinumErreicht */
+	public static final String QUERY_BY_LATINUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LatinumErreicht */
+	public static final String QUERY_LIST_BY_LATINUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GraecumErreicht */
+	public static final String QUERY_BY_GRAECUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GraecumErreicht */
+	public static final String QUERY_LIST_BY_GRAECUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes HebraicumErreicht */
+	public static final String QUERY_BY_HEBRAICUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes HebraicumErreicht */
+	public static final String QUERY_LIST_BY_HEBRAICUMERREICHT = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht IN ?1";
 
 	/** ID des Sprachenfolgeeintrags */
 	@Id

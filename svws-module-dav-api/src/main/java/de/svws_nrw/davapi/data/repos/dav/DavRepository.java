@@ -71,9 +71,8 @@ public final class DavRepository implements IDavRepository {
 		if (readableCollectionACLPermissionsByCollectionId.isEmpty()) {
 			return new ArrayList<>();
 		}
-		return conn
-				.queryNamed("DTODavRessource.davressourcecollection_id.multiple",
-						readableCollectionACLPermissionsByCollectionId.keySet(), DTODavRessource.class)
+		return conn.queryList(DTODavRessource.QUERY_LIST_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class,
+						readableCollectionACLPermissionsByCollectionId.keySet())
 				.stream().filter(dto -> dto.geloeschtam == null).map(dto -> mapDTODavRessource(dto, parameters,
 						readableCollectionACLPermissionsByCollectionId.get(dto.DavRessourceCollection_ID)))
 				.toList();
@@ -189,8 +188,7 @@ public final class DavRepository implements IDavRepository {
 		DTODavRessource dtoDavRessource;
 		conn.transactionBegin();
 		final List<DTODavRessource> davRessourcesWithSameUID = conn
-				.queryNamed("DTODavRessource.davressourcecollection_id", davRessource.ressourceCollectionId,
-						DTODavRessource.class)
+				.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class, davRessource.ressourceCollectionId)
 				.stream().filter(r -> r.geloeschtam == null && r.UID.equals(davRessource.uid)).toList();
 		if (davRessourcesWithSameUID.size() == 1) {
 			davRessource.id = davRessourcesWithSameUID.get(0).ID;
@@ -238,8 +236,7 @@ public final class DavRepository implements IDavRepository {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		final List<DTODavRessourceCollectionsACL> dtoACLs = conn
-				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", dtoDavRessourceCollection.ID,
-						DTODavRessourceCollectionsACL.class)
+				.queryList(DTODavRessourceCollectionsACL.QUERY_BY_RESSOURCECOLLECTION_ID, DTODavRessourceCollectionsACL.class, dtoDavRessourceCollection.ID)
 				.stream().filter(dto -> dto.Benutzer_ID == conn.getUser().getId()).toList();
 		DTODavRessourceCollectionsACL dtoACL;
 		if (dtoACLs.size() == 1) {
@@ -297,9 +294,8 @@ public final class DavRepository implements IDavRepository {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		conn.transactionBegin();
-		final List<DTODavRessource> listDavRessourcesSameUID = conn
-				.queryNamed("DTODavRessource.davressourcecollection_id", collectionId, DTODavRessource.class).stream()
-				.filter(r -> r.UID.equals(ressourceUID)).toList();
+		final List<DTODavRessource> listDavRessourcesSameUID = conn.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID,
+				DTODavRessource.class, collectionId).stream().filter(r -> r.UID.equals(ressourceUID)).toList();
 		if (listDavRessourcesSameUID.size() != 1 || listDavRessourcesSameUID.get(0).geloeschtam != null) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
@@ -394,10 +390,8 @@ public final class DavRepository implements IDavRepository {
 
 	@Override
 	public List<String> getDeletedResourceUIDsSince(final Long collectionId, final Long syncTokenMillis) {
-		return conn.queryNamed("DTODavRessource.davressourcecollection_id", collectionId, DTODavRessource.class)
-				.stream()
-				.filter(dto -> dto.geloeschtam != null
-						&& DateTimeUtil.getTimeInMillis(dto.geloeschtam) >= syncTokenMillis)
+		return conn.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class, collectionId)
+				.stream().filter(dto -> (dto.geloeschtam != null) && (DateTimeUtil.getTimeInMillis(dto.geloeschtam) >= syncTokenMillis))
 				.map(dto -> dto.UID).toList();
 	}
 
@@ -465,9 +459,7 @@ public final class DavRepository implements IDavRepository {
 		if (readableCollectionPermissionsById.isEmpty()) {
 			return new ArrayList<>();
 		}
-		return conn
-				.queryNamed("DTODavRessourceCollection.id.multiple", readableCollectionPermissionsById.keySet(),
-						DTODavRessourceCollection.class)
+		return conn.queryByKeyList(DTODavRessourceCollection.class, readableCollectionPermissionsById.keySet())
 				.stream().filter(dto -> dto.geloeschtam == null)
 				.map(dto -> mapDTODavRessourceCollection(dto, readableCollectionPermissionsById.get(dto.ID))).toList();
 	}
@@ -480,8 +472,8 @@ public final class DavRepository implements IDavRepository {
 	 */
 	private Map<Long, DavRessourceCollectionACLPermissions> getReadableCollectionPermissionsById() {
 		// suche alle ACL-Einträge für den Benutzer
-		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionsACLs = conn.queryNamed(
-				"DTODavRessourceCollectionsACL.benutzer_id", user.getId(), DTODavRessourceCollectionsACL.class);
+		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionsACLs = conn.queryList(
+				DTODavRessourceCollectionsACL.QUERY_BY_BENUTZER_ID, DTODavRessourceCollectionsACL.class, user.getId());
 		final Map<Long, DavRessourceCollectionACLPermissions> readableCollectionPermissionsById = new HashMap<>();
 		for (final DTODavRessourceCollectionsACL dtoCollectionsACL : dtoDavRessourceCollectionsACLs) {
 			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(
@@ -510,9 +502,8 @@ public final class DavRepository implements IDavRepository {
 			return Optional.of(new DavRessourceCollectionACLPermissions(true, true, ressourceCollectionId,
 					queryByKey.Benutzer_ID));
 		}
-		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionACLs = conn
-				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", ressourceCollectionId,
-						DTODavRessourceCollectionsACL.class)
+		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionACLs = conn.queryList(
+				DTODavRessourceCollectionsACL.QUERY_BY_RESSOURCECOLLECTION_ID, DTODavRessourceCollectionsACL.class, ressourceCollectionId)
 				.stream().filter(dto -> dto.Benutzer_ID == conn.getUser().getId()).toList();
 		if (dtoDavRessourceCollectionACLs.size() == 1) {
 			final DTODavRessourceCollectionsACL dtoDavRessourceCollectionsACL = dtoDavRessourceCollectionACLs.get(0);

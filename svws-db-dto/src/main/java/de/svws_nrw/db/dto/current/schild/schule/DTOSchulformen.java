@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,30 +29,74 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Schulformen")
-@NamedQuery(name = "DTOSchulformen.all", query = "SELECT e FROM DTOSchulformen e")
-@NamedQuery(name = "DTOSchulformen.id", query = "SELECT e FROM DTOSchulformen e WHERE e.ID = :value")
-@NamedQuery(name = "DTOSchulformen.id.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchulformen.sgl", query = "SELECT e FROM DTOSchulformen e WHERE e.SGL = :value")
-@NamedQuery(name = "DTOSchulformen.sgl.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.SGL IN :value")
-@NamedQuery(name = "DTOSchulformen.sf_sgl", query = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL = :value")
-@NamedQuery(name = "DTOSchulformen.sf_sgl.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL IN :value")
-@NamedQuery(name = "DTOSchulformen.schulform", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform = :value")
-@NamedQuery(name = "DTOSchulformen.schulform.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform IN :value")
-@NamedQuery(name = "DTOSchulformen.doppelqualifikation", query = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation = :value")
-@NamedQuery(name = "DTOSchulformen.doppelqualifikation.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation IN :value")
-@NamedQuery(name = "DTOSchulformen.sortierung", query = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung = :value")
-@NamedQuery(name = "DTOSchulformen.sortierung.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung IN :value")
-@NamedQuery(name = "DTOSchulformen.sichtbar", query = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar = :value")
-@NamedQuery(name = "DTOSchulformen.sichtbar.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name = "DTOSchulformen.bkindex", query = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex = :value")
-@NamedQuery(name = "DTOSchulformen.bkindex.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex IN :value")
-@NamedQuery(name = "DTOSchulformen.schulform2", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 = :value")
-@NamedQuery(name = "DTOSchulformen.schulform2.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 IN :value")
-@NamedQuery(name = "DTOSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name = "DTOSchulformen.all.migration", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SGL", "SF_SGL", "Schulform", "DoppelQualifikation", "Sortierung", "Sichtbar", "BKIndex", "Schulform2"})
 public final class DTOSchulformen {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchulformen e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOSchulformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchulformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchulformen e WHERE e.ID IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchulformen e WHERE e.ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchulformen e WHERE e.ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SGL */
+	public static final String QUERY_BY_SGL = "SELECT e FROM DTOSchulformen e WHERE e.SGL = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SGL */
+	public static final String QUERY_LIST_BY_SGL = "SELECT e FROM DTOSchulformen e WHERE e.SGL IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SF_SGL */
+	public static final String QUERY_BY_SF_SGL = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SF_SGL */
+	public static final String QUERY_LIST_BY_SF_SGL = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulform */
+	public static final String QUERY_BY_SCHULFORM = "SELECT e FROM DTOSchulformen e WHERE e.Schulform = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulform */
+	public static final String QUERY_LIST_BY_SCHULFORM = "SELECT e FROM DTOSchulformen e WHERE e.Schulform IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes DoppelQualifikation */
+	public static final String QUERY_BY_DOPPELQUALIFIKATION = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DoppelQualifikation */
+	public static final String QUERY_LIST_BY_DOPPELQUALIFIKATION = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes BKIndex */
+	public static final String QUERY_BY_BKINDEX = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BKIndex */
+	public static final String QUERY_LIST_BY_BKINDEX = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Schulform2 */
+	public static final String QUERY_BY_SCHULFORM2 = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schulform2 */
+	public static final String QUERY_LIST_BY_SCHULFORM2 = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 IN ?1";
 
 	/** ID der Schulgliederung */
 	@Id

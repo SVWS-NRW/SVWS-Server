@@ -151,17 +151,17 @@ public final class DBUtilsGostAbitur {
 			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
-		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryNamed("DTOSchuelerAbitur.schueler_id", id, DTOSchuelerAbitur.class);
+		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
 		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
-		final List<DTOSchuelerAbiturFach> faecher = conn.queryNamed("DTOSchuelerAbiturFach.schueler_id", id, DTOSchuelerAbiturFach.class);
+		final List<DTOSchuelerAbiturFach> faecher = conn.queryList(DTOSchuelerAbiturFach.QUERY_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, id);
 		if (faecher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
         // Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
-		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
+		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
 
 		final DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 

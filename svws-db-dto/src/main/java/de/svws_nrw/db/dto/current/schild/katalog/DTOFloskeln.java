@@ -6,7 +6,6 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,24 +18,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Floskeln")
-@NamedQuery(name = "DTOFloskeln.all", query = "SELECT e FROM DTOFloskeln e")
-@NamedQuery(name = "DTOFloskeln.kuerzel", query = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel = :value")
-@NamedQuery(name = "DTOFloskeln.kuerzel.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOFloskeln.floskeltext", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelText = :value")
-@NamedQuery(name = "DTOFloskeln.floskeltext.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelText IN :value")
-@NamedQuery(name = "DTOFloskeln.floskelgruppe", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelGruppe = :value")
-@NamedQuery(name = "DTOFloskeln.floskelgruppe.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelGruppe IN :value")
-@NamedQuery(name = "DTOFloskeln.floskelfach", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelFach = :value")
-@NamedQuery(name = "DTOFloskeln.floskelfach.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelFach IN :value")
-@NamedQuery(name = "DTOFloskeln.floskelniveau", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelNiveau = :value")
-@NamedQuery(name = "DTOFloskeln.floskelniveau.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelNiveau IN :value")
-@NamedQuery(name = "DTOFloskeln.floskeljahrgang", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelJahrgang = :value")
-@NamedQuery(name = "DTOFloskeln.floskeljahrgang.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.FloskelJahrgang IN :value")
-@NamedQuery(name = "DTOFloskeln.primaryKeyQuery", query = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel = ?1")
-@NamedQuery(name = "DTOFloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IN :value")
-@NamedQuery(name = "DTOFloskeln.all.migration", query = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "FloskelText", "FloskelGruppe", "FloskelFach", "FloskelNiveau", "FloskelJahrgang"})
 public final class DTOFloskeln {
+
+	/** Die Datenbankabfrage für alle DTOs */
+	public static final String QUERY_ALL = "SELECT e FROM DTOFloskeln e";
+
+	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
+	public static final String QUERY_PK = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IS NOT NULL";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOFloskeln e WHERE e.Kuerzel IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelText */
+	public static final String QUERY_BY_FLOSKELTEXT = "SELECT e FROM DTOFloskeln e WHERE e.FloskelText = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelText */
+	public static final String QUERY_LIST_BY_FLOSKELTEXT = "SELECT e FROM DTOFloskeln e WHERE e.FloskelText IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelGruppe */
+	public static final String QUERY_BY_FLOSKELGRUPPE = "SELECT e FROM DTOFloskeln e WHERE e.FloskelGruppe = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelGruppe */
+	public static final String QUERY_LIST_BY_FLOSKELGRUPPE = "SELECT e FROM DTOFloskeln e WHERE e.FloskelGruppe IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelFach */
+	public static final String QUERY_BY_FLOSKELFACH = "SELECT e FROM DTOFloskeln e WHERE e.FloskelFach = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelFach */
+	public static final String QUERY_LIST_BY_FLOSKELFACH = "SELECT e FROM DTOFloskeln e WHERE e.FloskelFach IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelNiveau */
+	public static final String QUERY_BY_FLOSKELNIVEAU = "SELECT e FROM DTOFloskeln e WHERE e.FloskelNiveau = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelNiveau */
+	public static final String QUERY_LIST_BY_FLOSKELNIVEAU = "SELECT e FROM DTOFloskeln e WHERE e.FloskelNiveau IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes FloskelJahrgang */
+	public static final String QUERY_BY_FLOSKELJAHRGANG = "SELECT e FROM DTOFloskeln e WHERE e.FloskelJahrgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FloskelJahrgang */
+	public static final String QUERY_LIST_BY_FLOSKELJAHRGANG = "SELECT e FROM DTOFloskeln e WHERE e.FloskelJahrgang IN ?1";
 
 	/** Kürzel für die Floskel wird beim Import automatisch vergeben */
 	@Id

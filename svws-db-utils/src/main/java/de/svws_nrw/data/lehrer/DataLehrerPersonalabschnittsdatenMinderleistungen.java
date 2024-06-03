@@ -68,7 +68,8 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen extends Dat
 	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> result = new ArrayList<>();
     	// Bestimme die Anrechungen für die Lehrerabschnittsdaten
-		final List<DTOLehrerEntlastungsstunde> dtos = conn.queryNamed("DTOLehrerEntlastungsstunde.abschnitt_id", idLehrerabschnittsdaten, DTOLehrerEntlastungsstunde.class);
+		final List<DTOLehrerEntlastungsstunde> dtos = conn.queryList(DTOLehrerEntlastungsstunde.QUERY_BY_ABSCHNITT_ID,
+				DTOLehrerEntlastungsstunde.class, idLehrerabschnittsdaten);
     	if (dtos == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu

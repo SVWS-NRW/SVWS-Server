@@ -68,14 +68,12 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		final ArrayList<StundenplanListeEintrag> daten = new ArrayList<>();
 		final List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null)
 			? conn.queryAll(DTOStundenplan.class)
-			: conn.queryNamed("DTOStundenplan.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOStundenplan.class);
+			: conn.queryList(DTOStundenplan.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOStundenplan.class, idSchuljahresabschnitt);
 		if (plaene.isEmpty())
 			return daten;
 		final List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
-		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn
-			.queryNamed("DTOSchuljahresabschnitte.id.multiple", idsSchuljahresabschnitte, DTOSchuljahresabschnitte.class)
-			.stream()
-			.collect(Collectors.toMap(a -> a.ID, a -> a));
+		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, idsSchuljahresabschnitte)
+			.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
 		for (final DTOStundenplan s : plaene) {
 			final DTOSchuljahresabschnitte a = mapAbschnitte.get(s.Schuljahresabschnitts_ID);
