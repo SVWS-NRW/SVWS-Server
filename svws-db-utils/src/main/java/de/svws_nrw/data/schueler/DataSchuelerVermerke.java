@@ -90,14 +90,12 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	/**
 	 * Gibt alle Vermerke zum Schüler zurück
 	 *
-	 * @param aLong SchuelerID
+	 * @param IdSchueler ID des Schuelers
 	 *
 	 * @return Liste von Vermerke passend zum Schüler
 	 */
-	public List<SchuelerVermerke> getBySchuelerID(final Long aLong) {
-
-		System.out.println(DTOSchuelerVermerke.class);
-		final List<DTOSchuelerVermerke> daten = conn.queryNamed("DTOSchuelerVermerke.schueler_id", aLong, DTOSchuelerVermerke.class);
+	public List<SchuelerVermerke> getBySchuelerID(final Long IdSchueler) {
+		final List<DTOSchuelerVermerke> daten = conn.queryList(DTOSchuelerVermerke.QUERY_BY_SCHUELER_ID, DTOSchuelerVermerke.class, IdSchueler);
 		return daten.reversed().stream().map(dtoMapper).toList();
 	}
 
