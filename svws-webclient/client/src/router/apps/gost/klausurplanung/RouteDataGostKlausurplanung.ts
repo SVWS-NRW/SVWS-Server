@@ -27,6 +27,7 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
 	stundenplanmanager: StundenplanManager | undefined;
 	kalenderwoche: StundenplanKalenderwochenzuordnung;
+	termin: GostKlausurtermin | undefined;
 	raummanager: GostKlausurraumManager | undefined;
 }
 
@@ -41,6 +42,7 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	view: routeGostKlausurplanungVorgaben,
 	raummanager: undefined,
 	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
+	termin: undefined,
 };
 
 
@@ -262,8 +264,18 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 	});
 
+	terminSelected = computed<GostKlausurtermin | undefined>({
+		get: () => this._state.value.termin,
+		set: (value) => {
+			if (this._state.value.termin !== value) {
+				this._state.value.termin = value;
+				this.commit();
+			}
+		}
+	});
+
 	gotoKalenderwoche = async (kw: number) => {
-		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw ));
+		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
 	gotoTermin = async (idtermin: number) => {

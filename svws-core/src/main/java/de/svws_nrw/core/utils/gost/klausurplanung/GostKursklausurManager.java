@@ -605,6 +605,18 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @param idTermin Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null.
+	 */
+	public GostKlausurtermin terminGetByIdOrNull(final long idTermin) {
+		return _termin_by_id.get(idTermin);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link GostKlausurtermin}-Objekte. <br>
 	 * Laufzeit: O(1)
 	 *

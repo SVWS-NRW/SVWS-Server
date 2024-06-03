@@ -593,6 +593,18 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @param idTermin Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null.
+	 */
+	public terminGetByIdOrNull(idTermin : number) : GostKlausurtermin | null {
+		return this._termin_by_id.get(idTermin);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link GostKlausurtermin}-Objekte. <br>
 	 * Laufzeit: O(1)
 	 *

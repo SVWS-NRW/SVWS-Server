@@ -26,14 +26,14 @@
 								:draggable="isDraggable(termin)"
 								@dragstart="onDrag(termin)"
 								@dragend="onDrag(undefined)"
-								@click="dragData?.id === termin.id ? onDrag(undefined) : onDrag(termin);$event.stopPropagation()"
+								@click="terminSelected.value?.id === termin.id ? onDrag(undefined) : onDrag(termin);$event.stopPropagation()"
 								:class="{
-									'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': dragData !== undefined && dragData.id === termin.id,
-									'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': dragData !== undefined && dragData.id !== termin.id || dragData === undefined,
+									'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
+									'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
 								<s-gost-klausurplanung-termin :termin="termin"
 									:k-man="kMan"
-									:compact="dragData?.id !== termin.id"
+									:compact="terminSelected.value?.id !== termin.id"
 									:quartalsauswahl="quartalsauswahl"
 									:show-last-klausurtermin="true"
 									drag-icon>
@@ -48,7 +48,7 @@
 				<template v-if="kalenderwoche.value">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
 						:manager="stundenplanmanager" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
-						:on-drop :on-drag :drag-data="() => dragData" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge>
+						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge>
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kalenderwoche.value || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kalenderwoche.value)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
@@ -154,13 +154,13 @@
 		return props.stundenplanmanager().kalenderwochenzuordnungGetMengeAsList();
 	}
 
-	const dragData = ref<GostKlausurplanungDragData>(undefined);
+	// const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
 
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {
 		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostKursklausur>>> | null = null;
-		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin && zeitrasterSelected.value !== undefined)
-			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(dragData.value, props.stundenplanmanager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
+		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined)
+			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, props.stundenplanmanager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
 		konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(props.kalenderwoche.value.kw, threshold, thresholdOnly).entrySet();
 		return konflikte.toArray() as JavaMapEntry<number, JavaSet<GostKursklausur>>[];
 	}
@@ -185,7 +185,7 @@
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
-		if (dragData.value instanceof GostKlausurtermin && dragData.value?.datum !== null)
+		if (props.terminSelected.value?.datum !== null)
 			event.preventDefault();
 	}
 
@@ -209,8 +209,8 @@
 
 	function kurseGefiltert(day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
-		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin)
-			for (const klausur of props.kMan().kursklausurGetMengeByTerminid(dragData.value.id))
+		if (props.terminSelected.value !== undefined)
+			for (const klausur of props.kMan().kursklausurGetMengeByTerminid(props.terminSelected.value.id))
 				kursIds.add(klausur.idKurs);
 		return props.stundenplanmanager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, props.kalenderwoche.value.wochentyp, day, stunde);
 	}
@@ -218,9 +218,9 @@
 	function sumSchreiber(day: any, stunde: number) {
 		const kurse = kurseGefiltert(day, stunde);
 		let summe = 0;
-		if (dragData.value !== undefined)
+		if (props.terminSelected.value !== undefined)
 			for (const klausur of kurse)
-				summe += props.kMan().kursAnzahlSchuelerGesamtByKursklausur(props.kMan().kursklausurGetByTerminidAndKursid(dragData.value.id, klausur)!);
+				summe += props.kMan().kursAnzahlSchuelerGesamtByKursklausur(props.kMan().kursklausurGetByTerminidAndKursid(props.terminSelected.value.id, klausur)!);
 		return summe;
 	}
 
@@ -229,19 +229,22 @@
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
-		dragData.value = data;
-		if (data === undefined)
-			zeitrasterSelected.value = undefined;
+		if (data instanceof GostKlausurtermin) {
+			props.terminSelected.value = data;
+			if (data === undefined)
+				zeitrasterSelected.value = undefined;
+		}
 	};
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKlausurtermin)
+		if (props.terminSelected.value !== undefined)
 			if (zone === undefined)
-				await props.patchKlausurtermin(dragData.value.id, {datum: null, startzeit: null});
+				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: null, startzeit: null});
 			else if (zone instanceof StundenplanZeitraster) {
 				const date = props.stundenplanmanager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zone);
-				await props.patchKlausurtermin(dragData.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
+				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
 			}
+		props.terminSelected.value = undefined;
 	};
 
 	const termineOhne = computed(() => {
