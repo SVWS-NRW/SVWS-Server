@@ -260,11 +260,13 @@
 		let rowStart = 0;
 		let rowEnd = 10;
 		const terminBeginn = props.kMan().minKursklausurstartzeitByTerminid(termin.id);
-		const terminEnde = props.kMan().maxKursklausurendzeitByTerminid(termin.id);
+		const terminEnde = Math.ceil(props.kMan().maxKursklausurendzeitByTerminid(termin.id) / 5) * 5;
 		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
 			rowStart = (terminBeginn - beginn.value) / 5;
 			rowEnd = (terminEnde - beginn.value) / 5;
 		}
+		// Workaround für zu kurze Terminzeiten
+		rowEnd += rowEnd - rowStart > 9 ? 0 : (9 - (rowEnd - rowStart));
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
