@@ -19,7 +19,8 @@
 								@dragstart="onDrag(lehrer)" @dragover.prevent="() => true"
 								:class="dragLehrer ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
 								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
-								<span class="truncate"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+								<span class="truncate grow"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ mapLehrerPausenaufsichten.get(lehrer.id)?.size() }}</span>
 							</div>
 						</div>
 					</div>
@@ -249,6 +250,15 @@
 		}
 		return "grid-row-start: " + (Math.round(rowStart) + 1) + "; grid-row-end: " + (Math.round(rowEnd) + 1) + "; grid-column: 1;";
 	}
+
+	const mapLehrerPausenaufsichten = computed(() => {
+		const map = new Map<number, List<StundenplanPausenaufsicht>>();
+		for (const l of props.stundenplanManager().lehrerGetMengeAsList())
+			map.set(l.id, new ArrayList<StundenplanPausenaufsicht>());
+		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList())
+			map.get(aufsicht.idLehrer)?.add(aufsicht);
+		return map;
+	})
 
 </script>
 
