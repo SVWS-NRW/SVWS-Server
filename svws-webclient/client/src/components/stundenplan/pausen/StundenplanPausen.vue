@@ -12,12 +12,16 @@
 		<div class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop="onDrop" @dragover.prevent="() => true">
 			<div class="fixed flex items-center justify-center h-3/4 w-64 z-20 pointer-events-none"><span :class="dragFromPausenzeit === undefined ? '':'icon-lg icon-error opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
 			<svws-ui-table :items="stundenplanManager().lehrerGetMengeAsList()" :columns="[{key: 'nachname', label: 'Name'}]" disable-header :no-data="false" type="navigation">
-				<template #cell(nachname)="{rowData: lehrer}">
-					<div class="svws-ui-badge select-none group flex place-items-center w-full"
-						@dragstart="onDrag(lehrer)" @dragover.prevent="() => true"
-						:class="dragLehrer ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
-						<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
-						<span class="truncate"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+				<template #rowCustom="{row: lehrer}">
+					<div class="svws-ui-tr">
+						<div class="svws-ui-td">
+							<div class="svws-ui-badge select-none group flex place-items-center w-full"
+								@dragstart="onDrag(lehrer)" @dragover.prevent="() => true"
+								:class="dragLehrer ? 'cursor-grabbing' : 'cursor-grab'" draggable="true">
+								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
+								<span class="truncate"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+							</div>
+						</div>
 					</div>
 				</template>
 			</svws-ui-table>
@@ -44,11 +48,12 @@
 								<div>Bereich</div>
 								<div v-for="typ in wochentypen" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}</div>
 							</div>
-							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow">
+							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+								:class="{'bg-green-400/50': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt}">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
 									@drop="onDrop" class="rounded-md" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave.stop="dragOverPausenzeit = undefined"
-									:class="{'bg-green-400': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && !bereichGesperrtTyp, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && bereichGesperrtTyp}">
+									:class="{'bg-green-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && !bereichGesperrtTyp, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && bereichGesperrtTyp}">
 									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'bg-red-400 cursor-grabbing': lehrer.id === dragLehrer?.id, 'cursor-grab': !dragLehrer}"
 										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" draggable="true">
 										<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
@@ -139,11 +144,13 @@
 		return false;
 	})
 
-	const isDraggingOver = (pauseID: number, aufsichtsbereichID: number, typ: number) => computed(() => {
+	const isDraggingOver = (pauseID: number, aufsichtsbereichID: number, typ?: number) => computed(() => {
 		if (dragOverPausenzeit.value === undefined)
 			return false;
 		const { pauseID: pID, aufsichtsbereichID: aID, typ: t } = dragOverPausenzeit.value;
-		return (pauseID === pID && aufsichtsbereichID === aID && typ === t);
+		if (typ !== undefined)
+			return (pauseID === pID && aufsichtsbereichID === aID && typ === t);
+		return (pauseID === pID && aufsichtsbereichID === aID);
 	})
 
 	function dragReset() {
