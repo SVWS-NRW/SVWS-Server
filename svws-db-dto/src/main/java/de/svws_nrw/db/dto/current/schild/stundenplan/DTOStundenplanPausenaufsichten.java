@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Pausenaufsichten")
-@JsonPropertyOrder({"ID", "Pausenzeit_ID", "Wochentyp", "Lehrer_ID"})
+@JsonPropertyOrder({"ID", "Pausenzeit_ID", "Lehrer_ID"})
 public final class DTOStundenplanPausenaufsichten {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -45,12 +45,6 @@ public final class DTOStundenplanPausenaufsichten {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Pausenzeit_ID */
 	public static final String QUERY_LIST_BY_PAUSENZEIT_ID = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Pausenzeit_ID IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochentyp */
-	public static final String QUERY_BY_WOCHENTYP = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochentyp */
-	public static final String QUERY_LIST_BY_WOCHENTYP = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
 	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID = ?1";
 
@@ -68,11 +62,6 @@ public final class DTOStundenplanPausenaufsichten {
 	@JsonProperty
 	public long Pausenzeit_ID;
 
-	/** Gibt an, ob es sich um einen Eintrag für jede Woche handelt (0) oder ob es sich um einen unterschiedlichen (!) Eintrag für eine A- bzw. B-Wochen (1 bzw. 2) handelt */
-	@Column(name = "Wochentyp")
-	@JsonProperty
-	public int Wochentyp;
-
 	/** Die ID des aufsichtsführenden Lehrers. Im Falle von mehreren Aufsichten werden für eine Pausenzeit-ID einfach mehrere Datensätze erzeugt */
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
@@ -89,13 +78,11 @@ public final class DTOStundenplanPausenaufsichten {
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanPausenaufsichten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Pausenzeit_ID   der Wert für das Attribut Pausenzeit_ID
-	 * @param Wochentyp   der Wert für das Attribut Wochentyp
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOStundenplanPausenaufsichten(final long ID, final long Pausenzeit_ID, final int Wochentyp, final long Lehrer_ID) {
+	public DTOStundenplanPausenaufsichten(final long ID, final long Pausenzeit_ID, final long Lehrer_ID) {
 		this.ID = ID;
 		this.Pausenzeit_ID = Pausenzeit_ID;
-		this.Wochentyp = Wochentyp;
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -128,7 +115,7 @@ public final class DTOStundenplanPausenaufsichten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOStundenplanPausenaufsichten(ID=" + this.ID + ", Pausenzeit_ID=" + this.Pausenzeit_ID + ", Wochentyp=" + this.Wochentyp + ", Lehrer_ID=" + this.Lehrer_ID + ")";
+		return "DTOStundenplanPausenaufsichten(ID=" + this.ID + ", Pausenzeit_ID=" + this.Pausenzeit_ID + ", Lehrer_ID=" + this.Lehrer_ID + ")";
 	}
 
 }

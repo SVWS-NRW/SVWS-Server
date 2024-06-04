@@ -30,12 +30,8 @@ public class StundenplanPausenaufsicht {
 	@Schema(description = "die ID des Lehrers, der Aufsicht führt", example = "89")
 	public long idLehrer = -1;
 
-	/** Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 */
-	@Schema(description = "der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
-	public int wochentyp = -1;
-
-	/** Die IDs der {@link StundenplanAufsichtsbereich}, in denen in dieser Pausenzeit von dem {@link StundenplanLehrer} Aufsicht geführt wird. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Aufsichtsbeiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird."))
-	public @NotNull List<@NotNull Long> bereiche = new ArrayList<>();
+	/** Die Zuordnung der Aufsichtsbereiche ({@link StundenplanAufsichtsbereich}) zu den Pausenaufsichten ({@link StundenplanPausenaufsicht}) und dem Wochentyp. */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Zuordnungen der Aufsichtsbeiche zu den Pausenaufsichten und dem Wochentyp."))
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> bereiche = new ArrayList<>();
 
 }

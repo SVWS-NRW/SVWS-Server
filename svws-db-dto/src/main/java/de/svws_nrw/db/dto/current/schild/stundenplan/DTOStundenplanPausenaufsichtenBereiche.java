@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_PausenaufsichtenBereich")
-@JsonPropertyOrder({"ID", "Pausenaufsicht_ID", "Aufsichtsbereich_ID"})
+@JsonPropertyOrder({"ID", "Pausenaufsicht_ID", "Aufsichtsbereich_ID", "Wochentyp"})
 public final class DTOStundenplanPausenaufsichtenBereiche {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -51,6 +51,12 @@ public final class DTOStundenplanPausenaufsichtenBereiche {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aufsichtsbereich_ID */
 	public static final String QUERY_LIST_BY_AUFSICHTSBEREICH_ID = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Wochentyp */
+	public static final String QUERY_BY_WOCHENTYP = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Wochentyp = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Wochentyp */
+	public static final String QUERY_LIST_BY_WOCHENTYP = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Wochentyp IN ?1";
+
 	/** Die eindeutige ID für die Zuordnung des Aufsichtsbereichs zur Pausenaufsicht */
 	@Id
 	@Column(name = "ID")
@@ -67,6 +73,11 @@ public final class DTOStundenplanPausenaufsichtenBereiche {
 	@JsonProperty
 	public long Aufsichtsbereich_ID;
 
+	/** Gibt an, ob es sich um einen Eintrag für jede Woche handelt (0) oder ob es sich um einen unterschiedlichen (!) Eintrag für eine A- bzw. B-Wochen (1 bzw. 2) handelt */
+	@Column(name = "Wochentyp")
+	@JsonProperty
+	public int Wochentyp;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanPausenaufsichtenBereiche ohne eine Initialisierung der Attribute.
 	 */
@@ -79,11 +90,13 @@ public final class DTOStundenplanPausenaufsichtenBereiche {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Pausenaufsicht_ID   der Wert für das Attribut Pausenaufsicht_ID
 	 * @param Aufsichtsbereich_ID   der Wert für das Attribut Aufsichtsbereich_ID
+	 * @param Wochentyp   der Wert für das Attribut Wochentyp
 	 */
-	public DTOStundenplanPausenaufsichtenBereiche(final long ID, final long Pausenaufsicht_ID, final long Aufsichtsbereich_ID) {
+	public DTOStundenplanPausenaufsichtenBereiche(final long ID, final long Pausenaufsicht_ID, final long Aufsichtsbereich_ID, final int Wochentyp) {
 		this.ID = ID;
 		this.Pausenaufsicht_ID = Pausenaufsicht_ID;
 		this.Aufsichtsbereich_ID = Aufsichtsbereich_ID;
+		this.Wochentyp = Wochentyp;
 	}
 
 
@@ -115,7 +128,7 @@ public final class DTOStundenplanPausenaufsichtenBereiche {
 	 */
 	@Override
 	public String toString() {
-		return "DTOStundenplanPausenaufsichtenBereiche(ID=" + this.ID + ", Pausenaufsicht_ID=" + this.Pausenaufsicht_ID + ", Aufsichtsbereich_ID=" + this.Aufsichtsbereich_ID + ")";
+		return "DTOStundenplanPausenaufsichtenBereiche(ID=" + this.ID + ", Pausenaufsicht_ID=" + this.Pausenaufsicht_ID + ", Aufsichtsbereich_ID=" + this.Aufsichtsbereich_ID + ", Wochentyp=" + this.Wochentyp + ")";
 	}
 
 }

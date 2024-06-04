@@ -568,6 +568,40 @@ public final class JSONMapper {
 
 
 	/**
+	 * Konvertiert das übergeben Objekt in eine Liste von DTOs, sofern es sich beim Inhalt um ein
+	 * ensprechendes DTO-Objekt handelt.
+	 *
+	 * @param <T>        der DTO-Typ
+	 * @param dtoClass   das Klassen-Objekt des DTO-Typs
+	 * @param listObj    das zu konvertierende ListenObjekt
+	 * @param nullable   falls null für das Listen-Objekt gültig ist
+	 *
+	 * @return das konvertierte Listen-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> convertToList(final Class<T> dtoClass, final Object listObj, final boolean nullable) throws ApiOperationException {
+		if (listObj == null) {
+			if (nullable)
+				return null;
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+		}
+		final List<T> result = new ArrayList<>();
+		if (listObj instanceof final List<?> liste) {
+			for (final Object obj : liste) {
+				if (obj.getClass().equals(dtoClass))
+					result.add((T) obj);
+				else
+					throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu dem DTO-Typ");
+			}
+		} else
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von DTOs erwartet.");
+		return result;
+	}
+
+
+	/**
 	 * Konvertiert den Java-String in eine {@link Response} mit dem JSON-String.
 	 *
 	 * @param data   der zu konvertierende String
