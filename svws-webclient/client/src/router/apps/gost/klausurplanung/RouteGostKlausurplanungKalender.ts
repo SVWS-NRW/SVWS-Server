@@ -41,15 +41,17 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 		routeGostKlausurplanung.data.terminSelected.value = termin;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
-		const kw = !to_params.kw ? undefined : parseInt(to_params.kw);
+		const kwEntry = (!to_params.kw || to_params.kw.length < 6 ) ? undefined : to_params.kw;
+		const kwJahr = kwEntry !== undefined ? parseInt(kwEntry.substring(0, 4)) : -1;
+		const kwWeek = kwEntry !== undefined ? parseInt(kwEntry.substring(4)) : -1;
 		const kwAlt = (from !== undefined) && (from.name === to.name) && (!(from_params.kw instanceof Array)) && (from_params.kw !== undefined) ? parseInt(from_params.kw) : undefined;
-		if ((kw === undefined) && (kwAlt === undefined)) {
-			const kwNeu = routeGostKlausurplanung.data.kalenderwoche.value.jahr === -1 ? routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString()).kw : routeGostKlausurplanung.data.kalenderwoche.value.kw;
-			return this.getRoute(abiturjahr, halbjahr.id, kwNeu, termin ? termin.id : termin);
-		} else if ((kw === undefined) && (kwAlt !== undefined)) {
+		if ((kwEntry === undefined) && (kwAlt === undefined)) {
+			const kwNeu = routeGostKlausurplanung.data.kalenderwoche.value.jahr === -1 ? routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString()) : routeGostKlausurplanung.data.kalenderwoche.value;
+			return this.getRoute(abiturjahr, halbjahr.id, parseInt(kwNeu.jahr + "" + kwNeu.kw), termin ? termin.id : termin);
+		} else if ((kwEntry === undefined) && (kwAlt !== undefined)) {
 			return this.getRoute(abiturjahr, halbjahr.id, kwAlt, termin ? termin.id : termin);
-		} else if (kw !== undefined) {
-			routeGostKlausurplanung.data.kalenderwoche.value = routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByJahrAndKWOrClosest(new Date().getUTCFullYear(), kw);
+		} else if (kwEntry !== undefined) {
+			routeGostKlausurplanung.data.kalenderwoche.value = routeGostKlausurplanung.data.stundenplanmanager.kalenderwochenzuordnungGetByJahrAndKWOrClosest(kwJahr, kwWeek);
 		}
 	}
 

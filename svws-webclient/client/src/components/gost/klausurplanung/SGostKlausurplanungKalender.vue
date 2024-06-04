@@ -175,12 +175,12 @@
 			const nextKw = props.stundenplanmanager().kalenderwochenzuordnungGetNextOrNull(props.kalenderwoche.value);
 			if (nextKw !== null)
 				props.kalenderwoche.value = nextKw;
-			await props.gotoKalenderwoche(props.kalenderwoche.value.kw);
+			await props.gotoKalenderwoche(props.kalenderwoche.value);
 		} else if (by < 0) {
 			const prevKw = props.stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(props.kalenderwoche.value);
 			if (prevKw !== null)
 				props.kalenderwoche.value = prevKw;
-			await props.gotoKalenderwoche(props.kalenderwoche.value.kw);
+			await props.gotoKalenderwoche(props.kalenderwoche.value);
 		}
 	}
 

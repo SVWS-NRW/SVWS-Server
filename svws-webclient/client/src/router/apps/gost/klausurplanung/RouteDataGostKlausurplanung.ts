@@ -274,8 +274,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 	});
 
-	gotoKalenderwoche = async (kw: number) => {
-		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung) => {
+		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr + "" + kw.kw), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
 	gotoTermin = async (idtermin: number | undefined) => {

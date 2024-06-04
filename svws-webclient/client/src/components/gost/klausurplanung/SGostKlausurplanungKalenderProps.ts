@@ -21,5 +21,5 @@ export interface GostKlausurplanungKalenderProps {
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	kalenderwoche: WritableComputedRef<StundenplanKalenderwochenzuordnung>;
 	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
-	gotoKalenderwoche: (value: number) => Promise<void>;
+	gotoKalenderwoche: (value: StundenplanKalenderwochenzuordnung) => Promise<void>;
 }
