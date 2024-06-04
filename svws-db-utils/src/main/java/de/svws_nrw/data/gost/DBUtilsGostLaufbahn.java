@@ -145,7 +145,7 @@ public final class DBUtilsGostLaufbahn {
     	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
     	getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
-    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList("DTOGostSchuelerFachbelegungen.schueler_id",
+    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
     			DTOGostSchuelerFachbelegungen.class, id).stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
     	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
