@@ -366,6 +366,7 @@ export class ApiConnection {
 		this._password = "";
 		this._schema_api = undefined;
 		this._aes.value = undefined;
+		this._api = undefined;
 	}
 
 	/**
