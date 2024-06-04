@@ -7,6 +7,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -30,29 +31,53 @@ public class Tabelle_Stundenplan_PausenaufsichtenBereich extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Die ID des zugewiesenen Aufsichtsbereichs. Sollten ggf. mehrere Aufsichtsbereiche zugwiesen werden, so müssen für eine Pausenaufsicht_ID mehrere Datensätze vorliegen");
 
+	/** Die Definition der Tabellenspalte Wochentyp */
+	public SchemaTabelleSpalte col_Wochentyp = add("Wochentyp", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setJavaComment("Gibt an, ob es sich um einen Eintrag für jede Woche handelt (0) oder ob es sich um einen unterschiedlichen (!) Eintrag für eine A- bzw. B-Wochen (1 bzw. 2) handelt")
+		.setRevision(SchemaRevisionen.REV_17);
+
 
 	/** Die Definition des Fremdschlüssels Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK = addForeignKey(
-			"Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Aufsichtsbereich_ID, Schema.tab_Stundenplan_Aufsichtsbereiche.col_ID)
-		);
+		"Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Aufsichtsbereich_ID, Schema.tab_Stundenplan_Aufsichtsbereiche.col_ID)
+	);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_PausenaufsichtenBereich_Aufsicht_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_PausenaufsichtenBereich_Aufsicht_FK = addForeignKey(
-			"Stundenplan_PausenaufsichtenBereich_Aufsicht_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Pausenaufsicht_ID, Schema.tab_Stundenplan_Pausenaufsichten.col_ID)
-		);
+		"Stundenplan_PausenaufsichtenBereich_Aufsicht_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Pausenaufsicht_ID, Schema.tab_Stundenplan_Pausenaufsichten.col_ID)
+	);
 
 
-	/** Die Definition des Unique-Index Stundenplan_PausenaufsichtenBereich_UC1 */
+	/** Die Definition des Non-Unique-Index Stundenplan_PausenaufsichtenBereich_Pausenaufsicht_ID */
+	public SchemaTabelleIndex index_Stundenplan_PausenaufsichtenBereich_Pausenaufsicht_ID = addIndex("Stundenplan_PausenaufsichtenBereich_Pausenaufsicht_ID",
+		col_Pausenaufsicht_ID
+	).setRevision(SchemaRevisionen.REV_16);
+
+	/** Die Definition des Non-Unique-Index Stundenplan_PausenaufsichtenBereich_Aufsichtsbereich_ID */
+	public SchemaTabelleIndex index_Stundenplan_PausenaufsichtenBereich_Aufsichtsbereich_ID = addIndex("Stundenplan_PausenaufsichtenBereich_Aufsichtsbereich_ID",
+		col_Aufsichtsbereich_ID
+	).setRevision(SchemaRevisionen.REV_16);
+
+	/** Die Definition des Unique-Index Stundenplan_PausenaufsichtenBereich_UC1 (alte Version ohne Wochentyp) */
+	public SchemaTabelleUniqueIndex unique_Stundenplan_PausenaufsichtenBereich_UC1_alt = addUniqueIndex("Stundenplan_PausenaufsichtenBereich_UC1",
+		col_Pausenaufsicht_ID,
+		col_Aufsichtsbereich_ID
+	).setVeraltet(SchemaRevisionen.REV_17);
+
+	/** Die Definition des Unique-Index Stundenplan_PausenaufsichtenBereich_UC1 (neu Version mit Wichentyp) */
 	public SchemaTabelleUniqueIndex unique_Stundenplan_PausenaufsichtenBereich_UC1 = addUniqueIndex("Stundenplan_PausenaufsichtenBereich_UC1",
-			col_Pausenaufsicht_ID,
-			col_Aufsichtsbereich_ID
-		);
+		col_Pausenaufsicht_ID,
+		col_Aufsichtsbereich_ID,
+		col_Wochentyp
+	).setRevision(SchemaRevisionen.REV_17);
 
 
 	/**

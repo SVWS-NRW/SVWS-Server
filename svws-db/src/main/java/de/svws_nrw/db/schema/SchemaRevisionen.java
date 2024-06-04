@@ -9,6 +9,7 @@ import de.svws_nrw.db.schema.revisionen.Revision11Updates;
 import de.svws_nrw.db.schema.revisionen.Revision13Updates;
 import de.svws_nrw.db.schema.revisionen.Revision14Updates;
 import de.svws_nrw.db.schema.revisionen.Revision15Updates;
+import de.svws_nrw.db.schema.revisionen.Revision17Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -123,7 +124,20 @@ public enum SchemaRevisionen {
 	/**
 	 * Bemerkungen bei Schülern als Vermerke speichern
 	 */
-	REV_15(15, "2024-05-22");
+	REV_15(15, "2024-05-22"),
+
+	/**
+	 * Anpassungen bei Stundenplan-Pausenaufsichten bezüglich der Wochentyp-basierten Zuordnung
+	 * zu Aufsichtsbereichen (Teil 1 - Anlegen zweier Indizes)
+	 */
+	REV_16(16, "2024-06-04"),
+
+	/**
+	 * Anpassungen bei Stundenplan-Pausenaufsichten bezüglich der Wochentyp-basierten Zuordnung
+	 * zu Aufsichtsbereichen (Teil 2 - Korrektur einer Unique-Constraint und Verschiben der
+	 * Wochentyp-Information)
+	 */
+	REV_17(17, "2024-06-04");
 
 
 	/**
@@ -131,14 +145,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_15;
+	public static final SchemaRevisionen maxRevision = REV_17;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_15;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_17;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -208,6 +222,7 @@ public enum SchemaRevisionen {
 	            case REV_13 -> new Revision13Updates();
 	            case REV_14 -> new Revision14Updates();
 	            case REV_15 -> new Revision15Updates();
+	            case REV_17 -> new Revision17Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }
