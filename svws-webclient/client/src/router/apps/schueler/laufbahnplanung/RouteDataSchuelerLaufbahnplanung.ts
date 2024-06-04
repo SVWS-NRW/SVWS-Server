@@ -169,7 +169,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		const list = new ArrayList<number>();
 		list.add(this.auswahl.id);
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;;
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
 		reportingParameter.idsHauptdaten = list;
 		reportingParameter.einzelausgabeHauptdaten = false;
@@ -181,7 +181,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				reportingParameter.detailLevel = 0;
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			default:
-				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
+				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.');
 		}
 	}
 
