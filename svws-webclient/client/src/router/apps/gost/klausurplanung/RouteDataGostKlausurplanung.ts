@@ -278,7 +278,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
-	gotoTermin = async (idtermin: number) => {
+	gotoTermin = async (idtermin: number | undefined) => {
 		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(this.abiturjahr, this.halbjahr.id, idtermin ));
 	}
 
