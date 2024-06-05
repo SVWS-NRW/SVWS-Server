@@ -193,13 +193,15 @@
 		bereichNeu.idPausenaufsicht = -1;
 		bereichNeu.wochentyp = typ;
 		bereiche.add(bereichNeu);
-		for (const aufsicht of dragOverAufsichten.value)
-			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(aufsicht.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
-				if ((aufsicht.idLehrer === dragLehrer.value.id) && (b.wochentyp === typ)) {
-					bereiche.addAll(aufsicht.bereiche);
-					await props.patchAufsicht({bereiche}, aufsicht.id);
-					return dragReset();
-				}
+		for (const aufsicht of dragOverAufsichten.value) {
+			if ((aufsicht.idLehrer === dragLehrer.value.id)) {
+				// TODO Prüfe, mithilfe des Managers, ob das Hinzufügen erlaubt ist oder nicht
+				// TODO Prüfe, mithilfe des Managers, ob beim Hinzufügen der Aufsicht Wochentypen zu 0 zusammengelegt werden können...
+				bereiche.addAll(aufsicht.bereiche);
+				await props.patchAufsicht({bereiche}, aufsicht.id);
+				return dragReset();
+			}
+		}
 		await props.addAufsicht({ idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche });
 		return dragReset();
 	}

@@ -1156,6 +1156,7 @@ public class APIStundenplan {
      * Die OpenAPI-Methode für das Patchen einer Pausenaufsicht eines Stundenplans.
      *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param sid       die Datenbank-ID des Stundenplans
      * @param id        die Datenbank-ID zur Identifikation der Pausenaufsicht
      * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
@@ -1163,7 +1164,7 @@ public class APIStundenplan {
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
-    @Path("/pausenaufsicht/{id : \\d+}")
+    @Path("/{idStundenplan : \\d+}/pausenaufsicht/{id : \\d+}")
     @Operation(summary = "Passt die Pausenaufsicht mit der angebenen ID an.",
     description = "Passt die Pausenaufsicht mit der angebenen ID an. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten "
@@ -1174,11 +1175,12 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    public Response patchStundenplanPausenaufsicht(@PathParam("schema") final String schema,
+    		@PathParam("idStundenplan") final long sid, @PathParam("id") final long id,
     		@RequestBody(description = "Der Patch für die Kalenderwochen-Zuordnung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, sid).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
