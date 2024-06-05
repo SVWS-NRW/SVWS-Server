@@ -149,7 +149,6 @@
 		}
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
-			console.log(s)
 			if (s.isDefault) {
 				schema.value = s;
 				hasDefault = true;

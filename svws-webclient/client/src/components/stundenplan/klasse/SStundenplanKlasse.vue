@@ -5,18 +5,21 @@
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
 					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeSichtbarAsList()" :item-text="i => i.kuerzel" autocomplete
-						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
+						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
 					<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
 					<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
 						:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					<svws-ui-button type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
 						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
-					<s-stundenplan-klasse-modal-merge v-if="stundenplanManager().unterrichtsgruppenMergeableGet()" :stundenplan-manager v-slot="{ openModal }">
-						<svws-ui-button type="error" size="small" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
-							<span class="icon-sm icon-error i-ri-error-warning-line" /> Unterricht zusammenlegen
-						</svws-ui-button>
-					</s-stundenplan-klasse-modal-merge>
+					<template v-if="stundenplanManager().unterrichtsgruppenMergeableGet().size()">
+						<span class="ml-4">Unterricht:</span>
+						<s-stundenplan-klasse-modal-merge :stundenplan-manager v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" class="ml-1" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
+								<span class="icon-sm icon-error i-ri-error-warning-line" />zusammenlegen
+							</svws-ui-button>
+						</s-stundenplan-klasse-modal-merge>
+					</template>
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
@@ -32,15 +35,14 @@
 							:style="`--background-color: ${stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td" :class="{
 								'text-error font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) < 0,
-								'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0
-							}">
+								'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 }">
 								<div class="ml-1">
-									<div class="svws-ui-badge select-none group cursor-grab"
+									<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
 										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
-										<span class="rounded-sm ">
-											<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+										<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+										<span :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">
+											{{ stundenplanManager().fachGetByIdOrException(ku.idFach).bezeichnung }}
 										</span>
-										<span class="my-0.5" :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).bezeichnung }}</span>
 									</div>
 								</div>
 							</div>
@@ -48,8 +50,9 @@
 								<span class="rounded p-0.5 -m-0.5" :class="{
 									'bg-error text-white font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) < 0,
 									'bg-light': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0,
-									'bg-success': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0
-								}">{{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}</span>
+									'bg-success': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0 }">
+									{{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
+								</span>
 							</div>
 						</div>
 					</template>
@@ -62,9 +65,9 @@
 								<!-- Die Schienenzeile -->
 								<div role="row" class="svws-ui-tr bg-light">
 									<div role="cell" class="select-none svws-ui-td font-bold group" :class="{ 'cursor-grabbing': dragData !== undefined }">
-										<div class="select-none group cursor-grab inline-flex">
+										<div class="select-none group cursor-grab flex place-items-center">
 											<span class="icon i-ri-draggable inline-block opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-											<span class="">{{ schiene.bezeichnung }}</span>
+											<span>{{ schiene.bezeichnung }}</span>
 										</div>
 									</div>
 									<div role="cell" class="select-none svws-ui-td" />
@@ -76,12 +79,11 @@
 									:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 									<div role="cell" class="select-none svws-ui-td" :class="{
 										'text-error font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
-										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
-									}">
+										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
 										<div class="ml-3">
-											<div class="svws-ui-badge select-none group cursor-grab" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }">
+											<div class="svws-ui-badge select-none group cursor-grab flex place-items-center" draggable="true" :class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }">
 												<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-												<span class="my-0.5" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
+												<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 											</div>
 										</div>
 									</div>
@@ -89,8 +91,9 @@
 										<span class="rounded p-0.5" :class="{
 											'bg-error text-white font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 											'bg-light': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0,
-											'bg-success': stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0
-										}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
+											'bg-success': stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0 }">
+											{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}
+										</span>
 									</div>
 								</div>
 							</div>
@@ -101,13 +104,12 @@
 								:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 								<div role="cell" class="select-none svws-ui-td" :class="{
 									'text-error font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
-									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
-								}">
+									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0 }">
 									<div class="ml-1">
-										<div class="svws-ui-badge select-none group cursor-grab"
+										<div class="svws-ui-badge select-none group cursor-grab flex place-items-center"
 											:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
 											<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-											<span class="my-0.5" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
+											<span :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ kurs.bezeichnung }}</span>
 										</div>
 									</div>
 								</div>
@@ -115,8 +117,9 @@
 									<span class="rounded p-0.5 -m-0.5" :class="{
 										'bg-error text-white font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 										'bg-light': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0,
-										'bg-success': stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0
-									}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
+										'bg-success': stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0 }">
+										{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}
+									</span>
 								</div>
 							</div>
 						</template>
