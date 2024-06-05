@@ -9,6 +9,8 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereich;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereichUpdate;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
@@ -28,6 +30,7 @@ import de.svws_nrw.data.stundenplan.DataStundenplanKalenderwochenzuordnung;
 import de.svws_nrw.data.stundenplan.DataStundenplanLehrer;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
+import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichtenBereich;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenzeiten;
 import de.svws_nrw.data.stundenplan.DataStundenplanRaeume;
 import de.svws_nrw.data.stundenplan.DataStundenplanSchienen;
@@ -42,6 +45,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -1302,6 +1306,38 @@ public class APIStundenplan {
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen und Hinzufügen mehrerer Zuordnungen von Pausenaufsichten zu
+     * Aufsichtsbereichen ggf. in Abhängigkeit von einem Wochentyp.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Stundenplans
+     * @param update    die Information zu den Änderungen der Zuordnungen
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return eine Response mit dem Status-Code
+     */
+    @POST
+    @Path("/{id : \\d+}/pausenaufsicht/update")
+    @Operation(summary = "Entfernt und fügt mehrere Zuordungen von Zuordnungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
+    		+ "Abhängigkeit von einem Wochentyp hinzu.",
+    		description = "Entfernt und fügt mehrere Zuordungen von Zuordnungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
+    	    		+ "Abhängigkeit von einem Wochentyp hinzu. "
+    				+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen",
+    	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsichtBereich.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.")
+    @ApiResponse(responseCode = "404", description = "Ein Wert für das Erstellen der Zuordnungen wurde nicht gefunden.")
+    public Response updateStundenplanPausenaufsichtenBereiche(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Informationen zu den Zuordnungen", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsichtBereichUpdate.class)))
+    		final @NotNull StundenplanPausenaufsichtBereichUpdate update, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichtenBereich(conn, id).update(update),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
 

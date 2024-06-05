@@ -360,6 +360,7 @@ export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanList
 export { StundenplanListeEintragMinimal } from './core/data/stundenplan/StundenplanListeEintragMinimal';
 export { StundenplanPausenaufsicht } from './core/data/stundenplan/StundenplanPausenaufsicht';
 export { StundenplanPausenaufsichtBereich } from './core/data/stundenplan/StundenplanPausenaufsichtBereich';
+export { StundenplanPausenaufsichtBereichUpdate } from './core/data/stundenplan/StundenplanPausenaufsichtBereichUpdate';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
 export { StundenplanSchiene } from './core/data/stundenplan/StundenplanSchiene';
