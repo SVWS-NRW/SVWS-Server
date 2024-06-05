@@ -21,6 +21,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
@@ -208,6 +209,15 @@ public class StundenplanManager {
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit = new HashMap2D<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit = new HashMap2D<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit = new HashMap2D<>();
+
+	// StundenplanPausenaufsichtBereich
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsichtBereich> _pausenaufsichtbereich_by_id = new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht = new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich = new HashMap<>();
+	private @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_Wochentyp = new HashMap<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp = new HashMap2D<>();
 
 	// StundenplanPausenzeit
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _pausenzeit_by_id = new HashMap<>();
@@ -475,44 +485,50 @@ public class StundenplanManager {
 
 		// 1. Ordnung (nur Referenzen zu den sortierten Mengen)
 
-		update_pausenzeit_by_tag_and_beginn_and_ende();              // _pausenzeitmenge_sortiert
-		update_aufsichtsbereich_by_kuerzel();                        // _aufsichtsbereichmenge_sortiert
-		update_raum_by_kuerzel();                                    // _raummenge_sortiert
-		update_klassenmenge_by_idJahrgang();                         // _klassenmenge
-		update_jahrgangmenge_by_idKlasse();                          // _klassenmenge
-		update_klassenunterrichtmenge_by_idKlasse();                 // _klassenunterrichtmenge
-		update_klassenunterrichtmenge_by_idSchueler();               // _klassenunterrichtmenge
-		update_klassenunterrichtmenge_by_idLehrer();                 // _klassenunterrichtmenge
-		update_klassenunterrichtmenge_by_idSchiene();                // _klassenunterrichtmenge
-		update_kursmenge_by_idSchueler();                            // _kursmenge
-		update_kursmenge_by_idLehrer();                              // _kursmenge
-		update_kursmenge_by_idSchiene();                             // _kursmenge
-		update_schuelermenge_by_idKurs();                            // _kursmenge
-		update_kursmenge_by_idJahrgang();                            // _kursmenge
-		update_jahrgangmenge_by_idKurs();                            // _kursmenge
-		update_pausenaufsichtmenge_by_wochentag();                   // _pausenaufsichtmenge
-		update_pausenaufsichtmenge_by_idLehrer();                    // _pausenaufsichtmenge
-		update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit();   // _pausenaufsichtmenge
-		update_pausenaufsichtmenge_by_idAufsichtsbereich();          // _pausenaufsichtmenge
-		update_pausenzeitmenge_by_idLehrer();                        // _pausenaufsichtmenge
-		update_pausenzeitmenge_by_wochentag();                       // _pausenzeitmenge
-		update_klassenmenge_by_idPausenzeit();                       // _pausenzeitmenge, _klassenmenge
-		update_schienenmenge_by_idJahrgang();                        // _schienenmenge
-		update_schuelermenge_by_idKlasse();                          // _schuelermenge
-		update_klassenmenge_by_idSchueler();                         // _schuelermenge
-		update_lehrermenge_by_idUnterricht();                        // _unterrichtmenge
-		update_schienenmenge_by_idUnterricht();                      // _unterrichtmenge
-		update_unterrichtmenge_by_idSchiene();                       // _unterrichtmenge
-		update_unterrichtmenge_by_idKurs();                          // _unterrichtmenge
-		update_unterrichtmenge_by_idKlasse_and_idFach();             // _unterrichtmenge
-		update_unterrichtmenge_by_idZeitraster_and_wochentyp();      // _unterrichtmenge
-		update_unterrichtmenge_by_idLehrer();                        // _unterrichtmenge
-		update_unterrichtmenge_by_idLehrer_and_idZeitraster();       // _unterrichtmenge
-		update_unterrichtmenge_by_idRaum();                          // _unterrichtmenge
-		update_unterrichtmenge_by_idRaum_and_idZeitraster();         // _unterrichtmenge
-		update_zeitraster_by_wochentag_and_stunde();                 // _zeitrastermenge
-		update_zeitrastermenge_by_wochentag();                       // _zeitrastermenge
-		update_zeitrastermenge_by_stunde();                          // _zeitrastermenge
+		update_pausenzeit_by_tag_and_beginn_and_ende();                                   // _pausenzeitmenge_sortiert
+		update_aufsichtsbereich_by_kuerzel();                                             // _aufsichtsbereichmenge_sortiert
+		update_raum_by_kuerzel();                                                         // _raummenge_sortiert
+		update_klassenmenge_by_idJahrgang();                                              // _klassenmenge
+		update_jahrgangmenge_by_idKlasse();                                               // _klassenmenge
+		update_klassenunterrichtmenge_by_idKlasse();                                      // _klassenunterrichtmenge
+		update_klassenunterrichtmenge_by_idSchueler();                                    // _klassenunterrichtmenge
+		update_klassenunterrichtmenge_by_idLehrer();                                      // _klassenunterrichtmenge
+		update_klassenunterrichtmenge_by_idSchiene();                                     // _klassenunterrichtmenge
+		update_kursmenge_by_idSchueler();                                                 // _kursmenge
+		update_kursmenge_by_idLehrer();                                                   // _kursmenge
+		update_kursmenge_by_idSchiene();                                                  // _kursmenge
+		update_schuelermenge_by_idKurs();                                                 // _kursmenge
+		update_kursmenge_by_idJahrgang();                                                 // _kursmenge
+		update_jahrgangmenge_by_idKurs();                                                 // _kursmenge
+		update_pausenaufsichtmenge_by_wochentag();                                        // _pausenaufsichtmenge
+		update_pausenaufsichtmenge_by_idLehrer();                                         // _pausenaufsichtmenge
+		update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit();                        // _pausenaufsichtmenge
+		update_pausenaufsichtmenge_by_idAufsichtsbereich();                               // _pausenaufsichtmenge
+		update_pausenaufsichtbereichmenge_by_idPausenaufsicht();                          // _pausenaufsichtbereich_by_id
+		update_pausenaufsichtbereichmenge_by_idAufsichtsbereich();                        // _pausenaufsichtbereich_by_id
+		update_pausenaufsichtbereichmenge_by_Wochentyp();                                 // _pausenaufsichtbereich_by_id
+		update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich();   // _pausenaufsichtbereich_by_id
+		update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp();            // _pausenaufsichtbereich_by_id
+		update_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp();          // _pausenaufsichtbereich_by_id
+		update_pausenzeitmenge_by_idLehrer();                                             // _pausenaufsichtmenge
+		update_pausenzeitmenge_by_wochentag();                                            // _pausenzeitmenge
+		update_klassenmenge_by_idPausenzeit();                                            // _pausenzeitmenge, _klassenmenge
+		update_schienenmenge_by_idJahrgang();                                             // _schienenmenge
+		update_schuelermenge_by_idKlasse();                                               // _schuelermenge
+		update_klassenmenge_by_idSchueler();                                              // _schuelermenge
+		update_lehrermenge_by_idUnterricht();                                             // _unterrichtmenge
+		update_schienenmenge_by_idUnterricht();                                           // _unterrichtmenge
+		update_unterrichtmenge_by_idSchiene();                                            // _unterrichtmenge
+		update_unterrichtmenge_by_idKurs();                                               // _unterrichtmenge
+		update_unterrichtmenge_by_idKlasse_and_idFach();                                  // _unterrichtmenge
+		update_unterrichtmenge_by_idZeitraster_and_wochentyp();                           // _unterrichtmenge
+		update_unterrichtmenge_by_idLehrer();                                             // _unterrichtmenge
+		update_unterrichtmenge_by_idLehrer_and_idZeitraster();                            // _unterrichtmenge
+		update_unterrichtmenge_by_idRaum();                                               // _unterrichtmenge
+		update_unterrichtmenge_by_idRaum_and_idZeitraster();                              // _unterrichtmenge
+		update_zeitraster_by_wochentag_and_stunde();                                      // _zeitrastermenge
+		update_zeitrastermenge_by_wochentag();                                            // _zeitrastermenge
+		update_zeitrastermenge_by_stunde();                                               // _zeitrastermenge
 
 		// 2. Ordnung
 
@@ -824,8 +840,8 @@ public class StundenplanManager {
 	private void update_pausenaufsichtmenge_by_idAufsichtsbereich() {
 		_pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap<>();
 		for (final @NotNull StundenplanPausenaufsicht aufsicht : _pausenaufsichtmenge)
-			for (final @NotNull Long idAufsichtsbereich : aufsicht.bereiche)
-				MapUtils.addToList(_pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich, aufsicht);
+			for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : aufsicht.bereiche)
+				MapUtils.addToList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
 	}
 
 	private void update_pausenaufsichtmenge() {
@@ -882,6 +898,43 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanPausenaufsicht aufsicht : _pausenaufsichtmenge)
 			if (aufsicht.idLehrer >= 0)
 				Map2DUtils.addToList(_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, aufsicht.idLehrer, aufsicht.idPausenzeit, aufsicht);
+	}
+
+
+	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht() {
+		_pausenaufsichtbereichmenge_by_idPausenaufsicht = new HashMap<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(_pausenaufsichtbereichmenge_by_idPausenaufsicht, bereich.idPausenaufsicht, bereich);
+	}
+
+	private void update_pausenaufsichtbereichmenge_by_idAufsichtsbereich() {
+		_pausenaufsichtbereichmenge_by_idAufsichtsbereich = new HashMap<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich, bereich.idAufsichtsbereich, bereich);
+	}
+
+	private void update_pausenaufsichtbereichmenge_by_Wochentyp() {
+		_pausenaufsichtbereichmenge_by_Wochentyp = new HashMap<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(_pausenaufsichtbereichmenge_by_Wochentyp, bereich.wochentyp, bereich);
+	}
+
+	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich() {
+		_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich);
+	}
+
+	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp() {
+		_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp = new HashMap2D<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, bereich.idPausenaufsicht, bereich.wochentyp, bereich);
+	}
+
+	private void update_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp() {
+		_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp = new HashMap2D<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, bereich.idAufsichtsbereich, bereich.wochentyp, bereich);
 	}
 
 	private void update_klassenmenge_by_idSchueler() {
@@ -1552,7 +1605,8 @@ public class StundenplanManager {
 	private void aufsichtsbereichRemoveOhneUpdateById(final long idAufsichtsbereich) {
 		// Kaskade: StundenplanPausenaufsicht
 		for (final @NotNull StundenplanPausenaufsicht aufsicht: MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich))
-			aufsicht.bereiche.remove(idAufsichtsbereich);
+			for (final @NotNull StundenplanPausenaufsichtBereich bereich: pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(idAufsichtsbereich, aufsicht.id))
+				aufsicht.bereiche.remove(bereich);
 
 		// Entfernen
 		DeveloperNotificationException.ifMapRemoveFailes(_aufsichtsbereich_by_id, idAufsichtsbereich);
@@ -3097,15 +3151,18 @@ public class StundenplanManager {
 		// add all
 		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list)
 			DeveloperNotificationException.ifMapPutOverwrites(_pausenaufsicht_by_id, pausenaufsicht.id, pausenaufsicht);
+
+		// add all StundenplanPausenaufsichtBereich
+		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list)
+			pausenaufsichtbereichAddAllOhneUpdate(pausenaufsicht.bereiche);
 	}
 
 	private void pausenaufsichtCheckAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _pausenzeit_by_id, pausenaufsicht.idPausenzeit);
-		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > _stundenplanWochenTypModell));
-		for (final @NotNull Long idAufsichtsbereich : pausenaufsicht.bereiche)
-			DeveloperNotificationException.ifMapNotContains("_aufsichtsbereich_by_id", _aufsichtsbereich_by_id, idAufsichtsbereich);
+		for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : pausenaufsicht.bereiche)
+			pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
 	}
 
 	/**
@@ -3161,7 +3218,7 @@ public class StundenplanManager {
 	 * @param idKlasse      Die Datenbank-ID der Klasse.
 	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
 	 * @param wochentyp     Der Wochentyp
-	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 * @param inklWoche0    falls TRUE, wird eine Pausenaufsicht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
 	 */
@@ -3169,7 +3226,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
 		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, idPausenzeit))
-			if  ((a.wochentyp == wochentyp) || ((a.wochentyp == 0) && inklWoche0))
+			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
 		return list;
@@ -3190,7 +3247,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
 		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer, idPausenzeit))
-			if  ((a.wochentyp == wochentyp) || ((a.wochentyp == 0) && inklWoche0))
+			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
 		return list;
@@ -3211,7 +3268,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
 		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler, idPausenzeit))
-			if  ((a.wochentyp == wochentyp) || ((a.wochentyp == 0) && inklWoche0))
+			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
 		return list;
@@ -3232,7 +3289,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
 		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, idJahrgang, idPausenzeit))
-			if  ((a.wochentyp == wochentyp) || ((a.wochentyp == 0) && inklWoche0))
+			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
 		return list;
@@ -3246,7 +3303,6 @@ public class StundenplanManager {
 	 * <br>Die folgenden Attribute werden kopiert:
 	 * <br>{@link StundenplanPausenaufsicht#idLehrer}
 	 * <br>{@link StundenplanPausenaufsicht#idPausenzeit}
-	 * <br>{@link StundenplanPausenaufsicht#wochentyp}
 	 * <br>{@link StundenplanPausenaufsicht#bereiche}
 	 *
 	 * @param pausenaufsicht  Das neue {@link StundenplanPausenaufsicht}-Objekt, dessen Attribute kopiert werden.
@@ -3278,6 +3334,155 @@ public class StundenplanManager {
 
 		update_all();
 	}
+
+
+	// ################################################################################
+	// #################### StundenplanPausenaufsichtBereich ##########################
+	// ################################################################################
+
+	/**
+	 * Fügt ein {@link StundenplanPausenaufsichtBereich}-Objekt hinzu.
+	 *
+	 * @param pausenaufsichtbereich  Das {@link StundenplanPausenaufsichtBereich}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void pausenaufsichtbereichAdd(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
+		pausenaufsichtbereichAddAll(ListUtils.create1(pausenaufsichtbereich));
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanPausenaufsichtBereich}-Objekte hinzu.
+	 *
+	 * @param listPausenaufsichtbereich  Die Menge der {@link StundenplanPausenaufsichtBereich}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void pausenaufsichtbereichAddAll(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> listPausenaufsichtbereich) {
+		pausenaufsichtbereichAddAllOhneUpdate(listPausenaufsichtbereich);
+		update_all();
+	}
+
+	private void pausenaufsichtbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list) {
+		// check all
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
+			pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich);
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " existiert bereits!", _pausenaufsichtbereich_by_id.containsKey(pausenaufsichtbereich.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " doppelt in der Liste!", !setOfIDs.add(pausenaufsichtbereich.id));
+		}
+
+		// add all
+		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id, pausenaufsichtbereich);
+	}
+
+	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
+		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", _pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
+		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)", (pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > _stundenplanWochenTypModell));
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsichtbereich   die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 */
+	public @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereichGetByIdOrException(final long idPausenaufsichtbereich) {
+		return DeveloperNotificationException.ifMapGetIsNull(_pausenaufsichtbereich_by_id, idPausenaufsichtbereich);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht   die ID der Pausenaufsicht.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtId(final long idPausenaufsicht) {
+		return MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht, idPausenaufsicht);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idAufsichtsbereich   die ID des Aufsichtsbereichs.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereich.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByAufsichtsbereichId(final long idAufsichtsbereich) {
+		return MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich, idAufsichtsbereich);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Wochentyps.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochentyp   der Wochentyp
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Wochentyps.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByWochentyp(final int wochentyp) {
+		return MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_Wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht und eines
+	 * bestimmten Aufsichtsbereichs.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht    die ID der Pausenaufsicht.
+	 * @param idAufsichtsbereich  die ID des Aufsichtsbereichs.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht und eines
+	 *         bestimmten Aufsichtsbereichs.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(final long idPausenaufsicht, final long idAufsichtsbereich) {
+		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, idPausenaufsicht, idAufsichtsbereich));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht für den
+	 * angegebenen Wochentyp.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht  die ID der Pausenaufsicht.
+	 * @param wochentyp         der Wochentyp
+	 * @param inklWoche0        falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht für den Wochentyp.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(final long idPausenaufsicht, final int wochentyp, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, idPausenaufsicht, wochentyp));
+		if (inklWoche0)
+			list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, idPausenaufsicht, 0));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs für den
+	 * angegebenen Wochentyp.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idAufsichtsbereich  die ID des Aufsichtsbereichs.
+	 * @param wochentyp           der Wochentyp
+	 * @param inklWoche0          falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs für den Wochentyp.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByAufsichtsbereichIdAndWochentypAndInklusive(final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, idAufsichtsbereich, wochentyp));
+		if (inklWoche0)
+			list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, idAufsichtsbereich, 0));
+		return list;
+	}
+
 
 	// #####################################################################
 	// #################### StundenplanPausenzeit ##########################

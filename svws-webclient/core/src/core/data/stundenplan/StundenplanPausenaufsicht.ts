@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { StundenplanPausenaufsichtBereich } from '../../../core/data/stundenplan/StundenplanPausenaufsichtBereich';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 
@@ -20,14 +21,9 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public idLehrer : number = -1;
 
 	/**
-	 * Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0
+	 * Die Zuordnung der Aufsichtsbereiche ({@link StundenplanAufsichtsbereich}) zu den Pausenaufsichten ({@link StundenplanPausenaufsicht}) und dem Wochentyp.
 	 */
-	public wochentyp : number = -1;
-
-	/**
-	 * Die IDs der {@link StundenplanAufsichtsbereich}, in denen in dieser Pausenzeit von dem {@link StundenplanLehrer} Aufsicht geführt wird.
-	 */
-	public bereiche : List<number> = new ArrayList<number>();
+	public bereiche : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
 
 
 	public constructor() {
@@ -54,12 +50,9 @@ export class StundenplanPausenaufsicht extends JavaObject {
 		if (typeof obj.idLehrer === "undefined")
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
-		if (typeof obj.wochentyp === "undefined")
-			 throw new Error('invalid json format, missing attribute wochentyp');
-		result.wochentyp = obj.wochentyp;
 		if ((obj.bereiche !== undefined) && (obj.bereiche !== null)) {
 			for (const elem of obj.bereiche) {
-				result.bereiche?.add(elem);
+				result.bereiche?.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -70,14 +63,13 @@ export class StundenplanPausenaufsicht extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idPausenzeit" : ' + obj.idPausenzeit + ',';
 		result += '"idLehrer" : ' + obj.idLehrer + ',';
-		result += '"wochentyp" : ' + obj.wochentyp + ',';
 		if (!obj.bereiche) {
 			result += '"bereiche" : []';
 		} else {
 			result += '"bereiche" : [ ';
 			for (let i = 0; i < obj.bereiche.size(); i++) {
 				const elem = obj.bereiche.get(i);
-				result += elem;
+				result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
 				if (i < obj.bereiche.size() - 1)
 					result += ',';
 			}
@@ -99,9 +91,6 @@ export class StundenplanPausenaufsicht extends JavaObject {
 		if (typeof obj.idLehrer !== "undefined") {
 			result += '"idLehrer" : ' + obj.idLehrer + ',';
 		}
-		if (typeof obj.wochentyp !== "undefined") {
-			result += '"wochentyp" : ' + obj.wochentyp + ',';
-		}
 		if (typeof obj.bereiche !== "undefined") {
 			if (!obj.bereiche) {
 				result += '"bereiche" : []';
@@ -109,7 +98,7 @@ export class StundenplanPausenaufsicht extends JavaObject {
 				result += '"bereiche" : [ ';
 				for (let i = 0; i < obj.bereiche.size(); i++) {
 					const elem = obj.bereiche.get(i);
-					result += elem;
+					result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
 					if (i < obj.bereiche.size() - 1)
 						result += ',';
 				}

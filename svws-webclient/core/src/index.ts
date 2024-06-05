@@ -359,6 +359,7 @@ export { StundenplanLehrer } from './core/data/stundenplan/StundenplanLehrer';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
 export { StundenplanListeEintragMinimal } from './core/data/stundenplan/StundenplanListeEintragMinimal';
 export { StundenplanPausenaufsicht } from './core/data/stundenplan/StundenplanPausenaufsicht';
+export { StundenplanPausenaufsichtBereich } from './core/data/stundenplan/StundenplanPausenaufsichtBereich';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
 export { StundenplanSchiene } from './core/data/stundenplan/StundenplanSchiene';

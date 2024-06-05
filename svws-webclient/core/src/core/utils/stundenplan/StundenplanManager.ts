@@ -22,6 +22,7 @@ import { cast_java_util_List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
 import { HashSet } from '../../../java/util/HashSet';
+import { StundenplanPausenaufsichtBereich } from '../../../core/data/stundenplan/StundenplanPausenaufsichtBereich';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { SetUtils } from '../../../core/utils/SetUtils';
@@ -282,6 +283,20 @@ export class StundenplanManager extends JavaObject {
 	private _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
 
 	private _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
+
+	private readonly _pausenaufsichtbereich_by_id : HashMap<number, StundenplanPausenaufsichtBereich> = new HashMap<number, StundenplanPausenaufsichtBereich>();
+
+	private _pausenaufsichtbereichmenge_by_idPausenaufsicht : HashMap<number, List<StundenplanPausenaufsichtBereich>> = new HashMap<number, List<StundenplanPausenaufsichtBereich>>();
+
+	private _pausenaufsichtbereichmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsichtBereich>> = new HashMap<number, List<StundenplanPausenaufsichtBereich>>();
+
+	private _pausenaufsichtbereichmenge_by_Wochentyp : HashMap<number, List<StundenplanPausenaufsichtBereich>> = new HashMap<number, List<StundenplanPausenaufsichtBereich>>();
+
+	private _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich : HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>> = new HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>>();
+
+	private _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp : HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>> = new HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>>();
+
+	private _pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp : HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>> = new HashMap2D<number, number, List<StundenplanPausenaufsichtBereich>>();
 
 	private readonly _pausenzeit_by_id : HashMap<number, StundenplanPausenzeit> = new HashMap<number, StundenplanPausenzeit>();
 
@@ -578,6 +593,12 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenaufsichtmenge_by_idLehrer();
 		this.update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit();
 		this.update_pausenaufsichtmenge_by_idAufsichtsbereich();
+		this.update_pausenaufsichtbereichmenge_by_idPausenaufsicht();
+		this.update_pausenaufsichtbereichmenge_by_idAufsichtsbereich();
+		this.update_pausenaufsichtbereichmenge_by_Wochentyp();
+		this.update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich();
+		this.update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp();
+		this.update_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp();
 		this.update_pausenzeitmenge_by_idLehrer();
 		this.update_pausenzeitmenge_by_wochentag();
 		this.update_klassenmenge_by_idPausenzeit();
@@ -852,8 +873,8 @@ export class StundenplanManager extends JavaObject {
 	private update_pausenaufsichtmenge_by_idAufsichtsbereich() : void {
 		this._pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap();
 		for (const aufsicht of this._pausenaufsichtmenge)
-			for (const idAufsichtsbereich of aufsicht.bereiche)
-				MapUtils.addToList(this._pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich, aufsicht);
+			for (const aufsichtsbereich of aufsicht.bereiche)
+				MapUtils.addToList(this._pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
 	}
 
 	private update_pausenaufsichtmenge() : void {
@@ -910,6 +931,42 @@ export class StundenplanManager extends JavaObject {
 		for (const aufsicht of this._pausenaufsichtmenge)
 			if (aufsicht.idLehrer >= 0)
 				Map2DUtils.addToList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, aufsicht.idLehrer, aufsicht.idPausenzeit, aufsicht);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht() : void {
+		this._pausenaufsichtbereichmenge_by_idPausenaufsicht = new HashMap();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht, bereich.idPausenaufsicht, bereich);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_idAufsichtsbereich() : void {
+		this._pausenaufsichtbereichmenge_by_idAufsichtsbereich = new HashMap();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich, bereich.idAufsichtsbereich, bereich);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_Wochentyp() : void {
+		this._pausenaufsichtbereichmenge_by_Wochentyp = new HashMap();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			MapUtils.addToList(this._pausenaufsichtbereichmenge_by_Wochentyp, bereich.wochentyp, bereich);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich() : void {
+		this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp() : void {
+		this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp = new HashMap2D();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, bereich.idPausenaufsicht, bereich.wochentyp, bereich);
+	}
+
+	private update_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp() : void {
+		this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp = new HashMap2D();
+		for (const bereich of this._pausenaufsichtbereich_by_id.values())
+			Map2DUtils.addToList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, bereich.idAufsichtsbereich, bereich.wochentyp, bereich);
 	}
 
 	private update_klassenmenge_by_idSchueler() : void {
@@ -1523,7 +1580,8 @@ export class StundenplanManager extends JavaObject {
 
 	private aufsichtsbereichRemoveOhneUpdateById(idAufsichtsbereich : number) : void {
 		for (const aufsicht of MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich))
-			aufsicht.bereiche.remove(idAufsichtsbereich);
+			for (const bereich of this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(idAufsichtsbereich, aufsicht.id))
+				aufsicht.bereiche.remove(bereich);
 		DeveloperNotificationException.ifMapRemoveFailes(this._aufsichtsbereich_by_id, idAufsichtsbereich);
 	}
 
@@ -2904,15 +2962,16 @@ export class StundenplanManager extends JavaObject {
 		}
 		for (const pausenaufsicht of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._pausenaufsicht_by_id, pausenaufsicht.id, pausenaufsicht);
+		for (const pausenaufsicht of list)
+			this.pausenaufsichtbereichAddAllOhneUpdate(pausenaufsicht.bereiche);
 	}
 
 	private pausenaufsichtCheckAttributes(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
-		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > this._stundenplanWochenTypModell));
-		for (const idAufsichtsbereich of pausenaufsicht.bereiche)
-			DeveloperNotificationException.ifMapNotContains("_aufsichtsbereich_by_id", this._aufsichtsbereich_by_id, idAufsichtsbereich);
+		for (const aufsichtsbereich of pausenaufsicht.bereiche)
+			this.pausenaufsichtbereichCheckAttributes(aufsichtsbereich);
 	}
 
 	/**
@@ -2968,14 +3027,14 @@ export class StundenplanManager extends JavaObject {
 	 * @param idKlasse      Die Datenbank-ID der Klasse.
 	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
 	 * @param wochentyp     Der Wochentyp
-	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 * @param inklWoche0    falls TRUE, wird eine Pausenaufsicht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
 	 */
 	public pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(idKlasse : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
 		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, idPausenzeit))
-			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+			if (!this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 		return list;
 	}
@@ -2994,7 +3053,7 @@ export class StundenplanManager extends JavaObject {
 	public pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(idLehrer : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
 		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer, idPausenzeit))
-			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+			if (!this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 		return list;
 	}
@@ -3013,7 +3072,7 @@ export class StundenplanManager extends JavaObject {
 	public pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(idSchueler : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
 		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler, idPausenzeit))
-			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+			if (!this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 		return list;
 	}
@@ -3032,7 +3091,7 @@ export class StundenplanManager extends JavaObject {
 	public pausenaufsichtGetMengeByJahrgangIdAndPausenzeitIdAndWochentypAndInklusive(idJahrgang : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
 		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, idJahrgang, idPausenzeit))
-			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+			if (!this.pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 		return list;
 	}
@@ -3045,7 +3104,6 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Die folgenden Attribute werden kopiert:
 	 * <br>{@link StundenplanPausenaufsicht#idLehrer}
 	 * <br>{@link StundenplanPausenaufsicht#idPausenzeit}
-	 * <br>{@link StundenplanPausenaufsicht#wochentyp}
 	 * <br>{@link StundenplanPausenaufsicht#bereiche}
 	 *
 	 * @param pausenaufsicht  Das neue {@link StundenplanPausenaufsicht}-Objekt, dessen Attribute kopiert werden.
@@ -3070,6 +3128,146 @@ export class StundenplanManager extends JavaObject {
 	public pausenaufsichtRemoveById(idPausenaufsicht : number) : void {
 		this.pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht);
 		this.update_all();
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanPausenaufsichtBereich}-Objekt hinzu.
+	 *
+	 * @param pausenaufsichtbereich  Das {@link StundenplanPausenaufsichtBereich}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public pausenaufsichtbereichAdd(pausenaufsichtbereich : StundenplanPausenaufsichtBereich) : void {
+		this.pausenaufsichtbereichAddAll(ListUtils.create1(pausenaufsichtbereich));
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanPausenaufsichtBereich}-Objekte hinzu.
+	 *
+	 * @param listPausenaufsichtbereich  Die Menge der {@link StundenplanPausenaufsichtBereich}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public pausenaufsichtbereichAddAll(listPausenaufsichtbereich : List<StundenplanPausenaufsichtBereich>) : void {
+		this.pausenaufsichtbereichAddAllOhneUpdate(listPausenaufsichtbereich);
+		this.update_all();
+	}
+
+	private pausenaufsichtbereichAddAllOhneUpdate(list : List<StundenplanPausenaufsichtBereich>) : void {
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
+		for (const pausenaufsichtbereich of list) {
+			this.pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich);
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " existiert bereits!", this._pausenaufsichtbereich_by_id.containsKey(pausenaufsichtbereich.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " doppelt in der Liste!", !setOfIDs.add(pausenaufsichtbereich.id));
+		}
+		for (const pausenaufsichtbereich of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._pausenaufsichtbereich_by_id, pausenaufsichtbereich.id, pausenaufsichtbereich);
+	}
+
+	private pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich : StundenplanPausenaufsichtBereich) : void {
+		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", this._pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", this._aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
+		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)", (pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > this._stundenplanWochenTypModell));
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsichtbereich   die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 */
+	public pausenaufsichtbereichGetByIdOrException(idPausenaufsichtbereich : number) : StundenplanPausenaufsichtBereich {
+		return DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsichtbereich_by_id, idPausenaufsichtbereich);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht   die ID der Pausenaufsicht.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht.
+	 */
+	public pausenaufsichtbereichGetMengeByPausenaufsichtId(idPausenaufsicht : number) : List<StundenplanPausenaufsichtBereich> {
+		return MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht, idPausenaufsicht);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idAufsichtsbereich   die ID des Aufsichtsbereichs.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereich.
+	 */
+	public pausenaufsichtbereichGetMengeByAufsichtsbereichId(idAufsichtsbereich : number) : List<StundenplanPausenaufsichtBereich> {
+		return MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich, idAufsichtsbereich);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Wochentyps.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochentyp   der Wochentyp
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Wochentyps.
+	 */
+	public pausenaufsichtbereichGetMengeByWochentyp(wochentyp : number) : List<StundenplanPausenaufsichtBereich> {
+		return MapUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_Wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht und eines
+	 * bestimmten Aufsichtsbereichs.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht    die ID der Pausenaufsicht.
+	 * @param idAufsichtsbereich  die ID des Aufsichtsbereichs.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht und eines
+	 *         bestimmten Aufsichtsbereichs.
+	 */
+	public pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(idPausenaufsicht : number, idAufsichtsbereich : number) : List<StundenplanPausenaufsichtBereich> {
+		const list : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, idPausenaufsicht, idAufsichtsbereich));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht für den
+	 * angegebenen Wochentyp.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenaufsicht  die ID der Pausenaufsicht.
+	 * @param wochentyp         der Wochentyp
+	 * @param inklWoche0        falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht für den Wochentyp.
+	 */
+	public pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(idPausenaufsicht : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsichtBereich> {
+		const list : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, idPausenaufsicht, wochentyp));
+		if (inklWoche0)
+			list.addAll(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, idPausenaufsicht, 0));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs für den
+	 * angegebenen Wochentyp.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idAufsichtsbereich  die ID des Aufsichtsbereichs.
+	 * @param wochentyp           der Wochentyp
+	 * @param inklWoche0          falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs für den Wochentyp.
+	 */
+	public pausenaufsichtbereichGetMengeByAufsichtsbereichIdAndWochentypAndInklusive(idAufsichtsbereich : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsichtBereich> {
+		const list : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
+		list.addAll(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, idAufsichtsbereich, wochentyp));
+		if (inklWoche0)
+			list.addAll(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, idAufsichtsbereich, 0));
+		return list;
 	}
 
 	/**
