@@ -3021,6 +3021,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer  die Datenbank-ID des Lehrers.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers.
+	 */
+	public pausenaufsichtGetMengeByLehrerId(idLehrer : number) : List<StundenplanPausenaufsicht> {
+		return MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idLehrer, idLehrer);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
 	 * <br>Laufzeit: O(1)
 	 *
