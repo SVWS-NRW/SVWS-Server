@@ -18,7 +18,7 @@
 							<div class="svws-ui-badge select-none group flex place-items-center w-full"
 								@dragstart="onDrag(lehrer)" @dragend="dragEnd" draggable="true">
 								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
-								<span class="truncate grow"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
+								<span class="truncate grow p-1"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
 								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ mapLehrerPausenaufsichten.get(lehrer.id)?.size() }}</span>
 							</div>
 						</div>
@@ -41,20 +41,25 @@
 					<div v-for="wochentag in stundenplanManager().pausenzeitGetWochentageAlsEnumRange()" :key="wochentag.id">
 						<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 						<div v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause.hashCode()" class="border rounded-md my-2 mx-1" :style="posPause(pause)">
-							<div class="font-bold px-2 py-1"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
+							<div class="font-bold px-2 py-1" :class="{'bg-svws/20': lehrerAufsichten.get(pause.id)}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center">
+							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center text-center w-full h-full">
 								<div>Bereich</div>
-								<div v-for="typ in wochentypen" :key="typ">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}</div>
+								<div v-for="typ in wochentypen" :key="typ" class="w-full h-full rounded-sm" :class="{'bg-success/20': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
+									{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}
+								</div>
 							</div>
 							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
-								:class="{'bg-green-400/50': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt}">
+								:class="{
+									'bg-svws/20': mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
+									'bg-error/20': bereichGesperrt(pause.id, aufsichtsbereich.id).value,
+									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && (!bereichGesperrt(pause.id, aufsichtsbereich.id).value)}">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
-									@drop.stop="onDrop" class="rounded-md" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
-									:class="{'bg-green-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && !bereichGesperrtTyp, 'bg-red-400/50': isDraggingOver(pause.id, aufsichtsbereich.id, typ).value && bereichGesperrtTyp}">
-									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'bg-red-400 cursor-grabbing': lehrer.id === dragLehrer?.id, 'cursor-grab': !dragLehrer}"
+									@drop.stop="onDrop" class="w-full h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
+									:class="{'bg-success/20': mapAufsichtBereichTyp.getOrNull(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id, typ)}">
+									<div v-for="lehrer in hatAufsicht(pause.id, aufsichtsbereich.id, typ).value" :key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer}"
 										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" draggable="true" @dragend="dragEnd">
 										<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 										<span>{{ lehrer.kuerzel }}</span>
@@ -74,8 +79,8 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
-	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
-	import { StundenplanPausenaufsichtBereich } from "@core";
+	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer, StundenplanPausenaufsichtBereich } from "@core";
+	import { HashMap3D } from "@core";
 	import { ArrayList } from "@core";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
@@ -111,54 +116,6 @@
 		dragOverPausenzeit.value = undefined;
 	}
 
-	const dragOverAufsichten = computed<List<StundenplanPausenaufsicht>>(() => {
-		if (dragOverPausenzeit.value !== undefined)
-			return props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(dragOverPausenzeit.value.pauseID);
-		return new ArrayList();
-	});
-
-	const dragOverAufsichtenBereich = computed<List<StundenplanPausenaufsicht>>(() => {
-		const list = new ArrayList<StundenplanPausenaufsicht>();
-		for (const a of dragOverAufsichten.value)
-			for (const b of a.bereiche)
-				if (b.idAufsichtsbereich === dragOverPausenzeit.value?.aufsichtsbereichID)
-					list.add(a);
-		return list;
-	})
-
-	const dragOverAufsichtenBereichTyp = computed<List<StundenplanPausenaufsicht>>(() => {
-		const list = new ArrayList<StundenplanPausenaufsicht>();
-		for (const a of dragOverAufsichtenBereich.value) {
-			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1)) {
-				if (b.wochentyp === dragOverPausenzeit.value?.typ) {
-					list.add(a);
-					break;
-				}
-			}
-		}
-		return list;
-	})
-
-	const bereichGesperrt = computed<boolean>(() => {
-		if (dragFromPausenzeit.value?.pauseID === dragOverPausenzeit.value?.pauseID)
-			return false;
-		for (const a of dragOverAufsichtenBereich.value)
-			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
-				if ((a.idLehrer === dragLehrer.value?.id) && (b.wochentyp === 0))
-					return true;
-		return false;
-	})
-
-	const bereichGesperrtTyp = computed<boolean>(() => {
-		if (bereichGesperrt.value === true)
-			return true;
-		for (const a of dragOverAufsichtenBereichTyp.value)
-			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
-				if ((a.idLehrer === dragLehrer.value?.id) && (b.wochentyp === dragOverPausenzeit.value?.typ))
-					return true;
-		return false;
-	})
-
 	const isDraggingOver = (pauseID: number, aufsichtsbereichID: number, typ?: number) => computed(() => {
 		if (dragOverPausenzeit.value === undefined)
 			return false;
@@ -166,6 +123,24 @@
 		if (typ !== undefined)
 			return (pauseID === pID && aufsichtsbereichID === aID && typ === t);
 		return (pauseID === pID && aufsichtsbereichID === aID);
+	})
+
+	const bereichGesperrt = (pauseID: number, bereichID: number) => computed(() => {
+		if (!isDraggingOver(pauseID, bereichID).value || dragOverPausenzeit.value === undefined)
+			return false;
+		const aufsicht = lehrerAufsichten.value.get(pauseID);
+		const typ = dragOverPausenzeit.value.typ;
+		if (aufsicht === undefined)
+			return false;
+		const typX = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, typ);
+		if (typX)
+			return true;
+		const typ0 = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, 0);
+		if (typ0)
+			return true;
+		if (isDraggingOver(pauseID, bereichID, 0).value && mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID))
+			return true;
+		return false;
 	})
 
 	function dragEnd() {
@@ -180,29 +155,29 @@
 	}
 
 	async function onDrop() {
-		if (bereichGesperrtTyp.value)
-			return dragReset();
-		await delAufsicht();
-		if (dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
-			return dragReset();
-		const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
-		const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>();
-		const bereichNeu = new StundenplanPausenaufsichtBereich();
-		bereichNeu.id = -1;
-		bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
-		bereichNeu.idPausenaufsicht = -1;
-		bereichNeu.wochentyp = typ;
-		bereiche.add(bereichNeu);
-		for (const aufsicht of dragOverAufsichten.value) {
-			if ((aufsicht.idLehrer === dragLehrer.value.id)) {
-				// TODO Prüfe, mithilfe des Managers, ob das Hinzufügen erlaubt ist oder nicht
-				// TODO Prüfe, mithilfe des Managers, ob beim Hinzufügen der Aufsicht Wochentypen zu 0 zusammengelegt werden können...
-				bereiche.addAll(aufsicht.bereiche);
-				await props.patchAufsicht({bereiche}, aufsicht.id);
-				return dragReset();
-			}
-		}
-		await props.addAufsicht({ idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche });
+		// if (bereichGesperrtTyp.value)
+		// 	return dragReset();
+		// await delAufsicht();
+		// if (dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
+		// 	return dragReset();
+		// const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
+		// const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>();
+		// const bereichNeu = new StundenplanPausenaufsichtBereich();
+		// bereichNeu.id = -1;
+		// bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
+		// bereichNeu.idPausenaufsicht = -1;
+		// bereichNeu.wochentyp = typ;
+		// bereiche.add(bereichNeu);
+		// for (const aufsicht of dragOverAufsichten.value) {
+		// 	if ((aufsicht.idLehrer === dragLehrer.value.id)) {
+		// 		// TODO Prüfe, mithilfe des Managers, ob das Hinzufügen erlaubt ist oder nicht
+		// 		// TODO Prüfe, mithilfe des Managers, ob beim Hinzufügen der Aufsicht Wochentypen zu 0 zusammengelegt werden können...
+		// 		bereiche.addAll(aufsicht.bereiche);
+		// 		await props.patchAufsicht({bereiche}, aufsicht.id);
+		// 		return dragReset();
+		// 	}
+		// }
+		// await props.addAufsicht({ idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche });
 		return dragReset();
 	}
 
@@ -224,6 +199,24 @@
 		},
 		set: (value) => _klasse.value = value
 	});
+
+	const lehrerAufsichten = computed<Map<number, StundenplanPausenaufsicht>>(() => {
+		const map = new Map<number, StundenplanPausenaufsicht>();
+		if (dragLehrer.value === undefined)
+			return map;
+		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList())
+			if (aufsicht.idLehrer === dragLehrer.value.id)
+				map.set(aufsicht.idPausenzeit, aufsicht);
+		return map;
+	})
+
+	const mapAufsichtBereichTyp = computed<HashMap3D<number, number, number, StundenplanPausenaufsichtBereich>>(() => {
+		const map = new HashMap3D<number, number, number, StundenplanPausenaufsichtBereich>();
+		for (const aufsicht of lehrerAufsichten.value.values())
+			for (const e of aufsicht.bereiche)
+				map.put(e.idPausenaufsicht, e.idAufsichtsbereich, e.wochentyp, e);
+		return map;
+	})
 
 	const hatAufsicht = (pauseID: number, aufsichtsbereichID: number, typ: number) => computed(() => {
 		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
