@@ -255,7 +255,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	}
 
 
-	private static final Set<String> requiredCreateAttributes = Set.of("idPausenzeit", "idLehrer", "wochentyp");
+	private static final Set<String> requiredCreateAttributes = Set.of("idPausenzeit", "idLehrer");
 
 
 	private final DTOMapper<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapper = (final DTOStundenplanPausenaufsichten u) -> getAufsicht(u.ID);
