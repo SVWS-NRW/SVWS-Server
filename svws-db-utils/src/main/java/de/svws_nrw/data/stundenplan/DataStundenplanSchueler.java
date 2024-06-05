@@ -49,7 +49,7 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link StundenplanSchueler}.
 	 */
-	private static final Function<DTOSchueler, StundenplanSchueler> dtoMapper = (final DTOSchueler s) -> {
+	public static final Function<DTOSchueler, StundenplanSchueler> dtoMapper = (final DTOSchueler s) -> {
 		final StundenplanSchueler daten = new StundenplanSchueler();
 		daten.id = s.ID;
 		daten.nachname = s.Nachname;

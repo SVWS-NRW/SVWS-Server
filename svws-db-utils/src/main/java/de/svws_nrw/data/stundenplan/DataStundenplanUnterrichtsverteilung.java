@@ -2,6 +2,7 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
@@ -12,6 +13,8 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -56,6 +59,35 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, id);
 		final List<StundenplanKurs> kurse = DataStundenplanKurse.getKurse(conn, id);
 		final List<StundenplanKlassenunterricht> klassenunterricht = DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, id);
+		// Prüfe, ob bei den Klassen oder Kursen Lehrer zugeordnet sind, deren ID in der Lehrer-Liste nicht vorhanden ist und füge diese ggf. hinzu
+		final List<Long> idsLehrer = lehrer.stream().map(l -> l.id).toList();
+		final List<Long> idsLehrerFehlende = Stream.concat(
+				kurse.stream().flatMap(k -> k.lehrer.stream()),
+				klassenunterricht.stream().flatMap(ku -> ku.lehrer.stream()))
+				.filter(l -> !idsLehrer.contains(l)).toList();
+		if (!idsLehrerFehlende.isEmpty()) {
+			final List<DTOLehrer> lehrerFehlende = conn.queryByKeyList(DTOLehrer.class, idsLehrerFehlende);
+			if (lehrerFehlende.size() != idsLehrerFehlende.size())
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Nicht alle Lehrer des Stundenplans mit der ID %d konnten auch in der Lehrer-Tabelle gefunden werden.".formatted(id));
+			lehrer.addAll(lehrerFehlende.stream().map(l -> {
+				final StundenplanLehrer sl = DataStundenplanLehrer.dtoMapper.apply(l);
+				sl.kuerzel = "*" + sl.kuerzel;
+				return sl;
+			}).toList());
+		}
+		// Prüfe, ob bei den Klassen oder Kursen Schüler zugeordnet sind, deren ID in der Schüler-Liste nicht vorhanden ist und füge diese ggf. hinzu
+		final List<Long> idsSchueler = schueler.stream().map(l -> l.id).toList();
+		final List<Long> idsSchuelerFehlende = Stream.concat(Stream.concat(
+				kurse.stream().flatMap(k -> k.schueler.stream()),
+				klassenunterricht.stream().flatMap(ku -> ku.schueler.stream())),
+				klassen.stream().flatMap(k -> k.schueler.stream()))
+				.filter(s -> !idsSchueler.contains(s)).toList();
+		if (!idsSchuelerFehlende.isEmpty()) {
+			final List<DTOSchueler> schuelerFehlende = conn.queryByKeyList(DTOSchueler.class, idsSchuelerFehlende);
+			if (schuelerFehlende.size() != idsSchuelerFehlende.size())
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Nicht alle Schüler des Stundenplans mit der ID %d konnten auch in der Schüler-Tabelle gefunden werden.".formatted(id));
+			schueler.addAll(schuelerFehlende.stream().map(s -> DataStundenplanSchueler.dtoMapper.apply(s)).toList());
+		}
 		// Erstelle das Core-DTO-Objekt für die Response
 		final StundenplanUnterrichtsverteilung daten = new StundenplanUnterrichtsverteilung();
 		daten.id = stundenplan.ID;
