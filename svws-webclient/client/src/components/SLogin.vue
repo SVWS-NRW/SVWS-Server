@@ -149,6 +149,7 @@
 		}
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
+			console.log(s)
 			if (s.isDefault) {
 				schema.value = s;
 				hasDefault = true;
@@ -161,6 +162,13 @@
 		}
 		if (!hasDefault) {
 			schema.value = inputDBSchemata.value.get(0);
+			const lastSchema = localStorage.getItem("SVWS-Client Last Used Schema");
+			if ((lastSchema !== null) && (lastSchema !== ''))
+				for (const s of inputDBSchemata.value)
+					if (s.name === lastSchema) {
+						schema.value = s;
+						break;
+					}
 		}
 		connection_failed.value = false;
 		connecting.value = false;
@@ -177,6 +185,8 @@
 		firstauth.value = false;
 		if (!props.authenticated)
 			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
+		else
+			localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 	}
 
 </script>
