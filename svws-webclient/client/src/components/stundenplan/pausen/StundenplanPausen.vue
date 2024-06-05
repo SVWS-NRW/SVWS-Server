@@ -74,7 +74,8 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
-	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
+	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
+	import { StundenplanPausenaufsichtBereich } from "@core";
 	import { ArrayList } from "@core";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
@@ -120,16 +121,21 @@
 		const list = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of dragOverAufsichten.value)
 			for (const b of a.bereiche)
-				if (b === dragOverPausenzeit.value?.aufsichtsbereichID)
+				if (b.idAufsichtsbereich === dragOverPausenzeit.value?.aufsichtsbereichID)
 					list.add(a);
 		return list;
 	})
 
 	const dragOverAufsichtenBereichTyp = computed<List<StundenplanPausenaufsicht>>(() => {
 		const list = new ArrayList<StundenplanPausenaufsicht>();
-		for (const a of dragOverAufsichtenBereich.value)
-			if (a.wochentyp === dragOverPausenzeit.value?.typ)
-				list.add(a);
+		for (const a of dragOverAufsichtenBereich.value) {
+			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1)) {
+				if (b.wochentyp === dragOverPausenzeit.value?.typ) {
+					list.add(a);
+					break;
+				}
+			}
+		}
 		return list;
 	})
 
@@ -137,8 +143,9 @@
 		if (dragFromPausenzeit.value?.pauseID === dragOverPausenzeit.value?.pauseID)
 			return false;
 		for (const a of dragOverAufsichtenBereich.value)
-			if (a.idLehrer === dragLehrer.value?.id && a.wochentyp === 0)
-				return true;
+			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
+				if ((a.idLehrer === dragLehrer.value?.id) && (b.wochentyp === 0))
+					return true;
 		return false;
 	})
 
@@ -146,8 +153,9 @@
 		if (bereichGesperrt.value === true)
 			return true;
 		for (const a of dragOverAufsichtenBereichTyp.value)
-			if (a.idLehrer === dragLehrer.value?.id && a.wochentyp === dragOverPausenzeit.value?.typ)
-				return true;
+			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(a.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
+				if ((a.idLehrer === dragLehrer.value?.id) && (b.wochentyp === dragOverPausenzeit.value?.typ))
+					return true;
 		return false;
 	})
 
@@ -178,15 +186,21 @@
 		if (dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
 			return dragReset();
 		const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
-		const bereiche = new ArrayList<number>();
-		bereiche.add(aufsichtsbereichID);
+		const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>();
+		const bereichNeu = new StundenplanPausenaufsichtBereich();
+		bereichNeu.id = -1;
+		bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
+		bereichNeu.idPausenaufsicht = -1;
+		bereichNeu.wochentyp = typ;
+		bereiche.add(bereichNeu);
 		for (const aufsicht of dragOverAufsichten.value)
-			if (aufsicht.idLehrer === dragLehrer.value.id && aufsicht.wochentyp === typ) {
-				bereiche.addAll(aufsicht.bereiche);
-				await props.patchAufsicht({bereiche}, aufsicht.id);
-				return dragReset();
-			}
-		await props.addAufsicht({idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche, wochentyp: typ});
+			for (const b of props.stundenplanManager().pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(aufsicht.id, dragOverPausenzeit.value?.aufsichtsbereichID ?? -1))
+				if ((aufsicht.idLehrer === dragLehrer.value.id) && (b.wochentyp === typ)) {
+					bereiche.addAll(aufsicht.bereiche);
+					await props.patchAufsicht({bereiche}, aufsicht.id);
+					return dragReset();
+				}
+		await props.addAufsicht({ idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche });
 		return dragReset();
 	}
 
@@ -214,7 +228,7 @@
 		let lehrer = new ArrayList<StundenplanLehrer>();
 		for (const a of aufsichten)
 			for (const b of a.bereiche)
-				if (b === aufsichtsbereichID && typ === a.wochentyp)
+				if ((b.idAufsichtsbereich === aufsichtsbereichID) && (typ === b.wochentyp))
 					lehrer.add(props.stundenplanManager().lehrerGetByIdOrException(a.idLehrer));
 		return lehrer;
 	})
@@ -226,17 +240,18 @@
 		const { id: lehrerID } = dragLehrer.value;
 		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
 		for (const aufsicht of aufsichten) {
-			if ((aufsicht.idLehrer === lehrerID) && (aufsicht.wochentyp === typ) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
-				if (aufsicht.bereiche.size() === 1)
-					await props.removeAufsicht(aufsicht.id);
-				else {
-					const bereiche = new ArrayList<number>()
-					bereiche.addAll(aufsicht.bereiche);
-					const i = bereiche.indexOf(aufsichtsbereichID);
-					bereiche.removeElementAt(i);
-					await props.patchAufsicht({bereiche}, aufsicht.id)
+			for (const b of aufsicht.bereiche)
+				if ((aufsicht.idLehrer === lehrerID) && (b.wochentyp === typ) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
+					if (aufsicht.bereiche.size() === 1)
+						await props.removeAufsicht(aufsicht.id);
+					else {
+						const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>()
+						for (const bereich of aufsicht.bereiche)
+							if (bereich.id !== aufsichtsbereichID)
+								bereiche.add(bereich);
+						await props.patchAufsicht({bereiche}, aufsicht.id)
+					}
 				}
-			}
 		}
 	}
 

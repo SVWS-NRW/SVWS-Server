@@ -3162,7 +3162,6 @@ export class StundenplanManager extends JavaObject {
 
 	private pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich : StundenplanPausenaufsichtBereich) : void {
 		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", this._pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
 		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", this._aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
 		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)", (pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > this._stundenplanWochenTypModell));
 	}

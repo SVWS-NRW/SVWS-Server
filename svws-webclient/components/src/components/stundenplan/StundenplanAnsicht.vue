@@ -324,8 +324,8 @@
 
 	function aufsichtsbereiche(pausenaufsicht: StundenplanPausenaufsicht): string {
 		let result = "";
-		for (const idBereich of pausenaufsicht.bereiche) {
-			const bereich = props.manager().aufsichtsbereichGetByIdOrException(idBereich);
+		for (const zuordnung of pausenaufsicht.bereiche) {
+			const bereich = props.manager().aufsichtsbereichGetByIdOrException(zuordnung.idAufsichtsbereich);
 			if (result !== "")
 				result += ",";
 			result += bereich.kuerzel;

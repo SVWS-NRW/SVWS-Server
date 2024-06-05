@@ -3375,7 +3375,7 @@ public class StundenplanManager {
 
 	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", _pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+		// DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", _pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
 		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
 		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)", (pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > _stundenplanWochenTypModell));
 	}

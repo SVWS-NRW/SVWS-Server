@@ -182,7 +182,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 				dtoStundenplan.ID).stream().map(a -> a.ID).collect(Collectors.toSet());
 		for (final StundenplanPausenaufsichtBereich bereich : bereiche) {
 			// Prüfe die ID der Pausenaufsicht
-			if (bereich.idPausenaufsicht != id)
+			if ((bereich.idPausenaufsicht != id) && (bereich.idPausenaufsicht != -1))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die zugeordneten Aufsichtsbereiche sind bei den übergebenen Daten nicht dieser Pausenaufsicht zugeordnet.");
 			// Prüfe die ID des Aufsichtsbereichs
 			if (!setIdsAufsichtsbereiche.contains(bereich.idAufsichtsbereich))
@@ -210,7 +210,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 				changed = true;
 			}
 			if (bereichVorhanden.Pausenaufsicht_ID != bereich.idPausenaufsicht) {
-				bereichVorhanden.Pausenaufsicht_ID = bereich.idPausenaufsicht;
+				bereichVorhanden.Pausenaufsicht_ID = (bereich.idPausenaufsicht == -1) ? id : bereich.idPausenaufsicht;
 				changed = true;
 			}
 			if (bereichVorhanden.Wochentyp != bereich.wochentyp) {
