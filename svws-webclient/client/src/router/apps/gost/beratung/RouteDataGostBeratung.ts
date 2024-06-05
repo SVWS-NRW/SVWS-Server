@@ -128,8 +128,8 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	public async ladeDaten(auswahl: number) {
-		if (auswahl === this._state.value.auswahl)
+	public async ladeDaten(auswahl: number, isEntering : boolean) {
+		if ((auswahl === this._state.value.auswahl) && !isEntering)
 			return;
 		if (auswahl === undefined)
 			this.setPatchedDefaultState({});
