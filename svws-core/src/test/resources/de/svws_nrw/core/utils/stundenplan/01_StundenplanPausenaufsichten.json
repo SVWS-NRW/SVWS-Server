@@ -3,712 +3,1033 @@
     "id": 1,
     "idPausenzeit": 1,
     "idLehrer": 28,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 1,
+        "idPausenaufsicht": 1,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 2,
     "idPausenzeit": 1,
     "idLehrer": 54,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 2,
+        "idPausenaufsicht": 2,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 3,
     "idPausenzeit": 1,
     "idLehrer": 14,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 3,
+        "idPausenaufsicht": 3,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 4,
     "idPausenzeit": 1,
     "idLehrer": 79,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 4,
+        "idPausenaufsicht": 4,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 5,
     "idPausenzeit": 1,
     "idLehrer": 7,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 5,
+        "idPausenaufsicht": 5,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 6,
     "idPausenzeit": 1,
     "idLehrer": 58,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 6,
+        "idPausenaufsicht": 6,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 7,
     "idPausenzeit": 1,
     "idLehrer": 11,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 7,
+        "idPausenaufsicht": 7,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 8,
     "idPausenzeit": 1,
     "idLehrer": 50,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 8,
+        "idPausenaufsicht": 8,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 9,
     "idPausenzeit": 2,
     "idLehrer": 44,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 9,
+        "idPausenaufsicht": 9,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 10,
     "idPausenzeit": 2,
     "idLehrer": 71,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 10,
+        "idPausenaufsicht": 10,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 11,
     "idPausenzeit": 2,
     "idLehrer": 50,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 11,
+        "idPausenaufsicht": 11,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 12,
     "idPausenzeit": 2,
     "idLehrer": 37,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 12,
+        "idPausenaufsicht": 12,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 13,
     "idPausenzeit": 2,
     "idLehrer": 32,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 13,
+        "idPausenaufsicht": 13,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 14,
     "idPausenzeit": 2,
     "idLehrer": 52,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 14,
+        "idPausenaufsicht": 14,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 15,
     "idPausenzeit": 2,
     "idLehrer": 76,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 15,
+        "idPausenaufsicht": 15,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 16,
     "idPausenzeit": 2,
     "idLehrer": 54,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 16,
+        "idPausenaufsicht": 16,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 17,
     "idPausenzeit": 3,
     "idLehrer": 38,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 17,
+        "idPausenaufsicht": 17,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 18,
     "idPausenzeit": 3,
     "idLehrer": 31,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 18,
+        "idPausenaufsicht": 18,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 19,
     "idPausenzeit": 3,
     "idLehrer": 37,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 19,
+        "idPausenaufsicht": 19,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 20,
     "idPausenzeit": 3,
     "idLehrer": 7,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 20,
+        "idPausenaufsicht": 20,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 21,
     "idPausenzeit": 3,
     "idLehrer": 8,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 21,
+        "idPausenaufsicht": 21,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 22,
     "idPausenzeit": 3,
     "idLehrer": 18,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 22,
+        "idPausenaufsicht": 22,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 23,
     "idPausenzeit": 3,
     "idLehrer": 68,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 23,
+        "idPausenaufsicht": 23,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 24,
     "idPausenzeit": 3,
     "idLehrer": 28,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 24,
+        "idPausenaufsicht": 24,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 25,
     "idPausenzeit": 4,
     "idLehrer": 21,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 25,
+        "idPausenaufsicht": 25,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 26,
     "idPausenzeit": 4,
     "idLehrer": 19,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 26,
+        "idPausenaufsicht": 26,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 27,
     "idPausenzeit": 4,
     "idLehrer": 33,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 27,
+        "idPausenaufsicht": 27,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 28,
     "idPausenzeit": 4,
     "idLehrer": 20,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 28,
+        "idPausenaufsicht": 28,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 29,
     "idPausenzeit": 4,
     "idLehrer": 85,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 29,
+        "idPausenaufsicht": 29,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 30,
     "idPausenzeit": 4,
     "idLehrer": 24,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 30,
+        "idPausenaufsicht": 30,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 31,
     "idPausenzeit": 4,
     "idLehrer": 34,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 31,
+        "idPausenaufsicht": 31,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 32,
     "idPausenzeit": 4,
     "idLehrer": 10,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 32,
+        "idPausenaufsicht": 32,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 33,
     "idPausenzeit": 5,
     "idLehrer": 37,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 33,
+        "idPausenaufsicht": 33,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 34,
     "idPausenzeit": 5,
     "idLehrer": 68,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 34,
+        "idPausenaufsicht": 34,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 35,
     "idPausenzeit": 5,
     "idLehrer": 56,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 35,
+        "idPausenaufsicht": 35,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 36,
     "idPausenzeit": 5,
     "idLehrer": 74,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 36,
+        "idPausenaufsicht": 36,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 37,
     "idPausenzeit": 5,
     "idLehrer": 31,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 37,
+        "idPausenaufsicht": 37,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 38,
     "idPausenzeit": 5,
     "idLehrer": 18,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 38,
+        "idPausenaufsicht": 38,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 39,
     "idPausenzeit": 5,
     "idLehrer": 84,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 39,
+        "idPausenaufsicht": 39,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 40,
     "idPausenzeit": 5,
     "idLehrer": 20,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 40,
+        "idPausenaufsicht": 40,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 41,
     "idPausenzeit": 6,
     "idLehrer": 22,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 41,
+        "idPausenaufsicht": 41,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 42,
     "idPausenzeit": 6,
     "idLehrer": 47,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 42,
+        "idPausenaufsicht": 42,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 43,
     "idPausenzeit": 6,
     "idLehrer": 85,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 43,
+        "idPausenaufsicht": 43,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 44,
     "idPausenzeit": 6,
     "idLehrer": 23,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 44,
+        "idPausenaufsicht": 44,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 45,
     "idPausenzeit": 6,
     "idLehrer": 33,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 45,
+        "idPausenaufsicht": 45,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 46,
     "idPausenzeit": 6,
     "idLehrer": 8,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 46,
+        "idPausenaufsicht": 46,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 47,
     "idPausenzeit": 6,
     "idLehrer": 27,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 47,
+        "idPausenaufsicht": 47,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 48,
     "idPausenzeit": 6,
     "idLehrer": 24,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 48,
+        "idPausenaufsicht": 48,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 49,
     "idPausenzeit": 7,
     "idLehrer": 38,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 49,
+        "idPausenaufsicht": 49,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 50,
     "idPausenzeit": 7,
     "idLehrer": 31,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 50,
+        "idPausenaufsicht": 50,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 51,
     "idPausenzeit": 7,
     "idLehrer": 41,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 51,
+        "idPausenaufsicht": 51,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 52,
     "idPausenzeit": 7,
     "idLehrer": 25,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 52,
+        "idPausenaufsicht": 52,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 53,
     "idPausenzeit": 7,
     "idLehrer": 2,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 53,
+        "idPausenaufsicht": 53,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 54,
     "idPausenzeit": 7,
     "idLehrer": 21,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 54,
+        "idPausenaufsicht": 54,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 55,
     "idPausenzeit": 7,
     "idLehrer": 12,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 55,
+        "idPausenaufsicht": 55,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 56,
     "idPausenzeit": 7,
     "idLehrer": 82,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 56,
+        "idPausenaufsicht": 56,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 57,
     "idPausenzeit": 8,
     "idLehrer": 30,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 57,
+        "idPausenaufsicht": 57,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 58,
     "idPausenzeit": 8,
     "idLehrer": 76,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 58,
+        "idPausenaufsicht": 58,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 59,
     "idPausenzeit": 8,
     "idLehrer": 33,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 59,
+        "idPausenaufsicht": 59,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 60,
     "idPausenzeit": 8,
     "idLehrer": 20,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 60,
+        "idPausenaufsicht": 60,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 61,
     "idPausenzeit": 8,
     "idLehrer": 1,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 61,
+        "idPausenaufsicht": 61,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 62,
     "idPausenzeit": 8,
     "idLehrer": 31,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 62,
+        "idPausenaufsicht": 62,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 63,
     "idPausenzeit": 8,
     "idLehrer": 66,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 63,
+        "idPausenaufsicht": 63,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 64,
     "idPausenzeit": 8,
     "idLehrer": 63,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 64,
+        "idPausenaufsicht": 64,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 65,
     "idPausenzeit": 9,
     "idLehrer": 30,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 65,
+        "idPausenaufsicht": 65,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 66,
     "idPausenzeit": 9,
     "idLehrer": 45,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 66,
+        "idPausenaufsicht": 66,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 67,
     "idPausenzeit": 9,
     "idLehrer": 52,
-    "wochentyp": 0,
     "bereiche": [
-      3
+      {
+        "id": 67,
+        "idPausenaufsicht": 67,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 68,
     "idPausenzeit": 9,
     "idLehrer": 35,
-    "wochentyp": 0,
     "bereiche": [
-      4
+      {
+        "id": 68,
+        "idPausenaufsicht": 68,
+        "idAufsichtsbereich": 4,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 69,
     "idPausenzeit": 9,
     "idLehrer": 22,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 69,
+        "idPausenaufsicht": 69,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 70,
     "idPausenzeit": 9,
     "idLehrer": 3,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 70,
+        "idPausenaufsicht": 70,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 71,
     "idPausenzeit": 9,
     "idLehrer": 33,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 71,
+        "idPausenaufsicht": 71,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 72,
     "idPausenzeit": 9,
     "idLehrer": 71,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 72,
+        "idPausenaufsicht": 72,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 73,
     "idPausenzeit": 10,
     "idLehrer": 83,
-    "wochentyp": 0,
     "bereiche": [
-      1
+      {
+        "id": 73,
+        "idPausenaufsicht": 73,
+        "idAufsichtsbereich": 1,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 74,
     "idPausenzeit": 10,
     "idLehrer": 30,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 74,
+        "idPausenaufsicht": 74,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 75,
     "idPausenzeit": 10,
     "idLehrer": 71,
-    "wochentyp": 0,
     "bereiche": [
-      3,
-      4
+      {
+        "id": 75,
+        "idPausenaufsicht": 75,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      },
+      {
+        "id": 76,
+        "idPausenaufsicht": 75,
+        "idAufsichtsbereich": 3,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 77,
     "idPausenzeit": 10,
     "idLehrer": 78,
-    "wochentyp": 0,
     "bereiche": [
-      5
+      {
+        "id": 77,
+        "idPausenaufsicht": 77,
+        "idAufsichtsbereich": 5,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 78,
     "idPausenzeit": 10,
     "idLehrer": 24,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 78,
+        "idPausenaufsicht": 78,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 79,
     "idPausenzeit": 10,
     "idLehrer": 57,
-    "wochentyp": 0,
     "bereiche": [
-      2
+      {
+        "id": 79,
+        "idPausenaufsicht": 79,
+        "idAufsichtsbereich": 2,
+        "wochentyp": 0
+      }
     ]
   },
   {
     "id": 80,
     "idPausenzeit": 10,
     "idLehrer": 42,
-    "wochentyp": 0,
     "bereiche": [
-      6
+      {
+        "id": 80,
+        "idPausenaufsicht": 80,
+        "idAufsichtsbereich": 6,
+        "wochentyp": 0
+      }
     ]
   }
 ]
