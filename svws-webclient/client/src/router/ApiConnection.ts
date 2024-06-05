@@ -331,7 +331,7 @@ export class ApiConnection {
 			this._kompetenzen.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
-			this._stammdaten.value.stammdaten = undefined;
+			this._stammdaten.value = {stammdaten: undefined};
 			this._serverMode.value = ServerMode.STABLE;
 			this._aes.value = undefined;
 		}
@@ -348,7 +348,7 @@ export class ApiConnection {
 				this._stammdaten.value.stammdaten = await this._api.getSchuleStammdaten(this._schema);
 			return true;
 		} catch(error) {
-			this._stammdaten.value.stammdaten = undefined;
+			this._stammdaten.value = {stammdaten: undefined};
 		}
 		return false;
 	}
@@ -358,7 +358,7 @@ export class ApiConnection {
 	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
-		this._stammdaten.value.stammdaten = undefined;
+		this._stammdaten.value = {stammdaten: undefined};
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
