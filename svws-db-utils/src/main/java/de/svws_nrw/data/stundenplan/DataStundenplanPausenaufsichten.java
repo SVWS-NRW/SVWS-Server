@@ -174,7 +174,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	private void patchBereiche(final long id, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("bereiche"))
 			return;
-		final List<StundenplanPausenaufsichtBereich> bereiche = JSONMapper.convertToList(StundenplanPausenaufsichtBereich.class, map, false);
+		final List<StundenplanPausenaufsichtBereich> bereiche = JSONMapper.convertToList(StundenplanPausenaufsichtBereich.class, map.get("bereiche"), false);
 		if (bereiche.isEmpty())
 			return;
 		final DTOStundenplan dtoStundenplan = DataStundenplan.getDTOStundenplan(conn, idStundenplan);   // Prüfe, on der Stundenplan existiert
@@ -224,7 +224,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		// Schreibe die neuen Bereiche
 		long nextID = conn.transactionGetNextID(DTOStundenplanPausenaufsichtenBereiche.class);
 		for (final StundenplanPausenaufsichtBereich bereich : mapBereiche.values())
-			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich.wochentyp));
+			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, bereich.idPausenaufsicht == -1 ? id : bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich.wochentyp));
 		conn.transactionFlush();
 	}
 

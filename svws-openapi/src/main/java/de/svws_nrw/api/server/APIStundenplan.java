@@ -1188,13 +1188,14 @@ public class APIStundenplan {
      * einem bestehendem Stundenplan.
      *
      * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
      * @param is           der Input-Stream mit den Daten der Pausenaufsicht
      * @param request      die Informationen zur HTTP-Anfrage
      *
      * @return die HTTP-Antwort mit der neuen Pausenaufsicht
      */
     @POST
-    @Path("/pausenaufsicht/create")
+    @Path("/{id : \\d+}/pausenaufsicht/create")
     @Operation(summary = "Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück.",
     description = "Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
@@ -1205,11 +1206,11 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenaufsicht für einen Stundenplan anzulegen.")
     @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response addStundenplanPausenaufsicht(@PathParam("schema") final String schema,
+    public Response addStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenaufsicht ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -1218,13 +1219,14 @@ public class APIStundenplan {
      * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Pausenaufsichten zu einem bestehendem Stundenplan.
      *
      * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
      * @param is           der Input-Stream mit den Daten der Pausenaufsichten
      * @param request      die Informationen zur HTTP-Anfrage
      *
      * @return die HTTP-Antwort mit den neuen Pausenaufsichten
      */
     @POST
-    @Path("/pausenaufsicht/create/multiple")
+    @Path("/{id : \\d+}/pausenaufsicht/create/multiple")
     @Operation(summary = "Erstellt neue Pausenaufsichten für einen Stundenplan und gibt die zugehörigen Objekte zurück.",
     description = "Erstellt neue Pausenaufsichten für einen Stundenplan und gibt die zugehörigen Objekte zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
@@ -1235,11 +1237,11 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Pausenaufsichten für einen Stundenplan anzulegen.")
     @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response addStundenplanPausenaufsichten(@PathParam("schema") final String schema,
+    public Response addStundenplanPausenaufsichten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenaufsichten ohne IDs, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsicht.class)))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).addMultiple(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).addMultiple(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 

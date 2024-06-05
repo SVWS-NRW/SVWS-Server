@@ -590,10 +590,14 @@ public final class JSONMapper {
 		final List<T> result = new ArrayList<>();
 		if (listObj instanceof final List<?> liste) {
 			for (final Object obj : liste) {
-				if (obj.getClass().equals(dtoClass))
-					result.add((T) obj);
-				else
-					throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu dem DTO-Typ");
+				//mapper.writer().withAttributes(obj).write
+				try {
+					final String str = mapper.writer().writeValueAsString((Map<?, ?>) obj);
+					final T value = mapper.reader().forType(dtoClass).readValue(str);
+					result.add(value);
+				} catch (final IOException e) {
+					throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler beim Konvertieren zu dem DTO-Typ");
+				}
 			}
 		} else
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von DTOs erwartet.");

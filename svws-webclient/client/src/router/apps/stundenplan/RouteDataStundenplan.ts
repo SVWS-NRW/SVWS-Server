@@ -238,8 +238,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	}
 
 	addAufsicht = async (data: Partial<StundenplanPausenaufsicht>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const pausenaufsicht = await api.server.addStundenplanPausenaufsicht(data, api.schema);
+		const pausenaufsicht = await api.server.addStundenplanPausenaufsicht(data, api.schema, id);
 		this.stundenplanManager.pausenaufsichtAdd(pausenaufsicht);
 		this.commit();
 		api.status.stop();
