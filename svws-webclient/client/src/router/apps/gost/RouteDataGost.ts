@@ -186,7 +186,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const jahrgang: GostJahrgang | undefined = daten.mapAbiturjahrgaenge?.get(abiturjahr);
 		if (jahrgang === undefined)
 			throw new DeveloperNotificationException("Der neu erstelle Abiturjahrgang konnte nicht geladen werden.");
-		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten);
+		daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, daten, true);
 		this.setPatchedDefaultState(daten);
 		await RouteManager.doRoute(routeGost.getRoute(jahrgang.abiturjahr));
 	}
@@ -266,7 +266,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	removeAbiturjahrgang = async () => {
 		await api.server.deleteGostAbiturjahrgang(api.schema, this.jahrgangsdaten.abiturjahr);
 		let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
-		state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state);
+		state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state, true);
 		this.setPatchedDefaultState(state);
 	}
 
