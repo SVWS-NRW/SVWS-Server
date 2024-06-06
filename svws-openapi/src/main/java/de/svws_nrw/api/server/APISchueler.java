@@ -797,7 +797,7 @@ public class APISchueler {
 	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 								 @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIDasResponse(id),
-			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 
@@ -827,7 +827,7 @@ public class APISchueler {
 										  	@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 										  	@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(vid, is),
-			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
+			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
 
@@ -856,7 +856,7 @@ public class APISchueler {
 								  @Context final HttpServletRequest request) {
 
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).create(id),
-			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
+			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
 	/**
@@ -883,10 +883,8 @@ public class APISchueler {
 	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID, @PathParam("idVermerk") final long idVermerk,
 									@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).delete(idVermerk),
-			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
+			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
-
-
 
 
 	/**
