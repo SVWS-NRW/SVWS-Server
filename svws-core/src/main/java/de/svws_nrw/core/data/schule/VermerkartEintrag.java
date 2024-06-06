@@ -29,4 +29,6 @@ public class VermerkartEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar = true;
 
+	/** Gibt an wie viele Vermerke dem entsprechenden VermerkArtEintrag zugeordnet sind. Wird im DTO errechnet. */
+	public int anzahlVermerke;
 }

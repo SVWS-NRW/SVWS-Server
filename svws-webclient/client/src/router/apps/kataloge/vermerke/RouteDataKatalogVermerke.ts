@@ -86,4 +86,22 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
 		this.setPatchedState({mapKatalogeintraege, auswahl});
-	}}
+	}
+	//
+	deleteKlassenCheck = (eintraege: Iterable<VermerkartEintrag>): [boolean, ArrayList<string>] => {
+			const errorLog: ArrayList<string> = new ArrayList();
+			const deleteCandidates = new ArrayList<number>;
+
+			let isEmtpy : boolean = false;
+
+			for(const eintrag in eintraege) {
+				isEmtpy = true;
+			}
+	
+			if (isEmtpy)
+ 				errorLog.add('Es wurde keine Vermerkart zum Löschen ausgewählt.')
+			return [errorLog.isEmpty(), errorLog]
+		}
+	}
+
+	

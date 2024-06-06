@@ -12128,9 +12128,9 @@ export class ApiServer extends BaseApi {
 	 * Entfernt mehrere Vermerkart-Katalog-Einträge der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<VermerkartEintrag>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
 	 *   Code 404: Vermerkart-Katalog-Einträge nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -12139,16 +12139,16 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteVermerkartEintraege(data : List<number>, schema : string) : Promise<List<VermerkartEintrag>> {
+	public async deleteVermerkartEintraege(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/vermerkarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<VermerkartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VermerkartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

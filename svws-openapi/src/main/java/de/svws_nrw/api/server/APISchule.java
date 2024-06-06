@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
@@ -979,15 +980,15 @@ public class APISchule {
 	 * @param is           die IDs der Vermerkart-Katalog-Einträge
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Vermerkart-Katalog-Einträgen
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
 	@DELETE
 	@Path("/vermerkarten/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Vermerkart-Katalog-Einträge der Schule.",
 		description = "Entfernt mehrere Vermerkart-Katalog-Einträge der Schule."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Vermerkart-Katalog-Einträge wurde erfolgreich entfernt.",
-		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = VermerkartEintrag.class))))
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Vermerkart-Katalog-Einträge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

@@ -3,37 +3,37 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class SchuelerVermerke extends JavaObject {
 
 	/**
-	 * ID des Datensatzes
+	 * Die ID des Schülervermerks.
 	 */
 	public id : number = 0;
 
 	/**
-	 * ID des Schülers
+	 * ID des entsprechenden Schülers.
 	 */
 	public schueler_id : number = 0;
 
 	/**
-	 * TODO
+	 * ID der entsprechenden Vermerkart.
 	 */
 	public VermerkArt_ID : number = 0;
 
 	/**
-	 * TODO
+	 * Das Datum der Erstellung oder letzten Bearbeitung.
 	 */
 	public Datum : string | null = null;
 
 	/**
-	 * TODO
+	 * Der Vermerk als Text.
 	 */
 	public Bemerkung : string | null = null;
 
 	/**
-	 * TODO
+	 * Name des Benutzers welcher den Vermerk angelegt hat.
 	 */
 	public AngelegtVon : string | null = null;
 
 	/**
-	 * TODO
+	 * Name des Benutzers welcher den Vermerk als letzten bearbeitet hat.
 	 */
 	public GeaendertVon : string | null = null;
 

@@ -22,6 +22,11 @@ export class VermerkartEintrag extends JavaObject {
 	 */
 	public istSichtbar : boolean = true;
 
+	/**
+	 * Gibt an wie viele Vermerke dem entsprechenden VermerkArtEintrag zugeordnet sind. Wird im DTO errechnet.
+	 */
+	public anzahlVermerke : number = 0;
+
 
 	public constructor() {
 		super();
@@ -50,6 +55,9 @@ export class VermerkartEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
+		if (typeof obj.anzahlVermerke === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlVermerke');
+		result.anzahlVermerke = obj.anzahlVermerke;
 		return result;
 	}
 
@@ -59,6 +67,7 @@ export class VermerkartEintrag extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -77,6 +86,9 @@ export class VermerkartEintrag extends JavaObject {
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		}
+		if (typeof obj.anzahlVermerke !== "undefined") {
+			result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
