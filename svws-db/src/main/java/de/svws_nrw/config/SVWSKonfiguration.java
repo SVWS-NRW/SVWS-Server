@@ -563,19 +563,20 @@ public final class SVWSKonfiguration {
 
 
 	/**
-	 * Gibt den Namen des konfigurierten Default-Schemas zurück.
+	 * Gibt den Namen des konfigurierten Default-Schemas zurück oder null,
+	 * wenn keines konfiguriert ist.
 	 *
-	 * @return der Name des konfigurierten Default-Schemas
+	 * @return der Name des konfigurierten Default-Schemas oder null
 	 */
 	public String getDefaultSchema() {
 		if ((dto == null) || (dto.dbKonfiguration.schemata.isEmpty()))
 			return null;
 		if ((dto.dbKonfiguration.defaultschema == null) || ("".equals(dto.dbKonfiguration.defaultschema)))
-			return dto.dbKonfiguration.schemata.get(0).name;
+			return null;
 		final DBConfig schema = dto.dbconfigs.get(dto.dbKonfiguration.defaultschema);
 		if (schema != null)
 			return schema.getDBSchema();
-		return dto.dbKonfiguration.schemata.get(0).name;
+		return null;
 	}
 
 
