@@ -5,13 +5,11 @@
 				:action-function="deleteKlassen" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKlassen">
 				<span v-if="preConditionCheck[0] == true">Alle ausgewählten Klassen sind bereit zum Löschen.</span>
-				<template v-else>
-					<template v-for="message in preConditionCheck[1]" :key="message">
-						<span class="text-error"> {{ message }} <br> </span>
-					</template>
+				<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span class="text-error"> {{ message }} <br> </span>
 				</template>
 			</svws-ui-action-button>
-			<log-box :logs :status>
+			<log-box :logs="logs" :status="status">
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen </svws-ui-button>
 				</template>

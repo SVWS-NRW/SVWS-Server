@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type {RouteLocationNamedRaw, RouteLocationNormalized, RouteLocationRaw, RouteParams} from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -23,7 +23,7 @@ const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "klassen/:id(-?\\d+)?", SKlassenApp, new RouteDataKlassen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
@@ -42,39 +42,40 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			return routeError.getRoute(idSchuljahresabschnitt);
 		if (idSchuljahresabschnitt === undefined)
 			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
-			const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (id !== undefined) {
-				if (neueID === null)
-					return this.getRoute();
-				const params = { ... to_params};
-				params.id = String(neueID);
-				const locationRaw : RouteLocationRaw = {};
-				locationRaw.name = to.name;
-				locationRaw.params = params;
-				return locationRaw;
-			}
-		}
-		const eintrag = (id !== undefined) ? this.data.klassenListeManager.liste.get(id) : null;
-		await this.data.setEintrag(eintrag);
-		if (!this.data.klassenListeManager.hasDaten()) {
-			if (id === undefined) {
-				const listFiltered = this.data.klassenListeManager.filtered();
-				if (listFiltered.isEmpty())
-					return;
-				return this.getChildRoute(listFiltered.get(0).id, from);
-			}
-			return this.getRoute();
-		}
+
+		const idKlasse = RouteNode.getIntParam(to_params, "id");
+		if (idKlasse instanceof Error)
+			return routeError.getRoute(idKlasse);
+
+		// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
+		const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+		if (neueIdKlasse && neueIdKlasse !== idKlasse)
+			return this.getRewriteRoute(to, to_params, neueIdKlasse);
+
+		// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID immer -1 ist, ansonsten redirect
+		if (this.isGruppenprozessRoute(to) && idKlasse !== -1)
+			return this.getRewriteRoute(to, to_params, -1);
+
+		if (this.isGruppenprozessRoute(to))
+			await this.data.gotoGruppenprozess();
+		else
+			await this.data.gotoEintrag(idKlasse)
+
 		if (to.name === this.name)
 			return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
 					this.data.setView(child, this.children);
+	}
+
+	private getRewriteRoute(to: RouteNode<any, any>, to_params: RouteParams, idKlasse: number | null): RouteLocationNamedRaw{
+		const params = { ... to_params};
+		params.id = String(idKlasse);
+		return {
+			name: to.name,
+			params: params,
+		}
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
@@ -97,8 +98,8 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
-			setGruppenprozess: this.data.setGruppenprozess,
-			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
+			gotoGruppenprozess: this.data.gotoGruppenprozess,
+			setzeDefaultSortierung: this.data.setzeDefaultSortierung
 		};
 	}
 
@@ -119,14 +120,14 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private isGruppenprozess(child : RouteNode<any, any>) : boolean {
+	private isGruppenprozessRoute(child : RouteNode<any, any>) : boolean {
 		return (child === routeKlasseGruppenprozesse);
 	}
 
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
 		for (const c of super.children) {
-			if (!this.isGruppenprozess(c) && c.hatEineKompetenz() && c.hatSchulform())
+			if (!this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		}
 		return result;
@@ -135,7 +136,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	private getTabsGruppenprozesse(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
 		for (const c of super.children) {
-			if (this.isGruppenprozess(c) && c.hatEineKompetenz() && c.hatSchulform())
+			if (this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		}
 		return result;

@@ -6,7 +6,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="gotoEintrag"
-				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
+				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
@@ -35,7 +35,7 @@
 
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import {computed, onMounted, ref, shallowRef} from "vue";
+	import {computed, ref} from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
@@ -124,22 +124,24 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const selectedItems = shallowRef<KlassenDaten[]>([]);
 	const clickedEintrag = computed(() => {
 		return props.klassenListeManager().liste.auswahlExists() ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
 	})
 
-	onMounted(() => {
-		void setAuswahl([... props.klassenListeManager().liste.auswahl()]);
-	})
+	async function gotoEintrag(eintrag: KlassenDaten){
+		await props.gotoEintrag(eintrag.id);
+	}
 
 	async function setAuswahl(items : KlassenDaten[]) {
 		props.klassenListeManager().liste.auswahlClear();
 		for (const item of items)
 			if (props.klassenListeManager().liste.hasValue(item))
 				props.klassenListeManager().liste.auswahlAdd(item);
-		selectedItems.value = [ ... props.klassenListeManager().liste.auswahl() ]
-		await props.setGruppenprozess(selectedItems.value.length > 0);
+
+		if (props.klassenListeManager().liste.auswahlExists())
+			await props.gotoGruppenprozess();
+		else
+			await props.gotoEintrag(null);
 	}
 
 	function lehrerkuerzel(list: number[]) {

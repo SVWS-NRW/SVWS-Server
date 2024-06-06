@@ -500,19 +500,20 @@ public final class DataKlassendaten extends DataManager<Long> {
 		final List<DTOKlassen> klassen = this.conn.queryByKeyList(DTOKlassen.class, ids).stream().toList();
 
 		// Prüfe ob das Löschen der Klassen erlaubt ist
-		final List<SimpleOperationResponse> responses = new ArrayList<>();
-		klassen.forEach(klasse -> responses.add(checkDeletePreConditions(klasse)));
+		final Map<Long, SimpleOperationResponse> mapResponses = klassen.stream()
+			.collect(Collectors.toMap(r -> r.ID, this::checkDeletePreConditions));
 
 		// Lösche die Klassen und gib den Erfolg in der Response zurück
-		final Map<Long, SimpleOperationResponse> mapResponses = responses.stream().collect(Collectors.toMap(r -> r.id, r -> r));
 		for (final DTOKlassen klasse : klassen) {
 			final SimpleOperationResponse operationResponse = mapResponses.get(klasse.ID);
 			if (operationResponse == null)
 				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(klasse.ID));
+
 			if (operationResponse.log.isEmpty())
 				operationResponse.success = this.conn.transactionRemove(klasse);
 		}
-		return Response.ok().entity(responses).build();
+
+		return Response.ok().entity(mapResponses.values()).build();
 	}
 
 	/**

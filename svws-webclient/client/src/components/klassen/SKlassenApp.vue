@@ -1,5 +1,5 @@
 <template>
-	<template v-if="klassenListeManager().hasDaten()">
+	<template v-if="klassenListeManager().hasDaten() || props.gruppenprozesseEnabled">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
