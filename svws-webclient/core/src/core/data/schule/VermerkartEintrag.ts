@@ -23,7 +23,7 @@ export class VermerkartEintrag extends JavaObject {
 	public istSichtbar : boolean = true;
 
 	/**
-	 * Gibt an wie viele Vermerke dem entsprechenden VermerkArtEintrag zugeordnet sind. Wird im DTO errechnet.
+	 * Gibt an wie viele Vermerke dem entsprechenden Vermerkart-Eintrag zugeordnet sind (berechneter Wert).
 	 */
 	public anzahlVermerke : number = 0;
 

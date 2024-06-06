@@ -33,11 +33,12 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerVermerke}.
 	 *
-	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataSchuelerVermerke(final DBEntityManager conn) {
 		super(conn);
 	}
+
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln des Vermerkes in eines Datenbank-DTOs {@link DTOSchuelerVermerke}
@@ -45,17 +46,16 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 */
 	public static final Function<DTOSchuelerVermerke, SchuelerVermerke> dtoMapper = (final DTOSchuelerVermerke e) -> {
 		final SchuelerVermerke vermerk = new SchuelerVermerke();
-
 		vermerk.id = e.ID;
-		vermerk.schueler_id = e.Schueler_ID;
-		vermerk.VermerkArt_ID = e.VermerkArt_ID;
-		vermerk.Datum = e.Datum;
-		vermerk.Bemerkung = e.Bemerkung;
-		vermerk.AngelegtVon = e.AngelegtVon;
-		vermerk.GeaendertVon = e.GeaendertVon;
-
+		vermerk.idSchueler = e.Schueler_ID;
+		vermerk.idVermerkart = e.VermerkArt_ID;
+		vermerk.datum = e.Datum;
+		vermerk.bemerkung = e.Bemerkung;
+		vermerk.angelegtVon = e.AngelegtVon;
+		vermerk.geaendertVon = e.GeaendertVon;
 		return vermerk;
 	};
+
 
 	@Override
 	public Response getAll() throws ApiOperationException {
@@ -68,41 +68,52 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 
 
 	/**
-	 * Gibt getBySchuelerID als Response zurück
+	 * Gibt ide Vermerke des Schülers mit der angegebenen ID als Response zurück
 	 *
-	 * @param aLong SchuelerID
+	 * @param idSchueler   die ID des Schülers
 	 *
-	 * @return getBySchuelerID als Response
+	 * @return die Response für die Liste der Schüler
 	 */
-	public Response getBySchuelerIDasResponse(final Long aLong) {
-
-		try {
-			List<SchuelerVermerke> daten = this.getBySchuelerID(aLong);
-			if (daten == null || daten.isEmpty())
-				daten = new ArrayList<>();
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			System.out.println(e);
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
+	public Response getBySchuelerIDasResponse(final Long idSchueler) {
+		List<SchuelerVermerke> daten = this.getBySchuelerID(idSchueler);
+		if ((daten == null) || daten.isEmpty())
+			daten = new ArrayList<>();
+		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
 
 	/**
-	 * Gibt alle Vermerke zum Schüler zurück
+	 * Gibt die Vermerke zum Schüler mit der angebebenen ID als Liste zurück
 	 *
-	 * @param IdSchueler ID des Schuelers
+	 * @param idSchueler   die ID des Schuelers
 	 *
-	 * @return Liste von Vermerke passend zum Schüler
+	 * @return die Liste der Vermerke zum Schüler
 	 */
-	public List<SchuelerVermerke> getBySchuelerID(final Long IdSchueler) {
-		final List<DTOSchuelerVermerke> daten = conn.queryList(DTOSchuelerVermerke.QUERY_BY_SCHUELER_ID, DTOSchuelerVermerke.class, IdSchueler);
-		return daten.reversed().stream().map(dtoMapper).toList();
+	public List<SchuelerVermerke> getBySchuelerID(final Long idSchueler) {
+		final List<DTOSchuelerVermerke> daten = conn.queryList(DTOSchuelerVermerke.QUERY_BY_SCHUELER_ID, DTOSchuelerVermerke.class, idSchueler);
+		return daten.stream().map(dtoMapper).toList();
 	}
+
+
+	/**
+	 * Bestimmt die IDs der Vermerke, welche zu der übergebenen ID der Vermerkart gehören.
+	 *
+	 * @param conn   die zu verwendende Datenbankverbindung
+	 * @param id     die ID der Vermerkart
+	 *
+	 * @return die List von Vermerken IDs, welche der entsprechenden Vermerkart zugeordnet sind
+	 */
+	public static List<Long> getIDsByVermerkart(final DBEntityManager conn, final Long id) {
+		return conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID, DTOSchuelerVermerke.class, id)
+			.stream().map(v -> v.Schueler_ID).toList();
+	}
+
 
 	@Override
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
+
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
@@ -114,6 +125,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 		final SchuelerVermerke daten = dtoMapper.apply(schuelerVermerk);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
@@ -167,6 +179,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 
 		return Response.status(Status.OK).build();
 	}
+
 
 	/**
 	 * Erstellt einen neuen Schülervermerk

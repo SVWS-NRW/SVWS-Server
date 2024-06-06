@@ -1,4 +1,4 @@
-import {List, Schueler, SchuelerVermerke, VermerkartEintrag} from "@core";
+import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
 
 export interface SchuelerVermerkeProps {
 	data: List<SchuelerVermerke>;

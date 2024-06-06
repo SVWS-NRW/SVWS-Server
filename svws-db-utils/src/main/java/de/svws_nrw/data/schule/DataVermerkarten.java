@@ -7,6 +7,7 @@ import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerVermerke;
@@ -92,16 +93,19 @@ public final class DataVermerkarten extends DataManager<Long> {
 	public static List<VermerkartEintrag> getVermerkarten(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		if (conn == null)
 			return new ArrayList<>();
+		// Lese den Katalog der Vermerkarten ein
 		final List<DTOVermerkArt> katalog = conn.queryAll(DTOVermerkArt.class);
 		if (katalog == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Vermerkarten gefunden.");
+		// Bestimme die zugehörigen Anzahlen zu den Vermerkarten
+		final Map<Long, Long> mapAnzahlSchuelerVermerkeByVermerkart = conn.queryAll(DTOSchuelerVermerke.class)
+				.stream().collect(Collectors.groupingBy(s -> s.VermerkArt_ID, Collectors.counting()));
+		// Erstelle die Liste der Core-DTOs für die Schüler-Vermerke
 		final ArrayList<VermerkartEintrag> daten = new ArrayList<>();
-
 		for (final DTOVermerkArt r : katalog) {
-			int anzahlVermerke = conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID, DTOSchuelerVermerke.class, r.ID).size();
+			final int anzahlVermerke = mapAnzahlSchuelerVermerkeByVermerkart.computeIfAbsent(r.ID, k -> 0L).intValue();
 			daten.add(mapDTO(r, anzahlVermerke));
 		}
-
 		return daten;
 	}
 
@@ -126,8 +130,8 @@ public final class DataVermerkarten extends DataManager<Long> {
 		final DTOVermerkArt vermerkArt = conn.queryByKey(DTOVermerkArt.class, id);
 		if (vermerkArt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Vermerkart mit der ID %d wurde nicht gefunden.".formatted(id));
-
-		int anzahlVermerke = conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID.replace("SELECT e ", "SELECT COUNT(e) "), DTOSchuelerVermerke.class, vermerkArt.ID).size();
+		final int anzahlVermerke = conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID.replace("SELECT e ", "SELECT COUNT(e) "),
+				DTOSchuelerVermerke.class, vermerkArt.ID).size();
 		return mapDTO(vermerkArt, anzahlVermerke);
 	}
 
@@ -242,25 +246,12 @@ public final class DataVermerkarten extends DataManager<Long> {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
 		operationResponse.id = dtoVermerkArt.ID;
 
-		// Die Klasse darf keine Vermerke beinhalten.
-		final List<Long> vermerkIds = getVermerkIDsByVermerkartIDs(dtoVermerkArt.ID);
+		// Kein Schüler darf Vermerke dieser Vermerkart haben
+		final List<Long> vermerkIds = DataSchuelerVermerke.getIDsByVermerkart(conn, dtoVermerkArt.ID);
 		if (!vermerkIds.isEmpty())
 			operationResponse.log.add("Vermerkart %s (ID: %d) hat noch %d verknüpfte(n) Vermerke.".formatted(dtoVermerkArt.Bezeichnung, dtoVermerkArt.ID, vermerkIds.size()));
 
 		return operationResponse;
-	}
-
-
-	/**
-	 * Bestimmt die IDs der Vermerke, welche zu der übergebenen ID der Vermerkart gehören.
-	 *
-	 * @param id   die ID der Vermerkart
-	 *
-	 * @return die List von Vermerken IDs, welche der entsprechenden Vermerkart zugeordnet sind
-	 */
-	public List<Long> getVermerkIDsByVermerkartIDs(final Long id) {
-		return conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID, DTOSchuelerVermerke.class, id)
-			.stream().map(v -> v.Schueler_ID).toList();
 	}
 
 }

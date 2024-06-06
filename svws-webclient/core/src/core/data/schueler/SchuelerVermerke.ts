@@ -8,34 +8,34 @@ export class SchuelerVermerke extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * ID des entsprechenden Schülers.
+	 * Die ID des zugehörigen Schülers.
 	 */
-	public schueler_id : number = 0;
+	public idSchueler : number = 0;
 
 	/**
-	 * ID der entsprechenden Vermerkart.
+	 * Die ID der Vermerkart des Vermerks.
 	 */
-	public VermerkArt_ID : number = 0;
+	public idVermerkart : number = 0;
 
 	/**
 	 * Das Datum der Erstellung oder letzten Bearbeitung.
 	 */
-	public Datum : string | null = null;
+	public datum : string | null = null;
 
 	/**
 	 * Der Vermerk als Text.
 	 */
-	public Bemerkung : string | null = null;
+	public bemerkung : string | null = null;
 
 	/**
 	 * Name des Benutzers welcher den Vermerk angelegt hat.
 	 */
-	public AngelegtVon : string | null = null;
+	public angelegtVon : string | null = null;
 
 	/**
 	 * Name des Benutzers welcher den Vermerk als letzten bearbeitet hat.
 	 */
-	public GeaendertVon : string | null = null;
+	public geaendertVon : string | null = null;
 
 
 	public constructor() {
@@ -56,28 +56,28 @@ export class SchuelerVermerke extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schueler_id === "undefined")
-			 throw new Error('invalid json format, missing attribute schueler_id');
-		result.schueler_id = obj.schueler_id;
-		if (typeof obj.VermerkArt_ID === "undefined")
-			 throw new Error('invalid json format, missing attribute VermerkArt_ID');
-		result.VermerkArt_ID = obj.VermerkArt_ID;
-		result.Datum = typeof obj.Datum === "undefined" ? null : obj.Datum === null ? null : obj.Datum;
-		result.Bemerkung = typeof obj.Bemerkung === "undefined" ? null : obj.Bemerkung === null ? null : obj.Bemerkung;
-		result.AngelegtVon = typeof obj.AngelegtVon === "undefined" ? null : obj.AngelegtVon === null ? null : obj.AngelegtVon;
-		result.GeaendertVon = typeof obj.GeaendertVon === "undefined" ? null : obj.GeaendertVon === null ? null : obj.GeaendertVon;
+		if (typeof obj.idSchueler === "undefined")
+			 throw new Error('invalid json format, missing attribute idSchueler');
+		result.idSchueler = obj.idSchueler;
+		if (typeof obj.idVermerkart === "undefined")
+			 throw new Error('invalid json format, missing attribute idVermerkart');
+		result.idVermerkart = obj.idVermerkart;
+		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
+		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.angelegtVon = typeof obj.angelegtVon === "undefined" ? null : obj.angelegtVon === null ? null : obj.angelegtVon;
+		result.geaendertVon = typeof obj.geaendertVon === "undefined" ? null : obj.geaendertVon === null ? null : obj.geaendertVon;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerVermerke) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"schueler_id" : ' + obj.schueler_id + ',';
-		result += '"VermerkArt_ID" : ' + obj.VermerkArt_ID + ',';
-		result += '"Datum" : ' + ((!obj.Datum) ? 'null' : JSON.stringify(obj.Datum)) + ',';
-		result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : JSON.stringify(obj.Bemerkung)) + ',';
-		result += '"AngelegtVon" : ' + ((!obj.AngelegtVon) ? 'null' : JSON.stringify(obj.AngelegtVon)) + ',';
-		result += '"GeaendertVon" : ' + ((!obj.GeaendertVon) ? 'null' : JSON.stringify(obj.GeaendertVon)) + ',';
+		result += '"idSchueler" : ' + obj.idSchueler + ',';
+		result += '"idVermerkart" : ' + obj.idVermerkart + ',';
+		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
+		result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,23 +88,23 @@ export class SchuelerVermerke extends JavaObject {
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schueler_id !== "undefined") {
-			result += '"schueler_id" : ' + obj.schueler_id + ',';
+		if (typeof obj.idSchueler !== "undefined") {
+			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
-		if (typeof obj.VermerkArt_ID !== "undefined") {
-			result += '"VermerkArt_ID" : ' + obj.VermerkArt_ID + ',';
+		if (typeof obj.idVermerkart !== "undefined") {
+			result += '"idVermerkart" : ' + obj.idVermerkart + ',';
 		}
-		if (typeof obj.Datum !== "undefined") {
-			result += '"Datum" : ' + ((!obj.Datum) ? 'null' : JSON.stringify(obj.Datum)) + ',';
+		if (typeof obj.datum !== "undefined") {
+			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
-		if (typeof obj.Bemerkung !== "undefined") {
-			result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : JSON.stringify(obj.Bemerkung)) + ',';
+		if (typeof obj.bemerkung !== "undefined") {
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.AngelegtVon !== "undefined") {
-			result += '"AngelegtVon" : ' + ((!obj.AngelegtVon) ? 'null' : JSON.stringify(obj.AngelegtVon)) + ',';
+		if (typeof obj.angelegtVon !== "undefined") {
+			result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
 		}
-		if (typeof obj.GeaendertVon !== "undefined") {
-			result += '"GeaendertVon" : ' + ((!obj.GeaendertVon) ? 'null' : JSON.stringify(obj.GeaendertVon)) + ',';
+		if (typeof obj.geaendertVon !== "undefined") {
+			result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

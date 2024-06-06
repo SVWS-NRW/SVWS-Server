@@ -775,6 +775,7 @@ public class APISchueler {
         	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
+
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Vermerke eines Schülers.
 	 *
@@ -795,7 +796,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
 	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-								 @Context final HttpServletRequest request) {
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIDasResponse(id),
 			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
@@ -815,17 +816,18 @@ public class APISchueler {
 	@PATCH
 	@Path("/{id : \\d+}/vermerke/{vid : \\d+}")
 	@Operation(summary = "Liefert zu der ID des Schülers.",
-		        description = "Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank."
-                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
+			description = "Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Vermerke integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Vermerkdaten der Schüler zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchSchuelerVermerke(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("vid") final long vid, @RequestBody(description = "Der Patch für die Vermerke", required = true, content =
-										  	@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
-										  	@Context final HttpServletRequest request) {
+	public Response patchSchuelerVermerke(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("vid") final long vid,
+			@RequestBody(description = "Der Patch für die Vermerke", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(vid, is),
 			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
@@ -833,16 +835,14 @@ public class APISchueler {
 
 	/**
 	 *
-	 * Erzeugt einen SchuelerKAoADaten-Eintrag und gibt diesen zurück
+	 * Erzeugt einen Schpler-Vermerk und gibt diesen zurück
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
-	 *                   werden soll
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id 		 die Schueler-ID
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 *
-	 * @return HTTP_200 und die angelegten SchuelerKAoADaten, wenn erfolgreich. <br>
-	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei
-	 *         fehlender Berechtigung,<br>
+	 * @return HTTP_200 und der angelegte Schueler-Vermerk, wenn erfolgreich. <br>
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,<br>
 	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
 	 */
 	@POST
@@ -852,20 +852,18 @@ public class APISchueler {
 		+ "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Vermerke des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerVermerke.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.")
-	public Response createVermerk(@PathParam("schema") final String schema, @PathParam("id") final long id,
-								  @Context final HttpServletRequest request) {
-
+	public Response createVermerk(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).create(id),
 			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
+
 	/**
 	 * Löscht ein SchülerVermerk-Eintrag anhand dessen Id
 	 *
-	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt
-	 *                       werden soll
+	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param schuelerID     die Schueler-ID
-	 * @param idVermerk die Datenbank-ID des SchülerVermerks
+	 * @param idVermerk      die Datenbank-ID des Schüler-Vermerks
 	 * @param request        die Informationen zur HTTP-Anfrage
 	 *
 	 * @return HTTP_204, wenn erfolgreich. <br>
@@ -874,14 +872,13 @@ public class APISchueler {
 	 */
 	@DELETE
 	@Path("/{id : \\d+}/vermerke/{idVermerk : \\d+}")
-	@Operation(summary = "Löscht einen SchuelerKAoADaten Eintrag", description = "Löscht einen SchuelerKAoADaten Eintrag"
-		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten "
-		+ "besitzt.")
-	@ApiResponse(responseCode = "204", description = "Die KAOADaten des Schülers wurden gelöscht")
+	@Operation(summary = "Löscht einen Schueler-Vermerk", description = "Löscht einen Schueler-Vermerk"
+		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Vermerk des Schülers wurde gelöscht")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID, @PathParam("idVermerk") final long idVermerk,
-									@Context final HttpServletRequest request) {
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk mit der angegebenen ID gefunden")
+	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID,
+			@PathParam("idVermerk") final long idVermerk, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).delete(idVermerk),
 			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
@@ -911,6 +908,7 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerKAoADaten(conn).getBySchuelerIDAsResponse(id),
 			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
+
 
 	/**
 	 *

@@ -517,7 +517,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Gibt die Benutzerkompetenz anhand der übergebenen ID zurück.
 	 *
-	 * @param id    die ID der Benutzerkompetenz
+	 * @param id   die ID der Benutzerkompetenz
 	 *
 	 * @return die Benutzerkompetenz oder null, falls die ID fehlerhaft ist
 	 */
@@ -526,16 +526,17 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	}
 
 	/**
-	 *  Überprüft, ob die Kompetenz mit k_id für die Schulform mit s_id zulässig ist.
+	 * Überprüft, ob die Kompetenz mit k_id für die Schulform mit s_id zulässig ist.
+	 *
 	 * @param schulform  Die Schulform
+	 *
 	 * @return true, wenn die Kompetenz für die Schulform zulässig ist.
 	 */
 	public hatSchulform(schulform : Schulform | null) : boolean {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
-		if (this.daten.nurSchulformen !== null) {
+		if (this.daten.nurSchulformen !== null)
 			return this.daten.nurSchulformen.contains(schulform.daten.id);
-		}
 		return true;
 	}
 

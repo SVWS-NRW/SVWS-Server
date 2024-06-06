@@ -15,7 +15,7 @@ const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchueler
 export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.vermerke", "vermerke", SSchuelerVermerke, new RouteDataSchuelerVermerke());
+		super(Schulform.values().filter(f => f !== Schulform.G), [ BenutzerKompetenz.KEINE ], "schueler.vermerke", "vermerke", SSchuelerVermerke, new RouteDataSchuelerVermerke());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerke";
@@ -54,8 +54,8 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			patch: this.data.patch,
 			create: this.data.create,
 			deleteVermerk: this.data.deleteVermerk
-			}
 		};
+	}
 
 }
 

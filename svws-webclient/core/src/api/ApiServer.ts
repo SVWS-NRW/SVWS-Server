@@ -9470,12 +9470,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteSchuelerVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke/{idVermerk : \d+}
 	 *
-	 * Löscht einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
+	 * Löscht einen Schueler-VermerkDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die KAOADaten des Schülers wurden gelöscht
+	 *   Code 204: Der Vermerk des Schülers wurde gelöscht
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
-	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *   Code 404: Kein Schüler-Vermerk mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id

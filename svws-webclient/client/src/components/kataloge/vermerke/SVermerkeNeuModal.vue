@@ -5,9 +5,9 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input	:valid="validatorVermerkBezeichnung" v-model="vermerkart.bezeichnung" type="text" placeholder="Bezeichnung" />
-				<div v-if="!validatorVermerkBezeichnung(vermerkart.bezeichnung) && vermerkart.bezeichnung.length > 0" class="flex my-auto">
+				<div v-if="!validatorVermerkBezeichnung(vermerkart.bezeichnung) && (vermerkart.bezeichnung.length > 0)" class="flex my-auto">
 					<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-					<p >Diese Bezeichnung wird bereits verwendet</p>
+					<p> Diese Bezeichnung wird bereits verwendet </p>
 				</div>
 			</svws-ui-input-wrapper>
 		</template>

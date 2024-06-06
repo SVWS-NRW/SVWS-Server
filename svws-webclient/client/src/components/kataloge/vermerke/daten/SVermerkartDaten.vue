@@ -4,7 +4,6 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung })" type="text" />
 			</svws-ui-input-wrapper>
-			<p>Wird {{ auswahl().anzahlVermerke }} mal verwendet</p>
 		</svws-ui-content-card>
 	</div>
 </template>

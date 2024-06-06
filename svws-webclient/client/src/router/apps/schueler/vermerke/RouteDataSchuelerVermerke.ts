@@ -1,8 +1,8 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import type {List, SchuelerListeEintrag} from "@core";
-import {DeveloperNotificationException, Schueler, SchuelerVermerke} from "@core";
-import {api} from "~/router/Api";
+import type { List, SchuelerListeEintrag, SchuelerVermerke } from "@core";
+import { ArrayList, DeveloperNotificationException } from "@core";
+import { api } from "~/router/Api";
 
 import type { VermerkartEintrag } from "@core";
 
@@ -14,7 +14,8 @@ interface RouteStateSchuelerVermerke extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateSchuelerVermerke> {
-	data: [],
+	auswahl: undefined,
+	data: new ArrayList(),
 	mapVermerkArten: new Map(),
 };
 
@@ -65,23 +66,17 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 				this._state.value.auswahl = auswahl;
 
 				const vermerke =  await api.server.getVermerkdaten(api.schema, auswahl.id);
-				const vermerkArten = await api.server.getVermerkarten(api.schema);
 
+				const vermerkArten = await api.server.getVermerkarten(api.schema);
 				const mapVermerkArten = new Map();
 				for (const vA of vermerkArten)
 					mapVermerkArten.set(vA.id, vA);
 
-				// setze die Vermerke
-				const mapVermerke = new Map();
-				for (const vermerk of vermerke) {
-					mapVermerke.set(vermerk.id, vermerk)
-				}
-
 				this.setPatchedDefaultState({data: vermerke, mapVermerkArten: mapVermerkArten});
-
 			} catch(error) {
-				throw new DeveloperNotificationException("Die Vermerk-Daten konnten nicht eingeholt werden, sind für diesen Schüler Vermerk-Daten möglich?")
+				throw new DeveloperNotificationException("Die Vermerk-Daten konnten nicht geladen werden.")
 			}
 		}
 	}
+
 }

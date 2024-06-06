@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Daten eines Vermerkes.
+ * Sie beschreibt die Daten eines Vermerkes bei einem Schüler.
  */
 @XmlRootElement
 @Schema(description = "Die Vermerkdaten eines Schülers.")
@@ -14,30 +14,31 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchuelerVermerke {
 
 	/** Die ID des Schülervermerks. */
-	@Schema(description = "Die ID des Schülervermerks", example = "4711")
+	@Schema(description = "die ID des Schülervermerks", example = "4711")
 	public long id;
 
-	/** ID des entsprechenden Schülers. */
-	@Schema(description = "ID des entsprechenden Schülers.", example = "4713")
-	public long schueler_id;
+	/** Die ID des zugehörigen Schülers. */
+	@Schema(description = "die ID des zugehörigen Schülers.", example = "4713")
+	public long idSchueler;
 
-	/** ID der entsprechenden Vermerkart. */
-	@Schema(description = "ID der entsprechenden Vermerkart.", example = "4")
-	public long VermerkArt_ID;
+	/** Die ID der Vermerkart des Vermerks. */
+	@Schema(description = "die ID der Vermerkart des Vermerks", example = "4")
+	public long idVermerkart;
 
 	/** Das Datum der Erstellung oder letzten Bearbeitung. */
 	@Schema(description = "Das Datum der Erstellung oder letzten Bearbeitung.", example = "2")
-	public String Datum;
+	public String datum;
 
 	/** Der Vermerk als Text. */
 	@Schema(description = "Der Vermerk als Text. ", example = "20.04.2021")
-	public String Bemerkung;
+	public String bemerkung;
 
 	/** Name des Benutzers welcher den Vermerk angelegt hat. */
 	@Schema(description = "Name des Benutzers welcher den Vermerk angelegt hat", example = "12.02.2023")
-	public String AngelegtVon;
+	public String angelegtVon;
 
 	/** Name des Benutzers welcher den Vermerk als letzten bearbeitet hat. */
 	@Schema(description = "Name des Benutzers welcher den Vermerk als letzten bearbeitet hat.", example = "12.02.2023")
-	public String GeaendertVon;
+	public String geaendertVon;
+
 }

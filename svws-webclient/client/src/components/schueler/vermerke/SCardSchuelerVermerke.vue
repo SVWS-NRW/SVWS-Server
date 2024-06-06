@@ -1,13 +1,12 @@
 <template>
-	<svws-ui-action-button class="actionButtonElement" @click="() => {isActive = !isActive;	updateDataFromPRops();}" icon="i-ri-message-line" :title="getTitle()" :description="getDescription()" :is-active="isActive" >
+	<svws-ui-action-button class="actionButtonElement" @click="() => {isActive = !isActive;	updateDataFromPRops();}" icon="i-ri-message-line"
+		:title="getTitle()" :description="getDescription()" :is-active="isActive">
 		<svws-ui-input-wrapper class="card">
 			<svws-ui-textarea-input	v-model="innerData.Bemerkung" :autoresize="true" :rows="4" @change="(newVal) => innerPatch(String(newVal), innerData.id)" />
-
 			<div class="selectElement">
 				<p class="labelVermerkart">Vermerkart:</p>
 				<svws-ui-select v-model="aktuelleVermerkArt" :headless="false"	:items="[...props.mapVermerkArten.values()]" :item-text="(item) => item.bezeichnung"
-					@update:modelValue="(newVal: VermerkartEintrag) => {patch({VermerkArt_ID: newVal.id}, innerData.id)}"
-				/>
+					@update:model-value="(newVal: VermerkartEintrag) => {patch({VermerkArt_ID: newVal.id}, innerData.id)}" />
 			</div>
 			<div style="width: 100%; display:flex; ">
 				<div style="width: 80%">
@@ -16,7 +15,7 @@
 						<svws-ui-spinner :spinning="true" />
 					</div>
 					<div v-else class="subTextContainer">
-						<p v-if="data.GeaendertVon">	
+						<p v-if="data.GeaendertVon">
 							Zuletzt bearbeitet von {{ data.GeaendertVon }} am {{ formatDate(String(data.Datum))}}
 						</p>
 						<p v-else>
@@ -36,7 +35,7 @@
 
 <script setup lang="ts">
 
-	import { SchuelerVermerke, VermerkartEintrag } from "@core";
+	import type { SchuelerVermerke, VermerkartEintrag } from "@core";
 	import { computed,  ref } from "vue";
 
 	const isActive = ref<boolean>(false);
@@ -44,8 +43,8 @@
 	const props = defineProps<{
 		data: SchuelerVermerke;
 		mapVermerkArten: Map<number, VermerkartEintrag>;
-		patch: (data: Partial<SchuelerVermerke>, idVermerk: number) => {};
-		deleteVermerk: (idVermerk: number) => {};
+		patch: (data: Partial<SchuelerVermerke>, idVermerk: number) => { };
+		deleteVermerk: (idVermerk: number) => { };
 	}>();
 
 	const innerData = ref<SchuelerVermerke>(props.data);
@@ -69,7 +68,7 @@
 		get: () => {
 			patching.value = false;
 			return [...props.mapVermerkArten.values()].find(
-				(elem) => elem.id == props.data.VermerkArt_ID
+				(elem) => (elem.id === props.data.VermerkArt_ID)
 			);
 		},
 		set: (newVal) => {
@@ -79,7 +78,7 @@
 
 	const getTitle = () => {
 		let title = aktuelleVermerkArt.value?.bezeichnung || ""
-		title += ': ' + (props.data.Bemerkung?.length == 0 ? 'Neuer Vermerk' : props.data.Bemerkung)
+		title += ': ' + ((props.data.Bemerkung?.length === 0) ? 'Neuer Vermerk' : props.data.Bemerkung)
 		return title
 	}
 
@@ -89,7 +88,7 @@
 
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 	:deep(.svws-title) {
 		text-overflow: ellipsis;
@@ -99,18 +98,15 @@
 	}
 
 	.actionButtonElement {
-		@apply mb-5;
-		@apply bg-blue-100;
+		@apply mb-5 bg-blue-100;
 	}
 
 	.icon-xxl {
-		@apply m-auto;
-		@apply inline-block ;
-	} 
+		@apply m-auto inline-block;
+	}
 
 	.profileName {
-		@apply text-headline-md;
-		@apply mb-1;
+		@apply text-headline-md mb-1;
 	}
 
 	.card {
@@ -118,13 +114,11 @@
 	}
 
 	.innerLaylout {
-		@apply flex;
-		@apply w-full;
+		@apply flex w-full;
 	}
 
 	.selectElement {
-		@apply flex;
-		@apply w-144;
+		@apply flex w-144;
 	}
 
 	.subTextContainer {
@@ -132,13 +126,11 @@
 	}
 
 	.labelVermerkart {
-		@apply my-auto;
-		@apply mr-4;
+		@apply my-auto mr-4;
 	}
 
 	.deleteButton {
-		@apply ml-auto; 
-		@apply mr-0;
+		@apply ml-auto mr-0;
 	}
 
 </style>
