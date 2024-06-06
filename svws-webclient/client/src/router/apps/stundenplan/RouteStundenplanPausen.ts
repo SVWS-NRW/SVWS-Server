@@ -40,6 +40,7 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
 			listAufsichtsbereiche: () => routeStundenplan.data.listAufsichtsbereiche,
 			wochentyp: () => 0,
+			updateAufsichtBereich: routeStundenplan.data.updateAufsichtBereich,
 			addAufsicht: routeStundenplan.data.addAufsicht,
 			removeAufsicht: routeStundenplan.data.removeAufsicht,
 			patchAufsicht: routeStundenplan.data.patchAufsicht,

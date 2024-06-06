@@ -1321,10 +1321,10 @@ public class APIStundenplan {
      * @return eine Response mit dem Status-Code
      */
     @POST
-    @Path("/{id : \\d+}/pausenaufsicht/update")
-    @Operation(summary = "Entfernt und fügt mehrere Zuordungen von Zuordnungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
+    @Path("/{id : \\d+}/pausenaufsichtenbereiche/update")
+    @Operation(summary = "Entfernt und fügt mehrere Zuordungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
     		+ "Abhängigkeit von einem Wochentyp hinzu.",
-    		description = "Entfernt und fügt mehrere Zuordungen von Zuordnungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
+    		description = "Entfernt und fügt mehrere Zuordungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in "
     	    		+ "Abhängigkeit von einem Wochentyp hinzu. "
     				+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen",

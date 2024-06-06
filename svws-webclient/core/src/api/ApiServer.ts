@@ -12391,37 +12391,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode updateStundenplanPausenaufsichtenBereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsicht/update
-	 *
-	 * Entfernt und fügt mehrere Zuordungen von Zuordnungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in Abhängigkeit von einem Wochentyp hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<StundenplanPausenaufsichtBereich>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.
-	 *   Code 404: Ein Wert für das Erstellen der Zuordnungen wurde nicht gefunden.
-	 *
-	 * @param {StundenplanPausenaufsichtBereichUpdate} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen
-	 */
-	public async updateStundenplanPausenaufsichtenBereiche(data : StundenplanPausenaufsichtBereichUpdate, schema : string, id : number) : Promise<List<StundenplanPausenaufsichtBereich>> {
-		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsicht/update"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenaufsichtBereichUpdate.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<StundenplanPausenaufsichtBereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
 	 *
 	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -12446,6 +12415,37 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateStundenplanPausenaufsichtenBereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichtenbereiche/update
+	 *
+	 * Entfernt und fügt mehrere Zuordungen von Pausenaufsichten zu Aufsichtsbereichen ggf. in Abhängigkeit von einem Wochentyp hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenaufsichtBereich>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.
+	 *   Code 404: Ein Wert für das Erstellen der Zuordnungen wurde nicht gefunden.
+	 *
+	 * @param {StundenplanPausenaufsichtBereichUpdate} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen
+	 */
+	public async updateStundenplanPausenaufsichtenBereiche(data : StundenplanPausenaufsichtBereichUpdate, schema : string, id : number) : Promise<List<StundenplanPausenaufsichtBereich>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichtenbereiche/update"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = StundenplanPausenaufsichtBereichUpdate.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenaufsichtBereich>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(text)); });
 		return ret;
 	}
 

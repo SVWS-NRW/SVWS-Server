@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag} from "@core";
+import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate} from "@core";
 import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager,
 	DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -233,6 +233,18 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		}
 		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
 		this.stundenplanManager.pausenzeitAddAll(res);
+		this.commit();
+		api.status.stop();
+	}
+
+	updateAufsichtBereich = async (update: StundenplanPausenaufsichtBereichUpdate) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		api.status.start();
+		const res = await api.server.updateStundenplanPausenaufsichtenBereiche(update, api.schema, id);
+		// this.stundenplanManager.pausenaufsichtbereichRemoveAll(update.listEntfernen);
+		this.stundenplanManager.pausenaufsichtbereichAddAll(res);
 		this.commit();
 		api.status.stop();
 	}

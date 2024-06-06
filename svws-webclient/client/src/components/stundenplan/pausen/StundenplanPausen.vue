@@ -52,9 +52,9 @@
 							</div>
 							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
 								:class="{
-									'bg-svws/20': mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
-									'bg-error/20': bereichGesperrt(pause.id, aufsichtsbereich.id).value,
-									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && (!bereichGesperrt(pause.id, aufsichtsbereich.id).value)}">
+									'bg-svws/20': !isDraggingOver(pause.id, aufsichtsbereich.id).value && mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
+									'bg-error/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt(pause.id, aufsichtsbereich.id).value,
+									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
 									@drop.stop="onDrop" class="w-full h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
@@ -79,7 +79,8 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
-	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer, StundenplanPausenaufsichtBereich } from "@core";
+	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
+	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate } from "@core";
 	import { HashMap3D } from "@core";
 	import { ArrayList } from "@core";
 
@@ -129,18 +130,22 @@
 		if (!isDraggingOver(pauseID, bereichID).value || dragOverPausenzeit.value === undefined)
 			return false;
 		const aufsicht = lehrerAufsichten.value.get(pauseID);
-		const typ = dragOverPausenzeit.value.typ;
 		if (aufsicht === undefined)
 			return false;
+		if (dragFromPausenzeit.value !== undefined && dragFromPausenzeit.value.aufsichtsbereichID === bereichID && dragFromPausenzeit.value.pauseID === pauseID)
+			for (const b of aufsicht.bereiche)
+				if (dragFromPausenzeit.value.typ === dragOverPausenzeit.value.typ)
+					return true;
+				else if (b.wochentyp === 0)
+					return false;
+		const typ = dragOverPausenzeit.value.typ;
 		const typX = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, typ);
 		if (typX)
 			return true;
 		const typ0 = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, 0);
 		if (typ0)
 			return true;
-		if (isDraggingOver(pauseID, bereichID, 0).value && mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID))
-			return true;
-		return false;
+		return ((isDraggingOver(pauseID, bereichID, 0).value) && (mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID)))
 	})
 
 	function dragEnd() {
@@ -155,29 +160,28 @@
 	}
 
 	async function onDrop() {
-		// if (bereichGesperrtTyp.value)
-		// 	return dragReset();
-		// await delAufsicht();
-		// if (dragOverPausenzeit.value === undefined || dragLehrer.value === undefined)
-		// 	return dragReset();
-		// const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
-		// const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>();
-		// const bereichNeu = new StundenplanPausenaufsichtBereich();
-		// bereichNeu.id = -1;
-		// bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
-		// bereichNeu.idPausenaufsicht = -1;
-		// bereichNeu.wochentyp = typ;
-		// bereiche.add(bereichNeu);
-		// for (const aufsicht of dragOverAufsichten.value) {
-		// 	if ((aufsicht.idLehrer === dragLehrer.value.id)) {
-		// 		// TODO Prüfe, mithilfe des Managers, ob das Hinzufügen erlaubt ist oder nicht
-		// 		// TODO Prüfe, mithilfe des Managers, ob beim Hinzufügen der Aufsicht Wochentypen zu 0 zusammengelegt werden können...
-		// 		bereiche.addAll(aufsicht.bereiche);
-		// 		await props.patchAufsicht({bereiche}, aufsicht.id);
-		// 		return dragReset();
-		// 	}
-		// }
-		// await props.addAufsicht({ idLehrer: dragLehrer.value.id, idPausenzeit: pauseID, bereiche });
+		if (dragOverPausenzeit.value && bereichGesperrt(dragOverPausenzeit.value.pauseID, dragOverPausenzeit.value.aufsichtsbereichID).value)
+			return dragReset();
+		const update = new StundenplanPausenaufsichtBereichUpdate()
+		if (dragFromPausenzeit.value !== undefined) {
+			const { aufsichtsbereichID, pauseID, typ } = dragFromPausenzeit.value;
+			const aufsichtFrom = lehrerAufsichten.value.get(pauseID);
+			if (aufsichtFrom === undefined)
+				return dragReset();
+			for (const b of aufsichtFrom.bereiche)
+				if (b.idAufsichtsbereich === aufsichtsbereichID && b.wochentyp === typ)
+					update.listEntfernen.add(b);
+		}
+		if (dragOverPausenzeit.value !== undefined && dragLehrer.value !== undefined) {
+			const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
+			const bereichNeu = new StundenplanPausenaufsichtBereich();
+			bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
+			bereichNeu.wochentyp = typ;
+			const aufsicht = lehrerAufsichten.value.get(pauseID);
+			bereichNeu.idPausenaufsicht = aufsicht?.id || -1;
+			update.listHinzuzufuegen.add(bereichNeu);
+		}
+		await props.updateAufsichtBereich(update);
 		return dragReset();
 	}
 
@@ -204,9 +208,8 @@
 		const map = new Map<number, StundenplanPausenaufsicht>();
 		if (dragLehrer.value === undefined)
 			return map;
-		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList())
-			if (aufsicht.idLehrer === dragLehrer.value.id)
-				map.set(aufsicht.idPausenzeit, aufsicht);
+		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeByLehrerId(dragLehrer.value.id))
+			map.set(aufsicht.idPausenzeit, aufsicht);
 		return map;
 	})
 
@@ -227,28 +230,6 @@
 					lehrer.add(props.stundenplanManager().lehrerGetByIdOrException(a.idLehrer));
 		return lehrer;
 	})
-
-	async function delAufsicht() {
-		if (dragFromPausenzeit.value === undefined || dragLehrer.value === undefined)
-			return;
-		const { pauseID, aufsichtsbereichID, typ } = dragFromPausenzeit.value;
-		const { id: lehrerID } = dragLehrer.value;
-		const aufsichten = props.stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(pauseID);
-		for (const aufsicht of aufsichten) {
-			for (const b of aufsicht.bereiche)
-				if ((aufsicht.idLehrer === lehrerID) && (b.wochentyp === typ) && (aufsicht.bereiche.contains(aufsichtsbereichID))) {
-					if (aufsicht.bereiche.size() === 1)
-						await props.removeAufsicht(aufsicht.id);
-					else {
-						const bereiche = new ArrayList<StundenplanPausenaufsichtBereich>()
-						for (const bereich of aufsicht.bereiche)
-							if (bereich.id !== aufsichtsbereichID)
-								bereiche.add(bereich);
-						await props.patchAufsicht({bereiche}, aufsicht.id)
-					}
-				}
-		}
-	}
 
 	const getPausenzeitenWochentag = (wochentag: Wochentag) => computed<StundenplanPausenzeit[]>(() => {
 		if (klasse.value !== undefined)
