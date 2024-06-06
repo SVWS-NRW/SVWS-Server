@@ -65,7 +65,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		if (abiturjahr === undefined)
 			return this.getRoute();
 		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
-		await this.data.setAbiturjahrgang(eintrag);
+		await this.data.setAbiturjahrgang(eintrag, isEntering);
 		if (this.name !== to.name)
 			return;
 		const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;

@@ -202,10 +202,10 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return;
 	}
 
-	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>) : Promise<Partial<RouteDataGost>> {
-		if (jahrgang && jahrgang.abiturjahr === curState.auswahl?.abiturjahr && curState.jahrgangsdaten !== undefined)
+	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>, isEntering: boolean) : Promise<Partial<RouteDataGost>> {
+		if (jahrgang && (jahrgang.abiturjahr === curState.auswahl?.abiturjahr) && (curState.jahrgangsdaten !== undefined) && !isEntering)
 			return curState;
-		if (jahrgang === undefined || jahrgang === null || this.mapJahrgaenge.size === 0) {
+		if ((jahrgang === undefined) || (jahrgang === null) || (this.mapJahrgaenge.size === 0)) {
 			return Object.assign({ ... this._defaultState }, {
 				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 			});
@@ -227,8 +227,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		});
 	}
 
-	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined) => {
-		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value);
+	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined, isEntering: boolean) => {
+		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value, isEntering);
 		this.setPatchedDefaultState(daten);
 	}
 
