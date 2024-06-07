@@ -58,6 +58,31 @@ export class Map3DUtils extends JavaObject {
 		return setNeu;
 	}
 
+	/**
+	 * Fügt der dem Schlüssel (K1, K2, K3) zugeordneten Liste den Wert V hinzu.
+	 * Erzeugt eine Liste, falls noch keine existiert.
+	 *
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <V>    der Typ der Objekte in der ArrayList.
+	 * @param map3D  die Map, welche (K1, K2, K3) auf "ArrayList of V" abbildet.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
+	 * @param key3   der 3. Schlüssel.
+	 * @param value  der Wert, welcher der zugeordneten Liste hinzugefügt wird.
+	 */
+	public static addToList<K1, K2, K3, V>(map3D : HashMap3D<K1, K2, K3, List<V>>, key1 : K1, key2 : K2, key3 : K3, value : V) : void {
+		const list : List<V> | null = map3D.getOrNull(key1, key2, key3);
+		if (list !== null) {
+			list.add(value);
+		} else {
+			const listNeu : ArrayList<V> = new ArrayList<V>();
+			listNeu.add(value);
+			map3D.put(key1, key2, key3, listNeu);
+		}
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.Map3DUtils';
 	}
