@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
@@ -18,6 +19,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -157,6 +160,28 @@ public final class DataStundenplan extends DataManager<Long> {
 					for (final DTOStundenplanUnterricht unterricht : unterrichte)
 						unterricht.Wochentyp = 0;
 					conn.transactionPersistAll(unterrichte);
+					conn.transactionFlush();
+				}
+			}
+			// Bestimme alle Aufsichtsbereich des Stundenplans, wo zugeordnete Pausenaufsichten einen Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet haben und passe diesen ggf. an.
+			final List<Long> idsAufsichtsbereiche = conn.queryList(DTOStundenplanAufsichtsbereich.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanAufsichtsbereich.class, idStundenplan)
+					.stream().map(z -> z.ID).toList();
+			if (!idsAufsichtsbereiche.isEmpty()) {
+				final List<DTOStundenplanPausenaufsichtenBereiche> bereiche = conn.queryList("SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN ?1 AND e.Wochentyp > ?2",
+						DTOStundenplanPausenaufsichtenBereiche.class, idsAufsichtsbereiche, wochentypmodell);
+				if (!bereiche.isEmpty()) {
+					final HashMap2D<Long, Long, Boolean> updatedPausenaufsichtsbereich = new HashMap2D<>();
+					for (final DTOStundenplanPausenaufsichtenBereiche bereich : bereiche) {
+						final List<DTOStundenplanPausenaufsichtenBereiche> andereBereiche = conn.queryList("SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = ?1 AND e.Pausenaufsicht_ID = ?2 AND e.Wochentyp <= ?3",
+								DTOStundenplanPausenaufsichtenBereiche.class, bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, wochentypmodell);
+						if (andereBereiche.isEmpty() && !updatedPausenaufsichtsbereich.contains(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID)) {
+							bereich.Wochentyp = 0;
+							conn.transactionPersist(bereich);
+							updatedPausenaufsichtsbereich.put(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, true);
+						} else {
+							conn.transactionRemove(bereich);
+						}
+					}
 					conn.transactionFlush();
 				}
 			}
