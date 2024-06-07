@@ -245,7 +245,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const res = await api.server.updateStundenplanPausenaufsichtenBereiche(update, api.schema, id);
 		// this.stundenplanManager.pausenaufsichtbereichRemoveAll(update.listEntfernen);
 		this.stundenplanManager.pausenaufsichtbereichAddAll(res);
-		this.commit();
+		this.setPatchedState({ stundenplanManager: this.stundenplanManager });
 		api.status.stop();
 	}
 

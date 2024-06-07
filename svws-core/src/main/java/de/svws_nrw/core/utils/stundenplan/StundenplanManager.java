@@ -920,13 +920,11 @@ public class StundenplanManager {
 
 	private void update_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp() {
 		_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
-		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : _aufsichtsbereichmenge_sortiert) {
-			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.id)) {
-				for (final @NotNull StundenplanPausenaufsichtBereich zuordnung : MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht, aufsicht.id)) {
-					Map3DUtils.addToList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, aufsicht.idPausenzeit, aufsichtsbereich.id, zuordnung.wochentyp, aufsicht);
-				}
-			}
-		}
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : _aufsichtsbereichmenge_sortiert)
+			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.id))
+				for (final @NotNull StundenplanPausenaufsichtBereich zuordnung : MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht, aufsicht.id))
+					if (aufsichtsbereich.id == zuordnung.idAufsichtsbereich)
+						Map3DUtils.addToList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, aufsicht.idPausenzeit, aufsichtsbereich.id, zuordnung.wochentyp, aufsicht);
 	}
 
 	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht() {
@@ -3222,7 +3220,7 @@ public class StundenplanManager {
 
 		// add all StundenplanPausenaufsichtBereich
 		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list)
-			pausenaufsichtbereichAddAllOhneUpdate(pausenaufsicht.bereiche);
+			pausenaufsichtbereichAddAllOhneUpdate(pausenaufsicht.bereiche, true);
 	}
 
 	private void pausenaufsichtCheckAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
@@ -3474,11 +3472,11 @@ public class StundenplanManager {
 	 * @param listPausenaufsichtbereich  Die Menge der {@link StundenplanPausenaufsichtBereich}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void pausenaufsichtbereichAddAll(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> listPausenaufsichtbereich) {
-		pausenaufsichtbereichAddAllOhneUpdate(listPausenaufsichtbereich);
+		pausenaufsichtbereichAddAllOhneUpdate(listPausenaufsichtbereich, false);
 		update_all();
 	}
 
-	private void pausenaufsichtbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list) {
+	private void pausenaufsichtbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list, final boolean isIntern) {
 		// check all
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
@@ -3488,8 +3486,13 @@ public class StundenplanManager {
 		}
 
 		// add all
-		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list)
+		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
 			DeveloperNotificationException.ifMapPutOverwrites(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id, pausenaufsichtbereich);
+			if (!isIntern) {
+				final @NotNull StundenplanPausenaufsicht pausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+				pausenaufsicht.bereiche.add(pausenaufsichtbereich);
+			}
+		}
 	}
 
 	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
