@@ -3619,7 +3619,7 @@ public class StundenplanManager {
 			for (int i = 0; i < pausenaufsicht.bereiche.size(); i++) {
 				final @NotNull StundenplanPausenaufsichtBereich bereich = pausenaufsicht.bereiche.get(i);
 				if (bereich.id == pausenaufsichtbereich.id) {
-					pausenaufsicht.bereiche.remove(i);
+					pausenaufsicht.bereiche.remove(bereich);
 					break;
 				}
 			}

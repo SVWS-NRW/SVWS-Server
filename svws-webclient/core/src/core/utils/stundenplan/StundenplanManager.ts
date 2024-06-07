@@ -3405,7 +3405,7 @@ export class StundenplanManager extends JavaObject {
 			for (let i : number = 0; i < pausenaufsicht.bereiche.size(); i++) {
 				const bereich : StundenplanPausenaufsichtBereich = pausenaufsicht.bereiche.get(i);
 				if (bereich.id === pausenaufsichtbereich.id) {
-					pausenaufsicht.bereiche.remove(i);
+					pausenaufsicht.bereiche.remove(bereich);
 					break;
 				}
 			}
