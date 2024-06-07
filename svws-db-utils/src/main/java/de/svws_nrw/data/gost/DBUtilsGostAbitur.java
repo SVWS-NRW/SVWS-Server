@@ -52,12 +52,12 @@ public final class DBUtilsGostAbitur {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
-    	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
-    	if (leistungen == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+	public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
+		final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
+		if (leistungen == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-    	// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
+		// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
 
 		if (!"Q2".equals(leistungen.aktuellerJahrgang))
 			return null;
@@ -77,22 +77,25 @@ public final class DBUtilsGostAbitur {
 			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			fach.fachID = leistungenFach.fach.id;
 			fach.istFSNeu = leistungenFach.istFSNeu;
-			fach.abiturFach = GostAbiturFach.fromID(leistungenFach.abiturfach) == null ? null : leistungenFach.abiturfach;
+			fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
 			for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 				if (!leistungenBelegung.abschnittGewertet)
 					continue;
 
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
-				if ((letzteBelegungHalbjahr == null || GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0)
-						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
+				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
+					&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
 					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
-					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				}
 
 				// Erzeuge die zugehörige Belegung
 				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
-				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null : GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
-				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
+						: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
+				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				belegung.schriftlich = leistungenBelegung.istSchriftlich;
 				belegung.biliSprache = leistungenBelegung.bilingualeSprache;
 				belegung.lehrer = leistungenBelegung.lehrer;
@@ -121,7 +124,7 @@ public final class DBUtilsGostAbitur {
 
 		// und gib die Abiturdaten zurück...
 		return abidaten;
-    }
+	}
 
 
 
@@ -136,16 +139,17 @@ public final class DBUtilsGostAbitur {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
+	public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
-    	final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
+		final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
 
-    	// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
-    	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
-    	if (dtoSchueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
+		if (dtoSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte =
+				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
 		if (dtoAbschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -160,7 +164,7 @@ public final class DBUtilsGostAbitur {
 		if (faecher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
-        // Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
+		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
 
 		final DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
@@ -176,32 +180,41 @@ public final class DBUtilsGostAbitur {
 			abiturjahr = abidatenVergleich.abiturjahr;
 
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
 
 		// Kopiere die DTOs in die Abiturdaten-Klasse
 		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
-		abidaten.schuljahrAbitur = dtoAbschnittPruefung == null ? null : dtoAbschnittPruefung.Jahr;
+		abidaten.schuljahrAbitur = (dtoAbschnittPruefung == null) ? null : dtoAbschnittPruefung.Jahr;
 		abidaten.abiturjahr = abiturjahr;
 		abidaten.projektKursThema = dtoSchuelerAbitur.ProjektkursThema;
-		abidaten.block1FehlstundenGesamt = dtoSchuelerAbitur.FehlstundenSumme == null ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
-		abidaten.block1FehlstundenUnentschuldigt = dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt == null ? -1 : dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
+		abidaten.block1FehlstundenGesamt = (dtoSchuelerAbitur.FehlstundenSumme == null) ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
+		abidaten.block1FehlstundenUnentschuldigt = (dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt == null) ? -1
+				: dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht))
+			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht)) {
 				abidaten.latinum = true;
+				break;
+			}
 		abidaten.kleinesLatinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht))
+			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht)) {
 				abidaten.kleinesLatinum = true;
+				break;
+			}
 		abidaten.graecum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.G.daten.kuerzel.equals(folge.Sprache) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht))
+			if (ZulaessigesFach.G.daten.kuerzel.equals(folge.Sprache) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht)) {
 				abidaten.graecum = true;
+				break;
+			}
 		abidaten.hebraicum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.H.daten.kuerzel.equals(folge.Sprache) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht))
+			if (ZulaessigesFach.H.daten.kuerzel.equals(folge.Sprache) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht)) {
 				abidaten.hebraicum = true;
+				break;
+			}
 		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
 		abidaten.besondereLernleistungNotenKuerzel = dtoSchuelerAbitur.BesondereLernleistungNotenpunkte.kuerzel;
 		abidaten.besondereLernleistungThema = dtoSchuelerAbitur.BesondereLernleistungThema;
@@ -230,19 +243,21 @@ public final class DBUtilsGostAbitur {
 			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			final GostFach gostFach = gostFaecher.get(dto.Fach_ID);
 			fach.fachID = dto.Fach_ID;
-			fach.letzteKursart = dto.KursartAllgemein == null ? null : dto.KursartAllgemein.kuerzel;
-			fach.abiturFach = dto.AbiturFach == null ? null : dto.AbiturFach.id;
+			fach.letzteKursart = (dto.KursartAllgemein == null) ? null : dto.KursartAllgemein.kuerzel;
+			fach.abiturFach = (dto.AbiturFach == null) ? null : dto.AbiturFach.id;
 			if (dto.KursartAllgemein == GostKursart.PJK) {
-			    if (gostFach == null) {
-			        final DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
-			        final DTOFach dtoLeitfach1 = dtoFach.ProjektKursLeitfach1_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
-                    final DTOFach dtoLeitfach2 = dtoFach.ProjektKursLeitfach2_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
-                    abidaten.projektkursLeitfach1Kuerzel = dtoLeitfach1 == null ? null : dtoLeitfach1.Kuerzel;
-                    abidaten.projektkursLeitfach2Kuerzel = dtoLeitfach2 == null ? null : dtoLeitfach2.Kuerzel;
-			    } else {
-    				abidaten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
-    				abidaten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
-			    }
+				if (gostFach == null) {
+					final DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
+					final DTOFach dtoLeitfach1 =
+						(dtoFach.ProjektKursLeitfach1_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
+					final DTOFach dtoLeitfach2 =
+						(dtoFach.ProjektKursLeitfach2_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
+					abidaten.projektkursLeitfach1Kuerzel = (dtoLeitfach1 == null) ? null : dtoLeitfach1.Kuerzel;
+					abidaten.projektkursLeitfach2Kuerzel = (dtoLeitfach2 == null) ? null : dtoLeitfach2.Kuerzel;
+				} else {
+					abidaten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
+					abidaten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
+				}
 			}
 			fach.block1PunktSumme = dto.ZulassungPunktsumme;
 			fach.block1NotenpunkteDurchschnitt = dto.ZulassungNotenpunktdurchschnitt;
@@ -356,6 +371,6 @@ public final class DBUtilsGostAbitur {
 
 		// gib die Abiturdaten zurück.
 		return abidaten;
-    }
+	}
 
 }

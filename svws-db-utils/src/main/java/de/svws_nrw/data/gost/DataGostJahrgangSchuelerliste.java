@@ -65,17 +65,17 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	public List<SchuelerListeEintrag> getAllSchueler() throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
-    	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
+		// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
 		if (schuelerListe.isEmpty())
 			return new ArrayList<>();
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();
 
-    	// Bestimme die aktuellen Lernabschnitte für die Schüler
+		// Bestimme die aktuellen Lernabschnitte für die Schüler
 		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryDtoSchuelerLernabschnitte = conn.query(
 				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-				+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class
-		);
+						+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = queryDtoSchuelerLernabschnitte
 				.setParameter("value", schuelerIDs)
 				.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
@@ -84,16 +84,16 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		// Erstelle die Schülerliste
-    	return schuelerListe.stream()
-        		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
-        		.sorted(DataSchuelerliste.dataComparator)
-    	    	.toList();
+		return schuelerListe.stream()
+				.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+				.sorted(DataSchuelerliste.dataComparator)
+				.toList();
 	}
 
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getAllSchueler()).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getAllSchueler()).build();
 	}
 
 	@Override

@@ -46,16 +46,17 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 		if (dtosBeratungslehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<GostBeratungslehrer> daten = getBeratungslehrer(conn, dtosBeratungslehrer);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangBeratungslehrer.class, abijahr);
+		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer =
+				conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangBeratungslehrer.class, abijahr);
 		if (dtosBeratungslehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<GostBeratungslehrer> daten = getBeratungslehrer(conn, dtosBeratungslehrer);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, id);
 		final GostBeratungslehrer daten = getBeratungslehrer(dtoBeratungslehrer, dtoLehrer);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -132,7 +133,8 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit der ID %d ist nicht vorhanden.".formatted(idLehrer));
 		final DTOGostJahrgangBeratungslehrer beratungslehrer = conn.queryByKey(DTOGostJahrgangBeratungslehrer.class, abijahr, idLehrer);
 		if (beratungslehrer != null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit der ID %d ist bereits als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Der Lehrer mit der ID %d ist bereits als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
 		final DTOGostJahrgangBeratungslehrer dto = new DTOGostJahrgangBeratungslehrer(abijahr, idLehrer);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
@@ -159,7 +161,8 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit der ID %d ist nicht vorhanden.".formatted(idLehrer));
 		final DTOGostJahrgangBeratungslehrer beratungslehrer = conn.queryByKey(DTOGostJahrgangBeratungslehrer.class, abijahr, idLehrer);
 		if (beratungslehrer == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit der ID %d ist nicht als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Der Lehrer mit der ID %d ist nicht als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
 		final var daten = getBeratungslehrer(beratungslehrer, lehrer);
 		conn.transactionRemove(beratungslehrer);
 		conn.transactionFlush();

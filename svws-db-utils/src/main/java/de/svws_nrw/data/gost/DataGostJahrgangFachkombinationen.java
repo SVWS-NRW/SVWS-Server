@@ -91,14 +91,14 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		final List<GostJahrgangFachkombination> daten = new ArrayList<>();
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.add(dtoMapper.apply(kombi));
-        return daten;
+		return daten;
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final @NotNull List<@NotNull GostJahrgangFachkombination> daten = getFachkombinationen(conn, abijahrgang);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -108,71 +108,72 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-    	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostJahrgangFachkombinationen kombi = conn.queryByKey(DTOGostJahrgangFachkombinationen.class, id);
 			if (kombi == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
-	    			case "abiturjahr" -> throw new ApiOperationException(Status.BAD_REQUEST);
-	    			case "fachID1" -> {
-	    				kombi.Fach1_ID = JSONMapper.convertToLong(value, false);
-	    				final DTOFach fach = conn.queryByKey(DTOFach.class, kombi.Fach1_ID);
-	    				if (fach == null)
-	    					throw new ApiOperationException(Status.NOT_FOUND);
-	    				if (Boolean.FALSE.equals(fach.IstOberstufenFach))
-	    		    		throw new ApiOperationException(Status.CONFLICT);
-	    			}
-	    			case "fachID2" -> {
-	    				kombi.Fach2_ID = JSONMapper.convertToLong(value, false);
-	    				final DTOFach fach = conn.queryByKey(DTOFach.class, kombi.Fach2_ID);
-	    				if (fach == null)
-	    					throw new ApiOperationException(Status.NOT_FOUND);
-	    				if (Boolean.FALSE.equals(fach.IstOberstufenFach))
-	    		    		throw new ApiOperationException(Status.CONFLICT);
-	    			}
-	    			case "kursart1" -> {
-	    				kombi.Kursart1 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart1.datenlaenge());
-	    				if (kombi.Kursart1 == null) {
-	    					final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart1);
-	    					if (kursart == null)
-		    					throw new ApiOperationException(Status.NOT_FOUND);
-	    				}
-	    			}
-	    			case "kursart2" -> {
-	    				kombi.Kursart2 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart2.datenlaenge());
-	    				if (kombi.Kursart2 == null) {
-	    					final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart2);
-	    					if (kursart == null)
-		    					throw new ApiOperationException(Status.NOT_FOUND);
-	    				}
-	    			}
-	    			case "gueltigInHalbjahr" -> {
-	    				final Boolean[] data = JSONMapper.convertToBooleanArray(value, false, false, 6);
-	    				kombi.EF1 = data[0];
-	    				kombi.EF2 = data[1];
-	    				kombi.Q11 = data[2];
-	    				kombi.Q12 = data[3];
-	    				kombi.Q21 = data[4];
-	    				kombi.Q22 = data[5];
-	    			}
-	    			case "typ" -> throw new ApiOperationException(Status.BAD_REQUEST);
-	    			case "hinweistext" -> kombi.Hinweistext = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Hinweistext.datenlaenge());
-	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
-	    		}
-	    	}
-	    	conn.transactionPersist(kombi);
+					case "abiturjahr" -> throw new ApiOperationException(Status.BAD_REQUEST);
+					case "fachID1" -> {
+						kombi.Fach1_ID = JSONMapper.convertToLong(value, false);
+						final DTOFach fach = conn.queryByKey(DTOFach.class, kombi.Fach1_ID);
+						if (fach == null)
+							throw new ApiOperationException(Status.NOT_FOUND);
+						if (Boolean.FALSE.equals(fach.IstOberstufenFach))
+							throw new ApiOperationException(Status.CONFLICT);
+					}
+					case "fachID2" -> {
+						kombi.Fach2_ID = JSONMapper.convertToLong(value, false);
+						final DTOFach fach = conn.queryByKey(DTOFach.class, kombi.Fach2_ID);
+						if (fach == null)
+							throw new ApiOperationException(Status.NOT_FOUND);
+						if (Boolean.FALSE.equals(fach.IstOberstufenFach))
+							throw new ApiOperationException(Status.CONFLICT);
+					}
+					case "kursart1" -> {
+						kombi.Kursart1 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart1.datenlaenge());
+						if (kombi.Kursart1 == null) {
+							final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart1);
+							if (kursart == null)
+								throw new ApiOperationException(Status.NOT_FOUND);
+						}
+					}
+					case "kursart2" -> {
+						kombi.Kursart2 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart2.datenlaenge());
+						if (kombi.Kursart2 == null) {
+							final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart2);
+							if (kursart == null)
+								throw new ApiOperationException(Status.NOT_FOUND);
+						}
+					}
+					case "gueltigInHalbjahr" -> {
+						final Boolean[] data = JSONMapper.convertToBooleanArray(value, false, false, 6);
+						kombi.EF1 = data[0];
+						kombi.EF2 = data[1];
+						kombi.Q11 = data[2];
+						kombi.Q12 = data[3];
+						kombi.Q21 = data[4];
+						kombi.Q22 = data[5];
+					}
+					case "typ" -> throw new ApiOperationException(Status.BAD_REQUEST);
+					case "hinweistext" -> kombi.Hinweistext =
+							JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Hinweistext.datenlaenge());
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
+				}
+			}
+			conn.transactionPersist(kombi);
 		}
-        return Response.status(Status.OK).build();
+		return Response.status(Status.OK).build();
 	}
 
 
@@ -191,7 +192,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		// Bestimme die Fachkombination
 		final DTOGostJahrgangFachkombinationen kombi = conn.queryByKey(DTOGostJahrgangFachkombinationen.class, id);
 		if (kombi == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erzeuge den Core-DTO, der zurückgegeben wird
 		final GostJahrgangFachkombination daten = dtoMapper.apply(kombi);
 		// Entferne die Fachkombination
@@ -216,13 +217,14 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		final GostLaufbahnplanungFachkombinationTyp kombityp = GostLaufbahnplanungFachkombinationTyp.fromValue(typ);
 		// Bestimme die ID für die neue Regel
 		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Jahrgang_Fachkombinationen.name());
-		final long id = dbID == null ? 1 : dbID.MaxID + 1;
+		final long id = (dbID == null) ? 1 : (dbID.MaxID + 1);
 		// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
 		final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
 		final List<GostFach> faecher = fachmanager.faecher();
 		if (faecher.size() < 2)
 			throw new ApiOperationException(Status.NOT_FOUND, "Nicht genügend Fächer für den Abiturjahrgang definiert.");
-		final DTOGostJahrgangFachkombinationen kombi = new DTOGostJahrgangFachkombinationen(id, abijahrgang, faecher.get(0).id, faecher.get(1).id, true, true, true, true, true, true, kombityp, "");
+		final DTOGostJahrgangFachkombinationen kombi =
+				new DTOGostJahrgangFachkombinationen(id, abijahrgang, faecher.get(0).id, faecher.get(1).id, true, true, true, true, true, true, kombityp, "");
 		conn.transactionPersist(kombi);
 		final GostJahrgangFachkombination daten = dtoMapper.apply(kombi);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -110,7 +110,8 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * @throws ApiOperationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw) throws ApiOperationException {
+	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw)
+			throws ApiOperationException {
 		if ("".equals(fw))
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
@@ -157,7 +158,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 				switch (key) {
 					case "halbjahre" -> {
 						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
-						if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
+						if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6)))
 							throw new ApiOperationException(Status.CONFLICT);
 						if (wahlen.length == 0) {
 							fachbelegung.EF1_Kursart = null;
@@ -177,9 +178,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					}
 					case "abiturFach" -> {
 						final Integer af = JSONMapper.convertToInteger(value, true);
-							if ((af != null) && ((af < 1) || (af > 4)))
-								throw new ApiOperationException(Status.CONFLICT);
-							fachbelegung.AbiturFach = af;
+						if ((af != null) && ((af < 1) || (af > 4)))
+							throw new ApiOperationException(Status.CONFLICT);
+						fachbelegung.AbiturFach = af;
 					}
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
@@ -254,8 +255,8 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 */
 	public static void transactionResetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
-    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
-    			DTOGostJahrgangFachbelegungen.class, -1);
+		final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
+				DTOGostJahrgangFachbelegungen.class, -1);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
 		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
 			final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, dto.Fach_ID);
@@ -285,10 +286,11 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler) throws ApiOperationException {
+	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler)
+			throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
-    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
-    			DTOGostJahrgangFachbelegungen.class, abijahr);
+		final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
+				DTOGostJahrgangFachbelegungen.class, abijahr);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
 		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
 			final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);

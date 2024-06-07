@@ -87,22 +87,22 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
-    	// Bestimme den aktuellen Schuljahresabschnitt der Schule
+		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-    	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
+		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final DTOGostJahrgangsdaten jahrgangsdaten = (abijahrgang == -1)
 				? getVorlage(conn)
 				: conn.queryByKey(DTOGostJahrgangsdaten.class, abijahrgang);
 		if (jahrgangsdaten == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		final GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
@@ -113,7 +113,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 				Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
 				if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
 					jahrgangRestjahre += 3;
-				if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
+				if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 					daten.jahrgang = jahrgang.ASDJahrgang;
 					break;
 				}
@@ -125,52 +125,52 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 			daten.bezeichnung = "Allgemein / Vorlage";
 			daten.istAbgeschlossen = false;
 		}
-    	daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen;
-    	daten.textMailversand = jahrgangsdaten.TextMailversand;
-    	daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
-    	daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
-    	daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
-    	daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
-    	// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
-    	if (abijahrgang >= 0) {
-    		final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
-	    	final List<Integer> jahre = Arrays.asList(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
-	    	final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryList(DTOSchuljahresabschnitte.QUERY_LIST_BY_JAHR,
-	    			DTOSchuljahresabschnitte.class, jahre);
-	    	for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
-	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
-	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
-	    		daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
-	    		daten.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, abschnitt);
-	    	}
-    	}
-    	daten.anzahlKursblockungen = DataGostBlockungsliste.getAnzahlBlockungen(conn, daten.abiturjahr);
-    	// Ergänze die Beratungslehrer
-    	final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG,
-    			DTOGostJahrgangBeratungslehrer.class, daten.abiturjahr);
-    	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-    	return daten;
+		daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen;
+		daten.textMailversand = jahrgangsdaten.TextMailversand;
+		daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
+		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
+		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
+		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
+		// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
+		if (abijahrgang >= 0) {
+			final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
+			final List<Integer> jahre = Arrays.asList(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
+			final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryList(DTOSchuljahresabschnitte.QUERY_LIST_BY_JAHR,
+					DTOSchuljahresabschnitte.class, jahre);
+			for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
+				final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
+					(anzahlAbschnitte == 4) ? ((abschnitt.Abschnitt + 1) / 2) : abschnitt.Abschnitt);
+				daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
+				daten.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, abschnitt);
+			}
+		}
+		daten.anzahlKursblockungen = DataGostBlockungsliste.getAnzahlBlockungen(conn, daten.abiturjahr);
+		// Ergänze die Beratungslehrer
+		final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_ABI_JAHRGANG,
+				DTOGostJahrgangBeratungslehrer.class, daten.abiturjahr);
+		daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
+		return daten;
 	}
 
 	@Override
 	public Response get(final Integer abi_jahrgang) throws ApiOperationException {
 		final GostJahrgangsdaten daten = getJahrgangsdaten(conn, abi_jahrgang);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response patch(final Integer abiturjahr, final InputStream is) throws ApiOperationException {
-    	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() <= 0)
-	    	return Response.status(Status.OK).build();
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() <= 0)
+			return Response.status(Status.OK).build();
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
-    	if (jahrgangsdaten == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	for (final Entry<String, Object> entry : map.entrySet()) {
-    		final String key = entry.getKey();
-    		final Object value = entry.getValue();
-    		switch (key) {
+		if (jahrgangsdaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			switch (key) {
 				case "abiturjahr" -> {
 					final Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
 					if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
@@ -179,8 +179,10 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 				case "jahrgang" -> throw new ApiOperationException(Status.BAD_REQUEST);
 				case "bezeichnung" -> throw new ApiOperationException(Status.BAD_REQUEST);
 				case "istAbgeschlossen" -> throw new ApiOperationException(Status.BAD_REQUEST);
-				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
-				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
+				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen =
+						JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
+				case "textMailversand" -> jahrgangsdaten.TextMailversand =
+						JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
 				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
 				case "beginnZusatzkursGE" -> {
 					final String tmp = JSONMapper.convertToString(value, false, false, null);
@@ -198,11 +200,11 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
 				}
 				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API
-    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
-    		}
-    	}
-    	conn.transactionPersist(jahrgangsdaten);
-    	return Response.status(Status.OK).build();
+				default -> throw new ApiOperationException(Status.BAD_REQUEST);
+			}
+		}
+		conn.transactionPersist(jahrgangsdaten);
+		return Response.status(Status.OK).build();
 	}
 
 }

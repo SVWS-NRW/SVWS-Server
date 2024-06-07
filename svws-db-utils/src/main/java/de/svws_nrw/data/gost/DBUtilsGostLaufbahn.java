@@ -78,21 +78,21 @@ public final class DBUtilsGostLaufbahn {
 		try {
 			if (needTransaction)
 				conn.transactionBegin();
-    		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
+			// Prüfe, ob der Abiturjahrgang für den Schüler existiert
 			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 			if (jahrgang == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 			// Lese den Schüler aus
-	    	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, idSchueler);
-	    	if (dtoGostSchueler == null) {
-	    		dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
-	    		if (!conn.transactionPersist(dtoGostSchueler))
-	    			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-	    		// Initialisiere die Laufbahnplanung mit Default-Einträgen
-	    		DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
-	    	}
-	    	if (needTransaction)
-	    		conn.transactionCommit();
+			DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, idSchueler);
+			if (dtoGostSchueler == null) {
+				dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
+				if (!conn.transactionPersist(dtoGostSchueler))
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+				// Initialisiere die Laufbahnplanung mit Default-Einträgen
+				DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
+			}
+			if (needTransaction)
+				conn.transactionCommit();
 			return dtoGostSchueler;
 		} catch (final Exception e) {
 			if (e instanceof final ApiOperationException aoe)
@@ -117,47 +117,49 @@ public final class DBUtilsGostLaufbahn {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten get(final DBEntityManager conn, final long id) throws ApiOperationException {
-    	final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-    	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
-    	if (dtoSchueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final DTOSchuljahresabschnitte dtoAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchueler.Schuljahresabschnitts_ID);
-    	if (dtoAbschnitt == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+	public static Abiturdaten get(final DBEntityManager conn, final long id) throws ApiOperationException {
+		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
+		if (dtoSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOSchuljahresabschnitte dtoAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchueler.Schuljahresabschnitts_ID);
+		if (dtoAbschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class);
-    	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
-    			.setParameter("schueler_id", id)
-    			.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)
-    			.getResultList().stream().findFirst().orElse(null);
-    	if (aktAbschnitt == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class);
+		final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
+				.setParameter("schueler_id", id)
+				.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)
+				.getResultList().stream().findFirst().orElse(null);
+		if (aktAbschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-    	// Bestimme die Jahrgänge der Schule
+		// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-    	// Bestimme das Abiturjahr
-    	final Schulgliederung schulgliederung = aktAbschnitt.Schulgliederung == null
-    			? Schulgliederung.getDefault(schule.Schulform)
-    			: aktAbschnitt.Schulgliederung;
-    	final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
-    	final Jahrgaenge jahrgang = (dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
-    	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
-    	getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
-    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
-    			DTOGostSchuelerFachbelegungen.class, id).stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
+		// Bestimme das Abiturjahr
+		final Schulgliederung schulgliederung = (aktAbschnitt.Schulgliederung == null)
+			? Schulgliederung.getDefault(schule.Schulform)
+			: aktAbschnitt.Schulgliederung;
+		final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
+		final Jahrgaenge jahrgang = ((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
+		final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
+		getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
+		final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, id).stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
-    	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
-    	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
-    	if (leistungen == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
+		final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
+		if (leistungen == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
-    	final Abiturdaten abidaten = new Abiturdaten();
-    	abidaten.schuelerID = id;
-    	abidaten.abiturjahr = abiturjahr;
-    	abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
-    	abidaten.sprachendaten = leistungen.sprachendaten;
+		final Abiturdaten abidaten = new Abiturdaten();
+		abidaten.schuelerID = id;
+		abidaten.abiturjahr = abiturjahr;
+		abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 		abidaten.projektKursThema = leistungen.projektkursThema;
 		abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
@@ -171,20 +173,24 @@ public final class DBUtilsGostLaufbahn {
 			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			fach.fachID = leistungenFach.fach.id;
 			fach.istFSNeu = leistungenFach.istFSNeu;
-			fach.abiturFach = GostAbiturFach.fromID(leistungenFach.abiturfach) == null ? null : leistungenFach.abiturfach;
+			fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
 			for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 				if (!leistungenBelegung.abschnittGewertet)
 					continue;
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
-				if ((letzteBelegungHalbjahr == null || GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0) && (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
+				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
+					&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
 					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
-					fach.letzteKursart = GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				}
 
 				// Erzeuge die zugehörige Belegung
 				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
-				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null : GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
-				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
+						: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
+				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				if ("AT".equals(leistungenBelegung.notenKuerzel)) {
 					final GostFach gostFach = gostFaecher.get(fach.fachID);
 					if (ZulaessigesFach.SP == ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel))
@@ -218,14 +224,14 @@ public final class DBUtilsGostLaufbahn {
 		abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
 		abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
 
-    	// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
+		// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
 		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
 			final DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
 			if (belegungPlanung == null) {
-			    fach.abiturFach = null;
-		    } else {
-			    final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-			    fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+				fach.abiturFach = null;
+			} else {
+				final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+				fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 			}
 		}
 
@@ -254,12 +260,12 @@ public final class DBUtilsGostLaufbahn {
 
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
 			if (gostFach == null)
-			    continue;
+				continue;
 			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
 			if (zulFach != null)
 				fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-			fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+			fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 			GostKursart fachKursart = GostKursart.GK;
 			if ("PX".equals(gostFach.kuerzel))
 				fachKursart = GostKursart.PJK;
@@ -270,18 +276,22 @@ public final class DBUtilsGostLaufbahn {
 			if ((fach.belegungen[GostHalbjahr.EF2.id] == null) && (belegungPlanung.EF2_Kursart != null))
 				setFachbelegung(fach, GostHalbjahr.EF2, belegungPlanung.EF2_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, false);
 			if ((fach.belegungen[GostHalbjahr.Q11.id] == null) && (belegungPlanung.Q11_Kursart != null))
-				setFachbelegung(fach, GostHalbjahr.Q11, belegungPlanung.Q11_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q1);
+				setFachbelegung(fach, GostHalbjahr.Q11, belegungPlanung.Q11_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+						belegungPlanung.Markiert_Q1);
 			if ((fach.belegungen[GostHalbjahr.Q12.id] == null) && (belegungPlanung.Q12_Kursart != null))
-				setFachbelegung(fach, GostHalbjahr.Q12, belegungPlanung.Q12_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q2);
+				setFachbelegung(fach, GostHalbjahr.Q12, belegungPlanung.Q12_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+						belegungPlanung.Markiert_Q2);
 			if ((fach.belegungen[GostHalbjahr.Q21.id] == null) && (belegungPlanung.Q21_Kursart != null))
-				setFachbelegung(fach, GostHalbjahr.Q21, belegungPlanung.Q21_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q3);
+				setFachbelegung(fach, GostHalbjahr.Q21, belegungPlanung.Q21_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+						belegungPlanung.Markiert_Q3);
 			if ((fach.belegungen[GostHalbjahr.Q22.id] == null) && (belegungPlanung.Q22_Kursart != null))
-				setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q4);
+				setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+						belegungPlanung.Markiert_Q4);
 		}
 
 		// und gib die Abiturdaten zurück...
 		return abidaten;
-    }
+	}
 
 
 	/**
@@ -297,29 +307,29 @@ public final class DBUtilsGostLaufbahn {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getVorlage(final DBEntityManager conn, final int abijahr) throws ApiOperationException {
+	public static Abiturdaten getVorlage(final DBEntityManager conn, final int abijahr) throws ApiOperationException {
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
-    	final Map<Long, DTOGostJahrgangFachbelegungen> dtoFachwahlen =
-    			conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr)
-    			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
+		final Map<Long, DTOGostJahrgangFachbelegungen> dtoFachwahlen =
+				conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr)
+						.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
-    	final Abiturdaten abidaten = new Abiturdaten();
-    	abidaten.schuelerID = -1;
-    	abidaten.abiturjahr = abijahr;
-    	abidaten.schuljahrAbitur = abijahr - 1;
+		final Abiturdaten abidaten = new Abiturdaten();
+		abidaten.schuelerID = -1;
+		abidaten.abiturjahr = abijahr;
+		abidaten.schuljahrAbitur = abijahr - 1;
 		// Erstelle Fake-Einträge für die Sprachenfolge, da die konkrete Belegung der Schüler in der Sprachenfolge unklar ist
 		abidaten.bilingualeSprache = null;               // TODO ggf. auch ein alternatives Defaulting für den bilingualen Zweig erlauben
-    	abidaten.sprachendaten.schuelerID = -1;
-    	for (final String sprachkuerzel : gostFaecher.getFremdsprachenkuerzel()) {
+		abidaten.sprachendaten.schuelerID = -1;
+		for (final String sprachkuerzel : gostFaecher.getFremdsprachenkuerzel()) {
 			final Sprachbelegung belegung = new Sprachbelegung();
 			belegung.sprache = sprachkuerzel;
 			belegung.reihenfolge = 1;
 			belegung.belegungVonJahrgang = Jahrgaenge.JG_05.daten.kuerzel;
 			abidaten.sprachendaten.belegungen.add(belegung);
-        }
+		}
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = false;  // Da es sich um eine Vorlage handelt, sind die Halbjahre nicht bewertet
 		// Füge gewählte Fächer hinzu
@@ -336,12 +346,12 @@ public final class DBUtilsGostLaufbahn {
 
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
 			if (gostFach == null)
-			    continue;
+				continue;
 			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
 			if (zulFach != null)
 				fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-			fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+			fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 			GostKursart fachKursart = GostKursart.GK;
 			if ("PX".equals(gostFach.kuerzel))
 				fachKursart = GostKursart.PJK;
@@ -361,26 +371,26 @@ public final class DBUtilsGostLaufbahn {
 				setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, false);
 		}
 		return abidaten;
-    }
+	}
 
 
-    private static void setFachbelegung(final AbiturFachbelegung fach, final GostHalbjahr halbjahr,
-    		final String belegungPlanungKursart, final GostKursart fachKursart, final int wochenstunden, final boolean istInAbiwertung) {
-    	final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
-    	belegung.halbjahrKuerzel = halbjahr.kuerzel;
-		belegung.kursartKuerzel = belegungPlanungKursart == null ? null : switch (belegungPlanungKursart) {
+	private static void setFachbelegung(final AbiturFachbelegung fach, final GostHalbjahr halbjahr,
+			final String belegungPlanungKursart, final GostKursart fachKursart, final int wochenstunden, final boolean istInAbiwertung) {
+		final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+		belegung.halbjahrKuerzel = halbjahr.kuerzel;
+		belegung.kursartKuerzel = (belegungPlanungKursart == null) ? null : switch (belegungPlanungKursart) {
 			case "AT" -> "AT";
 			case "LK" -> "LK";
 			case "ZK" -> "ZK";
 			default -> fachKursart.toString();
 		};
-		belegung.schriftlich = belegungPlanungKursart == null ? null
-				: "LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
+		belegung.schriftlich = (belegungPlanungKursart == null) ? null
+			: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
 		fach.belegungen[halbjahr.id] = belegung;
 		fach.letzteKursart = belegung.kursartKuerzel;
-    }
+	}
 
 
 
@@ -396,7 +406,8 @@ public final class DBUtilsGostLaufbahn {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull DTOGostSchueler> getSchuelerOrInit(final DBEntityManager conn, final @NotNull List<@NotNull Long> schuelerIDs, final int abijahr) throws ApiOperationException {
+	public static @NotNull List<@NotNull DTOGostSchueler> getSchuelerOrInit(final DBEntityManager conn, final @NotNull List<@NotNull Long> schuelerIDs,
+			final int abijahr) throws ApiOperationException {
 		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
@@ -411,26 +422,27 @@ public final class DBUtilsGostLaufbahn {
 				continue;
 			final DTOGostSchueler dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
 			result.add(dtoGostSchueler);
-    		if (!conn.transactionPersist(dtoGostSchueler))
-    			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-    		conn.transactionFlush();
-    		// Initialisiere die Laufbahnplanung mit Default-Einträgen
-        	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr);
-    		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
-    		conn.transactionFlush();
-    		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
-    			final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);
-    			fw.EF1_Kursart = dto.EF1_Kursart;
-    			fw.EF2_Kursart = dto.EF2_Kursart;
-    			fw.Q11_Kursart = dto.Q11_Kursart;
-    			fw.Q12_Kursart = dto.Q11_Kursart;
-    			fw.Q21_Kursart = dto.Q21_Kursart;
-    			fw.Q22_Kursart = dto.Q22_Kursart;
-    			fw.AbiturFach = dto.AbiturFach;
-    			fw.Bemerkungen = dto.Bemerkungen;
-    			conn.transactionPersist(fw);
-    		}
-    		conn.transactionFlush();
+			if (!conn.transactionPersist(dtoGostSchueler))
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			conn.transactionFlush();
+			// Initialisiere die Laufbahnplanung mit Default-Einträgen
+			final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen =
+					conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachbelegungen.class, abijahr);
+			conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
+			conn.transactionFlush();
+			for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
+				final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);
+				fw.EF1_Kursart = dto.EF1_Kursart;
+				fw.EF2_Kursart = dto.EF2_Kursart;
+				fw.Q11_Kursart = dto.Q11_Kursart;
+				fw.Q12_Kursart = dto.Q11_Kursart;
+				fw.Q21_Kursart = dto.Q21_Kursart;
+				fw.Q22_Kursart = dto.Q22_Kursart;
+				fw.AbiturFach = dto.AbiturFach;
+				fw.Bemerkungen = dto.Bemerkungen;
+				conn.transactionPersist(fw);
+			}
+			conn.transactionFlush();
 		}
 		return result;
 	}
@@ -449,67 +461,78 @@ public final class DBUtilsGostLaufbahn {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static @NotNull Map<@NotNull Long, @NotNull Abiturdaten> getAbiturdaten(final DBEntityManager conn, final DTOEigeneSchule schule, final int abijahrgang) throws ApiOperationException {
-    	final @NotNull Map<@NotNull Long, @NotNull Abiturdaten> result = new HashMap<>();
-    	// Bestimme die Jahrgänge der Schule
+	public static @NotNull Map<@NotNull Long, @NotNull Abiturdaten> getAbiturdaten(final DBEntityManager conn, final DTOEigeneSchule schule,
+			final int abijahrgang) throws ApiOperationException {
+		final @NotNull Map<@NotNull Long, @NotNull Abiturdaten> result = new HashMap<>();
+		// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-    	// Bestimme die Fächer des Abiturjahrgangs und die Schuljahresabschnitte
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
-    	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-    	// Bestimme alle Schüler des angegebenen Abiturjahrgangs
-    	final List<DTOSchueler> listSchueler = getSchuelerOfAbiturjahrgang(conn, abijahrgang);
-    	if (listSchueler.isEmpty())
-    		return new HashMap<>();
+		// Bestimme die Fächer des Abiturjahrgangs und die Schuljahresabschnitte
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
+		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte =
+				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		// Bestimme alle Schüler des angegebenen Abiturjahrgangs
+		final List<DTOSchueler> listSchueler = getSchuelerOfAbiturjahrgang(conn, abijahrgang);
+		if (listSchueler.isEmpty())
+			return new HashMap<>();
 		final List<Long> schuelerIDs = listSchueler.stream().map(s -> s.ID).toList();
-    	final Map<Long, DTOSchueler> mapSchueler = listSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-    	// Bestimme die aktuellen Lernabschnitte der Schüler
-    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class);
-    	final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryAktAbschnitte.setParameter("ids", schuelerIDs).getResultList();
-    	final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitteBySchuelerID = listAktAbschnitte.stream().collect(Collectors.toMap(a -> a.Schueler_ID, a -> a));
-    	// Bestimme die Leistungsdaten mithilfe der Sprachendaten der Schüler
-    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAlleGostAbschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.WechselNr = 0 AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2')", DTOSchuelerLernabschnittsdaten.class);
-    	final List<DTOSchuelerLernabschnittsdaten> listAlleGostAbschnitte = queryAlleGostAbschnitte.setParameter("ids", schuelerIDs).getResultList();
-    	final List<Long> listAlleGostLernabschnittsIDs = listAlleGostAbschnitte.stream().map(l -> l.ID).toList();
-    	final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitteBySchuelerID = listAlleGostAbschnitte.stream().collect(Collectors.groupingBy(a -> a.Schueler_ID, Collectors.toList()));
-    	schuelerIDs.stream().forEach(id -> mapAlleGostAbschnitteBySchuelerID.computeIfAbsent(id, k -> new ArrayList<>()));
-    	final Map<Long, Sprachendaten> mapSprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, schuelerIDs).stream().collect(Collectors.toMap(sd -> sd.schuelerID, sd -> sd));
-    	final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = listAlleGostLernabschnittsIDs.isEmpty()
-    			? new HashMap<>()
-    			: conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, listAlleGostLernabschnittsIDs)
-    					.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
-    	listAlleGostLernabschnittsIDs.stream().forEach(id -> mapLeistungenByAbschnittID.computeIfAbsent(id, k -> new ArrayList<>()));
-    	final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapSchuljahresabschnitte, mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten, mapJahrgaenge);
-    	// Bestimme die allgemeinen Daten des Schülers und die Fachbelegungen für die Gymnasiale Obertufe und lege dabei ggf. Default-Werte an
-    	getSchuelerOrInit(conn, schuelerIDs, abijahrgang);
-    	final List<DTOGostSchuelerFachbelegungen> listAlleFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
-    			DTOGostSchuelerFachbelegungen.class, schuelerIDs);
-    	final Map<Long, Map<Long, DTOGostSchuelerFachbelegungen>> mapAlleFachwahlen = listAlleFachwahlen.stream().collect(Collectors.groupingBy(fw -> fw.Schueler_ID, Collectors.toMap(f -> f.Fach_ID, f -> f)));
+		final Map<Long, DTOSchueler> mapSchueler = listSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		// Bestimme die aktuellen Lernabschnitte der Schüler
+		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitte = conn.query(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class);
+		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryAktAbschnitte.setParameter("ids", schuelerIDs).getResultList();
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitteBySchuelerID =
+				listAktAbschnitte.stream().collect(Collectors.toMap(a -> a.Schueler_ID, a -> a));
+		// Bestimme die Leistungsdaten mithilfe der Sprachendaten der Schüler
+		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAlleGostAbschnitte = conn.query(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.WechselNr = 0 AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2')",
+				DTOSchuelerLernabschnittsdaten.class);
+		final List<DTOSchuelerLernabschnittsdaten> listAlleGostAbschnitte = queryAlleGostAbschnitte.setParameter("ids", schuelerIDs).getResultList();
+		final List<Long> listAlleGostLernabschnittsIDs = listAlleGostAbschnitte.stream().map(l -> l.ID).toList();
+		final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitteBySchuelerID =
+				listAlleGostAbschnitte.stream().collect(Collectors.groupingBy(a -> a.Schueler_ID, Collectors.toList()));
+		schuelerIDs.stream().forEach(id -> mapAlleGostAbschnitteBySchuelerID.computeIfAbsent(id, k -> new ArrayList<>()));
+		final Map<Long, Sprachendaten> mapSprachendaten =
+				DBUtilsSchueler.getSchuelerSprachendaten(conn, schuelerIDs).stream().collect(Collectors.toMap(sd -> sd.schuelerID, sd -> sd));
+		final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = listAlleGostLernabschnittsIDs.isEmpty()
+				? new HashMap<>()
+				: conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, listAlleGostLernabschnittsIDs)
+						.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
+		listAlleGostLernabschnittsIDs.stream().forEach(id -> mapLeistungenByAbschnittID.computeIfAbsent(id, k -> new ArrayList<>()));
+		final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapSchuljahresabschnitte,
+				mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten, mapJahrgaenge);
+		// Bestimme die allgemeinen Daten des Schülers und die Fachbelegungen für die Gymnasiale Obertufe und lege dabei ggf. Default-Werte an
+		getSchuelerOrInit(conn, schuelerIDs, abijahrgang);
+		final List<DTOGostSchuelerFachbelegungen> listAlleFachwahlen = conn.queryList(DTOGostSchuelerFachbelegungen.QUERY_LIST_BY_SCHUELER_ID,
+				DTOGostSchuelerFachbelegungen.class, schuelerIDs);
+		final Map<Long, Map<Long, DTOGostSchuelerFachbelegungen>> mapAlleFachwahlen =
+				listAlleFachwahlen.stream().collect(Collectors.groupingBy(fw -> fw.Schueler_ID, Collectors.toMap(f -> f.Fach_ID, f -> f)));
 
-    	// Erstelle die Abiturdaten aus den DTOs
-    	for (final long idSchueler : schuelerIDs) {
-        	final DTOSchueler dtoSchueler = mapSchueler.get(idSchueler);
-        	final DTOSchuljahresabschnitte dtoAbschnitt = mapSchuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
-        	final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitteBySchuelerID.get(idSchueler);
-        	if (aktAbschnitt == null)
-        		throw new ApiOperationException(Status.NOT_FOUND);
-        	// Bestimme das Abiturjahr
-        	final Schulgliederung schulgliederung = aktAbschnitt.Schulgliederung == null
-        			? Schulgliederung.getDefault(schule.Schulform)
-        			: aktAbschnitt.Schulgliederung;
-        	final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
-        	final Jahrgaenge jahrgang = (dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
-        	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
-        	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = mapAlleFachwahlen.computeIfAbsent(idSchueler, k -> new HashMap<>());
-        	// Bestimme die bereits vorhandenen Leistungsdaten
-        	final GostLeistungen leistungen = mapGostLeistungen.get(idSchueler);
-        	if (leistungen == null)
-        		throw new ApiOperationException(Status.NOT_FOUND);
+		// Erstelle die Abiturdaten aus den DTOs
+		for (final long idSchueler : schuelerIDs) {
+			final DTOSchueler dtoSchueler = mapSchueler.get(idSchueler);
+			final DTOSchuljahresabschnitte dtoAbschnitt = mapSchuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
+			final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitteBySchuelerID.get(idSchueler);
+			if (aktAbschnitt == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+			// Bestimme das Abiturjahr
+			final Schulgliederung schulgliederung = (aktAbschnitt.Schulgliederung == null)
+				? Schulgliederung.getDefault(schule.Schulform)
+				: aktAbschnitt.Schulgliederung;
+			final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
+			final Jahrgaenge jahrgang = ((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
+			final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
+			final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen = mapAlleFachwahlen.computeIfAbsent(idSchueler, k -> new HashMap<>());
+			// Bestimme die bereits vorhandenen Leistungsdaten
+			final GostLeistungen leistungen = mapGostLeistungen.get(idSchueler);
+			if (leistungen == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
 
-	    	final Abiturdaten abidaten = new Abiturdaten();
-	    	abidaten.schuelerID = idSchueler;
-	    	abidaten.abiturjahr = abiturjahr;
-	    	abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
-	    	abidaten.sprachendaten = leistungen.sprachendaten;
+			final Abiturdaten abidaten = new Abiturdaten();
+			abidaten.schuelerID = idSchueler;
+			abidaten.abiturjahr = abiturjahr;
+			abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
+			abidaten.sprachendaten = leistungen.sprachendaten;
 			abidaten.bilingualeSprache = leistungen.bilingualeSprache;
 			abidaten.projektKursThema = leistungen.projektkursThema;
 			abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
@@ -523,20 +546,25 @@ public final class DBUtilsGostLaufbahn {
 				final AbiturFachbelegung fach = new AbiturFachbelegung();
 				fach.fachID = leistungenFach.fach.id;
 				fach.istFSNeu = leistungenFach.istFSNeu;
-				fach.abiturFach = GostAbiturFach.fromID(leistungenFach.abiturfach) == null ? null : leistungenFach.abiturfach;
+				fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
 				for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 					if (!leistungenBelegung.abschnittGewertet)
 						continue;
 					// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
-					if ((letzteBelegungHalbjahr == null || GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0) && (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
+					if (((letzteBelegungHalbjahr == null)
+							|| (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
+							&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
 						letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
-						fach.letzteKursart = GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+						fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 					}
 
 					// Erzeuge die zugehörige Belegung
 					final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
-					belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null : GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
-					belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+					belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null
+							: GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
+					belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
+							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 					if ("AT".equals(leistungenBelegung.notenKuerzel)) {
 						final GostFach gostFach = gostFaecher.get(fach.fachID);
 						if (ZulaessigesFach.SP == ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel))
@@ -570,14 +598,14 @@ public final class DBUtilsGostLaufbahn {
 			abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
 			abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
 
-	    	// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
+			// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
 			for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
 				final DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
 				if (belegungPlanung == null) {
-				    fach.abiturFach = null;
-			    } else {
-				    final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-				    fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+					fach.abiturFach = null;
+				} else {
+					final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+					fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 				}
 			}
 
@@ -616,12 +644,12 @@ public final class DBUtilsGostLaufbahn {
 
 				final GostFach gostFach = gostFaecher.get(fach.fachID);
 				if (gostFach == null)
-				    continue;
+					continue;
 				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
 				if (zulFach != null)
 					fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
 				final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-				fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+				fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 				GostKursart fachKursart = GostKursart.GK;
 				if ("PX".equals(gostFach.kuerzel))
 					fachKursart = GostKursart.PJK;
@@ -632,87 +660,95 @@ public final class DBUtilsGostLaufbahn {
 				if ((fach.belegungen[GostHalbjahr.EF2.id] == null) && (belegungPlanung.EF2_Kursart != null))
 					setFachbelegung(fach, GostHalbjahr.EF2, belegungPlanung.EF2_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, false);
 				if ((fach.belegungen[GostHalbjahr.Q11.id] == null) && (belegungPlanung.Q11_Kursart != null))
-					setFachbelegung(fach, GostHalbjahr.Q11, belegungPlanung.Q11_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q1);
+					setFachbelegung(fach, GostHalbjahr.Q11, belegungPlanung.Q11_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q1);
 				if ((fach.belegungen[GostHalbjahr.Q12.id] == null) && (belegungPlanung.Q12_Kursart != null))
-					setFachbelegung(fach, GostHalbjahr.Q12, belegungPlanung.Q12_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q2);
+					setFachbelegung(fach, GostHalbjahr.Q12, belegungPlanung.Q12_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q2);
 				if ((fach.belegungen[GostHalbjahr.Q21.id] == null) && (belegungPlanung.Q21_Kursart != null))
-					setFachbelegung(fach, GostHalbjahr.Q21, belegungPlanung.Q21_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q3);
+					setFachbelegung(fach, GostHalbjahr.Q21, belegungPlanung.Q21_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q3);
 				if ((fach.belegungen[GostHalbjahr.Q22.id] == null) && (belegungPlanung.Q22_Kursart != null))
-					setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase, belegungPlanung.Markiert_Q4);
+					setFachbelegung(fach, GostHalbjahr.Q22, belegungPlanung.Q22_Kursart, fachKursart, gostFach.wochenstundenQualifikationsphase,
+							belegungPlanung.Markiert_Q4);
 			}
 
 			result.put(idSchueler, abidaten);
-    	}
+		}
 		// und gib die Abiturdaten zurück...
 		return result;
-    }
+	}
 
 
-    /**
-     * Bestimmt alle Schüler des angebebenen Abiturjahrgangs als Set Schüler-IDs.
-     *
-     * @param conn          die Datenbankverbindung
-     * @param abijahrgang   der Abiturjahrgang
-     *
-     * @return die Menge der Schüler-IDs
+	/**
+	 * Bestimmt alle Schüler des angebebenen Abiturjahrgangs als Set Schüler-IDs.
+	 *
+	 * @param conn          die Datenbankverbindung
+	 * @param abijahrgang   der Abiturjahrgang
+	 *
+	 * @return die Menge der Schüler-IDs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public static List<DTOSchueler> getSchuelerOfAbiturjahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
-    	// Bestimme die Schule, die Schuljahresabschnitte und alle Jahrgänge der Schule
-    	final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-    	final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-    	final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-    	// Bestimme alle Jahrgänge der Schule, welche als ASD-Jahrgang 'EF', 'Q1', 'Q2' haben
-    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryList(DTOJahrgang.QUERY_LIST_BY_ASDJAHRGANG, DTOJahrgang.class, List.of("EF", "Q1", "Q2"));
-    	final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
-    	// Bestimme alle Schüler mit Geloescht <> '+' und (Schueler.Status <> 8 oder Schueler.Entlassjahrgang_ID.ASDJahrgang in ('EF', 'Q1', 'Q2')
-    	final List<DTOSchueler> alleSchueler = conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Geloescht <> true AND (e.Status <> ?1 OR e.Entlassjahrgang_ID IN ?2)", DTOSchueler.class, SchuelerStatus.ABSCHLUSS, listJahrgaengeGostIDs);
-    	final List<Long> alleSchuelerIDs = alleSchueler.stream().map(s -> s.ID).toList();
-    	// Bestimme die aktuellen SchuelerLernabschnitte der Schüler
-    	final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(
-			"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s WHERE s.ID IN ?1 AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND sla.WechselNr = 0",
-			DTOSchuelerLernabschnittsdaten.class, alleSchuelerIDs);
-    	final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = schuelerLernabschnittsdaten.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-    	// Filtere die Schüler auf die Schüler des Abiturjahrgangs
-    	final List<DTOSchueler> result = new ArrayList<>();
-    	for (final DTOSchueler schueler : alleSchueler) {
-    		final DTOSchuljahresabschnitte schuljahresabschnitt = mapAbschnitte.get(schueler.Schuljahresabschnitts_ID);
-    		if (schuljahresabschnitt == null)
-    			continue;
-    		final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(schueler.ID);
-    		if (lernabschnitt == null)
-    			continue;
-    		final DTOJahrgang jahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
-    		if (jahrgang == null)
-    			continue;
-    		// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
-    		final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
-    		final Integer restjahreNachJahrgang = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+	 */
+	public static List<DTOSchueler> getSchuelerOfAbiturjahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
+		// Bestimme die Schule, die Schuljahresabschnitte und alle Jahrgänge der Schule
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte =
+				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+		// Bestimme alle Jahrgänge der Schule, welche als ASD-Jahrgang 'EF', 'Q1', 'Q2' haben
+		final List<DTOJahrgang> listJahrgaengeGost = conn.queryList(DTOJahrgang.QUERY_LIST_BY_ASDJAHRGANG, DTOJahrgang.class, List.of("EF", "Q1", "Q2"));
+		final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
+		// Bestimme alle Schüler mit Geloescht <> '+' und (Schueler.Status <> 8 oder Schueler.Entlassjahrgang_ID.ASDJahrgang in ('EF', 'Q1', 'Q2')
+		final List<DTOSchueler> alleSchueler =
+				conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Geloescht <> true AND (e.Status <> ?1 OR e.Entlassjahrgang_ID IN ?2)", DTOSchueler.class,
+						SchuelerStatus.ABSCHLUSS, listJahrgaengeGostIDs);
+		final List<Long> alleSchuelerIDs = alleSchueler.stream().map(s -> s.ID).toList();
+		// Bestimme die aktuellen SchuelerLernabschnitte der Schüler
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(
+				"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s WHERE s.ID IN ?1 AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND sla.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, alleSchuelerIDs);
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte =
+				schuelerLernabschnittsdaten.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		// Filtere die Schüler auf die Schüler des Abiturjahrgangs
+		final List<DTOSchueler> result = new ArrayList<>();
+		for (final DTOSchueler schueler : alleSchueler) {
+			final DTOSchuljahresabschnitte schuljahresabschnitt = mapAbschnitte.get(schueler.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt == null)
+				continue;
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(schueler.ID);
+			if (lernabschnitt == null)
+				continue;
+			final DTOJahrgang jahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
+			if (jahrgang == null)
+				continue;
+			// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
+			final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
+			final Integer restjahreNachJahrgang = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
 			if ((restjahreNachJahrgang != null) && (restjahreNachAbiturjahr == restjahreNachJahrgang))
 				result.add(schueler);
-    	}
-    	return result;
-    }
+		}
+		return result;
+	}
 
 
-    /**
-     * Bestimmt alle Fachwahlen des angebebenen Abiturjahrgangs als Map von der ID des Schülers auf die jeweiligen Fachwahlen.
-     *
-     * @param conn          die Datenbankverbindung
-     * @param abijahrgang   der Abiturjahrgang
-     *
-     * @return die Fachwahlen des Abiturjahrgangs als Map
+	/**
+	 * Bestimmt alle Fachwahlen des angebebenen Abiturjahrgangs als Map von der ID des Schülers auf die jeweiligen Fachwahlen.
+	 *
+	 * @param conn          die Datenbankverbindung
+	 * @param abijahrgang   der Abiturjahrgang
+	 *
+	 * @return die Fachwahlen des Abiturjahrgangs als Map
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public static Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
+	 */
+	public static Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, GostJahrgangFachwahlen> result = new HashMap<>();
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
-	        throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Fächer in der Datenbank gefunden werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Fächer in der Datenbank gefunden werden.");
 		final Map<Long, Abiturdaten> mapAbiturdaten = getAbiturdaten(conn, schule, abijahrgang);
 		// Erstelle die Fachwahl-Objekte
 		for (final Abiturdaten abidaten : mapAbiturdaten.values()) {
@@ -752,6 +788,6 @@ public final class DBUtilsGostLaufbahn {
 			}
 		}
 		return result;
-    }
+	}
 
 }

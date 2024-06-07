@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostBlockungsliste extends DataManager<Integer> {
 
-  private final int abijahrgang;
+	private final int abijahrgang;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link GostBlockungListeneintrag}.
@@ -62,14 +62,15 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
+		final List<DTOGostBlockung> blockungen =
+				conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
 		if (blockungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
 				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
-    	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -85,7 +86,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		if (halbjahr == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
+		final List<DTOGostBlockung> blockungen =
+				conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		if (blockungen.isEmpty())
@@ -93,8 +95,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
 				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
-    	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -114,7 +116,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 	 */
 	public static long[] getAnzahlBlockungen(final DBEntityManager conn, final int abiturjahr) {
 		final long[] result = new long[6];
-		final List<Object[]> tmpAnzahlBlockungen = conn.queryNative("SELECT Halbjahr, count(*) AS Anzahl FROM Gost_Blockung WHERE Abi_Jahrgang=%d GROUP BY Halbjahr".formatted(abiturjahr));
+		final List<Object[]> tmpAnzahlBlockungen =
+				conn.queryNative("SELECT Halbjahr, count(*) AS Anzahl FROM Gost_Blockung WHERE Abi_Jahrgang=%d GROUP BY Halbjahr".formatted(abiturjahr));
 		for (final Object[] anzahlBlockungen : tmpAnzahlBlockungen) {
 			final int halbjahr = GostHalbjahr.fromID((Integer) anzahlBlockungen[0]).id;
 			result[halbjahr] = (Long) anzahlBlockungen[1];
