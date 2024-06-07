@@ -14,7 +14,7 @@ export interface StundenplanPausenProps {
 	importAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
 	listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
 	wochentyp: () => number;
-	updateAufsichtBereich: (update: StundenplanPausenaufsichtBereichUpdate) => Promise<void>;
+	updateAufsichtBereich: (update: StundenplanPausenaufsichtBereichUpdate, idPausenzeit?: number, idLehrer?: number) => Promise<void>;
 	addAufsicht: (aufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	removeAufsicht: (aufsichtID: number) => Promise<void>;
 	patchAufsicht: (aufsicht: Partial<StundenplanPausenaufsicht>, id: number) => Promise<void>;

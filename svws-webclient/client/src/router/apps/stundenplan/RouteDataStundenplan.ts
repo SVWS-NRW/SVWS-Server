@@ -1,4 +1,5 @@
-import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate} from "@core";
+import type { StundenplanListeEintrag, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate} from "@core";
+import { StundenplanPausenaufsicht} from "@core";
 import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager,
 	DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -231,20 +232,52 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			delete item.klassen;
 			list.add(item);
 		}
-		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
+		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, id);
 		this.stundenplanManager.pausenzeitAddAll(res);
 		this.commit();
 		api.status.stop();
 	}
 
-	updateAufsichtBereich = async (update: StundenplanPausenaufsichtBereichUpdate) => {
+	updateAufsichtBereich = async (update: StundenplanPausenaufsichtBereichUpdate, idPausenzeit?: number, idLehrer?: number) => {
+		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
+			return;
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
+		/** Der folgende Teil ist falsch, weil von einer einzigen Pausenzeit und einem einzigen Lehrer ausgegangen wird. Daher ist auch nur ein Element in der List zulässig. */
+		const listAdd = new ArrayList<Partial<StundenplanPausenaufsicht>>();
+		for (const aufsichtsbereich of update.listHinzuzufuegen)
+			if (aufsichtsbereich.idPausenaufsicht < 0 && idPausenzeit && idLehrer) {
+				const aufsichtNeu: Partial<StundenplanPausenaufsicht> = new StundenplanPausenaufsicht();
+				aufsichtNeu.idPausenzeit = idPausenzeit;
+				aufsichtNeu.idLehrer = idLehrer;
+				delete aufsichtNeu.id;
+				listAdd.add(aufsichtNeu);
+				// Abbrechen, damit nicht zu viele gleiche angelegt werden.
+				break;
+			}
+		if (!listAdd.isEmpty()) {
+			const res = await api.server.addStundenplanPausenaufsichten(listAdd, api.schema, id);
+			this.stundenplanManager.pausenaufsichtAddAll(res);
+			if (res.size()) {
+				const aufsichtErstellt = res.get(0);
+				for (const aufsichtsbereich of update.listHinzuzufuegen)
+					if (aufsichtsbereich.idPausenaufsicht < 0)
+						aufsichtsbereich.idPausenaufsicht = aufsichtErstellt.id;
+			}
+		}
 		const res = await api.server.updateStundenplanPausenaufsichtenBereiche(update, api.schema, id);
 		this.stundenplanManager.pausenaufsichtbereichRemoveAll(update.listEntfernen);
 		this.stundenplanManager.pausenaufsichtbereichAddAll(res);
+		const listRemove = new ArrayList<number>();
+		for (const aufsicht of this.stundenplanManager.pausenaufsichtGetMengeAsList())
+			if (aufsicht.bereiche.isEmpty()) {
+				listRemove.add(aufsicht.id);
+				//removeAll verwenden!
+				this.stundenplanManager.pausenaufsichtRemoveById(aufsicht.id);
+			}
+		await api.server.deleteStundenplanPausenaufsichten(listRemove, api.schema, id);
 		this.setPatchedState({ stundenplanManager: this.stundenplanManager });
 		api.status.stop();
 	}

@@ -81,9 +81,7 @@
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
-	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate } from "@core";
-	import { HashMap3D } from "@core";
-	import { ArrayList } from "@core";
+	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList } from "@core";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
 
@@ -182,7 +180,7 @@
 			bereichNeu.idPausenaufsicht = aufsicht?.id || -1;
 			update.listHinzuzufuegen.add(bereichNeu);
 		}
-		await props.updateAufsichtBereich(update);
+		await props.updateAufsichtBereich(update, dragOverPausenzeit.value?.pauseID, dragLehrer.value?.id);
 		return dragReset();
 	}
 
