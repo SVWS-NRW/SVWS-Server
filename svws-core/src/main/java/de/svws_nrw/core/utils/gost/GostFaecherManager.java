@@ -151,8 +151,8 @@ public class GostFaecherManager {
 		if (fachkombi.hinweistext.isBlank()) {
 			final @NotNull GostFach fach1 = getOrException(fachkombi.fachID1);
 			final @NotNull GostFach fach2 = getOrException(fachkombi.fachID2);
-			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? "" : " als " + fachkombi.kursart1;
-			final @NotNull String kursart2 = ((fachkombi.kursart2 == null) || fachkombi.kursart2.isBlank()) ? "" : " als " + fachkombi.kursart2;
+			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? "" : (" als " + fachkombi.kursart1);
+			final @NotNull String kursart2 = ((fachkombi.kursart2 == null) || fachkombi.kursart2.isBlank()) ? "" : (" als " + fachkombi.kursart2);
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1
 					+ ((typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH) ? " erfordert " : " erlaubt kein ")
 					+ fach2.kuerzelAnzeige + kursart2;
@@ -309,7 +309,7 @@ public class GostFaecherManager {
 		final @NotNull List<@NotNull GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : _faecher) {
 			final ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-			if (zf == ZulaessigesFach.PX || zf == ZulaessigesFach.VX || zf == ZulaessigesFach.VO || zf == ZulaessigesFach.IN)
+			if ((zf == ZulaessigesFach.PX) || (zf == ZulaessigesFach.VX) || (zf == ZulaessigesFach.VO) || (zf == ZulaessigesFach.IN))
 				continue;
 			faecherSchriftlichMoeglich.add(f);
 		}
@@ -333,7 +333,7 @@ public class GostFaecherManager {
 	 * @return die Liste der Fremdsprachen-Kürzel
 	 */
 	public @NotNull List<@NotNull String> getFremdsprachenkuerzel() {
-		final @NotNull List<@NotNull String> result =  new ArrayList<>();
+		final @NotNull List<@NotNull String> result = new ArrayList<>();
 		result.addAll(_mapBySprachkuerzel.keySet());
 		result.sort((final @NotNull String a, final @NotNull String b) -> a.compareToIgnoreCase(b));
 		return result;

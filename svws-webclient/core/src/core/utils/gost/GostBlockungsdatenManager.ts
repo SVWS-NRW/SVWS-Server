@@ -240,7 +240,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringKursartSimple(kursart : number) : string {
 		const gKursart : GostKursart | null = GostKursart.fromIDorNull(kursart);
-		return (gKursart === null) ? "[Kursart-ID = " + kursart + " (ohne Mapping)]" : gKursart.kuerzel;
+		return (gKursart === null) ? ("[Kursart-ID = " + kursart + " (ohne Mapping)]") : gKursart.kuerzel;
 	}
 
 	/**
@@ -257,7 +257,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const gFach : GostFach | null = this._faecherManager.get(kurs.fach_id);
 		let sFach : string = "Fach-ID = " + kurs.fach_id + " (ohne Mapping)";
 		if (gFach !== null)
-			sFach = gFach.kuerzelAnzeige === null ? "Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')" : gFach.kuerzelAnzeige;
+			sFach = (gFach.kuerzelAnzeige === null) ? ("Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')") : gFach.kuerzelAnzeige;
 		return "[Kurs " + sFach! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
 	}
 
@@ -790,7 +790,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisGetBewertung1Intervall(idErgebnis : number) : number {
 		const summe : number = this.ergebnisGetBewertung1Wert(idErgebnis);
-		return 1 - 1 / (0.25 * summe + 1);
+		return 1 - (1 / ((0.25 * summe) + 1));
 	}
 
 	/**
@@ -823,7 +823,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisGetBewertung2Intervall(idErgebnis : number) : number {
 		const summe : number = this.ergebnisGetBewertung2Wert(idErgebnis);
-		return 1 - 1 / (0.25 * summe + 1);
+		return 1 - (1 / ((0.25 * summe) + 1));
 	}
 
 	/**
@@ -855,7 +855,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let wert : number = this.ergebnisGetBewertung3Wert(idErgebnis);
 		if (wert > 0)
 			wert--;
-		return 1 - 1 / (0.25 * wert + 1);
+		return 1 - (1 / ((0.25 * wert) + 1));
 	}
 
 	/**
@@ -889,7 +889,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisGetBewertung4Intervall(idErgebnis : number) : number {
 		const wert : number = this.ergebnisGetBewertung4Wert(idErgebnis);
-		return 1 - 1 / (0.25 * wert + 1);
+		return 1 - (1 / ((0.25 * wert) + 1));
 	}
 
 	private kursAddKursOhneSortierung(kurs : GostBlockungKurs) : void {
@@ -1104,7 +1104,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const nummer : number = this.schieneGet(idSchiene).nummer;
 		const kursart : number = this.kursGet(idKurs).kursart;
 		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) {
+			if ((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) {
 				if (regel.parameter.get(0) !== kursart)
 					return true;
 			} else {
@@ -1112,7 +1112,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 					return true;
 			}
 		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			if ((nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) && (regel.parameter.get(0) === kursart))
+			if (((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) && (regel.parameter.get(0) === kursart))
 				return true;
 		return false;
 	}
@@ -1537,7 +1537,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				schiene.nummer--;
 		for (let index : number = 0; index < this._daten.schienen.size(); index++) {
 			const schiene : GostBlockungSchiene = this._daten.schienen.get(index);
-			DeveloperNotificationException.ifTrue(this.toStringSchiene(schiene.id)! + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!", schiene.nummer !== index + 1);
+			DeveloperNotificationException.ifTrue(this.toStringSchiene(schiene.id)! + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!", schiene.nummer !== (index + 1));
 		}
 		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
 		if (iRegel === null)

@@ -46,18 +46,21 @@ public class GostBlockungsdatenManager {
 	private final @NotNull GostFaecherManager _faecherManager;
 
 	/** Ein Comparator für Kurse der Blockung. Dieser vergleicht nur die Kursnummern! */
-	private static final @NotNull Comparator<@NotNull GostBlockungKurs> _compKursnummer = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> Integer.compare(a.nummer, b.nummer);
+	private static final @NotNull Comparator<@NotNull GostBlockungKurs> _compKursnummer =
+			(final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> Integer.compare(a.nummer, b.nummer);
 
 	/** Ein Comparator für Schienen der Blockung */
-	private static final @NotNull Comparator<@NotNull GostBlockungSchiene> _compSchiene = (final @NotNull GostBlockungSchiene a, final @NotNull GostBlockungSchiene b) -> Integer.compare(a.nummer, b.nummer);
+	private static final @NotNull Comparator<@NotNull GostBlockungSchiene> _compSchiene =
+			(final @NotNull GostBlockungSchiene a, final @NotNull GostBlockungSchiene b) -> Integer.compare(a.nummer, b.nummer);
 
 	/** Ein Comparator für die Lehrkräfte eines Kurses */
-	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> _compLehrkraefte = (final @NotNull GostBlockungKursLehrer a, final @NotNull GostBlockungKursLehrer b) -> {
-		final int result = Integer.compare(a.reihenfolge, b.reihenfolge);
-		if (result != 0)
-			return result;
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> _compLehrkraefte =
+			(final @NotNull GostBlockungKursLehrer a, final @NotNull GostBlockungKursLehrer b) -> {
+				final int result = Integer.compare(a.reihenfolge, b.reihenfolge);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
 
 	/** Ein Comparator für die Schüler. */
 	private final @NotNull Comparator<@NotNull Schueler> _compSchueler;
@@ -81,10 +84,12 @@ public class GostBlockungsdatenManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungKurs> _map_idKurs_kurs = new HashMap<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Listen der Kurse, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostBlockungKurs>> _map2d_idFach_idKursart_kurse = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostBlockungKurs>> _map2d_idFach_idKursart_kurse =
+			new HashMap2D<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Listen der Fachwahlen, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostFachwahl>> _map2d_idFach_idKursart_fachwahlen = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostFachwahl>> _map2d_idFach_idKursart_fachwahlen =
+			new HashMap2D<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungSchiene> _map_idSchiene_schiene = new HashMap<>();
@@ -93,7 +98,8 @@ public class GostBlockungsdatenManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungRegel> _map_idRegel_regel = new HashMap<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
-	private final @NotNull Map<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _map_regeltyp_regeln = new ArrayMap<>(GostKursblockungRegelTyp.values());
+	private final @NotNull Map<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _map_regeltyp_regeln =
+			new ArrayMap<>(GostKursblockungRegelTyp.values());
 
 	/** Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
 	private final @NotNull HashMap<@NotNull LongArrayKey, @NotNull GostBlockungRegel> _map_multikey_regeln = new HashMap<>();
@@ -178,7 +184,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull String toStringKursartSimple(final int kursart) {
 		final GostKursart gKursart = GostKursart.fromIDorNull(kursart);
-		return (gKursart == null) ? "[Kursart-ID = " + kursart + " (ohne Mapping)]" : gKursart.kuerzel;
+		return (gKursart == null) ? ("[Kursart-ID = " + kursart + " (ohne Mapping)]") : gKursart.kuerzel;
 	}
 
 	/**
@@ -196,7 +202,7 @@ public class GostBlockungsdatenManager {
 		final GostFach gFach = _faecherManager.get(kurs.fach_id);
 		@NotNull String sFach = "Fach-ID = " + kurs.fach_id + " (ohne Mapping)";
 		if (gFach != null)
-			sFach = gFach.kuerzelAnzeige == null ? "Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')" : gFach.kuerzelAnzeige;
+			sFach = (gFach.kuerzelAnzeige == null) ? ("Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')") : gFach.kuerzelAnzeige;
 
 		return "[Kurs " + sFach + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix + "]";
 	}
@@ -213,7 +219,8 @@ public class GostBlockungsdatenManager {
 		if (kurs == null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
 
-		return "(" + kurs.id + ") " + toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
+		return "(" + kurs.id + ") " + toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer
+				+ (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
 	}
 
 	/**
@@ -392,7 +399,8 @@ public class GostBlockungsdatenManager {
 	private @NotNull Comparator<@NotNull Schueler> createComparatorSchueler() {
 		final @NotNull Comparator<@NotNull Schueler> comp = (final @NotNull Schueler a, final @NotNull Schueler b) -> {
 			final int cmpSchueler = compareSchueler(a.id, b.id);
-			if (cmpSchueler != 0) return cmpSchueler;
+			if (cmpSchueler != 0)
+				return cmpSchueler;
 
 			return Long.compare(a.id, b.id);
 		};
@@ -403,10 +411,12 @@ public class GostBlockungsdatenManager {
 	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
 		final @NotNull Comparator<@NotNull GostFachwahl> comp = (final @NotNull GostFachwahl a, final @NotNull GostFachwahl b) -> {
 			final int cmpSchueler = compareSchueler(a.schuelerID, b.schuelerID);
-			if (cmpSchueler != 0) return cmpSchueler;
+			if (cmpSchueler != 0)
+				return cmpSchueler;
 
 			final int cmpFach = compareFach(a.fachID, b.fachID);
-			if (cmpFach != 0) return cmpFach;
+			if (cmpFach != 0)
+				return cmpFach;
 
 			return Integer.compare(a.kursartID, b.kursartID);
 		};
@@ -417,10 +427,13 @@ public class GostBlockungsdatenManager {
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursFachKursartNummer() {
 		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
 			final int cmpFach = compareFach(a.fach_id, b.fach_id);
-			if (cmpFach != 0) return cmpFach;
+			if (cmpFach != 0)
+				return cmpFach;
 
-			if (a.kursart < b.kursart) return -1;
-			if (a.kursart > b.kursart) return +1;
+			if (a.kursart < b.kursart)
+				return -1;
+			if (a.kursart > b.kursart)
+				return +1;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
@@ -430,11 +443,14 @@ public class GostBlockungsdatenManager {
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursKursartFachNummer() {
 		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
-			if (a.kursart < b.kursart) return -1;
-			if (a.kursart > b.kursart) return +1;
+			if (a.kursart < b.kursart)
+				return -1;
+			if (a.kursart > b.kursart)
+				return +1;
 
 			final int cmpFach = compareFach(a.fach_id, b.fach_id);
-			if (cmpFach != 0) return cmpFach;
+			if (cmpFach != 0)
+				return cmpFach;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
@@ -444,67 +460,80 @@ public class GostBlockungsdatenManager {
 
 	private int compareRegel_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 != 0) return cmpKurs1;
+		if (cmpKurs1 != 0)
+			return cmpKurs1;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Kurs_Nummer(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 != 0) return cmpKurs1;
+		if (cmpKurs1 != 0)
+			return cmpKurs1;
 
 		final int cmpSchienenNr = Long.compare(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchienenNr != 0) return cmpSchienenNr;
+		if (cmpSchienenNr != 0)
+			return cmpSchienenNr;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Schueler(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0) return cmpSchueler1;
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Schueler_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0) return cmpSchueler1;
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
 
 		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
-		if (cmpKurs1 != 0) return cmpKurs1;
+		if (cmpKurs1 != 0)
+			return cmpKurs1;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Kurs_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 != 0) return cmpKurs1;
+		if (cmpKurs1 != 0)
+			return cmpKurs1;
 
 		final int cmpKurs2 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
-		if (cmpKurs2 != 0) return cmpKurs2;
+		if (cmpKurs2 != 0)
+			return cmpKurs2;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Schueler_Schueler_Fach(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0) return cmpSchueler1;
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
 
 		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 != 0) return cmpSchueler2;
+		if (cmpSchueler2 != 0)
+			return cmpSchueler2;
 
 		final int cmpFach = compareFach(a.parameter.get(2), b.parameter.get(2));
-		if (cmpFach != 0) return cmpFach;
+		if (cmpFach != 0)
+			return cmpFach;
 
 		return Long.compare(a.id, b.id);
 	}
 
 	private int compareRegel_Schueler_Schueler(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0) return cmpSchueler1;
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
 
 		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 != 0) return cmpSchueler2;
+		if (cmpSchueler2 != 0)
+			return cmpSchueler2;
 
 		return Long.compare(a.id, b.id);
 	}
@@ -520,10 +549,12 @@ public class GostBlockungsdatenManager {
 			return +1;
 
 		final int cNachname = a.nachname.compareTo(b.nachname);
-		if (cNachname != 0) return cNachname;
+		if (cNachname != 0)
+			return cNachname;
 
 		final int cVorname = a.vorname.compareTo(b.vorname);
-		if (cVorname != 0) return cVorname;
+		if (cVorname != 0)
+			return cVorname;
 
 		return Long.compare(a.id, b.id);
 	}
@@ -630,7 +661,8 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Manager für ein Ergebnis mit dieser ID gibt.
 	 */
 	public @NotNull GostBlockungsergebnisManager ergebnisManagerGet(final long idErgebnis) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_ErgebnisManager.get(idErgebnis));
+		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!",
+				_map_idErgebnis_ErgebnisManager.get(idErgebnis));
 	}
 
 	/**
@@ -758,7 +790,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public double ergebnisGetBewertung1Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		final double summe = ergebnisGetBewertung1Wert(idErgebnis);
-		return 1 - 1 / (0.25 * summe + 1);
+		return 1 - (1 / ((0.25 * summe) + 1));
 	}
 
 	/**
@@ -791,7 +823,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public double ergebnisGetBewertung2Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		final double summe = ergebnisGetBewertung2Wert(idErgebnis);
-		return 1 - 1 / (0.25 * summe + 1);
+		return 1 - (1 / ((0.25 * summe) + 1));
 	}
 
 	/**
@@ -823,7 +855,7 @@ public class GostBlockungsdatenManager {
 		int wert = ergebnisGetBewertung3Wert(idErgebnis);
 		if (wert > 0)
 			wert--; // Jede Kursdifferenz wird um 1 reduziert, außer die 0.
-		return 1 - 1 / (0.25 * wert + 1);
+		return 1 - (1 / ((0.25 * wert) + 1));
 	}
 
 	/**
@@ -857,7 +889,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public double ergebnisGetBewertung4Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		final int wert = ergebnisGetBewertung4Wert(idErgebnis);
-		return 1 - 1 / (0.25 * wert + 1);
+		return 1 - (1 / ((0.25 * wert) + 1));
 	}
 
 	private void kursAddKursOhneSortierung(final @NotNull GostBlockungKurs kurs) throws DeveloperNotificationException {
@@ -1082,8 +1114,8 @@ public class GostBlockungsdatenManager {
 
 		// KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
 		// Zugriff ist O(1) durch "regelGetListeOfTyp" und da jede Regel dieses Typs getestet werden muss.
-		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) { // Schiene im Intervall?
+		for (final @NotNull GostBlockungRegel regel : regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+			if ((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) { // Schiene im Intervall?
 				if (regel.parameter.get(0) != kursart)
 					return true;
 			} else {
@@ -1093,10 +1125,10 @@ public class GostBlockungsdatenManager {
 
 		// KURSART_SPERRE_SCHIENEN_VON_BIS
 		// Zugriff ist O(1) durch "regelGetListeOfTyp" und da jede Regel dieses Typs getestet werden muss.
-		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			if ((nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2))  // Schiene im Intervall?
+		for (final @NotNull GostBlockungRegel regel : regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+			if (((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2)))  // Schiene im Intervall?
 				&& (regel.parameter.get(0) == kursart))
-					return true;
+				return true;
 
 		return false;
 	}
@@ -1112,7 +1144,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public boolean kursGetHatSperrungInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
 		final int nrSchiene = schieneGet(idSchiene).nummer;
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene });
 		return _map_multikey_regeln.containsKey(key);
 	}
 
@@ -1127,8 +1159,9 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull GostBlockungRegel kursGetRegelGesperrtInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
 		final int nrSchiene = schieneGet(idSchiene).nummer;
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene});
-		return DeveloperNotificationException.ifNull("" + toStringKurs(idKurs) + " ist nicht gesperrt in Schiene " + toStringSchiene(idSchiene) + "!", _map_multikey_regeln.get(key));
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene });
+		return DeveloperNotificationException.ifNull("" + toStringKurs(idKurs) + " ist nicht gesperrt in Schiene " + toStringSchiene(idSchiene) + "!",
+				_map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -1156,7 +1189,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public boolean kursGetHatFixierungInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
 		final int nrSchiene = schieneGet(idSchiene).nummer;
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene });
 		return _map_multikey_regeln.containsKey(key);
 	}
 
@@ -1171,8 +1204,9 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull GostBlockungRegel kursGetRegelFixierungInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
 		final int nrSchiene = schieneGet(idSchiene).nummer;
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene});
-		return DeveloperNotificationException.ifNull(toStringKurs(idKurs) + " ist nicht fixiert in Schiene " + toStringSchiene(idSchiene) + "!", _map_multikey_regeln.get(key));
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene });
+		return DeveloperNotificationException.ifNull(toStringKurs(idKurs) + " ist nicht fixiert in Schiene " + toStringSchiene(idSchiene) + "!",
+				_map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -1187,7 +1221,7 @@ public class GostBlockungsdatenManager {
 
 		int anzahlFixierungen = 0;
 		for (int nr = 1; nr <= schieneGetAnzahl(); nr++) {
-			final @NotNull LongArrayKey kFixierungAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr});
+			final @NotNull LongArrayKey kFixierungAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
 			final GostBlockungRegel rFixierungAlt = regelGetByLongArrayKeyOrNull(kFixierungAlt);
 			if (rFixierungAlt != null)
 				anzahlFixierungen++;
@@ -1360,7 +1394,9 @@ public class GostBlockungsdatenManager {
 		final @NotNull List<@NotNull GostBlockungKursLehrer> listOfLehrer = kurs.lehrer;
 		for (final @NotNull GostBlockungKursLehrer lehrkraft : listOfLehrer) {
 			DeveloperNotificationException.ifTrue(toStringKurs(idKurs) + " hat bereits " + toStringLehrkraft(lehrkraft.id), lehrkraft.id == neueLehrkraft.id);
-			DeveloperNotificationException.ifTrue(toStringKurs(idKurs) + " hat bereits " + toStringLehrkraft(lehrkraft.id) + " mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge == neueLehrkraft.reihenfolge);
+			DeveloperNotificationException.ifTrue(
+					toStringKurs(idKurs) + " hat bereits " + toStringLehrkraft(lehrkraft.id) + " mit Reihenfolge " + lehrkraft.reihenfolge,
+					lehrkraft.reihenfolge == neueLehrkraft.reihenfolge);
 		}
 		// Hinzufügen
 		listOfLehrer.add(neueLehrkraft);
@@ -1565,7 +1601,8 @@ public class GostBlockungsdatenManager {
 		// (3)
 		for (int index = 0; index < _daten.schienen.size(); index++) {
 			final @NotNull GostBlockungSchiene schiene = _daten.schienen.get(index);
-			DeveloperNotificationException.ifTrue(toStringSchiene(schiene.id) + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!", schiene.nummer != index + 1);
+			DeveloperNotificationException.ifTrue(toStringSchiene(schiene.id) + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!",
+				schiene.nummer != (index + 1));
 		}
 
 		// (4)
@@ -1621,7 +1658,8 @@ public class GostBlockungsdatenManager {
 
 		// Ist der Regel-Typ gültig?
 		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		DeveloperNotificationException.ifTrue(toStringRegel(regel.id) + " hat unbekannten Typ (" + regel.typ + ")!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
+		DeveloperNotificationException.ifTrue(toStringRegel(regel.id) + " hat unbekannten Typ (" + regel.typ + ")!",
+				typ == GostKursblockungRegelTyp.UNDEFINIERT);
 
 		// Existiert bereits exakt die selbe Regel?
 		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
@@ -1748,7 +1786,9 @@ public class GostBlockungsdatenManager {
 	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 */
 	@Deprecated(forRemoval = true)
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list,
+			final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA,
+			final @NotNull GostBlockungSchiene schieneB) {
 		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
 		boolean aktiv = false;
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
@@ -1779,7 +1819,7 @@ public class GostBlockungsdatenManager {
 	 * @return die Regel, welche den Kurs in einer Schiene sperrt, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel regelGetRegelOrDummyKursGesperrtInSchiene(final long idKurs, final int nrSchiene) {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene });
 
 		final GostBlockungRegel regel = _map_multikey_regeln.get(key);
 		if (regel != null)
@@ -1797,7 +1837,7 @@ public class GostBlockungsdatenManager {
 	 * @return die Regel, welche den Kurs in einer Schiene fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel regelGetRegelOrDummyKursFixierungInSchiene(final long idKurs, final int nrSchiene) {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene });
 
 		final GostBlockungRegel regel = _map_multikey_regeln.get(key);
 		if (regel != null)
@@ -1816,7 +1856,7 @@ public class GostBlockungsdatenManager {
 	 * @return die Regel, welche den Schüler in einem Kurs fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel regelGetRegelOrDummySchuelerInKursFixierung(final long idSchueler, final long idKurs) {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
 
 		final GostBlockungRegel regel = _map_multikey_regeln.get(key);
 		if (regel != null)
@@ -1937,7 +1977,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
-	public void regelRemove(final @NotNull GostBlockungRegel regel)  throws DeveloperNotificationException, UserNotificationException {
+	public void regelRemove(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException, UserNotificationException {
 		regelRemoveByID(regel.id);
 	}
 
@@ -1949,7 +1989,7 @@ public class GostBlockungsdatenManager {
 	 *
 	 * @return die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 */
-	public @NotNull List<@NotNull GostKursart> fachGetMengeKursarten(final long idFach)  {
+	public @NotNull List<@NotNull GostKursart> fachGetMengeKursarten(final long idFach) {
 		final @NotNull HashSet<@NotNull Integer> idKursarten = new HashSet<>();
 
 		if (_map2d_idFach_idKursart_kurse.containsKey1(idFach))
@@ -2257,7 +2297,7 @@ public class GostBlockungsdatenManager {
 	public @NotNull List<@NotNull GostFach> schuelerGetFachListeGemeinsamerFacharten(final long idSchueler1, final long idSchueler2) {
 		final @NotNull List<@NotNull GostFach> temp = new ArrayList<>();
 
-		for (final @NotNull GostFachwahl fachwahl1 :  schuelerGetListeOfFachwahlen(idSchueler1))
+		for (final @NotNull GostFachwahl fachwahl1 : schuelerGetListeOfFachwahlen(idSchueler1))
 			if (schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
 				temp.add(_faecherManager.getOrException(fachwahl1.fachID));
 
@@ -2274,7 +2314,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
 	 */
 	public boolean schuelerGetIstVerbotenInKurs(final long idSchueler, final long idKurs) throws DeveloperNotificationException {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
 		return _map_multikey_regeln.containsKey(key);
 	}
 
@@ -2288,8 +2328,9 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel schuelerGetRegelVerbotenInKurs(final long idSchueler, final long idKurs) throws DeveloperNotificationException {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
-		return DeveloperNotificationException.ifNull(toStringSchueler(idSchueler) + " hat gar kein Verbot für " + toStringKurs(idKurs) + "!", _map_multikey_regeln.get(key));
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
+		return DeveloperNotificationException.ifNull(toStringSchueler(idSchueler) + " hat gar kein Verbot für " + toStringKurs(idKurs) + "!",
+				_map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -2302,7 +2343,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
 	 */
 	public boolean schuelerGetIstFixiertInKurs(final long idSchueler, final long idKurs) throws DeveloperNotificationException {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
 		return _map_multikey_regeln.containsKey(key);
 	}
 
@@ -2316,8 +2357,9 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel schuelerGetRegelFixiertInKurs(final long idSchueler, final long idKurs) throws DeveloperNotificationException {
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
-		return DeveloperNotificationException.ifNull(toStringSchueler(idSchueler) + " hat gar keine Fixierung für " + toStringKurs(idKurs) + "!", _map_multikey_regeln.get(key));
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
+		return DeveloperNotificationException.ifNull(toStringSchueler(idSchueler) + " hat gar keine Fixierung für " + toStringKurs(idKurs) + "!",
+				_map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -2475,7 +2517,7 @@ public class GostBlockungsdatenManager {
 				sb.append("    Fach = " + idFach + ", Kursart = " + idKursart + " (" + nKurse + " Kurse)\n");
 				final @NotNull List<@NotNull GostFachwahl> list = _map2d_idFach_idKursart_fachwahlen.getNonNullOrException(idFach, idKursart);
 
-				for (final @NotNull  GostFachwahl fachwahl : list) {
+				for (final @NotNull GostFachwahl fachwahl : list) {
 					sb.append("        " + fachwahl.schuelerID + "\n");
 				}
 			}

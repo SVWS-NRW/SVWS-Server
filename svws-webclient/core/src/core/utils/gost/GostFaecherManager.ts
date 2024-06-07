@@ -166,8 +166,8 @@ export class GostFaecherManager extends JavaObject {
 		if (JavaString.isBlank(fachkombi.hinweistext)) {
 			const fach1 : GostFach = this.getOrException(fachkombi.fachID1);
 			const fach2 : GostFach = this.getOrException(fachkombi.fachID2);
-			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? "" : " als " + fachkombi.kursart1;
-			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? "" : " als " + fachkombi.kursart2;
+			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? "" : (" als " + fachkombi.kursart1);
+			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? "" : (" als " + fachkombi.kursart2);
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1! + ((typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) ? " erfordert " : " erlaubt kein ") + fach2.kuerzelAnzeige + kursart2!;
 		}
 		if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) {
@@ -322,7 +322,7 @@ export class GostFaecherManager extends JavaObject {
 		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this._faecher) {
 			const zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-			if (zf as unknown === ZulaessigesFach.PX as unknown || zf as unknown === ZulaessigesFach.VX as unknown || zf as unknown === ZulaessigesFach.VO as unknown || zf as unknown === ZulaessigesFach.IN as unknown)
+			if ((zf as unknown === ZulaessigesFach.PX as unknown) || (zf as unknown === ZulaessigesFach.VX as unknown) || (zf as unknown === ZulaessigesFach.VO as unknown) || (zf as unknown === ZulaessigesFach.IN as unknown))
 				continue;
 			faecherSchriftlichMoeglich.add(f);
 		}

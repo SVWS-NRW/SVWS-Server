@@ -45,7 +45,8 @@ public final class GostAbiturjahrUtils {
 	 *
 	 * @return das Kalenderjahr des Abiturs oder null, falls das Jahr des Abiturs nicht bestimmt werden kann.
 	 */
-	public static Integer getGostAbiturjahr(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final int aktuellesSchuljahr, final @NotNull String jahrgang) {
+	public static Integer getGostAbiturjahr(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
+			final int aktuellesSchuljahr, final @NotNull String jahrgang) {
 		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
 			return null;
 		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
@@ -69,7 +70,8 @@ public final class GostAbiturjahrUtils {
 	 *
 	 * @return der Statistik-Jahrgang zu dem angegeben Abiturjahrgang
 	 */
-	public static String getGostAbiturjahrJahrgang(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final int schuljahr, final int abiturjahr) {
+	public static String getGostAbiturjahrJahrgang(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
+			final int schuljahr, final int abiturjahr) {
 		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
 			return null;
 		final int restlicheJahre = abiturjahr - schuljahr;
@@ -80,7 +82,7 @@ public final class GostAbiturjahrUtils {
 		if (restlicheJahre == 3)
 			return "EF";
 		final int sekIJahre = gliederung.istG8() || ((schulform == Schulform.GY) && (gliederung == Schulgliederung.DEFAULT))
-				      ? 9 : 10;
+			? 9 : 10;
 		if (restlicheJahre >= sekIJahre)
 			return null;
 		String strJG = "" + (sekIJahre - (restlicheJahre - 4));

@@ -31,8 +31,10 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 			return cmp;
 
 		// Bewertungskriterium 5: Bei absolut identischen Ergebnissen gewinnt die kleinere ID des Zwischenergebnisses.
-		if (o1.id < o2.id) return -1;
-		if (o1.id > o2.id) return +1;
+		if (o1.id < o2.id)
+			return -1;
+		if (o1.id > o2.id)
+			return +1;
 
 		return 0; // Sollte niemals, da die IDs niemals gleich sind.
 	}

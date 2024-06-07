@@ -1337,7 +1337,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Güte des Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	private static getOfBewertungFarbcodeStatic(value : number) : number {
-		return 1 - 1 / (0.25 * value + 1);
+		return 1 - (1 / ((0.25 * value) + 1));
 	}
 
 	/**
@@ -1458,7 +1458,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertung3Farbcode() : number {
 		const wert : number = this._ergebnis.bewertung.kursdifferenzMax;
-		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert === 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1477,7 +1477,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertung3Farbcode_nur_LK() : number {
 		const wert : number = this._bewertung3_KD_nur_LK;
-		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert === 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1496,7 +1496,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertung3Farbcode_nur_GK() : number {
 		const wert : number = this._bewertung3_KD_nur_GK;
-		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert === 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1515,7 +1515,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertung3Farbcode_nur_REST() : number {
 		const wert : number = this._bewertung3_KD_nur_REST;
-		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert === 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1531,7 +1531,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private static getOfBewertung3HistogrammStatic(bewertung : GostBlockungsergebnisBewertung) : Array<number> {
 		const histo : Array<number> = Array(10).fill(0);
 		for (let i : number = 0; i < histo.length; i++)
-			histo[i] = bewertung.kursdifferenzHistogramm.length >= histo.length ? bewertung.kursdifferenzHistogramm[i] : 0;
+			histo[i] = (bewertung.kursdifferenzHistogramm.length >= histo.length) ? bewertung.kursdifferenzHistogramm[i] : 0;
 		return histo;
 	}
 
@@ -1997,7 +1997,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate | null = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		for (const z of zuordnung.fachwahlenZuKurs) {
 			const kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
-			const kursN : GostBlockungsergebnisKurs | null = z.kursID < 0 ? null : this.getKursE(z.kursID);
+			const kursN : GostBlockungsergebnisKurs | null = (z.kursID < 0) ? null : this.getKursE(z.kursID);
 			if (kursV as unknown !== kursN as unknown) {
 				if (kursV !== null)
 					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursV.id, idSchueler));
@@ -2300,7 +2300,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1 : number, idSchueler2 : number, idFach : number) : boolean {
 		const kurs1 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler1, idFach);
 		const kurs2 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler2, idFach);
-		return (kurs1 === null) || (kurs2 === null) ? false : kurs1.id === kurs2.id;
+		return ((kurs1 === null) || (kurs2 === null)) ? false : (kurs1.id === kurs2.id);
 	}
 
 	/**

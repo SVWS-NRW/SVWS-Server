@@ -27,10 +27,12 @@ public class GostJahrgangsFachwahlenManager {
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als schriftlichen Grundkurs gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID =
+			new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als mündlichen Grundkurs (oder PJK oder VTF) gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_muendlich_fachID_halbjahrID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_muendlich_fachID_halbjahrID_schuelerID =
+			new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Zusatzkurs gewählt haben. */
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_zk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
@@ -182,7 +184,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als schriftlichen Grundkurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+	public @NotNull List<@NotNull Long> schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(final long idFach,
+			final @NotNull GostHalbjahr halbjahr) {
 		final List<@NotNull Long> schuelerListe = _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
