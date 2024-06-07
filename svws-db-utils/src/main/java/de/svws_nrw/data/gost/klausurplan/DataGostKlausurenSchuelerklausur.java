@@ -60,7 +60,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionSkSkt getCollectionSkSktNachschreiber(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
+	public static GostKlausurenCollectionSkSkt getCollectionSkSktNachschreiber(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr)
+			throws ApiOperationException {
 		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
 		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
 		if (!kursKlausuren.isEmpty()) {
@@ -68,7 +69,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 					"SELECT DISTINCT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenSchuelerklausurenTermine skt ON sk.ID = skt.Schuelerklausur_ID AND sk.Kursklausur_ID IN :kkids WHERE skt.Folge_Nr > 0",
 					DTOGostKlausurenSchuelerklausuren.class).setParameter("kkids", kursKlausuren.stream().map(kk -> kk.id).toList()).getResultList();
 			ergebnis.schuelerklausuren = DTOMapper.mapList(schuelerKlausurDTOs, DataGostKlausurenSchuelerklausur.dtoMapper);
-			ergebnis.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, ergebnis.schuelerklausuren);
+			ergebnis.schuelerklausurtermine =
+					DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, ergebnis.schuelerklausuren);
 		}
 		return ergebnis;
 	}
@@ -87,7 +89,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionSkSkt getCollectionSkSkt(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
+	public static GostKlausurenCollectionSkSkt getCollectionSkSkt(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr,
+			final boolean ganzesSchuljahr) throws ApiOperationException {
 		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
 		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, ganzesSchuljahr);
 		ergebnis.schuelerklausuren = getSchuelerKlausurenZuKursklausuren(conn, kursKlausuren);
@@ -106,7 +109,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostSchuelerklausur> getSchuelerKlausurenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren) throws ApiOperationException {
+	public static List<GostSchuelerklausur> getSchuelerKlausurenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren)
+			throws ApiOperationException {
 		if (kursKlausuren.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.queryList(DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID,
@@ -134,7 +138,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 			Map.entry("idSchuelerklausur", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("idKursklausur", (conn, dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("idSchueler", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
-			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge())));
+			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge())));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
@@ -162,7 +167,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> termine) throws ApiOperationException {
+	public static List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final DBEntityManager conn,
+			final List<GostSchuelerklausurTermin> termine) throws ApiOperationException {
 		if (termine.isEmpty())
 			return new ArrayList<>();
 		final List<GostSchuelerklausur> sks = DTOMapper.mapList(conn.queryByKeyList(DTOGostKlausurenSchuelerklausuren.class,
@@ -184,14 +190,17 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenDataCollection getGostKlausurenCollectionBySchuelerid(final DBEntityManager conn, final long idSchueler, final int abiturjahr, final int halbjahr) throws ApiOperationException {
+	public static GostKlausurenDataCollection getGostKlausurenCollectionBySchuelerid(final DBEntityManager conn, final long idSchueler, final int abiturjahr,
+			final int halbjahr) throws ApiOperationException {
 		final GostKlausurenDataCollection result = new GostKlausurenDataCollection();
 
 		result.schuelerklausuren = DTOMapper.mapList(
-				conn.query("SELECT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenKursklausuren kk ON (sk.Schueler_ID = :sId AND sk.Kursklausur_ID = kk.ID) JOIN DTOGostKlausurenVorgaben v ON (kk.Vorgabe_ID = v.ID AND v.Abi_Jahrgang = :abiturjahr AND v.Halbjahr = :halbjahr)", DTOGostKlausurenSchuelerklausuren.class)
-					.setParameter("sId", idSchueler).setParameter("abiturjahr", abiturjahr)
-					.setParameter("halbjahr", GostHalbjahr.fromIDorException(halbjahr))
-					.getResultList(),
+				conn.query(
+						"SELECT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenKursklausuren kk ON (sk.Schueler_ID = :sId AND sk.Kursklausur_ID = kk.ID) JOIN DTOGostKlausurenVorgaben v ON (kk.Vorgabe_ID = v.ID AND v.Abi_Jahrgang = :abiturjahr AND v.Halbjahr = :halbjahr)",
+						DTOGostKlausurenSchuelerklausuren.class)
+						.setParameter("sId", idSchueler).setParameter("abiturjahr", abiturjahr)
+						.setParameter("halbjahr", GostHalbjahr.fromIDorException(halbjahr))
+						.getResultList(),
 				DataGostKlausurenSchuelerklausur.dtoMapper);
 
 		if (!result.schuelerklausuren.isEmpty()) {
@@ -218,14 +227,17 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds) throws ApiOperationException {
+	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds)
+			throws ApiOperationException {
 		if (terminIds.isEmpty())
 			return new ArrayList<>();
 		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
 		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0 AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0))";
-		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
+		final String skFilter = kkSkIds.isEmpty() ? ""
+				: " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0 AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0))";
+		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
+				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
 		if (!kkSkIds.isEmpty())
 			query.setParameter("skIds", kkSkIds);

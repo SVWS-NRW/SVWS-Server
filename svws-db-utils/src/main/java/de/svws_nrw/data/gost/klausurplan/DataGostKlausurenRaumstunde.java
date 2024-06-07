@@ -106,7 +106,8 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 *
 	 * @return die Liste der zugehörigen Klausurraumstunden-Objekte
 	 */
-	public static List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final DBEntityManager conn, final List<GostSchuelerklausurterminraumstunde> listSktrs) {
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final DBEntityManager conn,
+			final List<GostSchuelerklausurterminraumstunde> listSktrs) {
 		if (listSktrs.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenRaumstunden> sks = conn.queryByKeyList(DTOGostKlausurenRaumstunden.class,

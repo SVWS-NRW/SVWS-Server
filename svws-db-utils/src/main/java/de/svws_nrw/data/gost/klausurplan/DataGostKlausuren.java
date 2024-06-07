@@ -65,7 +65,8 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenMetaDataCollection getAllData(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
+	public static GostKlausurenMetaDataCollection getAllData(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr)
+			throws ApiOperationException {
 
 		final List<GostJahrgang> jahrgaenge = DataGostJahrgangsliste.getGostJahrgangsliste(conn);
 
@@ -81,7 +82,8 @@ public final class DataGostKlausuren extends DataManager<Long> {
 			data.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg.abiturjahr).getAllSchueler());
 
 			for (final GostHalbjahr gj : GostHalbjahr.values()) {
-				final Schuljahresabschnitt sja = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahr), gj.halbjahr);
+				final Schuljahresabschnitt sja =
+						DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahr), gj.halbjahr);
 				if (sja != null)
 					data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}

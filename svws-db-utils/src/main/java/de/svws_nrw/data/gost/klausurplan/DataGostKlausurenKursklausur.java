@@ -66,10 +66,10 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final long idSchuljahresAbschnitt) throws ApiOperationException {
 		super(conn);
-		if (abiturjahr != -1 && conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)
+		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
 		_idSchuljahresAbschnitt = idSchuljahresAbschnitt;
-		if (idSchuljahresAbschnitt != -1 && conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresAbschnitt) == null)
+		if ((idSchuljahresAbschnitt != -1) && (conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresAbschnitt) == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Schuljahresabschnitt nicht gefunden, ID: " + idSchuljahresAbschnitt);
 	}
 
@@ -91,7 +91,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKursklausur> getKursKlausuren(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
+	public static List<GostKursklausur> getKursKlausuren(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr)
+			throws ApiOperationException {
 		return getKursklausurenZuVorgaben(conn, DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr));
 	}
 
@@ -105,7 +106,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKursklausur> getKursklausurenZuVorgaben(final DBEntityManager conn, final List<GostKlausurvorgabe> vorgaben) throws ApiOperationException {
+	public static List<GostKursklausur> getKursklausurenZuVorgaben(final DBEntityManager conn, final List<GostKlausurvorgabe> vorgaben)
+			throws ApiOperationException {
 		if (vorgaben.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_VORGABE_ID,
@@ -156,7 +158,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKursklausur> getKursklausurenZuSchuelerklausuren(final DBEntityManager conn, final List<GostSchuelerklausur> schuelerklausuren) throws ApiOperationException {
+	public static List<GostKursklausur> getKursklausurenZuSchuelerklausuren(final DBEntityManager conn, final List<GostSchuelerklausur> schuelerklausuren)
+			throws ApiOperationException {
 		if (schuelerklausuren.isEmpty())
 			return new ArrayList<>();
 		return getKursklausurenZuIds(conn, schuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct().toList());
@@ -188,7 +191,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<DTOGostKlausurenKursklausuren> getKursklausurenDTOsZuIds(final DBEntityManager conn, final List<Long> kkids) throws ApiOperationException {
+	public static List<DTOGostKlausurenKursklausuren> getKursklausurenDTOsZuIds(final DBEntityManager conn, final List<Long> kkids)
+			throws ApiOperationException {
 		if (kkids.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenKursklausuren> kks = conn.queryByKeyList(DTOGostKlausurenKursklausuren.class, kkids);
@@ -211,7 +215,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenDataCollection getKlausurDataCollection(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
+	public static GostKlausurenDataCollection getKlausurDataCollection(final DBEntityManager conn, final int abiturjahr, final int halbjahr,
+			final boolean ganzesSchuljahr) throws ApiOperationException {
 		final GostKlausurenDataCollection data = new GostKlausurenDataCollection();
 		data.vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr);
 		data.kursklausuren = getKursklausurenZuVorgaben(conn, data.vorgaben);
@@ -235,7 +240,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) throws ApiOperationException {
+	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten)
+			throws ApiOperationException {
 		final GostKlausurenDataCollection blockung = new GostKlausurenDataCollection();
 		blockungDaten.richKlausuren = enrichKursklausuren(conn, blockungDaten.klausuren);
 		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
@@ -248,7 +254,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return blockung;
 	}
 
-	private static void bearbeiteTermin(final DBEntityManager conn, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId, final GostKlausurenDataCollection blockung) throws ApiOperationException {
+	private static void bearbeiteTermin(final DBEntityManager conn, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId,
+			final GostKlausurenDataCollection blockung) throws ApiOperationException {
 		DTOGostKlausurenTermine termin = null;
 		final List<DTOGostKlausurenKursklausuren> listKlausuren = getKursklausurenDTOsZuIds(conn, ergebnisTermin.kursklausuren);
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausurDTOs(conn, listKlausuren);
@@ -256,12 +263,14 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		for (final DTOGostKlausurenKursklausuren klausur : listKlausuren) {
 			final GostKlausurvorgabe vorgabe = vorgabenManager.vorgabeGetByIdOrException(klausur.Vorgabe_ID);
 			if (termin == null) {
-				termin = new DTOGostKlausurenTermine(terminId, vorgabe.abiJahrgang, GostHalbjahr.fromIDorException(vorgabe.halbjahr), vorgabe.quartal, true, false);
+				termin = new DTOGostKlausurenTermine(terminId, vorgabe.abiJahrgang, GostHalbjahr.fromIDorException(vorgabe.halbjahr),
+						vorgabe.quartal, true, false);
 				conn.transactionPersist(termin);
 				blockung.termine.add(DataGostKlausurenTermin.dtoMapper.apply(termin));
 				conn.transactionFlush();
 			}
-			if (termin.Abi_Jahrgang != vorgabe.abiJahrgang || termin.Halbjahr != GostHalbjahr.fromIDorException(vorgabe.halbjahr) || termin.Quartal != vorgabe.quartal)
+			if ((termin.Abi_Jahrgang != vorgabe.abiJahrgang) || (termin.Halbjahr != GostHalbjahr.fromIDorException(vorgabe.halbjahr))
+				|| (termin.Quartal != vorgabe.quartal))
 				throw new ApiOperationException(Status.CONFLICT, "Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
 			klausur.Termin_ID = termin.ID;
 			conn.transactionPersist(klausur);
@@ -303,7 +312,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public static GostKursklausur getKursklausurById(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOGostKlausurenKursklausuren data = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
-		return data == null ? null : dtoMapper.apply(data);
+		return (data == null) ? null : dtoMapper.apply(data);
 	}
 
 	private static final Set<String> forbiddenPatchAttributes = Set.of("id", "idVorgabe", "idKurs");
@@ -316,7 +325,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
 					final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, dto.Vorgabe_ID);
-					if (termin.Quartal != 0 && !Objects.equals(termin.Quartal, vorgabe.Quartal))
+					if ((termin.Quartal != 0) && !Objects.equals(termin.Quartal, vorgabe.Quartal))
 						throw new ApiOperationException(Status.CONFLICT, "Klausur-Quartal entspricht nicht Termin-Quartal.");
 				}
 				dto.Termin_ID = newTermin;
@@ -333,21 +342,22 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final DTOGostKlausurenKursklausuren dto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper.apply(dto)));
+		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn,
+				ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper.apply(dto)));
 		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, sks);
 		final List<Long> skts_ids = skts.stream().map(skt -> skt.id).toList();
 		GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
-			if (forbiddenPatchAttributes != null && forbiddenPatchAttributes.contains(key))
+			if ((forbiddenPatchAttributes != null) && forbiddenPatchAttributes.contains(key))
 				throw new ApiOperationException(Status.FORBIDDEN, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTOGostKlausurenKursklausuren> mapper = patchMappings.get(key);
 			if (mapper == null)
 				throw new ApiOperationException(Status.BAD_REQUEST);
 			if (key.equals("startzeit")) {
 				final Integer startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-				if (startzeitNeu == null && dto.Startzeit != null || startzeitNeu != null && !startzeitNeu.equals(dto.Startzeit)) {
+				if (((startzeitNeu == null) && (dto.Startzeit != null)) || ((startzeitNeu != null) && !startzeitNeu.equals(dto.Startzeit))) {
 					dto.Startzeit = startzeitNeu;
 					conn.transactionPersist(dto);
 					if (_idSchuljahresAbschnitt == -1)
@@ -355,7 +365,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 					final GostKlausurraumRich krRich = new GostKlausurraumRich();
 					krRich.id = -1;
 					krRich.schuelerklausurterminIDs = skts_ids;
-					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, ListUtils.create1(krRich), _idSchuljahresAbschnitt);
+					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, ListUtils.create1(krRich),
+							_idSchuljahresAbschnitt);
 				}
 			}
 			if (key.equals("idTermin")) {
@@ -387,7 +398,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKursklausurRich> enrichKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursklausuren) throws ApiOperationException {
+	public static List<GostKursklausurRich> enrichKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursklausuren)
+			throws ApiOperationException {
 		final List<GostKursklausurRich> richKlausuren = new ArrayList<>();
 		if (kursklausuren.isEmpty())
 			return richKlausuren;
@@ -400,7 +412,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn.queryList(
 				DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID, DTOGostKlausurenSchuelerklausuren.class,
-						kursklausuren.stream().map(k -> k.id).toList()).stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
+				kursklausuren.stream().map(k -> k.id).toList()).stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
 		if (mapSchuelerklausuren.isEmpty())
 			return new ArrayList<>();
 
@@ -411,7 +423,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(k.idVorgabe);
 			final DTOKurs kurs = mapKurse.get(k.idKurs);
 			final List<DTOGostKlausurenSchuelerklausuren> sKlausuren = mapSchuelerklausuren.get(k.id);
-			if (sKlausuren != null && !sKlausuren.isEmpty()) {
+			if ((sKlausuren != null) && !sKlausuren.isEmpty()) {
 				final GostKursklausurRich kkr = new GostKursklausurRich();
 				kkr.abijahr = v.abiJahrgang;
 				kkr.bemerkung = k.bemerkung;
@@ -427,7 +439,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				try {
 					kkr.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
 				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-					throw new ApiOperationException(Status.BAD_REQUEST, "Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
 				}
 				kkr.quartal = v.quartal;
 				kkr.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();

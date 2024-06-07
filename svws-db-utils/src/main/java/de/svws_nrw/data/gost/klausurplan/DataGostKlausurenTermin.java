@@ -46,27 +46,31 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	private static final Set<String> patchForbiddenAttributes = Set.of("abijahr", "halbjahr", "istHaupttermin");
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenTermine>> patchMappings =
-		Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, false);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("abijahr", (conn, dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
-			Map.entry("halbjahr", (conn, dto, value, map) -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
-			Map.entry("quartal", (conn, dto, value, map) -> dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
-			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
-			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
-			Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
-			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-			Map.entry("istHaupttermin", (conn, dto, value, map) -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> {
-				final boolean newValue = JSONMapper.convertToBoolean(value, false);
-				if (dto.NachschreiberZugelassen != null && dto.NachschreiberZugelassen.booleanValue() && !newValue && !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
-					throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
-				dto.NachschreiberZugelassen = newValue;
-			})
-		);
+			Map.ofEntries(
+					Map.entry("id", (conn, dto, value, map) -> {
+						final Long patch_id = JSONMapper.convertToLong(value, false);
+						if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+							throw new ApiOperationException(Status.BAD_REQUEST);
+					}),
+					Map.entry("abijahr", (conn, dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
+					Map.entry("halbjahr", (conn, dto, value, map) ->
+							dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+					Map.entry("quartal", (conn, dto, value, map) ->
+							dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
+					Map.entry("bemerkung", (conn, dto, value, map) ->
+							dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
+					Map.entry("bezeichnung", (conn, dto, value, map) ->
+							dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
+					Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
+					Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+					Map.entry("istHaupttermin", (conn, dto, value, map) -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false)),
+					Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> {
+						final boolean newValue = JSONMapper.convertToBoolean(value, false);
+						if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen.booleanValue() && !newValue
+							&& !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
+							throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
+						dto.NachschreiberZugelassen = newValue;
+					}));
 
 	@Override
 	public Response getAll() {
@@ -102,7 +106,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurtermineZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren) throws ApiOperationException {
+	public static List<GostKlausurtermin> getKlausurtermineZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren)
+			throws ApiOperationException {
 		if (kursKlausuren.isEmpty())
 			return new ArrayList<>();
 		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenTermine.class,
@@ -120,14 +125,17 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> schuelerklausurTermine) throws ApiOperationException {
+	public static List<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final DBEntityManager conn,
+			final List<GostSchuelerklausurTermin> schuelerklausurTermine) throws ApiOperationException {
 		final Set<GostKlausurtermin> ergebnis = new HashSet<>();
 		if (schuelerklausurTermine.isEmpty())
 			return new ArrayList<>(ergebnis);
 		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
 		if (schuelerklausurTermineNullTermin.size() > 0) {
-			final List<GostSchuelerklausur> schuelerklausurNullTermin =  DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
-			final List<GostKursklausur> kursklausurNullTermin =  DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, schuelerklausurNullTermin);
+			final List<GostSchuelerklausur> schuelerklausurNullTermin =
+					DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
+			final List<GostKursklausur> kursklausurNullTermin =
+					DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, schuelerklausurNullTermin);
 			ergebnis.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, kursklausurNullTermin));
 		}
 
@@ -152,16 +160,17 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
-		final GostHalbjahr ghj = halbjahr <= 0 ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
+	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr)
+			throws ApiOperationException {
+		final GostHalbjahr ghj = (halbjahr <= 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 		final List<DTOGostKlausurenTermine> terminDTOs = (ghj == null)
-			? conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
-				.setParameter("jgid", abiturjahr)
-				.getResultList()
-			: conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr IN :hj", DTOGostKlausurenTermine.class)
-				.setParameter("jgid", abiturjahr)
-				.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[]{ghj}))
-				.getResultList();
+				? conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
+						.setParameter("jgid", abiturjahr)
+						.getResultList()
+				: conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr IN :hj", DTOGostKlausurenTermine.class)
+						.setParameter("jgid", abiturjahr)
+						.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[] { ghj }))
+						.getResultList();
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 
@@ -176,11 +185,13 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuId(final DBEntityManager conn, final GostKlausurtermin termin) throws ApiOperationException {
+	public static List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuId(final DBEntityManager conn, final GostKlausurtermin termin)
+			throws ApiOperationException {
 		if (termin.datum == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
 
-		final List<GostKlausurtermin> termine = DTOMapper.mapList(conn.queryList(DTOGostKlausurenTermine.QUERY_BY_DATUM, DTOGostKlausurenTermine.class, termin.datum), dtoMapper);
+		final List<GostKlausurtermin> termine =
+				DTOMapper.mapList(conn.queryList(DTOGostKlausurenTermine.QUERY_BY_DATUM, DTOGostKlausurenTermine.class, termin.datum), dtoMapper);
 //		termine.remove(termin);
 
 		return termine;

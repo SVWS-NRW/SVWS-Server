@@ -46,18 +46,19 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * {@link DTOGostKlausurenKalenderinformationen} in einen Core-DTO
 	 * {@link GostKlausurenKalenderinformation}.
 	 */
-	private final DTOMapper<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper = (final DTOGostKlausurenKalenderinformationen z) -> {
-		final GostKlausurenKalenderinformation daten = new GostKlausurenKalenderinformation();
-		daten.id = z.ID;
-		daten.bemerkung = z.Bemerkungen;
-		daten.bezeichnung = z.Bezeichnung;
-		daten.startdatum = z.Startdatum;
-		daten.startzeit = z.Startzeit;
-		daten.enddatum = z.Enddatum;
-		daten.endzeit = z.Endzeit;
-		daten.istSperrtermin = z.IstSperrtermin;
-		return daten;
-	};
+	private final DTOMapper<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper =
+			(final DTOGostKlausurenKalenderinformationen z) -> {
+				final GostKlausurenKalenderinformation daten = new GostKlausurenKalenderinformation();
+				daten.id = z.ID;
+				daten.bemerkung = z.Bemerkungen;
+				daten.bezeichnung = z.Bezeichnung;
+				daten.startdatum = z.Startdatum;
+				daten.startzeit = z.Startzeit;
+				daten.enddatum = z.Enddatum;
+				daten.endzeit = z.Endzeit;
+				daten.istSperrtermin = z.IstSperrtermin;
+				return daten;
+			};
 
 	/**
 	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
@@ -84,14 +85,17 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenKalenderinformationen>> patchMappings =
 			Map.ofEntries(
-				Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge())),
-				Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge())),
-				Map.entry("startdatum", (conn, dto, value, map) -> dto.Startdatum = JSONMapper.convertToString(value, false, false, null)),
-				Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-				Map.entry("enddatum", (conn, dto, value, map) -> dto.Enddatum = JSONMapper.convertToString(value, true, false, null)),
-				Map.entry("endzeit", (conn, dto, value, map) -> dto.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-				Map.entry("istSperrtermin", (conn, dto, value, map) -> dto.IstSperrtermin = JSONMapper.convertToBoolean(value, false))
-			);
+					Map.entry("bemerkung", (conn, dto, value, map) ->
+							dto.Bemerkungen = JSONMapper.convertToString(value, true, false,
+									Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge())),
+					Map.entry("bezeichnung", (conn, dto, value, map) ->
+							dto.Bezeichnung = JSONMapper.convertToString(value, true, false,
+									Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge())),
+					Map.entry("startdatum", (conn, dto, value, map) -> dto.Startdatum = JSONMapper.convertToString(value, false, false, null)),
+					Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+					Map.entry("enddatum", (conn, dto, value, map) -> dto.Enddatum = JSONMapper.convertToString(value, true, false, null)),
+					Map.entry("endzeit", (conn, dto, value, map) -> dto.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+					Map.entry("istSperrtermin", (conn, dto, value, map) -> dto.IstSperrtermin = JSONMapper.convertToBoolean(value, false)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
