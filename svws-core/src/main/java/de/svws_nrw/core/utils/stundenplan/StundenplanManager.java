@@ -3612,6 +3612,31 @@ public class StundenplanManager {
 	}
 
 
+	private void pausenaufsichtbereichRemoveAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereiche) {
+		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : pausenaufsichtbereiche) {
+			DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
+			final @NotNull StundenplanPausenaufsicht pausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+			for (int i = 0; i < pausenaufsicht.bereiche.size(); i++) {
+				final @NotNull StundenplanPausenaufsichtBereich bereich = pausenaufsicht.bereiche.get(i);
+				if (bereich.id == pausenaufsichtbereich.id) {
+					pausenaufsicht.bereiche.remove(i);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 *
+	 * @param pausenaufsichtbereiche   die {@link StundenplanPausenaufsichtBereich}-Objekte.
+	 */
+	public void pausenaufsichtbereichRemoveAll(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereiche) {
+		pausenaufsichtbereichRemoveAllOhneUpdate(pausenaufsichtbereiche);
+		update_all();
+	}
+
+
 	// #####################################################################
 	// #################### StundenplanPausenzeit ##########################
 	// #####################################################################

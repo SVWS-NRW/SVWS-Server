@@ -3398,6 +3398,30 @@ export class StundenplanManager extends JavaObject {
 		return list;
 	}
 
+	private pausenaufsichtbereichRemoveAllOhneUpdate(pausenaufsichtbereiche : List<StundenplanPausenaufsichtBereich>) : void {
+		for (const pausenaufsichtbereich of pausenaufsichtbereiche) {
+			DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
+			const pausenaufsicht : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+			for (let i : number = 0; i < pausenaufsicht.bereiche.size(); i++) {
+				const bereich : StundenplanPausenaufsichtBereich = pausenaufsicht.bereiche.get(i);
+				if (bereich.id === pausenaufsichtbereich.id) {
+					pausenaufsicht.bereiche.remove(i);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsichtBereich}-Objekt.
+	 *
+	 * @param pausenaufsichtbereiche   die {@link StundenplanPausenaufsichtBereich}-Objekte.
+	 */
+	public pausenaufsichtbereichRemoveAll(pausenaufsichtbereiche : List<StundenplanPausenaufsichtBereich>) : void {
+		this.pausenaufsichtbereichRemoveAllOhneUpdate(pausenaufsichtbereiche);
+		this.update_all();
+	}
+
 	/**
 	 * Fügt ein {@link StundenplanPausenzeit}-Objekt hinzu.
 	 *

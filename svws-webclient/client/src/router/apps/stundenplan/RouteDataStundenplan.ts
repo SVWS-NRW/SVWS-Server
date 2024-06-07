@@ -243,7 +243,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const res = await api.server.updateStundenplanPausenaufsichtenBereiche(update, api.schema, id);
-		// this.stundenplanManager.pausenaufsichtbereichRemoveAll(update.listEntfernen);
+		this.stundenplanManager.pausenaufsichtbereichRemoveAll(update.listEntfernen);
 		this.stundenplanManager.pausenaufsichtbereichAddAll(res);
 		this.setPatchedState({ stundenplanManager: this.stundenplanManager });
 		api.status.stop();
