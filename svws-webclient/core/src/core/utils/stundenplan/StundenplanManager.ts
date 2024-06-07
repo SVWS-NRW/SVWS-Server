@@ -884,9 +884,15 @@ export class StundenplanManager extends JavaObject {
 
 	private update_pausenaufsichtmenge_by_idAufsichtsbereich() : void {
 		this._pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap();
-		for (const aufsicht of this._pausenaufsichtmenge)
-			for (const aufsichtsbereich of aufsicht.bereiche)
-				MapUtils.addToList(this._pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
+		const mapCheckDuplicate : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+		for (const aufsicht of this._pausenaufsichtmenge) {
+			for (const aufsichtsbereich of aufsicht.bereiche) {
+				if (!mapCheckDuplicate.contains(aufsichtsbereich.idAufsichtsbereich, aufsicht.id)) {
+					MapUtils.addToList(this._pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
+					mapCheckDuplicate.put(aufsichtsbereich.idAufsichtsbereich, aufsicht.id, true);
+				}
+			}
+		}
 	}
 
 	private update_pausenaufsichtmenge() : void {

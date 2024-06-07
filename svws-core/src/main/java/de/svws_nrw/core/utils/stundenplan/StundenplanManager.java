@@ -848,9 +848,15 @@ public class StundenplanManager {
 
 	private void update_pausenaufsichtmenge_by_idAufsichtsbereich() {
 		_pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap<>();
-		for (final @NotNull StundenplanPausenaufsicht aufsicht : _pausenaufsichtmenge)
-			for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : aufsicht.bereiche)
-				MapUtils.addToList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
+		final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Boolean> mapCheckDuplicate = new HashMap2D<>();
+		for (final @NotNull StundenplanPausenaufsicht aufsicht : _pausenaufsichtmenge) {
+			for (final @NotNull StundenplanPausenaufsichtBereich aufsichtsbereich : aufsicht.bereiche) {
+				if (!mapCheckDuplicate.contains(aufsichtsbereich.idAufsichtsbereich, aufsicht.id)) {
+					MapUtils.addToList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.idAufsichtsbereich, aufsicht);
+					mapCheckDuplicate.put(aufsichtsbereich.idAufsichtsbereich, aufsicht.id, true);
+				}
+			}
+		}
 	}
 
 	private void update_pausenaufsichtmenge() {
