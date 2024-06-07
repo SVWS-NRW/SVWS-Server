@@ -175,7 +175,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	private aktionSetzeKlausurgruppeInDenRaum(kg : number, r : number) : boolean {
 		const gruppe : List<GostSchuelerklausurTerminRich | null> = this._klausurGruppen.get(kg);
-		if (this._raumZuBelegung[r] + gruppe.size() > this._raumAt[r].groesse)
+		if ((this._raumZuBelegung[r] + gruppe.size()) > this._raumAt[r].groesse)
 			return false;
 		if ((this._regel_forciere_selben_klausurstart_pro_raum) && (this._raumZuKlausurstart[r] >= 0) && (this._klausurGruppeZuKlausurstart[kg] !== this._raumZuKlausurstart[r]))
 			return false;
@@ -261,8 +261,8 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 
 	private aktionKlausurenVerteilenAlgorithmusGeneric(aRaum : Array<number> | null, aKlausurGruppe : Array<number> | null) : void {
 		this.aktionZustandClear();
-		for (const kg of (aKlausurGruppe === null ? ArrayUtils.getIndexPermutation(this._klausurGruppenAnzahl, this._random) : aKlausurGruppe))
-			for (const r of (aRaum === null ? ArrayUtils.getIndexPermutation(this._raumAnzahl, this._random) : aRaum))
+		for (const kg of ((aKlausurGruppe === null) ? ArrayUtils.getIndexPermutation(this._klausurGruppenAnzahl, this._random) : aKlausurGruppe))
+			for (const r of ((aRaum === null) ? ArrayUtils.getIndexPermutation(this._raumAnzahl, this._random) : aRaum))
 				if (this.aktionSetzeKlausurgruppeInDenRaum(kg, r))
 					break;
 		this.aktionSpeichernFallsBesser();

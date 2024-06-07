@@ -33,7 +33,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		if (this.getFaecherManagerOrNull() !== null) {
 			const aFach : GostFach | null = this.getFaecherManager().get(a.idFach);
 			const bFach : GostFach | null = this.getFaecherManager().get(b.idFach);
-			if (aFach !== null && bFach !== null) {
+			if ((aFach !== null) && (bFach !== null)) {
 				if (aFach.sortierung > bFach.sortierung)
 					return +1;
 				if (aFach.sortierung < bFach.sortierung)
@@ -273,7 +273,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			return vorgaben;
 		}
 		const vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal);
-		return vorgaben !== null ? vorgaben : new ArrayList();
+		return (vorgaben !== null) ? vorgaben : new ArrayList();
 	}
 
 	/**
@@ -327,7 +327,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(abiJahrgang : number, halbjahr : GostHalbjahr, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach.getOrNull(abiJahrgang, halbjahr.id, kursartAllg.kuerzel, idFach);
-		return list !== null ? list : new ArrayList();
+		return (list !== null) ? list : new ArrayList();
 	}
 
 	/**
@@ -339,7 +339,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public getPrevious(vorgabe : GostKlausurvorgabe) : GostKlausurvorgabe | null {
 		const vorgabenSchuljahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
-		if (vorgabe.halbjahr % 2 === 1) {
+		if ((vorgabe.halbjahr % 2) === 1) {
 			const vorgabenVorhalbjahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.abiJahrgang, vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
 			if (vorgabenVorhalbjahr !== null)
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);

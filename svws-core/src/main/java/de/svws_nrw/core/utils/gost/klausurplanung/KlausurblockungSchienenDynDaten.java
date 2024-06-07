@@ -98,7 +98,8 @@ public class KlausurblockungSchienenDynDaten {
 		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
 		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
-				if (schuelerID < 0)  throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
+				if (schuelerID < 0)
+					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
 				if (setSchueler.add(schuelerID)) {
 					final int schuelerNummer = _mapSchuelerZuNummer.size(); // Mapping: schuelerID --> laufende Nummer
 					_mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
@@ -109,8 +110,10 @@ public class KlausurblockungSchienenDynDaten {
 
 	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
-			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
-			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
+			if (gostKursklausur.id < 0)
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
+			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id))
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
 			// Mapping: datenbankKlausurID --> laufende Nummer
 			final int klausurNummer = _mapKlausurZuNummer.size();
 			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
@@ -139,8 +142,10 @@ public class KlausurblockungSchienenDynDaten {
 			final @NotNull LinkedCollection<@NotNull Long> list = e.getValue();
 			for (final @NotNull Long klausurID1 : list)
 				for (final @NotNull Long klausurID2 : list) {
-					final @NotNull Integer klausurNr1 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")", _mapKlausurZuNummer.get(klausurID1));
-					final @NotNull Integer klausurNr2 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")", _mapKlausurZuNummer.get(klausurID2));
+					final @NotNull Integer klausurNr1 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")",
+							_mapKlausurZuNummer.get(klausurID1));
+					final @NotNull Integer klausurNr2 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")",
+							_mapKlausurZuNummer.get(klausurID2));
 					_verboten[klausurNr1][klausurNr2] = true;
 				}
 		}
@@ -153,8 +158,10 @@ public class KlausurblockungSchienenDynDaten {
 				if (hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					final Integer klausurNr1 = _mapKlausurZuNummer.get(gostKursklausur1.id);
 					final Integer klausurNr2 = _mapKlausurZuNummer.get(gostKursklausur2.id);
-					if (klausurNr1 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id);
-					if (klausurNr2 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id);
+					if (klausurNr1 == null)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id);
+					if (klausurNr2 == null)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id);
 					_bevorzugt[klausurNr1][klausurNr2]++;
 				}
 	}
@@ -289,7 +296,7 @@ public class KlausurblockungSchienenDynDaten {
 		final int[] temp = Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_klausurenAnzahl);
-			if ((i1 - i2) * (i1 - i2) > _klausurenAnzahl)
+			if (((i1 - i2) * (i1 - i2)) > _klausurenAnzahl)
 				continue;
 			// Tausche nur dann, wenn "nahe" beieinander.
 			final int save1 = temp[i1];
@@ -537,7 +544,7 @@ public class KlausurblockungSchienenDynDaten {
 			if (gibIstBenachbart(nr2, setS))
 				continue; // Überspringe, da "nr2" einen Nachbarn in setS hat.
 
-				final int nachbarn = gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS, nr2);
+			final int nachbarn = gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS, nr2);
 			if (nachbarn < maxNachbarn)
 				continue; // Überspringe schlechteren Knoten.
 
@@ -705,7 +712,7 @@ public class KlausurblockungSchienenDynDaten {
 			for (int nr = 0; nr < _klausurenAnzahl; nr++) {
 				if (_klausurZuSchiene[nr] == s) // Dieses IF muss zuerst sein!
 					_klausurZuSchiene[nr] = -1;
-				if (_klausurZuSchiene[nr] == _schienenAnzahl - 1)
+				if (_klausurZuSchiene[nr] == (_schienenAnzahl - 1))
 					_klausurZuSchiene[nr] = s;
 			}
 			_schienenAnzahl--;

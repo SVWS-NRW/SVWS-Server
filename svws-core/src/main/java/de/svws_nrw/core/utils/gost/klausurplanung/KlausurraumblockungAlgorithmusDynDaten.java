@@ -26,28 +26,38 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private static final double MALUS_MOEGLICHST_WENIG_RAEUME = 1000.0;
 	private static final double MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME = 1.0;
 
-	private static final @NotNull Comparator<@NotNull GostKlausurraumRich> _compRaeume = (final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
-		if (o1.groesse < o2.groesse) return -1;
-		if (o1.groesse > o2.groesse) return +1;
+	private static final @NotNull Comparator<@NotNull GostKlausurraumRich> _compRaeume =
+			(final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
+				if (o1.groesse < o2.groesse)
+					return -1;
+				if (o1.groesse > o2.groesse)
+					return +1;
 
-		if (o1.id < o2.id) return -1;
-		if (o1.id > o2.id) return +1;
+				if (o1.id < o2.id)
+					return -1;
+				if (o1.id > o2.id)
+					return +1;
 
-		return 0;
-	};
+				return 0;
+			};
 
-	private static final @NotNull Comparator<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _compKlausurGruppen = (final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o1, final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o2) -> {
-		if (o1.size() < o2.size()) return -1;
-		if (o1.size() > o2.size()) return +1;
+	private static final @NotNull Comparator<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _compKlausurGruppen =
+			(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o1, final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o2) -> {
+				if (o1.size() < o2.size())
+					return -1;
+				if (o1.size() > o2.size())
+					return +1;
 
-		// Falls die Gruppen die gleiche Größe haben, wird nach der ID des ersten Repräsentanten sortiert.
-		final @NotNull GostSchuelerklausurTerminRich k1 = ListUtils.getNonNullElementAtOrException(o1, 0);
-		final @NotNull GostSchuelerklausurTerminRich k2 = ListUtils.getNonNullElementAtOrException(o2, 0);
-		if (k1.id < k2.id) return -1;
-		if (k1.id > k2.id) return +1;
+				// Falls die Gruppen die gleiche Größe haben, wird nach der ID des ersten Repräsentanten sortiert.
+				final @NotNull GostSchuelerklausurTerminRich k1 = ListUtils.getNonNullElementAtOrException(o1, 0);
+				final @NotNull GostSchuelerklausurTerminRich k2 = ListUtils.getNonNullElementAtOrException(o2, 0);
+				if (k1.id < k2.id)
+					return -1;
+				if (k1.id > k2.id)
+					return +1;
 
-		return 0;
-	};
+				return 0;
+			};
 
 	private final @NotNull Random _random;
 	private final @NotNull GostKlausurraumblockungKonfiguration _config;
@@ -86,10 +96,10 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		_config = config;
 
 		// Regeln kopieren
-		_regel_optimiere_blocke_in_moeglichst_wenig_raeume =  config._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
-		_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume =  config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
-		_regel_forciere_selbe_kursklausur_im_selben_raum =  config._regel_forciere_selbe_kursklausur_im_selben_raum;
-		_regel_forciere_selbe_klausurdauer_pro_raum =  config._regel_forciere_selbe_klausurdauer_pro_raum;
+		_regel_optimiere_blocke_in_moeglichst_wenig_raeume = config._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
+		_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
+		_regel_forciere_selbe_kursklausur_im_selben_raum = config._regel_forciere_selbe_kursklausur_im_selben_raum;
+		_regel_forciere_selbe_klausurdauer_pro_raum = config._regel_forciere_selbe_klausurdauer_pro_raum;
 		_regel_forciere_selben_klausurstart_pro_raum = config._regel_forciere_selben_klausurstart_pro_raum;
 
 		// Räume kopieren.
@@ -142,7 +152,8 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		return ListUtils.getNonNullElementAtOrException(list, 0);
 	}
 
-	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppenSortiert(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
+	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppenSortiert(
+			final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> gruppen = new ArrayList<>();
 
 		if (_regel_forciere_selbe_kursklausur_im_selben_raum) {
@@ -178,7 +189,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		final @NotNull List<GostSchuelerklausurTerminRich> gruppe = _klausurGruppen.get(kg);
 
 		// Ist noch Platz für alle Klausuren der Gruppe?
-		if (_raumZuBelegung[r] + gruppe.size() > _raumAt[r].groesse)
+		if ((_raumZuBelegung[r] + gruppe.size()) > _raumAt[r].groesse)
 			return false;
 
 		// Ist die Klausur-Startzeit in dem Raum überhaupt erlaubt?
@@ -294,8 +305,8 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private void aktionKlausurenVerteilenAlgorithmusGeneric(final int[] aRaum, final int[] aKlausurGruppe) {
 		aktionZustandClear();
 
-		for (final int kg : (aKlausurGruppe == null ?  ArrayUtils.getIndexPermutation(_klausurGruppenAnzahl, _random) : aKlausurGruppe))
-			for (final int r : (aRaum == null ?  ArrayUtils.getIndexPermutation(_raumAnzahl, _random) : aRaum))
+		for (final int kg : ((aKlausurGruppe == null) ? ArrayUtils.getIndexPermutation(_klausurGruppenAnzahl, _random) : aKlausurGruppe))
+			for (final int r : ((aRaum == null) ? ArrayUtils.getIndexPermutation(_raumAnzahl, _random) : aRaum))
 				if (aktionSetzeKlausurgruppeInDenRaum(kg, r))
 					break;
 

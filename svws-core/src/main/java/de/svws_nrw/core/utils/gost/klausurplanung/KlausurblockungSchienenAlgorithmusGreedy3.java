@@ -61,9 +61,9 @@ public final class KlausurblockungSchienenAlgorithmusGreedy3 extends Klausurbloc
 			return;
 
 		// Erster Aufruf?
-		final int klausurNr = _dynDaten.gibAnzahlSchienen() == 0
-				? _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() // 1.
-				: _dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben(); // 2+.
+		final int klausurNr = (_dynDaten.gibAnzahlSchienen() == 0)
+			? _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() // 1.
+			: _dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben(); // 2+.
 
 		// Alle Klausuren gesetzt?
 		if (klausurNr < 0) {
@@ -78,7 +78,7 @@ public final class KlausurblockungSchienenAlgorithmusGreedy3 extends Klausurbloc
 		// Rekursion
 		for (int schiene = 0; schiene < _minSchienen; schiene++) {
 			final int schienenAnzahl = _dynDaten.gibAnzahlSchienen();
-			final int differenz = schiene < schienenAnzahl ? 0 : (schiene - schienenAnzahl + 1);
+			final int differenz = (schiene < schienenAnzahl) ? 0 : ((schiene - schienenAnzahl) + 1);
 
 			_dynDaten.aktionSchienenAnzahlVeraendern(+differenz);
 			if (_dynDaten.aktionSetzeKlausurInSchiene(klausurNr, schiene)) {

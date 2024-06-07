@@ -287,7 +287,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		const temp : Array<number> | null = Arrays.copyOf(this._klausurenSortiertGrad, this._klausurenAnzahl);
 		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++) {
 			const i2 : number = this._random.nextInt(this._klausurenAnzahl);
-			if ((i1 - i2) * (i1 - i2) > this._klausurenAnzahl)
+			if (((i1 - i2) * (i1 - i2)) > this._klausurenAnzahl)
 				continue;
 			const save1 : number = temp[i1];
 			const save2 : number = temp[i2];
@@ -666,7 +666,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++) {
 				if (this._klausurZuSchiene[nr] === s)
 					this._klausurZuSchiene[nr] = -1;
-				if (this._klausurZuSchiene[nr] === this._schienenAnzahl - 1)
+				if (this._klausurZuSchiene[nr] === (this._schienenAnzahl - 1))
 					this._klausurZuSchiene[nr] = s;
 			}
 			this._schienenAnzahl--;

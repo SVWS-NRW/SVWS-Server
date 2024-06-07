@@ -258,7 +258,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum_and_idTermin.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idTermin, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id).add(k);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idTermin, (raumstunden === null || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
@@ -266,7 +266,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, (raumstunden === null || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
@@ -1114,7 +1114,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public schuelerklausurtermineZuVerteilenGetMenge(fremdTermine : boolean) : List<GostSchuelerklausurTermin> {
 		const skts : List<GostSchuelerklausurTermin> | null = fremdTermine ? this._schuelerklausurterminmenge : this._schuelerklausurterminmenge_by_idTermin.get(this.getHauptTermin().id);
-		return skts === null ? new ArrayList() : skts;
+		return (skts === null) ? new ArrayList() : skts;
 	}
 
 	/**

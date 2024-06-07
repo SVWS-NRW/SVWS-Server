@@ -60,10 +60,12 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 	private void berechneRekursiv() {
 
 		// Kann das Ergebnis überhaupt noch besser werden?
-		if (_dynDaten.gibTerminAnzahl() > _minTermine) return;
+		if (_dynDaten.gibTerminAnzahl() > _minTermine)
+			return;
 
 		// Ist die Zeit abgelaufen?
-		if (System.currentTimeMillis() > _zeitEnde) return;
+		if (System.currentTimeMillis() > _zeitEnde)
+			return;
 
 		// Sind alle Klausuren verteilt?
 		if (!_dynDaten.gibExistierenNichtverteilteKlausuren()) {
@@ -87,7 +89,8 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 
 		// 2. Fall: Die Gruppe muss in einen neu erzeugten Termin.
 		final int terminNr = _dynDaten.gibErzeugeNeuenTermin();
-		if (!_dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!");
+		if (!_dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr))
+			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!");
 		berechneRekursiv();
 		_dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
 		_dynDaten.entferneLetztenTermin();

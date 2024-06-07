@@ -71,7 +71,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
 			}
 			zeitProAlgorithmus *= 2;
-		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt);
+		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt);
 		dynDaten.aktionZustand2Laden();
 		return dynDaten.gibErzeugeOutput();
 	}

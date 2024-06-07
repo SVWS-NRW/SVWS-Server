@@ -51,8 +51,8 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> berechne(
-					final @NotNull GostNachschreibterminblockungKonfiguration config,
-					final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull GostNachschreibterminblockungKonfiguration config,
+			final @NotNull GostKursklausurManager klausurManager) {
 
 		// 1) Bilde Gruppen von Nachschreibern, falls dies bestimmte Kriterien/Regeln erfordern.
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen = new ArrayList<>(); // Liste der Gruppen.
@@ -101,9 +101,9 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	}
 
 	private static boolean _istHinzufuegenErlaubt(
-					final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe,
-					final @NotNull GostSchuelerklausurTermin skt1, final @NotNull GostNachschreibterminblockungKonfiguration config,
-					final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe,
+			final @NotNull GostSchuelerklausurTermin skt1, final @NotNull GostNachschreibterminblockungKonfiguration config,
+			final @NotNull GostKursklausurManager klausurManager) {
 
 		// Integrität überprüfen.
 		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
@@ -139,10 +139,10 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	}
 
 	private static @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(
-					final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung bewertung,
-					final @NotNull List<@NotNull GostKlausurtermin> termine,
-					final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen,
-					final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung bewertung,
+			final @NotNull List<@NotNull GostKlausurtermin> termine,
+			final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen,
+			final @NotNull GostKursklausurManager klausurManager) {
 
 		// Zum Sammeln der Ergebnisse.
 		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = new ArrayList<>();

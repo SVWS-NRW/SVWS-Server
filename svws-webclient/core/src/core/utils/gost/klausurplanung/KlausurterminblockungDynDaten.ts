@@ -196,7 +196,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		const mapSchieneZuKlausurGruppe : HashMap<number, List<number>> = new HashMap<number, List<number>>();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
-			const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
+			const schienenID : number = (gostKursklausur.kursSchiene.length < 1) ? -1 : gostKursklausur.kursSchiene[0];
 			if (schienenID < 0) {
 				this._klausurGruppen.add(ListUtils.create1(klausurNr));
 			} else {
@@ -356,7 +356,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		const size : number = temp.size();
 		for (let i1 : number = 0; i1 < size; i1++) {
 			const i2 : number = this._random.nextInt(size);
-			if ((i1 - i2) * (i1 - i2) >= size)
+			if (((i1 - i2) * (i1 - i2)) >= size)
 				continue;
 			const save1 : List<number> = temp.get(i1);
 			const save2 : List<number> = temp.get(i2);

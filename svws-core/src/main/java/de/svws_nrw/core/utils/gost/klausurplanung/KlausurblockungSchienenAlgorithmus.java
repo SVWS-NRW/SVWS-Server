@@ -82,7 +82,7 @@ public class KlausurblockungSchienenAlgorithmus {
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.
-		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt); // noch Zeit?
+		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt); // noch Zeit?
 
 		// Lade besten globalen Zustand
 		dynDaten.aktionZustand2Laden();

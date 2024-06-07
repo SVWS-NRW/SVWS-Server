@@ -25,15 +25,20 @@ public class KlausurterminblockungAlgorithmus {
 
 	private static final @NotNull Random _random = new Random();
 
-	private static final @NotNull Comparator<@NotNull GostKursklausurRich> _compGostKursklausurRich = (final @NotNull GostKursklausurRich a, final @NotNull GostKursklausurRich b) -> {
-		if (a.halbjahr < b.halbjahr) return -1;
-		if (a.halbjahr > b.halbjahr) return +1;
+	private static final @NotNull Comparator<@NotNull GostKursklausurRich> _compGostKursklausurRich =
+			(final @NotNull GostKursklausurRich a, final @NotNull GostKursklausurRich b) -> {
+				if (a.halbjahr < b.halbjahr)
+					return -1;
+				if (a.halbjahr > b.halbjahr)
+					return +1;
 
-		if (a.quartal < b.quartal) return -1;
-		if (a.quartal > b.quartal) return +1;
+				if (a.quartal < b.quartal)
+					return -1;
+				if (a.quartal > b.quartal)
+					return +1;
 
-		return 0;
-	};
+				return 0;
+			};
 
 
 	/** Ein Logger für Debug-Zwecke. */
@@ -68,7 +73,8 @@ public class KlausurterminblockungAlgorithmus {
 		return out;
 	}
 
-	private void berechneRekursivQuartalsModus(final @NotNull List<@NotNull GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
+	private void berechneRekursivQuartalsModus(final @NotNull List<@NotNull GostKursklausurRich> input,
+			final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
 
 		// Keine Daten vorhanden.
 		if (input.isEmpty())
@@ -114,7 +120,8 @@ public class KlausurterminblockungAlgorithmus {
 
 
 
-	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
+	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausurRich> input,
+			final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
 		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste potentiell geblockt werden sollen.
 		final @NotNull KlausurterminblockungModusKursarten modus = KlausurterminblockungModusKursarten.getOrException(config.modusKursarten);
 		switch (modus) {
@@ -161,7 +168,8 @@ public class KlausurterminblockungAlgorithmus {
 	 * @param config  die Konfiguration der Blockung.
 	 * @param out     die Termin-Klausur-Zuordnung (Ausgabe).
 	 */
-	private void berechne_helper(final @NotNull List<@NotNull GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
+	private void berechne_helper(final @NotNull List<@NotNull GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config,
+			final @NotNull GostKlausurterminblockungErgebnis out) {
 		// Logger +4
 		_logger.log("KlausurterminblockungAlgorithmus");
 		_logger.modifyIndent(+4);
@@ -204,7 +212,7 @@ public class KlausurterminblockungAlgorithmus {
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.
-		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt); // noch Zeit?
+		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt); // noch Zeit?
 
 		// Lade besten globalen Zustand
 		dynDaten.aktionZustand2Laden();
