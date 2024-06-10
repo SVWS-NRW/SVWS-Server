@@ -14,11 +14,11 @@
 				{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 			</template>
 			<template #cell(bereiche)="{ value }">
-				<template v-for="bereich in value">{{ stundenplanManager().aufsichtsbereichGetByIdOrException(bereich).kuerzel }} &nbsp;</template>
+				<template v-for="bereich in value">{{ stundenplanManager().aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).kuerzel }} &nbsp;</template>
 			</template>
 			<template #cell(wochentyp)="{ value }">
 				<span v-if="value === 0" class="opacity-25">—</span>
-				<template v-else>{{ String.fromCharCode(64 + value) }}</template>
+				<template v-else>{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}</template>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
