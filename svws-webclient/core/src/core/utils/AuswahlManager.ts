@@ -89,6 +89,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	protected _filterPermitAuswahl : boolean = false;
 
+	/**
+	 * Die Daten aus der vorherigen Auswahl.
+	 */
+	protected _vorherigeAuswahl : TDaten | null = null;
+
 
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
@@ -296,13 +301,14 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	}
 
 	/**
-	 * Setzt die Daten. Dabei wird ggf. die Auswahl angepasst.
+	 * Setzt die Daten. Dabei wird ggf. die Auswahl angepasst. Die vorherige Auswahl wird gespeichert.
 	 *
 	 * @param daten   die neuen Daten
 	 *
 	 * @throws DeveloperNotificationException   falls die Daten nicht in der Auswahlliste vorhanden ist
 	 */
 	public setDaten(daten : TDaten | null) : void {
+		this._vorherigeAuswahl = this._daten;
 		if (daten === null) {
 			this._daten = null;
 		} else {
@@ -431,6 +437,15 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		if ((abschnittAuswahl === null) || (abschnittSchule === null))
 			return false;
 		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
+	}
+
+	/**
+	 * Gibt die vorherige Auswahl zurück oder <code>null</code>, wenn es keine vorherige Auswahl gibt.
+	 *
+	 * @return vorherige Auswahl
+	 */
+	public getVorherigeAuswahl() : TDaten | null {
+		return this._vorherigeAuswahl;
 	}
 
 	transpilerCanonicalName(): string {

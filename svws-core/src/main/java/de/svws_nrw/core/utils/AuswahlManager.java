@@ -72,6 +72,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht. */
 	protected boolean _filterPermitAuswahl;
 
+	/** Die Daten aus der vorherigen Auswahl. */
+	protected TDaten _vorherigeAuswahl = null;
 
 
 	/**
@@ -302,13 +304,16 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 
 
 	/**
-	 * Setzt die Daten. Dabei wird ggf. die Auswahl angepasst.
+	 * Setzt die Daten. Dabei wird ggf. die Auswahl angepasst. Die vorherige Auswahl wird gespeichert.
 	 *
 	 * @param daten   die neuen Daten
 	 *
 	 * @throws DeveloperNotificationException   falls die Daten nicht in der Auswahlliste vorhanden ist
 	 */
 	public void setDaten(final TDaten daten) throws DeveloperNotificationException {
+		// vorherige Auswahl speichern, um diese ggf. wiederherstellen zu können
+		this._vorherigeAuswahl = this._daten;
+
 		if (daten == null) {
 			// Die Daten werden zurückgesetzt und damit ist keine Auswahl mehr vorhanden
 			this._daten = null;
@@ -453,6 +458,16 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		if ((abschnittAuswahl == null) || (abschnittSchule == null))
 			return false;
 		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
+	}
+
+
+	/**
+	 * Gibt die vorherige Auswahl zurück oder <code>null</code>, wenn es keine vorherige Auswahl gibt.
+	 *
+	 * @return vorherige Auswahl
+	 */
+	public TDaten getVorherigeAuswahl() {
+		return this._vorherigeAuswahl;
 	}
 
 }

@@ -207,7 +207,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoGruppenprozess = async () => {
-		if (this._state.value.view === routeKlasseGruppenprozesse && this._state.value.gruppenprozesseEnabled) {
+		if (this._state.value.gruppenprozesseEnabled || this._state.value.view === routeKlasseGruppenprozesse && this._state.value.gruppenprozesseEnabled) {
 			this.commit();
 			return;
 		}

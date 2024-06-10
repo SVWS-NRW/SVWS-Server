@@ -141,7 +141,7 @@
 		if (props.klassenListeManager().liste.auswahlExists())
 			await props.gotoGruppenprozess();
 		else
-			await props.gotoEintrag(null);
+			await props.gotoEintrag(props.klassenListeManager().getVorherigeAuswahl()?.id);
 	}
 
 	function lehrerkuerzel(list: number[]) {

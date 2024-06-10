@@ -146,12 +146,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		}
 	}
 
-	/**
-	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
-	 *
-	 * @param eintrag   der Auswahl-Eintrag
-	 * @param daten     das neue Daten-Objekt zu der Auswahl
-	 */
 	protected onSetDaten(eintrag : KlassenDaten, daten : KlassenDaten) : boolean {
 		let updateEintrag : boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {

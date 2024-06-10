@@ -70,7 +70,6 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	private boolean _filterNurSichtbar = true;
 
 
-
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
@@ -125,12 +124,6 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	}
 
 
-	/**
-	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
-	 *
-	 * @param eintrag   der Auswahl-Eintrag
-	 * @param daten     das neue Daten-Objekt zu der Auswahl
-	 */
 	@Override
 	protected boolean onSetDaten(final @NotNull KlassenDaten eintrag, final @NotNull KlassenDaten daten) {
 		boolean updateEintrag = false;
