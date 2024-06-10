@@ -455,7 +455,7 @@ export { KlausurterminblockungModusKursarten } from './core/types/gost/klausurpl
 export { KlausurterminblockungModusQuartale } from './core/types/gost/klausurplanung/KlausurterminblockungModusQuartale';
 export { Jahrgaenge } from './core/types/jahrgang/Jahrgaenge';
 export { PrimarstufeSchuleingangsphaseBesuchsjahre } from './core/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
-export { KAOAAnschlussoptionen } from './core/types/kaoa/KAOAAnschlussoptionen';
+export { KAOAAnschlussoption } from './core/types/kaoa/KAOAAnschlussoption';
 export { KAOABerufsfeld } from './core/types/kaoa/KAOABerufsfeld';
 export { KAOAEbene4 } from './core/types/kaoa/KAOAEbene4';
 export { KAOAKategorie } from './core/types/kaoa/KAOAKategorie';
@@ -584,6 +584,8 @@ export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
 export { ReligionUtils } from './core/utils/religion/ReligionUtils';
+export { SchuelerKAoAManager } from './core/utils/schueler/SchuelerKAoAManager';
+export { SchuelerKAoAUtils } from './core/utils/schueler/SchuelerKAoAUtils';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';

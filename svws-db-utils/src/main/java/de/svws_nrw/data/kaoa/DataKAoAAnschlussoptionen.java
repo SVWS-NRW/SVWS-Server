@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag;
-import de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen;
+import de.svws_nrw.core.types.kaoa.KAOAAnschlussoption;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -27,7 +27,7 @@ public final class DataKAoAAnschlussoptionen extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<KAOAAnschlussoptionEintrag> daten = new ArrayList<>();
-		for (final KAOAAnschlussoptionen a : KAOAAnschlussoptionen.values())
+		for (final KAOAAnschlussoption a : KAOAAnschlussoption.values())
 			daten.addAll(Arrays.asList(a.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

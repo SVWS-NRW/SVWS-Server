@@ -5,7 +5,7 @@ export class SchuelerKAoADaten extends JavaObject {
 	/**
 	 * Die ID der KAOA Daten in der Datenbank.
 	 */
-	public id : number | null = -1;
+	public id : number = -1;
 
 	/**
 	 * Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören.
@@ -68,7 +68,9 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerKAoADaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerKAoADaten();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
@@ -91,11 +93,11 @@ export class SchuelerKAoADaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerKAoADaten) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
-		result += '"abschnitt" : ' + obj.abschnitt! + ',';
+		result += '"id" : ' + obj.id + ',';
+		result += '"abschnitt" : ' + obj.abschnitt + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
-		result += '"kategorie" : ' + obj.kategorie! + ',';
-		result += '"merkmal" : ' + obj.merkmal! + ',';
+		result += '"kategorie" : ' + obj.kategorie + ',';
+		result += '"merkmal" : ' + obj.merkmal + ',';
 		result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal) + ',';
 		result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption) + ',';
 		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld) + ',';
@@ -109,7 +111,7 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerKAoADaten>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.abschnitt !== "undefined") {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';

@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Der Core-Type für die KAoA-Anschlussoptionen für Anschlussvereinbarungen nach SBO 10.7.
  */
-public enum KAOAAnschlussoptionen {
+public enum KAOAAnschlussoption {
 
     /** KAoA-Anschlussoption: Berufspraxisstufe einer Förderschule für Geistige Entwicklung */
     BE(new KAOAAnschlussoptionEintrag[]{
@@ -414,10 +414,10 @@ public enum KAOAAnschlussoptionen {
 	public final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoptionen> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoption> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoptionen> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoption> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -425,7 +425,7 @@ public enum KAOAAnschlussoptionen {
 	 *
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist
 	 */
-	KAOAAnschlussoptionen(final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie) {
+	KAOAAnschlussoption(final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -437,9 +437,9 @@ public enum KAOAAnschlussoptionen {
 	 *
 	 * @return die Map von der ID auf die zugehörige Anschlussoption
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoptionen> getMapStatusByID() {
+	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoption> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
+			for (final KAOAAnschlussoption g : KAOAAnschlussoption.values())
 				_statusByID.put(g.daten.id, g);
 		return _statusByID;
 	}
@@ -451,9 +451,9 @@ public enum KAOAAnschlussoptionen {
 	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Anschlussoption
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoptionen> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoption> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
+			for (final KAOAAnschlussoption g : KAOAAnschlussoption.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);
 		return _statusByKuerzel;
 	}
@@ -466,7 +466,7 @@ public enum KAOAAnschlussoptionen {
 	 *
 	 * @return die Anschlussoption oder null, falls die ID ungültig ist
 	 */
-	public static KAOAAnschlussoptionen getByID(final Long id) {
+	public static KAOAAnschlussoption getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -478,7 +478,7 @@ public enum KAOAAnschlussoptionen {
 	 *
 	 * @return die Anschlussoption oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAAnschlussoptionen getByKuerzel(final String kuerzel) {
+	public static KAOAAnschlussoption getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

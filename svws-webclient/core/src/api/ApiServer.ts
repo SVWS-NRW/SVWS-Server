@@ -8881,7 +8881,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die KAOADaten des Schülers
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerKAoADaten
+	 *     - Rückgabe-Typ: List<SchuelerKAoADaten>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
 	 *
@@ -8890,13 +8890,15 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die KAOADaten des Schülers
 	 */
-	public async getKAOAdaten(schema : string, id : number) : Promise<SchuelerKAoADaten> {
+	public async getKAOAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
-		const text = result;
-		return SchuelerKAoADaten.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerKAoADaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerKAoADaten.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

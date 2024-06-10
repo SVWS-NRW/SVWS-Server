@@ -1,6 +1,5 @@
 package de.svws_nrw.core.data.schueler;
 
-
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -16,27 +15,23 @@ public class SchuelerKAoADaten {
 
 	/** Die ID der KAOA Daten in der Datenbank. */
 	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example = "126784")
-	public Long id = -1L;
+	public long id = -1L;
 
 	/** Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören.", example = "7522")
-	@NotNull
-	public  Long abschnitt = -1L;
+	public long abschnitt = -1L;
 
 	/** Der Jahrgaeng des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Der Jahrgaeng des Schülers, zu dem diese KAOA Daten gehören.", example = "09")
-	@NotNull
-	public String jahrgang = "";
+	public @NotNull String jahrgang = "";
 
 	/** Der Kategorie des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Der Kategorie des Schülers, zu dem diese KAOA Daten gehören.", example = "14")
-	@NotNull
-	public Long kategorie = -1L;
+	public long kategorie = -1L;
 
 	/** Das Merkmal des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Das Merkmal des Schülers, zu dem diese KAOA Daten gehören.", example = "69")
-	@NotNull
-	public Long merkmal = -1L;
+	public long merkmal = -1L;
 
 	/** Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören.", example = "117")
@@ -54,7 +49,7 @@ public class SchuelerKAoADaten {
 	@Schema(description = "Ebene4 dieser KAOA Daten.", example = "4")
 	public Long ebene4;
 
-	/** Die Bemerkung zu diesen KAOA Daten.  */
+	/** Die Bemerkung zu diesen KAOA Daten. */
 	@Schema(description = "Die Bemerkung zu diesen KAOA Daten.", example = "text")
 	public String bemerkung;
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
-import de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen;
+import de.svws_nrw.core.types.kaoa.KAOAAnschlussoption;
 import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
 import de.svws_nrw.core.types.kaoa.KAOAKategorie;
 import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
@@ -67,7 +67,7 @@ class DataSchuelerKAoADatenTest {
      */
     @Test
     void testValidateKategorieNull() {
-        daten.kategorie = null;
+        daten.kategorie = -1L;
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
         assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
     }
@@ -123,7 +123,7 @@ class DataSchuelerKAoADatenTest {
     void testValidateAnschlussoptionNotFound() {
         daten.anschlussoption = -1L;
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        final KAOAAnschlussoptionen anschlussoptionen = KAOAAnschlussoptionen.getByID(daten.anschlussoption);
+        final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
         assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
     }
 
@@ -134,7 +134,7 @@ class DataSchuelerKAoADatenTest {
     void testValidateAnschlussoptionWrong() {
         daten.anschlussoption = 26L;
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        final KAOAAnschlussoptionen anschlussoptionen = KAOAAnschlussoptionen.getByID(daten.anschlussoption);
+        final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
         assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
     }
 

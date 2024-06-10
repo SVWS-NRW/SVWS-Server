@@ -1,6 +1,10 @@
 <template>
 	<div class="page--content">
-		<s-card-schueler-kaoa :data="data" @patch="patch" />
+		<svws-ui-todo title="KAoA">
+			Dieser Bereich ist noch in Entwicklung. Hier werden die KAoA-Daten abgelegt.
+			{{ data() }}
+			{{ schuelerKaoaManager().getKAOAKategorien() }}
+		</svws-ui-todo>
 	</div>
 </template>
 

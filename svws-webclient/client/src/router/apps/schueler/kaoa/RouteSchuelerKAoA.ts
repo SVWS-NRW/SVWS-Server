@@ -17,7 +17,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 
 	public constructor() {
 		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
 		this.isHidden = (params?: RouteParams) => {
@@ -50,8 +50,9 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerKAoAProps {
 		return {
-			data: this.data.data,
+			data: () => this.data.data,
 			patch: this.data.patch,
+			schuelerKaoaManager: () => routeSchuelerKAoA.data.schuelerKaoaManager,
 		 };
 	}
 

@@ -1,16 +1,21 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import type { SchuelerListeEintrag} from "@core";
-import { DeveloperNotificationException, SchuelerKAoADaten } from "@core";
+import type { List, SchuelerListeEintrag, SchuelerKAoADaten} from "@core";
+import { ArrayList, SchuelerKAoAManager, DeveloperNotificationException } from "@core";
+import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 
 interface RouteStateSchuelerKAoA extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
-	data: SchuelerKAoADaten;
+	data: List<SchuelerKAoADaten>;
+	schuelerKAoAManager: SchuelerKAoAManager | undefined;
 }
 
 const defaultState = <RouteStateSchuelerKAoA> {
-	data: new SchuelerKAoADaten(),
+	auswahl: undefined,
+	data: new ArrayList(),
+	schuelerKAoAManager: undefined,
 };
 
 export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
@@ -25,10 +30,16 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		return this._state.value.auswahl;
 	}
 
-	get data(): SchuelerKAoADaten {
+	get data(): List<SchuelerKAoADaten> {
 		// if (this._state.value.data === undefined)
 		// 	throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.data
+	}
+
+	get schuelerKaoaManager(): SchuelerKAoAManager {
+		if (this._state.value.schuelerKAoAManager === undefined)
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-KAoA Daten nicht initialisiert");
+		return this._state.value.schuelerKAoAManager;
 	}
 
 	patch = async (data : Partial<SchuelerKAoADaten>) => {
@@ -45,7 +56,11 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			this.setPatchedDefaultState({});
 		else {
 			try {
-				// TODO Lade KAoA-Daten
+				const data: List<SchuelerKAoADaten> = await api.server.getKAOAdaten(api.schema, auswahl.id);
+				// TODO
+				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform,
+					data, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList());
+				this.setPatchedState({ auswahl, data, schuelerKAoAManager })
 			} catch(error) {
 				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?")
 			}

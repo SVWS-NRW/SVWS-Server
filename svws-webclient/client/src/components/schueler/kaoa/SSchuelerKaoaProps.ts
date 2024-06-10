@@ -1,6 +1,7 @@
-import type { SchuelerKAoADaten } from "@core";
+import type { List, SchuelerKAoADaten } from "@core";
 
 export interface SchuelerKAoAProps {
-	data: SchuelerKAoADaten;
+	data: () => List<SchuelerKAoADaten>;
 	patch: (data : Partial<SchuelerKAoADaten>) => Promise<void>;
+	schuelerKaoaManager: () => SchuelerKAoAManager;
 }
