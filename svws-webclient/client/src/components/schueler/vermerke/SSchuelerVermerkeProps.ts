@@ -1,9 +1,9 @@
 import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
 
 export interface SchuelerVermerkeProps {
-	data: List<SchuelerVermerke>;
+	schuelerVermerke: () => List<SchuelerVermerke>;
 	mapVermerkArten: Map<number, VermerkartEintrag>;
 	patch: (data : Partial<SchuelerVermerke>, idVermerk : number) => Promise<void>;
-	create: () => Promise<void>;
-	deleteVermerk: (idVermerk: number) => Promise<void>;
+	add: () => Promise<void>;
+	remove: (idVermerk: number) => Promise<void>;
 }

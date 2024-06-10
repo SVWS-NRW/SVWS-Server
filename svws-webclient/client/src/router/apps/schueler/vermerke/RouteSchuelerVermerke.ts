@@ -34,7 +34,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 		if (to_params.id === undefined) {
 			await this.data.ladeDaten(null);
 		} else {
-			const id = parseInt(<string>to_params.id);
+			const id = parseInt(to_params.id);
 			try {
 				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
@@ -49,11 +49,11 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 
 	public getProps(to: RouteLocationNormalized): SchuelerVermerkeProps {
 		return {
-			data: this.data.data,
+			schuelerVermerke: () => this.data.schuelerVermerke,
 			mapVermerkArten: this.data.mapVermerkArten,
 			patch: this.data.patch,
-			create: this.data.create,
-			deleteVermerk: this.data.deleteVermerk
+			add: this.data.add,
+			remove: this.data.remove
 		};
 	}
 

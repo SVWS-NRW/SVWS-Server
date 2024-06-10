@@ -9442,32 +9442,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke
-	 *
-	 * Erstellt einen neuen Vermerk EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Vermerkdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Vermerke des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerVermerke
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Vermerke des Schülers
-	 */
-	public async createVermerk(schema : string, id : number) : Promise<SchuelerVermerke> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.postJSON(path, null);
-		const text = result;
-		return SchuelerVermerke.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der DELETE-Methode deleteSchuelerVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke/{idVermerk : \d+}
 	 *
 	 * Löscht einen Schueler-VermerkDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.
@@ -9956,6 +9930,32 @@ export class ApiServer extends BaseApi {
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const body : string = SchuelerLernabschnittBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/vermerke
+	 *
+	 * Erstellt einen neuen Vermerk EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Vermerkdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Vermerke des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerVermerke
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.
+	 *
+	 * @param {Partial<SchuelerVermerke>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Vermerke des Schülers
+	 */
+	public async addVermerk(data : Partial<SchuelerVermerke>, schema : string) : Promise<SchuelerVermerke> {
+		const path = "/db/{schema}/schueler/vermerke"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerVermerke.transpilerFromJSON(text);
 	}
 
 

@@ -9,13 +9,13 @@ import type { VermerkartEintrag } from "@core";
 
 interface RouteStateSchuelerVermerke extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
-	data: List<SchuelerVermerke>;
+	schuelerVermerke: List<SchuelerVermerke>;
 	mapVermerkArten: Map<number, VermerkartEintrag>;
 }
 
 const defaultState = <RouteStateSchuelerVermerke> {
 	auswahl: undefined,
-	data: new ArrayList(),
+	schuelerVermerke: new ArrayList(),
 	mapVermerkArten: new Map(),
 };
 
@@ -31,8 +31,8 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		return this._state.value.auswahl;
 	}
 
-	get data(): List<SchuelerVermerke> {
-		return this._state.value.data
+	get schuelerVermerke(): List<SchuelerVermerke> {
+		return this._state.value.schuelerVermerke
 	}
 
 	get mapVermerkArten(): Map<number, VermerkartEintrag> {
@@ -47,12 +47,15 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		await this.ladeDaten(this.auswahl);
 	}
 
-	create = async () => {
-		await api.server.createVermerk(api.schema, this.auswahl.id)
+	add = async () => {
+		console.log("......>", api.schema, this.auswahl.id)
+		const addCanditate : Partial<SchuelerVermerke> = {idSchueler: this.auswahl.id}
+		await api.server.addVermerk(addCanditate, api.schema)
 		await this.ladeDaten(this.auswahl);
 	}
 
-	deleteVermerk = async (idVermerk: number) => {
+	remove = async (idVermerk: number) => {
+		console.log("delete")
 		await api.server.deleteSchuelerVermerk(api.schema, this.auswahl.id, idVermerk)
 		await this.ladeDaten(this.auswahl);
 	}
@@ -62,20 +65,15 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		if ((auswahl === null) || (auswahl === undefined))
 			this.setPatchedDefaultState({});
 		else {
-			try {
-				this._state.value.auswahl = auswahl;
 
-				const vermerke =  await api.server.getVermerkdaten(api.schema, auswahl.id);
+			const schuelerVermerke =  await api.server.getVermerkdaten(api.schema, auswahl.id);
 
-				const vermerkArten = await api.server.getVermerkarten(api.schema);
-				const mapVermerkArten = new Map();
-				for (const vA of vermerkArten)
-					mapVermerkArten.set(vA.id, vA);
+			const vermerkArten = await api.server.getVermerkarten(api.schema);
+			const mapVermerkArten = new Map();
+			for (const va of vermerkArten)
+				mapVermerkArten.set(va.id, va);
 
-				this.setPatchedDefaultState({data: vermerke, mapVermerkArten: mapVermerkArten});
-			} catch(error) {
-				throw new DeveloperNotificationException("Die Vermerk-Daten konnten nicht geladen werden.")
-			}
+			this.setPatchedDefaultState({ auswahl: auswahl, schuelerVermerke: schuelerVermerke, mapVermerkArten: mapVermerkArten });
 		}
 	}
 

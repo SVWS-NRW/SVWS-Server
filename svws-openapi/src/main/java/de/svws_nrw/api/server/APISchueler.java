@@ -838,7 +838,7 @@ public class APISchueler {
 	 * Erzeugt einen Schpler-Vermerk und gibt diesen zurück
 	 *
 	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id 		 die Schueler-ID
+	 * @param is 		der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 *
 	 * @return HTTP_200 und der angelegte Schueler-Vermerk, wenn erfolgreich. <br>
@@ -846,14 +846,17 @@ public class APISchueler {
 	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
 	 */
 	@POST
-	@Path("/{id : \\d+}/vermerke")
+	@Path("/vermerke")
 	@Operation(summary = "Erstellt einen neuen Vermerk Eintrag", description = "Erstellt einen neuen Vermerk Eintrag"
 		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Vermerkdaten "
 		+ "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Vermerke des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerVermerke.class)))
+	@ApiResponse(responseCode = "201", description = "Die Vermerke des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerVermerke.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Vermerke anzulegen.")
-	public Response createVermerk(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).create(id),
+	public Response addVermerk(@PathParam("schema") final String schema,
+		   @RequestBody(description = "Die Daten des Vermerks", required = true, content =
+		   		@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
+		   @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).add(is),
 			request, ServerMode.DEV, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
 
