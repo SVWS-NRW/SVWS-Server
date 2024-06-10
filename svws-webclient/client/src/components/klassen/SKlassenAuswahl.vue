@@ -139,7 +139,7 @@
 				props.klassenListeManager().liste.auswahlAdd(item);
 
 		if (props.klassenListeManager().liste.auswahlExists())
-			await props.gotoGruppenprozess();
+			await props.gotoGruppenprozess(true);
 		else
 			await props.gotoEintrag(props.klassenListeManager().getVorherigeAuswahl()?.id);
 	}

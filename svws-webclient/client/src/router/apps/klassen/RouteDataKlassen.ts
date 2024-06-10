@@ -206,8 +206,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
 	}
 
-	gotoGruppenprozess = async () => {
-		if (this._state.value.gruppenprozesseEnabled || this._state.value.view === routeKlasseGruppenprozesse && this._state.value.gruppenprozesseEnabled) {
+	gotoGruppenprozess = async (navigate: boolean) => {
+		if (this._state.value.gruppenprozesseEnabled || this._state.value.view === routeKlasseGruppenprozesse) {
 			this.commit();
 			return;
 		}
@@ -215,8 +215,9 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this._state.value.gruppenprozesseEnabled = true;
 		this._state.value.oldView = this._state.value.view;
 
-		// Aktiviere Gruppenprozess View
-		await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute(-1));
+		if (navigate)
+			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute());
+
 		this._state.value.view = routeKlasseGruppenprozesse;
 		this._state.value.klassenListeManager.setDaten(null);
 	}

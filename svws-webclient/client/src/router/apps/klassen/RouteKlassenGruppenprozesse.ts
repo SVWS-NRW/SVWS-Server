@@ -19,8 +19,8 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 		super.text = "Gruppenprozesse";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" }};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenGruppenprozesseProps {

@@ -1,4 +1,4 @@
-import type {RouteLocationNamedRaw, RouteLocationNormalized, RouteLocationRaw, RouteParams} from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -50,14 +50,14 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
 		const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		if (neueIdKlasse && neueIdKlasse !== idKlasse)
-			return this.getRewriteRoute(to, to_params, neueIdKlasse);
+			return routeKlasseDaten.getRoute(neueIdKlasse);
 
-		// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID immer -1 ist, ansonsten redirect
-		if (this.isGruppenprozessRoute(to) && idKlasse !== -1)
-			return this.getRewriteRoute(to, to_params, -1);
+		// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
+		if (this.isGruppenprozessRoute(to) && idKlasse !== undefined)
+			return routeKlasseGruppenprozesse.getRoute();
 
 		if (this.isGruppenprozessRoute(to))
-			await this.data.gotoGruppenprozess();
+			await this.data.gotoGruppenprozess(false);
 		else
 			await this.data.gotoEintrag(idKlasse)
 
@@ -67,15 +67,6 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
 					this.data.setView(child, this.children);
-	}
-
-	private getRewriteRoute(to: RouteNode<any, any>, to_params: RouteParams, idKlasse: number | null): RouteLocationNamedRaw{
-		const params = { ... to_params};
-		params.id = String(idKlasse);
-		return {
-			name: to.name,
-			params: params,
-		}
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {

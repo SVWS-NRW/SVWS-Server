@@ -619,7 +619,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected static getIntParam(params: RouteParams, name: string) : number | undefined | Error {
 		const value = params[name];
-		if (value === undefined)
+		if (value === undefined || value.toString().trim().length === 0)
 			return undefined;
 		if (value instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");

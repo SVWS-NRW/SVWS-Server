@@ -6,7 +6,7 @@ export interface KlassenAuswahlProps {
 	klassenListeManager: () => KlassenListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	gotoEintrag: (eintragId?: number | null) => Promise<void>;
-	gotoGruppenprozess: () => Promise<void>;
+	gotoGruppenprozess: (navigate: boolean) => Promise<void>;
 	setFilter: () => Promise<void>;
 	setzeDefaultSortierung: () => Promise<void>;
 }
