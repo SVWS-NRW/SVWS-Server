@@ -15,11 +15,11 @@
 				<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" clickable selectable v-model="selected">
 					<template #cell(anzahlVermerke)="{ value, rowData }">
 						<div class="inline-flex min-h-5">
-							<p class="mr-2"> {{ value }} </p>
 							<div v-if="isRemovable(rowData)" class="inline-flex">
 								<span class="icon i-ri-alert-line mx-0.5 mr-1" />
-								<p>In Verwendung</p>
+								<p>verwendet</p>
 							</div>
+							<p class="w-8"> {{ value }} </p>
 						</div>
 					</template>
 					<template #actions>
@@ -46,8 +46,8 @@
 	const selected = ref<VermerkartEintrag[]>([]);
 
 	const cols = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc"},
-		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc"},
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2},
+		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];
 
 	async function doDeleteEintraege() {
@@ -65,3 +65,7 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+
+</style>

@@ -9466,34 +9466,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchSchuelerVermerke für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke/{vid : \d+}
-	 *
-	 * Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Vermerke integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Vermerkdaten der Schüler zu ändern.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerVermerke>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} vid - der Pfad-Parameter vid
-	 */
-	public async patchSchuelerVermerke(data : Partial<SchuelerVermerke>, schema : string, id : number, vid : number) : Promise<void> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke/{vid : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{vid\s*(:[^{}]+({[^{}]+})*)?}/g, vid.toString());
-		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller Schüler des angegebenen Schuljahresabschnitts unter Angabe der ID, des Vor- und Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nchnamens und des Vornamens sortiert.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -9956,6 +9928,32 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerVermerke.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerVermerke für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/vermerke/{vid : \d+}
+	 *
+	 * Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Vermerke integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Vermerkdaten der Schüler zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerVermerke>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} vid - der Pfad-Parameter vid
+	 */
+	public async patchSchuelerVermerke(data : Partial<SchuelerVermerke>, schema : string, vid : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/vermerke/{vid : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{vid\s*(:[^{}]+({[^{}]+})*)?}/g, vid.toString());
+		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

@@ -39,27 +39,23 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		return this._state.value.mapVermerkArten
 	}
 
-
 	patch = async (data : Partial<SchuelerVermerke>, idVermerk: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchSchuelerVermerke(data, api.schema, this.auswahl.id, idVermerk)
+		await api.server.patchSchuelerVermerke(data, api.schema, idVermerk)
 		await this.ladeDaten(this.auswahl);
 	}
 
 	add = async () => {
-		console.log("......>", api.schema, this.auswahl.id)
 		const addCanditate : Partial<SchuelerVermerke> = {idSchueler: this.auswahl.id}
 		await api.server.addVermerk(addCanditate, api.schema)
 		await this.ladeDaten(this.auswahl);
 	}
 
 	remove = async (idVermerk: number) => {
-		console.log("delete")
 		await api.server.deleteSchuelerVermerk(api.schema, this.auswahl.id, idVermerk)
 		await this.ladeDaten(this.auswahl);
 	}
-
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if ((auswahl === null) || (auswahl === undefined))
