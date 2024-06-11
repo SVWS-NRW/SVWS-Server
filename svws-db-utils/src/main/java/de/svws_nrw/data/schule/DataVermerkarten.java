@@ -20,6 +20,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -196,12 +197,10 @@ public final class DataVermerkarten extends DataManager<Long> {
 	 *
 	 * @param id die ID des Vermerkart-Katalog-Eintrags
 	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
+	 * @return die Response mit einer Liste mit einer {@link SimpleOperationResponse} zu der angefragten Lösch-Operationen.
 	 */
-	public Response delete(final Long id) throws ApiOperationException {
-		throw new UnsupportedOperationException("Das Löschen von einzelnen Vermerkarten ist zur Zeit noch nicht implementiert. Bitte nutze delete multiple.");
+	public Response delete(final Long id) {
+		return deleteMultiple(Collections.singletonList(id));
 	}
 
 

@@ -58,8 +58,9 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 		return vermerk;
 	};
 
+
 	/**
-	 * Mapper Funktion zum Umwandeln des Vermerkes in eines Datenbank-DTOs {@link DTOSchuelerVermerke}
+	 * Mapper Funktion zum Umwandeln des Vermerkes von einem Datenbank-DTOs {@link DTOSchuelerVermerke}
 	 * in einen Core-DTO {@link SchuelerVermerke}.
 	 */
 	public static final Function<DTOSchuelerVermerke, SchuelerVermerke> mapDTO = (final DTOSchuelerVermerke e) -> {
@@ -87,7 +88,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 
 
 	/**
-	 * Gibt ide Vermerke des Schülers mit der angegebenen ID als Response zurück
+	 * Gibt die Vermerke des Schülers mit der angegebenen ID als Response zurück
 	 *
 	 * @param idSchueler   die ID des Schülers
 	 *
@@ -157,7 +158,10 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOSchuelerVermerke.class, patchMappings);
 	}
 
-
+	/**
+	 * Mapper zum Umwandeln des Vermerkes von einem Core-DTO {@link SchuelerVermerke} in einen
+	 * Datenbank-DTOs {@link DTOSchuelerVermerke}.
+	 */
 	private static final Map<String, DataBasicMapper<DTOSchuelerVermerke>> patchMappings = Map.ofEntries(
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
@@ -179,6 +183,11 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 		})
 	);
 
+
+	/**
+	 * Mapper zum Umwandeln des Vermerkes von einem Core-DTO {@link SchuelerVermerke} in einen
+	 * Datenbank-DTOs {@link DTOSchuelerVermerke} innerhalb eines Add / Create Vorgangs.
+	 */
 	private static final Map<String, DataBasicMapper<DTOSchuelerVermerke>> addMappings = Map.ofEntries(
 		Map.entry("idSchueler", (conn, dto, value, map) -> {
 			dto.Schueler_ID = JSONMapper.convertToLong(value, false);
@@ -200,7 +209,6 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
-
 		return super.addBasic(is, DTOSchuelerVermerke.class, initDTO, dtoMapper, requiredCreateAttributes, addMappings);
 	}
 

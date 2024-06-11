@@ -806,7 +806,6 @@ public class APISchueler {
      * Die OpenAPI-Methode für das Patchen der Vermerke eines Schülers.
      *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation des Schülers
      * @param vid       die ID des Vermerkes welcher gepatches wird
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
@@ -814,7 +813,7 @@ public class APISchueler {
      * @return das Ergebnis der Patch-Operation
      */
 	@PATCH
-	@Path("/{id : \\d+}/vermerke/{vid : \\d+}")
+	@Path("/vermerke/{vid : \\d+}")
 	@Operation(summary = "Liefert zu der ID des Schülers.",
 			description = "Passt die Vermerke zu der angegebenen Schüler-ID und der angegeben VermerkeId an und speichert das Ergebnis in der Datenbank."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
@@ -824,7 +823,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchSchuelerVermerke(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("vid") final long vid,
+	public Response patchSchuelerVermerke(@PathParam("schema") final String schema, @PathParam("vid") final long vid,
 			@RequestBody(description = "Der Patch für die Vermerke", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
@@ -841,7 +840,7 @@ public class APISchueler {
 	 * @param is 		der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 *
-	 * @return HTTP_200 und der angelegte Schueler-Vermerk, wenn erfolgreich. <br>
+	 * @return HTTP_201 und der angelegte Schueler-Vermerk, wenn erfolgreich. <br>
 	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,<br>
 	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
 	 */
