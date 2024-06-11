@@ -301,6 +301,8 @@ export { UebergangsempfehlungKatalogEintrag } from './core/data/schueler/Ueberga
 export { AbgangsartKatalog } from './core/data/schule/AbgangsartKatalog';
 export { AbgangsartKatalogDaten } from './core/data/schule/AbgangsartKatalogDaten';
 export { AbgangsartKatalogEintrag } from './core/data/schule/AbgangsartKatalogEintrag';
+export { Abteilung } from './core/data/schule/Abteilung';
+export { AbteilungKlassenzuordnung } from './core/data/schule/AbteilungKlassenzuordnung';
 export { AllgemeineMerkmaleKatalogEintrag } from './core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 export { Aufsichtsbereich } from './core/data/schule/Aufsichtsbereich';
 export { BerufskollegAnlageKatalogEintrag } from './core/data/schule/BerufskollegAnlageKatalogEintrag';
