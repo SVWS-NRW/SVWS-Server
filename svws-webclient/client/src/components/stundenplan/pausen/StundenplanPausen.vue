@@ -126,17 +126,23 @@
 	})
 
 	const bereichGesperrt = (pauseID: number, bereichID: number) => computed(() => {
-		if (!isDraggingOver(pauseID, bereichID).value || dragOverPausenzeit.value === undefined)
+		if (!isDraggingOver(pauseID, bereichID).value || (dragOverPausenzeit.value === undefined))
 			return false;
 		const aufsicht = lehrerAufsichten.value.get(pauseID);
 		if (aufsicht === undefined)
 			return false;
-		if (dragFromPausenzeit.value !== undefined && dragFromPausenzeit.value.aufsichtsbereichID === bereichID && dragFromPausenzeit.value.pauseID === pauseID)
-			for (const b of aufsicht.bereiche)
-				if (dragFromPausenzeit.value.typ === dragOverPausenzeit.value.typ)
+		if ((dragFromPausenzeit.value !== undefined) && (dragFromPausenzeit.value.aufsichtsbereichID === bereichID) && (dragFromPausenzeit.value.pauseID === pauseID)) {
+			if (dragFromPausenzeit.value.typ === dragOverPausenzeit.value.typ)
+				return true;
+			if (mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID).size() < 2)
+				return false;
+			if ((dragFromPausenzeit.value.aufsichtsbereichID === dragOverPausenzeit.value.aufsichtsbereichID) && (dragOverPausenzeit.value.typ === 0))
+				return true;
+			for (const b of mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID))
+				if (b.wochentyp === dragOverPausenzeit.value.typ && b.idAufsichtsbereich === dragOverPausenzeit.value.aufsichtsbereichID)
 					return true;
-				else if (b.wochentyp === 0)
-					return false;
+			return false;
+		}
 		const typ = dragOverPausenzeit.value.typ;
 		const typX = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, typ);
 		if (typX)
@@ -144,6 +150,7 @@
 		const typ0 = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, 0);
 		if (typ0)
 			return true;
+		console.log(((dragFromPausenzeit.value !== undefined) && (dragFromPausenzeit.value.aufsichtsbereichID === bereichID) && (dragFromPausenzeit.value.pauseID === pauseID)))
 		return ((isDraggingOver(pauseID, bereichID, 0).value) && (mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID)))
 	})
 
@@ -171,7 +178,7 @@
 				if (b.idAufsichtsbereich === aufsichtsbereichID && b.wochentyp === typ)
 					update.listEntfernen.add(b);
 		}
-		if (dragOverPausenzeit.value !== undefined && dragLehrer.value !== undefined) {
+		if ((dragOverPausenzeit.value !== undefined) && (dragLehrer.value !== undefined)) {
 			const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
 			const bereichNeu = new StundenplanPausenaufsichtBereich();
 			bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
