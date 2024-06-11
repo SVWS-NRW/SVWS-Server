@@ -47,7 +47,7 @@
 		</div>
 		<div class="page--content-flex-column">
 			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
-				<svws-ui-table :columns="colsPausenzeiten" :items="itemsPausenzeit" v-model:clicked="zeit" selectable v-model="selectedPausenzeiten" count>
+				<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" selectable v-model="selectedPausenzeiten" count v-model:sort-by-and-order="sortByAndOrder">
 					<template #cell(wochentag)="{ rowData }">
 						<svws-ui-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 					</template>
@@ -101,7 +101,7 @@
 	import { computed, ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { SvwsUiSelect } from "@ui";
 	import type { StundenplanRaum, Raum, StundenplanAufsichtsbereich, StundenplanPausenzeit } from "@core";
 	import { ArrayList, DateUtils, Wochentag } from "@core";
@@ -181,8 +181,8 @@
 	const itemsPausenzeit = computed(() => [...props.stundenplanManager().pausenzeitGetMengeAsList()]);
 
 	const colsPausenzeiten = [
-		{key: 'wochentag', label: 'Wochentag', span: 1},
-		{key: 'beginn', label: 'Beginn', span: 1},
+		{key: 'wochentag', label: 'Wochentag', span: 1, sortable: true, },
+		{key: 'beginn', label: 'Beginn', span: 1, sortable: true, },
 		{key: 'ende', label: 'Ende', span: 1},
 		{key: 'klassen', label: 'Nur in Klassen', span: 2},
 	]
@@ -210,6 +210,26 @@
 			if (!props.stundenplanManager().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende))
 				moeglich.add(e);
 		return moeglich;
+	})
+
+	const sortByAndOrder = ref<SortByAndOrder | undefined>()
+
+	const pausenzeitenSorted = computed(() => {
+		const temp = sortByAndOrder.value;
+		if (temp === undefined)
+			return itemsPausenzeit.value;
+		const arr = [...itemsPausenzeit.value];
+		arr.sort((a, b) => {
+			switch (temp.key) {
+				case 'beginn':
+					return (a.beginn ?? 0) - (b.beginn ?? 0);
+				case 'wochentag':
+					return a.wochentag - b.wochentag;
+				default:
+					return 0;
+			}
+		})
+		return temp.order === true ? arr : arr.reverse();
 	})
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();

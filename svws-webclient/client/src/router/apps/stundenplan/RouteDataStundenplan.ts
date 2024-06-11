@@ -479,7 +479,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	addJahrgang = async (id: number) => {
 		api.status.start();
 		const jahrgang = new StundenplanJahrgang();
-		jahrgang.id = id;
+		for (const j of this.listJahrgaenge)
+			if (j.id === id) {
+				jahrgang.kuerzel = j.kuerzel || j.kuerzelStatistik;
+				jahrgang.id = j.id;
+			}
 		this.stundenplanManager.jahrgangAdd(jahrgang);
 		this.commit();
 		api.status.stop();

@@ -29,7 +29,7 @@
 	const showModal = () => _showModal;
 
 	const item = ref<StundenplanRaum>(new StundenplanRaum());
-	item.value.groesse = 1;
+	item.value.groesse = 30;
 
 	const openModal = () => {
 		showModal().value = true;

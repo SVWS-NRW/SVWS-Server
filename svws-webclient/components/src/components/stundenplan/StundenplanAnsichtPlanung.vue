@@ -31,12 +31,6 @@
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
-				<!-- Die Pausenzeiten -->
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause text-sm text-center justify-center svws-no-hover" :style="posPause(undefined, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
-						<div>{{ ((pause.ende || 0) - (pause.beginn || 0)) }} Minuten</div>
-					</div>
-				</template>
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': toRaw(selected)===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
@@ -53,6 +47,9 @@
 					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
 						<div v-if="toRaw(selected)===pause" class="svws-ui-stundenplan--pausen-aufsicht">
 							<span class="icon i-ri-cup-line icon-primary" />
+						</div>
+						<div v-else class="svws-ui-stundenplan--pausen-aufsicht">
+							<span class="icon i-ri-cup-line opacity-20" />
 						</div>
 					</div>
 				</template>
