@@ -20,7 +20,7 @@ public class AbteilungKlassenzuordnung {
 
 	/** Die ID der Abteilung */
 	@Schema(description = "die ID der Abteilung", example = "4712")
-	public long idAbleitung = -1;
+	public long idAbteilung = -1;
 
 	/** Die ID der Klasse */
 	@Schema(description = "die ID der Klasse", example = "4713")

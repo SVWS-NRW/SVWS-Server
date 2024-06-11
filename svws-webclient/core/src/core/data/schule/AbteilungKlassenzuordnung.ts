@@ -10,7 +10,7 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	/**
 	 * Die ID der Abteilung
 	 */
-	public idAbleitung : number = -1;
+	public idAbteilung : number = -1;
 
 	/**
 	 * Die ID der Klasse
@@ -36,9 +36,9 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idAbleitung === "undefined")
-			 throw new Error('invalid json format, missing attribute idAbleitung');
-		result.idAbleitung = obj.idAbleitung;
+		if (typeof obj.idAbteilung === "undefined")
+			 throw new Error('invalid json format, missing attribute idAbteilung');
+		result.idAbteilung = obj.idAbteilung;
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
@@ -48,7 +48,7 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	public static transpilerToJSON(obj : AbteilungKlassenzuordnung) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"idAbleitung" : ' + obj.idAbleitung + ',';
+		result += '"idAbteilung" : ' + obj.idAbteilung + ',';
 		result += '"idKlasse" : ' + obj.idKlasse + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -60,8 +60,8 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idAbleitung !== "undefined") {
-			result += '"idAbleitung" : ' + obj.idAbleitung + ',';
+		if (typeof obj.idAbteilung !== "undefined") {
+			result += '"idAbteilung" : ' + obj.idAbteilung + ',';
 		}
 		if (typeof obj.idKlasse !== "undefined") {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
