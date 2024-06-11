@@ -37,31 +37,31 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	 * @param {boolean} isEntering              gibt an, ob die Route neu betreten wird
 	 */
 	public async reload(idSchuljahresabschnitt: number, idSchueler: number | undefined, isEntering: boolean): Promise<void> {
-		let schuelerListeManager = this.schuelerListeManager;
+		let manager = this.schuelerListeManager;
 
-		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird
-		if (isEntering) {
+		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird oder der Schuljahresabschnitt geändert wird
+		if (isEntering || idSchuljahresabschnitt !== this.schuelerListeManager.getSchuljahresabschnittAuswahl()?.id) {
 			const schuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
 
-			schuelerListeManager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-			schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
-			schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-			schuelerListeManager.useFilter(this.schuelerListeManager);
+			manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
+			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+			manager.useFilter(this.schuelerListeManager);
 		}
 
 		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
-		const schuelerAuswahl = await this.getSchuelerAuswahl(idSchueler, schuelerListeManager, isEntering);
+		const schuelerAuswahl = await this.getSchuelerAuswahl(idSchueler, manager, isEntering);
 		const schuelerStammdaten = await this.loadSchuelerStammdaten(schuelerAuswahl);
-		schuelerListeManager.setDaten(schuelerStammdaten);
-		schuelerListeManager.filterInvalidateCache()
+		manager.setDaten(schuelerStammdaten);
+		manager.filterInvalidateCache();
 
 		// Lade view
-		const view = this.getCurrentViewOrDefault(schuelerListeManager);
+		const view = this.getCurrentViewOrDefault(manager);
 
 		this.setPatchedDefaultState({
-			idSchuljahresabschnitt,
-			schuelerListeManager,
-			view
+			idSchuljahresabschnitt: idSchuljahresabschnitt,
+			schuelerListeManager: manager,
+			view: view
 		});
 	}
 
