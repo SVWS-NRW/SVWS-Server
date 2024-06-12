@@ -22,7 +22,8 @@
 
 	import { VermerkartEintrag } from '@core';
 	import { ref } from 'vue';
-	import type { InputDataType } from '../../../../../ui/src/types';
+	import type { Ref } from "vue";
+	import type { InputDataType } from '@ui';
 
 	const props = defineProps<{
 		addEintrag: (vermerkart: Partial<VermerkartEintrag>) => Promise<void>;
@@ -30,21 +31,29 @@
 	}>();
 
 	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
 
 	const vermerkart = ref(new VermerkartEintrag());
 
-	const validatorVermerkBezeichnung = (value: InputDataType) : boolean => {
-		return ((value !== undefined) && (value !== null)) && ((String(value).length === 0) || (![...props.mapKatalogeintraege.values()].some(vmE => vmE.bezeichnung === String(value).trim())))
+	function showModal() : Ref<boolean> {
+		return _showModal;
 	}
 
-	async function saveEntries() {
+	function validatorVermerkBezeichnung(value: InputDataType) : boolean {
+		if ((value === undefined) || (value === null))
+			return true;
+		for (const eintrag of props.mapKatalogeintraege.values())
+			if (eintrag.bezeichnung === value.toString().trim())
+				return false;
+		return true;
+	}
+
+	async function saveEntries() : Promise<void> {
 		const postCandidate: Partial<VermerkartEintrag> =  {bezeichnung: vermerkart.value.bezeichnung};
 		showModal().value = false;
 		await props.addEintrag(postCandidate);
 	}
 
-	const openModal = () => {
+	function openModal() : void {
 		vermerkart.value = new VermerkartEintrag();
 		showModal().value = true;
 	}

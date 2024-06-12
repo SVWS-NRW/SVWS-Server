@@ -62,31 +62,30 @@
 		patching.value = false;
 	}
 
-	const formatDate = (date: string) => {
+	function formatDate (date: string) : string {
 		return date.split("-").reverse().join(".");
-	};
+	}
+
 
 	// map Vermerkarten zu ihren entsprechenden Vermerken
-	const aktuelleVermerkArten = computed<VermerkartEintrag[]>(
-		() => {
-			let vermerkArtEintraege : VermerkartEintrag[] = [];
-			for (let index = 0; index < props.schuelerVermerke().size(); index++) {
-				let schuelerVermerk = props.schuelerVermerke().get(index);
-				let vermerArtEintrag = props.mapVermerkArten.get(schuelerVermerk.idVermerkart);
-				if (vermerArtEintrag)
-					vermerkArtEintraege.push(vermerArtEintrag)
-			}
-			return vermerkArtEintraege
+	const aktuelleVermerkArten = computed<VermerkartEintrag[]>(() => {
+		const vermerkArtEintraege : VermerkartEintrag[] = [];
+		for (const vE of props.schuelerVermerke()) {
+			let vermerArtEintrag = props.mapVermerkArten.get(vE.idVermerkart);
+			if (vermerArtEintrag !== undefined && vermerArtEintrag !== null)
+				vermerkArtEintraege.push(vermerArtEintrag)
 		}
-	)
+		return vermerkArtEintraege
+	})
 
-	const getTitle = (index: number) : string => {
+
+	function getTitle (index: number) : string {
 		let title = aktuelleVermerkArten.value[index].bezeichnung || "";
 		title += ': ' + ((props.schuelerVermerke().get(index).bemerkung?.length === 0) ? 'Neuer Vermerk' : props.schuelerVermerke().get(index).bemerkung);
 		return title;
 	}
 
-	const getDescription = (index: number) : string => {
+	function getDescription(index: number) : string {
 		return (props.schuelerVermerke().get(index).geaendertVon || props.schuelerVermerke().get(index).angelegtVon) + ' - ' + formatDate(String(props.schuelerVermerke().get(index).datum));
 	}
 

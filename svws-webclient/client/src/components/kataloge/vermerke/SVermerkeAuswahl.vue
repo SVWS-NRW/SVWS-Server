@@ -50,15 +50,15 @@
 		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];
 
-	const deleteCandidates = computed(() => selected.value.filter(elem => (elem.anzahlVermerke === 0)))
+	const deleteCandidates = computed(() => selected.value.filter(elem => (elem.anzahlVermerke === 0)));
 
 	async function doDeleteEintraege() {
 		await props.deleteEintraege(deleteCandidates.value);
 		selected.value = [];
 	}
 
-	const isRemovable = (rowData: any) => {
-		return selected.value.includes(rowData) && (rowData.anzahlVermerke > 0)
+	function isRemovable(rowData: any) {
+		return selected.value.includes(rowData) && (rowData.anzahlVermerke > 0);
 	}
 
 </script>
