@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.db.converter.current.DatumConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -36,10 +37,12 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Von */
 	public SchemaTabelleSpalte col_Von = add("Von", SchemaDatentypen.DATETIME, false)
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Beginndatum");
 
 	/** Die Definition der Tabellenspalte Bis */
 	public SchemaTabelleSpalte col_Bis = add("Bis", SchemaDatentypen.DATETIME, false)
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Endedatum");
 
 

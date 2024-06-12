@@ -13,6 +13,7 @@ import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 
 
@@ -60,6 +61,11 @@ public final class Benutzer {
      */
     private final Set<Long> _idsKlassen = new HashSet<>();
 
+    /**
+     * Enthält die aktuellen Leitungsfunktionen des Benutzers, falls es sich um einen Lehrer
+     * handelt. Diese sind normalerweise in Bezug auf das aktuelle Datum des Servers gesetzt.
+     */
+    private final Set<LehrerLeitungsfunktion> _leitungsfunktionen = new HashSet<>();
 
 
     /**
@@ -374,6 +380,27 @@ public final class Benutzer {
 	 */
 	public Set<Long> getKlassenIDs() {
 		return new HashSet<>(this._idsKlassen);
+	}
+
+
+	/**
+	 * Setzt die aktuellen Leitungsfunktionen, welche dem Benutzer zugeordnet sind.
+	 *
+	 * @param funktionen   die Leitungsfunktionen
+	 */
+	public void setLeitungsfunktionen(final Collection<LehrerLeitungsfunktion> funktionen) {
+		this._leitungsfunktionen.clear();
+		this._leitungsfunktionen.addAll(funktionen);
+	}
+
+
+	/**
+	 * Gibt die aktuellen Leitungsfunktionen zurück, welche dem Benutzer zugeordnet sind.
+	 *
+	 * @return die Leitungsfunktionen
+	 */
+	public Set<LehrerLeitungsfunktion> getLeitungsfunktionen() {
+		return new HashSet<>(this._leitungsfunktionen);
 	}
 
 }

@@ -1,5 +1,9 @@
 package de.svws_nrw.data.benutzer;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -10,11 +14,13 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
+import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.ThrowingFunction;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
@@ -74,7 +80,17 @@ public final class DBBenutzerUtils {
 				final List<DTOKlassenLeitung> klassenleitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_LEHRER_ID, DTOKlassenLeitung.class, idLehrer);
 				idsKlassen.addAll(klassenleitungen.stream().map(kl -> kl.Klassen_ID).toList());
 				user.setKlassenIDs(idsKlassen);
-				// TODO Bestimme die Schulleitungsfunktion anhand der Tabelle Schulleitung
+				// Bestimme die Schulleitungsfunktion anhand der Tabelle Schulleitung und des aktuellen Datums
+				final List<DTOSchulleitung> schulleitungsfunktionen = conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, idLehrer);
+				final List<LehrerLeitungsfunktion> leitungsfunktionenAktuell = new ArrayList<>();
+				for (final DTOSchulleitung slf : schulleitungsfunktionen) {
+					final LocalDateTime von = ((slf.Von == null) ? LocalDate.of(1900, 1, 1) : LocalDate.parse(slf.Von)).atStartOfDay();
+					final LocalDateTime bis = ((slf.Bis == null) ? LocalDate.of(9999, 12, 31) : LocalDate.parse(slf.Bis)).atTime(23, 59, 59);
+					final LocalDateTime jetzt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(slf.ID);
+					if ((funktion != null) && (von.compareTo(jetzt) <= 0) && (jetzt.compareTo(bis) <= 0))
+						leitungsfunktionenAktuell.add(funktion);
+				}
 			}
 		}
 	}
