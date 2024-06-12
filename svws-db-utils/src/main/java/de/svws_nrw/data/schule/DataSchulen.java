@@ -47,7 +47,7 @@ public final class DataSchulen extends DataManager<Long> {
 		daten.kuerzel = e.Kuerzel;
 		daten.kurzbezeichnung = e.KurzBez;
 		daten.schulnummer = e.SchulNr;
-		daten.name = e.Name;
+		daten.name = (e.Name == null) ? "" : e.Name;
 		daten.schulformID = (e.SchulformNr == null) ? null : Schulform.getByNummer(e.SchulformNr).daten.id;
 		daten.strassenname = e.Strassenname;
 		daten.hausnummer = e.HausNr;
