@@ -2,6 +2,7 @@ package de.svws_nrw.data.benutzer;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -13,7 +14,9 @@ import de.svws_nrw.data.ThrowingFunction;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
+import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -44,15 +47,35 @@ public final class DBBenutzerUtils {
 	public static void leseKompetenzen(final Benutzer user) {
 		user.getKompetenzen().clear();
 		try (DBEntityManager conn = user.getEntityManager()) {
-			final DTOViewBenutzer dbBenutzer = conn.queryList(DTOViewBenutzer.QUERY_BY_BENUTZERNAME, DTOViewBenutzer.class, user.getUsername()).stream().findFirst().orElse(null);
+			// Bestimme den Benutzer in der Datenbank
+			final DTOViewBenutzerdetails dbBenutzer = conn.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class, user.getUsername()).stream().findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return;
+			// Ordne dem Benutzer die Kompetenzen zu
 			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin))
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
 			conn.queryList(DTOViewBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOViewBenutzerKompetenz.class, dbBenutzer.ID).stream()
 				.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
 				.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
 				.forEach(komp -> user.getKompetenzen().add(komp));
+			// Funktionsbezogene Rechte bei Lehrern
+			if ((dbBenutzer.Typ == BenutzerTyp.LEHRER) && (dbBenutzer.TypID != null)) {
+				// Bestimme die Klassen mit Klassenlehrern oder Abteilungsleiterrechten ...
+				final long idLehrer = dbBenutzer.TypID;
+				final Set<Long> idsKlassen = new HashSet<>();
+				// ... die Klassen-IDs aus den Abteilungsinformationen - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
+				final List<Long> listAbteilungsIDs = conn.queryList(DTOAbteilungen.QUERY_BY_ABTEILUNGSLEITER_ID, DTOAbteilungen.class, idLehrer)
+						.stream().map(a -> a.ID).toList();
+				if (!listAbteilungsIDs.isEmpty()) {
+					final List<DTOAbteilungsKlassen> listAbteilungenKlassen = conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, listAbteilungsIDs);
+					idsKlassen.addAll(listAbteilungenKlassen.stream().map(ak -> ak.Klassen_ID).toList());
+				}
+				// ... die Klassen-IDs von Klassenleitungen anhand der Klassenlehrer-Tabelle - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
+				final List<DTOKlassenLeitung> klassenleitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_LEHRER_ID, DTOKlassenLeitung.class, idLehrer);
+				idsKlassen.addAll(klassenleitungen.stream().map(kl -> kl.Klassen_ID).toList());
+				user.setKlassenIDs(idsKlassen);
+				// TODO Bestimme die Schulleitungsfunktion anhand der Tabelle Schulleitung
+			}
 		}
 	}
 

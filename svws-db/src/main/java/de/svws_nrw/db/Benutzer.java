@@ -2,6 +2,7 @@ package de.svws_nrw.db;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +52,13 @@ public final class Benutzer {
      * gespeichert.
      */
     private List<BenutzerKompetenz> _kompetenzen = new ArrayList<>();
+
+    /**
+     * Enthält die IDs zu den Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
+     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer oder
+     * auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+     */
+    private final Set<Long> _idsKlassen = new HashSet<>();
 
 
 
@@ -341,6 +349,31 @@ public final class Benutzer {
 	 */
 	public void setIdLehrer(final Long idLehrer) {
 		this._idLehrer = idLehrer;
+	}
+
+
+	/**
+	 * Setzt die IDs der Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
+     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
+     * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 */
+	public void setKlassenIDs(final Collection<Long> idsKlassen) {
+		this._idsKlassen.clear();
+		this._idsKlassen.addAll(idsKlassen);
+	}
+
+
+	/**
+	 * Gibt die IDs der Klasse zurück, bei welchen der Benutzer einen vollständigen Zugriff bei
+     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
+     * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+     *
+	 * @return die IDs der Klassen
+	 */
+	public Set<Long> getKlassenIDs() {
+		return new HashSet<>(this._idsKlassen);
 	}
 
 }
