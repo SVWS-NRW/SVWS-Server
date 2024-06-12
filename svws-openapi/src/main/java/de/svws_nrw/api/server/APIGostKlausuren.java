@@ -575,8 +575,8 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> DataGostKlausuren.getAllDataGZip(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr)),
         		request, ServerMode.STABLE,
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+        		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
     }
 
 	/**
@@ -1120,13 +1120,13 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenUpdate.class))) final GostKlausurenUpdate update,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->  {
-			List<DTOGostKlausurenSchuelerklausurenTermine> list =  DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurterminDTOsById(conn, update.listSchuelerklausurTermineRemoveIdTermin);
-			for (DTOGostKlausurenSchuelerklausurenTermine skt : list) {
+			final List<DTOGostKlausurenSchuelerklausurenTermine> list =  DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurterminDTOsById(conn, update.listSchuelerklausurTermineRemoveIdTermin);
+			for (final DTOGostKlausurenSchuelerklausurenTermine skt : list) {
 					skt.Termin_ID = null;
 			}
 			conn.transactionPersistAll(list);
-			List<DTOGostKlausurenTermine> listTermine =  DataGostKlausurenTermin.getKlausurterminDTOsZuIds(conn, update.listKlausurtermineNachschreiberZugelassenFalse);
-			for (DTOGostKlausurenTermine ts : listTermine) {
+			final List<DTOGostKlausurenTermine> listTermine =  DataGostKlausurenTermin.getKlausurterminDTOsZuIds(conn, update.listKlausurtermineNachschreiberZugelassenFalse);
+			for (final DTOGostKlausurenTermine ts : listTermine) {
 					ts.NachschreiberZugelassen = false;
 			}
 			conn.transactionPersistAll(listTermine);
