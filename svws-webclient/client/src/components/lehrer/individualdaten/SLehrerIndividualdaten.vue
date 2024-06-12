@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
-		<s-card-lehrer-basisdaten :lehrer-liste-manager="lehrerListeManager" :patch="patch" />
-		<s-card-lehrer-kontaktdaten :lehrer-liste-manager="lehrerListeManager" :patch="patch" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
+		<s-lehrer-individualdaten-allgemein :lehrer-liste-manager="lehrerListeManager" :patch="patch" />
+		<s-lehrer-individualdaten-kontakt :lehrer-liste-manager="lehrerListeManager" :patch="patch" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
 		<s-lehrer-individualdaten-leitungsfunktionen :lehrer-liste-manager="lehrerListeManager" />
 	</div>
 </template>
