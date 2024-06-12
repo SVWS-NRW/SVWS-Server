@@ -1,7 +1,13 @@
 package de.svws_nrw.core.data.lehrer;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.svws_nrw.core.data.schule.Schulleitung;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -105,5 +111,9 @@ public class LehrerStammdaten {
 	/** Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example = "true")
 	public boolean istRelevantFuerStatistik;
+
+	/** Die Liste der Schulleitungsfunktionen, welche der Schule Lehrer an der Schule hat oder hatte. */
+	@ArraySchema(schema = @Schema(implementation = Schulleitung.class))
+	public final @NotNull List<@NotNull Schulleitung> leitungsfunktionen = new ArrayList<>();
 
 }

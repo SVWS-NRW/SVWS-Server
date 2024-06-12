@@ -4,8 +4,11 @@ import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.data.DTOMapper;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
@@ -18,8 +21,6 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
 
 
 /**
@@ -41,7 +42,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerStammdaten}.
 	 */
-	private final Function<DTOLehrer, LehrerStammdaten> dtoMapper = (final DTOLehrer lehrer) -> {
+	public final DTOMapper<DTOLehrer, LehrerStammdaten> dtoMapper = (final DTOLehrer lehrer) -> {
 		final LehrerStammdaten daten = new LehrerStammdaten();
 		daten.id = lehrer.ID;
 		daten.kuerzel = lehrer.Kuerzel;
@@ -104,90 +105,77 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 		final DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
 		if (lehrerFoto != null)
 			daten.foto = lehrerFoto.FotoBase64;
-
+		daten.leitungsfunktionen.addAll(DataSchulleitung.getSchulleitungsfunktionen(conn, id));
 		return daten;
 	}
 
+	private final Map<String, DataBasicMapper<DTOLehrer>> patchMappings = Map.ofEntries(
+		Map.entry("id", (conn, lehrer, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != lehrer.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST);
+		}),
+		Map.entry("foto", (conn, lehrer, value, map) -> {
+	    	final String strData = JSONMapper.convertToString(value, true, true, null);
+			DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, lehrer.ID);
+			if (lehrerFoto == null)
+				lehrerFoto = new DTOLehrerFoto(lehrer.ID);
+			final String oldFoto = lehrerFoto.FotoBase64;
+	    	if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
+	    		return;
+	    	lehrerFoto.FotoBase64 = strData;
+	    	conn.transactionPersist(lehrerFoto);
+		}),
+		Map.entry("kuerzel", (conn, lehrer, value, map) -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge())),
+		Map.entry("personalTyp", (conn, lehrer, value, map) -> {
+			final PersonalTyp p = PersonalTyp.fromKuerzel(JSONMapper.convertToString(value, false, false, null));
+			if (p == null)
+				throw new ApiOperationException(Status.CONFLICT);
+	    	lehrer.PersonTyp = p;
+		}),
+		Map.entry("anrede", (conn, lehrer, value, map) -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge())),
+		Map.entry("titel", (conn, lehrer, value, map) -> lehrer.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge())),
+		Map.entry("amtsbezeichnung", (conn, lehrer, value, map) -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Amtsbezeichnung.datenlaenge())),
+		Map.entry("nachname", (conn, lehrer, value, map) -> lehrer.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge())),
+		Map.entry("vorname", (conn, lehrer, value, map) -> lehrer.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge())),
+		Map.entry("geschlecht", (conn, lehrer, value, map) -> {
+			final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
+			if (geschlecht == null)
+				throw new ApiOperationException(Status.CONFLICT);
+			lehrer.Geschlecht = geschlecht;
+		}),
+		Map.entry("geburtsdatum", (conn, lehrer, value, map) -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null)),  // TODO convertToDate im JSONMapper
+		Map.entry("staatsangehoerigkeitID", (conn, lehrer, value, map) -> {
+	    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
+	    	if ((staatsangehoerigkeitID == null) || (staatsangehoerigkeitID.isBlank())) {
+				lehrer.staatsangehoerigkeit = null;
+			} else {
+				final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
+		    	if (nat == null)
+		    		throw new ApiOperationException(Status.NOT_FOUND);
+		    	lehrer.staatsangehoerigkeit = nat;
+			}
+		}),
+
+		// Wohnort und Kontaktdaten
+		Map.entry("strassenname", (conn, lehrer, value, map) -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge())),
+		Map.entry("hausnummer", (conn, lehrer, value, map) -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge())),
+		Map.entry("hausnummerZusatz", (conn, lehrer, value, map) -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge())),
+		Map.entry("wohnortID", (conn, lehrer, value, map) -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
+		Map.entry("ortsteilID", (conn, lehrer, value, map) -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true))),
+		Map.entry("telefon", (conn, lehrer, value, map) -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge())),
+		Map.entry("telefonMobil", (conn, lehrer, value, map) -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge())),
+		Map.entry("emailDienstlich", (conn, lehrer, value, map) -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge())),
+		Map.entry("emailPrivat", (conn, lehrer, value, map) -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge())),
+
+		// Sichtbarkeit und Statistik-Relevanz
+		Map.entry("istSichtbar", (conn, lehrer, value, map) -> lehrer.Sichtbar = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("istRelevantFuerStatistik", (conn, lehrer, value, map) -> lehrer.statistikRelevant = JSONMapper.convertToBoolean(value, false))
+	);
+
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-    	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (!map.isEmpty()) {
-    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-	    	if (lehrer == null)
-	    		throw new ApiOperationException(Status.NOT_FOUND);
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
-	    			// Basisdaten
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw new ApiOperationException(Status.BAD_REQUEST);
-					}
-	    			case "foto" -> {
-	    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
-	        			DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
-	        			if (lehrerFoto == null)
-	        				lehrerFoto = new DTOLehrerFoto(id);
-	        			final String oldFoto = lehrerFoto.FotoBase64;
-	        	    	if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
-	        	    		return Response.status(Status.OK).build();
-	        	    	lehrerFoto.FotoBase64 = strData;
-	        	    	conn.transactionPersist(lehrerFoto);
-	    			}
-	    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge());
-	    			case "personalTyp" -> {
-		        		final PersonalTyp p = PersonalTyp.fromKuerzel(JSONMapper.convertToString(value, false, false, null));
-		        		if (p == null)
-		        			throw new ApiOperationException(Status.CONFLICT);
-		            	lehrer.PersonTyp = p;
-	    			}
-	    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge());
-	    			case "titel" -> lehrer.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge());
-	    			case "amtsbezeichnung" -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Amtsbezeichnung.datenlaenge());
-	    			case "nachname" -> lehrer.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge());
-	    			case "vorname" -> lehrer.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge());
-	    			case "geschlecht" -> {
-	    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
-	    				if (geschlecht == null)
-	    					throw new ApiOperationException(Status.CONFLICT);
-	    				lehrer.Geschlecht = geschlecht;
-	    			}
-	    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
-	    			case "staatsangehoerigkeitID" -> {
-	    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
-	    		    	if ((staatsangehoerigkeitID == null) || (staatsangehoerigkeitID.isBlank())) {
-    						lehrer.staatsangehoerigkeit = null;
-    					} else {
-    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
-	    			    	if (nat == null)
-	    			    		throw new ApiOperationException(Status.NOT_FOUND);
-	    			    	lehrer.staatsangehoerigkeit = nat;
-    					}
-	    			}
-
-	    			// Wohnort und Kontaktdaten
-	    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge());
-	    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge());
-	    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge());
-	    			case "wohnortID" -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
-	    			case "ortsteilID" -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-	    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge());
-	    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
-	    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
-	    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
-
-	    			// Sichtbarkeit und Statistik-Relevanz
-	    			case "istSichtbar" -> lehrer.Sichtbar = JSONMapper.convertToBoolean(value, false);
-	    			case "istRelevantFuerStatistik" -> lehrer.statistikRelevant = JSONMapper.convertToBoolean(value, false);
-
-	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
-	    		}
-	    	}
-	    	conn.transactionPersist(lehrer);
-    	}
-    	return Response.status(Status.OK).build();
+		return super.patchBasic(id, is, DTOLehrer.class, patchMappings);
 	}
 
 

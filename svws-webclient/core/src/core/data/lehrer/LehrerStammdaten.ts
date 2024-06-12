@@ -1,4 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Schulleitung } from '../../../core/data/schule/Schulleitung';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 
 export class LehrerStammdaten extends JavaObject {
 
@@ -117,6 +120,11 @@ export class LehrerStammdaten extends JavaObject {
 	 */
 	public istRelevantFuerStatistik : boolean = false;
 
+	/**
+	 * Die Liste der Schulleitungsfunktionen, welche der Schule Lehrer an der Schule hat oder hatte.
+	 */
+	public readonly leitungsfunktionen : List<Schulleitung> = new ArrayList<Schulleitung>();
+
 
 	public constructor() {
 		super();
@@ -172,6 +180,11 @@ export class LehrerStammdaten extends JavaObject {
 		if (typeof obj.istRelevantFuerStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
 		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
+		if ((obj.leitungsfunktionen !== undefined) && (obj.leitungsfunktionen !== null)) {
+			for (const elem of obj.leitungsfunktionen) {
+				result.leitungsfunktionen?.add(Schulleitung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -200,6 +213,18 @@ export class LehrerStammdaten extends JavaObject {
 		result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
+		if (!obj.leitungsfunktionen) {
+			result += '"leitungsfunktionen" : []';
+		} else {
+			result += '"leitungsfunktionen" : [ ';
+			for (let i = 0; i < obj.leitungsfunktionen.size(); i++) {
+				const elem = obj.leitungsfunktionen.get(i);
+				result += Schulleitung.transpilerToJSON(elem);
+				if (i < obj.leitungsfunktionen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -275,6 +300,20 @@ export class LehrerStammdaten extends JavaObject {
 		}
 		if (typeof obj.istRelevantFuerStatistik !== "undefined") {
 			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
+		}
+		if (typeof obj.leitungsfunktionen !== "undefined") {
+			if (!obj.leitungsfunktionen) {
+				result += '"leitungsfunktionen" : []';
+			} else {
+				result += '"leitungsfunktionen" : [ ';
+				for (let i = 0; i < obj.leitungsfunktionen.size(); i++) {
+					const elem = obj.leitungsfunktionen.get(i);
+					result += Schulleitung.transpilerToJSON(elem);
+					if (i < obj.leitungsfunktionen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';
