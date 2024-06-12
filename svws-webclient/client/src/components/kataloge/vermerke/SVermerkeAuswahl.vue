@@ -23,8 +23,8 @@
 						</div>
 					</template>
 					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<s-vermerke-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag" :vermerke="mapKatalogeintraege">
+						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0 || deleteCandidates.length === 0" />
+						<s-vermerke-neu-modal v-slot="{ openModal }" :add-eintrag :map-katalogeintraege>
 							<svws-ui-button type="icon" @click="openModal()">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
@@ -40,7 +40,7 @@
 
 	import type { VermerkeAuswahlProps } from "./SVermerkeAuswahlProps";
 	import type { VermerkartEintrag } from "@core";
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<VermerkeAuswahlProps>();
 	const selected = ref<VermerkartEintrag[]>([]);
@@ -50,14 +50,11 @@
 		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];
 
+	const deleteCandidates = computed(() => selected.value.filter(elem => (elem.anzahlVermerke === 0)))
+
 	async function doDeleteEintraege() {
-		const deleteCandidates = selected.value.filter(elem => (elem.anzahlVermerke === 0));
-		if (deleteCandidates.length === 0) {
-			throw Error("Alle ausgwählten Vermerke werden verwendet und können nicht gelöscht werden")
-		} else {
-			await props.deleteEintraege(deleteCandidates);
-			selected.value = [];
-		}
+		await props.deleteEintraege(deleteCandidates.value);
+		selected.value = [];
 	}
 
 	const isRemovable = (rowData: any) => {

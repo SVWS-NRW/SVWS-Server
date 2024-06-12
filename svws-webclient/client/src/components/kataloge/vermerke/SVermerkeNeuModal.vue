@@ -22,10 +22,11 @@
 
 	import { VermerkartEintrag } from '@core';
 	import { ref } from 'vue';
+	import type { InputDataType } from '../../../../../ui/src/types';
 
 	const props = defineProps<{
 		addEintrag: (vermerkart: Partial<VermerkartEintrag>) => Promise<void>;
-		vermerke: Map<number, VermerkartEintrag>;
+		mapKatalogeintraege: Map<number, VermerkartEintrag>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -33,8 +34,8 @@
 
 	const vermerkart = ref(new VermerkartEintrag());
 
-	const validatorVermerkBezeichnung = (value: string) => {
-		return value && ![...props.vermerke.values()].map(vmE => vmE.bezeichnung).includes(value.trim())
+	const validatorVermerkBezeichnung = (value: InputDataType) : boolean => {
+		return ((value !== undefined) && (value !== null)) && ((String(value).length === 0) || (![...props.mapKatalogeintraege.values()].some(vmE => vmE.bezeichnung === String(value).trim())))
 	}
 
 	async function saveEntries() {
