@@ -344,6 +344,7 @@ export { SchulformKatalogEintrag } from './core/data/schule/SchulformKatalogEint
 export { SchulformSchulgliederung } from './core/data/schule/SchulformSchulgliederung';
 export { SchulgliederungKatalogEintrag } from './core/data/schule/SchulgliederungKatalogEintrag';
 export { Schuljahresabschnitt } from './core/data/schule/Schuljahresabschnitt';
+export { Schulleitung } from './core/data/schule/Schulleitung';
 export { SchulstufeKatalogEintrag } from './core/data/schule/SchulstufeKatalogEintrag';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
