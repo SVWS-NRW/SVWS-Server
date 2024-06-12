@@ -3,12 +3,20 @@ package de.svws_nrw.data.schule;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schule.Schulleitung;
+import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.DTOMapper;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -111,18 +119,106 @@ public final class DataSchulleitung extends DataManager<Long> {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+	private final Map<String, DataBasicMapper<DTOSchulleitung>> patchMappings = Map.ofEntries(
+		Map.entry("id", (conn, dto, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch (%d) stimmt nicht mit der ID des API-Aufrufs (%d) überein."
+						.formatted(patch_id, dto.ID));
+		}),
+		Map.entry("idLeitungsfunktion", (conn, dto, value, map) -> {
+			final long id = JSONMapper.convertToLong(value, false);
+			if (id != dto.LeitungsfunktionID) {
+				final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(id);
+				if (funktion == null)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Es gibt keine Leitungsfunktion mit der ID %d.".formatted(id));
+				dto.LeitungsfunktionID = id;
+				if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank()))
+					dto.Funktionstext = funktion.daten.bezeichnung;
+			}
+		}),
+		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Funktionstext = JSONMapper.convertToString(value, false, false, Schema.tab_Schulleitung.col_Funktionstext.datenlaenge())),
+		Map.entry("idLehrer", (conn, dto, value, map) -> {
+			final long id = JSONMapper.convertToLong(value, false);
+			if (id != dto.LehrerID) {
+				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+				if (lehrer == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der ID %d gefunden werden.".formatted(id));
+				dto.LehrerID = id;
+			}
+		}),
+		Map.entry("beginn", (conn, dto, value, map) -> dto.Von = JSONMapper.convertToString(value, true, false, null)),  // TODO convertToDate im JSONMapper
+		Map.entry("ende", (conn, dto, value, map) -> dto.Bis = JSONMapper.convertToString(value, true, false, null))  // TODO convertToDate im JSONMapper
+	);
+
+
+
 	@Override
-	public Response patch(final Long id, final InputStream is) {
-		// Umsetzung mit patchBasic
-		throw new UnsupportedOperationException();
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
+		return super.patchBasic(id, is, DTOSchulleitung.class, patchMappings);
 	}
 
-	// TODO add
+	private static final Set<String> requiredCreateAttributes = Set.of("idLeitungsfunktion", "idLehrer");
 
-	// TODO addMultiple
+	private final ObjLongConsumer<DTOSchulleitung> initDTO = (dto, id) -> {
+		dto.ID = id;
+	};
 
-	// TODO delete
+	/**
+	 * Fügt eine Schulleitungsfunktion mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response add(final InputStream is) throws ApiOperationException {
+		return super.addBasic(is, DTOSchulleitung.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
 
-	// TODO deleteMultiple
+
+	/**
+	 * Fügt mehrere Schulleitungsfunktionen mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die
+	 * zugehörigen CoreDTOs zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
+		return super.addBasicMultiple(is, DTOSchulleitung.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Löscht eine Schulleitungsfunktion
+	 *
+	 * @param id   die ID der Schulleitungsfunktion
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response delete(final Long id) throws ApiOperationException {
+		return super.deleteBasic(id, DTOSchulleitung.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Schulleitungsfunktionen
+	 *
+	 * @param ids   die IDs der Schulleitungsfunktionen
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
+		return super.deleteBasicMultiple(ids, DTOSchulleitung.class, dtoMapper);
+	}
 
 }

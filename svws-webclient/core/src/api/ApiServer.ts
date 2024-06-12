@@ -152,6 +152,7 @@ import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag
 import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
 import { SchulgliederungKatalogEintrag } from '../core/data/schule/SchulgliederungKatalogEintrag';
+import { Schulleitung } from '../core/data/schule/Schulleitung';
 import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
@@ -10824,6 +10825,176 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulleitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/{id : \d+}
+	 *
+	 * Gibt die Leitungsfunktion der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leitungsfunktion
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schulleitung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leitungsfunktion der Schule anzusehen.
+	 *   Code 404: Keine Leitungsfunktion der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Leitungsfunktion
+	 */
+	public async getSchulleitungsfunktion(schema : string, id : number) : Promise<Schulleitung> {
+		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Schulleitung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulleitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/{id : \d+}
+	 *
+	 * Passt die Leitungsfunktion der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Schulleitung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchulleitungsfunktion(data : Partial<Schulleitung>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Schulleitung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulleitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/{id : \d+}
+	 *
+	 * Entfernt eine Leitungsfunktion der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leitungsfunktion der Schule wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schulleitung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion der Schule zu löschen.
+	 *   Code 404: Die Leitungsfunktion der Schule ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Leitungsfunktion der Schule wurde erfolgreich entfernt.
+	 */
+	public async deleteSchulleitungsfunktion(schema : string, id : number) : Promise<Schulleitung> {
+		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Schulleitung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchulleitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/create
+	 *
+	 * Erstellt einen neue Leitungsfunktion der Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Leitungsfunktion der Schule wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schulleitung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion für die Schule anzulegen.
+	 *   Code 404: Der Lehrer wurde nichtgefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Schulleitung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leitungsfunktion der Schule wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchulleitungsfunktion(data : Partial<Schulleitung>, schema : string) : Promise<Schulleitung> {
+		const path = "/db/{schema}/schule/leitungsfunktion/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Schulleitung.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Schulleitung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchulleitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/create/multiple
+	 *
+	 * Erstellt mehrere neue Leitungsfunktion für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Leitungsfunktionen wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schulleitung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktion für die Schule anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<Schulleitung>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leitungsfunktionen wurden erfolgreich hinzugefügt.
+	 */
+	public async addSchulleitungsfunktionen(data : List<Partial<Schulleitung>>, schema : string) : Promise<List<Schulleitung>> {
+		const path = "/db/{schema}/schule/leitungsfunktion/create/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<Schulleitung>).map(d => Schulleitung.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Schulleitung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulleitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/delete/multiple
+	 *
+	 * Entfernt mehrere Leitungsfunktionen der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leitungsfunktionen der Schule wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schulleitung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion der Schule zu löschen.
+	 *   Code 404: Mindestens eine Leitungsfunktion der Schule ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leitungsfunktionen der Schule wurde erfolgreich entfernt.
+	 */
+	public async deleteSchulleitungsfunktionen(data : List<number>, schema : string) : Promise<List<Schulleitung>> {
+		const path = "/db/{schema}/schule/leitungsfunktion/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Schulleitung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
