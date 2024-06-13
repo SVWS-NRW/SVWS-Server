@@ -676,6 +676,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+		System.out.println("----------- update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet -------");
 		// Leeren und hinzufügen.
 		_kursID_to_schuelerIDSet = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
@@ -697,6 +698,7 @@ public class GostBlockungsergebnisManager {
 				if (!_parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
 					schuelerIDset.remove(idSchueler);
 					MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
+					System.out.println(_parent.toStringSchuelerSimple(idSchueler) + " ungültig in  " + _parent.toStringKursSimple(eKurs.id));
 					// _schuelerID_to_ungueltigeKurseSet darf nur Schüler mit ungültigen Fachwahlen enthalten!
 				}
 		}
@@ -5483,9 +5485,10 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
-	 * <br>(1) Wenn der Schüler den Kurs gar nicht gewählt hat, wird dies ignoriert.
-	 * <br>(2) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
-	 * <br>(3) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 * <br>(1) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
+	 * <br>(2) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 *
+	 * <br>Hinweis: Wenn der Schüler den Kurs gar nicht gewählt hat, wird dies trotzdem erlaubt. Denn bei einer Umwahl, kann eine Kurszuordnung ungültig sein!
 	 *
 	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
 	 *
@@ -5498,12 +5501,9 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
 			final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(z.idKurs);
 			// (1)
-			if (!getOfSchuelerHatFachwahl(z.idSchueler, kurs1.fach_id, kurs1.kursart))
-				continue;
-			// (2)
 			if (!getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listHinzuzufuegen.add(z);
-			// (3)
+			// (2)
 			for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
 				if ((kurs1.id != kurs2.id) && (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, kurs2.id)))
 					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs2.id, z.idSchueler));

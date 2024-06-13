@@ -670,6 +670,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(ergebnisOld : GostBlockungsergebnis) : void {
+		console.log(JSON.stringify("----------- update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet -------"));
 		this._kursID_to_schuelerIDSet = new HashMap();
 		for (const eSchiene of ergebnisOld.schienen)
 			for (const eKurs of eSchiene.kurse)
@@ -685,6 +686,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (!this._parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
 					schuelerIDset.remove(idSchueler);
 					MapUtils.getOrCreateHashSet(this._schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
+					console.log(JSON.stringify(this._parent.toStringSchuelerSimple(idSchueler)! + " ungültig in  " + this._parent.toStringKursSimple(eKurs.id)!));
 				}
 		}
 	}
@@ -4784,9 +4786,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
-	 * <br>(1) Wenn der Schüler den Kurs gar nicht gewählt hat, wird dies ignoriert.
-	 * <br>(2) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
-	 * <br>(3) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 * <br>(1) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
+	 * <br>(2) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 *
+	 * <br>Hinweis: Wenn der Schüler den Kurs gar nicht gewählt hat, wird dies trotzdem erlaubt. Denn bei einer Umwahl, kann eine Kurszuordnung ungültig sein!
 	 *
 	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
 	 *
@@ -4796,8 +4799,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		for (const z of kursSchuelerZuordnungen) {
 			const kurs1 : GostBlockungKurs = this._parent.kursGet(z.idKurs);
-			if (!this.getOfSchuelerHatFachwahl(z.idSchueler, kurs1.fach_id, kurs1.kursart))
-				continue;
 			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listHinzuzufuegen.add(z);
 			for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))

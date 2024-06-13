@@ -1188,9 +1188,9 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Operation angibt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
-		// Bestimm die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
+     */
+    public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
+    	// Bestimmt die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchuljahresabschnitte schuleAbschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
 
