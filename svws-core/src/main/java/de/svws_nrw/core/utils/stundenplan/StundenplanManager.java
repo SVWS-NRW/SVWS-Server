@@ -4587,14 +4587,17 @@ public class StundenplanManager {
 	/**
 	 * Aktualisiert das (globale) Wochentyp-Modell für die Wochen des Stundenplans.
 	 * <br>0: Stundenplan gilt jede Woche.
-	 * <br>1: Ungültiger Wert.
+	 * <br>1: Ungültiger Wert --> Wird ersetzt durch 0.
 	 * <br>N: Stundenplan wiederholt sich alle N Wochen.
 	 * <br>Für alle {@link StundenplanUnterricht#wochentyp} deren Wert ungültig ist, wird der Wert auf 0 gesetzt.
 	 * <br>Zudem werden alle (nicht Dummy) {@link StundenplanKalenderwochenzuordnung}-Objekte gelöscht.
 	 *
-	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
+	 * @param modellTypOriginal  Der neue Wert für das (globale) Wochentyp-Modell.
 	 */
-	public void stundenplanSetWochenTypModell(final int modellTyp) {
+	public void stundenplanSetWochenTypModell(final int modellTypOriginal) {
+
+		final int modellTyp = (modellTypOriginal == 1) ? 0 : modellTypOriginal;
+
 		// Unverändert?
 		if (modellTyp == _stundenplanWochenTypModell)
 			return;
@@ -4606,6 +4609,11 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterricht_by_id.values())
 			if (u.wochentyp > modellTyp)
 				u.wochentyp = 0;
+
+		// Alle Aufsichtsbereiche müssen revalidiert werden, falls sie außerhalb der gültigen Wochen liegen.
+		for (final @NotNull StundenplanPausenaufsichtBereich a : _pausenaufsichtbereich_by_id.values())
+			if (a.wochentyp > modellTyp)
+				a.wochentyp = 0;
 
 		// Alle StundenplanKalenderwochenzuordnung-Objekte müssen zudem gelöscht werden. Es greift dann der Default.
 		_kwz_by_id = new HashMap<>();
