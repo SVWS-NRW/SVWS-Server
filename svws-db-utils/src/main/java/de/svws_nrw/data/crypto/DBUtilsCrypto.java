@@ -1,18 +1,15 @@
 package de.svws_nrw.data.crypto;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.security.SecureRandom;
-import java.util.Random;
 
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.base.crypto.Passwords;
 import de.svws_nrw.base.crypto.RSA;
 import de.svws_nrw.base.crypto.RSAException;
 import de.svws_nrw.db.Benutzer;
@@ -28,33 +25,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DBUtilsCrypto {
 
-	private static final Random random = new SecureRandom();
-
 	private DBUtilsCrypto() {
 		throw new IllegalStateException("Instantiation of " + DBUtilsCrypto.class.getName() + " not allowed");
-	}
-
-	private static String generateRandomPassword(final int length) {
-		// define char types and order
-		final List<Integer> types = new ArrayList<>();
-		types.add(0); // special char
-		types.add(1); // digit
-		types.add(2); // lowercase
-		types.add(6); // uppercase
-		for (int i = 4; i < length; i++)
-			types.add(random.nextInt(10));
-		Collections.shuffle(types);
-		// randomly create chars by type and order
-		final char[] chars = new char[length];
-		for (int i = 0; i < length; i++) {
-			chars[i] = switch (types.get(i)) {
-				case 0 -> (char) random.nextInt(33, 45); // special char
-				case 1 -> (char) random.nextInt(48, 58); // digit
-				case 2, 3, 4, 5 -> (char) random.nextInt(97, 123); // lowercase
-				default -> (char) random.nextInt(65, 91); // uppercase
-			};
-		}
-		return new String(chars);
 	}
 
 	private static String nameToAscii(final String name) {
@@ -138,7 +110,7 @@ public final class DBUtilsCrypto {
 			final Set<String> allUserPseudonyms = allCreds.stream().map(c -> c.BenutzernamePseudonym).collect(Collectors.toSet());
  			cred = new DTOCredentials(credId, determineUsername(schueler.Vorname, schueler.Nachname, 16, allUsernames));
 			cred.BenutzernamePseudonym = determinePseudonym("s", credId, allUserPseudonyms);
-			cred.Initialkennwort = generateRandomPassword(12);
+			cred.Initialkennwort = Passwords.generateRandomPassword(12);
 			cred.PasswordHash = Benutzer.erstellePasswortHash(cred.Initialkennwort);
 			cred.RSAPublicKey = null;
 			cred.RSAPrivateKey = null;

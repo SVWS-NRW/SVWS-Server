@@ -218,10 +218,12 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte KennwortTools */
 	public SchemaTabelleSpalte col_KennwortTools = add("KennwortTools", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+		.setVeraltet(SchemaRevisionen.REV_18)
 		.setJavaComment("Wird für das GS-Modul genutzt (gehashed).");
 
 	/** Die Definition der Tabellenspalte KennwortToolsAktuell */
 	public SchemaTabelleSpalte col_KennwortToolsAktuell = add("KennwortToolsAktuell", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+		.setVeraltet(SchemaRevisionen.REV_18)
 		.setDefault("-;5")
 		.setJavaComment("Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist");
 

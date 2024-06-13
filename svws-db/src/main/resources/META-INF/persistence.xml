@@ -249,6 +249,7 @@
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler</class>
+        <class>de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaStatus</class>

@@ -10,6 +10,7 @@ import de.svws_nrw.db.schema.revisionen.Revision13Updates;
 import de.svws_nrw.db.schema.revisionen.Revision14Updates;
 import de.svws_nrw.db.schema.revisionen.Revision15Updates;
 import de.svws_nrw.db.schema.revisionen.Revision17Updates;
+import de.svws_nrw.db.schema.revisionen.Revision18Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -137,7 +138,13 @@ public enum SchemaRevisionen {
 	 * zu Aufsichtsbereichen (Teil 2 - Korrektur einer Unique-Constraint und Verschiben der
 	 * Wochentyp-Information)
 	 */
-	REV_17(17, "2024-06-04");
+	REV_17(17, "2024-06-04"),
+
+	/**
+	 * Ergänzen der Tabelle LehrerNotenmodulCredentials und übetragen der Informationen
+	 * KennwortTools und KennwortToolsAktuell aus der Tabelle K_Lehrer
+	 */
+	REV_18(18, "2024-06-13");
 
 
 	/**
@@ -145,14 +152,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_17;
+	public static final SchemaRevisionen maxRevision = REV_18;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_17;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_18;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -223,6 +230,7 @@ public enum SchemaRevisionen {
 	            case REV_14 -> new Revision14Updates();
 	            case REV_15 -> new Revision15Updates();
 	            case REV_17 -> new Revision17Updates();
+	            case REV_18 -> new Revision18Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }

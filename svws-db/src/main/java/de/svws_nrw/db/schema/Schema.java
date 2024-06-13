@@ -152,6 +152,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLehramtLehrbef;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLeitungsfunktion_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLernplattform;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerMehrleistung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerNotenmodulCredentials;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Lernplattformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Logins;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Nationalitaeten_Keys;
@@ -653,6 +654,9 @@ public final class Schema {
 
 	/** Tabelle LehrerMehrleistung */
 	public static final Tabelle_LehrerMehrleistung tab_LehrerMehrleistung = add(new Tabelle_LehrerMehrleistung());
+
+	/** Tabelle LehrerNotenmodulCredentials */
+	public static final Tabelle_LehrerNotenmodulCredentials tab_LehrerNotenmodulCredentials = add(new Tabelle_LehrerNotenmodulCredentials());
 
 	/** Tabelle Schueler */
 	public static final Tabelle_Schueler tab_Schueler = add(new Tabelle_Schueler());
