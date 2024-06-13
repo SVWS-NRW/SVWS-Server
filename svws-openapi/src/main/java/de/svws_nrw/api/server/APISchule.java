@@ -2327,6 +2327,29 @@ public class APISchule {
 
 
     /**
+     * Die OpenAPI-Methode für die Abfrage aller Leitungsfunktionen der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              die Leitungsfunktionen der Schule
+     */
+    @GET
+    @Path("/leitungsfunktion/alle")
+    @Operation(summary = "Gibt die Leitungsfunktionen der Schule zurück.",
+               description = "Gibt die Leitungsfunktionen der Schule zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Leitungsfunktionen",
+                 content = @Content(mediaType = "application/json",
+                 array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leitungsfunktionen der Schule anzusehen.")
+    public Response getSchulleitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage einer Leitungsfunktion der Schule.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

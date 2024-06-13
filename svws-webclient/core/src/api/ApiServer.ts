@@ -11017,6 +11017,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchulleitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/alle
+	 *
+	 * Gibt die Leitungsfunktionen der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leitungsfunktionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schulleitung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leitungsfunktionen der Schule anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leitungsfunktionen
+	 */
+	public async getSchulleitungsfunktionen(schema : string) : Promise<List<Schulleitung>> {
+		const path = "/db/{schema}/schule/leitungsfunktion/alle"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Schulleitung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addSchulleitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktion/create
 	 *
 	 * Erstellt einen neue Leitungsfunktion der Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
