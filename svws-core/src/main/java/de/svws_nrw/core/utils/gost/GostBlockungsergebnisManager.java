@@ -5568,6 +5568,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler aus Kursen zu entfernen.
 	 * <br>(1) Wenn der Schüler im Kurs ist, wird er entfernt.
+	 * <br>(2) Falls es Schüler-Kurs-Fixierungen gibt, werden diese entfernt.
 	 *
 	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche entfernt werden sollen.
 	 *
@@ -5581,6 +5582,12 @@ public class GostBlockungsergebnisManager {
 			// (1)
 			if (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listEntfernen.add(z);
+
+			// (2)
+			final @NotNull LongArrayKey keyFixiertAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, z.idKurs});
+			final GostBlockungRegel regelFixiertAlt = _parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
+			if (regelFixiertAlt != null)
+				u.regelUpdates.listEntfernen.add(regelFixiertAlt);
 		}
 
 		return u;
