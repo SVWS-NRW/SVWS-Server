@@ -5,33 +5,29 @@
 				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
 				<span class="icon icon-lg i-ri-chat-new-line" />
 			</svws-ui-button>
-			<div v-for="(d, index) in schuelerVermerke()" :key="d.id">
-				<svws-ui-action-button class="actionButtonElement" @click="() => {activeId = activeId === index ? -1 : index}" icon="i-ri-message-line"
-					:title="getTitle(index)" :description="getDescription(index)" :is-active="activeId === index">
+			<div v-for="vermerk of schuelerVermerke()" :key="vermerk.id">
+				<svws-ui-action-button class="actionButtonElement" @click="activeVermerk = (activeVermerk?.id === vermerk.id) ? undefined : vermerk" icon="i-ri-message-line"
+					:title="getTitle(vermerk)" :description="getDescription(vermerk)" :is-active="activeVermerk?.id === vermerk.id">
 					<svws-ui-input-wrapper class="px-6">
-						<svws-ui-textarea-input	v-model="schuelerVermerke().get(index).bemerkung" :autoresize="true" :rows="4" @change="(newVal) => patchInternal({bemerkung : String(newVal)}, schuelerVermerke().get(index).id)" />
+						<svws-ui-textarea-input	v-model="vermerk.bemerkung" :autoresize="true" :rows="4" @change="bemerkung => patch({ bemerkung }, vermerk.id)" />
 						<div class="flex w-144">
 							<p class="my-auto mr-4">Vermerkart:</p>
-							<svws-ui-select :model-value="aktuelleVermerkArten[index]" :headless="false"	:items="props.mapVermerkArten.values()" :item-text="(item) => item.bezeichnung + ''"
-								@update:model-value="(newVal: VermerkartEintrag) => {patch({idVermerkart: newVal.id}, schuelerVermerke().get(index).id)}" />
+							<svws-ui-select :model-value="mapVermerkArten.get(vermerk.idVermerkart)" :headless="false"	:items="mapVermerkArten.values()" :item-text="item => item.bezeichnung"
+								@update:model-value="art => (art !== null) && patch({ idVermerkart: art?.id ?? -1 }, vermerk.id)" />
 						</div>
 						<div class="w-full flex">
 							<div class="w-4/5">
-								<p class="text-headline-md mb-1">{{ schuelerVermerke().get(index).angelegtVon }}</p>
-								<div v-if="patching" class="subTextContainer">
+								<p class="text-headline-md mb-1">{{ vermerk.angelegtVon }}</p>
+								<div v-if="apiStatus.pending" class="subTextContainer">
 									<svws-ui-spinner :spinning="true" />
 								</div>
 								<div v-else class="subTextContainer">
-									<p v-if="schuelerVermerke().get(index).geaendertVon">
-										Zuletzt bearbeitet von {{ schuelerVermerke().get(index).geaendertVon }} am {{ formatDate(String(schuelerVermerke().get(index).datum))}}
-									</p>
-									<p v-else>
-										Erstellt am	{{ formatDate(String(schuelerVermerke().get(index).datum)) }}
-									</p>
+									<p v-if="vermerk.geaendertVon">	Zuletzt bearbeitet von {{ vermerk.geaendertVon }} am {{ getDate(vermerk) }}	</p>
+									<p v-else> Erstellt am	{{ getDate(vermerk) }} </p>
 								</div>
 							</div>
 							<div class="w-1/5 mb-0 mt-auto">
-								<svws-ui-button	type="danger" class="deleteButton" @click="remove(schuelerVermerke().get(index).id)">
+								<svws-ui-button	type="danger" class="deleteButton" @click="remove(vermerk.id)">
 									Löschen
 								</svws-ui-button>
 							</div>
@@ -49,44 +45,21 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import type { SchuelerVermerke, VermerkartEintrag } from "@core";
-	import { computed,  ref } from "vue";
+	import { DateUtils, type SchuelerVermerke } from "@core";
+	import { ref } from "vue";
 
-	const activeId = ref<number>(-1);
+	const activeVermerk = ref<SchuelerVermerke>();
 
-	const patching = ref<boolean>(false);
-
-	async function patchInternal(data : Partial<SchuelerVermerke>, idVermerk : number) {
-		patching.value = true;
-		await props.patch(data, idVermerk);
-		patching.value = false;
+	function getDate(vermerk: SchuelerVermerke) {
+		return DateUtils.gibDatumGermanFormat(vermerk.datum || new Date().toISOString());
 	}
 
-	function formatDate (date: string) : string {
-		return date.split("-").reverse().join(".");
+	function getTitle(vermerk: SchuelerVermerke) {
+		return `${props.mapVermerkArten.get(vermerk.idVermerkart)?.bezeichnung}: ${vermerk.bemerkung || '⎯⎯⎯⎯⎯⎯⎯⎯'}`;
 	}
 
-
-	// map Vermerkarten zu ihren entsprechenden Vermerken
-	const aktuelleVermerkArten = computed<VermerkartEintrag[]>(() => {
-		const vermerkArtEintraege : VermerkartEintrag[] = [];
-		for (const vE of props.schuelerVermerke()) {
-			let vermerArtEintrag = props.mapVermerkArten.get(vE.idVermerkart);
-			if (vermerArtEintrag !== undefined && vermerArtEintrag !== null)
-				vermerkArtEintraege.push(vermerArtEintrag)
-		}
-		return vermerkArtEintraege
-	})
-
-
-	function getTitle (index: number) : string {
-		let title = aktuelleVermerkArten.value[index].bezeichnung || "";
-		title += ': ' + ((props.schuelerVermerke().get(index).bemerkung?.length === 0) ? 'Neuer Vermerk' : props.schuelerVermerke().get(index).bemerkung);
-		return title;
-	}
-
-	function getDescription(index: number) : string {
-		return (props.schuelerVermerke().get(index).geaendertVon || props.schuelerVermerke().get(index).angelegtVon) + ' - ' + formatDate(String(props.schuelerVermerke().get(index).datum));
+	function getDescription(vermerk: SchuelerVermerke) : string {
+		return (vermerk.geaendertVon || vermerk.angelegtVon) + ' - ' + getDate(vermerk);
 	}
 
 </script>

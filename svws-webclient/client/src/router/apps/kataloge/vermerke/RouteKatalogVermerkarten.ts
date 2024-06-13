@@ -22,10 +22,10 @@ const SVermerkApp = () => import("~/components/kataloge/vermerke/SVermerkeApp.vu
 export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.vermerke", "kataloge/vermerke/:id(\\d+)?", SVermerkApp, new RouteDataKatalogVermerke());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.vermerkarten", "kataloge/vermerkarten/:id(\\d+)?", SVermerkApp, new RouteDataKatalogVermerke());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Vermerkart";
+		super.text = "Vermerkarten";
 		super.setView("liste", SVermerkAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogVermerkartenDaten

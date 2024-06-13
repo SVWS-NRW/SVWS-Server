@@ -8,6 +8,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteDataSchuelerVermerke";
 import type { SchuelerVermerkeProps } from "~/components/schueler/vermerke/SSchuelerVermerkeProps";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 
 const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchuelerVermerke.vue");
@@ -35,11 +36,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			await this.data.ladeDaten(null);
 		} else {
 			const id = parseInt(to_params.id);
-			try {
-				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
-			} catch(error) {
-				return routeSchueler.getRoute(id);
-			}
+			await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
 		}
 	}
 
@@ -53,7 +50,8 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			mapVermerkArten: this.data.mapVermerkArten,
 			patch: this.data.patch,
 			add: this.data.add,
-			remove: this.data.remove
+			remove: this.data.remove,
+			apiStatus: api.status,
 		};
 	}
 
