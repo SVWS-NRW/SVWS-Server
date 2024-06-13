@@ -5,8 +5,8 @@
 		<template #modalDescription>
 			Sollen folgende fehlerhafte Kurs-Schüler-Zuordnungen entfernt werden?
 			<svws-ui-table selectable v-model="selected" :items="zuordnungen" disable-footer :columns="[{key: 'idKurs', label: 'Kurs',}, {key: 'idSchueler', label: 'Schüler'}]">
-				<template #cell(idSchueler)="{value: id}"> {{ getErgebnismanager().getOfSchuelerNameVorname(id) }} </template>
-				<template #cell(idKurs)="{value: kurs}"> {{ getErgebnismanager().getOfKursName(kurs.id) }} </template>
+				<template #cell(idSchueler)="{value: idSchueler}"> {{ getErgebnismanager().getOfSchuelerNameVorname(idSchueler) }} </template>
+				<template #cell(idKurs)="{value: idKurs}"> {{ getErgebnismanager().getOfKursName(idKurs) }} </template>
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
@@ -18,13 +18,8 @@
 
 <script setup lang="ts">
 
-	type Item  = {
-		name: number;
-		kurs: GostBlockungsergebnisKurs;
-	}
-
 	import { computed, ref } from 'vue';
-	import type { GostBlockungsergebnisKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager , GostBlockungsergebnisKursSchuelerZuordnung} from '@core';
+	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager , GostBlockungsergebnisKursSchuelerZuordnung} from '@core';
 	import { DTOUtils, HashSet } from '@core';
 
 	const props = defineProps<{
