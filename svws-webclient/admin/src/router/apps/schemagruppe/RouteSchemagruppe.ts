@@ -40,9 +40,10 @@ export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): SchemagruppeProps {
 		return {
+			apiStatus: api.status,
+			apiUsername: api.username,
 			auswahlGruppe: routeSchema.data.auswahlGruppe,
 			removeSchemata: routeSchema.data.removeSchemata,
-			apiStatus: api.status,
 		};
 	}
 
