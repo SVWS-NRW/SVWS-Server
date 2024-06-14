@@ -3,7 +3,7 @@
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
 			<svws-ui-spacing />
-			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
 		</div>
 	</svws-ui-action-button>
@@ -11,14 +11,16 @@
 
 <script setup lang="ts">
 
-	import type { List, SimpleOperationResponse } from "@core";
 	import { ref, type ShallowRef } from "vue";
+	import type { List, SimpleOperationResponse } from "@core";
+	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
 		duplicateSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
+		validatorUsername: (username: InputDataType) => boolean;
 		isActive: boolean;
 	}>();
 

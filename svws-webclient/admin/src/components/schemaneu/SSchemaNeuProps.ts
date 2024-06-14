@@ -5,6 +5,7 @@ import type { SimpleOperationResponse } from "../../../../core/src/core/data/Sim
 
 export interface SchemaNeuProps {
 	apiStatus: ApiStatus;
+	apiUsername: string;
 	addSchema: (data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>;
 	importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;

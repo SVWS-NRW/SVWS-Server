@@ -39,6 +39,7 @@ export class RouteSchemaNeu extends RouteNode<unknown, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchemaNeuProps {
 		return {
 			apiStatus: api.status,
+			apiUsername: api.username,
 			migrationQuellinformationen: () => routeSchema.data.migrationQuellinformationen.value,
 			addSchema: routeSchema.data.addSchema,
 			importSchema: routeSchema.data.importSchema,

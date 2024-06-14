@@ -8,7 +8,7 @@
 			<svws-ui-spacing />
 			<div class="font-bold text-button">Ziel-Datenbank (wird erstellt):</div>
 			<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
-			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 		</div>
 	</svws-ui-action-button>
@@ -16,14 +16,16 @@
 
 <script setup lang="ts">
 
-	import type { List, SimpleOperationResponse } from "@core";
 	import { ref, type ShallowRef } from "vue";
+	import type { List, SimpleOperationResponse } from "@core";
+	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
 		importSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
+		validatorUsername: (username: InputDataType) => boolean;
 		isActive: boolean;
 	}>();
 

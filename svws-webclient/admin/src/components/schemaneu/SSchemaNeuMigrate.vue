@@ -7,7 +7,7 @@
 				<div class="font-bold text-button">Quell-Datenbank:</div>
 				<svws-ui-text-input v-model.trim="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
 				<svws-ui-text-input v-model.trim="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
-				<svws-ui-text-input v-model.trim="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
+				<svws-ui-text-input v-model.trim="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" :valid="validateUsername" />
 				<svws-ui-text-input v-model.trim="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
 				<svws-ui-spacing />
 				<svws-ui-checkbox v-model="migrationQuellinformationen().schildzentral">Migration aus einer Schild-2-Zentral-Instanz</svws-ui-checkbox>
@@ -30,8 +30,9 @@
 
 <script setup lang="ts">
 
-	import type { List, SimpleOperationResponse } from "@core";
 	import { type ShallowRef, shallowRef } from "vue";
+	import type { List, SimpleOperationResponse } from "@core";
+	import type { InputDataType } from "@ui";
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 
 	const props = defineProps<{
@@ -40,6 +41,7 @@
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
+		validatorUsername: (username: InputDataType) => boolean;
 		isActive: boolean;
 	}>();
 

@@ -16,13 +16,13 @@
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
 						<!-- Neues leeres Schema anlegen -->
-						<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :is-active="currentAction === 'neu'" @click="clickNeu" />
+						<s-schema-neu-leer :add-schema :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'neu'" @click="clickNeu" />
 						<!-- Backup in neues Schema importieren -->
-						<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :is-active="currentAction === 'restore'" @click="clickRestore" />
+						<s-schema-neu-restore :import-schema :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'restore'" @click="clickRestore" />
 						<!-- In Neues Schema migrieren -->
-						<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :is-active="currentAction === 'migrate'" @click="clickMigrate" />
+						<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'migrate'" @click="clickMigrate" />
 						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<s-schema-neu-duplicate :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" @click="clickDuplicate" />
+						<s-schema-neu-duplicate :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" :validator-username @click="clickDuplicate" />
 					</svws-ui-content-card>
 				</div>
 				<div class="col-span-full">
@@ -40,8 +40,9 @@
 <script setup lang="ts">
 
 	import { ref, shallowRef } from "vue";
-	import type { SchemaNeuProps } from "./SSchemaNeuProps";
 	import type { List } from "@core";
+	import type { InputDataType } from "@ui";
+	import type { SchemaNeuProps } from "./SSchemaNeuProps";
 
 	const props = defineProps<SchemaNeuProps>();
 
@@ -80,6 +81,13 @@
 		clearLog();
 	}
 
+	const validatorUsername = (username: InputDataType) => {
+		if ((username === undefined) || (username === null) || (typeof username === "number"))
+			return false;
+		if ((username === 'root') || (username === props.apiUsername))
+			return false;
+		return true;
+	}
 
 </script>
 

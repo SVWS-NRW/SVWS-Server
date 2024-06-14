@@ -3,7 +3,7 @@
 		<div class="input-wrapper">
 			<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loadingFunction().value" />
 			<svws-ui-spacing />
-			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="value => value !== 'root'" />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loadingFunction().value" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loadingFunction().value" type="password" />
 		</div>
 	</svws-ui-action-button>
@@ -13,12 +13,14 @@
 
 	import { type ShallowRef, ref } from "vue";
 	import { BenutzerKennwort, SimpleOperationResponse, type List } from "@core";
+	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
 		addSchema: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
+		validatorUsername: (username: InputDataType) => boolean;
 		isActive: boolean;
 	}>();
 
