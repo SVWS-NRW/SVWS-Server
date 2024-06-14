@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 /**
@@ -59,30 +58,12 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	};
 
 
-	/**
-	 * Mapper Funktion zum Umwandeln des Vermerkes von einem Datenbank-DTOs {@link DTOSchuelerVermerke}
-	 * in einen Core-DTO {@link SchuelerVermerke}.
-	 */
-	public static final Function<DTOSchuelerVermerke, SchuelerVermerke> mapDTO = (final DTOSchuelerVermerke e) -> {
-		final SchuelerVermerke vermerk = new SchuelerVermerke();
-		vermerk.id = e.ID;
-		vermerk.idSchueler = e.Schueler_ID;
-		vermerk.idVermerkart = e.VermerkArt_ID;
-		vermerk.datum = e.Datum;
-		vermerk.bemerkung = e.Bemerkung;
-		vermerk.angelegtVon = e.AngelegtVon;
-		vermerk.geaendertVon = e.GeaendertVon;
-		return vermerk;
-
-	};
-
-
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<DTOSchuelerVermerke> vermerke = conn.queryAll(DTOSchuelerVermerke.class);
-		if (vermerke == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<SchuelerVermerke> daten = vermerke.stream().map(mapDTO).toList();
+		final List<SchuelerVermerke> daten = new ArrayList<>();
+		for (final DTOSchuelerVermerke dto : vermerke)
+			daten.add(dtoMapper.apply(dto));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -93,11 +74,11 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * @param idSchueler   die ID des Schülers
 	 *
 	 * @return die Response für die Liste der Schüler
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getBySchuelerIDasResponse(final Long idSchueler) {
-		List<SchuelerVermerke> daten = this.getBySchuelerID(idSchueler);
-		if ((daten == null) || daten.isEmpty())
-			daten = new ArrayList<>();
+	public Response getBySchuelerIDasResponse(final Long idSchueler) throws ApiOperationException {
+		final List<SchuelerVermerke> daten = this.getBySchuelerID(idSchueler);
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -108,10 +89,15 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * @param idSchueler   die ID des Schuelers
 	 *
 	 * @return die Liste der Vermerke zum Schüler
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<SchuelerVermerke> getBySchuelerID(final Long idSchueler) {
-		final List<DTOSchuelerVermerke> daten = conn.queryList(DTOSchuelerVermerke.QUERY_BY_SCHUELER_ID, DTOSchuelerVermerke.class, idSchueler);
-		return daten.stream().map(mapDTO).toList();
+	public List<SchuelerVermerke> getBySchuelerID(final Long idSchueler) throws ApiOperationException {
+		final List<DTOSchuelerVermerke> vermerke = conn.queryList(DTOSchuelerVermerke.QUERY_BY_SCHUELER_ID, DTOSchuelerVermerke.class, idSchueler);
+		final List<SchuelerVermerke> daten = new ArrayList<>();
+		for (final DTOSchuelerVermerke dto : vermerke)
+			daten.add(dtoMapper.apply(dto));
+		return daten;
 	}
 
 
@@ -147,17 +133,6 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	}
 
 
-	private static final Set<String> requiredCreateAttributes = Set.of("idSchueler");
-
-
-	private static final ObjLongConsumer<DTOSchuelerVermerke> initDTO = (dto, id) -> dto.ID = id;
-
-
-	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOSchuelerVermerke.class, patchMappings);
-	}
-
 	/**
 	 * Mapper zum Umwandeln des Vermerkes von einem Core-DTO {@link SchuelerVermerke} in einen
 	 * Datenbank-DTOs {@link DTOSchuelerVermerke}.
@@ -167,6 +142,13 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (Long.compare(patch_id, dto.ID) != 0))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
+		}),
+		Map.entry("idSchueler", (conn, dto, value, map) -> {
+			dto.Schueler_ID = JSONMapper.convertToLong(value, false);
+			dto.VermerkArt_ID = 1L;
+			dto.Bemerkung = "";
+			dto.AngelegtVon = conn.getUser().getUsername();
+			dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
 		}),
 		Map.entry("bemerkung", (conn, dto, value, map) -> {
 			dto.Bemerkung = JSONMapper.convertToString(value, false, true, Schema.tab_SchuelerVermerke.col_Bemerkung.datenlaenge());
@@ -183,20 +165,17 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 		})
 	);
 
+	private static final Set<String> patchAttributesForbidden = Set.of("idSchueler");   // Nur beim Erstellen eines DTOs erlaubt, nicht beim Patchen selbst
 
-	/**
-	 * Mapper zum Umwandeln des Vermerkes von einem Core-DTO {@link SchuelerVermerke} in einen
-	 * Datenbank-DTOs {@link DTOSchuelerVermerke} innerhalb eines Add / Create Vorgangs.
-	 */
-	private static final Map<String, DataBasicMapper<DTOSchuelerVermerke>> addMappings = Map.ofEntries(
-		Map.entry("idSchueler", (conn, dto, value, map) -> {
-			dto.Schueler_ID = JSONMapper.convertToLong(value, false);
-			dto.VermerkArt_ID = 1L;
-			dto.Bemerkung = "";
-			dto.AngelegtVon = conn.getUser().getUsername();
-			dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
-		})
-	);
+	@Override
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
+		return super.patchBasicFiltered(id, is, DTOSchuelerVermerke.class, patchMappings, patchAttributesForbidden);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("idSchueler");
+
+	private static final ObjLongConsumer<DTOSchuelerVermerke> initDTO = (dto, id) -> dto.ID = id;
 
 
 	/**
@@ -209,28 +188,51 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
-		return super.addBasic(is, DTOSchuelerVermerke.class, initDTO, dtoMapper, requiredCreateAttributes, addMappings);
+		return super.addBasic(is, DTOSchuelerVermerke.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Vermerke mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
+		return super.addBasicMultiple(is, DTOSchuelerVermerke.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 
 	/**
 	 * Löscht einen Vermerk
 	 *
-	 * @param idVermerk   die ID des Vermerks
+	 * @param id   die ID des Vermerks
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long idVermerk) throws ApiOperationException {
-		// Erhalte Delete Kandidaten mit der übermittelten ID
-		final DTOSchuelerVermerke deleteCandidate = conn.queryByKey(DTOSchuelerVermerke.class, idVermerk);
-		final SchuelerVermerke daten = dtoMapper.apply(deleteCandidate);
-
-		// Entferne den Vermerk
-		conn.transactionRemove(deleteCandidate);
-
-		return Response.ok().entity(daten).build();
+	public Response delete(final Long id) throws ApiOperationException {
+		return super.deleteBasic(id, DTOSchuelerVermerke.class, dtoMapper);
 	}
+
+
+	/**
+	 * Löscht mehrere Vermerke
+	 *
+	 * @param ids   die IDs der Vermerke
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
+		return super.deleteBasicMultiple(ids, DTOSchuelerVermerke.class, dtoMapper);
+	}
+
 }
 
