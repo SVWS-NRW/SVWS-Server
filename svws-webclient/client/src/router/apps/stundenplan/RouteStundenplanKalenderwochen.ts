@@ -29,7 +29,7 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 	public getProps(to: RouteLocationNormalized): StundenplanKalenderwochenProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
-			patch: routeStundenplan.data.patch,
+			patchKalenderwochenzuordnungen: routeStundenplan.data.patchKalenderwochenzuordnungen,
 		};
 	}
 

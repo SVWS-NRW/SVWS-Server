@@ -1,6 +1,6 @@
-import type { Stundenplan, StundenplanManager } from "@core";
+import type { List, StundenplanKalenderwochenzuordnung, StundenplanManager } from "@core";
 
 export interface StundenplanKalenderwochenProps {
 	stundenplanManager: () => StundenplanManager;
-	patch: (daten: Partial<Stundenplan>) => Promise<void>;
+	patchKalenderwochenzuordnungen: (daten: List<StundenplanKalenderwochenzuordnung>) => Promise<void>;
 }

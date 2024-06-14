@@ -21,16 +21,14 @@
 	const props = defineProps<StundenplanKalenderwochenProps>();
 
 	async function nextWochentyp(kw: StundenplanKalenderwochenzuordnung) {
-		const kalenderwochenZuordnung = new ArrayList<Partial<StundenplanKalenderwochenzuordnung>>();
+		const kalenderwochenZuordnung = new ArrayList<StundenplanKalenderwochenzuordnung>();
 		const modell = props.stundenplanManager().getWochenTypModell();
 		for (const e of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList()) {
 			if (e.kw >= kw.kw)
 				e.wochentyp = (e.wochentyp + 1 > modell) ? 1 : e.wochentyp + 1;
-			const ee = e.clone() as Partial<StundenplanKalenderwochenzuordnung>;
-			delete ee.id;
-			kalenderwochenZuordnung.add(ee);
+			kalenderwochenZuordnung.add(e);
 		}
-		await props.patch({ kalenderwochenZuordnung });
+		await props.patchKalenderwochenzuordnungen(kalenderwochenZuordnung);
 	}
 
 </script>

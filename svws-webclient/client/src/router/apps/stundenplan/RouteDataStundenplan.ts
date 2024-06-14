@@ -1,7 +1,5 @@
-import type { StundenplanListeEintrag, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate} from "@core";
-import { StundenplanPausenaufsicht} from "@core";
-import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager,
-	DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
+import type { StundenplanListeEintrag, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung} from "@core";
+import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -113,6 +111,32 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
 		}
 		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
+		api.status.stop();
+	}
+
+	patchKalenderwochenzuordnungen = async (data: List<StundenplanKalenderwochenzuordnung>) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		api.status.start();
+		const listHinzuzufuegen = new ArrayList<Partial<StundenplanKalenderwochenzuordnung>>();
+		const listPatch = new ArrayList<StundenplanKalenderwochenzuordnung>();
+		for (const e of data) {
+			if (e.id < 0) {
+				const ee = e.clone() as Partial<StundenplanKalenderwochenzuordnung>;
+				delete ee.id;
+				listHinzuzufuegen.add(ee);
+				// manager hinzufügen
+			} else {
+				listPatch.add(e);
+				// sollte als all-Methode verfügbar sein
+				this.stundenplanManager.kalenderwochenzuordnungPatchAttributes(e);
+			}
+		}
+		if (!listPatch.isEmpty())
+			await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
+		// if (!listHinzuzufuegen.isEmpty())
+		// 	await api.server.addStundenplanKalenderwochenzuordnung(listHinzuzufuegen, api.schema, this.auswahl.id);
+		this.commit();
 		api.status.stop();
 	}
 
