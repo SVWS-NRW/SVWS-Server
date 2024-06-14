@@ -13,7 +13,9 @@
 						<div class="modal--content-wrapper">
 							<div class="modal--content overflow-y-auto">
 								<div class="flex flex-col">
-									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt" icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined" :is-active="currentAction === 'init'" @click="clickInit">
+									<svws-ui-action-button title="Schulkatalog" description="Daten werden über die Auswahl der Schulnummer ausgwählt"
+										icon="i-ri-archive-line" :action-function="init" :is-loading :action-disabled="schule === undefined"
+										:is-active="source === 'init'" @click="clickInit">
 										<div class="flex gap-2">
 											<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
 												:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
@@ -23,7 +25,9 @@
 											{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
 										</div>
 									</svws-ui-action-button>
-									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert." icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')" :is-active="currentAction === 'migrate'" @click="clickMigrate">
+									<svws-ui-action-button title="Schild 2-Datenbank migrieren" description="Daten werden über die Auswahl einer existierenden Schild 2-Datenbank migriert."
+										icon="i-ri-database-2-line" :action-function="migrate" action-label="Migration starten" :is-loading :action-disabled="(db === 'mdb' && !file) || (user === 'root')"
+										:is-active="source === 'migrate'" @click="clickMigrate">
 										<div class="flex flex-col gap-4">
 											<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
 											<div class="flex flex-col gap-6 text-left" v-if="db === 'mdb'">
@@ -50,7 +54,9 @@
 											</div>
 										</div>
 									</svws-ui-action-button>
-									<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore" action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading :is-active="currentAction === 'restore'" @click="clickRestore">
+									<svws-ui-action-button title="Wiederherstellen" description="Daten werden aus einem Backup wiederhergestellt" :action-function="restore"
+										action-label="Wiederherstellen" icon="i-ri-device-recover-line" :action-disabled="!file || isLoading" :is-loading
+										:is-active="source === 'restore'" @click="clickRestore">
 										<div class="flex flex-col gap-2 text-left">
 											<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
 											<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
@@ -91,7 +97,6 @@
 	const isLoading = ref<boolean>(false);
 
 	const file = ref<File | null>(null);
-	const currentAction = ref<'' | 'restore' | 'migrate' | 'init'>('');
 
 	function clearLog() {
 		isLoading.value = false;
@@ -100,17 +105,17 @@
 	}
 
 	async function clickInit() {
-		currentAction.value = (currentAction.value === 'init') ? '' : 'init';
+		await props.setSource('init');
 		clearLog();
 	}
 
 	async function clickRestore() {
-		currentAction.value = (currentAction.value === 'restore') ? '' : 'restore';
+		await props.setSource('restore');
 		clearLog();
 	}
 
 	async function clickMigrate() {
-		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
+		await props.setSource('migrate');
 		clearLog();
 	}
 

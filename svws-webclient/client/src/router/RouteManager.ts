@@ -163,10 +163,8 @@ export class RouteManager {
 			return false;
 		if ((from_node === undefined) && (from.fullPath !== "/"))
 			return false;
-		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init")) {
-			await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
-			return;
-		}
+		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init"))
+			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;
