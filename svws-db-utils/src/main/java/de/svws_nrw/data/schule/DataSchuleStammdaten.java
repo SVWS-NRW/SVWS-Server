@@ -27,7 +27,6 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchwerpunkt;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSportbefreiung;
