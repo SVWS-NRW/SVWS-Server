@@ -18,6 +18,10 @@ public class SchemaListeEintrag {
 	@Schema(description = "der Name des Schemas", example = "svwsdb")
 	public @NotNull String name = "";
 
+	/** Der Name des Datenbank-Benutzers für das Schema. */
+	@Schema(description = "der Name des Datenbank-Benutzers für das Schema", example = "svwsdb")
+	public @NotNull String username = "";
+
 	/** Gibt an, ob das Schema ein SVWS-Schema ist oder nicht. */
 	@Schema(description = "gibt an, ob das Schema ein SVWS-Schema ist oder nicht", example = "false")
 	public boolean isSVWS = false;

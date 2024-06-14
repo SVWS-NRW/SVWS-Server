@@ -9,6 +9,7 @@
 					<span class="svws-subline">
 						<span v-if="auswahl.revision < 0" class="opacity-50"> Kein SVWS-Schema </span>
 						<span v-else> Revision: {{ auswahl.revision }} </span>
+						<span v-if="auswahl.username !== ''">, DB-Benutzer: {{ auswahl.username }} </span>
 					</span>
 				</div>
 				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3">

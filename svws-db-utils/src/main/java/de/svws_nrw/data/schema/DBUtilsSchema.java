@@ -144,8 +144,10 @@ public final class DBUtilsSchema {
 			final DBSchemaVersion version = status.getVersion();
 			if ((version != null) && (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE)) {
 				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
+				final DBConfig dbconfig = config.getDBConfig(schemanameConfig);
 				final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
 				schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
+				schemainfo.username = (dbconfig == null) ? "" : dbconfig.getUsername();
 				schemainfo.isSVWS = true;
 				schemainfo.revision = version.getRevisionOrDefault(-1);
 				schemainfo.isTainted = version.isTainted();
@@ -154,8 +156,10 @@ public final class DBUtilsSchema {
 				result.add(schemainfo);
 			} else if (!nurSVWSSchemas) { // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
+				final DBConfig dbconfig = config.getDBConfig(schemanameConfig);
 				final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
 				schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
+				schemainfo.username = (dbconfig == null) ? "" : dbconfig.getUsername();
 				schemainfo.isSVWS = false;
 				schemainfo.revision = -1;
 				schemainfo.isTainted = true;

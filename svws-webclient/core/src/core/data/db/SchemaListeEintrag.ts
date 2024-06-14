@@ -8,6 +8,11 @@ export class SchemaListeEintrag extends JavaObject {
 	public name : string = "";
 
 	/**
+	 * Der Name des Datenbank-Benutzers für das Schema.
+	 */
+	public username : string = "";
+
+	/**
 	 * Gibt an, ob das Schema ein SVWS-Schema ist oder nicht.
 	 */
 	public isSVWS : boolean = false;
@@ -51,6 +56,9 @@ export class SchemaListeEintrag extends JavaObject {
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
+		if (typeof obj.username === "undefined")
+			 throw new Error('invalid json format, missing attribute username');
+		result.username = obj.username;
 		if (typeof obj.isSVWS === "undefined")
 			 throw new Error('invalid json format, missing attribute isSVWS');
 		result.isSVWS = obj.isSVWS;
@@ -72,6 +80,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchemaListeEintrag) : string {
 		let result = '{';
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		result += '"username" : ' + JSON.stringify(obj.username!) + ',';
 		result += '"isSVWS" : ' + obj.isSVWS + ',';
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
@@ -86,6 +95,9 @@ export class SchemaListeEintrag extends JavaObject {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		}
+		if (typeof obj.username !== "undefined") {
+			result += '"username" : ' + JSON.stringify(obj.username!) + ',';
 		}
 		if (typeof obj.isSVWS !== "undefined") {
 			result += '"isSVWS" : ' + obj.isSVWS + ',';
