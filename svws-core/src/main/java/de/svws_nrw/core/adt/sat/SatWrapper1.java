@@ -43,9 +43,9 @@ public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull S
 
 		// use "map1to2" to map from "in1" to "in2"
 		final @NotNull SatInput in2 = new SatInput();
-		for (final @NotNull Integer @NotNull[] clause : in1.getClauses()) {
+		for (final @NotNull Integer @NotNull [] clause : in1.getClauses()) {
 			// map clause-indices
-			@NotNull final Integer @NotNull[] clause2 = new Integer[clause.length];
+			@NotNull final Integer @NotNull [] clause2 = new Integer[clause.length];
 			for (int i = 0; i < clause.length; i++) {
 				final int lit = clause[i];
 				clause2[i] = (lit >= 0) ? map1to2[lit] : -map1to2[-lit];

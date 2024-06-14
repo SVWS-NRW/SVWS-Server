@@ -30,10 +30,12 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
 
 	/** Filter für alle Fächer, welche als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse =
+			(final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen =
+			(final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
 
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
@@ -74,8 +76,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 		// Bestimme die Fächergruppen für die Berechnung des Abschlusses
 		final @NotNull AbschlussFaecherGruppen faecher = new AbschlussFaecherGruppen(
 				new AbschlussFaecherGruppe(input.faecher, Arrays.asList("D", "M"), null),
-				new AbschlussFaecherGruppe(input.faecher, null, Arrays.asList("D", "M", "LBNW", "LBAL")
-						));
+				new AbschlussFaecherGruppe(input.faecher, null, Arrays.asList("D", "M", "LBNW", "LBAL")));
 
 		// Prüfe, ob alle nötigen Fächer in der FG1 vorhanden sind
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M"))) {
@@ -108,7 +109,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 			if (f.kuerzel == null)
 				continue;
 			final int note = f.note;
-			final int note_neu = (note == 1) ? 1 : note - 1;
+			final int note_neu = (note == 1) ? 1 : (note - 1);
 			logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
 			f.note = note_neu;
 		}
@@ -187,7 +188,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 			// bei 2x5 in FG1 muss die Nachprüfung allerdings in FG1 erfolgen!
 			final @NotNull List<@NotNull String> np_faecher = (fg1_mangelhaft == 2)
 					? faecher.fg1.getKuerzel(filterMangelhaft)
-							: faecher.getKuerzel(filterMangelhaft);
+					: faecher.getKuerzel(filterMangelhaft);
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: "
 					+ ((fg1_mangelhaft == 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 

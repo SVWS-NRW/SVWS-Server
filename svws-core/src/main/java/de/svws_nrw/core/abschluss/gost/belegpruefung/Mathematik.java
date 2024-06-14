@@ -63,7 +63,8 @@ public final class Mathematik extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.M_10);
 
 		// Gesamtprüfung Punkt 46: Prüfe, ob Mathematik von EF.1 bis Q2.1 schriftlich belegt wurde
-		if (!manager.pruefeBelegungMitSchriftlichkeit(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (!manager.pruefeBelegungMitSchriftlichkeit(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11,
+				GostHalbjahr.Q12, GostHalbjahr.Q21))
 			addFehler(GostBelegungsfehler.M_11);
 	}
 

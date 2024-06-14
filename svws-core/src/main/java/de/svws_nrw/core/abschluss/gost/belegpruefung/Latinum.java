@@ -39,7 +39,8 @@ public final class Latinum extends GostBelegpruefung {
 	protected void pruefeEF1() {
 		// Prüfe, ob Latein am Ende der SI belegt mit mind. 2 Jahren belegt wurde, aber nicht in EF.1.
 		// Gebe dann einen entsprechenden Hinweis zum Erwerbs des Latinums aus.
-		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), "L") && (!manager.pruefeBelegung(latein, GostHalbjahr.EF1)))
+		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), "L")
+				&& (!manager.pruefeBelegung(latein, GostHalbjahr.EF1)))
 			addFehler(GostBelegungsfehler.L_10_INFO);
 	}
 

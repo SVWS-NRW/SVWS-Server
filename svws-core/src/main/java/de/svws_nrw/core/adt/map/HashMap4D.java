@@ -21,7 +21,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotNull V> {
 
-	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>>> _map1 = new HashMap<>();
+	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>>> _map1 =
+			new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -179,7 +180,8 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @throws NullPointerException falls der Pfad (key1, key2, key3) nicht
 	 *                              existiert, oder NULL zugeordnet ist.
 	 */
-	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) throws NullPointerException {
+	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4)
+			throws NullPointerException {
 		final V value = getOrException(key1, key2, key3, key4);
 
 		if (value == null)

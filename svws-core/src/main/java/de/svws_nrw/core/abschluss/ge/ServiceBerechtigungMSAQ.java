@@ -24,18 +24,29 @@ import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
  */
 public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite = (final @NotNull GEAbschlussFach f) -> (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2));
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS = (final @NotNull GEAbschlussFach f) -> ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 3));
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS = (final @NotNull GEAbschlussFach f) -> ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite =
+			(final @NotNull GEAbschlussFach f) -> (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS =
+			(final @NotNull GEAbschlussFach f) -> ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4))
+					|| ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 3));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS =
+			(final @NotNull GEAbschlussFach f) -> ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5))
+					|| ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4));
 
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP = (final @NotNull GEAbschlussFach f) -> (f.note > 3) && "WP".equalsIgnoreCase(f.kuerzel);
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !"WP".equalsIgnoreCase(f.kuerzel);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP =
+			(final @NotNull GEAbschlussFach f) -> (f.note > 3) && "WP".equalsIgnoreCase(f.kuerzel);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> (f.note > 3)
+			|| ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !"WP".equalsIgnoreCase(f.kuerzel);
 
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1NichtAusgleichbar = (final @NotNull GEAbschlussFach f) -> (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3));
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2NichtAusgleichbar = (final @NotNull GEAbschlussFach f) -> (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3));
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1NichtAusgleichbar =
+			(final @NotNull GEAbschlussFach f) -> (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2NichtAusgleichbar =
+			(final @NotNull GEAbschlussFach f) -> (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche =
+			(final @NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3)));
 
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse =
+			(final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
@@ -99,7 +110,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 			final @NotNull List<@NotNull GEAbschlussFach> tmpFaecher = faecher.fg2.getFaecher(filterEKurse);
 			for (final @NotNull GEAbschlussFach f : tmpFaecher) {
 				final int note = f.note;
-				final int note_neu = (note == 1) ? 1 : note - 1;
+				final int note_neu = (note == 1) ? 1 : (note - 1);
 				logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 				f.note = note_neu;
 				f.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;
@@ -140,9 +151,11 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		final @NotNull List<@NotNull GEAbschlussFach> fg2_defizite = faecher.fg2.getFaecher(filterDefizite);
 
 		if (!fg1_defizite.isEmpty())
-			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(filterDefizite));
+			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": "
+					+ faecher.fg1.getKuerzelListe(filterDefizite));
 		if (!fg2_defizite.isEmpty())
-			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(filterDefizite));
+			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": "
+					+ faecher.fg2.getKuerzelListe(filterDefizite));
 
 		// Prüfe, ob in FG1 oder FG2 Fächer vorhanden sind, die nicht ausgeglichen werden können und in denen keine Nachprüfung möglich ist
 		boolean nachpruefung_genutzt = false;
@@ -222,7 +235,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 				final @NotNull GEAbschlussFach ausgleichsFach = fg1_ausgleichsfaecher.get(0);
 				defizitFach.ausgeglichen = true;
 				ausgleichsFach.ausgleich = true;
-				logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe FG2 mit der Option Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+				logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe FG2 mit der Option Ausgleich von " + defizitFach.kuerzel + " durch "
+						+ ausgleichsFach.kuerzel);
 
 				// Prüfe FG2 - falls ein Abschluss mit der Ausgleichs-Option möglich ist - kann die Prüfung insgesamt beendet werden
 				final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, nachpruefung_genutzt);
@@ -236,7 +250,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 
 			// Prüfe FG2 mit der Option der Nachprüfung in WP, dabei muss berücksichtigt werden, ob in FG2 bereits eine Nachprüfung im leistungsdifferenzierten Fach nötig ist!
 			if (nachpruefung_genutzt) {
-				logger.logLn(LogLevel.DEBUG, logIndent + " -> Eine Nachprüfung im WP-Fach und in dem leistungsdifferenzierten Fach der FG2 ist nicht gleichzeitig möglich.");
+				logger.logLn(LogLevel.DEBUG, logIndent
+						+ " -> Eine Nachprüfung im WP-Fach und in dem leistungsdifferenzierten Fach der FG2 ist nicht gleichzeitig möglich.");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 			}
 			wp_defizit.ausgleich = true;
@@ -256,7 +271,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 			log_fg2_indent += "  ";
 		}
 		final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, log_fg2_indent, npFaecher, nachpruefung_genutzt);
-		if (((fg2_nicht_ausgleichbar.size() == 1) && abschlussergebnis.erworben) || ((!abschlussergebnis.erworben) && (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)))) {
+		if (((fg2_nicht_ausgleichbar.size() == 1) && abschlussergebnis.erworben)
+				|| ((!abschlussergebnis.erworben) && (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)))) {
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 		return abschlussergebnis;
@@ -274,7 +290,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
 	 */
-	private @NotNull AbschlussErgebnis pruefeFG2(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String logIndent, final @NotNull List<@NotNull GEAbschlussFach> npFaecher, final boolean nachpruefungGenutzt) {
+	private @NotNull AbschlussErgebnis pruefeFG2(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String logIndent,
+			final @NotNull List<@NotNull GEAbschlussFach> npFaecher, final boolean nachpruefungGenutzt) {
 		final @NotNull List<@NotNull GEAbschlussFach> ges_ausgleichsfaecher = faecher.getFaecher(filterAusgleiche);
 
 		final @NotNull List<@NotNull GEAbschlussFach> fg2_defizite_1NS = faecher.fg2.getFaecher(filterDefizite1NS);
@@ -294,7 +311,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		}
 
 		// Prüfe, ob auch mit Nachprüfung nicht genug Ausgleichsmöglichkeiten geschaffen werden können
-		if (ges_ausgleichsfaecher.size() < fg2_defizit_anzahl - (nachpruefungGenutzt ? 0 : 1)) {
+		if (ges_ausgleichsfaecher.size() < (fg2_defizit_anzahl - (nachpruefungGenutzt ? 0 : 1))) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite in FG2 - nicht genügend Ausgleichsfächer vorhanden");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
@@ -307,7 +324,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 				defizitFach.note--; // verbessere zwischenzeitlich
 				logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
 				final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
-				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
+				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben
+						? " möglich" : " nicht möglich"));
 				if (abschlussergebnis.erworben)
 					npFaecher.add(defizitFach);
 				defizitFach.ausgeglichen = true;
@@ -330,7 +348,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 			defizitFach.note--; // verbessere zwischenzeitlich
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
 			final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
-			logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
+			logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben
+					? " möglich" : " nicht möglich"));
 			if (abschlussergebnis.erworben)
 				npFaecher.add(defizitFach);
 			defizitFach.ausgeglichen = true;

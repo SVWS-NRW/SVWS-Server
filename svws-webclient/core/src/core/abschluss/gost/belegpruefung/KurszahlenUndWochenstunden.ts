@@ -200,7 +200,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					}
 				}
 				const wochenstundenAlt : number | null = this.wochenstunden.get(halbjahr);
-				this.wochenstunden.put(halbjahr, wochenstundenAlt === null ? stunden : wochenstundenAlt! + stunden);
+				this.wochenstunden.put(halbjahr, (wochenstundenAlt === null) ? stunden : (wochenstundenAlt! + stunden));
 				if (halbjahr.istEinfuehrungsphase()) {
 					if (istAnrechenbar) {
 						const kurszahlEF : number | null = this.kurszahlenEinfuehrungsphase.get(kursart);

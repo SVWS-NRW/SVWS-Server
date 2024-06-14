@@ -47,9 +47,12 @@ public enum GostBelegpruefungsArt {
 		if (kuerzel == null)
 			return null;
 		switch (kuerzel) {
-			case "EF.1": return EF1;
-			case "Gesamt": return GESAMT;
-			default: return null;
+			case "EF.1":
+				return EF1;
+			case "Gesamt":
+				return GESAMT;
+			default:
+				return null;
 		}
 	}
 

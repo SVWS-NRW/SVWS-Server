@@ -88,7 +88,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 				const tmpFaecher : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterEKurse);
 				for (const f of tmpFaecher) {
 					const note : number = f.note;
-					const note_neu : number = (note === 1) ? 1 : note - 1;
+					const note_neu : number = (note === 1) ? 1 : (note - 1);
 					this.logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 					f.note = note_neu;
 					f.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;
@@ -239,7 +239,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG2 - mit Ausgleich und Nachprüfung kein Abschluss möglich");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
-		if (ges_ausgleichsfaecher.size() < fg2_defizit_anzahl - (nachpruefungGenutzt ? 0 : 1)) {
+		if (ges_ausgleichsfaecher.size() < (fg2_defizit_anzahl - (nachpruefungGenutzt ? 0 : 1))) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG2 - nicht genügend Ausgleichsfächer vorhanden");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}

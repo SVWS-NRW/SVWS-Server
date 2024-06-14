@@ -40,7 +40,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   Der Inhaltstyp der LinkedCollection
  */
-class LinkedCollectionElement<@NotNull E> {
+final class LinkedCollectionElement<@NotNull E> {
 
 	/** Der Wert, der in diesem Element gespeichert wird. */
 	private @NotNull E _value;
@@ -70,7 +70,8 @@ class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @return der Wert des Elements
 	 */
-	@NotNull E getValue() {
+	@NotNull
+	E getValue() {
 		return _value;
 	}
 
@@ -81,7 +82,8 @@ class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @return der alte Wert des Elements
 	 */
-	@NotNull E setValue(final @NotNull E value) {
+	@NotNull
+	E setValue(final @NotNull E value) {
 		final @NotNull E oldValue = this._value;
 		this._value = value;
 		return oldValue;

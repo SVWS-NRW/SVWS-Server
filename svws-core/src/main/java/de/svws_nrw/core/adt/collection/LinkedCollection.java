@@ -114,13 +114,13 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 		return new LinkedCollectionIterator<>(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public @NotNull Object@NotNull[] toArray() {
+	public @NotNull Object @NotNull [] toArray() {
 		// keine Elemente vorhanden. Gebe ein leeres Array zurück.
 		if (_size == 0)
 			return new Object[0];
-		@SuppressWarnings("unchecked")
-		final @NotNull E@NotNull[] array = (@NotNull E@NotNull[]) Array.newInstance(_head.getValue().getClass(), _size);
+		final @NotNull E @NotNull [] array = (@NotNull E @NotNull []) Array.newInstance(_head.getValue().getClass(), _size);
 		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
 		for (int i = 0; i < _size; i++) {
 			// Die Werte der LinkedCollection werden zurückgegeben. Nicht die Elemente mit der Zeigerstruktur und den Werten
@@ -131,9 +131,9 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull T> @NotNull T@NotNull[] toArray(final @NotNull T@NotNull[] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		if (a.length < _size)
-			return (@NotNull T@NotNull[]) this.toArray();
+			return (@NotNull T @NotNull []) this.toArray();
 		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
 		for (int i = 0; i < _size; i++) {
 			final @NotNull E e = iter.next();
@@ -342,7 +342,8 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @return die kombinierte sortierte Liste
 	 */
-	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator, final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
+	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator,
+			final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
 		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element
 		LinkedCollectionElement<@NotNull E> headTo;
 		LinkedCollectionElement<@NotNull E> headFrom;

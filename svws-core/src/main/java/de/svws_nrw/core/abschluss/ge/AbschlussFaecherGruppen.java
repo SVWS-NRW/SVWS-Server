@@ -128,7 +128,8 @@ public class AbschlussFaecherGruppen {
 	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1, final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2) {
+	public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1,
+			final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		final @NotNull List<@NotNull String> faecherFG1 = fg1.getKuerzel(filterFG1);
 		final @NotNull List<@NotNull String> faecherFG2 = fg2.getKuerzel(filterFG2);

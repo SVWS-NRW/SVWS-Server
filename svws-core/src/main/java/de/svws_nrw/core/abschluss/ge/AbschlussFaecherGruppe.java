@@ -32,7 +32,8 @@ public class AbschlussFaecherGruppe {
 	 * @param faecherNutzen     nur die gelisteten Fächer nutzen, null bedeutet grundsätzlich alle benoteten Fächer nutzen (außer den gefilterten)
 	 * @param faecherFiltern    null bedeutet keinen Filter verwenden, ansonsten werden die gelisteten Fächer gefiltert
 	 */
-	public AbschlussFaecherGruppe(final @NotNull List<@NotNull GEAbschlussFach> faecherAlle, final List<@NotNull String> faecherNutzen, final List<@NotNull String> faecherFiltern) {
+	public AbschlussFaecherGruppe(final @NotNull List<@NotNull GEAbschlussFach> faecherAlle, final List<@NotNull String> faecherNutzen,
+			final List<@NotNull String> faecherFiltern) {
 		// Gehe alle Leistungsdaten des Lernabschnittes durch und füge alle Fächer hinzu, die den Kriterien entsprechen
 		for (int i = 0; i < faecherAlle.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecherAlle.get(i);
@@ -42,7 +43,8 @@ public class AbschlussFaecherGruppe {
 				continue;
 			if ((faecherNutzen != null) && !faecherNutzen.contains(fach.kuerzel))
 				continue;
-			faecher.add(AbschlussManager.erstelleAbschlussFach(fach.kuerzel, fach.bezeichnung, fach.note, GELeistungsdifferenzierteKursart.from(fach.kursart), fach.istFremdsprache));
+			faecher.add(AbschlussManager.erstelleAbschlussFach(fach.kuerzel, fach.bezeichnung, fach.note, GELeistungsdifferenzierteKursart.from(fach.kursart),
+					fach.istFremdsprache));
 		}
 	}
 

@@ -57,14 +57,13 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * Der {@link Comparator}, der zum Vergleichen der Schlüsselwerte genutzt wird, wenn eine natürliche Ordnung über
 	 * das {@link Comparable} - Interface verwendet wird.
 	 */
+	@SuppressWarnings("unchecked")
 	private final @NotNull Comparator<@NotNull K> _comparatorNatural = (final @NotNull K key1, final @NotNull K key2) -> {
 		if ((key1 == null) || (key2 == null))
 			throw new NullPointerException();
 		if (!((key1 instanceof Comparable) && (key2 instanceof Comparable)))
 			throw new ClassCastException();
-		@SuppressWarnings("unchecked")
-		final @NotNull
-		Comparable<@NotNull K> k1 = (@NotNull Comparable<@NotNull K>) key1;
+		final @NotNull Comparable<@NotNull K> k1 = (@NotNull Comparable<@NotNull K>) key1;
 		return k1.compareTo(key2);
 	};
 
@@ -371,8 +370,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	boolean bcAddAllEntries(final @NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c,
 			final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		boolean changed = false;
-		for (final @NotNull
-				Entry<@NotNull K, @NotNull V> entry : c)
+		for (final @NotNull Entry<@NotNull K, @NotNull V> entry : c)
 			changed |= bcAddEntryReturnBool(entry, iv);
 		return changed;
 	}
@@ -385,8 +383,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 */
 	void bcAddAllEntriesOfMap(final @NotNull Map<? extends @NotNull K, ? extends @NotNull V> map,
 			final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		for (final @NotNull
-				Entry<? extends @NotNull K, ? extends @NotNull V> entry : map.entrySet())
+		for (final @NotNull Entry<? extends @NotNull K, ? extends @NotNull V> entry : map.entrySet())
 			bcAddEntryReturnOldValueOrNull(entry.getKey(), entry.getValue(), iv);
 	}
 
@@ -451,8 +448,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllKeys(final @NotNull Collection<@NotNull ?> c, final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		for (final @NotNull
-				Object key : c)
+		for (final @NotNull Object key : c)
 			if (!bcContainsKey(key, iv))
 				return false;
 		return true;
@@ -467,10 +463,9 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 *
 	 * @return TRUE, falls der Wert (Value) in dieser Datenstruktur existiert.
 	 */
+	@SuppressWarnings("unchecked")
 	boolean bcContainsValue(final @NotNull Object objValue, final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		@SuppressWarnings("unchecked")
-		final @NotNull
-		V value = (@NotNull V) objValue;
+		final @NotNull V value = (@NotNull V) objValue;
 		AVLMapNode<@NotNull K, @NotNull V> n1 = _nodeFirstOrNull(iv);
 		if (n1 == null)
 			return false;
@@ -497,8 +492,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllValues(final @NotNull Collection<@NotNull ?> c, final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		for (final @NotNull
-				Object val : c)
+		for (final @NotNull Object val : c)
 			if (!bcContainsValue(val, iv))
 				return false;
 		return true;
@@ -516,8 +510,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	boolean bcContainsEntry(final @NotNull Object o, final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		if (!(o instanceof Entry))
 			return false;
-		final @NotNull
-		Entry<@NotNull K, @NotNull V> e = (@NotNull Entry<@NotNull K, @NotNull V>) o;
+		final @NotNull Entry<@NotNull K, @NotNull V> e = (@NotNull Entry<@NotNull K, @NotNull V>) o;
 		final AVLMapNode<@NotNull K, @NotNull V> node = _nodeGetOrNull(e.getKey(), iv);
 		if (node == null)
 			return false;
@@ -534,8 +527,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllEntries(final @NotNull Collection<@NotNull ?> c, final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		for (final @NotNull
-				Object entry : c)
+		for (final @NotNull Object entry : c)
 			if (!bcContainsEntry(entry, iv))
 				return false;
 		return true;
@@ -555,8 +547,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	V bcRemoveKeyReturnOldValueOrNull(final @NotNull Object obj, final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		if (obj == null) // Sonderfall: NULL-Key
 			throw new NullPointerException("TreeMap unterstützt keine NULL-Schlüssel.");
-		final @NotNull
-		K key = (@NotNull K) obj;
+		final @NotNull K key = (@NotNull K) obj;
 		// Alten Wert (Value) sichern.
 		final AVLMapNode<@NotNull K, @NotNull V> old = _nodeGetOrNull(key, iv);
 		if (old == null)
@@ -593,8 +584,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 */
 	boolean bcRemoveAllKeys(final @NotNull Collection<@NotNull ?> c, final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		boolean changed = false;
-		for (final @NotNull
-				Object obj : c)
+		for (final @NotNull Object obj : c)
 			changed |= bcRemoveKeyReturnBool(obj, iv);
 		return changed;
 	}
@@ -615,8 +605,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 			return false;
 		if (_root == null)
 			throw new NullPointerException(); // Transpiler-Hilfe
-		final @NotNull
-		Entry<@NotNull K, @NotNull V> e = (@NotNull Entry<@NotNull K, @NotNull V>) o;
+		final @NotNull Entry<@NotNull K, @NotNull V> e = (@NotNull Entry<@NotNull K, @NotNull V>) o;
 		_root = _nodeRemoveKeyRecursive(_root, e.getKey());
 		return true;
 	}
@@ -631,8 +620,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 */
 	boolean bcRemoveAllEntries(final @NotNull Collection<@NotNull ?> c, final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		boolean removedAny = false;
-		for (final @NotNull
-				Object entry : c)
+		for (final @NotNull Object entry : c)
 			removedAny |= bcRemoveEntry(entry, iv);
 		return removedAny;
 	}
@@ -742,7 +730,8 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 *
 	 * @return Liefert den Comparator dieser Map.
 	 */
-	@NotNull Comparator<@NotNull K> bcGetComparator(final @NotNull AVLMapIntervall<@NotNull K> iv) {
+	@NotNull
+	Comparator<@NotNull K> bcGetComparator(final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		return _comparator;
 	}
 
@@ -765,7 +754,8 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull K bcGetFirstKeyOrException(final @NotNull AVLMapIntervall<@NotNull K> iv) {
+	@NotNull
+	K bcGetFirstKeyOrException(final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		return _keyOrExeption(_nodeFirstOrNull(iv));
 	}
 
@@ -788,7 +778,8 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull K bcGetLastKeyOrException(final @NotNull AVLMapIntervall<@NotNull K> iv) {
+	@NotNull
+	K bcGetLastKeyOrException(final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		return _keyOrExeption(_nodeLastOrNull(iv));
 	}
 
@@ -828,8 +819,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 */
 	@SuppressWarnings("unchecked")
 	V bcGetValueOfKeyOrNull(final @NotNull Object objKey, final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		final @NotNull
-		K key = (@NotNull K) objKey;
+		final @NotNull K key = (@NotNull K) objKey;
 		final AVLMapNode<@NotNull K, @NotNull V> node = _nodeGetOrNull(key, iv);
 		return (node == null) ? null : node._val;
 	}
@@ -1017,7 +1007,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeLastOrNull(final @NotNull AVLMapIntervall<@NotNull K> iv) {
-		return iv.toInc ?  _nodeFloorOrNull(iv.to, iv) : _nodeLowerOrNull(iv.to, iv);
+		return iv.toInc ? _nodeFloorOrNull(iv.to, iv) : _nodeLowerOrNull(iv.to, iv);
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeCeilingOrNull(final @NotNull K key,
@@ -1279,8 +1269,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 			final @NotNull AVLMapNode<@NotNull K, @NotNull V> nodeM) {
 		if (nodeM._childR == null)
 			throw new NullPointerException(); // kann/sollte nicht passieren.
-		final @NotNull
-		AVLMapNode<@NotNull K, @NotNull V> nodeR = nodeM._childR;
+		final @NotNull AVLMapNode<@NotNull K, @NotNull V> nodeR = nodeM._childR;
 		nodeM._childR = nodeR._childL;
 		nodeR._childL = nodeM;
 		_nodeRevalidateHeightAndSize(nodeM);
@@ -1292,8 +1281,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 			final @NotNull AVLMapNode<@NotNull K, @NotNull V> nodeM) {
 		if (nodeM._childL == null)
 			throw new NullPointerException(); // kann/sollte nicht passieren.
-		final @NotNull
-		AVLMapNode<@NotNull K, @NotNull V> nodeL = nodeM._childL;
+		final @NotNull AVLMapNode<@NotNull K, @NotNull V> nodeL = nodeM._childL;
 		nodeM._childL = nodeL._childR;
 		nodeL._childR = nodeM;
 		_nodeRevalidateHeightAndSize(nodeM);

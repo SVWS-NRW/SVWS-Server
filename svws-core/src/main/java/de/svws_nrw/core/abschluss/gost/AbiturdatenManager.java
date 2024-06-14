@@ -66,10 +66,12 @@ public class AbiturdatenManager {
 	private final @NotNull GostBelegpruefungsArt pruefungsArt;
 
 	/** Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht */
-	private final @NotNull Map<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche = new ArrayMap<>(GostFachbereich.values());
+	private final @NotNull Map<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche =
+			new ArrayMap<>(GostFachbereich.values());
 
 	/** Eine HashMap, welche den schnellen Zugriff auf die Prüfungsordnungs-relevanten Fachbelegungen über den Fachbereich ermöglicht */
-	private final @NotNull Map<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereicheRelevant = new ArrayMap<>(GostFachbereich.values());
+	private final @NotNull Map<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereicheRelevant =
+			new ArrayMap<>(GostFachbereich.values());
 
 
 	/** Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung */
@@ -403,7 +405,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungMitKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungMitKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -430,7 +433,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungExistiertMitKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertMitKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -455,7 +459,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Kursart mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungHatMindestensEinmalKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungHatMindestensEinmalKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -483,17 +488,22 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungMitSchriftlichkeitEinzeln(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr halbjahr) {
+	public boolean pruefeBelegungMitSchriftlichkeitEinzeln(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final @NotNull GostHalbjahr halbjahr) {
 		if (fachbelegung == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 		if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 			return false;
 		switch (schriftlichkeit) {
-			case BELIEBIG: return true;
-			case SCHRIFTLICH: return belegungHalbjahr.schriftlich;
-			case MUENDLICH: return !belegungHalbjahr.schriftlich;
-			default: return false;
+			case BELIEBIG:
+				return true;
+			case SCHRIFTLICH:
+				return belegungHalbjahr.schriftlich;
+			case MUENDLICH:
+				return !belegungHalbjahr.schriftlich;
+			default:
+				return false;
 		}
 	}
 
@@ -509,7 +519,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungMitSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungMitSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -532,7 +543,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungErfuelltNicht(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungErfuelltNicht(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -541,8 +553,8 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr))
 					|| ((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
-					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
-							|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
+							&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
+									|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
 				return true;
 		}
 		return false;
@@ -561,7 +573,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungErfuelltNichtFallsBelegt(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungErfuelltNichtFallsBelegt(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -591,7 +604,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die angegebene Schriftlichkeit mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungHatMindestensEinmalSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungHatMindestensEinmalSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -622,7 +636,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
@@ -746,8 +761,9 @@ public class AbiturdatenManager {
 				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
 					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))
-						&& (((halbjahr != GostHalbjahr.Q11) && (halbjahr != GostHalbjahr.Q12) && (halbjahr != GostHalbjahr.Q21)) || (belegungHalbjahr.schriftlich))) {
-							hatHalbjahresBelegung = true;
+							&& (((halbjahr != GostHalbjahr.Q11) && (halbjahr != GostHalbjahr.Q12) && (halbjahr != GostHalbjahr.Q21))
+									|| (belegungHalbjahr.schriftlich))) {
+						hatHalbjahresBelegung = true;
 						// "break;" wird hier nicht verwendet, da bei der fehlerhaften Belegung von inhaltsgleichen Fächern (gleiches Statistik-Kürzel) im selben Halbjahr diese Prüfung dennoch korrekt ablaufen sollte
 					}
 				}
@@ -773,7 +789,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungExistiertMitSchriftlichkeitEinzeln(final List<AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr halbjahr) {
+	public boolean pruefeBelegungExistiertMitSchriftlichkeitEinzeln(final List<AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr halbjahr) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -795,7 +812,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungExistiertMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -817,7 +835,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Kursart bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungExistiertHatMindestensEinmalKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertHatMindestensEinmalKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart,
+			final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -840,7 +859,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true oder false (siehe oben)
 	 */
-	public boolean pruefeBelegungExistiertErfuelltNicht(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertErfuelltNicht(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -864,7 +884,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true oder false (siehe oben)
 	 */
-	public boolean pruefeBelegungExistiertErfuelltNichtFallsBelegt(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertErfuelltNichtFallsBelegt(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -888,7 +909,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungDurchgehendBelegbar(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegbar(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit,
+			final GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if (!GostFachUtils.istDurchgehendBelegbarBisQ22(getFach(fachbelegung)))
@@ -909,7 +931,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungDurchgehendBelegbarExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegbarExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
@@ -934,13 +957,14 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, falls bei eine Fachbelegung durchgängig belegt wurde und die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
-	public boolean pruefeBelegungDurchgehendBelegtExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegtExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
-				&& pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
-					return true;
+					&& pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
+				return true;
 		}
 		return false;
 	}
@@ -980,7 +1004,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return eine Liste mit den Fachbelegungen, welche die kursart haben
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungKursartExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungKursartExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostKursart kursart) {
 		final @NotNull ArrayList<@NotNull AbiturFachbelegung> result = new ArrayList<>();
 		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return result;
@@ -1033,7 +1058,7 @@ public class AbiturdatenManager {
 				continue;
 			boolean hatBelegung = true;
 			// Beachte zur Fortsetzung alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			final @NotNull GostHalbjahr@NotNull[] halbjahre = { GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+			final @NotNull GostHalbjahr @NotNull [] halbjahre = { GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
 			for (final GostHalbjahr halbjahr : halbjahre) {
 				boolean hatHalbjahresBelegung = false;
 				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
@@ -1347,7 +1372,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungen(final List<@NotNull AbiturFachbelegung> fachbelegungen, final GostHalbjahr... halbjahre) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungen(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
 		final @NotNull ArrayList<@NotNull AbiturFachbelegung> result = new ArrayList<>();
@@ -1454,7 +1480,8 @@ public class AbiturdatenManager {
 						final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 						if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 							boolean istSchriftlichkeitOK = true;
-							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21)) && (!belegungHalbjahr.schriftlich))
+							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21))
+									&& (!belegungHalbjahr.schriftlich))
 								istSchriftlichkeitOK = false;
 							if (istSchriftlichkeitOK) {
 								belegung_vorhanden = true;
@@ -1485,7 +1512,8 @@ public class AbiturdatenManager {
 	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungenMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungenMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen,
+			final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
 		final @NotNull ArrayList<@NotNull AbiturFachbelegung> result = new ArrayList<>();
@@ -1559,13 +1587,14 @@ public class AbiturdatenManager {
 	 *
 	 * @return die Belegungsinformationen zu dem Fach
 	 */
-	public AbiturFachbelegungHalbjahr getBelegungHalbjahr(final @NotNull AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr halbjahr, final @NotNull GostSchriftlichkeit schriftlich) {
+	public AbiturFachbelegungHalbjahr getBelegungHalbjahr(final @NotNull AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr halbjahr,
+			final @NotNull GostSchriftlichkeit schriftlich) {
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 		return ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))
 				&& ((schriftlich == GostSchriftlichkeit.BELIEBIG)
-				|| ((schriftlich == GostSchriftlichkeit.SCHRIFTLICH) && (belegungHalbjahr.schriftlich))
-				|| ((schriftlich == GostSchriftlichkeit.MUENDLICH) && (!belegungHalbjahr.schriftlich))))
-				? belegungHalbjahr : null;
+						|| ((schriftlich == GostSchriftlichkeit.SCHRIFTLICH) && (belegungHalbjahr.schriftlich))
+						|| ((schriftlich == GostSchriftlichkeit.MUENDLICH) && (!belegungHalbjahr.schriftlich))))
+								? belegungHalbjahr : null;
 	}
 
 
@@ -1609,8 +1638,8 @@ public class AbiturdatenManager {
 			return null;
 		final GostKursart kursart = GostKursart.fromKuerzel(belegung.letzteKursart);
 		if ((kursart == null) || ((kursart == GostKursart.LK) && (!fach.istMoeglichAbiLK))
-				 || ((kursart == GostKursart.GK) && (!fach.istMoeglichAbiGK))
-				 || ((kursart != GostKursart.GK) && (kursart != GostKursart.LK)))
+				|| ((kursart == GostKursart.GK) && (!fach.istMoeglichAbiGK))
+				|| ((kursart != GostKursart.GK) && (kursart != GostKursart.LK)))
 			return null;
 		// LK ?
 		if (kursart == GostKursart.LK)
@@ -1627,7 +1656,7 @@ public class AbiturdatenManager {
 		return pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)
-				? kursart : null;
+						? kursart : null;
 	}
 
 
@@ -1692,7 +1721,7 @@ public class AbiturdatenManager {
 			return false;
 		if (abidaten.sprachendaten == null)
 			return false;
-		for (final AbiturFachbelegung fs: fremdsprachen) {
+		for (final AbiturFachbelegung fs : fremdsprachen) {
 			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
@@ -1719,7 +1748,7 @@ public class AbiturdatenManager {
 			return false;
 		if (abidaten.sprachendaten == null)
 			return false;
-		for (final AbiturFachbelegung fs: fremdsprachen) {
+		for (final AbiturFachbelegung fs : fremdsprachen) {
 			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
@@ -1899,7 +1928,7 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull int[] getWochenstunden() {
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
-		final @NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
+		final @NotNull int[] stunden = new int[] { 0, 0, 0, 0, 0, 0 };
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			stunden[hj.id] = kuw.getWochenstunden(hj);
 		return stunden;
@@ -1936,7 +1965,7 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull int[] getAnrechenbareKurse() {
 		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
-		final @NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
+		final @NotNull int[] anzahl = new int[] { 0, 0, 0, 0, 0, 0 };
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
 		return anzahl;

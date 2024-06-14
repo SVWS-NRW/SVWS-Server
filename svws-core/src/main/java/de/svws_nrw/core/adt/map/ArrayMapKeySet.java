@@ -63,12 +63,12 @@ final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
 	}
 
 	@Override
-	public @NotNull Object@NotNull[] toArray() {
+	public @NotNull Object @NotNull [] toArray() {
 		return getKeyList().toArray();
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T@NotNull[] toArray(final @NotNull T@NotNull[] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return getKeyList().toArray(a);
 	}
 

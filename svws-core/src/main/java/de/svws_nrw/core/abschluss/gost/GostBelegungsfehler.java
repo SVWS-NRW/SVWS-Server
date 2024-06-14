@@ -230,22 +230,22 @@ public enum GostBelegungsfehler {
 			"Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit.",
 			"Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."),
 
-    /** BelegungsfehlerArt FS_23 */
-    FS_23("FS_23", GostBelegungsfehlerArt.BELEGUNG,
-        "Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen.",
-        "Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."),
+	/** BelegungsfehlerArt FS_23 */
+	FS_23("FS_23", GostBelegungsfehlerArt.BELEGUNG,
+			"Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen.",
+			"Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."),
 
-    /** BelegungsfehlerArt FS_24 */
-    FS_24("FS_24", GostBelegungsfehlerArt.BELEGUNG,
-        "Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden.",
-        "Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden."),
+	/** BelegungsfehlerArt FS_24 */
+	FS_24("FS_24", GostBelegungsfehlerArt.BELEGUNG,
+			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden.",
+			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden."),
 
-    /** BelegungsfehlerArt FS_25 */
-    FS_25("FS_25", GostBelegungsfehlerArt.BELEGUNG,
-        "Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge.",
-        "Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge."),
+	/** BelegungsfehlerArt FS_25 */
+	FS_25("FS_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge.",
+			"Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge."),
 
-    /** BelegungsfehlerArt  */
+	/** BelegungsfehlerArt  */
 	GE_1_INFO("GE_1_INFO", GostBelegungsfehlerArt.HINWEIS,
 			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
 			"Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."),
@@ -598,7 +598,8 @@ public enum GostBelegungsfehler {
 		this.code = code;
 		this.art = art;
 		this.textGESAMT = (textGESAMT != null) ? textGESAMT : "Programmfehler: Diese Belegungsfehlerart ist für eine Gesamt-Prüfung nicht vorgesehen!";
-		this.textEF1 = (textEF1 != null) ? textEF1 : "Programmfehler: Diese Belegungsfehlerart ist für eine Prüfung eingeschränkt auf die EF.1 nicht vorgesehen!";
+		this.textEF1 =
+				(textEF1 != null) ? textEF1 : "Programmfehler: Diese Belegungsfehlerart ist für eine Prüfung eingeschränkt auf die EF.1 nicht vorgesehen!";
 	}
 
 

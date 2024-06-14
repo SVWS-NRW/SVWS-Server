@@ -43,7 +43,8 @@ public class HashMap5D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
-	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5, final @NotNull V value) {
+	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5,
+			final @NotNull V value) {
 		HashMap4D<@NotNull K2, @NotNull K3, @NotNull K4, @NotNull K5, @NotNull V> map2 = _map.get(key1);
 		if (map2 == null) {
 			map2 = new HashMap4D<>();
@@ -68,7 +69,8 @@ public class HashMap5D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @throws NullPointerException falls es den Pfad (key1, key2, key3, key4) nicht gibt.
 	 */
-	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) throws NullPointerException {
+	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5)
+			throws NullPointerException {
 		final HashMap4D<@NotNull K2, @NotNull K3, @NotNull K4, @NotNull K5, @NotNull V> map2 = _map.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
@@ -172,7 +174,8 @@ public class HashMap5D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @throws NullPointerException falls der Pfad (key1, key2, key3) nicht
 	 *                              existiert, oder NULL zugeordnet ist.
 	 */
-	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) throws NullPointerException {
+	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4,
+			final @NotNull K5 key5) throws NullPointerException {
 		final V value = getOrException(key1, key2, key3, key4, key5);
 
 		if (value == null)
@@ -333,7 +336,8 @@ public class HashMap5D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesOfMap5AsList(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
+	public @NotNull List<@NotNull V> getNonNullValuesOfMap5AsList(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3,
+			final @NotNull K4 key4) {
 		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
 
 		final HashMap4D<@NotNull K2, @NotNull K3, @NotNull K4, @NotNull K5, @NotNull V> map2 = _map.get(key1);

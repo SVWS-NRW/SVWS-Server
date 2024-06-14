@@ -60,12 +60,12 @@ final class ArrayMapCollection<@NotNull K, @NotNull V> implements Collection<@No
 	}
 
 	@Override
-	public @NotNull Object@NotNull[] toArray() {
+	public @NotNull Object @NotNull [] toArray() {
 		return getValueList().toArray();
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T@NotNull[] toArray(final @NotNull T@NotNull[] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return getValueList().toArray(a);
 	}
 

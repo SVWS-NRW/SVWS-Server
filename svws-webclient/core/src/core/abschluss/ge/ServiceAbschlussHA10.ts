@@ -101,7 +101,7 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 			if (f.kuerzel === null)
 				continue;
 			const note : number = f.note;
-			const note_neu : number = (note === 1) ? 1 : note - 1;
+			const note_neu : number = (note === 1) ? 1 : (note - 1);
 			this.logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
 			f.note = note_neu;
 		}

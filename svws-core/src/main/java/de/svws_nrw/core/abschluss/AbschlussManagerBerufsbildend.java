@@ -28,7 +28,8 @@ public final class AbschlussManagerBerufsbildend {
 	 *
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
-	public static @NotNull AbschlussErgebnisBerufsbildend getErgebnis(final boolean hatBSA, final double note, final Boolean hatBA, final SchulabschlussAllgemeinbildend abschlussAllgemeinbildend) {
+	public static @NotNull AbschlussErgebnisBerufsbildend getErgebnis(final boolean hatBSA, final double note, final Boolean hatBA,
+			final SchulabschlussAllgemeinbildend abschlussAllgemeinbildend) {
 		// Nachprüfungsmöglichkeiten ???
 		final @NotNull AbschlussErgebnisBerufsbildend ergebnis = new AbschlussErgebnisBerufsbildend();
 		ergebnis.hatBSA = hatBSA;

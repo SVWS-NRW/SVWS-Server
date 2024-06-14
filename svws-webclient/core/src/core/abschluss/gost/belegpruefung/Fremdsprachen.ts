@@ -127,7 +127,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				continue;
 			gefundenFremdsprachenbelegung = true;
 			const gostFach : GostFach | null = this.manager.getFach(abiFachbelegung);
-			if (gostFach !== null && !JavaObject.equalsTranspiler(gostFach.kuerzel, (""))) {
+			if ((gostFach !== null) && !JavaObject.equalsTranspiler(gostFach.kuerzel, (""))) {
 				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(this.manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					if (this.manager.pruefeBelegungDurchgehendBelegbar(abiFachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 						anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar += 1;
@@ -144,7 +144,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		}
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0)
 			this.addFehler(GostBelegungsfehler.FS_12);
-		if ((gefundenFremdsprachenbelegung && !(gefundenFortgefuehrteFremdsprachenbelegungOhneSprachenfolge || gefundenFortgefuehrteFremdspracheAlsNeueinsetzende)) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar === 0))
+		if ((gefundenFremdsprachenbelegung && !(gefundenFortgefuehrteFremdsprachenbelegungOhneSprachenfolge || gefundenFortgefuehrteFremdspracheAlsNeueinsetzende)) && ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar) === 0))
 			this.addFehler(GostBelegungsfehler.FS_11);
 		if (anzahlFortgefuehrteFremdsprachenEFBelegbar > 0) {
 			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar === 0)
@@ -155,7 +155,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.FS_18);
 			return;
 		}
-		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlFortgefuehrteFremdsprachenEFBelegbar) === 0 && anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar > 0) {
+		if (((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlFortgefuehrteFremdsprachenEFBelegbar) === 0) && (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar > 0)) {
 			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0) {
 				this.addFehler(GostBelegungsfehler.FS_18);
 			}

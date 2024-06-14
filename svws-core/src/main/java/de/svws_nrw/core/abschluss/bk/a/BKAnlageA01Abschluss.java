@@ -37,11 +37,14 @@ public class BKAnlageA01Abschluss extends Service<@NotNull BKAnlageAFaecher, @No
 		// Prüfe auf BSA
 		logger.log(LogLevel.INFO, "Prüfe BSA:");
 		if (AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) > 0) {
-			logger.logLn(LogLevel.INFO, " nicht erreicht (kein ungenügend erlaubt, insgesamt " + AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) + ").");
-			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
+			logger.logLn(LogLevel.INFO,
+					" nicht erreicht (kein ungenügend erlaubt, insgesamt " + AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) + ").");
+			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false,
+					SchulabschlussAllgemeinbildend.OA);
 		} else if (AbschlussManagerBerufsbildend.getAnzahlDefizite(input) > 1) {
 			logger.logLn(LogLevel.INFO, " nicht erreicht (mehr als 1 Defizit, insgesamt " + AbschlussManagerBerufsbildend.getAnzahlDefizite(input) + ").");
-			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
+			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false,
+					SchulabschlussAllgemeinbildend.OA);
 		}
 		logger.logLn(LogLevel.INFO, " erreicht.");
 
@@ -53,23 +56,27 @@ public class BKAnlageA01Abschluss extends Service<@NotNull BKAnlageAFaecher, @No
 				logger.logLn(LogLevel.INFO, "Das Sprachreferenzniveau in Englisch ist für den MSA nicht ausreichend.");
 			}
 			logger.logLn(LogLevel.INFO, "HSA10 wurde erreicht.");
-			return AbschlussManagerBerufsbildend.getErgebnis(true, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.HA10);
+			return AbschlussManagerBerufsbildend.getErgebnis(true, AbschlussManagerBerufsbildend.getDurchschnitt(input),
+					input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.HA10);
 		}
 
 		if (AbschlussManagerBerufsbildend.getDurchschnitt(input) <= 2.5) {
 			logger.logLn(LogLevel.INFO, "Die Durschnittsnote ist besser als oder gleich 2,5.");
 			logger.logLn(LogLevel.INFO, "MSA-Q wurde erreicht.");
-			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.MSA_Q);
+			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input),
+					input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.MSA_Q);
 		} else if (AbschlussManagerBerufsbildend.getDurchschnitt(input) <= 3.5) {
 			logger.logLn(LogLevel.INFO, "Die Durschnittsnote ist besser als oder gleich 3,5, aber schlechter als 2,5.");
 			logger.logLn(LogLevel.INFO, "MSA wurde erreicht.");
-			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.MSA);
+			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input),
+					input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.MSA);
 		}
 
 		// nur HSA
 		logger.logLn(LogLevel.INFO, "Die Durschnittsnote ist schlechter als 3,5.");
 		logger.logLn(LogLevel.INFO, "HSA10 wurde erreicht.");
-		return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.HA10);
+		return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung,
+				SchulabschlussAllgemeinbildend.HA10);
 	}
 
 

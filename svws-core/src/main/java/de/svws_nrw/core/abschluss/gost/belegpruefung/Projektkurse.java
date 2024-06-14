@@ -91,8 +91,6 @@ public final class Projektkurse extends GostBelegpruefung {
 
 
 
-
-
 	/**
 	 * Prüft, ob ein Projektfach in der EF belegt wurde. Eine solche Belegung ist nicht zulässig.
 	 */
@@ -233,7 +231,8 @@ public final class Projektkurse extends GostBelegpruefung {
 				// Prüfe, ob die Fachdefinition des Projektkursfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 				final GostFach lf = manager.getFach(leitfach1);
 				if (lf == null)
-					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
+					throw new DeveloperNotificationException(
+							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
 				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
 					addFehler(GostBelegungsfehler.PF_19);
@@ -243,7 +242,8 @@ public final class Projektkurse extends GostBelegpruefung {
 				// Prüfe, ob die Fachdefinition des Projektkursfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 				final GostFach lf = manager.getFach(leitfach2);
 				if (lf == null)
-					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
+					throw new DeveloperNotificationException(
+							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
 				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
 					addFehler(GostBelegungsfehler.PF_19);
@@ -263,7 +263,8 @@ public final class Projektkurse extends GostBelegpruefung {
 	 *
 	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
 	 */
-	private boolean pruefeBelegungLeitfachbelegungNormal(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach, final @NotNull GostHalbjahr halbjahr1) {
+	private boolean pruefeBelegungLeitfachbelegungNormal(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach,
+			final @NotNull GostHalbjahr halbjahr1) {
 		// Prüfe zunächst die Belegung des Projektfaches
 		if (halbjahr1 == GostHalbjahr.Q22)
 			return false;
@@ -288,7 +289,8 @@ public final class Projektkurse extends GostBelegpruefung {
 	 *
 	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
 	 */
-	private boolean pruefeBelegungLeitfachbelegungEinzel(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach, final @NotNull GostHalbjahr halbjahr1) {
+	private boolean pruefeBelegungLeitfachbelegungEinzel(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach,
+			final @NotNull GostHalbjahr halbjahr1) {
 		// Prüfe zunächst die Belegung des Projektfaches
 		if (!manager.pruefeBelegung(projektkurs, halbjahr1))
 			return false;
@@ -315,12 +317,12 @@ public final class Projektkurse extends GostBelegpruefung {
 		// oder ob eine Einzelbelegungen eines Projektkurse zuvor eine zulässige Leitfachbelegung hatte
 		// der Spezial-Fall einer Einzelbelegung in der Q2.2 muss durch einen anderen Fehlercode korrigiert werden, aber nicht durch die Leitfachbelegung...
 		return (pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q11)
-			|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q12)
-			|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q21)
-			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q11)
-			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q12)
-			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q21)
-			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q22));
+				|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q12)
+				|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q21)
+				|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q11)
+				|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q12)
+				|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q21)
+				|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q22));
 	}
 
 

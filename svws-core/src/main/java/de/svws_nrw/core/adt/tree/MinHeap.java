@@ -286,13 +286,13 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	}
 
 	@Override
-	public @NotNull Object@NotNull[] toArray() {
+	public @NotNull Object @NotNull [] toArray() {
 		return copyNodes();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull U> @NotNull U@NotNull[] toArray(final @NotNull U@NotNull[] a) {
+	public <@NotNull U> @NotNull U @NotNull [] toArray(final @NotNull U @NotNull [] a) {
 		if (a.length < _size)
 			return (@NotNull U[]) copyNodes();
 		System.arraycopy(_nodes, 0, a, 0, _size);
@@ -329,11 +329,11 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return ein sortiertes Array mit den Elementen des Minimum Heaps.
 	 */
 	@SuppressWarnings("unchecked")
-	public @NotNull T@NotNull[] toSortedArray() {
+	public @NotNull T @NotNull [] toSortedArray() {
 		if (_size == 0)
-			return (@NotNull T@NotNull[]) new Object[0];
+			return (@NotNull T @NotNull []) new Object[0];
 		final @NotNull MinHeap<@NotNull T> copy = new MinHeap<>(this);
-		final @NotNull T@NotNull[] tmp = newArray(_nodes[0], _size);
+		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], _size);
 		T current;
 		int i = 0;
 		while ((current = copy.poll()) != null)
@@ -492,10 +492,10 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return das neue Array
 	 */
 	@SuppressWarnings("unchecked")
-	private @NotNull T@NotNull[] newArray(final T elem, final int length) {
+	private @NotNull T @NotNull [] newArray(final T elem, final int length) {
 		if (elem == null)
-			return (@NotNull T@NotNull[]) Array.newInstance(Object.class, length);
-		return (@NotNull T@NotNull[]) Array.newInstance(elem.getClass(), length);
+			return (@NotNull T @NotNull []) Array.newInstance(Object.class, length);
+		return (@NotNull T @NotNull []) Array.newInstance(elem.getClass(), length);
 	}
 
 
@@ -504,8 +504,8 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 *
 	 * @return die Kopie des _nodes-Array.
 	 */
-	private @NotNull T@NotNull[] copyNodes() {
-		final @NotNull T@NotNull[] result = newArray(_size <= 0 ? null : _nodes[0], _size);
+	private @NotNull T @NotNull [] copyNodes() {
+		final @NotNull T @NotNull [] result = newArray(_size <= 0 ? null : _nodes[0], _size);
 		System.arraycopy(_nodes, 0, result, 0, _size);
 		return result;
 	}
@@ -519,13 +519,13 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 *
 	 * @throws IllegalStateException
 	 */
-	private void grow() throws IllegalStateException  {
+	private void grow() throws IllegalStateException {
 		if (_nodes.length == Integer.MAX_VALUE)
 			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + Integer.MAX_VALUE + " Elemente beinhalten.");
 		int newLength = _nodes.length * 2 + 1;
 		if (newLength < 0)
 			newLength = Integer.MAX_VALUE;
-		final @NotNull T@NotNull[] tmp = newArray(_nodes[0], newLength);
+		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], newLength);
 		System.arraycopy(_nodes, 0, tmp, 0, _size);
 		this._nodes = tmp;
 	}

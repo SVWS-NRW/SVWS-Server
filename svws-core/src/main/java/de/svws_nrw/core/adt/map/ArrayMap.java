@@ -67,7 +67,8 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 			throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.");
 		final @NotNull K firstKey = keyArray[0];
 		if (!(firstKey instanceof Enum<?>))
-			throw new IllegalArgumentException("Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.");
+			throw new IllegalArgumentException(
+					"Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.");
 		this.keyArray = keyArray;
 		this.keyIndexFunction = keyIndexFunctionEnum;
 		this.entries = (ArrayMapEntry<@NotNull K, @NotNull V>[]) Array.newInstance(ArrayMapEntry.class, keyArray.length);
@@ -165,8 +166,8 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	 *
 	 * @return der zugeordnete Eintrag oder null, wenn kein Eintrag zugeordnet ist
 	 */
+	@SuppressWarnings("unchecked")
 	ArrayMapEntry<@NotNull K, @NotNull V> getEntry(final Object key) {
-		@SuppressWarnings("unchecked")
 		final K k = (K) key;
 		if (k == null)
 			return null;
@@ -224,11 +225,11 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 		return entry == null ? null : entry.getValue();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public V remove(final Object key) {
 		if (key == null)
 			throw new NullPointerException("Der Schlüsselwert darf nicht null sein.");
-		@SuppressWarnings("unchecked")
 		final int index = keyIndexFunction.apply((K) key);
 		if (!isValidIndex(index))
 			return null;

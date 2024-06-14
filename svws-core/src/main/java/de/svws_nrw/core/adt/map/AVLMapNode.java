@@ -26,7 +26,8 @@ public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull 
 	/**
 	 * Der zum Schlüsselwert zugeordnete Wert des Baum-Eintrags.
 	 */
-	@NotNull V _val;
+	@NotNull
+	V _val;
 
 	/**
 	 * Der Vorgänger-Knoten.

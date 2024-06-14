@@ -133,7 +133,6 @@ public final class AbschlussManager {
 
 
 
-
 	/**
 	 * Die Methode dient dem Erzeugen eines Faches für die Abschlussberechnung.
 	 *
@@ -145,7 +144,8 @@ public final class AbschlussManager {
 	 *
 	 * @return das Abschlussfach
 	 */
-	public static @NotNull GEAbschlussFach erstelleAbschlussFach(final @NotNull String kuerzel, final String bezeichnung, final int note, final @NotNull GELeistungsdifferenzierteKursart kursart, final Boolean istFremdsprache) {
+	public static @NotNull GEAbschlussFach erstelleAbschlussFach(final @NotNull String kuerzel, final String bezeichnung, final int note,
+			final @NotNull GELeistungsdifferenzierteKursart kursart, final Boolean istFremdsprache) {
 		final @NotNull GEAbschlussFach fach = new GEAbschlussFach();
 		fach.kuerzel = kuerzel;
 		fach.bezeichnung = (bezeichnung == null || "".equals(bezeichnung)) ? "---" : bezeichnung;
@@ -154,7 +154,6 @@ public final class AbschlussManager {
 		fach.istFremdsprache = (istFremdsprache != null) && istFremdsprache;
 		return fach;
 	}
-
 
 
 

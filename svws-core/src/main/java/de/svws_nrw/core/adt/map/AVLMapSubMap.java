@@ -468,12 +468,9 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	boolean bcRetainAllKeys(final @NotNull Collection<@NotNull ?> c) {
 		// Wandle die Collection in eine Map um, damit der Zugriff schnell ist.
 		// Dies ist erlaubt, da die Schlüssel eine natürliche Ordnung aufweisen.
-		final @NotNull
-		AVLMap<@NotNull K, @NotNull K> mapRetain = new AVLMap<>();
-		for (final @NotNull
-				Object obj : c) {
-			final @NotNull
-			K key = (@NotNull K) obj;
+		final @NotNull AVLMap<@NotNull K, @NotNull K> mapRetain = new AVLMap<>();
+		for (final @NotNull Object obj : c) {
+			final @NotNull K key = (@NotNull K) obj;
 			mapRetain.put(key, key);
 		}
 
@@ -503,13 +500,10 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 		// Vorsicht: c könnte verschiedene Entries mit dem selben KEY haben.
 
 		// Sammle alle Entries, die bleiben sollen.
-		final @NotNull
-		AVLMap<@NotNull K, @NotNull V> mapSave = new AVLMap<>();
+		final @NotNull AVLMap<@NotNull K, @NotNull V> mapSave = new AVLMap<>();
 
-		final @NotNull
-		Set<@NotNull Entry<@NotNull K, @NotNull V>> setSave = mapSave.entrySet();
-		for (final @NotNull
-				Object o : c)
+		final @NotNull Set<@NotNull Entry<@NotNull K, @NotNull V>> setSave = mapSave.entrySet();
+		for (final @NotNull Object o : c)
 			if (_par.bcContainsEntry(o, _iv))
 				setSave.add((@NotNull Entry<@NotNull K, @NotNull V>) o);
 
@@ -611,7 +605,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull ArrayList<K> bcGetArrayListOfKeys() {
+	@NotNull
+	ArrayList<K> bcGetArrayListOfKeys() {
 		final ArrayList<K> v = new ArrayList<>();
 		final Iterator<K> iter = navigableKeySet().iterator();
 		while (iter.hasNext())
@@ -625,7 +620,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull ArrayList<V> bcGetArrayListOfValues() {
+	@NotNull
+	ArrayList<V> bcGetArrayListOfValues() {
 		final ArrayList<V> v = new ArrayList<>();
 		final Iterator<V> iter = values().iterator();
 		while (iter.hasNext())
@@ -639,7 +635,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 */
-	@NotNull ArrayList<Entry<K, V>> bcGetArrayListOfEntries() {
+	@NotNull
+	ArrayList<Entry<K, V>> bcGetArrayListOfEntries() {
 		final ArrayList<Entry<K, V>> v = new ArrayList<>();
 		final Iterator<Entry<K, V>> iter = entrySet().iterator();
 		while (iter.hasNext())
@@ -653,7 +650,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Einen {@link Iterator} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull Iterator<@NotNull K> bcGetSubKeySetIterator() {
+	@NotNull
+	Iterator<@NotNull K> bcGetSubKeySetIterator() {
 		return new AVLMapSubKeySetIterator<>(this);
 	}
 
@@ -663,7 +661,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Einen {@link Iterator} von Werten (Values) relativ zu dieser Sub-Map.
 	 */
-	@NotNull Iterator<@NotNull V> bcGetSubCollectionIterator() {
+	@NotNull
+	Iterator<@NotNull V> bcGetSubCollectionIterator() {
 		return new AVLMapSubCollectionIterator<>(this);
 	}
 
@@ -673,7 +672,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link Iterator} von Entries relativ zu dieser Sub-Map.
 	 */
-	@NotNull Iterator<@NotNull Entry<@NotNull K, @NotNull V>> bcGetSubEntrySetIterator() {
+	@NotNull
+	Iterator<@NotNull Entry<@NotNull K, @NotNull V>> bcGetSubEntrySetIterator() {
 		return new AVLMapSubEntrySetIterator<>(this);
 	}
 
@@ -683,7 +683,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull NavigableSet<@NotNull K> bcGetSubKeySetDescending() {
+	@NotNull
+	NavigableSet<@NotNull K> bcGetSubKeySetDescending() {
 		return new AVLMapSubKeySet<>(new AVLMapSubMap<>(_par, _iv, !_asc));
 	}
 
@@ -693,7 +694,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link Iterator} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull Iterator<@NotNull K> bcGetSubKeySetDescendingIterator() {
+	@NotNull
+	Iterator<@NotNull K> bcGetSubKeySetDescendingIterator() {
 		return new AVLMapSubKeySetIterator<>(new AVLMapSubMap<>(_par, _iv, !_asc));
 	}
 
@@ -708,7 +710,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull NavigableSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final boolean fromInclusive, final @NotNull K toElement,
+	@NotNull
+	NavigableSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final boolean fromInclusive, final @NotNull K toElement,
 			final boolean toInclusive) {
 		return _createSet(fromElement, fromInclusive, toElement, toInclusive, _asc);
 	}
@@ -722,7 +725,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull NavigableSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement, final boolean inclusive) {
+	@NotNull
+	NavigableSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement, final boolean inclusive) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, inclusive, _asc);
 	}
 
@@ -735,7 +739,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull NavigableSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement, final boolean inclusive) {
+	@NotNull
+	NavigableSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement, final boolean inclusive) {
 		return _createSet(fromElement, inclusive, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -751,7 +756,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull SortedSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final @NotNull K toElement) {
+	@NotNull
+	SortedSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final @NotNull K toElement) {
 		return _createSet(fromElement, true, toElement, false, _asc);
 	}
 
@@ -765,7 +771,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull SortedSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement) {
+	@NotNull
+	SortedSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, false, _asc);
 	}
 
@@ -779,7 +786,8 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	 *
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull SortedSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement) {
+	@NotNull
+	SortedSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement) {
 		return _createSet(fromElement, true, _iv.to, _iv.toInc, _asc);
 	}
 

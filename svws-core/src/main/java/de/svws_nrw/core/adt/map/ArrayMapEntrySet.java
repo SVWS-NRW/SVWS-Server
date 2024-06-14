@@ -44,12 +44,12 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 		return _map.isEmpty();
 	}
 
+	@SuppressWarnings("unchecked")
 	private Entry<@NotNull K, @NotNull V> toEntry(final Object obj) {
 		if (obj == null)
 			return null;
 		if (!(obj instanceof Entry))
 			return null;
-		@SuppressWarnings("unchecked")
 		final @NotNull Entry<@NotNull K, @NotNull V> entry = (@NotNull Entry<@NotNull K, @NotNull V>) obj;
 		return entry;
 	}
@@ -89,12 +89,12 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 	}
 
 	@Override
-	public @NotNull Object@NotNull[] toArray() {
+	public @NotNull Object @NotNull [] toArray() {
 		return getEntryList().toArray();
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T@NotNull[] toArray(final @NotNull T@NotNull[] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return getEntryList().toArray(a);
 	}
 

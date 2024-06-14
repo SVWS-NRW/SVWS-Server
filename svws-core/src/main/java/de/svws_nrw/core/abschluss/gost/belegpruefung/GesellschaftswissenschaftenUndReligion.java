@@ -114,9 +114,10 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 
 		// Falls nicht: Philosophie und eine weitere durchgängig belegbare Gesellschaftswissenschaft müssen belegt sein
 		if ((!manager.pruefeBelegung(philosophie, GostHalbjahr.EF1))
-			|| ((!manager.pruefeBelegungDurchgehendBelegbarExistiert(geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
-				&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
-				&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)))) {
+				|| ((!manager.pruefeBelegungDurchgehendBelegbarExistiert(geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
+						&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
+						&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG,
+								GostHalbjahr.EF1)))) {
 			// Philosophie wurde nicht belegt oder keine zusätzliche Gesellschaftswissenschaft, welche durchgängig belegbar ist
 			addFehler(GostBelegungsfehler.RE_10);
 		}
@@ -158,7 +159,8 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	 * - Zusatzkurse zählen hier nicht als Belegung
 	 */
 	private void pruefeDurchgaengigeBelegung() {
-		if (!manager.pruefeBelegungExistiert(gesellschaftswissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!manager.pruefeBelegungExistiert(gesellschaftswissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12,
+				GostHalbjahr.Q21, GostHalbjahr.Q22))
 			addFehler(GostBelegungsfehler.GW_10);
 	}
 

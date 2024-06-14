@@ -124,7 +124,6 @@ public final class AbiFaecher extends GostBelegpruefung {
 
 
 
-
 	/**
 	 * Gesamtprüfung Punkt 70:
 	 * Prüfe, ob der erste LK eine fortgeführte Fremdsprache, eine klassische Naturwissenschaft, Mathematik oder Deutsch ist

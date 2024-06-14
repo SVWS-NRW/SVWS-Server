@@ -20,141 +20,141 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SatInput {
 
-    /** Die aktuelle Anzahl an Variablen. */
-    private int _nVars;
+	/** Die aktuelle Anzahl an Variablen. */
+	private int _nVars;
 
-    /** Eine Variable, die mit Hilfe einer Klausel auf TRUE forciert wird und somit eine Konstante ist.*/
-    private int _varTRUE;
+	/** Eine Variable, die mit Hilfe einer Klausel auf TRUE forciert wird und somit eine Konstante ist.*/
+	private int _varTRUE;
 
-    /** Eine Variable, die mit Hilfe einer Klausel auf FALSE forciert wird und somit eine Konstante ist. */
-    private int _varFALSE;
+	/** Eine Variable, die mit Hilfe einer Klausel auf FALSE forciert wird und somit eine Konstante ist. */
+	private int _varFALSE;
 
-    /** Die aktuelle Anzahl an Variablen. */
-    private final @NotNull List<@NotNull Integer @NotNull[]> _clauses;
+	/** Die aktuelle Anzahl an Variablen. */
+	private final @NotNull List<@NotNull Integer @NotNull []> _clauses;
 
-    /**
-     * Erzeugt eine neues Objekt. Anschließend lassen sich Variablen erzeugen und Klauseln hinzufügen.
-     * Möchte man die Formel f = (x1 OR x2 OR NOT x3) AND (NOT x2 OR x3) AND (x5) kodieren, so funktioniert das so:  <br>
-     * <pre>
-     *     SatFormula f = new SatFormula();
-     *     int x1 = f.createNewVar();
-     *     int x2 = f.createNewVar();
-     *     int x3 = f.createNewVar();
-     *     f.createNewVar(); // not used
-     *     int x5 = f.createNewVar();
-     *
-     *     f.addClause(new int[] {x1, x2, -x3}); // adds {1, 2, -3}
-     *     f.addClause(new int[] {-x2, x3});     // adds {-2, 3}
-     *     f.addClause(new int[] {x5});          // adds {5}
-     * </pre>
-     */
-    public SatInput() {
-        _nVars = 0;
-        _clauses = new ArrayList<>();
-        _varTRUE = 0;  // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
-        _varFALSE = 0; // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
-    }
+	/**
+	 * Erzeugt eine neues Objekt. Anschließend lassen sich Variablen erzeugen und Klauseln hinzufügen.
+	 * Möchte man die Formel f = (x1 OR x2 OR NOT x3) AND (NOT x2 OR x3) AND (x5) kodieren, so funktioniert das so:  <br>
+	 * <pre>
+	 *     SatFormula f = new SatFormula();
+	 *     int x1 = f.createNewVar();
+	 *     int x2 = f.createNewVar();
+	 *     int x3 = f.createNewVar();
+	 *     f.createNewVar(); // not used
+	 *     int x5 = f.createNewVar();
+	 *
+	 *     f.addClause(new int[] {x1, x2, -x3}); // adds {1, 2, -3}
+	 *     f.addClause(new int[] {-x2, x3});     // adds {-2, 3}
+	 *     f.addClause(new int[] {x5});          // adds {5}
+	 * </pre>
+	 */
+	public SatInput() {
+		_nVars = 0;
+		_clauses = new ArrayList<>();
+		_varTRUE = 0;  // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
+		_varFALSE = 0; // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
+	}
 
 	@Override
-    public @NotNull String toString() {
-        return getDimacsHeader();
-    }
+	public @NotNull String toString() {
+		return getDimacsHeader();
+	}
 
-    /**
-     * Liefert eine Variable, die zuvor auf TRUE forciert wurde.
-     *
-     * @return Eine Variable, die zuvor auf TRUE forciert wurde.
-     */
-    public int getVarTRUE() {
-        if (_varTRUE == 0) { // Definiere _varTRUE, falls dies der erste Aufruf ist.
-            _varTRUE = create_var();
-            add_clause_1(+_varTRUE);
-        }
-        return _varTRUE;
-    }
+	/**
+	 * Liefert eine Variable, die zuvor auf TRUE forciert wurde.
+	 *
+	 * @return Eine Variable, die zuvor auf TRUE forciert wurde.
+	 */
+	public int getVarTRUE() {
+		if (_varTRUE == 0) { // Definiere _varTRUE, falls dies der erste Aufruf ist.
+			_varTRUE = create_var();
+			add_clause_1(+_varTRUE);
+		}
+		return _varTRUE;
+	}
 
-    /**
-     * Liefert eine Variable, die zuvor auf FALSE forciert wurde.
-     *
-     * @return Eine Variable, die zuvor auf FALSE forciert wurde.
-     */
-    public int getVarFALSE() {
-        if (_varFALSE == 0) { // Definiere _varFALSE, falls dies der erste Aufruf ist.
-            _varFALSE = create_var();
-            add_clause_1(-_varFALSE);
-        }
-        return _varFALSE;
-    }
+	/**
+	 * Liefert eine Variable, die zuvor auf FALSE forciert wurde.
+	 *
+	 * @return Eine Variable, die zuvor auf FALSE forciert wurde.
+	 */
+	public int getVarFALSE() {
+		if (_varFALSE == 0) { // Definiere _varFALSE, falls dies der erste Aufruf ist.
+			_varFALSE = create_var();
+			add_clause_1(-_varFALSE);
+		}
+		return _varFALSE;
+	}
 
-    /**
-     * Liefert die interne Anzahl an erzeugten Variablen.
-     *
-     * @return Die interne Anzahl an erzeugten Variablen.
-     */
-    public int getVarCount() {
-        return _nVars;
-    }
+	/**
+	 * Liefert die interne Anzahl an erzeugten Variablen.
+	 *
+	 * @return Die interne Anzahl an erzeugten Variablen.
+	 */
+	public int getVarCount() {
+		return _nVars;
+	}
 
-    /**
-     * Liefert die Menge aller Klauseln.
-     *
-     * @return die Menge aller Klauseln.
-     */
-    public @NotNull List<@NotNull Integer @NotNull[]> getClauses() {
-        return _clauses;
-    }
+	/**
+	 * Liefert die Menge aller Klauseln.
+	 *
+	 * @return die Menge aller Klauseln.
+	 */
+	public @NotNull List<@NotNull Integer @NotNull []> getClauses() {
+		return _clauses;
+	}
 
-    /**
-     * Liefert den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
-     *
-     * @return den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
-     */
-    public @NotNull String getDimacsHeader() {
-        return "p cnf " + _nVars + " " + _clauses.size();
-    }
+	/**
+	 * Liefert den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+	 *
+	 * @return den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+	 */
+	public @NotNull String getDimacsHeader() {
+		return "p cnf " + _nVars + " " + _clauses.size();
+	}
 
-    /**
-     * Erzeugte eine neue Variable. Den zurückgegebenen Integer-Wert darf man nun in Klauseln (auch negiert)
-     * benutzen. Eine Variable hat niemals den Wert 0, da dieser Wert nicht negiert werden kann. Ebenso darf
-     * eine Variable nicht 0 sein, da im DIMACS CNF FORMAT das Symbol 0 zum Kodieren eines Zeilenendes benutzt wird.
-     *
-     * @return Die Nummer der neuen Variablen.
-     */
-    public int create_var() {
-        _nVars++;
-        return _nVars;
-    }
+	/**
+	 * Erzeugte eine neue Variable. Den zurückgegebenen Integer-Wert darf man nun in Klauseln (auch negiert)
+	 * benutzen. Eine Variable hat niemals den Wert 0, da dieser Wert nicht negiert werden kann. Ebenso darf
+	 * eine Variable nicht 0 sein, da im DIMACS CNF FORMAT das Symbol 0 zum Kodieren eines Zeilenendes benutzt wird.
+	 *
+	 * @return Die Nummer der neuen Variablen.
+	 */
+	public int create_var() {
+		_nVars++;
+		return _nVars;
+	}
 
-    /**
-     * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
-     * Siehe auch: {@link SatInput#create_var()}
-     *
-     * @param n die Anzahl an zu erzeugenden Variablen.
-     *
-     * @return ein Array mit den neuen Variablen.
-     */
-    public @NotNull int[] create_vars1D(final int n) {
-        final @NotNull int @NotNull [] temp = new int[n];
-        for (int i = 0; i < temp.length; i++)
-            temp[i] = create_var();
-        return temp;
-    }
+	/**
+	 * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
+	 * Siehe auch: {@link SatInput#create_var()}
+	 *
+	 * @param n die Anzahl an zu erzeugenden Variablen.
+	 *
+	 * @return ein Array mit den neuen Variablen.
+	 */
+	public @NotNull int[] create_vars1D(final int n) {
+		final @NotNull int @NotNull [] temp = new int[n];
+		for (int i = 0; i < temp.length; i++)
+			temp[i] = create_var();
+		return temp;
+	}
 
-    /**
-     * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
-     * Siehe auch: {@link SatInput#create_var()}
-     *
-     * @param rows die Anzahl an Zeilen eines 2D-Arrays.
-     * @param cols die Anzahl an Spalten eines 2D-Arrays.
-     *
-     * @return ein Array mit den neuen Variablen.
-     */
-    public @NotNull int @NotNull [][] create_vars2D(final int rows, final int cols) {
-        final @NotNull int @NotNull [] @NotNull [] temp = new int[rows][cols];
-        for (int r = 0; r < rows; r++)
-        	temp[r] = create_vars1D(cols);
-        return temp;
-    }
+	/**
+	 * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
+	 * Siehe auch: {@link SatInput#create_var()}
+	 *
+	 * @param rows die Anzahl an Zeilen eines 2D-Arrays.
+	 * @param cols die Anzahl an Spalten eines 2D-Arrays.
+	 *
+	 * @return ein Array mit den neuen Variablen.
+	 */
+	public @NotNull int @NotNull [][] create_vars2D(final int rows, final int cols) {
+		final @NotNull int @NotNull [] @NotNull [] temp = new int[rows][cols];
+		for (int r = 0; r < rows; r++)
+			temp[r] = create_vars1D(cols);
+		return temp;
+	}
 
 	/**
 	 * Liefert die neu erzeugte Variable z für die 'z = x AND y' gilt.
@@ -189,7 +189,7 @@ public final class SatInput {
 	}
 
 
-    /**
+	/**
 	 * Forciert, dass in der Liste maximal eine Variable TRUE ist.
 	 * Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 *
@@ -219,109 +219,109 @@ public final class SatInput {
 	}
 
 	/**
-     * Hinzufügen einer Klausel. Eine Klausel ist eine nicht leere Menge von Variablen,
-     * die mit einem logischen ODER verknüpft sind. Die Variablen dürfen negiert sein. <br>
-     * <pre>
-     * Das Array [-3, 8, 2]
-     * wird als  (NOT x3) OR x8 OR x2 interpretiert.
-     * </pre>
-     * Die Menge aller Klauseln sind mit einem AND verknüpft.
-     *
-     * @param pVars Die Variablen (auch negiert) der Klausel mit den zuvor generierten Variablen.
-     *
-     * @throws DeveloperNotificationException falls die angegebenen Variablen ungültig sind.
-     */
-    public void add_clause(final @NotNull Integer @NotNull[] pVars) throws DeveloperNotificationException {
-        DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
+	 * Hinzufügen einer Klausel. Eine Klausel ist eine nicht leere Menge von Variablen,
+	 * die mit einem logischen ODER verknüpft sind. Die Variablen dürfen negiert sein. <br>
+	 * <pre>
+	 * Das Array [-3, 8, 2]
+	 * wird als  (NOT x3) OR x8 OR x2 interpretiert.
+	 * </pre>
+	 * Die Menge aller Klauseln sind mit einem AND verknüpft.
+	 *
+	 * @param pVars Die Variablen (auch negiert) der Klausel mit den zuvor generierten Variablen.
+	 *
+	 * @throws DeveloperNotificationException falls die angegebenen Variablen ungültig sind.
+	 */
+	public void add_clause(final @NotNull Integer @NotNull [] pVars) throws DeveloperNotificationException {
+		DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
 
-        for (final int literal : pVars) {
-            DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
-            final int absL = Math.abs(literal);
-            DeveloperNotificationException.ifTrue("Variable " + absL + " wurde vorher nicht erzeugt!", absL > _nVars);
-        }
+		for (final int literal : pVars) {
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
+			final int absL = Math.abs(literal);
+			DeveloperNotificationException.ifTrue("Variable " + absL + " wurde vorher nicht erzeugt!", absL > _nVars);
+		}
 
-        _clauses.add(pVars);
-    }
+		_clauses.add(pVars);
+	}
 
 
 	/**
-     * Fügt eine Klausel hinzu. Falls die Variablen noch nicht existieren, werden sie erzeugt.
-     *
-     * @param pVars Die Variablen (auch negiert) der Klausel.
-     *
-     * @throws DeveloperNotificationException falls die Klausel leer ist, oder eine Variable 0 ist.
-     */
-    public void add_clause_and_variables(final @NotNull Integer @NotNull[] pVars) throws DeveloperNotificationException {
-        DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
+	 * Fügt eine Klausel hinzu. Falls die Variablen noch nicht existieren, werden sie erzeugt.
+	 *
+	 * @param pVars Die Variablen (auch negiert) der Klausel.
+	 *
+	 * @throws DeveloperNotificationException falls die Klausel leer ist, oder eine Variable 0 ist.
+	 */
+	public void add_clause_and_variables(final @NotNull Integer @NotNull [] pVars) throws DeveloperNotificationException {
+		DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
 
-        for (final int literal : pVars) {
-            DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
-            final int absL = Math.abs(literal);
-            _nVars = Math.max(_nVars, absL);
-        }
+		for (final int literal : pVars) {
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
+			final int absL = Math.abs(literal);
+			_nVars = Math.max(_nVars, absL);
+		}
 
-        _clauses.add(pVars);
+		_clauses.add(pVars);
 	}
-
-    /**
-     * Fügt eine Klausel der Größe 1 hinzu. Forciert damit die übergebene Variable auf TRUE.
-     *
-     * @param x Die Variable wird auf TRUE gesetzt.
-     */
-    public void add_clause_1(final int x) {
-        add_clause(new @NotNull Integer @NotNull[] {x});
-    }
 
 	/**
-     * Fügt eine Klausel der Größe 2 hinzu. Forciert damit, dass mindestens eine der beiden Variablen TRUE ist.
-     *
-     * @param x Die Variable x der Klausel (x OR y).
-     * @param y Die Variable y der Klausel (x OR y).
-     */
-    public void add_clause_2(final int x, final int y) {
-        add_clause(new @NotNull Integer @NotNull[] {x, y});
-    }
-
-    /**
-     * Fügt eine Klausel der Größe 3 hinzu. Forciert damit, dass mindestens eine der drei Variablen TRUE ist.
-     *
-     * @param x Die Variable x der Klausel (x OR y OR z).
-     * @param y Die Variable y der Klausel (x OR y OR z).
-     * @param z Die Variable z der Klausel (x OR y OR z).
-     */
-    public void add_clause_3(final int x, final int y, final int z) {
-        add_clause(new @NotNull Integer @NotNull[] {x, y, z});
-    }
-
-    /**
-     * Forciert, dass nicht beide Variablen TRUE sind.
-     *
-     * @param x Die Variable x der Klausel (-x OR -y).
-     * @param y Die Variable y der Klausel (-x OR -y).
-     */
-    public void add_clause_not_both(final int x, final int y) {
-        add_clause_2(-x, -y);
-    }
-
-    /**
-     * Forciert, dass beide Variablen gleich sind.
-     *
-     * @param x Die Variable x der Bedingung (x = y).
-     * @param y Die Variable y der Bedingung (x = y).
-     */
-    public void add_clause_equal(final int x, final int y) {
-    	add_clause_2(-x, +y);
-    	add_clause_2(+x, -y);
+	 * Fügt eine Klausel der Größe 1 hinzu. Forciert damit die übergebene Variable auf TRUE.
+	 *
+	 * @param x Die Variable wird auf TRUE gesetzt.
+	 */
+	public void add_clause_1(final int x) {
+		add_clause(new @NotNull Integer @NotNull [] { x });
 	}
 
-    /**
-     * Forciert, dass beide Variablen ungleich sind.
-     *
-     * @param x Die Variable x der Bedingung (x != y).
-     * @param y Die Variable y der Bedingung (x != y).
-     */
-    public void add_clause_unequal(final int x, final int y) {
-    	add_clause_equal(x, -y);
+	/**
+	 * Fügt eine Klausel der Größe 2 hinzu. Forciert damit, dass mindestens eine der beiden Variablen TRUE ist.
+	 *
+	 * @param x Die Variable x der Klausel (x OR y).
+	 * @param y Die Variable y der Klausel (x OR y).
+	 */
+	public void add_clause_2(final int x, final int y) {
+		add_clause(new @NotNull Integer @NotNull [] { x, y });
+	}
+
+	/**
+	 * Fügt eine Klausel der Größe 3 hinzu. Forciert damit, dass mindestens eine der drei Variablen TRUE ist.
+	 *
+	 * @param x Die Variable x der Klausel (x OR y OR z).
+	 * @param y Die Variable y der Klausel (x OR y OR z).
+	 * @param z Die Variable z der Klausel (x OR y OR z).
+	 */
+	public void add_clause_3(final int x, final int y, final int z) {
+		add_clause(new @NotNull Integer @NotNull [] { x, y, z });
+	}
+
+	/**
+	 * Forciert, dass nicht beide Variablen TRUE sind.
+	 *
+	 * @param x Die Variable x der Klausel (-x OR -y).
+	 * @param y Die Variable y der Klausel (-x OR -y).
+	 */
+	public void add_clause_not_both(final int x, final int y) {
+		add_clause_2(-x, -y);
+	}
+
+	/**
+	 * Forciert, dass beide Variablen gleich sind.
+	 *
+	 * @param x Die Variable x der Bedingung (x = y).
+	 * @param y Die Variable y der Bedingung (x = y).
+	 */
+	public void add_clause_equal(final int x, final int y) {
+		add_clause_2(-x, +y);
+		add_clause_2(+x, -y);
+	}
+
+	/**
+	 * Forciert, dass beide Variablen ungleich sind.
+	 *
+	 * @param x Die Variable x der Bedingung (x != y).
+	 * @param y Die Variable y der Bedingung (x != y).
+	 */
+	public void add_clause_unequal(final int x, final int y) {
+		add_clause_equal(x, -y);
 	}
 
 	/**
@@ -354,7 +354,7 @@ public final class SatInput {
 
 
 		// Spezialfall: Genau 0 --> Alles FALSE
-		if  (pAmount == 0) {
+		if (pAmount == 0) {
 			for (final int x : list)
 				add_clause_1(-x);
 			return;
@@ -385,7 +385,7 @@ public final class SatInput {
 	 * @param pAmount Die Anzahl an TRUEs.
 	 */
 	public void add_clause_exactly_in_row(final @NotNull int @NotNull [] @NotNull [] pData, final int pRow, final int pAmount) {
-		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new LinkedCollection<>();
 		for (int c = 0; c < pData[pRow].length; c++)
 			pList.add(pData[pRow][c]);
 		add_clause_exactly(pList, pAmount);
@@ -399,7 +399,7 @@ public final class SatInput {
 	 * @param pAmount Die Anzahl an TRUEs.
 	 */
 	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
-		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new LinkedCollection<>();
 		for (int r = 0; r < pData.length; r++)
 			pList.add(pData[r][pCol]);
 		add_clause_exactly(pList, pAmount);
@@ -445,8 +445,7 @@ public final class SatInput {
 		int i = 0;
 		final @NotNull Iterator<@NotNull Integer> iter = list.iterator();
 		while (iter.hasNext()) {
-			final @NotNull
-			Integer value = iter.next();
+			final @NotNull Integer value = iter.next();
 			if (i < amount) {
 				add_clause_1(+value);
 			} else {
@@ -508,8 +507,9 @@ public final class SatInput {
 	 * @param solution Die übergebene Lösung.
 	 * @return TRUE, falls die Lösung alle Klauseln des Inputs erfüllt.
 	 */
-	public boolean isValidSolution(final @NotNull int @NotNull[] solution) {
-		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + _nVars + "!", solution.length != _nVars + 1);
+	public boolean isValidSolution(final @NotNull int @NotNull [] solution) {
+		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + _nVars + "!",
+				solution.length != _nVars + 1);
 
 		for (final @NotNull Integer @NotNull [] clause : _clauses) {
 			int countTRUE = 0;

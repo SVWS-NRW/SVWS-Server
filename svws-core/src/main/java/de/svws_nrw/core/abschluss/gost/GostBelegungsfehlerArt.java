@@ -45,11 +45,16 @@ public enum GostBelegungsfehlerArt {
 		if (kuerzel == null)
 			return null;
 		switch (kuerzel) {
-			case "BELEGUNG": return BELEGUNG;
-			case "SCHRIFTLICHKEIT": return SCHRIFTLICHKEIT;
-			case "SCHULSPEZIFISCH": return SCHULSPEZIFISCH;
-			case "HINWEIS": return HINWEIS;
-			default: return null;
+			case "BELEGUNG":
+				return BELEGUNG;
+			case "SCHRIFTLICHKEIT":
+				return SCHRIFTLICHKEIT;
+			case "SCHULSPEZIFISCH":
+				return SCHULSPEZIFISCH;
+			case "HINWEIS":
+				return HINWEIS;
+			default:
+				return null;
 		}
 	}
 

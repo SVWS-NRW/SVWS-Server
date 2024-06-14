@@ -52,7 +52,8 @@ public final class Sport extends GostBelegpruefung {
 	protected void pruefeGesamt() {
 		// Prüfe, ob Sport durchgängig von EF.1 bis Q2.2 belegt wurde. Ein Sportattest muss mit
 		// Note "AT" eingetragen werden und gilt damit zunächst als belegt.
-		if ((_sport == null) || (!manager.pruefeBelegungExistiert(_sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
+		if ((_sport == null) || (!manager.pruefeBelegungExistiert(_sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12,
+				GostHalbjahr.Q21, GostHalbjahr.Q22)))
 			addFehler(GostBelegungsfehler.SP_10);
 	}
 

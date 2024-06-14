@@ -329,8 +329,8 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 		if (map2 != null) {
 			final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 			if (map3 != null)
-			    for (final @NotNull V value : map3.values())
-				    list.add(value);
+				for (final @NotNull V value : map3.values())
+					list.add(value);
 		}
 
 		return list;

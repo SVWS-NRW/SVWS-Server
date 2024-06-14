@@ -35,7 +35,8 @@ public final class Fachkombinationen extends GostBelegpruefung {
 	}
 
 
-	private static boolean pruefeHatBelegungFach2InHalbjahr(final @NotNull GostJahrgangFachkombination kombi, final AbiturFachbelegung belegung2, final @NotNull GostHalbjahr halbjahr) {
+	private static boolean pruefeHatBelegungFach2InHalbjahr(final @NotNull GostJahrgangFachkombination kombi, final AbiturFachbelegung belegung2,
+			final @NotNull GostHalbjahr halbjahr) {
 		if (belegung2 == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegung2Halbjahr = belegung2.belegungen[halbjahr.id];
@@ -60,7 +61,8 @@ public final class Fachkombinationen extends GostBelegpruefung {
 				if ((kombi.typ == GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
 					addFehler(GostBelegungsfehler.KOMBI_1);
 					return;
-				} else if (kombi.typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && !pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
+				} else if (kombi.typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue()
+						&& !pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
 					addFehler(GostBelegungsfehler.KOMBI_2);
 					return;
 				}

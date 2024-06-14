@@ -34,7 +34,8 @@ public final class FachWaehlbar extends GostBelegpruefung {
 	}
 
 
-	private void pruefeFachbelegungHalbjahr(final @NotNull GostFach fach, final @NotNull AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr halbjahr) {
+	private void pruefeFachbelegungHalbjahr(final @NotNull GostFach fach, final @NotNull AbiturFachbelegung fachbelegung,
+			final @NotNull GostHalbjahr halbjahr) {
 		final AbiturFachbelegungHalbjahr fbHalbjahr = fachbelegung.belegungen[halbjahr.id];
 		if (fbHalbjahr == null)
 			return;

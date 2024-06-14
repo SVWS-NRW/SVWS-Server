@@ -70,7 +70,8 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public KurszahlenUndWochenstunden(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt, final @NotNull GostBelegpruefung pruefungProjektkurse) {
+	public KurszahlenUndWochenstunden(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt,
+			final @NotNull GostBelegpruefung pruefungProjektkurse) {
 		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
@@ -101,7 +102,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		int blockIAnzahlErsatzfach = 0; // die Gesamtzahl der Kurse der Qualifikationsphase in einem Ersatzfach des literarisch künstlerischen Bereichs
 
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
-		final @NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
+		final @NotNull GostKursart @NotNull [] kursarten = GostKursart.values();
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			final @NotNull ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 			kurszahlen.put(halbjahr, kurszahlenHalbjahr);
@@ -192,8 +193,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				}
 
 				// Für die Grundkurse
-				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase && ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
-					|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
+				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase
+						&& ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
+								|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
 					kurszahlenAnrechenbar.put(halbjahr, kurszahlAnrechenbar == null ? 1 : kurszahlAnrechenbar + 1);
 					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
@@ -220,15 +222,27 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				// Zähle die Wochenstunden
 				int stunden = 0;
 				switch (kursart.kuerzel) {
-					case "GK": stunden = fach.istFremdSpracheNeuEinsetzend ? 4 : 3; break;
-					case "LK": stunden = 5; break;
-					case "PJK": stunden = (fachbelegungHalbjahr.wochenstunden == 3) ? 3 : 2; break;
-					case "VTF": stunden = 2; break;
-					case "ZK": stunden = 3; break;
-					default: stunden = 3; break;
+					case "GK":
+						stunden = fach.istFremdSpracheNeuEinsetzend ? 4 : 3;
+						break;
+					case "LK":
+						stunden = 5;
+						break;
+					case "PJK":
+						stunden = (fachbelegungHalbjahr.wochenstunden == 3) ? 3 : 2;
+						break;
+					case "VTF":
+						stunden = 2;
+						break;
+					case "ZK":
+						stunden = 3;
+						break;
+					default:
+						stunden = 3;
+						break;
 				}
 				final Integer wochenstundenAlt = wochenstunden.get(halbjahr);
-				wochenstunden.put(halbjahr, wochenstundenAlt == null ? stunden : wochenstundenAlt + stunden);
+				wochenstunden.put(halbjahr, (wochenstundenAlt == null) ? stunden : (wochenstundenAlt + stunden));
 
 				// Kurszahlen und Wochenstunden für die Einführungsphase und die Qualifikationsphase - hier werden ggf. auch unzulässige Belegungen gezählt
 				if (halbjahr.istEinfuehrungsphase()) {
@@ -283,7 +297,6 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		if ((stunden == null) || (stunden < 32) || (stunden > 36))
 			addFehler(GostBelegungsfehler.ANZ_11_INFO);
 	}
-
 
 
 

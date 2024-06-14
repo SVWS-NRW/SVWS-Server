@@ -28,16 +28,19 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
 
 	/** Filter für alle mangelhaften Fächer, die keine ZP10-Fächer sind. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaftOhneZP10Faecher = (final @NotNull GEAbschlussFach f) -> (f.note == 5) && (!"D".equals(f.kuerzel)) && (!"E".equals(f.kuerzel)) && (!"M".equals(f.kuerzel));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaftOhneZP10Faecher =
+			(final @NotNull GEAbschlussFach f) -> (f.note == 5) && (!"D".equals(f.kuerzel)) && (!"E".equals(f.kuerzel)) && (!"M".equals(f.kuerzel));
 
 	/** Filter für alle ungenügenden Fächer */
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
 
 	/** Filter für alle Fächer, welche als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse =
+			(final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen =
+			(final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
 
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
@@ -78,7 +81,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 								"D", "M", "LBNW", "LBAL",   // FG1
 								"BI", "PH", "CH",           // FG1 als Lernbereichsnote NW
 								"AT", "AW", "AH"            // FG1 als Lernbereichsnote AL
-								)));
+						)));
 
 		// Prüfe, ob alle nötigen Fächer in der FG1 vorhanden sind
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M", "LBNW", "LBAL"))) {
@@ -111,7 +114,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 			if (f.kuerzel == null)
 				continue;
 			final int note = f.note;
-			final int note_neu = (note == 1) ? 1 : note - 1;
+			final int note_neu = (note == 1) ? 1 : (note - 1);
 			logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
 			f.note = note_neu;
 		}
@@ -193,11 +196,11 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 			logger.logLn(LogLevel.INFO, " -> Hinweis: Nachprüfungen in ZP10-Fächern nicht möglich");
 			final @NotNull List<@NotNull String> np_faecher = (fg1_mangelhaft == 2)
 					? faecher.fg1.getKuerzel(filterMangelhaftOhneZP10Faecher)
-							: faecher.getKuerzel(filterMangelhaftOhneZP10Faecher);
+					: faecher.getKuerzel(filterMangelhaftOhneZP10Faecher);
 			final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
 			logger.logLn(LogLevel.INFO, AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)
 					? (" -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis))
-							: " -> also: kein Nachprüfungsmöglichkeit.");
+					: " -> also: kein Nachprüfungsmöglichkeit.");
 			return abschlussergebnis;
 		}
 

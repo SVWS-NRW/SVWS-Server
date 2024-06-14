@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public abstract class GostBelegpruefung {
 
 	/** Eine ggf. zuvor durchgeführte Abitur-Belegprüfung, welche in dieser Belegprüfung als Voraussetzung vorhanden sein muss. */
-	protected final @NotNull GostBelegpruefung@NotNull[] pruefungen_vorher;
+	protected final @NotNull GostBelegpruefung @NotNull [] pruefungen_vorher;
 
 	/** Der Daten-Manager für die Abiturdaten */
 	protected final @NotNull AbiturdatenManager manager;
@@ -33,7 +33,8 @@ public abstract class GostBelegpruefung {
 	 * @param pruefungsArt      die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungenVorher   eine vorher durchgeführte Abiturprüfung
 	 */
-	protected GostBelegpruefung(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt, final GostBelegpruefung... pruefungenVorher) {
+	protected GostBelegpruefung(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt,
+			final GostBelegpruefung... pruefungenVorher) {
 		this.pruefungen_vorher = pruefungenVorher;
 		this.manager = manager;
 		this.pruefungs_art = pruefungsArt;
