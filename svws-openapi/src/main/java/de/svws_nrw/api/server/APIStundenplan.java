@@ -1104,6 +1104,125 @@ public class APIStundenplan {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen einer neuen Kalenderwochenzuordnung zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Kalenderwochenzuordnung
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Kalenderwochenzuordnung
+     */
+    @POST
+    @Path("/{id : \\d+}/kalenderwochen/create")
+    @Operation(summary = "Erstellt eine neue Kalenderwochenzuordnung für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt eine neue Kalenderwochenzuordnung für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Kalenderwochenzuordnung wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Kalenderwochenzuordnung für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Kalenderwochenzuordnung ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Kalenderwochenzuordnungen zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Kalenderwochenzuordnungen
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der Liste der neuen Kalenderwochenzuordnungen
+     */
+    @POST
+    @Path("/{id : \\d+}/kalenderwochen/create/multiple")
+    @Operation(summary = "Erstellt mehrere neue Kalenderwochenzuordnungen für den angegebenen Stundenplan und gibt die zugehörigen Objekte zurück.",
+    description = "Erstellt mehrere neue Kalenderwochenzuordnungen für den angegebenen Stundenplan und gibt die zugehörigen Objekte zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Kalenderwochenzuordnungen wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kalenderwochenzuordnungen für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanKalenderwochenzuordnungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Kalenderwochenzuordnungen ohne IDs, welche automatisch generiert werden", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen der Kalenderwochenzuordnung eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID der Kalenderwochenzuordnung
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Kalenderwochenzuordnung
+     */
+    @DELETE
+    @Path("/kalenderwochen/{id : \\d+}")
+    @Operation(summary = "Entfernt eine Kalenderwochenzuordnung eines Stundenplans.",
+    description = "Entfernt eine Kalenderwochenzuordnung eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Die Kalenderwochenzuordnung wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Keine Kalenderwochenzuordnung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Kalenderwochenzuordnungen eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           die IDs der Kalenderwochenzuordnungen
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Kalenderwochenzuordnungen
+     */
+    @DELETE
+    @Path("/{id : \\d+}/kalenderwochen/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Kalenderwochenzuordnungen eines Stundenplans.",
+    description = "Entfernt mehrere Kalenderwochenzuordnungen eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Die Kalenderwochenzuordnungen wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Mindestens eine Kalenderwochenzuordnung ist nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanKalenderwochenzuordnungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die IDs der zu löschenden Kalenderwochenzuordnungen", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage aller Pausenaufsichten zu einem Stundenplan.

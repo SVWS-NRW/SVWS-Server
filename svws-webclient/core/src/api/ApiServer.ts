@@ -12601,6 +12601,101 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/kalenderwochen/create
+	 *
+	 * Erstellt eine neue Kalenderwochenzuordnung für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Kalenderwochenzuordnung wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanKalenderwochenzuordnung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Kalenderwochenzuordnung für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanKalenderwochenzuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Kalenderwochenzuordnung wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanKalenderwochenzuordnung(data : Partial<StundenplanKalenderwochenzuordnung>, schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanKalenderwochenzuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/kalenderwochen/create/multiple
+	 *
+	 * Erstellt mehrere neue Kalenderwochenzuordnungen für den angegebenen Stundenplan und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Kalenderwochenzuordnungen wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanKalenderwochenzuordnung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kalenderwochenzuordnungen für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanKalenderwochenzuordnung>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Kalenderwochenzuordnungen wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanKalenderwochenzuordnungen(data : List<Partial<StundenplanKalenderwochenzuordnung>>, schema : string, id : number) : Promise<List<StundenplanKalenderwochenzuordnung>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/create/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<StundenplanKalenderwochenzuordnung>).map(d => StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanKalenderwochenzuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanKalenderwochenzuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/kalenderwochen/delete/multiple
+	 *
+	 * Entfernt mehrere Kalenderwochenzuordnungen eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Kalenderwochenzuordnungen wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanKalenderwochenzuordnung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Mindestens eine Kalenderwochenzuordnung ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Kalenderwochenzuordnungen wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanKalenderwochenzuordnungen(data : List<number>, schema : string, id : number) : Promise<List<StundenplanKalenderwochenzuordnung>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanKalenderwochenzuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addStundenplanPausenaufsicht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsicht/create
 	 *
 	 * Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
@@ -13375,6 +13470,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/kalenderwochen/{id : \d+}
+	 *
+	 * Entfernt eine Kalenderwochenzuordnung eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Kalenderwochenzuordnung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanKalenderwochenzuordnung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Keine Kalenderwochenzuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Kalenderwochenzuordnung wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanKalenderwochenzuordnung(schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
 	}
 
 
