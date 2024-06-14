@@ -665,12 +665,6 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         conn.transactionPersistAll(telefonArten);
         conn.transactionFlush();
 
-        // K_Vermerkart mit einem Beispiel befüllen
-        final DTOVermerkArt vermerkArt = new DTOVermerkArt(1L, "allgemeine Bemerkung");
-        vermerkArt.Sortierung = 1;
-        conn.transactionPersist(vermerkArt);
-        conn.transactionFlush();
-
 		// Liefere die Schul-Stammdaten der neu angelegten Schule zurück.
 		return this.get(null);
 	}
