@@ -13,6 +13,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
+import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen";
 import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
 import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
@@ -33,6 +34,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeStundenplanDaten,
+			routeStundenplanKalenderwochen,
 			routeStundenplanPausen,
 			routeStundenplanZeitrasterPausenzeit,
 			routeStundenplanKlasse,
