@@ -852,7 +852,7 @@ public class StundenplanManager {
 		// Sortieren
 		for (final @NotNull Long idKlasse : _kursmenge_by_idKlasse_and_idSchiene.getKeySet())
 			for (final @NotNull Long idSchiene : _kursmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
-				_kursmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(_compKurs);
+				_kursmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(_compKurs);
 	}
 
 	private void update_klassenunterrichtmenge_by_idKlasse_and_idSchiene() {
@@ -871,7 +871,7 @@ public class StundenplanManager {
 		// Sortieren
 		for (final @NotNull Long idKlasse : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySet())
 			for (final @NotNull Long idSchiene : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
-				_klassenunterrichtmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(_compKlassenunterricht);
+				_klassenunterrichtmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(_compKlassenunterricht);
 	}
 
 	private void update_schienenmenge_by_idUnterricht() {
@@ -6132,7 +6132,7 @@ public class StundenplanManager {
 	 * @throws DeveloperNotificationException falls kein Zeitraster-Eintrag existiert
 	 */
 	public @NotNull StundenplanZeitraster zeitrasterGetByWochentagAndStundeOrException(final int wochentag, final int stunde) {
-		return _zeitraster_by_wochentag_and_stunde.getNonNullOrException(wochentag, stunde);
+		return _zeitraster_by_wochentag_and_stunde.getOrException(wochentag, stunde);
 	}
 
 	/**

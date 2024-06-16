@@ -122,7 +122,7 @@ public final class Map2DUtils {
      * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
      */
 	public static <@NotNull K1, @NotNull K2, @NotNull V> void removeFromListAndTrimOrException(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull List<@NotNull V>> map2D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) {
-		final List<@NotNull V> list = map2D.getNonNullOrException(key1, key2);
+		final List<@NotNull V> list = map2D.getOrException(key1, key2);
 
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
 

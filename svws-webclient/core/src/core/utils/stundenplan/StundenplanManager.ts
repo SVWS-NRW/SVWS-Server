@@ -805,7 +805,7 @@ export class StundenplanManager extends JavaObject {
 				}
 		for (const idKlasse of this._kursmenge_by_idKlasse_and_idSchiene.getKeySet())
 			for (const idSchiene of this._kursmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
-				this._kursmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(StundenplanManager._compKurs);
+				this._kursmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(StundenplanManager._compKurs);
 	}
 
 	private update_klassenunterrichtmenge_by_idKlasse_and_idSchiene() : void {
@@ -820,7 +820,7 @@ export class StundenplanManager extends JavaObject {
 				}
 		for (const idKlasse of this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySet())
 			for (const idSchiene of this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
-				this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(this._compKlassenunterricht);
+				this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(this._compKlassenunterricht);
 	}
 
 	private update_schienenmenge_by_idUnterricht() : void {
@@ -5509,7 +5509,7 @@ export class StundenplanManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls kein Zeitraster-Eintrag existiert
 	 */
 	public zeitrasterGetByWochentagAndStundeOrException(wochentag : number, stunde : number) : StundenplanZeitraster {
-		return this._zeitraster_by_wochentag_and_stunde.getNonNullOrException(wochentag, stunde);
+		return this._zeitraster_by_wochentag_and_stunde.getOrException(wochentag, stunde);
 	}
 
 	/**

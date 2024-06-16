@@ -8,7 +8,7 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class HashMap2D<K1, K2, V> extends JavaObject {
 
-	private readonly _map : JavaMap<K1, JavaMap<K2, V | null>> = new HashMap<K1, JavaMap<K2, V | null>>();
+	private readonly _map : JavaMap<K1, JavaMap<K2, V>> = new HashMap<K1, JavaMap<K2, V>>();
 
 
 	/**
@@ -26,13 +26,28 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
-	public put(key1 : K1, key2 : K2, value : V | null) : void {
-		let map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+	public put(key1 : K1, key2 : K2, value : V) : void {
+		let map2 : JavaMap<K2, V> | null = this._map.get(key1);
 		if (map2 === null) {
 			map2 = new HashMap();
 			this._map.put(key1, map2);
 		}
 		map2.put(key2, value);
+	}
+
+	/**
+	 * Liefert den Wert zum Mapping (key1, key2) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return den Wert zum Mapping (key1, key2) oder NULL. <br>
+	 */
+	public getOrNull(key1 : K1, key2 : K2) : V | null {
+		const map2 : JavaMap<K2, V> | null = this._map.get(key1);
+		if (map2 === null)
+			return null;
+		return map2.get(key2);
 	}
 
 	/**
@@ -45,26 +60,14 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return Den Wert zum Mapping (key1, key2).
 	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
-	public getOrException(key1 : K1, key2 : K2) : V | null {
-		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
+	public getOrException(key1 : K1, key2 : K2) : V {
+		const map2 : JavaMap<K2, V> = this.getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
-		return map2.get(key2);
-	}
-
-	/**
-	 * Liefert den Wert zum Mapping (key1, key2) oder NULL. <br>
-	 *
-	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
-	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
-	 *
-	 * @return den Wert zum Mapping (key1, key2) oder NULL. <br>
-	 */
-	public getOrNull(key1 : K1, key2 : K2) : V | null {
-		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
-		if (map2 === null)
-			return null;
-		return map2.get(key2);
+		const value : V | null = map2.get(key2);
+		if (value === null)
+			return value as unknown as V;
+		return value;
 	}
 
 	/**
@@ -78,8 +81,8 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
 	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
-	public getNonNullOrException(key1 : K1, key2 : K2) : V {
-		const value : V | null = this.getOrException(key1, key2);
+	public getNonNullOrException2(key1 : K1, key2 : K2) : V {
+		const value : V = this.getOrException(key1, key2);
 		if (value === null)
 			throw new DeveloperNotificationException("value is NULL!")
 		return value;
@@ -92,8 +95,8 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public getSubMapOrException(key1 : K1) : JavaMap<K2, V | null> {
-		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+	public getSubMapOrException(key1 : K1) : JavaMap<K2, V> {
+		const map2 : JavaMap<K2, V> | null = this._map.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
 		return map2;
@@ -106,7 +109,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder NULL.
 	 */
-	public getSubMapOrNull(key1 : K1) : JavaMap<K2, V | null> | null {
+	public getSubMapOrNull(key1 : K1) : JavaMap<K2, V> | null {
 		return this._map.get(key1);
 	}
 
@@ -119,7 +122,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
 	 */
 	public contains(key1 : K1, key2 : K2) : boolean {
-		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+		const map2 : JavaMap<K2, V> | null = this._map.get(key1);
 		if (map2 === null)
 			return false;
 		return map2.containsKey(key2);
@@ -151,13 +154,15 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	public removeOrException(key1 : K1, key2 : K2) : V | null {
-		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
+	public removeOrException(key1 : K1, key2 : K2) : V {
+		const map2 : JavaMap<K2, V> = this.getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		const value : V | null = map2.remove(key2);
 		if (map2.isEmpty())
 			this._map.remove(key1);
+		if (value === null)
+			return value as unknown as V;
 		return value;
 	}
 
@@ -168,7 +173,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder null.
 	 */
-	public removeSubMap(key1 : K1) : JavaMap<K2, V | null> | null {
+	public removeSubMap(key1 : K1) : JavaMap<K2, V> | null {
 		return this._map.remove(key1);
 	}
 
@@ -179,11 +184,11 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public removeSubMapOrException(key1 : K1) : JavaMap<K2, V | null> {
-		const value : JavaMap<K2, V | null> | null = this._map.remove(key1);
-		if (value === null)
+	public removeSubMapOrException(key1 : K1) : JavaMap<K2, V> {
+		const map2 : JavaMap<K2, V> | null = this._map.remove(key1);
+		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!")
-		return value;
+		return map2;
 	}
 
 	/**
@@ -194,13 +199,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return eine Liste aller Values des 1. Keys in dieser Map.
 	 */
 	public getNonNullValuesOfKey1AsList(key1 : K1) : List<V> {
-		const list : ArrayList<V> = new ArrayList<V>();
-		for (const value of this.getSubMapOrException(key1).values()) {
-			if (value === null)
-				throw new DeveloperNotificationException("Liste hat NULL Elemente!")
-			list.add(value);
-		}
-		return list;
+		return new ArrayList<V>(this.getSubMapOrException(key1).values());
 	}
 
 	/**
@@ -210,13 +209,9 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 */
 	public getNonNullValuesAsList() : List<V> {
 		const list : ArrayList<V> = new ArrayList<V>();
-		for (const map2 of this._map.values()) {
-			for (const value of map2.values()) {
-				if (value === null)
-					throw new DeveloperNotificationException("Liste hat NULL Elemente!")
+		for (const map2 of this._map.values())
+			for (const value of map2.values())
 				list.add(value);
-			}
-		}
 		return list;
 	}
 
@@ -248,7 +243,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
 	 */
 	public getSubMapSizeOrZero(key1 : K1) : number {
-		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+		const map2 : JavaMap<K2, V> | null = this._map.get(key1);
 		if (map2 === null)
 			return 0;
 		return map2.size();

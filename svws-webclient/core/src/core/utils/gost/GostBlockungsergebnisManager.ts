@@ -569,7 +569,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene : number, idFachart : number) : string {
 		const sb : StringBuilder = new StringBuilder();
 		if (this._schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
-			const kursGruppe : List<GostBlockungsergebnisKurs> = this._schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
+			const kursGruppe : List<GostBlockungsergebnisKurs> = this._schienenID_fachartID_to_kurseList.getOrException(idSchiene, idFachart);
 			const n : number = kursGruppe.size();
 			if (n >= 2) {
 				sb.append("  " + this.getOfFachartName(idFachart)! + " (+" + (n - 1) + "):");
@@ -864,7 +864,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet()) {
 			let summeAllerKollisionenDesSchuelers : number = 0;
 			for (const idSchiene of this._schuelerID_schienenID_to_kurseSet.getKeySetOf(idSchueler)) {
-				const kurseInDerSchiene : number = this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene).size();
+				const kurseInDerSchiene : number = this._schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene).size();
 				if (kurseInDerSchiene >= 2)
 					summeAllerKollisionenDesSchuelers += kurseInDerSchiene - 1;
 			}
@@ -1798,7 +1798,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerKursmengeMitKollisionen(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
 		const set : JavaSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const schiene of this._parent.schieneGetListe()) {
-			const kurseDerSchiene : JavaSet<GostBlockungsergebnisKurs> = this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, schiene.id);
+			const kurseDerSchiene : JavaSet<GostBlockungsergebnisKurs> = this._schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
 				set.addAll(kurseDerSchiene);
 		}
@@ -1898,7 +1898,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge der zugeordneten Kurse des Schülers in der Schiene.
 	 */
 	private getOfSchuelerOfSchieneKursmenge(idSchueler : number, idSchiene : number) : JavaSet<GostBlockungsergebnisKurs> {
-		return this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene);
+		return this._schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene);
 	}
 
 	/**
@@ -1910,7 +1910,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler in der Schiene mehr als einen Kurs belegt hat.
 	 */
 	public getOfSchuelerOfSchieneHatKollision(idSchueler : number, idSchiene : number) : boolean {
-		return this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene).size() > 1;
+		return this._schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene).size() > 1;
 	}
 
 	/**

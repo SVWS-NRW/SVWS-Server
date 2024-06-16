@@ -1018,7 +1018,7 @@ public class KursblockungDynDaten {
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {
-		return _fachartMap2D.getNonNullOrException(fachID, kursart);
+		return _fachartMap2D.getOrException(fachID, kursart);
 	}
 
 	private @NotNull KursblockungDynSchueler gibSchueler(final long schuelerID) {

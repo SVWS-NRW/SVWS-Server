@@ -2227,7 +2227,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public @NotNull GostFachwahl schuelerGetOfFachFachwahl(final long idSchueler, final long idFach) throws DeveloperNotificationException {
-		return _map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach);
+		return _map2d_idSchueler_idFach_fachwahl.getOrException(idSchueler, idFach);
 	}
 
 	/**
@@ -2254,8 +2254,8 @@ public class GostBlockungsdatenManager {
 	 * @return TRUE, falls beide Schüler bezogen auf das Fach die selbe Kursart haben oder eine Exception, falls zum Fach keine Fachwahl existiert.
 	 */
 	public boolean schuelerGetHatDieSelbeKursartMitSchuelerInFach(final long idSchueler1, final long idSchueler2, final long idFach) {
-		final @NotNull GostFachwahl fachwahl1 = _map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler1, idFach);
-		final @NotNull GostFachwahl fachwahl2 = _map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler2, idFach);
+		final @NotNull GostFachwahl fachwahl1 = _map2d_idSchueler_idFach_fachwahl.getOrException(idSchueler1, idFach);
+		final @NotNull GostFachwahl fachwahl2 = _map2d_idSchueler_idFach_fachwahl.getOrException(idSchueler2, idFach);
 		return fachwahl1.kursartID == fachwahl2.kursartID;
 	}
 
@@ -2272,7 +2272,7 @@ public class GostBlockungsdatenManager {
 	public boolean schuelerGetHatFachart(final long idSchueler, final long idFach, final int idKursart) throws DeveloperNotificationException {
 		if (!_map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach))
 			return false;
-		return _map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach).kursartID == idKursart;
+		return _map2d_idSchueler_idFach_fachwahl.getOrException(idSchueler, idFach).kursartID == idKursart;
 	}
 
 	/**
@@ -2513,9 +2513,9 @@ public class GostBlockungsdatenManager {
 		sb.append("\nFachwahlen = " + fachwahlGetAnzahl() + "\n");
 		for (final long idFach : _map2d_idFach_idKursart_fachwahlen.getKeySet()) {
 			for (final int idKursart : _map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach)) {
-				final int nKurse = _map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart).size();
+				final int nKurse = _map2d_idFach_idKursart_kurse.getOrException(idFach, idKursart).size();
 				sb.append("    Fach = " + idFach + ", Kursart = " + idKursart + " (" + nKurse + " Kurse)\n");
-				final @NotNull List<@NotNull GostFachwahl> list = _map2d_idFach_idKursart_fachwahlen.getNonNullOrException(idFach, idKursart);
+				final @NotNull List<@NotNull GostFachwahl> list = _map2d_idFach_idKursart_fachwahlen.getOrException(idFach, idKursart);
 
 				for (final @NotNull GostFachwahl fachwahl : list) {
 					sb.append("        " + fachwahl.schuelerID + "\n");

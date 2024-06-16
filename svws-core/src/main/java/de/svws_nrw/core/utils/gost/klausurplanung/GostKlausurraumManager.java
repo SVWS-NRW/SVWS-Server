@@ -137,7 +137,7 @@ public class GostKlausurraumManager {
 
 		raumAddAllOhneUpdate(listRaum);
 		raumstundeAddAllOhneUpdate(listRaumstunde);
-		for (@NotNull Long skt : listSchuelerklausurterminIds)
+		for (@NotNull final Long skt : listSchuelerklausurterminIds)
 			schuelerklausurAddOhneUpdate(_kursklausurManager.schuelerklausurterminGetByIdOrException(skt));
 		schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 
@@ -928,7 +928,7 @@ public class GostKlausurraumManager {
 		if (!_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
 		for (final long idKK : _schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
-			if (!_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
+			if (!_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getOrException(idRaum, idKK).isEmpty())
 				kursklausuren.add(_kursklausurManager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
@@ -958,7 +958,7 @@ public class GostKlausurraumManager {
 		if (!_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
 		for (final long idKK : _schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
-			schuelerklausuren.addAll(_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
+			schuelerklausuren.addAll(_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getOrException(idRaum, idKK));
 		return schuelerklausuren;
 	}
 
@@ -1124,7 +1124,7 @@ public class GostKlausurraumManager {
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull GostKlausurtermin, @NotNull List<@NotNull GostSchuelerklausurTermin>>> getFremdTermine() {
 		final @NotNull List<@NotNull Pair<@NotNull GostKlausurtermin, @NotNull List<@NotNull GostSchuelerklausurTermin>>> ergebnis = new ArrayList<>();
-		for (@NotNull Entry<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> entry : _schuelerklausurterminmenge_by_idTermin.entrySet()) {
+		for (@NotNull final Entry<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> entry : _schuelerklausurterminmenge_by_idTermin.entrySet()) {
 			if (_termin.id != entry.getKey()) {
 				ergebnis.add(new Pair<>(getKursklausurManager().terminGetByIdOrException(entry.getKey()), entry.getValue()));
 			}
@@ -1140,7 +1140,7 @@ public class GostKlausurraumManager {
 	 * @return Wahrheitswert
 	 */
 	public boolean isSchuelerklausurenInRaum(final boolean fremdTermine) {
-		for (@NotNull GostSchuelerklausurTermin termin : schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
+		for (@NotNull final GostSchuelerklausurTermin termin : schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
 			if (_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(termin.id))
 				return true;
 		return false;
@@ -1167,7 +1167,7 @@ public class GostKlausurraumManager {
 	 */
 	public int anzahlPlaetzeAlleRaeume(final boolean fremdTermine) {
 		int kapazitaet = 0;
-		for (@NotNull GostKlausurraum raum : raeumeVerfuegbarGetMenge(fremdTermine)) {
+		for (@NotNull final GostKlausurraum raum : raeumeVerfuegbarGetMenge(fremdTermine)) {
 			if (raum.idStundenplanRaum != null)
 				kapazitaet += getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum).groesse;
 		}
@@ -1217,8 +1217,8 @@ public class GostKlausurraumManager {
 	 * @return die Liste von angereicherten Objekten
 	 */
 	public @NotNull List<@NotNull GostSchuelerklausurTerminRich> enrichSchuelerklausurtermine(final @NotNull List<@NotNull GostSchuelerklausurTermin> termine) {
-		@NotNull List<@NotNull GostSchuelerklausurTerminRich> ergebnis = new ArrayList<>();
-		for (@NotNull GostSchuelerklausurTermin termin : termine)
+		@NotNull final List<@NotNull GostSchuelerklausurTerminRich> ergebnis = new ArrayList<>();
+		for (@NotNull final GostSchuelerklausurTermin termin : termine)
 			ergebnis.add(new GostSchuelerklausurTerminRich(termin, getKursklausurManager()));
 		return ergebnis;
 	}
@@ -1231,8 +1231,8 @@ public class GostKlausurraumManager {
 	 * @return die Liste von angereicherten Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurraumRich> enrichKlausurraeume(final @NotNull List<@NotNull GostKlausurraum> raeume) {
-		@NotNull List<@NotNull GostKlausurraumRich> ergebnis = new ArrayList<>();
-		for (@NotNull GostKlausurraum raum : raeume)
+		@NotNull final List<@NotNull GostKlausurraumRich> ergebnis = new ArrayList<>();
+		for (@NotNull final GostKlausurraum raum : raeume)
 			if (raum.idStundenplanRaum != null) // TODO in andere Methode verlagern
 				ergebnis.add(new GostKlausurraumRich(raum, getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
 		return ergebnis;

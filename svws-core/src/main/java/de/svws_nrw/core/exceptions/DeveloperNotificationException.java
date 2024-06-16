@@ -295,7 +295,7 @@ public class DeveloperNotificationException extends RuntimeException {
 			final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
 		if (!map.contains(key1, key2))
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!");
-		return map.getNonNullOrException(key1, key2);
+		return map.getOrException(key1, key2);
 	}
 
 

@@ -833,7 +833,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private gibFachart(fachID : number, kursart : number) : KursblockungDynFachart {
-		return this._fachartMap2D.getNonNullOrException(fachID, kursart);
+		return this._fachartMap2D.getOrException(fachID, kursart);
 	}
 
 	private gibSchueler(schuelerID : number) : KursblockungDynSchueler {

@@ -154,7 +154,7 @@ export class GostKlausurraumManager extends JavaObject {
 	private initAll(listRaum : List<GostKlausurraum>, listRaumstunde : List<GostKlausurraumstunde>, listSchuelerklausurraumstunde : List<GostSchuelerklausurterminraumstunde>, listSchuelerklausurterminIds : List<number>) : void {
 		this.raumAddAllOhneUpdate(listRaum);
 		this.raumstundeAddAllOhneUpdate(listRaumstunde);
-		for (let skt of listSchuelerklausurterminIds)
+		for (const skt of listSchuelerklausurterminIds)
 			this.schuelerklausurAddOhneUpdate(this._kursklausurManager.schuelerklausurterminGetByIdOrException(skt!));
 		this.schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 		this.update_all();
@@ -862,7 +862,7 @@ export class GostKlausurraumManager extends JavaObject {
 		if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
 		for (const idKK of this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
-			if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
+			if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getOrException(idRaum, idKK).isEmpty())
 				kursklausuren.add(this._kursklausurManager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
@@ -892,7 +892,7 @@ export class GostKlausurraumManager extends JavaObject {
 		if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
 		for (const idKK of this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
-			schuelerklausuren.addAll(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
+			schuelerklausuren.addAll(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getOrException(idRaum, idKK));
 		return schuelerklausuren;
 	}
 
@@ -1044,7 +1044,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public getFremdTermine() : List<Pair<GostKlausurtermin, List<GostSchuelerklausurTermin>>> {
 		const ergebnis : List<Pair<GostKlausurtermin, List<GostSchuelerklausurTermin>>> = new ArrayList<Pair<GostKlausurtermin, List<GostSchuelerklausurTermin>>>();
-		for (let entry of this._schuelerklausurterminmenge_by_idTermin.entrySet()) {
+		for (const entry of this._schuelerklausurterminmenge_by_idTermin.entrySet()) {
 			if (this._termin.id !== entry.getKey()) {
 				ergebnis.add(new Pair<GostKlausurtermin, List<GostSchuelerklausurTermin>>(this.getKursklausurManager().terminGetByIdOrException(entry.getKey()!), entry.getValue()));
 			}
@@ -1060,7 +1060,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return Wahrheitswert
 	 */
 	public isSchuelerklausurenInRaum(fremdTermine : boolean) : boolean {
-		for (let termin of this.schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
+		for (const termin of this.schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
 			if (this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(termin.id))
 				return true;
 		return false;
@@ -1087,7 +1087,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public anzahlPlaetzeAlleRaeume(fremdTermine : boolean) : number {
 		let kapazitaet : number = 0;
-		for (let raum of this.raeumeVerfuegbarGetMenge(fremdTermine)) {
+		for (const raum of this.raeumeVerfuegbarGetMenge(fremdTermine)) {
 			if (raum.idStundenplanRaum !== null)
 				kapazitaet += this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum).groesse;
 		}
@@ -1136,8 +1136,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return die Liste von angereicherten Objekten
 	 */
 	public enrichSchuelerklausurtermine(termine : List<GostSchuelerklausurTermin>) : List<GostSchuelerklausurTerminRich> {
-		let ergebnis : List<GostSchuelerklausurTerminRich> = new ArrayList<GostSchuelerklausurTerminRich>();
-		for (let termin of termine)
+		const ergebnis : List<GostSchuelerklausurTerminRich> = new ArrayList<GostSchuelerklausurTerminRich>();
+		for (const termin of termine)
 			ergebnis.add(new GostSchuelerklausurTerminRich(termin, this.getKursklausurManager()));
 		return ergebnis;
 	}
@@ -1150,8 +1150,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return die Liste von angereicherten Objekten
 	 */
 	public enrichKlausurraeume(raeume : List<GostKlausurraum>) : List<GostKlausurraumRich> {
-		let ergebnis : List<GostKlausurraumRich> = new ArrayList<GostKlausurraumRich>();
-		for (let raum of raeume)
+		const ergebnis : List<GostKlausurraumRich> = new ArrayList<GostKlausurraumRich>();
+		for (const raum of raeume)
 			if (raum.idStundenplanRaum !== null)
 				ergebnis.add(new GostKlausurraumRich(raum, this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum)));
 		return ergebnis;

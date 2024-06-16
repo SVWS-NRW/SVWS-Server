@@ -287,7 +287,7 @@ public class StupasSchulmanagerFormatReader {
 			m.zeitrasterAdd(zeitraster);
 		}
 
-		return zeiraster_by_wochentag_and_stunde.getNonNullOrException(line.Wochentag, line.Stunde);
+		return zeiraster_by_wochentag_and_stunde.getOrException(line.Wochentag, line.Stunde);
 	}
 
 	private StundenplanLehrer getCreateLehrer(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {

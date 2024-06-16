@@ -574,7 +574,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
 		if (_schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _schienenID_fachartID_to_kurseList.getOrException(idSchiene, idFachart);
 			final int n = kursGruppe.size();
 			if (n >= 2) {
 				sb.append("  " + getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
@@ -941,7 +941,7 @@ public class GostBlockungsergebnisManager {
 			int summeAllerKollisionenDesSchuelers = 0;
 
 			for (final long idSchiene : _schuelerID_schienenID_to_kurseSet.getKeySetOf(idSchueler)) {
-				final int kurseInDerSchiene = _schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene).size();
+				final int kurseInDerSchiene = _schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene).size();
 				if (kurseInDerSchiene >= 2)
 					summeAllerKollisionenDesSchuelers += kurseInDerSchiene - 1;
 			}
@@ -1935,7 +1935,7 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe()) {
 			final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseDerSchiene =
-					_schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, schiene.id);
+					_schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
 				set.addAll(kurseDerSchiene);
 		}
@@ -2041,7 +2041,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Menge der zugeordneten Kurse des Schülers in der Schiene.
 	 */
 	private @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerOfSchieneKursmenge(final long idSchueler, final long idSchiene) {
-		return _schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene);
+		return _schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene);
 	}
 
 	/**
@@ -2053,7 +2053,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler in der Schiene mehr als einen Kurs belegt hat.
 	 */
 	public boolean getOfSchuelerOfSchieneHatKollision(final long idSchueler, final long idSchiene) {
-		return _schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, idSchiene).size() > 1;
+		return _schuelerID_schienenID_to_kurseSet.getOrException(idSchueler, idSchiene).size() > 1;
 	}
 
 	/**

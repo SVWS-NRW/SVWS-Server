@@ -114,7 +114,7 @@ export class Map2DUtils extends JavaObject {
 	 * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
 	 */
 	public static removeFromListAndTrimOrException<K1, K2, V>(map2D : HashMap2D<K1, K2, List<V>>, key1 : K1, key2 : K2, value : V) : void {
-		const list : List<V> | null = map2D.getNonNullOrException(key1, key2);
+		const list : List<V> | null = map2D.getOrException(key1, key2);
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
 		if (list.isEmpty())
 			map2D.removeOrException(key1, key2);

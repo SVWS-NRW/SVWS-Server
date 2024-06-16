@@ -263,7 +263,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	public static ifMap2DGetIsNull<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : V {
 		if (!map.contains(key1, key2))
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
-		return map.getNonNullOrException(key1, key2);
+		return map.getOrException(key1, key2);
 	}
 
 	/**
