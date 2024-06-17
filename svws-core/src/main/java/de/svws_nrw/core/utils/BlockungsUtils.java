@@ -18,30 +18,31 @@ public final class BlockungsUtils {
 	}
 
 	/** Ein Comparator zum Sortieren von {@link GostBlockungListeneintrag}, welcher beachtet, dass der Suffix Zahlen enthält. */
-	private static final @NotNull Comparator<@NotNull GostBlockungListeneintrag> _compGostBlockungListeneintrag = (final @NotNull GostBlockungListeneintrag a, final @NotNull GostBlockungListeneintrag b) -> {
-		// Zerlege den Namen der Blockung in [Präfix, Suffix]. Der Suffix besteht nur aus Ziffern.
-		final @NotNull String @NotNull [] splitA = extractTrailingNumber(a.name.trim());
-		final @NotNull String @NotNull [] splitB = extractTrailingNumber(b.name.trim());
+	private static final @NotNull Comparator<@NotNull GostBlockungListeneintrag> _compGostBlockungListeneintrag =
+			(final @NotNull GostBlockungListeneintrag a, final @NotNull GostBlockungListeneintrag b) -> {
+				// Zerlege den Namen der Blockung in [Präfix, Suffix]. Der Suffix besteht nur aus Ziffern.
+				final @NotNull String @NotNull [] splitA = extractTrailingNumber(a.name.trim());
+				final @NotNull String @NotNull [] splitB = extractTrailingNumber(b.name.trim());
 
-		// Sortiere nach dem Präfix.
-		final @NotNull String praefixA = splitA[0].trim();
-		final @NotNull String praefixB = splitB[0].trim();
-		final int cmpPrefix = praefixA.compareTo(praefixB);
-		if (cmpPrefix != 0)
-			return cmpPrefix;
+				// Sortiere nach dem Präfix.
+				final @NotNull String praefixA = splitA[0].trim();
+				final @NotNull String praefixB = splitB[0].trim();
+				final int cmpPrefix = praefixA.compareTo(praefixB);
+				if (cmpPrefix != 0)
+					return cmpPrefix;
 
-		// Sortiere nach dem Zahlen-Suffix.
-		final int sizeA = splitA[1].length();
-		final int sizeB = splitB[1].length();
-		final @NotNull String suffixA = sizeA >= sizeB ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
-		final @NotNull String suffixB = sizeB >= sizeA ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
-		final int cmpSuffix = suffixA.compareTo(suffixB);
-		if (cmpSuffix != 0)
-			return cmpSuffix;
+				// Sortiere nach dem Zahlen-Suffix.
+				final int sizeA = splitA[1].length();
+				final int sizeB = splitB[1].length();
+				final @NotNull String suffixA = sizeA >= sizeB ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
+				final @NotNull String suffixB = sizeB >= sizeA ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
+				final int cmpSuffix = suffixA.compareTo(suffixB);
+				if (cmpSuffix != 0)
+					return cmpSuffix;
 
-		// Sortiere nach der ID.
-		return Long.compare(a.id, b.id);
-	};
+				// Sortiere nach der ID.
+				return Long.compare(a.id, b.id);
+			};
 
 	/**
 	 * Sortiert die Liste nach dem Namen der Blockung. Ist der Suffix eine Zahl, so wird dies bei der Sortierung beachtet.
@@ -55,7 +56,7 @@ public final class BlockungsUtils {
 	private static @NotNull String @NotNull [] extractTrailingNumber(final @NotNull String s) {
 		final String prefix = s.replaceAll("\\d*$", "");
 		final String suffix = s.substring(prefix.length());
-		return new String[] {prefix, suffix};
+		return new String[] { prefix, suffix };
 	}
 
 	/**

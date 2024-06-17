@@ -21,8 +21,8 @@ public final class AdressenUtils {
 	 *
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
-	public static @NotNull String@NotNull[] splitStrasse(final String strasse) {
-		final @NotNull String @NotNull[] result = new String[3];
+	public static @NotNull String @NotNull [] splitStrasse(final String strasse) {
+		final @NotNull String @NotNull [] result = new String[3];
 		if (strasse == null) {
 			result[0] = "";
 			result[1] = "";

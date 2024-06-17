@@ -342,7 +342,8 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 */
 	public boolean auswahlHasKey(final @NotNull K key) {
 		if (!this.has(key))
-			throw new DeveloperNotificationException("Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
+			throw new DeveloperNotificationException(
+					"Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
 		return this._mapAuswahlValuesByKey.containsKey(key);
 	}
 
@@ -415,7 +416,8 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 */
 	public void auswahlAddByKey(final @NotNull K key) {
 		if (!this.has(key))
-			throw new DeveloperNotificationException("Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
+			throw new DeveloperNotificationException(
+					"Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
 		this._mapAuswahlValuesByKey.put(key, this.getOrException(key));
 		if (_eventHandlerAuswahlGeandert != null)
 			_eventHandlerAuswahlGeandert.run();

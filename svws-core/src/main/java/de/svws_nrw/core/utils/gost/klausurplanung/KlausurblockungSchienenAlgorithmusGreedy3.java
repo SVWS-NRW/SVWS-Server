@@ -62,8 +62,8 @@ public final class KlausurblockungSchienenAlgorithmusGreedy3 extends Klausurbloc
 
 		// Erster Aufruf?
 		final int klausurNr = (_dynDaten.gibAnzahlSchienen() == 0)
-			? _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() // 1.
-			: _dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben(); // 2+.
+				? _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() // 1.
+				: _dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben(); // 2+.
 
 		// Alle Klausuren gesetzt?
 		if (klausurNr < 0) {

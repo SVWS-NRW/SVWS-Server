@@ -17,7 +17,8 @@ public final class DateUtils {
 	public static final int MAX_GUELTIGES_JAHR = 2900;
 
 	/** Ein Mapping für den Monat als Zahl zu seiner textuellen Beschreibung. */
-	private static final @NotNull String[] MONAT_ZU_TEXT = new String[] {"", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"};
+	private static final @NotNull String[] MONAT_ZU_TEXT =
+			new String[] { "", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember" };
 
 	/**
 	 * Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
@@ -25,8 +26,8 @@ public final class DateUtils {
 	 * [1][3] bedeutet, dass im März bereits 60 Tage vergangen sind (Schaltjahr).
 	 */
 	private static final @NotNull int @NotNull [][] monat_zu_vergangene_tage = new int[][] {
-			{0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334}, // kein Schaltjahr
-			{0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335}, // Schaltjahr
+			{ 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 }, // kein Schaltjahr
+			{ 0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 }, // Schaltjahr
 	};
 
 	private DateUtils() {
@@ -47,8 +48,8 @@ public final class DateUtils {
 	 * Auszug aus Wikipedia: Da ISO 8601 den Montag als ersten Tag der Woche definiert, ist dies somit die erste Woche,
 	 * von der mehr Tage (mindestens vier) auf das neue Jahr fallen als auf das alte Jahr.
 	 *  Äquivalent hierzu sind die folgenden Definitionen:<br>
-     * - jene Woche, die den 4. Januar enthält<br>
-     * - jene Woche, die den 1. Januar enthält, falls dieser ein Montag, Dienstag, Mittwoch oder Donnerstag ist, sonst die darauf folgende Woche
+	 * - jene Woche, die den 4. Januar enthält<br>
+	 * - jene Woche, die den 1. Januar enthält, falls dieser ein Montag, Dienstag, Mittwoch oder Donnerstag ist, sonst die darauf folgende Woche
 	 *
 	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
@@ -69,7 +70,7 @@ public final class DateUtils {
 		final int schalttage2 = (jahr / 4) - (jahr / 100) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		final int tagImJahr = monat_zu_vergangene_tage[schaltjahr][monat] + tagImMonat;
-		final int tagInWoche = (jahr + schalttage1 + tagImJahr  + 5) % 7 + 1;
+		final int tagInWoche = (jahr + schalttage1 + tagImJahr + 5) % 7 + 1;
 
 		final int tagImJahrAmJanuar4 = 4;
 		final int wochentagAmJanuar4 = (jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
@@ -90,7 +91,7 @@ public final class DateUtils {
 			kalenderwochenjahr--;
 		}
 
-		return new int[] {jahr, monat, tagImMonat, tagInWoche, tagImJahr, kalenderwoche, kalenderwochenjahr};
+		return new int[] { jahr, monat, tagImMonat, tagInWoche, tagImJahr, kalenderwoche, kalenderwochenjahr };
 	}
 
 	/**

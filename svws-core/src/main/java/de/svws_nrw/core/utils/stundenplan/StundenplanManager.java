@@ -2218,7 +2218,7 @@ public class StundenplanManager {
 	 * <br>Beispiel: Jahr 2025, KW  1 --> "KW 1 (30.12.2024–05.01.2025)"
 	 * <br>Beispiel: Jahr 2026, KW 53 --> "KW 53 (28.12.2026–03.01.2027)"
 	 * <br>Laufzeit: O(1)
-
+	 *
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 *
 	 * @return eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
@@ -6319,7 +6319,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
-
+	 *
 	 * @param wochentag  Der {@link Wochentag}-ENUM.
 	 * @param stunde     Die Unterrichtsstunde.
 	 *

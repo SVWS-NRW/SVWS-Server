@@ -20,12 +20,12 @@ public final class ArrayUtils {
 	 *
 	 * @param size    Die Länge des Arrays.
 	 * @param random  Ein {@link Random}-Objekt zum Permutieren der Elemente des Arrays.
-     *
-     * @return das Array mit den Werten 0 bis size-1 in permutierter Reihenfolge.
+	 *
+	 * @return das Array mit den Werten 0 bis size-1 in permutierter Reihenfolge.
 	 */
-   	public static @NotNull int[] getIndexPermutation(final int size, final @NotNull Random random) {
+	public static @NotNull int[] getIndexPermutation(final int size, final @NotNull Random random) {
 
-   		final int[] perm = new int[size];
+		final int[] perm = new int[size];
 		for (int i = 0; i < perm.length; i++)
 			perm[i] = i;
 
@@ -40,14 +40,14 @@ public final class ArrayUtils {
 		return perm;
 	}
 
-   	/**
-   	 * Liefert eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
-   	 *
-   	 * @param a      Das übergebene Array.
-   	 * @param value  Die Zahl, welche ergänzt wird.
-   	 *
-   	 * @return eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
-   	 */
+	/**
+	 * Liefert eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+	 *
+	 * @param a      Das übergebene Array.
+	 * @param value  Die Zahl, welche ergänzt wird.
+	 *
+	 * @return eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+	 */
 	public static @NotNull int[] erweitern(final @NotNull int[] a, final int value) {
 		final int[] temp = new int[a.length + 1];
 		System.arraycopy(a, 0, temp, 0, a.length);

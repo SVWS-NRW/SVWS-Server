@@ -11,9 +11,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class StringUtils {
 
-	private static final @NotNull String @NotNull [] buchstaben = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-			                                                          "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-			                                                          "U", "V", "W", "X", "Y", "Z"};
+	private static final @NotNull String @NotNull [] buchstaben =
+			new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+					"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+					"U", "V", "W", "X", "Y", "Z" };
 
 	private StringUtils() {
 	}
@@ -75,7 +76,7 @@ public final class StringUtils {
 			sb.append('0');
 		sb.append(sNumber);
 
-	    return sb.toString();
+		return sb.toString();
 	}
 
 	/**
@@ -93,6 +94,6 @@ public final class StringUtils {
 			sb.append('0');
 		sb.append(s);
 
-	    return sb.toString();
+		return sb.toString();
 	}
 }

@@ -45,7 +45,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 
 	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
-	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
+	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId =
+			(final @NotNull Schuljahresabschnitt sja) -> sja.id;
 
 
 	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
@@ -96,7 +97,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 			final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
-		this.schuljahresabschnitte = new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
+		this.schuljahresabschnitte =
+				new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;
@@ -153,7 +155,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 * @param b   der zweite Eintrag
 	 *
 	 * @return ein negativer Wert, 0 oder ein positiver Werte, wenn der erste Eintrag
-     *         kleiner, gleich oder größer ist als der zweite Eintrag
+	 *         kleiner, gleich oder größer ist als der zweite Eintrag
 	 */
 	protected abstract int compareAuswahl(@NotNull TAuswahl a, @NotNull TAuswahl b);
 
@@ -441,7 +443,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
 		if ((abschnittAuswahl == null) || (abschnittSchule == null))
 			return false;
-		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
+		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr)
+				|| ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
 	}
 
 
@@ -457,7 +460,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
 		if ((abschnittAuswahl == null) || (abschnittSchule == null))
 			return false;
-		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
+		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr)
+				|| ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
 	}
 
 
