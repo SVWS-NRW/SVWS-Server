@@ -157,7 +157,7 @@ public class APIDebug {
 	@Path("/debug{yaml : (/yaml)?}{api : (/\\w+)?}/{filename}")
 	public Response debugFile(@PathParam("yaml") final String yaml, @PathParam("api") final String api,
 			@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
-		return getResource(filename, request, "/yaml".equals(yaml), (api == null || api.isBlank()) ? "server" : api.substring(1));
+		return getResource(filename, request, "/yaml".equals(yaml), ((api == null) || api.isBlank()) ? "server" : api.substring(1));
 	}
 
 }

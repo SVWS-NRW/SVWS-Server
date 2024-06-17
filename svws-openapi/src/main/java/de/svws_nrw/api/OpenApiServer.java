@@ -54,7 +54,7 @@ public class OpenApiServer extends BaseOpenApiResource {
 			  <li> <a href="/debug/server/index.html"> API SVWS-Server </a> </li>
 			  %s
 			</ul>
-			""".formatted(SVWSKonfiguration.get().isDBRootAccessDisabled() || SVWSKonfiguration.get().hatPortHTTPPrivilegedAccess()
+			""".formatted((SVWSKonfiguration.get().isDBRootAccessDisabled() || SVWSKonfiguration.get().hatPortHTTPPrivilegedAccess())
 					? ""
 					: "<li> <a href=\"/debug/privileged/index.html\"> API SVWS-Server - Schemaverwaltung </a> </li>");
 

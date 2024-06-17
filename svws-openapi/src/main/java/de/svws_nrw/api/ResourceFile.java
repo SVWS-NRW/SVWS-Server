@@ -37,7 +37,7 @@ public final class ResourceFile {
 	ResourceFile(final String prefix, final File file) {
 		this.file = file;
 		final String p = file.getPath().replace('\\', '/');
-		this.path = p.substring(prefix.length(), p.length()).replaceFirst("^/", "");
+		this.path = p.substring(prefix.length()).replaceFirst("^/", "");
 		this.cache = null;
 		this.cacheTimestamp = Long.MIN_VALUE;
 	}

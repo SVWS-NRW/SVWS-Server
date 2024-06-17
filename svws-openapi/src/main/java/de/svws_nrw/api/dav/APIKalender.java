@@ -182,7 +182,7 @@ public class APIKalender {
 						"ifNonMatchHeader=" + ifNonMatchHeader, "ifMatchHeader=" + ifMatchHeader)) {
 			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
 
-			if (ifNonMatchHeader != null && "*".equals(ifNonMatchHeader)) {
+			if ((ifNonMatchHeader != null) && "*".equals(ifNonMatchHeader)) {
 				// Es soll ein neuer Termin erstellt werden,
 				// also nicht etwa (versehentlich) ein Termin mit der angegebenen Id
 				// überschrieben werden.
@@ -196,7 +196,7 @@ public class APIKalender {
 				return buildCreatedResponse((EntityTag) eTagResult);
 			}
 
-			if (ifMatchHeader != null && !ifMatchHeader.isBlank()) {
+			if ((ifMatchHeader != null) && !ifMatchHeader.isBlank()) {
 				// Update des Kalendereintrags durchführen
 				final Object eTagResult = dispatcher.dispatchUpdate(inputStream, kalenderId, kalenderEintragUId,
 						ifMatchHeader);
