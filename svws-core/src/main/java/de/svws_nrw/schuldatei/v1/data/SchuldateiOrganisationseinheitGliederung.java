@@ -31,11 +31,11 @@ public class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 	public String foerderschwerpunkt;
 
 
-    /**
-     * Erstellt eine neue Gliederung für eine Organisationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitGliederung() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt eine neue Gliederung für eine Organisationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitGliederung() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

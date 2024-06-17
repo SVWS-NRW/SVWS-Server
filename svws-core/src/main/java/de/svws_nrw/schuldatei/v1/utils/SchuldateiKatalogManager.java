@@ -51,7 +51,8 @@ public class SchuldateiKatalogManager {
 		this._eintraege.add(eintrag);
 		// ... in der Map der Einträge anhand des Wertes
 		if (this._mapEintragByWert.containsKey(eintrag.wert))
-			throw new IllegalArgumentException("Katalog " + this._name + ": Es existiert bereits ein anderer Katalog-Eintrag mit dem angegebenen Wert " + eintrag.wert + ".");
+			throw new IllegalArgumentException(
+					"Katalog " + this._name + ": Es existiert bereits ein anderer Katalog-Eintrag mit dem angegebenen Wert " + eintrag.wert + ".");
 		this._mapEintragByWert.put(eintrag.wert, eintrag);
 		try {
 			this._mapEintragByIntegerWert.put(Integer.parseInt(eintrag.wert), eintrag);

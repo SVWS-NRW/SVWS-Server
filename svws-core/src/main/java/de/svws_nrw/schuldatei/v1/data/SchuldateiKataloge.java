@@ -22,11 +22,11 @@ public class SchuldateiKataloge {
 	public @NotNull List<@NotNull SchuldateiKatalogeintrag> katalog = new ArrayList<>();
 
 
-    /**
-     * Erstellt Kataloge zu der Schuldatei
-     */
-    public SchuldateiKataloge() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt Kataloge zu der Schuldatei
+	 */
+	public SchuldateiKataloge() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

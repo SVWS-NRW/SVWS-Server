@@ -14,23 +14,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchuldateiEintrag {
 
 	/** Gibt an, ab wann der Eintrag gültig ist */
-    @Schema(description = "gibt an, ab wann der Eintrag gültig ist")
-    public String gueltigab;
+	@Schema(description = "gibt an, ab wann der Eintrag gültig ist")
+	public String gueltigab;
 
-    /** Gibt an, bis wann der Eintrag gültig ist */
-    @Schema(description = "gibt an, bis wann der Eintrag gültig ist")
-    public String gueltigbis;
+	/** Gibt an, bis wann der Eintrag gültig ist */
+	@Schema(description = "gibt an, bis wann der Eintrag gültig ist")
+	public String gueltigbis;
 
-    /** Das Änderungsdatum der letzten Änderung des Eintrags an*/
-    @Schema(description = "das Änderungsdatum der letzten Änderung des Eintrags")
-    public String geaendertam;
+	/** Das Änderungsdatum der letzten Änderung des Eintrags an*/
+	@Schema(description = "das Änderungsdatum der letzten Änderung des Eintrags")
+	public String geaendertam;
 
 
-    /**
-     * Erstellt einen neuen Eintrag der Schuldatei
-     */
-    public SchuldateiEintrag() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt einen neuen Eintrag der Schuldatei
+	 */
+	public SchuldateiEintrag() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

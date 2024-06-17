@@ -30,16 +30,16 @@ public class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 	@Schema(description = "Beschreibung", example = "Schule nimmt nicht an ASD teil")
 	public String Beschreibung;
 
-    /** Detail */
-    @Schema(description = "Detail")
-    public String detail;
+	/** Detail */
+	@Schema(description = "Detail")
+	public String detail;
 
 
-    /**
-     * Erstellt eine neue weitere Eigenschaft einer Organiationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitEigenschaft() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt eine neue weitere Eigenschaft einer Organiationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitEigenschaft() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

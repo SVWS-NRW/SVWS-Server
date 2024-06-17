@@ -25,7 +25,7 @@ public final class SchuldateiUtils {
 	 *     die Datumsangabe fehlerhaft ist
 	 */
 	private static @NotNull int[] splitDate(final @NotNull String date) throws IllegalArgumentException {
-		final @NotNull String @NotNull[] dmy = date.split("\\.");
+		final @NotNull String @NotNull [] dmy = date.split("\\.");
 		if (dmy.length != 3)
 			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.");
 		try {

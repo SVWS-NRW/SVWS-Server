@@ -31,11 +31,11 @@ public class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 	public @NotNull String schulformwert = "";
 
 
-    /**
-     * Erstellt eine neue Schulform für eine Organiationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitSchulform() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt eine neue Schulform für eine Organiationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitSchulform() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

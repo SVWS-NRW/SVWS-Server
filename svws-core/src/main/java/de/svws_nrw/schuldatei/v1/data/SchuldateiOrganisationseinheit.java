@@ -72,11 +72,11 @@ public class SchuldateiOrganisationseinheit {
 	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitGliederung> gliederung = new ArrayList<>();
 
 
-    /**
-     * Erstellt eine neue Organiationseinheit für die Schuldatei
-     */
-    public SchuldateiOrganisationseinheit() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt eine neue Organiationseinheit für die Schuldatei
+	 */
+	public SchuldateiOrganisationseinheit() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

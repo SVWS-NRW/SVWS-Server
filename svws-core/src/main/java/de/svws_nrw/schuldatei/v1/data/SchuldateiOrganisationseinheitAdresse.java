@@ -26,33 +26,33 @@ public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	@Schema(description = "Die Nummer der Liegenschaft der Organisationseinheit", example = "1")
 	public int liegenschaft = 0;
 
-    /** Straße der Adresse der Organisationseinheit */
-    @Schema(description = "Straße der Adresse der Organisationseinheit")
-    public @NotNull String strasse = "";
+	/** Straße der Adresse der Organisationseinheit */
+	@Schema(description = "Straße der Adresse der Organisationseinheit")
+	public @NotNull String strasse = "";
 
-    /** Postleitzahl der Schule */
-    @Schema(description = "Postleitzahl der Adresse der Organisationseinheit")
-    public @NotNull String postleitzahl = "";
+	/** Postleitzahl der Schule */
+	@Schema(description = "Postleitzahl der Adresse der Organisationseinheit")
+	public @NotNull String postleitzahl = "";
 
-    /** Ort der Schule */
-    @Schema(description = "Ort der Adresse der Organisationseinheit")
-    public @NotNull String ort = "";
+	/** Ort der Schule */
+	@Schema(description = "Ort der Adresse der Organisationseinheit")
+	public @NotNull String ort = "";
 
-    /** Regionalschlüssel der Schule */
-    @Schema(description = "Regionalschlüssel der Adresse der Organisationseinheit")
-    public @NotNull String regionalschluessel = "";
+	/** Regionalschlüssel der Schule */
+	@Schema(description = "Regionalschlüssel der Adresse der Organisationseinheit")
+	public @NotNull String regionalschluessel = "";
 
-    /** Qualität der Verortung */
-    @Schema(description = "Qualität der Verortung")
-    public long qualitaetverortung;
+	/** Qualität der Verortung */
+	@Schema(description = "Qualität der Verortung")
+	public long qualitaetverortung;
 
-    /** Koordinatenrechtswert der Adresse */
-    @Schema(description = "Koordinatenrechtswert der Adresse")
-    public long koordinaterechtswert;
+	/** Koordinatenrechtswert der Adresse */
+	@Schema(description = "Koordinatenrechtswert der Adresse")
+	public long koordinaterechtswert;
 
-    /** Koordinatenhochwert der Adresse */
-    @Schema(description = "Koordinatenhochwert der Adresse")
-    public long koordinatehochwert;
+	/** Koordinatenhochwert der Adresse */
+	@Schema(description = "Koordinatenhochwert der Adresse")
+	public long koordinatehochwert;
 
 	/** Der Adresstyp */
 	@Schema(description = "Adresstypid der Adresse", example = "1")
@@ -71,11 +71,11 @@ public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	public @NotNull String hauptstandortadresse = "";
 
 
-    /**
-     * Erstellt einen neuen Eintrag zu einer Adresse einer Organisationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitAdresse() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt einen neuen Eintrag zu einer Adresse einer Organisationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitAdresse() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

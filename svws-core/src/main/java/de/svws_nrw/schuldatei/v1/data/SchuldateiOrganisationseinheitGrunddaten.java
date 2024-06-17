@@ -35,60 +35,60 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	@Schema(description = "Der Rechtsstatus der Organisationseinheit", example = "1")
 	public int rechtsstatus;
 
-    /** Schulträgernummer der Organisationseinheit */
-    @Schema(description = "Schulträgernummer der Organisationseinheit")
-    public int schultraegernummer = 0;
+	/** Schulträgernummer der Organisationseinheit */
+	@Schema(description = "Schulträgernummer der Organisationseinheit")
+	public int schultraegernummer = 0;
 
-    /** Art der Trägerschaft der Schule */
-    @Schema(description = "Art der Trägerschaft des Schulträgers", example = "00")
-    public int artdertraegerschaft = 0;
+	/** Art der Trägerschaft der Schule */
+	@Schema(description = "Art der Trägerschaft des Schulträgers", example = "00")
+	public int artdertraegerschaft = 0;
 
-    /** Betriebsschlüssel der Schule */
-    @Schema(description = "Betriebsschlüssel der Schule")
-    public int schulbetriebsschluessel = 0;
+	/** Betriebsschlüssel der Schule */
+	@Schema(description = "Betriebsschlüssel der Schule")
+	public int schulbetriebsschluessel = 0;
 
-    /** Kapitel der Schule */
-    @Schema(description = "Kapitel der Schule")
-    public int kapitel = 0;
+	/** Kapitel der Schule */
+	@Schema(description = "Kapitel der Schule")
+	public int kapitel = 0;
 
-    /** Obere Schulaufsicht der Schule */
-    @Schema(description = "Obere Schulaufsicht der Schule", example = "001")
-    public int obereschulaufsicht = 0;
+	/** Obere Schulaufsicht der Schule */
+	@Schema(description = "Obere Schulaufsicht der Schule", example = "001")
+	public int obereschulaufsicht = 0;
 
-    /** Untere Schulaufsicht der Schule */
-    @Schema(description = "Untere Schulaufsicht der Schule")
-    public int untereschulaufsicht = 0;
+	/** Untere Schulaufsicht der Schule */
+	@Schema(description = "Untere Schulaufsicht der Schule")
+	public int untereschulaufsicht = 0;
 
-    /** Zentrum für schulpraktische Lehrerausbildung ZFSL */
-    @Schema(description = "Zentrum für schulpraktische Lehrerausbildung ZFSL", example = "503010")
-    public int zfsl = 0;
+	/** Zentrum für schulpraktische Lehrerausbildung ZFSL */
+	@Schema(description = "Zentrum für schulpraktische Lehrerausbildung ZFSL", example = "503010")
+	public int zfsl = 0;
 
-    /** Dienststellenschlüssel bzw. Personalbereich der Organisationseinheit */
-    @Schema(description = "Dienststellenschlüssel (Personalbereich) der Organisationseinheit", example = "M005")
-    public int dienststellenschluessel = 0;
+	/** Dienststellenschlüssel bzw. Personalbereich der Organisationseinheit */
+	@Schema(description = "Dienststellenschlüssel (Personalbereich) der Organisationseinheit", example = "M005")
+	public int dienststellenschluessel = 0;
 
-    /** Personalteilbereich der Organisationseinheit */
-    @Schema(description = "Personalteilbereich der Organisationseinheit", example = "2160")
-    public String ptb = null;
+	/** Personalteilbereich der Organisationseinheit */
+	@Schema(description = "Personalteilbereich der Organisationseinheit", example = "2160")
+	public String ptb = null;
 
-    /** Gibt an ob die Schule Internatsbetrieb hat */
-    @Schema(description = "Gibt die Art des Internatbetriebs an")
-    public String internatsbetrieb = null;
+	/** Gibt an ob die Schule Internatsbetrieb hat */
+	@Schema(description = "Gibt die Art des Internatbetriebs an")
+	public String internatsbetrieb = null;
 
-    /** Anzahl der Internatsplätze */
-    @Schema(description = "Anzahl der Internatsplätze")
-    public Integer internatsplaetze = null;
+	/** Anzahl der Internatsplätze */
+	@Schema(description = "Anzahl der Internatsplätze")
+	public Integer internatsplaetze = null;
 
 	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))
 	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
 
 
-    /**
-     * Erstellt neue Grunddaten für eine Organiationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitGrunddaten() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt neue Grunddaten für eine Organiationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitGrunddaten() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

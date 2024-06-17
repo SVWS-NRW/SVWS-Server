@@ -46,11 +46,11 @@ public class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	public String wert;
 
 
-    /**
-     * Erstellt ein neues Merkmal für eine Organisationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitMerkmal() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt ein neues Merkmal für eine Organisationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitMerkmal() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

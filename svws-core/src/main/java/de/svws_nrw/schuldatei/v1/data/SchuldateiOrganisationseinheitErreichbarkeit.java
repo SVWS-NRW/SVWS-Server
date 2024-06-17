@@ -26,24 +26,24 @@ public class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 	@Schema(description = "Die Nummer der Liegenschaft der Organisationseinheit", example = "1")
 	public @NotNull Integer liegenschaft = 0;
 
-    /** Kommgruppe des Eintrags*/
-    @Schema(description = "Kommgruppe des Eintrags")
-    public Integer kommgruppe;
+	/** Kommgruppe des Eintrags*/
+	@Schema(description = "Kommgruppe des Eintrags")
+	public Integer kommgruppe;
 
-    /** codekey des Eintrags */
-    @Schema(description = "codekey des Eintrags", example = "01")
-    public String codekey;
+	/** codekey des Eintrags */
+	@Schema(description = "codekey des Eintrags", example = "01")
+	public String codekey;
 
-    /** codewert des Eintrags */
-    @Schema(description = "codewert des Eintrags", example = "01234/1243501")
-    public String codewert;
+	/** codewert des Eintrags */
+	@Schema(description = "codewert des Eintrags", example = "01234/1243501")
+	public String codewert;
 
 
-    /**
-     * Erstellt einen neuen Eintrag zur Erreichbarkeit einer Organisationseinheit der Schuldatei
-     */
-    public SchuldateiOrganisationseinheitErreichbarkeit() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt einen neuen Eintrag zur Erreichbarkeit einer Organisationseinheit der Schuldatei
+	 */
+	public SchuldateiOrganisationseinheitErreichbarkeit() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }

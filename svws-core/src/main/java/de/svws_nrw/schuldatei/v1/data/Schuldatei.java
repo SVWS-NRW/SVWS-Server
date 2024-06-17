@@ -22,11 +22,11 @@ public class Schuldatei {
 	public @NotNull List<@NotNull SchuldateiOrganisationseinheit> organisationseinheit = new ArrayList<>();
 
 
-    /**
-     * Erstellt eine Schuldatei
-     */
-    public Schuldatei() {
-        // Die Initialisierung mit Defaults erfolgt direkt über die Attribute
-    }
+	/**
+	 * Erstellt eine Schuldatei
+	 */
+	public Schuldatei() {
+		// Die Initialisierung mit Defaults erfolgt direkt über die Attribute
+	}
 
 }
