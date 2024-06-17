@@ -98,6 +98,11 @@ class SVWSKonfigurationDTO {
 	@JsonProperty("ServerMode")
 	String serverMode;
 
+	/** Gibt den priviligierten Datenbank-Benutzer an, welcher über die Open-API-Schnittstelle für den priviligierten Zugriff auch Zugriff
+	 * auf die Konfiguration des SVWS-Server erhält. */
+	@JsonProperty("PrivilegedDatabaseUser")
+	String privilegedDatabaseUser;
+
 	/** Die Konfiguration des SVWS-Servers für den Datenbankzugriff */
 	@JsonProperty("DBKonfiguration")
 	SVWSKonfigurationDatabaseDTO dbKonfiguration;

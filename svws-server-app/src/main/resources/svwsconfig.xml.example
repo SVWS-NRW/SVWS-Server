@@ -49,6 +49,10 @@
 	
 	<!-- Gibt den Modus an, welche Funktionen vom Server bereitgestellt werden (dev, alpha, beta oder stable) -->
 	<ServerMode>stable</ServerMode>
+	
+	<!-- Gibt den priviligierten Datenbank-Benutzer an, welcher über die Open-API-Schnittstelle für den priviligierten Zugriff auch Zugriff auf die 
+	     Konfiguration des SVWS-Server erhält -->
+	<PrivilegedDatabaseUser>root</PrivilegedDatabaseUser>
 		
 	<!-- Beinhaltet die Datenbank-Konfiguration. Für den Zugriff auf mehrere Schemata können mehrere SchemaKonfigurations-Einträge angelegt werden -->
 	<DBKonfiguration>

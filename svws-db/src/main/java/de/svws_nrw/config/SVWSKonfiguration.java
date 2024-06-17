@@ -505,6 +505,20 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/** Gibt den Default für den priviligierten Datenbank-Benutzer an, welcher auch die Berechtigungen hat über die Open-API-Schnittstelle für
+	 * den priviligierten Zugriff auf die SVWS-Sserver-Konfiguration zuzugreifen. */
+	public static final String default_privileged_database_user = "root";
+
+	/**
+	 * Gibt den priviligierten Datenbank-Benutzer an, welcher auch die Berechtigungen hat über die Open-API-Schnittstelle für
+	 * den priviligierten Zugriff auf die SVWS-Sserver-Konfiguration zuzugreifen.
+	 *
+	 * @return der priviligierte Datenbank-Benutzer mit Änderungsrechten an der Server-Konfiguration
+	 */
+	public String getPrivilegedDatabaseUser() {
+		return (dto == null) || (this.dto.privilegedDatabaseUser == null) ? default_privileged_database_user : this.dto.privilegedDatabaseUser;
+	}
+
 
 
 	/**
