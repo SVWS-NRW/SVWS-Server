@@ -84,7 +84,8 @@ public class AES {
 	public byte[] decrypt(final byte[] input) throws AESException {
 		try {
 			if (input.length < 16)
-				throw new ArrayIndexOutOfBoundsException("Das übegebene Array ist zu klein und kann noch nicht einmal einen Initialisierungsvbektor enthalten.");
+				throw new ArrayIndexOutOfBoundsException(
+						"Das übegebene Array ist zu klein und kann noch nicht einmal einen Initialisierungsvbektor enthalten.");
 			final IvParameterSpec iv = new IvParameterSpec(input, 0, 16);
 			final Cipher cipher = Cipher.getInstance(this.algo.value());
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);
@@ -123,7 +124,7 @@ public class AES {
 	 */
 	public byte[] decryptBase64(final String input) throws AESException {
 		try {
-			final byte[] inputDecoded =  Base64.getDecoder().decode(input);
+			final byte[] inputDecoded = Base64.getDecoder().decode(input);
 			return decrypt(inputDecoded);
 		} catch (final IllegalArgumentException e) {
 			throw new AESException("Fehler beim Dekodieren des Base64-Inputs zu einem byte[]", e);

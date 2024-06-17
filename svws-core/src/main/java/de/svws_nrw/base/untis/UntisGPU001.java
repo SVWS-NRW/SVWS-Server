@@ -48,21 +48,20 @@ public final class UntisGPU001 {
 
 	/** Die Instanz des Object-Readers für die CSV-Daten */
 	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU001.class).with(CsvSchema.builder()
-		.addNumberColumn("idUnterricht")
-		.addColumn("klasseKuerzel")
-		.addColumn("lehrerKuerzel")
-		.addColumn("fachKuerzel")
-		.addColumn("raumKuerzel")
-		.addNumberColumn("wochentag")
-		.addNumberColumn("stunde")
-		.addNumberColumn("dauer")
-		.addColumn("dummy")
-		.build()
-		.withColumnSeparator(';')
-		.withQuoteChar('\"')
-		.withNullValue("")
-		.withoutHeader()
-	);
+			.addNumberColumn("idUnterricht")
+			.addColumn("klasseKuerzel")
+			.addColumn("lehrerKuerzel")
+			.addColumn("fachKuerzel")
+			.addColumn("raumKuerzel")
+			.addNumberColumn("wochentag")
+			.addNumberColumn("stunde")
+			.addNumberColumn("dauer")
+			.addColumn("dummy")
+			.build()
+			.withColumnSeparator(';')
+			.withQuoteChar('\"')
+			.withNullValue("")
+			.withoutHeader());
 
 	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU001-Datensätze

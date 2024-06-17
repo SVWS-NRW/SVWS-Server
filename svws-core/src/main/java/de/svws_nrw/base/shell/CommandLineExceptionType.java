@@ -25,7 +25,7 @@ public enum CommandLineExceptionType {
 
 
 	/// Die Nachricht, die bei der Exception angezeigt wird
-	private String message;
+	private final String message;
 
 
 	/**

@@ -14,8 +14,8 @@ import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
  * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "Name", "Vorname", "GebDat", "Geschlecht", "Fachkrz", "Kursart", "Note", "Kl1", "Kl2", "KLG",
-	"SoMi1", "SoMi2", "SomiG", "Fehl1", "Fehl2", "uFehl1", "uFehl2", "FehlStd", "UFehlStd", "Facharbeit",
-	"Facharbeitsthema", "Kurs", "Mahnung" })
+		"SoMi1", "SoMi2", "SomiG", "Fehl1", "Fehl2", "uFehl1", "uFehl2", "FehlStd", "UFehlStd", "Facharbeit",
+		"Facharbeitsthema", "Kurs", "Mahnung" })
 public class Kurs42DataFachwahlen {
 
 	/** Der Nachname des Schülers. Eine von vier Spalten in Kurs 42, um den Schüler zu identifizieren. */

@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.SchuelerStatus;
  * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "IdNr", "Status", "Geschlecht", "Jahrgang", "Klasse", "Name", "Vorname", "CollCount", "GebDat",
-	"SchulNr", "DB_IdNr", "Tutor", "PruefOrd", "EMail", "KoopDBIdNr", "ExterneId", "SchulEmail", "Gruppe" })
+		"SchulNr", "DB_IdNr", "Tutor", "PruefOrd", "EMail", "KoopDBIdNr", "ExterneId", "SchulEmail", "Gruppe" })
 public class Kurs42DataSchueler {
 
 	/** Eine von Kurs 42 genutzte ID des Schülers */

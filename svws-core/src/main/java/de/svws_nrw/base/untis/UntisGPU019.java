@@ -49,19 +49,19 @@ public final class UntisGPU019 {
 
 	/** Das CSV-Schema */
 	private static final CsvSchema schema = CsvSchema.builder()
-		.addColumn("name")
-		.addColumn("art")
-		.addNumberColumn("anzahlWochenstunden")
-		.addNumberColumn("idUnterricht")
-		.addColumn("fachAlias")
-		.addColumn("fach")
-		.addColumn("klassen")
-		.addColumn("dummy")
-		.build()
-		.withColumnSeparator(';')
-		.withQuoteChar('\"')
-		.withNullValue("")
-		.withoutHeader();
+			.addColumn("name")
+			.addColumn("art")
+			.addNumberColumn("anzahlWochenstunden")
+			.addNumberColumn("idUnterricht")
+			.addColumn("fachAlias")
+			.addColumn("fach")
+			.addColumn("klassen")
+			.addColumn("dummy")
+			.build()
+			.withColumnSeparator(';')
+			.withQuoteChar('\"')
+			.withNullValue("")
+			.withoutHeader();
 
 	/** Die Instanz des Object-Readers für die CSV-Daten */
 	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU019.class).with(schema);
@@ -104,7 +104,7 @@ public final class UntisGPU019 {
 	@Override
 	public String toString() {
 		return "Unterrichtsfolge [name=" + name + ", art=" + art + ", anzahlWochenstunden=" + anzahlWochenstunden
-			+ ", idUnterricht=" + idUnterricht + ", fachAlias=" + fachAlias + ", fach=" + fach + ", klassen=" + klassen + "]";
+				+ ", idUnterricht=" + idUnterricht + ", fachAlias=" + fachAlias + ", fach=" + fach + ", klassen=" + klassen + "]";
 	}
 
 }

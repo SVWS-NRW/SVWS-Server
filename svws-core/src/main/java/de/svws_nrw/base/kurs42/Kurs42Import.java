@@ -138,7 +138,8 @@ public class Kurs42Import {
 	 *
 	 * @throws IOException   falls die Dateien nicht erfolgreich gelesen werden können.
 	 */
-	public Kurs42Import(final Path parent, final int schulnummer, final Map<String, Long> mapLehrer, final Set<Long> setSchueler, final Logger logger) throws IOException {
+	public Kurs42Import(final Path parent, final int schulnummer, final Map<String, Long> mapLehrer, final Set<Long> setSchueler, final Logger logger)
+			throws IOException {
 		this.logger = logger;
 		this.setSchueler = setSchueler;
 		this.k42Blockung = new Kurs42DataBlockung(parent.resolve("Blockung.txt"));
@@ -149,7 +150,8 @@ public class Kurs42Import {
 		this.k42Blockplan = CsvReader.from(parent.resolve("Blockplan.txt"), Kurs42DataBlockplan.class);
 		this.k42Fachwahlen = CsvReader.from(parent.resolve("Fachwahlen.txt"), Kurs42DataFachwahlen.class);
 		if (!("" + schulnummer).equals(k42Blockung.Schulnummer))
-			throw new IOException("Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");
+			throw new IOException(
+					"Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");
 		this.name = (k42Blockung.Bezeichnung == null) || "".equals(k42Blockung.Bezeichnung) ? "Blockung importiert aus Kurs42" : k42Blockung.Bezeichnung;
 		final int abschnitt = k42Blockung.Abschnitt > 2 ? 2 : k42Blockung.Abschnitt;
 		this.halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(k42Blockung.Jahrgang, abschnitt);
@@ -180,7 +182,8 @@ public class Kurs42Import {
 			final long id = curKursID++;
 			final Long fachID = mapFachKuerzelToID.get(k42Kurs.Fach);
 			if (fachID == null)
-				throw new IOException("Das bei den Kursen angegeben Fach mit dem Kürzel " + k42Kurs.Fach + " existiert nicht in der Liste der Fächer. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+				throw new IOException("Das bei den Kursen angegeben Fach mit dem Kürzel " + k42Kurs.Fach
+						+ " existiert nicht in der Liste der Fächer. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
 			final GostKursart kursart = GostKursart.fromKuerzel(k42Kurs.Kursart);
 			final String kursartKey = fachID + ";" + kursart.id;
 
@@ -200,10 +203,12 @@ public class Kurs42Import {
 			kurs.suffix = "";
 			kurs.wochenstunden = k42Kurs.Std;
 			kurs.anzahlSchienen = k42Kurs.Schienenzahl;
-			if (k42Kurs.Lehrer != null && !"".equals(k42Kurs.Lehrer) && !"--".equals(k42Kurs.Lehrer)) {
+			if ((k42Kurs.Lehrer != null) && !"".equals(k42Kurs.Lehrer) && !"--".equals(k42Kurs.Lehrer)) {
 				final Long lehrerID = mapLehrer.get(k42Kurs.Lehrer);
 				if (lehrerID == null) {
-					logger.logLn("Das bei den Kursen angegeben Lehrer-Kürzel %s existiert nicht in der Lehrer-Liste. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird kein Lehrer zugeordnet.".formatted(k42Kurs.Lehrer));
+					logger.logLn(
+							"Das bei den Kursen angegeben Lehrer-Kürzel %s existiert nicht in der Lehrer-Liste. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird kein Lehrer zugeordnet."
+									.formatted(k42Kurs.Lehrer));
 					continue;
 				}
 				final GostBlockungKursLehrer kl = new GostBlockungKursLehrer();
@@ -281,12 +286,15 @@ public class Kurs42Import {
 			final Long id = mapKursNameToID.get(bp.Kursbezeichnung);
 			final int schienenNr = bp.Schiene + 1; // der SVWS-Server verwendet eine 1-Indizierung => Umwandlung
 			if (id == null) {
-				logger.logLn("Der im Blockplan angegebene Kurs '%s' existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird nicht die Schiene %d zugeordnet.".formatted(bp.Kursbezeichnung, schienenNr));
+				logger.logLn(
+						"Der im Blockplan angegebene Kurs '%s' existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird nicht die Schiene %d zugeordnet."
+								.formatted(bp.Kursbezeichnung, schienenNr));
 				continue;
 			}
 			final Long schienenID = mapSchieneNrToID.get(schienenNr);
 			if (schienenID == null)
-				throw new IOException("Die im Blockplan angegebene Schienennummer " + bp.Schiene + " existiert nicht in der Schienen-Liste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+				throw new IOException("Die im Blockplan angegebene Schienennummer " + bp.Schiene
+						+ " existiert nicht in der Schienen-Liste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
 			this.zuordnung_kurs_schiene.put(id, schienenID, new Pair<>(id, schienenID));
 			if (bp.Fixiert != 0) {
 				final GostBlockungRegel regel = new GostBlockungRegel();
@@ -304,7 +312,9 @@ public class Kurs42Import {
 		for (final GostBlockungKurs kurs : kurse) {
 			final int zugeordnet = zuordnung_kurs_schiene.getSubMapSizeOrZero(kurs.id);
 			if (kurs.anzahlSchienen != zugeordnet) {
-				logger.logLn("Der Kurs %s hat laut den Kurs42-Daten %x Schienen, aber er ist %x Schienen zugeordnet. Der letzte Wert wird als richtig übernommen.".formatted(mapKursByID.get(kurs.id).Name, kurs.anzahlSchienen, zugeordnet));
+				logger.logLn(
+						"Der Kurs %s hat laut den Kurs42-Daten %x Schienen, aber er ist %x Schienen zugeordnet. Der letzte Wert wird als richtig übernommen."
+								.formatted(mapKursByID.get(kurs.id).Name, kurs.anzahlSchienen, zugeordnet));
 				kurs.anzahlSchienen = zugeordnet;
 			}
 		}
@@ -315,14 +325,18 @@ public class Kurs42Import {
 			final String schuelerKey = getSchuelerKeyFW.apply(fw);
 			final Long kursID = mapKursNameToID.get(fw.Kurs);
 			if (kursID == null) {
-				logger.logLn("Der bei den Fachwahlen angegebene Kurs (%s) existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent.".formatted(fw.Kurs));
+				logger.logLn(
+						"Der bei den Fachwahlen angegebene Kurs (%s) existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent."
+								.formatted(fw.Kurs));
 				continue;
 			}
 			final Long schuelerID = mapSchuelerKeyToID.get(schuelerKey);
 			if (schuelerID == null)
-				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey + "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey
+						+ "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
 			if (!setSchueler.contains(schuelerID)) {
-				logger.logLn("Der Schüler mit der ID %d existiert nicht in der SVWS-DB. Die Kurs-Schüler-Zuordnung wird beim Import ignoriert.".formatted(schuelerID));
+				logger.logLn("Der Schüler mit der ID %d existiert nicht in der SVWS-DB. Die Kurs-Schüler-Zuordnung wird beim Import ignoriert."
+						.formatted(schuelerID));
 				continue;
 			}
 			this.zuordnung_kurs_schueler.put(kursID, schuelerID, new Pair<>(kursID, schuelerID));

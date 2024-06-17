@@ -56,8 +56,7 @@ public class CommandLineParser {
 		// Setze die aktuelle option auf die erste definierte Option, diese wird nicht benötigt, sollte aber nicht null sein
 		CommandLineOption current = options.entrySet().iterator().next().getValue();
 		boolean isArgument = false;
-		for (int i = 0; i < args.length; i++) {
-			final String arg = args[i];
+		for (final String arg : args) {
 			// Prüfe, zunächst, ob es sich um ein Argument der zuvor gelesenen Option handelt und schreibe ggf. den Wert
 			if (isArgument) {
 				values.put(current.getShortTag(), arg);

@@ -34,14 +34,14 @@ public class MailSmtpSession {
 		final Properties prop = new Properties();
 		prop.put("mail.smtp.auth", true);
 		prop.put("mail.smtp.starttls.enable", config.isStartTLS() ? "true" : "false");
-		prop.put("mail.smtp.host",  config.getHost());
+		prop.put("mail.smtp.host", config.getHost());
 		prop.put("mail.smtp.port", "" + config.getPort());
 		prop.put("mail.smtp.ssl.trust", config.getHost());
 		this.session = Session.getInstance(prop, new Authenticator() {
-		    @Override
-		    protected PasswordAuthentication getPasswordAuthentication() {
-		        return new PasswordAuthentication(config.getUsername(), config.getPassword());
-		    }
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(config.getUsername(), config.getPassword());
+			}
 		});
 	}
 
@@ -53,7 +53,8 @@ public class MailSmtpSession {
 	}
 
 
-	private static void addAttachment(final Multipart multipart, final @NotNull byte[] data, final @NotNull String mimeType, final @NotNull String filename) throws MessagingException {
+	private static void addAttachment(final Multipart multipart, final @NotNull byte[] data, final @NotNull String mimeType, final @NotNull String filename)
+			throws MessagingException {
 		final MimeBodyPart attachment = new MimeBodyPart();
 		final ByteArrayDataSource ds = new ByteArrayDataSource(data, mimeType);
 		attachment.setDataHandler(new DataHandler(ds));
@@ -72,7 +73,8 @@ public class MailSmtpSession {
 	 *
 	 * @throws MessagingException   falls ein Fehler bei dem Versenden der Nachricht auftritt
 	 */
-	public void sendTextMessage(final @NotNull String from, final @NotNull String to, final @NotNull String subject, final @NotNull String text) throws MessagingException {
+	public void sendTextMessage(final @NotNull String from, final @NotNull String to, final @NotNull String subject, final @NotNull String text)
+			throws MessagingException {
 		final Message message = new MimeMessage(this.session);
 		message.setFrom(new InternetAddress(from));
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));

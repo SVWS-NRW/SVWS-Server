@@ -72,27 +72,27 @@ public final class UntisGPU010 {
 
 	/** Das CSV-Schema */
 	private static final CsvSchema schema = CsvSchema.builder()
-		.addColumn("name")
-		.addColumn("langname")
-		.addColumn("text")
-		.addColumn("beschreibung")
-		.addColumn("statistik1")
-		.addColumn("statistik2")
-		.addColumn("kennzeichen")
-		.addColumn("vorname")
-		.addColumn("schuelernummer")
-		.addColumn("klasse")
-		.addColumn("geschlecht")
-		.addColumn("optimierungskennzeichen")
-		.addColumn("geburtsdatum")
-		.addColumn("emailAdresse")
-		.addColumn("fremdschluessel")
-		.addColumn("dummy")
-		.build()
-		.withColumnSeparator(';')
-		.withQuoteChar('\"')
-		.withNullValue("")
-		.withoutHeader();
+			.addColumn("name")
+			.addColumn("langname")
+			.addColumn("text")
+			.addColumn("beschreibung")
+			.addColumn("statistik1")
+			.addColumn("statistik2")
+			.addColumn("kennzeichen")
+			.addColumn("vorname")
+			.addColumn("schuelernummer")
+			.addColumn("klasse")
+			.addColumn("geschlecht")
+			.addColumn("optimierungskennzeichen")
+			.addColumn("geburtsdatum")
+			.addColumn("emailAdresse")
+			.addColumn("fremdschluessel")
+			.addColumn("dummy")
+			.build()
+			.withColumnSeparator(';')
+			.withQuoteChar('\"')
+			.withNullValue("")
+			.withoutHeader();
 
 	/** Die Instanz des Object-Readers für die CSV-Daten */
 	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU010.class).with(schema);
@@ -137,7 +137,7 @@ public final class UntisGPU010 {
 	@Override
 	public String toString() {
 		return "Unterrichtsfolge [name=" + name + ", langname=" + langname + ", vorname=" + vorname + ", fremdschluessel=" + fremdschluessel
-			+ ", klasse=" + klasse + ", geschlecht=" + geschlecht + ", geburtsdatum=" + geburtsdatum + ", emailAdresse=" + emailAdresse + "]";
+				+ ", klasse=" + klasse + ", geschlecht=" + geschlecht + ", geburtsdatum=" + geburtsdatum + ", emailAdresse=" + emailAdresse + "]";
 	}
 
 }

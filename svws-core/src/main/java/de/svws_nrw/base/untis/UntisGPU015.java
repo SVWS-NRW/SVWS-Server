@@ -66,25 +66,25 @@ public final class UntisGPU015 {
 
 	/** Das CSV-Schema */
 	private static final CsvSchema schema = CsvSchema.builder()
-		.addColumn("name")
-		.addNumberColumn("idUnterricht")
-		.addColumn("fach")
-		.addColumn("unterrichtAlias")
-		.addColumn("klasse")
-		.addColumn("statistikKennzeichen")
-		.addColumn("stundentennummer")
-		.addColumn("reserviert1")
-		.addColumn("reserviert2")
-		.addColumn("idsUnterrichteAlternativkurse")
-		.addColumn("kuerzelAlternativkurse")
-		.addColumn("reserviert3")
-		.addColumn("prioAlternativkurse")
-		.addColumn("dummy")
-		.build()
-		.withColumnSeparator(';')
-		.withQuoteChar('\"')
-		.withNullValue("")
-		.withoutHeader();
+			.addColumn("name")
+			.addNumberColumn("idUnterricht")
+			.addColumn("fach")
+			.addColumn("unterrichtAlias")
+			.addColumn("klasse")
+			.addColumn("statistikKennzeichen")
+			.addColumn("stundentennummer")
+			.addColumn("reserviert1")
+			.addColumn("reserviert2")
+			.addColumn("idsUnterrichteAlternativkurse")
+			.addColumn("kuerzelAlternativkurse")
+			.addColumn("reserviert3")
+			.addColumn("prioAlternativkurse")
+			.addColumn("dummy")
+			.build()
+			.withColumnSeparator(';')
+			.withQuoteChar('\"')
+			.withNullValue("")
+			.withoutHeader();
 
 
 	/** Die Instanz des Object-Readers für die CSV-Daten */
@@ -130,8 +130,8 @@ public final class UntisGPU015 {
 	@Override
 	public String toString() {
 		return "Unterrichtsfolge [name=" + name + ", idUnterricht=" + idUnterricht + ", fach=" + fach + ", klasse=" + klasse
-			+ ", schriftlichkeit=" + statistikKennzeichen + ", idsUnterrichteAlternativkurse=" + idsUnterrichteAlternativkurse
-			+ ", kuerzelAlternativkurse=" + kuerzelAlternativkurse + ", prioAlternativkurse=" + prioAlternativkurse + "]";
+				+ ", schriftlichkeit=" + statistikKennzeichen + ", idsUnterrichteAlternativkurse=" + idsUnterrichteAlternativkurse
+				+ ", kuerzelAlternativkurse=" + kuerzelAlternativkurse + ", prioAlternativkurse=" + prioAlternativkurse + "]";
 	}
 
 }

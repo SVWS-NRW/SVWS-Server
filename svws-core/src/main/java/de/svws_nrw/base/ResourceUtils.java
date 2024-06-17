@@ -108,15 +108,14 @@ public final class ResourceUtils {
 	 *
 	 * @return das Path-Objekt
 	 */
+	@SuppressWarnings("resource")
 	public static Path getFile(final String filename) {
 		Path path = null;
 		try {
 			final URL url = ResourceUtils.class.getClassLoader().getResource(filename);
 			final URI uri = url.toURI();
 			if ("jar".equals(uri.getScheme())) {
-				@SuppressWarnings("resource")
-				final
-				FileSystem fs = getJARFileSystem(uri);
+				final FileSystem fs = getJARFileSystem(uri);
 				final String[] array = uri.toString().split("!");
 				path = fs.getPath(array[1]);
 			} else {
@@ -160,7 +159,9 @@ public final class ResourceUtils {
 	 *
 	 * @throws IOException    bei einem Fehler beim Zugriff auf das Package
 	 */
-	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension) throws IOException {
+	@SuppressWarnings("resource")
+	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension)
+			throws IOException {
 		URI uri;
 		try {
 			uri = url.toURI();
@@ -169,7 +170,6 @@ public final class ResourceUtils {
 		}
 		Path path = null;
 		if ("jar".equals(uri.getScheme())) {
-			@SuppressWarnings("resource")
 			final FileSystem fs = getJARFileSystem(uri);
 			final String[] array = uri.toString().split("!");
 			path = fs.getPath(array[1]);
@@ -182,7 +182,6 @@ public final class ResourceUtils {
 			final int j = Paths.get(packagePath).getNameCount();
 			for (int i = 0; i < j; i++)
 				path = path.getParent();
-			@SuppressWarnings("resource")
 			final FileSystem fs = FileSystems.getDefault();
 			result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 		}
@@ -247,11 +246,12 @@ public final class ResourceUtils {
 	 *
 	 * @throws IOException bei einem Fehler beim Laden der JSON-Daten
 	 */
-	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz) throws IOException {
+	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz)
+			throws IOException {
 		final Map<String, T> classes = new TreeMap<>();
 		final List<Path> paths = ResourceUtils.getFilesInPackage(resourcePackage, FILE_EXTENSION_JSON);
 		final ObjectMapper mapper = new ObjectMapper();
-		for (final Path filePath: paths) {
+		for (final Path filePath : paths) {
 			final String filename = filePath.getFileName().toString();
 			try {
 				if (filename.toLowerCase().startsWith(prefix.toLowerCase()) && filename.toLowerCase().endsWith((suffix + FILE_EXTENSION_JSON).toLowerCase())) {
@@ -281,11 +281,12 @@ public final class ResourceUtils {
 	 *
 	 * @throws IOException bei einem Fehler beim Laden der JSON-Daten
 	 */
-	public static <T> Map<String, List<T>> json2Lists(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz) throws IOException {
+	public static <T> Map<String, List<T>> json2Lists(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz)
+			throws IOException {
 		final Map<String, List<T>> classes = new TreeMap<>();
 		final List<Path> paths = ResourceUtils.getFilesInPackage(resourcePackage, FILE_EXTENSION_JSON);
 		final ObjectMapper mapper = new ObjectMapper();
-		for (final Path filePath: paths) {
+		for (final Path filePath : paths) {
 			final String filename = filePath.getFileName().toString();
 			try {
 				if (filename.toLowerCase().startsWith(prefix.toLowerCase()) && filename.toLowerCase().endsWith((suffix + FILE_EXTENSION_JSON).toLowerCase())) {

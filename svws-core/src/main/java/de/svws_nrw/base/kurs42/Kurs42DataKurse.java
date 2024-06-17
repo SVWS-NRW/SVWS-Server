@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
  * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "KursId", "Fach", "Name", "Lehrer", "Std", "Raum", "Kursart", "Schulnummer", "Schienenzahl",
-	"Gesperrt", "Blocken", "ParallelKursZahl", "ParallelKursNr", "FixiertInSchiene" })
+		"Gesperrt", "Blocken", "ParallelKursZahl", "ParallelKursNr", "FixiertInSchiene" })
 public class Kurs42DataKurse {
 
 	/** Die ID des Kurses innerhalb von Kurs 42. Die Spalte wird ignoriert, da sie für den Import nicht nötig ist. */

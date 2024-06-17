@@ -58,7 +58,8 @@ public final class Kurs42DataBlockung {
 					case "Abschnitt" -> this.Abschnitt = Integer.parseInt(parts[1]);
 					case "Bezeichnung" -> this.Bezeichnung = parts[1];
 					case "Schulnummer" -> this.Schulnummer = parts[1];
-					default -> { /* do nothing */ }
+					default -> {
+						/* do nothing */ }
 				}
 			} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 				// invalid number format - do nothing and read next line
