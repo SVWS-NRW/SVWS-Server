@@ -16,21 +16,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class DBMultipartBody {
 
 	/** Die Quelldatenbank als Binärdatei. */
-    @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    @Schema(type = "string", format = "binary", description = "database file")
+	@PartType(MediaType.APPLICATION_OCTET_STREAM)
+	@Schema(type = "string", format = "binary", description = "database file")
 	@FormParam("database")
-    public byte[] database;
+	public byte[] database;
 
-    /** Der Benutzername für das Schema, in welches migriert bzw. importiert werden soll. */
-    @PartType(MediaType.TEXT_PLAIN)
+	/** Der Benutzername für das Schema, in welches migriert bzw. importiert werden soll. */
+	@PartType(MediaType.TEXT_PLAIN)
 	@Schema(implementation = String.class)
-    @FormParam("schemaUsername")
-    public String schemaUsername;
+	@FormParam("schemaUsername")
+	public String schemaUsername;
 
-    /** Das Kennwort des Benutzer für das Schema, in welches migriert bzw. importiert werden soll. */
-    @PartType(MediaType.TEXT_PLAIN)
+	/** Das Kennwort des Benutzer für das Schema, in welches migriert bzw. importiert werden soll. */
+	@PartType(MediaType.TEXT_PLAIN)
 	@Schema(implementation = String.class)
-    @FormParam("schemaUserPassword")
-    public String schemaUserPassword;
+	@FormParam("schemaUserPassword")
+	public String schemaUserPassword;
 
 }
