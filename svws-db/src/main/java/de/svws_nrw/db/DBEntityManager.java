@@ -18,6 +18,7 @@ import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
@@ -98,6 +99,18 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public Benutzer getUser() {
 		return this.user;
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer dieser Datenbank-Verbindung einen Benutzernamen hat, welcher
+	 * dem priviligierten Datenbbank-Benutzer gehört, der in der SVWS-Konfiguration eingetragen
+	 * ist.
+	 *
+	 * @return true, falls es sich um den priviligierten Datenbank-Benutzer handelt.
+	 */
+	public boolean isPrivilegedDatabaseUser() {
+		return SVWSKonfiguration.get().getPrivilegedDatabaseUser().equals(this.user.getUsername());
 	}
 
 

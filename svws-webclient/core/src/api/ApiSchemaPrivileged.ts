@@ -859,6 +859,27 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode isPrivilegedUser für den Zugriff auf die URL https://{hostname}/api/schema/root/privileged/{user}
+	 *
+	 * Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der SVWS-Konfiguration ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: true, wenn der Benutzer die Rechte hat
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um auf die priviligierte API zuzugreifen
+	 *
+	 * @returns true, wenn der Benutzer die Rechte hat
+	 */
+	public async isPrivilegedUser() : Promise<boolean | null> {
+		const path = "/api/schema/root/privileged/{user}";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode existsUser für den Zugriff auf die URL https://{hostname}/api/schema/root/user/{user}/exists
 	 *
 	 * Liefert die Information, ob ein DBMS-User existiert. Hierfür werden root-Rechte auf der Datenbank benötigt.

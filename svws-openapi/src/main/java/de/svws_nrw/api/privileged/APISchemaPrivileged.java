@@ -250,6 +250,31 @@ public class APISchemaPrivileged {
 				BenutzerKompetenz.KEINE);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage ob der angemeldete Datenbankuser ein priviligierter Datenbank-Benutzer
+	 * mit Rechten zur Anpassung der SVWS-Konfiguration ist.
+	 *
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return            Rückmeldung, ob der angegebene User existiert
+	 */
+	@GET
+	@Path("/api/schema/root/privileged/{user}")
+	@Operation(summary = "Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der"
+			+ " SVWS-Konfiguration ist.",
+			description = "Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der"
+					+ " SVWS-Konfiguration ist.")
+	@ApiResponse(responseCode = "200", description = "true, wenn der Benutzer die Rechte hat",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um auf die priviligierte API zuzugreifen")
+	public Response isPrivilegedUser(@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> ApiUtils.getResponse(conn.isPrivilegedDatabaseUser()),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
 	/**
 	 * Die OpenAPI-Methode für das angegebene Password für einen Datenbankuser korrekt ist.
 	 *
