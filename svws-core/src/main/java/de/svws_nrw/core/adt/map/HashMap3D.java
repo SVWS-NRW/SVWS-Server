@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -276,6 +277,15 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 */
 	public @NotNull Set<@NotNull K1> getKeySet() {
 		return this._map1.keySet();
+	}
+
+	/**
+	 * Liefert das EntrySet des 1. Schlüssels.
+	 *
+	 * @return das EntrySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<@NotNull Entry<K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>>>> getEntrySet() {
+		return this._map1.entrySet();
 	}
 
 	/**
