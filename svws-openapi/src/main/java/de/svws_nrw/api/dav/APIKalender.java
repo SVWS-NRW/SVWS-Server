@@ -75,7 +75,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
+				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
@@ -106,7 +107,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
+				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -135,7 +137,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
+				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -173,8 +176,10 @@ public class APIKalender {
 			@HeaderParam("If-None-Match") final String ifNonMatchHeader, @HeaderParam("If-Match") final String ifMatchHeader,
 			@Context final HttpServletRequest request) {
 
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragUId=" + kalenderEintragUId, "ifNonMatchHeader=" + ifNonMatchHeader, "ifMatchHeader=" + ifMatchHeader)) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
+				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragUId=" + kalenderEintragUId,
+						"ifNonMatchHeader=" + ifNonMatchHeader, "ifMatchHeader=" + ifMatchHeader)) {
 			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
 
 			if (ifNonMatchHeader != null && "*".equals(ifNonMatchHeader)) {
@@ -448,7 +453,7 @@ public class APIKalender {
 		if (LOG_INPUTSTREAM) {
 			final String methodName = getApiMethodName(2);
 			logger.log(LogLevel.WARNING, methodName);
-			for (final String s: params)
+			for (final String s : params)
 				logger.log(LogLevel.WARNING, s);
 			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
 			logger.log(methodName + "\n");
@@ -462,10 +467,10 @@ public class APIKalender {
 
 	private static String getApiMethodName(final long n) {
 		final StackWalker walker = StackWalker.getInstance();
-	    final Optional<String> methodName = walker.walk(frames -> frames
-	    	      .skip(n).findFirst()
-	    	      .map(StackWalker.StackFrame::getMethodName));
-	    return methodName.get();
+		final Optional<String> methodName = walker.walk(frames -> frames
+				.skip(n).findFirst()
+				.map(StackWalker.StackFrame::getMethodName));
+		return methodName.get();
 	}
 
 	private static Logger createLogger() {

@@ -353,7 +353,7 @@ public class APIAdressbuch {
 		if (LOG_INPUTSTREAM) {
 			final String methodName = getApiMethodName(2);
 			logger.log(LogLevel.WARNING, methodName);
-			for (final String s: params)
+			for (final String s : params)
 				logger.log(LogLevel.WARNING, s);
 			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
 			logger.log(methodName + "\n");
@@ -366,10 +366,10 @@ public class APIAdressbuch {
 
 	private static String getApiMethodName(final long n) {
 		final StackWalker walker = StackWalker.getInstance();
-	    final Optional<String> methodName = walker.walk(frames -> frames
-	    	      .skip(n).findFirst()
-	    	      .map(StackWalker.StackFrame::getMethodName));
-	    return methodName.get();
+		final Optional<String> methodName = walker.walk(frames -> frames
+				.skip(n).findFirst()
+				.map(StackWalker.StackFrame::getMethodName));
+		return methodName.get();
 	}
 
 	private static Logger createLogger() {
