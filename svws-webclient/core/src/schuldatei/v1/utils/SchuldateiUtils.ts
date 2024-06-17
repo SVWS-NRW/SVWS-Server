@@ -89,12 +89,12 @@ export class SchuldateiUtils extends JavaObject {
 	public static pruefeSchuljahr(schuljahr : number, eintrag : SchuldateiEintrag) : boolean {
 		if ((eintrag.gueltigab !== null) && (!JavaString.isBlank(eintrag.gueltigab))) {
 			const dmy : Array<number> = SchuldateiUtils.splitDate(eintrag.gueltigab);
-			if (!((dmy[2] <= schuljahr) || ((dmy[2] === schuljahr + 1) && (dmy[1] < 8))))
+			if (!((dmy[2] <= schuljahr) || ((dmy[2] === (schuljahr + 1)) && (dmy[1] < 8))))
 				return false;
 		}
 		if ((eintrag.gueltigbis !== null) && (!JavaString.isBlank(eintrag.gueltigbis))) {
 			const dmy : Array<number> = SchuldateiUtils.splitDate(eintrag.gueltigbis);
-			if (!((dmy[2] >= schuljahr + 1) || ((dmy[2] === schuljahr) && (dmy[1] > 7))))
+			if (!((dmy[2] >= (schuljahr + 1)) || ((dmy[2] === schuljahr) && (dmy[1] > 7))))
 				return false;
 		}
 		return true;

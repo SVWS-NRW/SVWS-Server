@@ -92,12 +92,12 @@ public final class SchuldateiUtils {
 	public static boolean pruefeSchuljahr(final int schuljahr, final @NotNull SchuldateiEintrag eintrag) throws IllegalArgumentException {
 		if ((eintrag.gueltigab != null) && (!eintrag.gueltigab.isBlank())) {
 			final @NotNull int[] dmy = splitDate(eintrag.gueltigab);
-			if (!((dmy[2] <= schuljahr) || ((dmy[2] == schuljahr + 1) && (dmy[1] < 8))))
+			if (!((dmy[2] <= schuljahr) || ((dmy[2] == (schuljahr + 1)) && (dmy[1] < 8))))
 				return false;
 		}
 		if ((eintrag.gueltigbis != null) && (!eintrag.gueltigbis.isBlank())) {
 			final @NotNull int[] dmy = splitDate(eintrag.gueltigbis);
-			if (!((dmy[2] >= schuljahr + 1) || ((dmy[2] == schuljahr) && (dmy[1] > 7))))
+			if (!((dmy[2] >= (schuljahr + 1)) || ((dmy[2] == schuljahr) && (dmy[1] > 7))))
 				return false;
 		}
 		return true;
