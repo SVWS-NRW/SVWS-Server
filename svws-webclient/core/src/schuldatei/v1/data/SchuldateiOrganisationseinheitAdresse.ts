@@ -78,7 +78,6 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {

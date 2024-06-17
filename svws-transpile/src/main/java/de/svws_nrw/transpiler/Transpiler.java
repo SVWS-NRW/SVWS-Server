@@ -1,6 +1,7 @@
 package de.svws_nrw.transpiler;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.Collator;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -225,6 +226,10 @@ public final class Transpiler extends AbstractProcessor {
 	 * @param node   the expression tree node
 	 */
 	void visitExpressionTree(final TreePath path, final ExpressionTree node) {
+		// Ignoriere Package-Identifier
+		final Element e = getElement(node);
+		if ((e != null) && (getElement(node).getKind() == ElementKind.PACKAGE))
+			return;
 		// ensure, that method invocation parameters are in the expression list before the method identifier
 		if (node instanceof final MethodInvocationTree miTree)
 			getTranspilerUnit(path).allExpressions.addAll(miTree.getArguments());
@@ -961,6 +966,26 @@ public final class Transpiler extends AbstractProcessor {
 			case final ParameterizedTypeTree ptt -> hasNotNullAnnotation(ptt.getType());
 			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
 		};
+	}
+
+
+	/**
+	 * Prüft, ob die Variable mit dem Schlüsselwort var für den Typ
+	 * deklariert wurde oder nicht.
+	 *
+	 * @param node   die Variablendeklaration
+	 *
+	 * @return true, falls das Schlüsselwort var verwendet wurde.
+	 */
+	public static boolean isDeclaredUsingVar(final VariableTree node) {
+		try {
+			final Field field = node.getClass().getDeclaredField("declaredUsingVar");
+			field.setAccessible(true);
+			return field.getBoolean(node);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 

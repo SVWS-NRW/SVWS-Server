@@ -28,7 +28,6 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {

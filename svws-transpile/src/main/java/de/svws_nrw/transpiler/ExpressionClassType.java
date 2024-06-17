@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -213,6 +214,17 @@ public final class ExpressionClassType extends ExpressionType {
 					ect.getFullQualifiedName()
 				);
 			}
+		}
+		final Element expressionElement = transpiler.getElement(tree.getExpression());
+		if ((expressionElement != null) && (transpiler.getElement(tree.getExpression()).getKind() == ElementKind.PACKAGE)) {
+			final ElementKind elementKind = transpiler.getElement(tree).getKind();
+			if (elementKind == ElementKind.CLASS) {
+				// TODO Type Parameters ?
+				return new ExpressionClassType(Kind.CLASS, tree.getIdentifier().toString(), tree.getExpression().toString());
+			} else if (elementKind == ElementKind.INTERFACE) {
+				return new ExpressionClassType(Kind.INTERFACE, tree.getIdentifier().toString(), tree.getExpression().toString());
+			} else
+				throw new TranspilerException("Transpiler Error: ElementKind %s not yet supported here.".formatted(elementKind));
 		}
 		return new ExpressionClassType(Kind.PARAMETERIZED_TYPE, tree.getIdentifier().toString(), tree.getExpression().toString());
 	}

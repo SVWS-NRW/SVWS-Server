@@ -56,6 +56,7 @@ task transpile(type: JavaExec) {
          "--ignore", "de.svws_nrw",
          "--javafiles", "build/transpiler-java-files.txt",
          "--apifiles", "build/transpiler-api-files.txt"
+	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
 }
 
 assemble.dependsOn transpile

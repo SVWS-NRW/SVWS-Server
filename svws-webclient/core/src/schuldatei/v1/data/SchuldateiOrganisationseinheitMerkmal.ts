@@ -48,7 +48,6 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {

@@ -787,6 +787,12 @@ public final class TranspilerUnit {
 		final MethodInvocationTree miTree = getMethodInvocationTree(node);
 		final String name = node.getExpression().toString();
 		ExpressionType type = "this".equals(name) ? ExpressionClassType.getExpressionClassType(transpiler, classElement) : allExpressionTypes.get(node.getExpression());
+		if ((type == null) && (transpiler.getElement(node.getExpression()).getKind() == ElementKind.PACKAGE)) {
+			if ((transpiler.getElement(node).getKind() == ElementKind.CLASS) || ((transpiler.getElement(node).getKind() == ElementKind.INTERFACE))) {
+				return ExpressionClassType.getExpressionClassType(transpiler, node);
+			}
+			throw new TranspilerException("Transpiler Error: Element kind %s not yet supported here.".formatted(transpiler.getElement(node).getKind()));
+		}
 		if (type == null)
 			throw new TranspilerException("Transpiler Error: Cannot get the expression type for the member select expression");
 		if (type instanceof ExpressionArrayType) {

@@ -33,7 +33,6 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {

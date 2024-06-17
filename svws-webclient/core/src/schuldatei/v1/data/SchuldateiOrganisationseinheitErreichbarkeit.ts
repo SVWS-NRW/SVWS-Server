@@ -38,7 +38,6 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	transpilerCanonicalName(): string {
