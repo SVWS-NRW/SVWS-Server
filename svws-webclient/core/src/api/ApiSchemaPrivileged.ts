@@ -880,6 +880,27 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/remove
+	 *
+	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Schema wurde erfolgreich aus der Konfiguration entfernt.
+	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
+	 *   Code 403: Das Schema darf nicht gelöscht werden.
+	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async removeSchemaFromConfig(schema : string) : Promise<void> {
+		const path = "/api/schema/root/schema/{schema}/remove"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode existsUser für den Zugriff auf die URL https://{hostname}/api/schema/root/user/{user}/exists
 	 *
 	 * Liefert die Information, ob ein DBMS-User existiert. Hierfür werden root-Rechte auf der Datenbank benötigt.
