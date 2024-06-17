@@ -68,13 +68,16 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 
 	/** Das Filter-Attribut für die Schulgliederungen */
 	public final @NotNull AttributMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
-	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
-	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
+	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId =
+			(final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
+	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung =
+			(final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
-	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
+	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus =
+			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf Schüler mit einem Lernabschnitt in dem Schuljahresabschnitt */
 	private boolean _filterNurMitLernabschitt = true;
@@ -88,10 +91,11 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in dem sich die Schule aktuell befindet
 	 */
-	public SchuelerListeManager(final Schulform schulform, final @NotNull SchuelerListe daten, final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
+	public SchuelerListeManager(final Schulform schulform, final @NotNull SchuelerListe daten,
+			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final long schuljahresabschnittSchule) {
 		super(daten.idSchuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, daten.schueler, SchuelerUtils.comparator,
-			_schuelerToId, _stammdatenToId, Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
+				_schuelerToId, _stammdatenToId, Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
 		// Erstelle eine Map für den Zugriff auf Klassen über die ID und
 		// erstelle für den Filter eine Liste der Klassen reduziert auf alle Klassen des Schuljahresabschnittes der Auswahl
 		final @NotNull List<@NotNull KlassenDaten> aktuelleKlassen = new ArrayList<>();
@@ -104,9 +108,11 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 		this.jahrgaenge = new AttributMitAuswahl<>(daten.jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(daten.kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl<>(daten.jahrgaengeGost, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
-		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
+		final @NotNull List<@NotNull Schulgliederung> gliederungen =
+				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
-		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
+		this.schuelerstatus =
+				new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		initSchueler();
 	}
 
@@ -247,7 +253,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
-		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
+		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt)
+				|| (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
 			return false;
 		if (this.kurse.auswahlExists()) {
 			boolean hatEinenKurs = false;

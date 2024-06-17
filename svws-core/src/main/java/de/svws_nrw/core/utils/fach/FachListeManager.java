@@ -44,7 +44,8 @@ public final class FachListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	public FachListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<@NotNull FachDaten> faecher) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FachUtils.comparator, _fachToId, _fachToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FachUtils.comparator, _fachToId, _fachToId,
+				Arrays.asList());
 		initFaecher();
 	}
 

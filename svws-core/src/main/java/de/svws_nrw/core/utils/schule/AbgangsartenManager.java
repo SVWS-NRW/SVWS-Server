@@ -57,7 +57,8 @@ public class AbgangsartenManager {
 			for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie) {
 				final AbgangsartKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
 				if (alt != null)
-					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'");
+					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel
+							+ "' und '" + alt.kuerzel + "'");
 				this._mapDatenByID.put(daten.id, daten);
 			}
 		}

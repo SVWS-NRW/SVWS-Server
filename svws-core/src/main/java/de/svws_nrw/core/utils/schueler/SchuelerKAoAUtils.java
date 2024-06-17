@@ -16,14 +16,15 @@ public final class SchuelerKAoAUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von KAoA in KAoA-Listen. */
-	public static final @NotNull Comparator<@NotNull SchuelerKAoADaten> comparator = (final @NotNull SchuelerKAoADaten a, final @NotNull SchuelerKAoADaten b) -> {
-		int cmp = Long.compare(a.abschnitt, b.abschnitt);
-		if (cmp != 0)
-			return cmp;
-		cmp = Long.compare(a.kategorie, b.kategorie);
-		if (cmp != 0)
-			return cmp;
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-	};
+	public static final @NotNull Comparator<@NotNull SchuelerKAoADaten> comparator =
+			(final @NotNull SchuelerKAoADaten a, final @NotNull SchuelerKAoADaten b) -> {
+				int cmp = Long.compare(a.abschnitt, b.abschnitt);
+				if (cmp != 0)
+					return cmp;
+				cmp = Long.compare(a.kategorie, b.kategorie);
+				if (cmp != 0)
+					return cmp;
+				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+			};
 
 }

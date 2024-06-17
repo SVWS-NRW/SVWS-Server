@@ -82,7 +82,7 @@ public final class GostAbiturjahrUtils {
 		if (restlicheJahre == 3)
 			return "EF";
 		final int sekIJahre = gliederung.istG8() || ((schulform == Schulform.GY) && (gliederung == Schulgliederung.DEFAULT))
-			? 9 : 10;
+				? 9 : 10;
 		if (restlicheJahre >= sekIJahre)
 			return null;
 		String strJG = "" + (sekIJahre - (restlicheJahre - 4));

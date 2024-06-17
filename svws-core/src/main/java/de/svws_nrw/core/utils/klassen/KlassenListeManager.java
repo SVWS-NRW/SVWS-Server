@@ -58,13 +58,16 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 
 	/** Das Filter-Attribut für die Schulgliederungen */
 	public final @NotNull AttributMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
-	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
-	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
+	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId =
+			(final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
+	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung =
+			(final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
-	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
+	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus =
+			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Klassen */
 	private boolean _filterNurSichtbar = true;
@@ -90,11 +93,13 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klasseToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("schueleranzahl", true)));
-		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
+		this.schuelerstatus =
+				new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
-		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
+		final @NotNull List<@NotNull Schulgliederung> gliederungen =
+				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		initKlassen();
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);

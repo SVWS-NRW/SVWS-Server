@@ -44,7 +44,8 @@ public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @N
 	public ReligionListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<@NotNull ReligionEintrag> religionen) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, _religionToId, _religionToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, _religionToId,
+				_religionToId, Arrays.asList());
 		initEintrage();
 	}
 

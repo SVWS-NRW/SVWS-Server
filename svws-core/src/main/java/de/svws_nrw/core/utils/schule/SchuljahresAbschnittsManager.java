@@ -12,7 +12,7 @@ public class SchuljahresAbschnittsManager {
 	/**
 	 * Der aktuelle Schuljahresabschnitt
 	 */
-	@NotNull private final Schuljahresabschnitt abschnitt;
+	private final @NotNull Schuljahresabschnitt abschnitt;
 
 	/**
 	 * Die Anzahl an Schuljahresabschnitten an dieser Schule

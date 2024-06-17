@@ -39,7 +39,8 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 	/** Das Filter-Attribut für die Personal-Typen */
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull PersonalTyp> personaltypen;
 	private static final @NotNull Function<@NotNull PersonalTyp, @NotNull Integer> _personaltypToId = (final @NotNull PersonalTyp pt) -> pt.id;
-	private static final @NotNull Comparator<@NotNull PersonalTyp> _comparatorPersonaltypen = (final @NotNull PersonalTyp a, final @NotNull PersonalTyp b) -> a.ordinal() - b.ordinal();
+	private static final @NotNull Comparator<@NotNull PersonalTyp> _comparatorPersonaltypen =
+			(final @NotNull PersonalTyp a, final @NotNull PersonalTyp b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Lehrer */
 	private boolean _filterNurSichtbar = true;
@@ -68,7 +69,8 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
 				Arrays.asList(new Pair<>("nachname", true), new Pair<>("vorname", true), new Pair<>("kuerzel", true)));
-		this.personaltypen = new AttributMitAuswahl<>(Arrays.asList(PersonalTyp.values()), _personaltypToId, _comparatorPersonaltypen, _eventHandlerFilterChanged);
+		this.personaltypen =
+				new AttributMitAuswahl<>(Arrays.asList(PersonalTyp.values()), _personaltypToId, _comparatorPersonaltypen, _eventHandlerFilterChanged);
 		initLehrer();
 	}
 

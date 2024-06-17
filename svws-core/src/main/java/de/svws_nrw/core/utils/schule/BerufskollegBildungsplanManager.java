@@ -32,7 +32,7 @@ public class BerufskollegBildungsplanManager {
 	private final long _version;
 
 	/** Ein Vektor mit allen Katalog-Einträgen */
-	private final @NotNull 	ArrayList<@NotNull BKBildungsplan> _values = new ArrayList<>();
+	private final @NotNull ArrayList<@NotNull BKBildungsplan> _values = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand des Kürzels */
 	private final @NotNull HashMap<@NotNull String, @NotNull BKFBFach> _mapFachByKuerzel = new HashMap<>();
@@ -41,14 +41,16 @@ public class BerufskollegBildungsplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull BKBildungsplan> _mapByID = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Lehrpläne anhand des Fachklassen-Schlüssels. */
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull BKBildungsplan>> _mapBildungsplanByFachklasse = new HashMap3D<>();
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull BKBildungsplan>> _mapBildungsplanByFachklasse =
+			new HashMap3D<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Fachklassen-Schlüssels. */
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull String, @NotNull Set<@NotNull BKFBFach>> _mapFachByFachklasse = new HashMap3D<>();
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull String, @NotNull Set<@NotNull BKFBFach>> _mapFachByFachklasse =
+			new HashMap3D<>();
 
 
 	/**
- 	 * Erstellt einen neuen Manager für den Katalog der berufsbezogenen Fächer im BK
+	 * Erstellt einen neuen Manager für den Katalog der berufsbezogenen Fächer im BK
 	 *
 	 * @param katalog   der Katalog der berufsbezogenen Fächer
 	 */
@@ -59,7 +61,8 @@ public class BerufskollegBildungsplanManager {
 			this._values.addAll(eintrag.historie);
 			for (final @NotNull BKBildungsplan bildungsplan : eintrag.historie) {
 				if (!bildungsplan.fachklasse.index.equals(eintrag.index) || !bildungsplan.fachklasse.schluessel.equals(eintrag.schluessel))
-					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans");
+					throw new DeveloperNotificationException(
+							"Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans");
 				final BKBildungsplan alt = this._mapByID.put(bildungsplan.id, bildungsplan);
 				if (alt != null)
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + bildungsplan.id);
@@ -104,7 +107,7 @@ public class BerufskollegBildungsplanManager {
 		final @NotNull ArrayList<@NotNull BKBildungsplan> lehrplaene = new ArrayList<>();
 		for (final @NotNull BKBildungsplan bildungsplan : this._values) {
 			if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-			 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
+					&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 				lehrplaene.add(bildungsplan);
 		}
 		return lehrplaene;
@@ -115,7 +118,7 @@ public class BerufskollegBildungsplanManager {
 	 * Gibt die Lehrpläne eines Index für ein Schuljahr zurück
 	 *
 	 * @param index  	  der Schulgliederungs-Index des Teilkatalogs
-     * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
+	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
 	 * @return Eine Liste der Lehrpläne eines Index für das angegebene Schuljahr
 	 */
@@ -125,7 +128,7 @@ public class BerufskollegBildungsplanManager {
 		for (final @NotNull List<@NotNull BKBildungsplan> list : lehrplaeneOfIndex) {
 			for (final @NotNull BKBildungsplan bildungsplan : list) {
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					lehrplaene.add(bildungsplan);
 			}
 		}
@@ -136,8 +139,8 @@ public class BerufskollegBildungsplanManager {
 	/**
 	 * Gibt die Lehrpläne eines Index der angegebenen Schulgliederung für ein Schuljahr zurück
 	 *
- 	 * @param gliederung   die Schulgliederung
-     * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
+	 * @param gliederung   die Schulgliederung
+	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
@@ -153,7 +156,7 @@ public class BerufskollegBildungsplanManager {
 	 * Lehrpläne mit ausgegeben werden.
 	 *
 	 * @param index  	  der Schulgliederungs-Index des Teilkatalogs
-     * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
+	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
@@ -164,7 +167,7 @@ public class BerufskollegBildungsplanManager {
 		for (final @NotNull List<@NotNull BKBildungsplan> list : lehrplaeneOfIndex) {
 			for (final @NotNull BKBildungsplan bildungsplan : list) {
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis + bildungsplan.dauer / 2 + 1 >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis + bildungsplan.dauer / 2 + 1 >= schuljahr)))
 					lehrplaene.add(bildungsplan);
 			}
 		}
@@ -175,8 +178,8 @@ public class BerufskollegBildungsplanManager {
 	/**
 	 * Gibt die Lehrpläne eines Index der angegebenen Schulgliederung für ein Schuljahr zurück
 	 *
- 	 * @param gliederung  die Schulgliederung
-     * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
+	 * @param gliederung  die Schulgliederung
+	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
@@ -230,7 +233,7 @@ public class BerufskollegBildungsplanManager {
 		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
 			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan;
 
 		return null;
@@ -246,7 +249,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return den Bildungsplan für eine Fachklasse im angegebenen Schuljahr und Jahrgang
 	 */
-	public BKBildungsplan getBildungsplanByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel, final int schuljahr, final int jahrgang) {
+	public BKBildungsplan getBildungsplanByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel, final int schuljahr,
+			final int jahrgang) {
 		return this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(schluessel.index, schluessel.schluessel, schuljahr, jahrgang);
 	}
 
@@ -261,13 +265,15 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return den Bildungsplan für eine Fachklasse im angegebenen Schuljahr und Jahrgang
 	 */
-	public BKBildungsplan getBildungsplanByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel, final int schuljahr, final int jahrgang) {
+	public BKBildungsplan getBildungsplanByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel, final int schuljahr,
+			final int jahrgang) {
 		final BKBildungsplan bildungsplan = getBildungsplanByIndexFachklasseSchuljahr(index, schluessel, schuljahr - jahrgang);
 		if (bildungsplan == null)
 			return null;
 
 		if ((bildungsplan.dauer + 1) / 2 < jahrgang)
-			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von " + bildungsplan.dauer + " Monaten!");
+			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von "
+					+ bildungsplan.dauer + " Monaten!");
 
 		return bildungsplan;
 	}
@@ -327,7 +333,7 @@ public class BerufskollegBildungsplanManager {
 		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
 			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return new ArrayList<>(bildungsplan.fbFaecher);
 
 		return null;
@@ -343,7 +349,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste der Bündelfächer für Fachklasse, Schuljahr und Jahrgang oder null bei einer fehlerhaften ID
 	 */
-	public List<@NotNull BKFBFach> getFaecherByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel, final int schuljahr, final int jahrgang) {
+	public List<@NotNull BKFBFach> getFaecherByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel, final int schuljahr,
+			final int jahrgang) {
 		return this.getFaecherByIndexFachklasseSchuljahrJahrgang(schluessel.index, schluessel.schluessel, schuljahr, jahrgang);
 	}
 
@@ -358,7 +365,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste der Bündelfächer für Fachklasse, Schuljahr und Jahrgang oder null bei einer fehlerhaften ID
 	 */
-	public List<@NotNull BKFBFach> getFaecherByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel, final int schuljahr, final int jahrgang) {
+	public List<@NotNull BKFBFach> getFaecherByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel,
+			final int schuljahr, final int jahrgang) {
 		final BKBildungsplan bildungsplan = getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 
 		if (bildungsplan == null)
@@ -391,7 +399,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr oder null, wenn nicht vorhanden
 	 */
-	public List<@NotNull BKLernfeld> getLernfelderByIndexFachklasseSchuljahr(final @NotNull Integer index, final @NotNull String schluessel, final int schuljahr) {
+	public List<@NotNull BKLernfeld> getLernfelderByIndexFachklasseSchuljahr(final @NotNull Integer index, final @NotNull String schluessel,
+			final int schuljahr) {
 		final Map<@NotNull Long, @NotNull List<@NotNull BKBildungsplan>> mapById = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 
 		if (mapById == null)
@@ -400,7 +409,7 @@ public class BerufskollegBildungsplanManager {
 		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
 			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return new ArrayList<>(bildungsplan.lernfelder);
 
 		return null;
@@ -416,7 +425,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr im angegebenen Jahrgang oder null, wenn nicht vorhanden
 	 */
-	public List<@NotNull BKLernfeld> getLernfelderByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel, final int schuljahr, final int jahrgang) {
+	public List<@NotNull BKLernfeld> getLernfelderByFachklassenschluesselSchuljahrJahrgang(final @NotNull BKFachklassenSchluessel schluessel,
+			final int schuljahr, final int jahrgang) {
 		return this.getLernfelderByIndexFachklasseSchuljahrJahrgang(schluessel.index, schluessel.schluessel, schuljahr, jahrgang);
 	}
 
@@ -431,7 +441,8 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr im angegebenen Jahrgang oder null, wenn nicht vorhanden
 	 */
-	public List<@NotNull BKLernfeld> getLernfelderByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel, final int schuljahr, final int jahrgang) {
+	public List<@NotNull BKLernfeld> getLernfelderByIndexFachklasseSchuljahrJahrgang(final @NotNull Integer index, final @NotNull String schluessel,
+			final int schuljahr, final int jahrgang) {
 		final BKBildungsplan bildungsplan = getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 
 		if (bildungsplan == null)

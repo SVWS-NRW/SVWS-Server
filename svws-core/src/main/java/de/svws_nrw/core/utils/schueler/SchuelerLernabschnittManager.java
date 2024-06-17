@@ -69,30 +69,33 @@ public class SchuelerLernabschnittManager {
 		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 	};
 
-	private static final @NotNull Comparator<@NotNull FoerderschwerpunktEintrag> _compFoerderschwerpunkte = (final @NotNull FoerderschwerpunktEintrag a, final @NotNull FoerderschwerpunktEintrag b) -> {
-		if (a.text == null)
-			return -1;
-		if (b.text == null)
-			return 1;
-		return a.text.compareTo(b.text);
-	};
+	private static final @NotNull Comparator<@NotNull FoerderschwerpunktEintrag> _compFoerderschwerpunkte =
+			(final @NotNull FoerderschwerpunktEintrag a, final @NotNull FoerderschwerpunktEintrag b) -> {
+				if (a.text == null)
+					return -1;
+				if (b.text == null)
+					return 1;
+				return a.text.compareTo(b.text);
+			};
 
-	private static final @NotNull Comparator<@NotNull LehrerListeEintrag> _compLehrer = (final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> {
-		int cmp = a.sortierung - b.sortierung;
-		if (cmp != 0)
-			return cmp;
-		cmp = a.nachname.compareTo(b.nachname);
-		if (cmp != 0)
-			return cmp;
-		cmp = a.vorname.compareTo(b.vorname);
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-	};
+	private static final @NotNull Comparator<@NotNull LehrerListeEintrag> _compLehrer =
+			(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> {
+				int cmp = a.sortierung - b.sortierung;
+				if (cmp != 0)
+					return cmp;
+				cmp = a.nachname.compareTo(b.nachname);
+				if (cmp != 0)
+					return cmp;
+				cmp = a.vorname.compareTo(b.vorname);
+				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+			};
 
-	private final @NotNull Comparator<@NotNull SchuelerLeistungsdaten> _compLeistungenByFach = (final @NotNull SchuelerLeistungsdaten a, final @NotNull SchuelerLeistungsdaten b) -> {
-		final @NotNull FachDaten aFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, a.fachID);
-		final @NotNull FachDaten bFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, b.fachID);
-		return _compFach.compare(aFach, bFach);
-	};
+	private final @NotNull Comparator<@NotNull SchuelerLeistungsdaten> _compLeistungenByFach =
+			(final @NotNull SchuelerLeistungsdaten a, final @NotNull SchuelerLeistungsdaten b) -> {
+				final @NotNull FachDaten aFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, a.fachID);
+				final @NotNull FachDaten bFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, b.fachID);
+				return _compFach.compare(aFach, bFach);
+			};
 
 
 

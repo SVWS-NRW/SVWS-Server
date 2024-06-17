@@ -15,29 +15,29 @@ public final class ReligionUtils {
 	}
 
 
-    /** Ein Default-Comparator für den Vergleich von Religion-Einträgen. */
-    public static final @NotNull Comparator<@NotNull ReligionEintrag> comparator = (final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
+	/** Ein Default-Comparator für den Vergleich von Religion-Einträgen. */
+	public static final @NotNull Comparator<@NotNull ReligionEintrag> comparator = (final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;
-        if ((a.kuerzel == null) || (b.kuerzel == null)) {
-            if ((a.kuerzel == null) && (b.kuerzel == null))
-                return 0;
-            return (a.kuerzel == null) ? -1 : 1;
-        }
-        cmp = a.kuerzel.compareTo(b.kuerzel);
-        return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-    };
+		if ((a.kuerzel == null) || (b.kuerzel == null)) {
+			if ((a.kuerzel == null) && (b.kuerzel == null))
+				return 0;
+			return (a.kuerzel == null) ? -1 : 1;
+		}
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
 
-    /** Ein Comparator für den Vergleich von Religion-Einträgen anhand ihres Textes. */
-    public static final @NotNull Comparator<@NotNull ReligionEintrag> comparatorText = (final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
-        if ((a.text == null) || (b.text == null)) {
-            if ((a.text == null) && (b.text == null))
-                return 0;
-            return (a.text == null) ? -1 : 1;
-        }
-        final int cmp = a.text.compareTo(b.text);
-        return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-    };
+	/** Ein Comparator für den Vergleich von Religion-Einträgen anhand ihres Textes. */
+	public static final @NotNull Comparator<@NotNull ReligionEintrag> comparatorText = (final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) -> {
+		if ((a.text == null) || (b.text == null)) {
+			if ((a.text == null) && (b.text == null))
+				return 0;
+			return (a.text == null) ? -1 : 1;
+		}
+		final int cmp = a.text.compareTo(b.text);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
 
 }
