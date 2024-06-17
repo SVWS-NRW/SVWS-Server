@@ -2264,6 +2264,71 @@
             "moduleLicense": "MIT License",
             "moduleVersion": ".*",
             "moduleName": "org.slf4j:jcl-over-slf4j"
+        },
+               {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": ".*",
+            "moduleName": "at.datenwort.openhtmltopdf:openhtmltopdf-core"
+        },
+        {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": ".*",
+            "moduleName": "at.datenwort.openhtmltopdf:openhtmltopdf-pdfbox"
+        },
+        {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": ".*",
+            "moduleName": "at.datenwort.openhtmltopdf:openhtmltopdf-svg-support"
+        },
+        {
+            "moduleLicense": "BSD-3-Clause",
+            "moduleVersion": ".*",
+            "moduleName": "com.google.protobuf:protobuf-java"
+        },
+        {
+            "moduleLicense": "ISC license",
+            "moduleVersion": ".*",
+            "moduleName": "de.svws-nrw.ext:jbcrypt"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "ognl:ognl"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.apache.pdfbox:pdfbox-io"
+        },
+        {
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.apache.pdfbox:pdfbox-io"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.attoparser:attoparser"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.attoparser:attoparser"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.thymeleaf:thymeleaf"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.unbescape:unbescape"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.unbescape:unbescape"
         }	
   ]
 }
