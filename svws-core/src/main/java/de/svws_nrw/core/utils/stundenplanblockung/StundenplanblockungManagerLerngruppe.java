@@ -16,19 +16,24 @@ public class StundenplanblockungManagerLerngruppe {
 	int stunden = 0;
 
 	/** Die Lehrkräfte der Lerngruppe. */
-	@NotNull ArrayList<StundenplanblockungManagerLehrkraft> _menge_le = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerLehrkraft> _menge_le = new ArrayList<>();
 
 	/** Die Klassen der Lerngruppe. */
-	@NotNull ArrayList<StundenplanblockungManagerKlasse> _menge_kl = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerKlasse> _menge_kl = new ArrayList<>();
 
 	/** Die Fächer Lerngruppe. */
-	@NotNull ArrayList<StundenplanblockungManagerFach> _menge_fa = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerFach> _menge_fa = new ArrayList<>();
 
 	/** Die Räume Lerngruppe. */
-	@NotNull ArrayList<StundenplanblockungManagerRaum> _menge_ra = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerRaum> _menge_ra = new ArrayList<>();
 
 	/** Die Kopplungen Lerngruppe. */
-	@NotNull ArrayList<StundenplanblockungManagerKopplung> _menge_ko = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerKopplung> _menge_ko = new ArrayList<>();
 
 	/**
 	 * Erzeugt eine neue Lerngruppe mit der übergebenen ID.
@@ -113,6 +118,7 @@ public class StundenplanblockungManagerLerngruppe {
 	public boolean hasFach(final @NotNull StundenplanblockungManagerFach pFa) {
 		return _menge_fa.contains(pFa);
 	}
+
 	/**
 	 * Entfernt aus der Lerngruppe die Lehrkraft (und umgekehrt).
 	 *

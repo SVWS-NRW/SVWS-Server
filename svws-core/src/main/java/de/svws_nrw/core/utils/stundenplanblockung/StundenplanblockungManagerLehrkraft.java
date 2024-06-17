@@ -13,7 +13,8 @@ public class StundenplanblockungManagerLehrkraft {
 	final long _id;
 
 	/** Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. */
-	@NotNull String _kuerzel = "";
+	@NotNull
+	String _kuerzel = "";
 
 	/** TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann. */
 	boolean _darf_vertreten = false;

@@ -13,10 +13,12 @@ public class StundenplanblockungManagerKlasse {
 	long _id;
 
 	/** Das Kürzel der Klasse. Beispielsweise '05a' oder 'Q1'. */
-	@NotNull String _kuerzel = "";
+	@NotNull
+	String _kuerzel = "";
 
 	/** Alle Lerngruppen der Klasse. */
-	@NotNull ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr;
+	@NotNull
+	ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr;
 
 	/**
 	 * Erzeugt eine neue Klasse.

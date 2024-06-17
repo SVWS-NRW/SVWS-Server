@@ -13,10 +13,12 @@ public class StundenplanblockungManagerFach {
 	long _id;
 
 	/** Das Kürzel des Faches. Beispielsweise 'D', 'E' oder 'M'. */
-	@NotNull String _kuerzel = "";
+	@NotNull
+	String _kuerzel = "";
 
 	/** Alle Lerngruppen in denen das Fach vertreten ist. */
-	@NotNull ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr = new ArrayList<>();
+	@NotNull
+	ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr = new ArrayList<>();
 
 	/**
 	 * Erzeugt ein neues Fach.
