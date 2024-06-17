@@ -72,552 +72,568 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APILehrer {
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Liste aller Lehrer.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit den einzelnen Lehrern
-     */
-    @GET
-    @Path("/")
-    @Operation(summary = "Gibt eine Übersicht von allen Lehrern zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, "
-               		       + "des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung "
-               		       + "sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten "
-               		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrer-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
-    public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
-    }
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den einzelnen Lehrern
+	 */
+	@GET
+	@Path("/")
+	@Operation(summary = "Gibt eine Übersicht von allen Lehrern zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, "
+					+ "des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung "
+					+ "sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrer-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
+	public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation des Lehrers
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Stammdaten des Lehrers
-     */
-    @GET
-    @Path("/{id : \\d+}/stammdaten")
-    @Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Stammdaten.",
-    description = "Liest die Stammdaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Stammdaten des Lehrers",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = LehrerStammdaten.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		                                    @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
-    }
-
-
-
-    /**
-     * Die OpenAPI-Methode für das Patchen der Stammdaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation des Lehrers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return das Ergebnis der Patch-Operation
-     */
-    @PATCH
-    @Path("/{id : \\d+}/stammdaten")
-    @Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Stammdaten.",
-    description = "Passt die Lehrer-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Stammdaten integriert.")
-    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true, content =
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
-    		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
-    }
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Stammdaten des Lehrers
+	 */
+	@GET
+	@Path("/{id : \\d+}/stammdaten")
+	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Stammdaten.",
+			description = "Liest die Stammdaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Stammdaten des Lehrers",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = LehrerStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+	}
 
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Personaldaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation des Lehrers
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Personaldaten des Lehrers
-     */
-    @GET
-    @Path("/{id : \\d+}/personaldaten")
-    @Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Personaldaten.",
-    description = "Liest die Personaldaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Personaldaten des Lehrers",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = LehrerPersonaldaten.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
-    }
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/stammdaten")
+	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Stammdaten.",
+			description = "Passt die Lehrer-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Stammdaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_AENDERN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für das Patchen der Personaldaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation des Lehrers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return das Ergebnis der Patch-Operation
-     */
-    @PATCH
-    @Path("/{id : \\d+}/personaldaten")
-    @Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Personaldaten.",
-    description = "Passt die Lehrer-Personaldaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personaldaten integriert.")
-    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content =
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
-    		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
-    }
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Personaldaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Personaldaten des Lehrers
+	 */
+	@GET
+	@Path("/{id : \\d+}/personaldaten")
+	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Personaldaten.",
+			description = "Liest die Personaldaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Personaldaten des Lehrers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerPersonaldaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Personalabschnittsdaten eines Lehrers zu einem Schuljahresabschnitt
-     */
-    @GET
-    @Path("/personalabschnittsdaten/{id : \\d+}")
-    @Operation(summary = "Liefert zu der ID des Abschnittes die zugehörigen Personalabschnittsdaten.",
-    description = "Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Personalabschnittsdaten",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
-    public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).get(id),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
-    }
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Personaldaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/personaldaten")
+	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Personaldaten.",
+			description = "Passt die Lehrer-Personaldaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personaldaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für das Patchen der Personalabschnittsdaten eines Lehrers.
-     *
-     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return das Ergebnis der Patch-Operation
-     */
-    @PATCH
-    @Path("/personalabschnittsdaten/{id : \\d+}")
-    @Operation(summary = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an.",
-    description = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.")
-    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		@RequestBody(description = "Der Patch für die Lehrer-Personalabschnittsdaten", required = true, content =
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final InputStream is,
-    		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patch(id, is),
-    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
-    }
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Personalabschnittsdaten eines Lehrers zu einem Schuljahresabschnitt
+	 */
+	@GET
+	@Path("/personalabschnittsdaten/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Abschnittes die zugehörigen Personalabschnittsdaten.",
+			description = "Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Personalabschnittsdaten", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
+	public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).get(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrer-Leitungsfunktionen.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrer-Leitungsfunktionen
-     */
-    @GET
-    @Path("/leitungsfunktionen")
-    @Operation(summary = "Gibt den Katalog der Lehrerleitungsfunktionen zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerleitungsfunktionen unter Angabe der ID und der Bezeichnung. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
-               		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLeitungsfunktionenEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
-    public Response getLehrerLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLehrerLeitungsfunktionen().getList(),
-        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrerzugangsgründe.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrerzugangsgründe
-     */
-    @GET
-    @Path("/allgemein/zugangsgruende")
-    @Operation(summary = "Gibt den Katalog der Lehrerzugangsgründe zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogZugangsgrundEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
-    public Response getLehrerZugangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerZugangsgruende()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrerabgangsgründe.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrerabgangsgründe
-     */
-    @GET
-    @Path("/allgemein/abgangsgruende")
-    @Operation(summary = "Gibt den Katalog der Lehrerabgangsgründe zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAbgangsgrundEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
-    public Response getLehrerAbgangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAbgangsgruende()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Beschäftigungsarten.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrer Beschäftigungsarten
-     */
-    @GET
-    @Path("/allgemein/beschaeftigungsarten")
-    @Operation(summary = "Gibt den Katalog der Beschäftigungsarten zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Beschäftigungsart-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogBeschaeftigungsartEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
-    public Response getLehrerBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerBeschaeftigungsarten()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Einsatzstatusarten.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrer Einsatzstatusarten
-     */
-    @GET
-    @Path("/allgemein/einsatzstatus")
-    @Operation(summary = "Gibt den Katalog des Einsatzstatus zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogEinsatzstatusEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
-    public Response getLehrerEinsatzstatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerEinsatzstatus()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fachrichtungen von Lehrern.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Fachrichtungen von Lehrern
-     */
-    @GET
-    @Path("/allgemein/fachrichtungen")
-    @Operation(summary = "Gibt den Katalog der Fachrichtungen von Lehrern zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Fachrichtungens-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
-    public Response getLehrerFachrichtungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungen()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Fachrichtungen für Lehrer.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Anerkennungen von Fachrichtungen für Lehrer
-     */
-    @GET
-    @Path("/allgemein/fachrichtungen_anerkennungen")
-    @Operation(summary = "Gibt den Katalog des Anerkennungen von Fachrichtungen für Lehrer zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungAnerkennungEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
-    public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungAnerkennungen()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrämter.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrämter
-     */
-    @GET
-    @Path("/allgemein/lehraemter")
-    @Operation(summary = "Gibt den Katalog der Lehrämter zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehramt-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
-    public Response getLehrerLehraemter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehraemter()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Lehrämtern.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Anerkennungen von Lehrämtern
-     */
-    @GET
-    @Path("/allgemein/lehraemter_anerkennungen")
-    @Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrämtern zurück.",
-               description = "Erstellt eine Liste aller Anerkennungen von Lehrämtern. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtAnerkennungEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
-    public Response getLehrerLehramtAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehramtAnerkennungen()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrbefähigungen.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrbefähigungen
-     */
-    @GET
-    @Path("/allgemein/lehrbefaehigungen")
-    @Operation(summary = "Gibt den Katalog des Lehrbefähigungen von Lehrern zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrbefähigung-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
-    public Response getLehrerLehrbefaehigungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungen()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Lehrbefähigungen.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Anerkennungen von Lehrbefähigungen
-     */
-    @GET
-    @Path("/allgemein/lehrbefaehigungen_anerkennungen")
-    @Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrbefähigungen zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungAnerkennungEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
-    public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Arten von Mehrleistungen durch Lehrer.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Arten von Mehrleistungen durch Lehrer
-     */
-    @GET
-    @Path("/allgemein/mehrleistungsarten")
-    @Operation(summary = "Gibt den Katalog der Arten von Mehrleistungen durch Lehrer zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Mehrleistungsart-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMehrleistungsartEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
-    public Response getLehrerMehrleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMehrleistungsarten()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Arten von Minderleistungen durch Lehrer.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Arten von Minderleistungen durch Lehrer
-     */
-    @GET
-    @Path("/allgemein/minderleistungsarten")
-    @Operation(summary = "Gibt den Katalog der Arten von Minderleistungen durch Lehrer zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Minderleistungsart-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMinderleistungsartEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
-    public Response getLehrerMinderleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMinderleistungsarten()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Rechtsverhältnisse.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Lehrer Rechtsverhältnisse
-     */
-    @GET
-    @Path("/allgemein/rechtsverhaeltnisse")
-    @Operation(summary = "Gibt den Katalog des Rechtsverhältnisse zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Rechtsverhältnis-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogRechtsverhaeltnisEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
-    public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerRechtsverhaeltnis()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/personalabschnittsdaten/{id : \\d+}")
+	@Operation(summary = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an.",
+			description = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Lehrer-Personalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patch(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
+	}
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Kataloges für der Gründe für Anrechnungsstunden von Lehrern.
-     *
-     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request   die Informationen zur HTTP-Anfrage
-     *
-     * @return die Liste mit dem Katalog der Gründe für Anrechnungsstunden von Lehrern
-     */
-    @GET
-    @Path("/allgemein/anrechnungsgruende")
-    @Operation(summary = "Gibt den Katalog der Gründe für Anrechnungsstunden von Lehrern zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Gründe für Anrechnungsstunden von Lehrern."
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAnrechnungsgrundEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getLehrerAnrechnungsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAnrechnungsgruende()).getList(), request,
-    			ServerMode.STABLE,
-    			BenutzerKompetenz.KEINE);
-    }
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrer-Leitungsfunktionen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrer-Leitungsfunktionen
+	 */
+	@GET
+	@Path("/leitungsfunktionen")
+	@Operation(summary = "Gibt den Katalog der Lehrerleitungsfunktionen zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerleitungsfunktionen unter Angabe der ID und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLeitungsfunktionenEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
+	public Response getLehrerLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLehrerLeitungsfunktionen().getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrerzugangsgründe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrerzugangsgründe
+	 */
+	@GET
+	@Path("/allgemein/zugangsgruende")
+	@Operation(summary = "Gibt den Katalog der Lehrerzugangsgründe zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogZugangsgrundEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
+	public Response getLehrerZugangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerZugangsgruende()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für der Lehrerabgangsgründe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrerabgangsgründe
+	 */
+	@GET
+	@Path("/allgemein/abgangsgruende")
+	@Operation(summary = "Gibt den Katalog der Lehrerabgangsgründe zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAbgangsgrundEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
+	public Response getLehrerAbgangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAbgangsgruende()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Beschäftigungsarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrer Beschäftigungsarten
+	 */
+	@GET
+	@Path("/allgemein/beschaeftigungsarten")
+	@Operation(summary = "Gibt den Katalog der Beschäftigungsarten zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Beschäftigungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogBeschaeftigungsartEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
+	public Response getLehrerBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerBeschaeftigungsarten()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Einsatzstatusarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrer Einsatzstatusarten
+	 */
+	@GET
+	@Path("/allgemein/einsatzstatus")
+	@Operation(summary = "Gibt den Katalog des Einsatzstatus zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogEinsatzstatusEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
+	public Response getLehrerEinsatzstatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerEinsatzstatus()).getList(), request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fachrichtungen von Lehrern.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Fachrichtungen von Lehrern
+	 */
+	@GET
+	@Path("/allgemein/fachrichtungen")
+	@Operation(summary = "Gibt den Katalog der Fachrichtungen von Lehrern zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Fachrichtungens-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
+	public Response getLehrerFachrichtungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungen()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Fachrichtungen für Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Anerkennungen von Fachrichtungen für Lehrer
+	 */
+	@GET
+	@Path("/allgemein/fachrichtungen_anerkennungen")
+	@Operation(summary = "Gibt den Katalog des Anerkennungen von Fachrichtungen für Lehrer zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungAnerkennungEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
+	public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungAnerkennungen()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrämter.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrämter
+	 */
+	@GET
+	@Path("/allgemein/lehraemter")
+	@Operation(summary = "Gibt den Katalog der Lehrämter zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehramt-Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
+	public Response getLehrerLehraemter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehraemter()).getList(), request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Lehrämtern.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Anerkennungen von Lehrämtern
+	 */
+	@GET
+	@Path("/allgemein/lehraemter_anerkennungen")
+	@Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrämtern zurück.",
+			description = "Erstellt eine Liste aller Anerkennungen von Lehrämtern. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtAnerkennungEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
+	public Response getLehrerLehramtAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehramtAnerkennungen()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrbefähigungen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrbefähigungen
+	 */
+	@GET
+	@Path("/allgemein/lehrbefaehigungen")
+	@Operation(summary = "Gibt den Katalog des Lehrbefähigungen von Lehrern zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrbefähigung-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
+	public Response getLehrerLehrbefaehigungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungen()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Anerkennungen von Lehrbefähigungen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Anerkennungen von Lehrbefähigungen
+	 */
+	@GET
+	@Path("/allgemein/lehrbefaehigungen_anerkennungen")
+	@Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrbefähigungen zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungAnerkennungEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
+	public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList(), request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Arten von Mehrleistungen durch Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Arten von Mehrleistungen durch Lehrer
+	 */
+	@GET
+	@Path("/allgemein/mehrleistungsarten")
+	@Operation(summary = "Gibt den Katalog der Arten von Mehrleistungen durch Lehrer zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Mehrleistungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMehrleistungsartEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
+	public Response getLehrerMehrleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMehrleistungsarten()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Arten von Minderleistungen durch Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Arten von Minderleistungen durch Lehrer
+	 */
+	@GET
+	@Path("/allgemein/minderleistungsarten")
+	@Operation(summary = "Gibt den Katalog der Arten von Minderleistungen durch Lehrer zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Minderleistungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMinderleistungsartEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
+	public Response getLehrerMinderleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMinderleistungsarten()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Lehrer Rechtsverhältnisse.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Lehrer Rechtsverhältnisse
+	 */
+	@GET
+	@Path("/allgemein/rechtsverhaeltnisse")
+	@Operation(summary = "Gibt den Katalog des Rechtsverhältnisse zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Rechtsverhältnis-Katalog-Einträgen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogRechtsverhaeltnisEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
+	public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerRechtsverhaeltnis()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des Kataloges für der Gründe für Anrechnungsstunden von Lehrern.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit dem Katalog der Gründe für Anrechnungsstunden von Lehrern
+	 */
+	@GET
+	@Path("/allgemein/anrechnungsgruende")
+	@Operation(summary = "Gibt den Katalog der Gründe für Anrechnungsstunden von Lehrern zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Gründe für Anrechnungsstunden von Lehrern."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern",
+			content = @Content(mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAnrechnungsgrundEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getLehrerAnrechnungsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAnrechnungsgruende()).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
 
 }

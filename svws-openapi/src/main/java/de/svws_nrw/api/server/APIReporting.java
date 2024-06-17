@@ -32,41 +32,38 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APIReporting {
 
-    /**
-     * Die OpenAPI-Methode für die Erstellung eines Reports im geforderten Format. Je nach übergebenen Parametern wird eine
+	/**
+	 * Die OpenAPI-Methode für die Erstellung eines Reports im geforderten Format. Je nach übergebenen Parametern wird eine
 	 * einzige Report-Datei oder eine ZIP-Datei mit einzelnen Dateien zurückgegeben.
-     *
-     * @param schema das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 *
+	 * @param schema das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param reportingParameter Objekt mit den Daten und Einstellungen für den zu erstellenden Report.
-     * @param request die Informationen zur HTTP-Anfrage
-     *
-     * @return Der Report (bzw. ZIP-Datei mit einzelnen Dateien) mit den angeforderten Daten
-     */
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Der Report (bzw. ZIP-Datei mit einzelnen Dateien) mit den angeforderten Daten
+	 */
 	@POST
 	@Produces("application/pdf")
-    @Path("/ausgabe")
-	@Operation(
-		summary = "Erstellt einen Report als PDF-Datei gemäß den übergebenen Daten.",
-		description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der "
-			+ "angegebenen IDs als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "
-			+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
+	@Path("/ausgabe")
+	@Operation(summary = "Erstellt einen Report als PDF-Datei gemäß den übergebenen Daten.",
+			description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "
+					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report mit den übergebenen Daten wurde erfolgreich erstellt.",
-		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Report")))
+			content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Report")))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zu den übergebenen Daten gefunden.")
 	@ApiResponse(responseCode = "500", description = "Es ist ein unbekannter Fehler aufgetreten.",
-		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response pdfReport(
-		@PathParam("schema") final String schema,
-		@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt werden soll.", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReportingParameter.class)))
-		final ReportingParameter reportingParameter, @Context final HttpServletRequest request) {
-			return DBBenutzerUtils.runWithTransaction(
-				conn ->	new ReportingFactory(conn, reportingParameter).createReportResponse(),
-				request,
-				ServerMode.STABLE,
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response pdfReport(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt werden soll.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ReportingParameter.class))) final ReportingParameter reportingParameter,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new ReportingFactory(conn, reportingParameter).createReportResponse(),
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN,
 				BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN);
-    	}
+	}
+
 }

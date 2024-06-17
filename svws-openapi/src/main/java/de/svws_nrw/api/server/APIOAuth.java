@@ -50,19 +50,21 @@ public class APIOAuth {
 	@POST
 	@Path("/secrets/create")
 	@Operation(summary = "Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Client-Secrets und gibt das zugehörige Objekt zurück.",
-		description = "Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Client-Secrets und gibt das zugehörige Objekt zurück. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von OAuth2-Client-Secrets besitzt.")
+			description = "Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Client-Secrets und gibt das zugehörige Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von OAuth2-Client-Secrets besitzt.")
 	@ApiResponse(responseCode = "201", description = "Der Eintrag wurde erfolgreich hinzugefügt.",
-		content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OAuth2ClientSecret.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OAuth2ClientSecret.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein OAuth2-Client-Secret für die Schule anzulegen.")
 	@ApiResponse(responseCode = "400", description = "Der Eintrag enthält Fehler, bspw. eine invalide URL.")
 	@ApiResponse(responseCode = "409", description = "Es existiert bereits ein Eintrag für den gegebenen OAuth2-Server.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addOAuthClientSecret(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten des zu erstellenden Eintrags.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OAuth2ClientSecret.class))) final InputStream is,
+			@RequestBody(description = "Die Daten des zu erstellenden Eintrags.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = OAuth2ClientSecret.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).add(is), request,
-				ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).add(is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ADMIN);
 	}
 
 
@@ -79,19 +81,23 @@ public class APIOAuth {
 	@PATCH
 	@Path("/secrets/{id : \\d+}")
 	@Operation(summary = "Patcht die zur ID gehörenden OAuth2-Client-Secrets an.",
-		description = "Passt die OAuth2-Client-Secrets zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von OAuth2-Client-Secrets besitzt.")
+			description = "Passt die OAuth2-Client-Secrets zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von OAuth2-Client-Secrets besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die OAuth2-Client-Secrets der Schule integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein OAuth2-Client-Secrets mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "409",
+			description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchOAuthSecret(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die OAuth2-Client-Secrets der Schule", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OAuth2ClientSecret.class))) final InputStream is,
+			@RequestBody(description = "Der Patch für die OAuth2-Client-Secrets der Schule", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = OAuth2ClientSecret.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).patch(id, is), request,
-				ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).patch(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ADMIN);
 	}
 
 
@@ -107,16 +113,17 @@ public class APIOAuth {
 	@DELETE
 	@Path("/secrets/{id : \\d+}")
 	@Operation(summary = "Entfernt ein OAuth2-Client-Secrets.",
-		description = "Entfernt ein OAuth2-Client-Secrets. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von OAuth Client Secrets hat.")
-	@ApiResponse(responseCode = "200", description = "Das OAuth2-Client-Secrets wurde erfolgreich entfernt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OAuth2ClientSecret.class)))
+			description = "Entfernt ein OAuth2-Client-Secrets. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von OAuth Client Secrets hat.")
+	@ApiResponse(responseCode = "200", description = "Das OAuth2-Client-Secrets wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = OAuth2ClientSecret.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um OAuth2-Client-Secrets zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "OAuth2-Client-Secrets nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteOAuthSecret(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).delete(id), request,
-				ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+	public Response deleteOAuthSecret(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).delete(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ADMIN);
 	}
 
 
@@ -131,14 +138,15 @@ public class APIOAuth {
 	@GET
 	@Path("/secrets")
 	@Operation(summary = "Gibt die OAuth2-Client-Secrets der Schule zurück.",
-		description = "Gibt die OAuth2-Client-Secrets der Schule zurück. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Client-Secrets besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste der OAuth2-Client-Secrets der Schule.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OAuth2ClientSecret.class))))
+			description = "Gibt die OAuth2-Client-Secrets der Schule zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Client-Secrets besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der OAuth2-Client-Secrets der Schule.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OAuth2ClientSecret.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Client-Secrets.")
-	public Response getOAuthClientSecrets(@PathParam("schema") final String schema,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).getList(), request,
-				ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+	public Response getOAuthClientSecrets(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).getList(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ADMIN);
 	}
 
 
@@ -155,15 +163,16 @@ public class APIOAuth {
 	@GET
 	@Path("/secrets/{id : \\d+}")
 	@Operation(summary = "Gibt das OAuth2-Client-Secrets der Schule zurück.",
-		description = "Gibt das OAuth2-Client-Secrets der Schule zurück. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Client-Secrets besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das OAuth2-Client-Secrets der Schule", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OAuth2ClientSecret.class)))
+			description = "Gibt das OAuth2-Client-Secrets der Schule zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Client-Secrets besitzt.")
+	@ApiResponse(responseCode = "200", description = "Das OAuth2-Client-Secrets der Schule",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = OAuth2ClientSecret.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein OAuth2-Client-Secrets mit der ID bei der Schule gefunden")
-	public Response getOAuthClientSecret(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).get(id), request,
-				ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+	public Response getOAuthClientSecret(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataOauthClientSecrets(conn).get(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.ADMIN);
 	}
 
 }

@@ -58,10 +58,11 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAKategorien(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoAKategorien()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoAKategorien()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Merkmale.
@@ -81,8 +82,8 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoAMerkmale()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoAMerkmale()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
 
@@ -105,10 +106,11 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAZusatzmerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoAZusatzmerkmale()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoAZusatzmerkmale()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Einträge der SBO Ebene 4.
@@ -128,10 +130,11 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAEbene4(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoAEbene4()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoAEbene4()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Anschlussoptionen.
@@ -151,10 +154,11 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAAnschlussoptionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoAAnschlussoptionen()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoAAnschlussoptionen()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Berufsfelder.
@@ -174,8 +178,8 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoABerufsfelder(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.run(() -> (new DataKAoABerufsfelder()).getAll(), request,
-    			ServerMode.STABLE,
+    	return DBBenutzerUtils.run(() -> (new DataKAoABerufsfelder()).getAll(),
+    			request, ServerMode.STABLE,
     			BenutzerKompetenz.KEINE);
     }
 

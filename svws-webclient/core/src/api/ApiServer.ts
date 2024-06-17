@@ -1200,7 +1200,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSchuelerBetriebsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betrieb
 	 *
-	 * Liest die Daten des Schülerbetriebs zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Schülerbetriebbesitzt.
+	 * Liest die Daten des Schülerbetriebs zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Schülerbetrieb besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Stammdaten des Schülerbetriebs.
@@ -1227,7 +1227,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getBetriebAnsprechpartnerdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betriebansprechpartner
 	 *
-	 * Liest die Daten des Betriebanpsrechpartners zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Betriebanpsrechpartnerbesitzt.
+	 * Liest die Daten des Betriebanpsrechpartners zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Betriebanpsrechpartner besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Stammdaten des Betriebanpsrechpartners.
@@ -1364,7 +1364,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Beschäftigungsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, undgibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Beschäftigungsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Beschäftigungsarten.
@@ -1391,7 +1391,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogBeschaeftigungsartmitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/{id : \d+}
 	 *
-	 * Liest die Daten der Beschäftigunsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Beschäftigungsartbesitzt.
+	 * Liest die Daten der Beschäftigunsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Beschäftigungsart besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Katalog-Eintrag zu den Beschäftigungsarten.
@@ -1446,7 +1446,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogBetriebsartmitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/{id : \d+}
 	 *
-	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsartenbesitzt.
+	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Katalog-Eintrag zu den Betriebsarten.
@@ -1503,7 +1503,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getBetriebeAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner
 	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
+	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner, des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Betriebansprechpartnern
@@ -1554,7 +1554,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, undgibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Betriebsarten.
@@ -6631,7 +6631,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, undgibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Haltestellen.
@@ -6766,7 +6766,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/{id : \d+}
 	 *
-	 * Entfernt einen Jahrgang.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgänge hat.
+	 * Entfernt einen Jahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgänge hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Jahrgang wurde erfolgreich entfernt.
@@ -6850,7 +6850,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteJahrgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/delete/multiple
 	 *
-	 * Entfernt mehrere Jahrgänge.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgängen hat.
+	 * Entfernt mehrere Jahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgängen hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Jahrgänge wurde erfolgreich entfernt.
@@ -7070,7 +7070,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
 	 *
-	 * Passt die Daten der Klasse mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendatenbesitzt.
+	 * Passt die Daten der Klasse mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich integriert.
@@ -7096,7 +7096,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
 	 *
-	 * Entfernt eine Klasse.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.
+	 * Entfernt eine Klasse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Die Klasse wurde erfolgreich entfernt.
@@ -7309,7 +7309,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
 	 *
-	 * Passt die Daten des Kurses mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Kursdatenbesitzt.
+	 * Passt die Daten des Kurses mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Kursdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich integriert.
@@ -7335,7 +7335,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
 	 *
-	 * Entfernt einen Kurs.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.
+	 * Entfernt einen Kurs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Kurs wurde erfolgreich entfernt.
@@ -9415,7 +9415,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getVermerkdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke
 	 *
-	 * Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerkebesitzt.
+	 * Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerke besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Vermerkdaten des Schülers
@@ -9711,7 +9711,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/{id : \d+}
 	 *
-	 * Entfernt Leistungsdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
+	 * Entfernt Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Leistungsdaten wurde erfolgreich entfernt.
@@ -11463,7 +11463,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde(z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Raum>} data - der Request-Body für die HTTP-Methode
@@ -11680,7 +11680,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteReligionEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/{id : \d+}
 	 *
-	 * Entfernt einen Religion-Katalog-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 * Entfernt einen Religion-Katalog-Eintrag der Schule. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.
