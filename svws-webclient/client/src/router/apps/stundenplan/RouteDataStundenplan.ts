@@ -134,8 +134,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		}
 		if (!listPatch.isEmpty())
 			await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
-		// if (!listHinzuzufuegen.isEmpty())
-		// 	await api.server.addStundenplanKalenderwochenzuordnung(listHinzuzufuegen, api.schema, this.auswahl.id);
+		if (!listHinzuzufuegen.isEmpty())
+			await api.server.addStundenplanKalenderwochenzuordnungen(listHinzuzufuegen, api.schema, this.auswahl.id);
 		this.commit();
 		api.status.stop();
 	}
