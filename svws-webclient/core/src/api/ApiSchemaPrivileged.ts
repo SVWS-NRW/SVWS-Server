@@ -880,6 +880,28 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode deactivateSchema für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}
+	 *
+	 * Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Flags des Schemas wurde erfolgreich angepasst.
+	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
+	 *   Code 403: Das Flag des Schemas darf nicht angepasst werden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} state - der Pfad-Parameter state
+	 */
+	public async deactivateSchema(schema : string, state : number) : Promise<void> {
+		const path = "/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{state\s*(:[^{}]+({[^{}]+})*)?}/g, state.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/remove
 	 *
 	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.

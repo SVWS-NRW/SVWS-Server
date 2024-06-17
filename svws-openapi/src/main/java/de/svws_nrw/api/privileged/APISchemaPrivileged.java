@@ -436,7 +436,7 @@ public class APISchemaPrivileged {
 	 * Die OpenAPI-Methode für das Entfernen eines Schemas aus der SVWS-Konfiguration. Der angemeldete Datenbankbenutzer
 	 * muss dafür priviligierte Rechte für die Bearbeitung der SVWS-Konfiguration haben.
 	 *
-	 * @param schemaname    der Name des Schemas, das gelöscht werden soll
+	 * @param schemaname    der Name des Schemas, das aus der Konfiguration entfernt werden soll
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Rückmeldung, ob die Operation erfolgreich war
@@ -460,11 +460,54 @@ public class APISchemaPrivileged {
 			if ((schemaname == null) || schemaname.isBlank())
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
 
-			// Prüfe, ob das
+			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final String schemanameConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(schemaname);
 			if (schemanameConfig == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.");
 			SVWSKonfiguration.get().removeSchema(schemanameConfig);
+			return Response.status(Status.NO_CONTENT).build();
+		},
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen des Flags, ob ein Schema deaktiviert wurde oder nicht.
+	 * Der angemeldete Datenbankbenutzer muss dafür priviligierte Rechte für die Bearbeitung der
+	 * SVWS-Konfiguration haben.
+	 *
+	 * @param schemaname    der Name des Schemas, dessen Flag angepasst werden soll
+	 * @param state         der Status, auf den das Schema gesetzt werden soll (1=deaktiviert, 0=aktiv)
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Rückmeldung, ob die Operation erfolgreich war
+	 */
+	@POST
+	@Path("/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}")
+	@Operation(summary = "Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist.",
+			description = "Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, der angemeldete Benutzer"
+					+ " die benötigten Rechte besitzt.")
+	@ApiResponse(responseCode = "204", description = "Das Flags des Schemas wurde erfolgreich angepasst.")
+	@ApiResponse(responseCode = "400", description = "Der Schema-Name darf nicht null oder leer sein.")
+	@ApiResponse(responseCode = "403", description = "Das Flag des Schemas darf nicht angepasst werden.")
+	public Response deactivateSchema(@PathParam("schema") final String schemaname, @PathParam("state") final int state, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
+			if (!conn.isPrivilegedDatabaseUser())
+				throw new ApiOperationException(Status.FORBIDDEN);
+
+			// Prüfe, ob der Schema-Name gültig ist
+			if ((schemaname == null) || schemaname.isBlank())
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
+
+			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			final boolean success = (state == 1)
+					? config.activateSchema(schemaname)
+					: config.deactivateSchema(schemaname);
+			if (!success)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Status konnte nicht angepasst werden.");
 			return Response.status(Status.NO_CONTENT).build();
 		},
 				request, ServerMode.STABLE,
