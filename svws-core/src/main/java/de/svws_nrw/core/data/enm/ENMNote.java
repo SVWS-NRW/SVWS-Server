@@ -18,7 +18,8 @@ public class ENMNote {
 	public int id;
 
 	/** Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-), ggf. auch ein Kürzel für PseudoNoten */
-	@Schema(description = "Das eindeutige Kürzel der Note: Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) oder das Kürzel einer Pseudo-Note", example = "AT")
+	@Schema(description = "Das eindeutige Kürzel der Note: Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) oder das Kürzel einer Pseudo-Note",
+			example = "AT")
 	public String kuerzel;
 
 	/** Die Notenpunkte, die dieser Note ggf. zugeordnet sind */

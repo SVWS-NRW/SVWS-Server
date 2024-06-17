@@ -12,44 +12,44 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Schild3KatalogEintragSchuelerImportExport {
 
-    /** Tabelle mit den Daten für den Import-Export */
-    @Schema(description = "TMP")
-    public String Tabelle;
+	/** Tabelle mit den Daten für den Import-Export */
+	@Schema(description = "TMP")
+	public String Tabelle;
 
-    /** Anzeigename */
-    @Schema(description = "TMP")
-    public String TabellenAnzeige;
+	/** Anzeigename */
+	@Schema(description = "TMP")
+	public String TabellenAnzeige;
 
-    /** Master-Tabelle */
-    @Schema(description = "TMP")
-    public String MasterTable;
+	/** Master-Tabelle */
+	@Schema(description = "TMP")
+	public String MasterTable;
 
-    /** SQL-Befehl für dem Export */
-    @Schema(description = "TMP")
-    public String ExpCmd;
+	/** SQL-Befehl für dem Export */
+	@Schema(description = "TMP")
+	public String ExpCmd;
 
-    /** SQL-Befehl zum Ermitteln der Feldnamen */
-    @Schema(description = "TMP")
-    public String SrcGetFieldsSQL;
+	/** SQL-Befehl zum Ermitteln der Feldnamen */
+	@Schema(description = "TMP")
+	public String SrcGetFieldsSQL;
 
-    /** SQL-Befehl zum Enternen der Daten */
-    @Schema(description = "TMP")
-    public String DeleteSQL;
+	/** SQL-Befehl zum Enternen der Daten */
+	@Schema(description = "TMP")
+	public String DeleteSQL;
 
-    /** SQL-Befehl zum Ermitteln der IDs */
-    @Schema(description = "TMP")
-    public String DstGetIDSQL;
+	/** SQL-Befehl zum Ermitteln der IDs */
+	@Schema(description = "TMP")
+	public String DstGetIDSQL;
 
-    /** Hauptfeld */
-    @Schema(description = "TMP")
-    public String HauptFeld;
+	/** Hauptfeld */
+	@Schema(description = "TMP")
+	public String HauptFeld;
 
-    /** Detail-Feld */
-    @Schema(description = "TMP")
-    public String DetailFeld;
+	/** Detail-Feld */
+	@Schema(description = "TMP")
+	public String DetailFeld;
 
-    /** Reihenfolge */
-    @Schema(description = "TMP")
-    public Integer Reihenfolge;
+	/** Reihenfolge */
+	@Schema(description = "TMP")
+	public Integer Reihenfolge;
 
 }

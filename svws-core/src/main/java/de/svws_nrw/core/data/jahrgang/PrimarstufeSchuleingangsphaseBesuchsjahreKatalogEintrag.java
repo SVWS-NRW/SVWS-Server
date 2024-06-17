@@ -31,7 +31,8 @@ public class PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag {
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Besuchsjahre verwendet werden. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Besuchsjahre verwendet werden. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Besuchsjahre verwendet werden. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigBis = null;
 
 

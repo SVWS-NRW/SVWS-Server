@@ -11,7 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungStundenelement")
-@Schema(name = "StundenplanblockungStundenelement", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für ein Stundenelement bei {@link StundenplanblockungInput}.")
+@Schema(name = "StundenplanblockungStundenelement",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für ein Stundenelement bei {@link StundenplanblockungInput}.")
 @TranspilerDTO
 public class StundenplanblockungStundenelement {
 

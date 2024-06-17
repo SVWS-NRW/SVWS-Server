@@ -28,7 +28,8 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param input   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusPermanentKFachwahlmatrix(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
+	public KursblockungAlgorithmusPermanentKFachwahlmatrix(final @NotNull Random random, final @NotNull Logger logger,
+			final @NotNull GostBlockungsdatenManager input) {
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.

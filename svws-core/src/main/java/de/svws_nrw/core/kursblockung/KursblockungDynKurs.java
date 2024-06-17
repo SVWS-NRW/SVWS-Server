@@ -88,15 +88,15 @@ public class KursblockungDynKurs {
 	 * @param pSchuelerAnzahl      Die Anzahl aller Schüler.
 	 */
 	KursblockungDynKurs(
-					final @NotNull Random pRandom,
-					final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
-					final int pSchienenLageFixiert,
-					final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei,
-					final long pKursID,
-					final @NotNull KursblockungDynFachart pFachart,
-					final @NotNull Logger pLogger,
-					final int pInternalID,
-					final int pSchuelerAnzahl) {
+			final @NotNull Random pRandom,
+			final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
+			final int pSchienenLageFixiert,
+			final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei,
+			final long pKursID,
+			final @NotNull KursblockungDynFachart pFachart,
+			final @NotNull Logger pLogger,
+			final int pInternalID,
+			final int pSchuelerAnzahl) {
 		_random = pRandom;
 		schienenLage = pSchienenLage;
 		schienenLageFixiert = pSchienenLageFixiert;
@@ -158,7 +158,8 @@ public class KursblockungDynKurs {
 	/** Liefert die zum Kurs zugehörige Fachart.
 	 *
 	 * @return Die zum Kurs zugehörige Fachart. */
-	@NotNull KursblockungDynFachart gibFachart() {
+	@NotNull
+	KursblockungDynFachart gibFachart() {
 		return fachart;
 	}
 
@@ -185,7 +186,8 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
 	 */
-	@NotNull int[] gibSchienenLage() {
+	@NotNull
+	int[] gibSchienenLage() {
 		final int length = schienenLage.length;
 
 		final @NotNull int[] lage = new int[length];

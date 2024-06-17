@@ -12,57 +12,57 @@ public enum Religion {
 
 	/** Religion: alevitisch */
 	AR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(1000, "AR", "alevitisch", null, null)
+			new ReligionKatalogEintrag(1000, "AR", "alevitisch", null, null)
 	}),
 
 	/** Religion: evangelisch */
 	ER(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(2000, "ER", "evangelisch", null, null)
+			new ReligionKatalogEintrag(2000, "ER", "evangelisch", null, null)
 	}),
 
 	/** Religion: jüdisch */
 	HR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(3000, "HR", "jüdisch", null, null)
+			new ReligionKatalogEintrag(3000, "HR", "jüdisch", null, null)
 	}),
 
 	/** Religion: islamisch */
 	IR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(4000, "IR", "islamisch", null, null)
+			new ReligionKatalogEintrag(4000, "IR", "islamisch", null, null)
 	}),
 
 	/** Religion: katholisch */
 	KR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(5000, "KR", "katholisch", null, null)
+			new ReligionKatalogEintrag(5000, "KR", "katholisch", null, null)
 	}),
 
 	/** Religion: mennonitische BG NRW */
 	ME(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(6000, "ME", "mennonitische BG NRW", null, null)
+			new ReligionKatalogEintrag(6000, "ME", "mennonitische BG NRW", null, null)
 	}),
 
 	/** Religion: ohne Bekenntnis */
 	OH(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(7000, "OH", "ohne Bekenntnis", null, null)
+			new ReligionKatalogEintrag(7000, "OH", "ohne Bekenntnis", null, null)
 	}),
 
 	/** Religion: griechisch-orthodox */
 	OR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(8000, "OR", "griechisch-orthodox", null, null)
+			new ReligionKatalogEintrag(8000, "OR", "griechisch-orthodox", null, null)
 	}),
 
 	/** Religion: syrisch-orthodox */
 	SO(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(9000, "SO", "syrisch-orthodox", null, null)
+			new ReligionKatalogEintrag(9000, "SO", "syrisch-orthodox", null, null)
 	}),
 
 	/** Religion: sonstige orthodoxe */
 	XO(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(10000, "XO", "sonstige orthodoxe", null, null)
+			new ReligionKatalogEintrag(10000, "XO", "sonstige orthodoxe", null, null)
 	}),
 
 	/** Religion: andere Religionen */
 	XR(new ReligionKatalogEintrag[] {
-		new ReligionKatalogEintrag(11000, "XR", "andere Religionen", null, null)
+			new ReligionKatalogEintrag(11000, "XR", "andere Religionen", null, null)
 	});
 
 
@@ -73,7 +73,7 @@ public enum Religion {
 	public final @NotNull ReligionKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Religionen */
-	public final @NotNull ReligionKatalogEintrag@NotNull[] historie;
+	public final @NotNull ReligionKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Religionen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Religion> _mapByKuerzel = new HashMap<>();
@@ -92,7 +92,7 @@ public enum Religion {
 	 * @param historie   die Historie der Religionen, welche ein Array von
 	 *                   {@link ReligionKatalogEintrag} ist
 	 */
-	Religion(final @NotNull ReligionKatalogEintrag@NotNull[] historie) {
+	Religion(final @NotNull ReligionKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

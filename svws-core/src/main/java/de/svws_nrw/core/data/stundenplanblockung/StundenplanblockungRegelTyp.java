@@ -24,53 +24,47 @@ public enum StundenplanblockungRegelTyp {
 	 * Definiert, wie viele Tage in der Woche Unterricht stattfindet.
 	 */
 	SCHULE_TAGE_PRO_WOCHE(1, "Schule: Unterrichtstage pro Woche:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, wie viele Stunden es pro Tag maximal gibt.
 	 */
 	SCHULE_LETZTE_STUNDE(2, "Schule: Letzte mögliche Stunde:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, wie viele Springstunden eine Lehrkraft pro Woche maximal haben darf.
 	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_SPRING_PRO_WOCHE(3, "Schule: Pro Lehrkraft pro Woche max. Springstunden:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, wie viele Springstunden eine Lehrkraft pro Tag maximal haben darf.
 	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_SPRING_PRO_TAG(4, "Schule: Pro Lehrkraft pro Tag max. Springstunden:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, wie viel Präsenz (Unterricht + Springstunden) eine Lehrkraft pro Tag maximal haben darf.
 	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_PRAESENZ_PRO_TAG(5, "Schule: Pro Lehrkraft pro Tag max. Präsenz:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, ob in bestimmten Stunden Einzelstunden verboten sind.
 	 */
 	SCHULE_LERNGRUPPEN_KEINE_EINZELSTUNDE_IN_STUNDE(6, "Schule: Lerngruppen haben keine Enzelstunde in Stunde:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			),
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)),
 
 	/**
 	 * Definiert, ob eine Doppelstunde (und mehr) diese und die nächste Stunde überschreiten darf.
 	 */
-	SCHULE_LERNGRUPPEN_KEINE_STUNDENUEBERGAENGE_IN_STUNDE_UND_DARAUFFOLGEND(7, "Schule: Lerngruppen haben keinen Übergang von dieser zur darauffolgenden Stunde:",
-			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-			);
+	SCHULE_LERNGRUPPEN_KEINE_STUNDENUEBERGAENGE_IN_STUNDE_UND_DARAUFFOLGEND(7,
+			"Schule: Lerngruppen haben keinen Übergang von dieser zur darauffolgenden Stunde:",
+			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER));
 
 
 	/**Der ID des Typs der Regel. */

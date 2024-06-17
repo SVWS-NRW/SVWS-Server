@@ -190,12 +190,12 @@ public enum GostHalbjahr {
 	 *
 	 * @return ein Array mit allen Halbjahren des Schuljahres, in dem das Halbjahr-Objekt liegt der gymnasialen Oberstufe
 	 */
-	public @NotNull GostHalbjahr@NotNull [] getSchuljahr() {
+	public @NotNull GostHalbjahr @NotNull [] getSchuljahr() {
 		if (id % 2 == 0) {
-			final @NotNull GostHalbjahr@NotNull [] hjs = { this, nextOrException() };
+			final @NotNull GostHalbjahr @NotNull [] hjs = { this, nextOrException() };
 			return hjs;
 		}
-		final @NotNull GostHalbjahr@NotNull [] hjs = { previousOrException(), this };
+		final @NotNull GostHalbjahr @NotNull [] hjs = { previousOrException(), this };
 		return hjs;
 	}
 
@@ -204,8 +204,8 @@ public enum GostHalbjahr {
 	 *
 	 * @return ein Array mit allen Halbjahren der Einführungsphase der gymnasialen Oberstufe
 	 */
-	public static @NotNull GostHalbjahr@NotNull [] getEinfuehrungsphase() {
-		final @NotNull GostHalbjahr@NotNull [] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
+	public static @NotNull GostHalbjahr @NotNull [] getEinfuehrungsphase() {
+		final @NotNull GostHalbjahr @NotNull [] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
 		return ef;
 	}
 
@@ -215,8 +215,8 @@ public enum GostHalbjahr {
 	 *
 	 * @return ein Array mit allen Halbjahren der Qualifikationsphase der gymnasialen Oberstufe
 	 */
-	public static @NotNull GostHalbjahr@NotNull [] getQualifikationsphase() {
-		final @NotNull GostHalbjahr@NotNull [] q = { GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+	public static @NotNull GostHalbjahr @NotNull [] getQualifikationsphase() {
+		final @NotNull GostHalbjahr @NotNull [] q = { GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
 		return q;
 	}
 
@@ -228,16 +228,16 @@ public enum GostHalbjahr {
 	 *
 	 * @return ein Array mit den Halbjahren des Jahrgangs
 	 */
-	public static @NotNull GostHalbjahr@NotNull[] getHalbjahreFromJahrgang(final @NotNull String jahrgang) {
+	public static @NotNull GostHalbjahr @NotNull [] getHalbjahreFromJahrgang(final @NotNull String jahrgang) {
 		switch (jahrgang) {
 			case "EF":
-				final @NotNull GostHalbjahr@NotNull[] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
+				final @NotNull GostHalbjahr @NotNull [] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
 				return ef;
 			case "Q1":
-				final @NotNull GostHalbjahr@NotNull[] q1 = { GostHalbjahr.Q11, GostHalbjahr.Q12 };
+				final @NotNull GostHalbjahr @NotNull [] q1 = { GostHalbjahr.Q11, GostHalbjahr.Q12 };
 				return q1;
 			case "Q2":
-				final @NotNull GostHalbjahr@NotNull[] q2 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				final @NotNull GostHalbjahr @NotNull [] q2 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
 				return q2;
 			default:
 				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe");
@@ -256,13 +256,20 @@ public enum GostHalbjahr {
 		if (id == null)
 			return null;
 		switch (id) {
-			case 0: return GostHalbjahr.EF1;
-			case 1: return GostHalbjahr.EF2;
-			case 2: return GostHalbjahr.Q11;
-			case 3: return GostHalbjahr.Q12;
-			case 4: return GostHalbjahr.Q21;
-			case 5: return GostHalbjahr.Q22;
-			default: return null;
+			case 0:
+				return GostHalbjahr.EF1;
+			case 1:
+				return GostHalbjahr.EF2;
+			case 2:
+				return GostHalbjahr.Q11;
+			case 3:
+				return GostHalbjahr.Q12;
+			case 4:
+				return GostHalbjahr.Q21;
+			case 5:
+				return GostHalbjahr.Q22;
+			default:
+				return null;
 		}
 	}
 
@@ -320,10 +327,14 @@ public enum GostHalbjahr {
 		if ((halbjahr != 1) && (halbjahr != 2))
 			return null;
 		switch (jahrgang) {
-			case "EF": return (halbjahr == 1) ? EF1 : EF2;
-			case "Q1": return (halbjahr == 1) ? Q11 : Q12;
-			case "Q2": return (halbjahr == 1) ? Q21 : Q22;
-			default: return null;
+			case "EF":
+				return (halbjahr == 1) ? EF1 : EF2;
+			case "Q1":
+				return (halbjahr == 1) ? Q11 : Q12;
+			case "Q2":
+				return (halbjahr == 1) ? Q21 : Q22;
+			default:
+				return null;
 		}
 	}
 

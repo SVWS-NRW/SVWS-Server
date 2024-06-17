@@ -12,92 +12,92 @@ public enum BerufskollegBerufsebene1 {
 
 	/** Berufsebene 1 : Agrarwirtschaft */
 	AW(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100001000, 1, "AW", "Agrarwirtschaft", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100001000, 1, "AW", "Agrarwirtschaft", null, null)
 	}),
 
 	/** Berufsebene 1 : Agrarwirtschaft, Bio- und Umwelttechnologie */
 	AB(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100002000, 1, "AB", "Agrarwirtschaft, Bio- und Umwelttechnologie", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100002000, 1, "AB", "Agrarwirtschaft, Bio- und Umwelttechnologie", null, null)
 	}),
 
 	/** Berufsebene 1 : Ernährung */
 	ER(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100003000, 1, "ER", "Ernährung", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100003000, 1, "ER", "Ernährung", null, null)
 	}),
 
 	/** Berufsebene 1 : Ernährung und Hauswirtschaft */
 	EU(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100004000, 1, "EU", "Ernährung und Hauswirtschaft", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100004000, 1, "EU", "Ernährung und Hauswirtschaft", null, null)
 	}),
 
 	/** Berufsebene 1 : Ernährung/Hauswirtschaft */
 	EH(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100005000, 1, "EH", "Ernährung/Hauswirtschaft", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100005000, 1, "EH", "Ernährung/Hauswirtschaft", null, null)
 	}),
 
 	/** Berufsebene 1 : Ernährungs- und Versorgungsmanagement */
 	EV(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100006000, 1, "EV", "Ernährungs- und Versorgungsmanagement", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100006000, 1, "EV", "Ernährungs- und Versorgungsmanagement", null, null)
 	}),
 
 	/** Berufsebene 1 : Gestaltung */
 	GT(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100007000, 1, "GT", "Gestaltung", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100007000, 1, "GT", "Gestaltung", null, null)
 	}),
 
 	/** Berufsebene 1 : Gesundheit und Soziales */
 	GU(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100008000, 1, "GU", "Gesundheit und Soziales", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100008000, 1, "GU", "Gesundheit und Soziales", null, null)
 	}),
 
 	/** Berufsebene 1 : Gesundheit/Erziehung und Soziales */
 	GE(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100009000, 1, "GE", "Gesundheit/Erziehung und Soziales", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100009000, 1, "GE", "Gesundheit/Erziehung und Soziales", null, null)
 	}),
 
 	/** Berufsebene 1 : Gesundheit/Soziales */
 	GS(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100010000, 1, "GS", "Gesundheit/Soziales", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100010000, 1, "GS", "Gesundheit/Soziales", null, null)
 	}),
 
 	/** Berufsebene 1 : Informatik */
 	IF(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100011000, 1, "IF", "Informatik", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100011000, 1, "IF", "Informatik", null, null)
 	}),
 
 	/** Berufsebene 1 : ohne besondere Zuordnung */
 	OZ(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100012000, 1, "OZ", "ohne besondere Zuordnung", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100012000, 1, "OZ", "ohne besondere Zuordnung", null, null)
 	}),
 
 	/** Berufsebene 1 : ohne Fachbereich / Schulversuch */
 	SV(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100013000, 1, "SV", "ohne Fachbereich / Schulversuch", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100013000, 1, "SV", "ohne Fachbereich / Schulversuch", null, null)
 	}),
 
 	/** Berufsebene 1 : Sozialwesen */
 	SW(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100014000, 1, "SW", "Sozialwesen", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100014000, 1, "SW", "Sozialwesen", null, null)
 	}),
 
 	/** Berufsebene 1 : Technik */
 	TE(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100015000, 1, "TE", "Technik", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100015000, 1, "TE", "Technik", null, null)
 	}),
 
 	/** Berufsebene 1 : Technik/Naturwissenschaften */
 	TN(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100016000, 1, "TN", "Technik/Naturwissenschaften", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100016000, 1, "TN", "Technik/Naturwissenschaften", null, null)
 	}),
 
 	/** Berufsebene 1 : Wirtschaft */
 	WI(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100017000, 1, "WI", "Wirtschaft", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100017000, 1, "WI", "Wirtschaft", null, null)
 	}),
 
 	/** Berufsebene 1 : Wirtschaft und Verwaltung */
 	WV(new BerufskollegBerufsebeneKatalogEintrag[] {
-		new BerufskollegBerufsebeneKatalogEintrag(100018000, 1, "WV", "Wirtschaft und Verwaltung", null, null)
+			new BerufskollegBerufsebeneKatalogEintrag(100018000, 1, "WV", "Wirtschaft und Verwaltung", null, null)
 	});
 
 
@@ -108,7 +108,7 @@ public enum BerufskollegBerufsebene1 {
 	public final @NotNull BerufskollegBerufsebeneKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Berufsebene */
-	public final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie;
+	public final @NotNull BerufskollegBerufsebeneKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Berufsebenen der Ebene 1, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene1> _ebenen = new HashMap<>();
@@ -119,7 +119,7 @@ public enum BerufskollegBerufsebene1 {
 	 *
 	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist
 	 */
-	BerufskollegBerufsebene1(final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie) {
+	BerufskollegBerufsebene1(final @NotNull BerufskollegBerufsebeneKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

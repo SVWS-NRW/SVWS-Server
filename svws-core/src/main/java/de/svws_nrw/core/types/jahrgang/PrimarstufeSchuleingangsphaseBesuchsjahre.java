@@ -16,19 +16,19 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 
 	/** E1: Das erste Besuchsjahr in der Schuleingangsphase */
 	E1(new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag[] {
-		new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(1000L, "E1", "Schuleingangsphase, 1. Schulbesuchsjahr", null, null)
+			new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(1000L, "E1", "Schuleingangsphase, 1. Schulbesuchsjahr", null, null)
 	}),
 
 
 	/** E2: Das zweite Besuchsjahr in der Schuleingangsphase */
 	E2(new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag[] {
-		new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(2000L, "E2", "Schuleingangsphase, 2. Schulbesuchsjahr", null, null)
+			new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(2000L, "E2", "Schuleingangsphase, 2. Schulbesuchsjahr", null, null)
 	}),
 
 
 	/** E3: Das dritte Besuchsjahr in der Schuleingangsphase */
 	E3(new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag[] {
-		new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(3000L, "E3", "Schuleingangsphase, 3. Schulbesuchsjahr", null, null)
+			new PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag(3000L, "E3", "Schuleingangsphase, 3. Schulbesuchsjahr", null, null)
 	});
 
 
@@ -39,7 +39,7 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 	public final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Besuchsjahre */
-	public final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag@NotNull[] historie;
+	public final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Besuchsjahre zu dem Kürzel der Besuchsjahre */
 	private static final @NotNull HashMap<@NotNull String, PrimarstufeSchuleingangsphaseBesuchsjahre> _mapKuerzel = new HashMap<>();
@@ -53,7 +53,7 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 	 *
 	 * @param historie   die Historie für die Besuchsjahre, welches ein Array von {@link PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag} ist
 	 */
-	PrimarstufeSchuleingangsphaseBesuchsjahre(final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag@NotNull[] historie) {
+	PrimarstufeSchuleingangsphaseBesuchsjahre(final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

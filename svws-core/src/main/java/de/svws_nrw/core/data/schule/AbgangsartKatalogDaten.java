@@ -30,11 +30,13 @@ public class AbgangsartKatalogDaten {
 	public @NotNull List<@NotNull SchulformGliederungJahrgaenge> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigBis = null;
 
 }

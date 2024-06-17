@@ -35,7 +35,8 @@ public class GostJahrgangsdaten {
 	public String bezeichnung;
 
 	/** Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
-	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet", example = "false")
+	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet",
+			example = "false")
 	public boolean istAbgeschlossen;
 
 	/** Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die
@@ -66,15 +67,18 @@ public class GostJahrgangsdaten {
 	public String beginnZusatzkursSW;
 
 	/** Gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0=EF.1, 1=EF.2, ...) */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0=EF.1, 1=EF.2, ...)"))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0=EF.1, 1=EF.2, ...)"))
 	public @NotNull long[] anzahlKursblockungen = new long[6];
 
 	/** Gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0=EF.1, 1=EF.2, ...) */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0=EF.1, 1=EF.2, ...)"))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0=EF.1, 1=EF.2, ...)"))
 	public @NotNull boolean[] istBlockungFestgelegt = new boolean[6];
 
 	/** Gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits (Quartals-)Noten in den Leistungsdaten vorhanden sind (0=EF.1, 1=EF.2, ...) */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits (Quartals-)Noten in den Leistungsdaten vorhanden sind (0=EF.1, 1=EF.2, ...)"))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits (Quartals-)Noten in den Leistungsdaten vorhanden sind (0=EF.1, 1=EF.2, ...)"))
 	public @NotNull boolean[] existierenNotenInLeistungsdaten = new boolean[6];
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe */

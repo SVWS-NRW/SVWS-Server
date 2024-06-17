@@ -13,38 +13,39 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerAbgangsgrund {
 
 	/** Grund 'Eintritt in den Ruhestand' für das Verlassen der Schule durch den Lehrer */
-	RUHEST(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(1, "RUHEST", "Eintritt in den Ruhestand", "11", null, null)
+	RUHEST(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(1, "RUHEST", "Eintritt in den Ruhestand", "11", null, null)
 	}),
 
 	/** Grund 'Dienst-, Erwerbs-, Berufsunfähigkeit' für das Verlassen der Schule durch den Lehrer */
-	UNFAEHIGK(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(2, "UNFÄHIGK", "Dienst-, Erwerbs-, Berufsunfähigkeit", "12", null, null)
+	UNFAEHIGK(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(2, "UNFÄHIGK", "Dienst-, Erwerbs-, Berufsunfähigkeit", "12", null, null)
 	}),
 
 	/** Grund 'Tod' für das Verlassen der Schule durch den Lehrer */
-	TOD(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(3, "TOD", "Tod", "13", null, null)
+	TOD(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(3, "TOD", "Tod", "13", null, null)
 	}),
 
 	/** Grund 'Übertritt in den Schuldienst eines anderen Bundeslandes' für das Verlassen der Schule durch den Lehrer */
-	AndBuLand(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(4, "AndBuLand", "Übertritt in den Schuldienst eines anderen Bundeslandes", "14", null, null)
+	AndBuLand(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(4, "AndBuLand", "Übertritt in den Schuldienst eines anderen Bundeslandes", "14", null, null)
 	}),
 
 	/** Grund 'Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule' für das Verlassen der Schule durch den Lehrer */
-	WECHSEL(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(5, "WECHSEL", "Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule", "15", null, null)
+	WECHSEL(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(5, "WECHSEL", "Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule", "15", null,
+					null)
 	}),
 
 	/** Grund 'Befristete Abgänge' für das Verlassen der Schule durch den Lehrer */
-	BEFRIST(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(6, "BEFRIST", "Befristete Abgänge", "16", null, null)
+	BEFRIST(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(6, "BEFRIST", "Befristete Abgänge", "16", null, null)
 	}),
 
 	/** Grund 'Sonstige Abgänge' für das Verlassen der Schule durch den Lehrer */
-	SONSTIG(new LehrerKatalogAbgangsgrundEintrag[]{
-		new LehrerKatalogAbgangsgrundEintrag(7, "SONSTIG", "Sonstige Abgänge", "17", null, null)
+	SONSTIG(new LehrerKatalogAbgangsgrundEintrag[] {
+			new LehrerKatalogAbgangsgrundEintrag(7, "SONSTIG", "Sonstige Abgänge", "17", null, null)
 	});
 
 
@@ -55,7 +56,7 @@ public enum LehrerAbgangsgrund {
 	public final @NotNull LehrerKatalogAbgangsgrundEintrag daten;
 
 	/** Die Historie mit den Einträgen des Abgangsgrundes */
-	public final @NotNull LehrerKatalogAbgangsgrundEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogAbgangsgrundEintrag @NotNull [] historie;
 
 
 	/**
@@ -63,7 +64,7 @@ public enum LehrerAbgangsgrund {
 	 *
 	 * @param historie   die Historie des Abgangsgrundes, welches ein Array von {@link LehrerKatalogAbgangsgrundEintrag} ist
 	 */
-	LehrerAbgangsgrund(final @NotNull LehrerKatalogAbgangsgrundEintrag@NotNull[] historie) {
+	LehrerAbgangsgrund(final @NotNull LehrerKatalogAbgangsgrundEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

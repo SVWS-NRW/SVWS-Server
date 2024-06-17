@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Bewertung eines Ergebnis einer Blockung der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "regelVerletzungen", "anzahlNichtZugeordnet", "anzahlKollisionen", "anzahlSchienenMitKollisionen",
-	"kursdifferenzen", "anzahlKurseMitGleicherFachartProSchiene" })
+		"kursdifferenzen", "anzahlKurseMitGleicherFachartProSchiene" })
 @TranspilerDTO
 public class GostBlockungsergebnisBewertung {
 

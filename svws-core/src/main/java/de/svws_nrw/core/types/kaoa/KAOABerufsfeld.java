@@ -11,82 +11,82 @@ import jakarta.validation.constraints.NotNull;
 public enum KAOABerufsfeld {
 
 	/** KAoA-Berufsfeld: Bau, Architektur, Vermessung */
-	BAV(new KAOABerufsfeldEintrag[]{
+	BAV(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(1, "BAV", "Bau, Architektur, Vermessung", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Dienstleistung */
-	D(new KAOABerufsfeldEintrag[]{
+	D(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(2, "D", "Dienstleistung", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Elektro */
-	EL(new KAOABerufsfeldEintrag[]{
+	EL(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(3, "EL", "Elektro", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Gesundheit */
-	G(new KAOABerufsfeldEintrag[]{
+	G(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(4, "G", "Gesundheit", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Gesellschafts-,Geisteswissenschaften */
-	GESGE(new KAOABerufsfeldEintrag[]{
+	GESGE(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(5, "GESGE", "Gesellschafts-,Geisteswissenschaften", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: IT, Computer */
-	ITC(new KAOABerufsfeldEintrag[]{
+	ITC(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(6, "ITC", "IT, Computer", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Kunst, Kultur, Gestaltung */
-	KKG(new KAOABerufsfeldEintrag[]{
+	KKG(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(7, "KKG", "Kunst, Kultur, Gestaltung", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Landwirtschaft, Natur, Umwelt */
-	LANAUM(new KAOABerufsfeldEintrag[]{
+	LANAUM(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(8, "LANAUM", "Landwirtschaft, Natur, Umwelt", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Metall, Maschinenbau */
-	M(new KAOABerufsfeldEintrag[]{
+	M(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(9, "M", "Metall, Maschinenbau", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Medien */
-	ME(new KAOABerufsfeldEintrag[]{
+	ME(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(10, "ME", "Medien", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Naturwissenschaft */
-	N(new KAOABerufsfeldEintrag[]{
+	N(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(11, "N", "Naturwissenschaft", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Produktion, Fertigung */
-	PRFE(new KAOABerufsfeldEintrag[]{
+	PRFE(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(12, "PRFE", "Produktion, Fertigung", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Soziales, Pädagogik */
-	SP(new KAOABerufsfeldEintrag[]{
+	SP(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(13, "SP", "Soziales, Pädagogik", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Technik, Technologiefelder */
-	TEC(new KAOABerufsfeldEintrag[]{
+	TEC(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(14, "TEC", "Technik, Technologiefelder", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Verkehr, Logistik */
-	VL(new KAOABerufsfeldEintrag[]{
+	VL(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(15, "VL", "Verkehr, Logistik", null, null)
 	}),
 
 	/** KAoA-Berufsfeld: Wirtschaft, Verwaltung */
-	WIVE(new KAOABerufsfeldEintrag[]{
+	WIVE(new KAOABerufsfeldEintrag[] {
 			new KAOABerufsfeldEintrag(16, "WIVE", "Wirtschaft, Verwaltung", null, null)
 	});
 
@@ -98,7 +98,7 @@ public enum KAOABerufsfeld {
 	public final @NotNull KAOABerufsfeldEintrag daten;
 
 	/** Die Historie mit den Einträgen des KAoA-Berufsfeldes */
-	public final @NotNull KAOABerufsfeldEintrag@NotNull[] historie;
+	public final @NotNull KAOABerufsfeldEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOABerufsfeld> _statusByID = new HashMap<>();
@@ -112,7 +112,7 @@ public enum KAOABerufsfeld {
 	 *
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOABerufsfeldEintrag} ist
 	 */
-	KAOABerufsfeld(final @NotNull KAOABerufsfeldEintrag@NotNull[] historie) {
+	KAOABerufsfeld(final @NotNull KAOABerufsfeldEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

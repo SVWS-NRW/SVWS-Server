@@ -14,7 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class ErzieherListeEintrag {
 
 	/** Die "Partner"-ID des Erziehers mit der Nummer des Erziehers in der DB angehangen (1 oder 2), welche diesem Erzieher im gleichen DB-Datensatz zugeordnet ist und die gleichen Addressdaten, etc. sich teil. */
-	@Schema(description = "die ID des weiteren Erziehers mit der Nummer des Erziehers in der DB angehangen (1 oder 2), welcher diesem Erzieher im gleichen DB-Datensatz zugeordnet ist und die gleichen Addressdaten, etc. sich teil.", example = "4711")
+	@Schema(description = "die ID des weiteren Erziehers mit der Nummer des Erziehers in der DB angehangen (1 oder 2), welcher diesem Erzieher im gleichen DB-Datensatz zugeordnet ist und die gleichen Addressdaten, etc. sich teil.",
+			example = "4711")
 	public long id;
 
 	/** Die ID des Schülers, welchem der Erzieher zugeordnet ist. */

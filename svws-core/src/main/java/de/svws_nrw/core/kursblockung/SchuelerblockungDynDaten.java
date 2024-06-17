@@ -90,7 +90,8 @@ public class SchuelerblockungDynDaten {
 
 		// Anzahl an Elementen überprüfen.
 		final int tmpNFachwahlen = pInput.fachwahlen.size();
-		DeveloperNotificationException.ifTrue("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!", tmpNFachwahlen < 1);
+		DeveloperNotificationException.ifTrue("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!",
+				tmpNFachwahlen < 1);
 		final int tmpNSchienen = pInput.schienen;
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!", tmpNSchienen < 1);
 		final int nKurse = pInput.kurse.size();
@@ -111,7 +112,8 @@ public class SchuelerblockungDynDaten {
 				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!", schiene1 < 1);
 				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!", schiene1 > tmpNSchienen);
 			}
-			DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!", kurs.istFixiert && kurs.istGesperrt);
+			DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!",
+					kurs.istFixiert && kurs.istGesperrt);
 		}
 
 		// Attribute der Fachwahlen überprüfen.
@@ -123,7 +125,8 @@ public class SchuelerblockungDynDaten {
 
 		// Pro Fachwahl auf Doppelfixierungen testen.
 		for (int iFachwahl = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
-			DeveloperNotificationException.ifTrue("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!", iFachwahl >= pInput.fachwahlenText.size());
+			DeveloperNotificationException.ifTrue("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!",
+					iFachwahl >= pInput.fachwahlenText.size());
 			final @NotNull String representation = pInput.fachwahlenText.get(iFachwahl);
 			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 
@@ -195,7 +198,8 @@ public class SchuelerblockungDynDaten {
 	 *
 	 * @return Eine optimale Zuordnung des Schülers auf seine gewählten Kurse.
 	 */
-	@NotNull SchuelerblockungOutput gibBestesMatching() {
+	@NotNull
+	SchuelerblockungOutput gibBestesMatching() {
 
 		// Datenstrukturen resetten.
 		_aktuellNichtwahlen = 0;
@@ -240,9 +244,10 @@ public class SchuelerblockungDynDaten {
 			if (aktionBelegeKurs(iFachwahl, kurs)) {
 				aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 				if (!aktionBelegeKursUndo(iFachwahl, kurs))
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: "
-							+ "Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! "
-							+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+					throw new DeveloperNotificationException(
+							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: "
+									+ "Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! "
+									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 		}
 
@@ -284,13 +289,15 @@ public class SchuelerblockungDynDaten {
 				}
 				final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
-							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
-							+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+					throw new DeveloperNotificationException(
+							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+									+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
+									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 				if (!aktionBelegeKurs(iFachwahl, kurs))
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
-							+ "Der Kurs (" + kurs.id + ") konnte nicht belegt werden! "
-							+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+					throw new DeveloperNotificationException(
+							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+									+ "Der Kurs (" + kurs.id + ") konnte nicht belegt werden! "
+									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 
 		// Besseren Zustand speichern?
@@ -311,23 +318,26 @@ public class SchuelerblockungDynDaten {
 				}
 				final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
-							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
-							+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+					throw new DeveloperNotificationException(
+							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+									+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
+									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 				if (!aktionBelegeKursUndo(iFachwahl, kurs))
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
-							+ "Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! "
-							+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+					throw new DeveloperNotificationException(
+							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+									+ "Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! "
+									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 	}
 
-	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull ArrayList<@NotNull SchuelerblockungInputKurs> pKurse, final int pSchiene) {
+	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull ArrayList<@NotNull SchuelerblockungInputKurs> pKurse,
+			final int pSchiene) {
 		final long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
 		for (final SchuelerblockungInputKurs kurs : pKurse)
 			if ((kurs.schienen[0] - 1 == pSchiene) // Es handelt sich nicht um einen Multikurs!
-				&& (kurs.anzahlSuS < maxSuS))
-					best = kurs;
+					&& (kurs.anzahlSuS < maxSuS))
+				best = kurs;
 		return best;
 	}
 

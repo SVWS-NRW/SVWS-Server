@@ -56,7 +56,8 @@ public class BerufskollegBerufsebeneKatalogEintrag {
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public BerufskollegBerufsebeneKatalogEintrag(final long id, final int ebene, final @NotNull String kuerzel, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
+	public BerufskollegBerufsebeneKatalogEintrag(final long id, final int ebene, final @NotNull String kuerzel, final @NotNull String bezeichnung,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.ebene = ebene;
 		this.kuerzel = kuerzel;

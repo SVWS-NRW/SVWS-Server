@@ -55,7 +55,8 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 	public String bkTyp = null;
 
 	/** Der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein. */
-	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.", example = "10")
+	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.",
+			example = "10")
 	public Integer bkIndex = null;
 
 	/** Gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht */
@@ -63,11 +64,13 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 	public boolean istVZ = false;
 
 	/** Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "BS")
+	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt",
+			example = "BS")
 	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new ArrayList<>();
 
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
+	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt",
+			example = "HA9")
 	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new ArrayList<>();
 
 

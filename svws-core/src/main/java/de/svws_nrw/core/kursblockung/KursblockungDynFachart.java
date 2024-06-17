@@ -67,13 +67,13 @@ public class KursblockungDynFachart {
 	 * @param schienenAnzahl  Die Gesamtanzahl aller Schienen.
 	 */
 	KursblockungDynFachart(
-					final @NotNull Random pRandom,
-					final int pNr,
-					final @NotNull GostFach pGostFach,
-					final @NotNull GostKursart pGostKursart,
-					final @NotNull KursblockungDynStatistik pStatistik,
-					final int schuelerAnzahl,
-					final int schienenAnzahl) {
+			final @NotNull Random pRandom,
+			final int pNr,
+			final @NotNull GostFach pGostFach,
+			final @NotNull GostKursart pGostKursart,
+			final @NotNull KursblockungDynStatistik pStatistik,
+			final int schuelerAnzahl,
+			final int schienenAnzahl) {
 		_random = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
@@ -115,7 +115,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das zugehörige Fach-Objekt.
 	 */
-	@NotNull GostFach gibFach() {
+	@NotNull
+	GostFach gibFach() {
 		return gostFach;
 	}
 
@@ -124,7 +125,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das zugehörige Kursart-Objekt.
 	 */
-	@NotNull GostKursart gibKursart() {
+	@NotNull
+	GostKursart gibKursart() {
 		return gostKursart;
 	}
 
@@ -171,7 +173,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das Array aller Kurse dieser Fachart.
 	 */
-	@NotNull KursblockungDynKurs @NotNull [] gibKurse() {
+	@NotNull
+	KursblockungDynKurs @NotNull [] gibKurse() {
 		return kursArr;
 	}
 
@@ -219,9 +222,8 @@ public class KursblockungDynFachart {
 	 */
 	boolean gibHatSchuelerKursInSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) &&  kurs.gibIstInSchiene(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene))
 				return true;
-
 		return false;
 	}
 
@@ -235,9 +237,8 @@ public class KursblockungDynFachart {
 	 */
 	boolean gibHatSchuelerKursMitFreierSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) &&  kurs.gibIstSchieneFrei(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene))
 				return true;
-
 		return false;
 	}
 
@@ -252,7 +253,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
 	 */
-	@NotNull int[] gibVonSchuelerVerbotenMit(final int schuelerNr) {
+	@NotNull
+	int[] gibVonSchuelerVerbotenMit(final int schuelerNr) {
 		return schuelerVerbotenMitSchueler[schuelerNr];
 	}
 
@@ -263,7 +265,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
 	 */
-	@NotNull int[] gibVonSchuelerZusammenMit(final int schuelerNr) {
+	@NotNull
+	int[] gibVonSchuelerZusammenMit(final int schuelerNr) {
 		return schuelerZusammenMitSchueler[schuelerNr];
 	}
 

@@ -12,17 +12,17 @@ public enum WeiterbildungskollegBildungsgangTyp {
 
 	/** Abendgymnasium */
 	ABENDGYMNASIUM(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(1000, "AG", "Abendgymnasium", null, null)
+			new BildungsgangTypKatalogEintrag(1000, "AG", "Abendgymnasium", null, null)
 	}),
 
 	/** Abendrealschule */
 	ABENDREALSCHULE(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(2000, "AR", "Abendrealschule", null, null)
+			new BildungsgangTypKatalogEintrag(2000, "AR", "Abendrealschule", null, null)
 	}),
 
 	/** Kolleg */
 	KOLLEG(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(3000, "KL", "Kolleg", null, null)
+			new BildungsgangTypKatalogEintrag(3000, "KL", "Kolleg", null, null)
 	});
 
 
@@ -33,7 +33,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	public final @NotNull BildungsgangTypKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Typen von Bildungsgängen */
-	public final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie;
+	public final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Typen von Bildungsgängen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegBildungsgangTyp> _ebenen = new HashMap<>();
@@ -45,7 +45,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	 * @param historie   die Historie der Typen von Bildungsgängen, welches ein Array von
 	 *                   {@link BildungsgangTypKatalogEintrag} ist
 	 */
-	WeiterbildungskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
+	WeiterbildungskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

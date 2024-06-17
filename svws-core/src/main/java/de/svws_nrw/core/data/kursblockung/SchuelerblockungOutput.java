@@ -13,7 +13,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * zuordnet.
  */
 @XmlRootElement(name = "SchuelerblockungOutput")
-@Schema(name = "SchuelerblockungOutput", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die Fachwahlen EINES Schülers zu Kursen zuordnet.")
+@Schema(name = "SchuelerblockungOutput",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die Fachwahlen EINES Schülers zu Kursen zuordnet.")
 @TranspilerDTO
 public class SchuelerblockungOutput {
 

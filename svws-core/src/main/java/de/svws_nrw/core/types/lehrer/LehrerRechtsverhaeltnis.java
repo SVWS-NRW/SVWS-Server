@@ -15,53 +15,53 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerRechtsverhaeltnis {
 
 	/** Rechtsverhältnis 'Beamter auf Lebenszeit' */
-	L(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(3, "L", "Beamter auf Lebenszeit", null, null)
+	L(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(3, "L", "Beamter auf Lebenszeit", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Beamter auf Probe' */
-	P(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(2, "P", "Beamter auf Probe", null, null)
+	P(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(2, "P", "Beamter auf Probe", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Beamter auf Probe zur Anstellung' */
-	A(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(1, "A", "Beamter auf Probe zur Anstellung", null, null)
+	A(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(1, "A", "Beamter auf Probe zur Anstellung", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' */
-	N(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(7, "N", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)
+	N(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(7, "N", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Beamter auf Widerruf (LAA)' */
-	W(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(9, "W", "Beamter auf Widerruf (LAA)", null, null)
+	W(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(9, "W", "Beamter auf Widerruf (LAA)", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Angestellte, unbefristet (BAT-Vertrag)' */
-	U(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(4, "U", "Angestellte, unbefristet (BAT-Vertrag)", null, null)
+	U(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(4, "U", "Angestellte, unbefristet (BAT-Vertrag)", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Angestellte, befristet (BAT-Vertrag)' */
-	B(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(5, "B", "Angestellte, befristet (BAT-Vertrag)", null, null)
+	B(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(5, "B", "Angestellte, befristet (BAT-Vertrag)", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Angestellte, nicht BAT-Vertrag' */
-	J(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(6, "J", "Angestellte, nicht BAT-Vertrag", null, null)
+	J(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(6, "J", "Angestellte, nicht BAT-Vertrag", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Gestellungsvertrag' */
-	S(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(8, "S", "Gestellungsvertrag", null, null)
+	S(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(8, "S", "Gestellungsvertrag", null, null)
 	}),
 
 	/** Rechtsverhältnis 'Unentgeltlich Beschäftigte' */
-	X(new LehrerKatalogRechtsverhaeltnisEintrag[]{
-		new LehrerKatalogRechtsverhaeltnisEintrag(10, "X", "Unentgeltlich Beschäftigte", null, null)
+	X(new LehrerKatalogRechtsverhaeltnisEintrag[] {
+			new LehrerKatalogRechtsverhaeltnisEintrag(10, "X", "Unentgeltlich Beschäftigte", null, null)
 	});
 
 
@@ -72,7 +72,7 @@ public enum LehrerRechtsverhaeltnis {
 	public final @NotNull LehrerKatalogRechtsverhaeltnisEintrag daten;
 
 	/** Die Historie mit den Einträgen der Rechtsverhältnisse */
-	public final @NotNull LehrerKatalogRechtsverhaeltnisEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogRechtsverhaeltnisEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerRechtsverhaeltnis> _rechtsverhaeltnisByID = new HashMap<>();
@@ -86,7 +86,7 @@ public enum LehrerRechtsverhaeltnis {
 	 *
 	 * @param historie   die Historie des Rechtsverhältnisses, welches ein Array von {@link LehrerKatalogRechtsverhaeltnisEintrag} ist
 	 */
-	LehrerRechtsverhaeltnis(final @NotNull LehrerKatalogRechtsverhaeltnisEintrag@NotNull[] historie) {
+	LehrerRechtsverhaeltnis(final @NotNull LehrerKatalogRechtsverhaeltnisEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

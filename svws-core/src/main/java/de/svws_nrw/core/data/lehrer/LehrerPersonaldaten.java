@@ -23,7 +23,8 @@ public class LehrerPersonaldaten {
 	public long id;
 
 	/** Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen. */
-	@Schema(description = "Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen.", example = "1708593")
+	@Schema(description = "Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen.",
+			example = "1708593")
 	public String identNrTeil1;
 
 	/** Der hintere Teil der Ident-Nummer – wird üblicherweise NRW-weit fortlaufend vergeben. */
@@ -59,7 +60,8 @@ public class LehrerPersonaldaten {
 	public String abgangsgrund;
 
 	/** Die Abschnittsdaten des Lehrers. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class, description = "Ein Array mit den Abschnittsdaten des Lehrers zu den einzelnen Schuljahresabschnitten."))
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class,
+			description = "Ein Array mit den Abschnittsdaten des Lehrers zu den einzelnen Schuljahresabschnitten."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdaten> abschnittsdaten = new ArrayList<>();
 
 	/** Die Lehrämter des Lehrers. */

@@ -23,11 +23,13 @@ public class HerkunftSchulformKatalogEintrag {
 	public long id = -1;
 
 	/** Das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird */
-	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird", example = "SK")
+	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird",
+			example = "SK")
 	public @NotNull String kuerzel = "";
 
 	/** Das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird */
-	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird", example = "SE")
+	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird",
+			example = "SE")
 	public @NotNull String kuerzelStatistik = "";
 
 	/** Die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann. */

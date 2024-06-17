@@ -65,7 +65,8 @@ public class KursblockungDynSchueler {
 	 * @param pKursAnzahl     Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden kann.
 	 * @param pInternalID     Eine interne ID für schnellen Zugriff.
 	 */
-	KursblockungDynSchueler(final @NotNull Logger pLogger, final @NotNull Random pRandom, final long pSchuelerID, final @NotNull KursblockungDynStatistik pStatistik, final int pSchienenAnzahl, final int pKursAnzahl, final int pInternalID) {
+	KursblockungDynSchueler(final @NotNull Logger pLogger, final @NotNull Random pRandom, final long pSchuelerID,
+			final @NotNull KursblockungDynStatistik pStatistik, final int pSchienenAnzahl, final int pKursAnzahl, final int pInternalID) {
 		_random = pRandom;
 		_logger = pLogger;
 		guiID = pSchuelerID;
@@ -102,7 +103,8 @@ public class KursblockungDynSchueler {
 	 *
 	 * @return die ID (von der GUI) dieses Schülers, beispielsweise 42.
 	 */
-	@NotNull long gibDatenbankID() {
+	@NotNull
+	long gibDatenbankID() {
 		return guiID;
 	}
 
@@ -111,7 +113,8 @@ public class KursblockungDynSchueler {
 	 *
 	 * @return eine String-Darstellung des Schüler (i.d.R. Vorname, Nachname, Geburtsdatum und Geschlecht).
 	 */
-	@NotNull String gibRepresentation() {
+	@NotNull
+	String gibRepresentation() {
 		return representation;
 	}
 
@@ -129,7 +132,8 @@ public class KursblockungDynSchueler {
 	 *
 	 * @return Ein Array aller Facharten (= Fachwahlen) des Schülers.
 	 */
-	@NotNull KursblockungDynFachart @NotNull [] gibFacharten() {
+	@NotNull
+	KursblockungDynFachart @NotNull [] gibFacharten() {
 		return fachartArr;
 	}
 
@@ -152,7 +156,8 @@ public class KursblockungDynSchueler {
 	 *
 	 * @return ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
 	 */
-	@NotNull KursblockungDynKurs[] gibKurswahlen() {
+	@NotNull
+	KursblockungDynKurs[] gibKurswahlen() {
 		return fachartZuKurs;
 	}
 
@@ -649,7 +654,8 @@ public class KursblockungDynSchueler {
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
 		if (fachart1.gibNr() != fachart2.gibNr())
-			throw new DeveloperNotificationException("Regel 11:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!");
+			throw new DeveloperNotificationException("Regel 11:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2
+					+ " haben nicht die selbe Kursart!");
 
 		fachart1.regel_schueler_zusammen_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
@@ -665,7 +671,8 @@ public class KursblockungDynSchueler {
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
 		if (fachart1.gibNr() != fachart2.gibNr())
-			throw new DeveloperNotificationException("Regel 12:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!");
+			throw new DeveloperNotificationException("Regel 12:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2
+					+ " haben nicht die selbe Kursart!");
 
 		fachart1.regel_schueler_verbieten_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
 	}

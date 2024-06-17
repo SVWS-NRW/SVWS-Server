@@ -29,7 +29,9 @@ public class GostSchuelerklausurterminraumstunde {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return another != null && another instanceof GostSchuelerklausurterminraumstunde && this.idSchuelerklausurtermin == ((GostSchuelerklausurterminraumstunde) another).idSchuelerklausurtermin && this.idRaumstunde == ((GostSchuelerklausurterminraumstunde) another).idRaumstunde;
+		return (another != null) && (another instanceof GostSchuelerklausurterminraumstunde)
+				&& (this.idSchuelerklausurtermin == ((GostSchuelerklausurterminraumstunde) another).idSchuelerklausurtermin)
+				&& (this.idRaumstunde == ((GostSchuelerklausurterminraumstunde) another).idRaumstunde);
 	}
 
 	/**

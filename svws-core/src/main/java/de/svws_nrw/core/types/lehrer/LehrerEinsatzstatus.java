@@ -15,18 +15,18 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerEinsatzstatus {
 
 	/** Einsatzstatus: 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' */
-	A(new LehrerKatalogEinsatzstatusEintrag[]{
-		new LehrerKatalogEinsatzstatusEintrag(1, "A", "Stammschule, ganz oder teilweise auch an anderen Schulen tätig", null, null)
+	A(new LehrerKatalogEinsatzstatusEintrag[] {
+			new LehrerKatalogEinsatzstatusEintrag(1, "A", "Stammschule, ganz oder teilweise auch an anderen Schulen tätig", null, null)
 	}),
 
 	/** Einsatzstatus: 'nicht Stammschule, aber auch hier tätig' */
-	B(new LehrerKatalogEinsatzstatusEintrag[]{
-		new LehrerKatalogEinsatzstatusEintrag(2, "B", "nicht Stammschule, aber auch hier tätig", null, null)
+	B(new LehrerKatalogEinsatzstatusEintrag[] {
+			new LehrerKatalogEinsatzstatusEintrag(2, "B", "nicht Stammschule, aber auch hier tätig", null, null)
 	}),
 
 	/** Einsatzstatus: 'Stammschule, nur hier tätig' */
-	DEFAULT(new LehrerKatalogEinsatzstatusEintrag[]{
-		new LehrerKatalogEinsatzstatusEintrag(3, "*", "Stammschule, nur hier tätig", null, null)
+	DEFAULT(new LehrerKatalogEinsatzstatusEintrag[] {
+			new LehrerKatalogEinsatzstatusEintrag(3, "*", "Stammschule, nur hier tätig", null, null)
 	});
 
 
@@ -38,7 +38,7 @@ public enum LehrerEinsatzstatus {
 	public final @NotNull LehrerKatalogEinsatzstatusEintrag daten;
 
 	/** Die Historie mit den Einträgen des Einsatzstatus */
-	public final @NotNull LehrerKatalogEinsatzstatusEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogEinsatzstatusEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerEinsatzstatus> _statusByID = new HashMap<>();
@@ -52,7 +52,7 @@ public enum LehrerEinsatzstatus {
 	 *
 	 * @param historie   die Historie des Einsatzstatus, welches ein Array von {@link LehrerKatalogEinsatzstatusEintrag} ist
 	 */
-	LehrerEinsatzstatus(final @NotNull LehrerKatalogEinsatzstatusEintrag@NotNull[] historie) {
+	LehrerEinsatzstatus(final @NotNull LehrerKatalogEinsatzstatusEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

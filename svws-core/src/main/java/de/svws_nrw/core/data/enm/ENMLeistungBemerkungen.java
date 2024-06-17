@@ -27,7 +27,8 @@ public class ENMLeistungBemerkungen {
 	public String AUE;
 
 	/** Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE) */
-	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE).", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE).",
+			example = "2013-11-14 13:12:48.774")
 	public String tsAUE;
 
 	/** Zeugnisbemerkungen */

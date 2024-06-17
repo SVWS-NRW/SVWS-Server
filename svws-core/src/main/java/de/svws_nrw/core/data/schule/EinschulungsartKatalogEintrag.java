@@ -27,7 +27,8 @@ public class EinschulungsartKatalogEintrag {
 	public @NotNull String bezeichnung = "";
 
 	/** Die textuelle Beschreibung der Einschulungsart. */
-	@Schema(description = "die textuelle Beschreibung der Einschulungsart", example = "Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben")
+	@Schema(description = "die textuelle Beschreibung der Einschulungsart",
+			example = "Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */

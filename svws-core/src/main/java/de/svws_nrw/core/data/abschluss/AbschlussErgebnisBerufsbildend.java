@@ -30,11 +30,13 @@ public class AbschlussErgebnisBerufsbildend {
 	public Boolean hatBA;
 
 	/** Gibt an, welcher allgemeinbildende Abschluss ggf. zusätzlich erreicht wurde, falls er nicht bereits vorher erreicht wurde. */
-	@Schema(description = "gibt an, welcher allgemeinbildende Abschluss ggf. zusätzlich erreicht wurde, falls er nicht bereits vorher erreicht wurde", example = "MSA-Q")
+	@Schema(description = "gibt an, welcher allgemeinbildende Abschluss ggf. zusätzlich erreicht wurde, falls er nicht bereits vorher erreicht wurde",
+			example = "MSA-Q")
 	public String abschlussAllgemeinbildend;
 
 	/** Der Log der Abschlussberechnung. */
-	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung", example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
+	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung",
+			example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
 	public List<@NotNull String> log;
 
 }

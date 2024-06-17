@@ -246,7 +246,7 @@ public enum Herkunft {
 	public final @NotNull HerkunftKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Herkunft */
-	public final @NotNull HerkunftKatalogEintrag@NotNull[] historie;
+	public final @NotNull HerkunftKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Herkünften, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Herkunft> _kuerzel = new HashMap<>();
@@ -261,12 +261,12 @@ public enum Herkunft {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
-				h.historie[i].id + 1000000000L,
-				h.historie[i].kuerzel,
-				h.historie[i].schulformen,
-				h.historie[i].beschreibung,
-				h.historie[i].gueltigVon,
-				h.historie[i].gueltigBis
+					h.historie[i].id + 1000000000L,
+					h.historie[i].kuerzel,
+					h.historie[i].schulformen,
+					h.historie[i].beschreibung,
+					h.historie[i].gueltigVon,
+					h.historie[i].gueltigBis
 			);
 		}
 		this.daten = historie[historie.length - 1];
@@ -283,12 +283,12 @@ public enum Herkunft {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
-				h.historie[i].id + 2000000000L,
-				h.historie[i].kuerzel,
-				h.historie[i].schulformen,
-				h.historie[i].beschreibung,
-				h.historie[i].gueltigVon,
-				h.historie[i].gueltigBis
+					h.historie[i].id + 2000000000L,
+					h.historie[i].kuerzel,
+					h.historie[i].schulformen,
+					h.historie[i].beschreibung,
+					h.historie[i].gueltigVon,
+					h.historie[i].gueltigBis
 			);
 		}
 		this.daten = historie[historie.length - 1];
@@ -306,12 +306,12 @@ public enum Herkunft {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
-				h.historie[i].id + 3000000000L,
-				h.historie[i].kuerzel,
-				h.historie[i].schulformen,
-				h.historie[i].beschreibung,
-				h.historie[i].gueltigVon,
-				h.historie[i].gueltigBis
+					h.historie[i].id + 3000000000L,
+					h.historie[i].kuerzel,
+					h.historie[i].schulformen,
+					h.historie[i].beschreibung,
+					h.historie[i].gueltigVon,
+					h.historie[i].gueltigBis
 			);
 		}
 		this.daten = historie[historie.length - 1];
@@ -328,12 +328,12 @@ public enum Herkunft {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
-				h.historie[i].id + 4000000000L,
-				h.historie[i].kuerzelStatistik,
-				h.historie[i].schulformen,
-				h.historie[i].beschreibung,
-				h.historie[i].gueltigVon,
-				h.historie[i].gueltigBis
+					h.historie[i].id + 4000000000L,
+					h.historie[i].kuerzelStatistik,
+					h.historie[i].schulformen,
+					h.historie[i].beschreibung,
+					h.historie[i].gueltigVon,
+					h.historie[i].gueltigBis
 			);
 		}
 		this.daten = historie[historie.length - 1];

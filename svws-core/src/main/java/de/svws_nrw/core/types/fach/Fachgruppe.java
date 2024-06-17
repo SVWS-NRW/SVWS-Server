@@ -36,7 +36,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 0, true, null, null)
+			), 0, true, null, null)
 	}),
 
 	/** Fachgruppe Arbeitslehre */
@@ -56,7 +56,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 12, true, null, null)
+			), 12, true, null, null)
 	}),
 
 	/** Fachgruppe Fremdsprachen */
@@ -76,7 +76,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 9, true, null, null)
+			), 9, true, null, null)
 	}),
 
 	/** Fachgruppe Kunst und Musik */
@@ -96,7 +96,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 13, true, null, null)
+			), 13, true, null, null)
 	}),
 
 	/** Fachgruppe Literatur, instrumental- oder vokalpraktischer Kurs */
@@ -107,7 +107,7 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 13, false, null, null)
+			), 13, false, null, null)
 	}),
 
 	/** Fachgruppe Gesellschaftswissenschaft */
@@ -127,7 +127,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 11, true, null, null)
+			), 11, true, null, null)
 	}),
 
 	/** Fachgruppe Philosophie */
@@ -138,7 +138,7 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 11, false, null, null)
+			), 11, false, null, null)
 	}),
 
 	/** Fachgruppe Religion */
@@ -158,7 +158,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 6, true, null, null)
+			), 6, true, null, null)
 	}),
 
 	/** Fachgruppe Mathematik */
@@ -178,7 +178,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 15, true, null, null)
+			), 15, true, null, null)
 	}),
 
 	/** Fachgruppe Naturwissenschaften */
@@ -198,7 +198,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 10, true, null, null)
+			), 10, true, null, null)
 	}),
 
 	/** Fachgruppe weiteres naturwissenschaftliches / technisches Fach */
@@ -209,7 +209,7 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 10, false, null, null)
+			), 10, false, null, null)
 	}),
 
 	/** Fachgruppe Sport */
@@ -229,7 +229,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 14, true, null, null)
+			), 14, true, null, null)
 	}),
 
 	/** Fachgruppe Vertiefungskurs */
@@ -240,7 +240,7 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Projektkurs */
@@ -251,42 +251,42 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Berufsübergreifender Bereich */
 	FG_BUE(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(15L, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 1, false, null, null)
+			), 1, false, null, null)
 	}),
 
 	/** Fachgruppe Berufsbezogener Bereich */
 	FG_BBS(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(16L, null, 20, "Berufsbezogener Bereich", "BBS", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 2, false, null, null)
+			), 2, false, null, null)
 	}),
 
 	/** Fachgruppe Berufsbezogener Bereich (Schwerpunkt) */
 	FG_BBS_SCHWERPUNKT(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(17L, null, 25, "Berufsbezogener Bereich (Schwerpunkt)", "BBS", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Differenzierungsbereich */
 	FG_DF(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(18L, null, 30, "Differenzierungsbereich", "DF", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 3, false, null, null)
+			), 3, false, null, null)
 	}),
 
 	/** Fachgruppe Berufspraktikum */
 	FG_BP(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(19L, null, 40, "Berufspraktikum", "BP", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 4, false, null, null)
+			), 4, false, null, null)
 	}),
 
 	/** Fachgruppe besondere Lernleistung */
@@ -296,7 +296,7 @@ public enum Fachgruppe {
 					Schulform.GY,
 					Schulform.SG,
 					Schulform.WB
-					), 8, false, null, null)
+			), 8, false, null, null)
 	}),
 
 	/** Fachgruppe Wahlpflichtbereich */
@@ -316,7 +316,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 16, false, null, null)
+			), 16, false, null, null)
 	}),
 
 	/** Fachgruppe Zusätzliche Unterrichtsveranstaltungen */
@@ -336,7 +336,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Angleichungskurse */
@@ -356,7 +356,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Sprache */
@@ -365,7 +365,7 @@ public enum Fachgruppe {
 					Schulform.G,
 					Schulform.KS, Schulform.S,
 					Schulform.V
-					), 0, true, null, null)
+			), 0, true, null, null)
 	}),
 
 	/** Fachgruppe Sachunterricht */
@@ -374,7 +374,7 @@ public enum Fachgruppe {
 					Schulform.G,
 					Schulform.KS, Schulform.S,
 					Schulform.V
-					), 0, true, null, null)
+			), 0, true, null, null)
 	}),
 
 	/** Fachgruppe Förderunterricht */
@@ -383,21 +383,21 @@ public enum Fachgruppe {
 					Schulform.G,
 					Schulform.KS, Schulform.S,
 					Schulform.V
-					), 0, true, null, null)
+			), 0, true, null, null)
 	}),
 
 	/** Fachgruppe Abschlussarbeit */
 	FG_ABA(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(27L, null, 1700, "Abschlussarbeit", "ABA", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Projektarbeit */
 	FG_PA(new FachgruppenKatalogEintrag[] {
 			new FachgruppenKatalogEintrag(28L, null, 1800, "Projektarbeit", "PA", new RGBFarbe(), Arrays.asList(
 					Schulform.BK, Schulform.SB
-					), 0, false, null, null)
+			), 0, false, null, null)
 	}),
 
 	/** Fachgruppe Informatik (Sek I) */
@@ -417,7 +417,7 @@ public enum Fachgruppe {
 					Schulform.SR,
 					Schulform.V,
 					Schulform.WB
-					), 10, true, null, null)
+			), 10, true, null, null)
 	});
 
 
@@ -428,7 +428,7 @@ public enum Fachgruppe {
 	public final @NotNull FachgruppenKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Fachgruppe */
-	public final @NotNull FachgruppenKatalogEintrag@NotNull[] historie;
+	public final @NotNull FachgruppenKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> _mapEintragByID = new HashMap<>();
@@ -440,7 +440,7 @@ public enum Fachgruppe {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Fachgruppe vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -450,11 +450,11 @@ public enum Fachgruppe {
 	 *                   {@link FachgruppenKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	Fachgruppe(final @NotNull FachgruppenKatalogEintrag @NotNull[] historie) {
+	Fachgruppe(final @NotNull FachgruppenKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -588,7 +588,7 @@ public enum Fachgruppe {
 		final @NotNull ArrayList<@NotNull Fachgruppe> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
-		final @NotNull Fachgruppe@NotNull[] fachgruppen = Fachgruppe.values();
+		final @NotNull Fachgruppe @NotNull [] fachgruppen = Fachgruppe.values();
 		for (int i = 0; i < fachgruppen.length; i++) {
 			final Fachgruppe fg = fachgruppen[i];
 			if (fg.hasSchulform(schulform))

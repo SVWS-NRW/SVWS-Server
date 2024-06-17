@@ -43,9 +43,12 @@ public enum GELeistungsdifferenzierteKursart {
 	 */
 	public static @NotNull GELeistungsdifferenzierteKursart from(final String kuerzel) {
 		switch (kuerzel) {
-			case "E": return GELeistungsdifferenzierteKursart.E;
-			case "G": return GELeistungsdifferenzierteKursart.G;
-			default: return GELeistungsdifferenzierteKursart.Sonstige;
+			case "E":
+				return GELeistungsdifferenzierteKursart.E;
+			case "G":
+				return GELeistungsdifferenzierteKursart.G;
+			default:
+				return GELeistungsdifferenzierteKursart.Sonstige;
 		}
 	}
 

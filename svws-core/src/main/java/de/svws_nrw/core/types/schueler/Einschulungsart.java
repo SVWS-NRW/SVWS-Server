@@ -12,32 +12,36 @@ public enum Einschulungsart {
 
 	/** Einschulungsart: Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben */
 	E51(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(1000, "51", "älter als 6. Jahre", "Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben", null, null)
+			new EinschulungsartKatalogEintrag(1000, "51", "älter als 6. Jahre",
+					"Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben", null, null)
 	}),
 
 	/** Einschulungsart: Kinder, die nach dem gültigen Einschulungsstichtag das 6. Lebensjahr vollenden */
 	E52(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(2000, "52", "jünger als 6 Jahre", "Kinder, die nach dem gültigen Einschulungsstichtag das 6. Lebensjahr vollenden", null, null)
+			new EinschulungsartKatalogEintrag(2000, "52", "jünger als 6 Jahre",
+					"Kinder, die nach dem gültigen Einschulungsstichtag das 6. Lebensjahr vollenden", null, null)
 	}),
 
 	/** Einschulungsart: Kinder, die in diesem Schuljahr erstmals gemäß §35 Abs. 3 SchulG eine Schule besuchen */
 	E53(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(3000, "53", "zurückgestellt (§35 Abs. 3 SchulG)", "Kinder, die in diesem Schuljahr erstmals gemäß §35 Abs. 3 SchulG eine Schule besuchen", null, null)
+			new EinschulungsartKatalogEintrag(3000, "53", "zurückgestellt (§35 Abs. 3 SchulG)",
+					"Kinder, die in diesem Schuljahr erstmals gemäß §35 Abs. 3 SchulG eine Schule besuchen", null, null)
 	}),
 
 	/** Einschulungsart: Kinder, die erstmals eine Früherziehung besuchen */
 	E54(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(4000, "54", "Früherziehung", "Kinder, die erstmals eine Früherziehung besuchen", null, null)
+			new EinschulungsartKatalogEintrag(4000, "54", "Früherziehung", "Kinder, die erstmals eine Früherziehung besuchen", null, null)
 	}),
 
 	/** Einschulungsart: Im abgelaufenen Schuljahr: Teilnahme an einer Früherziehung */
 	E18(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(7000, "18", "vorher: Früherziehung", "Im abgelaufenen Schuljahr: Teilnahme an einer Früherziehung", null, null)
+			new EinschulungsartKatalogEintrag(7000, "18", "vorher: Früherziehung", "Im abgelaufenen Schuljahr: Teilnahme an einer Früherziehung", null, null)
 	}),
 
 	/** Einschulungsart: Im abgelaufenen Schuljahr: Besuch eines Förderschul-(nicht Sonder)kindergarten */
 	E19(new EinschulungsartKatalogEintrag[] {
-		new EinschulungsartKatalogEintrag(8000, "19", "vorher: Förderschulkindergarten", "Im abgelaufenen Schuljahr: Besuch eines Förderschul-(nicht Sonder)kindergarten", null, null)
+			new EinschulungsartKatalogEintrag(8000, "19", "vorher: Förderschulkindergarten",
+					"Im abgelaufenen Schuljahr: Besuch eines Förderschul-(nicht Sonder)kindergarten", null, null)
 	});
 
 
@@ -48,7 +52,7 @@ public enum Einschulungsart {
 	public final @NotNull EinschulungsartKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Einschulungsart */
-	public final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie;
+	public final @NotNull EinschulungsartKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Einschulungsart> _ebenen = new HashMap<>();
@@ -60,7 +64,7 @@ public enum Einschulungsart {
 	 * @param historie   die Historie der Einschulungsart, welche ein Array von
 	 *                   {@link EinschulungsartKatalogEintrag} ist
 	 */
-	Einschulungsart(final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
+	Einschulungsart(final @NotNull EinschulungsartKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

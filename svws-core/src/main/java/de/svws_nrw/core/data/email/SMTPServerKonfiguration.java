@@ -31,11 +31,13 @@ public class SMTPServerKonfiguration {
 	public boolean useStartTLS = true;
 
 	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost). */
-	@Schema(description = "gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost)", example = "false")
+	@Schema(description = "gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost)",
+			example = "false")
 	public boolean useTLS = false;
 
 	/** Gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. */
-	@Schema(description = "gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host.", example = "*")
+	@Schema(description = "gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host.",
+			example = "*")
 	public String trustTLSHost = null;
 
 }

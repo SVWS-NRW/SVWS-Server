@@ -39,7 +39,8 @@ public class FachDaten {
 	public boolean istOberstufenFach = false;
 
 	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen). */
-	@Schema(description = "gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen).", example = "true")
+	@Schema(description = "gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen).",
+			example = "true")
 	public boolean istPruefungsordnungsRelevant = false;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
@@ -87,7 +88,8 @@ public class FachDaten {
 	public boolean istFHRFach = false;
 
 	/** Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussbrechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde. */
-	@Schema(description = "gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussbrechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde.", example = "true")
+	@Schema(description = "gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussbrechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde.",
+			example = "true")
 	public boolean holeAusAltenLernabschnitten = false;
 
 }

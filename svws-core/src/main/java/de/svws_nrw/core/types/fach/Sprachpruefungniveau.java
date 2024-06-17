@@ -25,12 +25,14 @@ public enum Sprachpruefungniveau {
 
 	/** Prüfungsniveau angelehnt an 'MSA' */
 	MSA(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null),
+			new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA",
+					"Mittlerer Schulabschluss / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null),
 	}),
 
 	/** Prüfungsniveau angelehnt an 'EF' */
 	EF(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(4, "NIVEAU_EF", "Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule)", null, null),
+			new SprachpruefungsniveauKatalogEintrag(4, "NIVEAU_EF",
+					"Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule)", null, null),
 	}),
 
 	/** Prüfungsniveau angelehnt an 'FHR' */
@@ -40,7 +42,8 @@ public enum Sprachpruefungniveau {
 
 	/** Prüfungsniveau angelehnt an 'WBK_FF' */
 	WBK_FF(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(6, "NIVEAU_WBK_FF", "Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache)", null, null)
+			new SprachpruefungsniveauKatalogEintrag(6, "NIVEAU_WBK_FF", "Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache)",
+					null, null)
 	});
 
 
@@ -51,7 +54,7 @@ public enum Sprachpruefungniveau {
 	public final @NotNull SprachpruefungsniveauKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Sprachprüfungsniveaus */
-	public final @NotNull SprachpruefungsniveauKatalogEintrag@NotNull[] historie;
+	public final @NotNull SprachpruefungsniveauKatalogEintrag @NotNull [] historie;
 
 	/** Die Zuordnung der Sprachreferenzniveaus zu ihren IDs */
 	private static final @NotNull HashMap<@NotNull Integer, @NotNull Sprachpruefungniveau> _mapID = new HashMap<>();
@@ -67,7 +70,7 @@ public enum Sprachpruefungniveau {
 	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von
 	 *                   {@link SprachpruefungsniveauKatalogEintrag} ist
 	 */
-	Sprachpruefungniveau(final @NotNull SprachpruefungsniveauKatalogEintrag@NotNull[] historie) {
+	Sprachpruefungniveau(final @NotNull SprachpruefungsniveauKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

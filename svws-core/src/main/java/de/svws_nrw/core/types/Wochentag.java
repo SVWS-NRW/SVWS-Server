@@ -68,9 +68,9 @@ public enum Wochentag {
 	 * @throws DeveloperNotificationException falls die ID ungültig ist
 	 */
 	public static @NotNull Wochentag fromIDorException(final int id) throws DeveloperNotificationException {
-	    DeveloperNotificationException.ifTrue("Der Wochentag(" + id + ") muss zwischen 1 (Montag) und 7 (Sonntag) liegen!", id < 1 || id > 7);
-	    final @NotNull Wochentag @NotNull[] wochentage = values();
-	    return wochentage[id - 1];
+		DeveloperNotificationException.ifTrue("Der Wochentag(" + id + ") muss zwischen 1 (Montag) und 7 (Sonntag) liegen!", id < 1 || id > 7);
+		final @NotNull Wochentag @NotNull [] wochentage = values();
+		return wochentage[id - 1];
 	}
 
 }

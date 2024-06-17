@@ -16,73 +16,73 @@ public enum LehrerBeschaeftigungsart {
 
 
 	/** Beschaeftigungsart 'Vollzeit' eines Lehrers */
-	V(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(1, "V", "Vollzeit", null, null)
+	V(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(1, "V", "Vollzeit", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Teilzeit' eines Lehrers */
-	T(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(2, "T", "Teilzeit", null, null)
+	T(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(2, "T", "Teilzeit", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers */
-	AT(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(3, "AT", "Altersteilzeit (Beschäftigungsphase)", null, null)
+	AT(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(3, "AT", "Altersteilzeit (Beschäftigungsphase)", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
-	TA(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(4, "TA", "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)
+	TA(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(4, "TA", "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
-	VA(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(5, "VA", "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)
+	VA(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(5, "VA", "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Sabbatjahr' eines Lehrers */
-	TS(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(6, "TS", "Sabbatjahr", null, null)
+	TS(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(6, "TS", "Sabbatjahr", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers */
-	SB(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigung", null, null)
+	SB(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigung", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Geringfügige Beschäftigung' eines Lehrers */
-	GB(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigung", null, null)
+	GB(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigung", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Studierende' eines Lehrers */
-	ST(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(11, "ST", "Studierende", null, null)
+	ST(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(11, "ST", "Studierende", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers */
-	NA(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(12, "NA", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)
+	NA(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(12, "NA", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Gestellungsvertrag' eines Lehrers */
-	G(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(13, "G", "Gestellungsvertrag", null, null)
+	G(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(13, "G", "Gestellungsvertrag", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers */
-	X(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(15, "X", "Unentgeltlich Beschäftigte", null, null)
+	X(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(15, "X", "Unentgeltlich Beschäftigte", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers */
-	WT(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(16, "WT", "Beamte auf Widerruf (LAA) in Teilzeit", null, null)
+	WT(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(16, "WT", "Beamte auf Widerruf (LAA) in Teilzeit", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers */
-	WV(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(17, "WV", "Beamte auf Widerruf (LAA) in Vollzeit", null, null)
+	WV(new LehrerKatalogBeschaeftigungsartEintrag[] {
+			new LehrerKatalogBeschaeftigungsartEintrag(17, "WV", "Beamte auf Widerruf (LAA) in Vollzeit", null, null)
 	});
 
 
@@ -93,7 +93,7 @@ public enum LehrerBeschaeftigungsart {
 	public final @NotNull LehrerKatalogBeschaeftigungsartEintrag daten;
 
 	/** Die Historie mit den Einträgen der Beschäftigungsart */
-	public final @NotNull LehrerKatalogBeschaeftigungsartEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogBeschaeftigungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerBeschaeftigungsart> _artenByID = new HashMap<>();
@@ -107,7 +107,7 @@ public enum LehrerBeschaeftigungsart {
 	 *
 	 * @param historie   die Historie der Beschäftigungsart, welches ein Array von {@link LehrerKatalogBeschaeftigungsartEintrag} ist
 	 */
-	LehrerBeschaeftigungsart(final @NotNull LehrerKatalogBeschaeftigungsartEintrag@NotNull[] historie) {
+	LehrerBeschaeftigungsart(final @NotNull LehrerKatalogBeschaeftigungsartEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

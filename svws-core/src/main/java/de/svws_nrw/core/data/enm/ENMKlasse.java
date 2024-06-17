@@ -31,7 +31,8 @@ public class ENMKlasse {
 	public String kuerzelAnzeige;
 
 	/** Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört (z.B. 11) oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt */
-	@Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.", example = "11")
+	@Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.",
+			example = "11")
 	public Long idJahrgang;
 
 	/** Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8) */

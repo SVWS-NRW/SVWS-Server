@@ -13,7 +13,8 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungLehrkraft")
-@Schema(name = "StundenplanblockungLehrkraft", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei {@link StundenplanblockungInput}.")
+@Schema(name = "StundenplanblockungLehrkraft",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei {@link StundenplanblockungInput}.")
 @TranspilerDTO
 public class StundenplanblockungLehrkraft {
 

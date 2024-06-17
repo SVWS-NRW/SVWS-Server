@@ -57,7 +57,8 @@ public class ENMLeistung {
 	public Integer fehlstundenFach;
 
 	/** Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
-	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden.",
+			example = "2013-11-14 13:12:48.774")
 	public String tsFehlstundenFach;
 
 	/** Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden. */
@@ -65,7 +66,8 @@ public class ENMLeistung {
 	public Integer fehlstundenUnentschuldigtFach;
 
 	/** Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
-	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden.",
+			example = "2013-11-14 13:12:48.774")
 	public String tsFehlstundenUnentschuldigtFach;
 
 	/** Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen */
@@ -73,7 +75,8 @@ public class ENMLeistung {
 	public String fachbezogeneBemerkungen;
 
 	/** Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen */
-	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen.",
+			example = "2013-11-14 13:12:48.774")
 	public String tsFachbezogeneBemerkungen;
 
 	/** Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule) */

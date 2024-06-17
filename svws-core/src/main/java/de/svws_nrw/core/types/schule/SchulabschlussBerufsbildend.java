@@ -12,72 +12,72 @@ public enum SchulabschlussBerufsbildend {
 
 	/** Es liegt kein Abschluss vor */
 	OA(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(0, "OA", "Ohne Abschluss", "0", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(0, "OA", "Ohne Abschluss", "0", null, null)
 	}),
 
 	/** Abschluss der Ausbildungsvorbereitung */
 	VORB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(100000, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(100000, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)
 	}),
 
 	/** Versetzungszeugnis */
 	VERS(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(110000, "VERS", "Versetzungszeugnis", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(110000, "VERS", "Versetzungszeugnis", "1", null, null)
 	}),
 
 	/** Abschlusszeugnis in Aufbaubildungsgängen */
 	AUFB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(120000, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(120000, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)
 	}),
 
 	/** Abschluss der Berufschulvorbereitung */
 	BV(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(130000, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(130000, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)
 	}),
 
 	/** Vorpraktikum */
 	VP(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(140000, "VP", "Vorpraktikum", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(140000, "VP", "Vorpraktikum", "1", null, null)
 	}),
 
 	/** Vorpraktikum */
 	BP(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(150000, "BP", "Berufspraktikum", "1", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(150000, "BP", "Berufspraktikum", "1", null, null)
 	}),
 
 	/** Abschluss der Berufschulgrundjahres */
 	BG(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(200000, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(200000, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)
 	}),
 
 	/** Berufschulabschluss */
 	BS(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(300000, "BS", "Berufschulabschluss", "3", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(300000, "BS", "Berufschulabschluss", "3", null, null)
 	}),
 
 	/** Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	BK(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(400000, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(400000, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)
 	}),
 
 	/** Berufsabschluss */
 	BAB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(500000, "BAB", "Berufsabschluss", "5", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(500000, "BAB", "Berufsabschluss", "5", null, null)
 	}),
 
 	/** Fachschulabschluss (berufliche Weiterbildung) */
 	BW(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(600000, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(600000, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)
 	}),
 
 	/** Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	VBK(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(800000, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(800000, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)
 	}),
 
 	/** Pseudoabschluss: Schulwechsler, die im selben Bildungsgang verbleiben */
 	WECHSEL(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(900000, "WECHSEL", "Schulwechsler, die im selben Bildungsgang verbleiben", "9", null, null)
+			new SchulabschlussBerufsbildendKatalogEintrag(900000, "WECHSEL", "Schulwechsler, die im selben Bildungsgang verbleiben", "9", null, null)
 	});
 
 
@@ -88,7 +88,7 @@ public enum SchulabschlussBerufsbildend {
 	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Abschlussarten */
-	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie;
+	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */
 	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> _mapByKuerzel = new HashMap<>();
@@ -102,7 +102,7 @@ public enum SchulabschlussBerufsbildend {
 	 *
 	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussBerufsbildendKatalogEintrag} ist
 	 */
-	SchulabschlussBerufsbildend(final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie) {
+	SchulabschlussBerufsbildend(final @NotNull SchulabschlussBerufsbildendKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

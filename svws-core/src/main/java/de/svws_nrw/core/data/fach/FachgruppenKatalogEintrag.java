@@ -87,9 +87,9 @@ public class FachgruppenKatalogEintrag {
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public FachgruppenKatalogEintrag(final long id, final Integer nummer, final Integer idSchild, final @NotNull String bezeichnung, final @NotNull String kuerzel,
-			final @NotNull RGBFarbe farbe, final @NotNull List<@NotNull Schulform> schulformen, final @NotNull Integer sortierung,
-			final boolean fuerZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
+	public FachgruppenKatalogEintrag(final long id, final Integer nummer, final Integer idSchild, final @NotNull String bezeichnung,
+			final @NotNull String kuerzel, final @NotNull RGBFarbe farbe, final @NotNull List<@NotNull Schulform> schulformen,
+			final @NotNull Integer sortierung, final boolean fuerZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.nummer = nummer;
 		this.idSchild = idSchild;

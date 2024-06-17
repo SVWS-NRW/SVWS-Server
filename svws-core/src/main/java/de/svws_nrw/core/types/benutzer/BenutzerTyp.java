@@ -49,11 +49,16 @@ public enum BenutzerTyp {
 	 */
 	public static BenutzerTyp getByID(final int id) {
 		switch (id) {
-			case 0: return BenutzerTyp.ALLGEMEIN;
-			case 1: return BenutzerTyp.LEHRER;
-			case 2: return BenutzerTyp.SCHUELER;
-			case 3: return BenutzerTyp.ERZIEHER;
-			default: return null;
+			case 0:
+				return BenutzerTyp.ALLGEMEIN;
+			case 1:
+				return BenutzerTyp.LEHRER;
+			case 2:
+				return BenutzerTyp.SCHUELER;
+			case 3:
+				return BenutzerTyp.ERZIEHER;
+			default:
+				return null;
 		}
 	}
 

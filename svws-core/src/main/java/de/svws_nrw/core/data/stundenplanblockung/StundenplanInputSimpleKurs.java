@@ -12,7 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für einen Kurs bei
  * {@link StundenplanInputSimple}. */
 @XmlRootElement(name = "StundenplanInputSimpleKurs")
-@Schema(name = "StundenplanInputSimpleKurs", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für einen Kurs bei {@link StundenplanInputSimple}.")
+@Schema(name = "StundenplanInputSimpleKurs",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für einen Kurs bei {@link StundenplanInputSimple}.")
 @TranspilerDTO
 public class StundenplanInputSimpleKurs {
 

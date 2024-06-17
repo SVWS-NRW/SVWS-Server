@@ -17,192 +17,192 @@ public class SchulenKatalogEintrag {
 	@Schema(description = "die Schulnummer", example = "100001")
 	public @NotNull String SchulNr = "";
 
-    /** Regionalschlüssel der Schule */
-    @Schema(description = "Regionalschlüssel der Schule")
-    public String RegSchl;
+	/** Regionalschlüssel der Schule */
+	@Schema(description = "Regionalschlüssel der Schule")
+	public String RegSchl;
 
-    /** Feld KoRe */
-    @Schema(description = "Feld KoRe")
-    public double KoRe;
+	/** Feld KoRe */
+	@Schema(description = "Feld KoRe")
+	public double KoRe;
 
-    /** Feld KoHo */
-    @Schema(description = "Feld KoHo")
-    public double KoHo;
+	/** Feld KoHo */
+	@Schema(description = "Feld KoHo")
+	public double KoHo;
 
-    /** Bezeichnung 1 der Schule */
-    @Schema(description = "Bezeichnung 1 der Schule")
-    public String ABez1;
+	/** Bezeichnung 1 der Schule */
+	@Schema(description = "Bezeichnung 1 der Schule")
+	public String ABez1;
 
-    /** Bezeichnung 2 der Schule */
-    @Schema(description = "Bezeichnung 2 der Schule")
-    public String ABez2;
+	/** Bezeichnung 2 der Schule */
+	@Schema(description = "Bezeichnung 2 der Schule")
+	public String ABez2;
 
-    /** Bezeichnung 3 der Schule */
-    @Schema(description = "Bezeichnung 3 der Schule")
-    public String ABez3;
+	/** Bezeichnung 3 der Schule */
+	@Schema(description = "Bezeichnung 3 der Schule")
+	public String ABez3;
 
-    /** Postleitzahl der Schule */
-    @Schema(description = "Postleitzahl der Schule")
-    public String PLZ;
+	/** Postleitzahl der Schule */
+	@Schema(description = "Postleitzahl der Schule")
+	public String PLZ;
 
-    /** Ort der Schule */
-    @Schema(description = "Ort der Schule")
-    public String Ort;
+	/** Ort der Schule */
+	@Schema(description = "Ort der Schule")
+	public String Ort;
 
-    /** Straße der Schule */
-    @Schema(description = "Straße der Schule")
-    public String Strasse;
+	/** Straße der Schule */
+	@Schema(description = "Straße der Schule")
+	public String Strasse;
 
-    /** Telefonvorwahl der Schule */
-    @Schema(description = "Telefonvorwahl der Schule")
-    public String TelVorw;
+	/** Telefonvorwahl der Schule */
+	@Schema(description = "Telefonvorwahl der Schule")
+	public String TelVorw;
 
-    /** Telefonnummer der Schule */
-    @Schema(description = "Telefonnummer der Schule")
-    public String Telefon;
+	/** Telefonnummer der Schule */
+	@Schema(description = "Telefonnummer der Schule")
+	public String Telefon;
 
-    /** Faxvorwahl der Schule */
-    @Schema(description = "Faxvorwahl der Schule")
-    public String FaxVorw;
+	/** Faxvorwahl der Schule */
+	@Schema(description = "Faxvorwahl der Schule")
+	public String FaxVorw;
 
-    /** Faxnummer der Schule */
-    @Schema(description = "Faxnummer der Schule")
-    public String Fax;
+	/** Faxnummer der Schule */
+	@Schema(description = "Faxnummer der Schule")
+	public String Fax;
 
-    /** Modemvorwahl der Schule */
-    @Schema(description = "Modemvorwahl der Schule")
-    public String ModemVorw;
+	/** Modemvorwahl der Schule */
+	@Schema(description = "Modemvorwahl der Schule")
+	public String ModemVorw;
 
-    /** Modem-Telefonnummer der Schule */
-    @Schema(description = "Modem-Telefonnummer der Schule")
-    public String Modem;
+	/** Modem-Telefonnummer der Schule */
+	@Schema(description = "Modem-Telefonnummer der Schule")
+	public String Modem;
 
-    /** Schulform der Schule */
-    @Schema(description = "Schulform der Schule")
-    public String SF;
+	/** Schulform der Schule */
+	@Schema(description = "Schulform der Schule")
+	public String SF;
 
-    /** OeffPri */
-    @Schema(description = "OeffPri")
-    public String OeffPri;
+	/** OeffPri */
+	@Schema(description = "OeffPri")
+	public String OeffPri;
 
-    /** Kurzbezeichnung der Schule */
-    @Schema(description = "Kurzbezeichnung der Schule")
-    public String KurzBez;
+	/** Kurzbezeichnung der Schule */
+	@Schema(description = "Kurzbezeichnung der Schule")
+	public String KurzBez;
 
-    /** Schulbetriebsschlüssel der Schule */
-    @Schema(description = "Schulbetriebsschlüssel der Schule")
-    public Integer SchBetrSchl;
+	/** Schulbetriebsschlüssel der Schule */
+	@Schema(description = "Schulbetriebsschlüssel der Schule")
+	public Integer SchBetrSchl;
 
-    /** Datum des Schulbetriensschlüssels der Schule */
-    @Schema(description = "Datum des Schulbetriensschlüssels der Schule")
-    public String SchBetrSchlDatum;
+	/** Datum des Schulbetriensschlüssels der Schule */
+	@Schema(description = "Datum des Schulbetriensschlüssels der Schule")
+	public String SchBetrSchlDatum;
 
-    /** Art der Trägerschaft der Schule */
-    @Schema(description = "Art der Trägerschaft der Schule")
-    public String ArtDerTraegerschaft;
+	/** Art der Trägerschaft der Schule */
+	@Schema(description = "Art der Trägerschaft der Schule")
+	public String ArtDerTraegerschaft;
 
-    /** Schulträgernummer der Schule */
-    @Schema(description = "Schulträgernummer der Schule")
-    public String SchultraegerNr;
+	/** Schulträgernummer der Schule */
+	@Schema(description = "Schulträgernummer der Schule")
+	public String SchultraegerNr;
 
-    /** Schulgliederung der Schule */
-    @Schema(description = "Schulgliederung der Schule")
-    public String Schulgliederung;
+	/** Schulgliederung der Schule */
+	@Schema(description = "Schulgliederung der Schule")
+	public String Schulgliederung;
 
-    /** Schulart */
-    @Schema(description = "Schulart")
-    public String Schulart;
+	/** Schulart */
+	@Schema(description = "Schulart")
+	public String Schulart;
 
-    /** Gibt an ob die Schule Ganztagsbetrieb hat */
-    @Schema(description = "Gibt an ob die Schule Ganztagsbetrieb hat")
-    public String Ganztagsbetrieb;
+	/** Gibt an ob die Schule Ganztagsbetrieb hat */
+	@Schema(description = "Gibt an ob die Schule Ganztagsbetrieb hat")
+	public String Ganztagsbetrieb;
 
-    /** Förderschwerpunkte der Schule */
-    @Schema(description = "Förderschwerpunkte der Schule")
-    public String FSP;
+	/** Förderschwerpunkte der Schule */
+	@Schema(description = "Förderschwerpunkte der Schule")
+	public String FSP;
 
-    /** Verbund */
-    @Schema(description = "Verbund")
-    public String Verbund;
+	/** Verbund */
+	@Schema(description = "Verbund")
+	public String Verbund;
 
-    /** Bus */
-    @Schema(description = "Bus")
-    public String Bus;
+	/** Bus */
+	@Schema(description = "Bus")
+	public String Bus;
 
-    /** Fachberater der Schule */
-    @Schema(description = "Fachberater der Schule")
-    public Integer Fachberater;
+	/** Fachberater der Schule */
+	@Schema(description = "Fachberater der Schule")
+	public Integer Fachberater;
 
-    /** FachberHauptamtl */
-    @Schema(description = "FachberHauptamtl")
-    public Integer FachberHauptamtl;
+	/** FachberHauptamtl */
+	@Schema(description = "FachberHauptamtl")
+	public Integer FachberHauptamtl;
 
-    /** TelNrDBSalt */
-    @Schema(description = "TelNrDBSalt")
-    public String TelNrDBSalt;
+	/** TelNrDBSalt */
+	@Schema(description = "TelNrDBSalt")
+	public String TelNrDBSalt;
 
-    /** RP */
-    @Schema(description = "RP")
-    public String RP;
+	/** RP */
+	@Schema(description = "RP")
+	public String RP;
 
-    /** Email-Adresse der Schule */
-    @Schema(description = "Email-Adresse der Schule")
-    public String Email;
+	/** Email-Adresse der Schule */
+	@Schema(description = "Email-Adresse der Schule")
+	public String Email;
 
-    /** Website der Schule */
-    @Schema(description = "Website der Schule")
-    public String URL;
+	/** Website der Schule */
+	@Schema(description = "Website der Schule")
+	public String URL;
 
-    /** Bemerkung zur Schule */
-    @Schema(description = "Bemerkung zur Schule")
-    public String Bemerkung;
+	/** Bemerkung zur Schule */
+	@Schema(description = "Bemerkung zur Schule")
+	public String Bemerkung;
 
-    /** Gibt an ob die Schule eine CD für ASDPC32 möchte */
-    @Schema(description = "Gibt an ob die Schule eine CD für ASDPC32 möchte")
-    public Integer CD;
+	/** Gibt an ob die Schule eine CD für ASDPC32 möchte */
+	@Schema(description = "Gibt an ob die Schule eine CD für ASDPC32 möchte")
+	public Integer CD;
 
-    /** Stift */
-    @Schema(description = "Stift")
-    public Integer Stift;
+	/** Stift */
+	@Schema(description = "Stift")
+	public Integer Stift;
 
-    /** Gibt an ob die Schule offenen Ganztag hat */
-    @Schema(description = "Gibt an ob die Schule offenen Ganztag hat")
-    public String OGTS;
+	/** Gibt an ob die Schule offenen Ganztag hat */
+	@Schema(description = "Gibt an ob die Schule offenen Ganztag hat")
+	public String OGTS;
 
-    /** SELB */
-    @Schema(description = "SELB")
-    public String SELB;
+	/** SELB */
+	@Schema(description = "SELB")
+	public String SELB;
 
-    /** Gibt an ob die Schule Internatsplätze hat */
-    @Schema(description = "Gibt an ob die Schule Internatsplätze hat")
-    public String Internat;
+	/** Gibt an ob die Schule Internatsplätze hat */
+	@Schema(description = "Gibt an ob die Schule Internatsplätze hat")
+	public String Internat;
 
-    /** Anzahl der Internatsplätze */
-    @Schema(description = "Anzahl der Internatsplätze")
-    public Integer InternatPlaetze;
+	/** Anzahl der Internatsplätze */
+	@Schema(description = "Anzahl der Internatsplätze")
+	public Integer InternatPlaetze;
 
-    /** Schulmailadresse */
-    @Schema(description = "Schulmailadresse")
-    public String SMail;
+	/** Schulmailadresse */
+	@Schema(description = "Schulmailadresse")
+	public String SMail;
 
-    /** Hat die Schule Sport im Abitur? */
-    @Schema(description = "Hat die Schule Sport im Abitur?")
-    public String SportImAbi;
+	/** Hat die Schule Sport im Abitur? */
+	@Schema(description = "Hat die Schule Sport im Abitur?")
+	public String SportImAbi;
 
-    /** Nimmt die Schule am Projekt Talentschule teil? */
-    @Schema(description = "Nimmt die Schule am Projekt Talentschule teil?")
-    public String Tal;
+	/** Nimmt die Schule am Projekt Talentschule teil? */
+	@Schema(description = "Nimmt die Schule am Projekt Talentschule teil?")
+	public String Tal;
 
-    /** Ist die konfessionelle Kooperation an dieser Schule genehmigt? */
-    @Schema(description = "Ist die konfessionelle Kooperation an dieser Schule genehmigt?")
-    public String KonKop;
+	/** Ist die konfessionelle Kooperation an dieser Schule genehmigt? */
+	@Schema(description = "Ist die konfessionelle Kooperation an dieser Schule genehmigt?")
+	public String KonKop;
 
-    /** Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
-    public Integer gueltigVon;
+	/** Gibt die Gültigkeit ab welchem Schuljahr an */
+	@Schema(description = "Gibt die Gültigkeit ab welchem Schuljahr an")
+	public Integer gueltigVon;
 
-    /** Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
-    public Integer gueltigBis;
+	/** Gibt die Gültigkeit bis zu welchem Schuljahr an */
+	@Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
+	public Integer gueltigBis;
 
 }

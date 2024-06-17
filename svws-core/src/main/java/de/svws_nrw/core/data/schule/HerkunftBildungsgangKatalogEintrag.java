@@ -33,7 +33,8 @@ public class HerkunftBildungsgangKatalogEintrag {
 	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Die textuelle Beschreibung der sonstigen Herkunft. */
-	@Schema(description = "die textuelle Beschreibung des Bildungsganges", example = "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)")
+	@Schema(description = "die textuelle Beschreibung des Bildungsganges",
+			example = "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */

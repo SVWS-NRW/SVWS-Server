@@ -50,10 +50,14 @@ public enum AbiturBelegungsart {
 		if (kuerzel == null)
 			return NICHT_BELEGT;
 		switch (kuerzel) {
-			case "-": return NICHT_BELEGT;
-			case "M": return MUENDLICH;
-			case "S": return SCHRIFTLICH;
-			default: return null;
+			case "-":
+				return NICHT_BELEGT;
+			case "M":
+				return MUENDLICH;
+			case "S":
+				return SCHRIFTLICH;
+			default:
+				return null;
 		}
 	}
 

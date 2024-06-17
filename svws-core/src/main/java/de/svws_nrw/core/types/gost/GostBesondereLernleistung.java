@@ -53,10 +53,14 @@ public enum GostBesondereLernleistung {
 		if (kuerzel == null)
 			return KEINE;
 		switch (kuerzel) {
-			case "K": return KEINE;
-			case "P": return PROJEKTKURS;
-			case "E": return EXTERNE;
-			default: return KEINE;
+			case "K":
+				return KEINE;
+			case "P":
+				return PROJEKTKURS;
+			case "E":
+				return EXTERNE;
+			default:
+				return KEINE;
 		}
 	}
 

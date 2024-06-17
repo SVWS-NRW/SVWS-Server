@@ -12,32 +12,32 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Schild3KatalogEintragUnicodeUmwandlung {
 
-    /** ID für den Primärschlüssel der Tabelle UnicodeUmwandlung */
-    @Schema(description = "ID für den Primärschlüssel der Tabelle UnicodeUmwandlung")
-    public Long ID;
+	/** ID für den Primärschlüssel der Tabelle UnicodeUmwandlung */
+	@Schema(description = "ID für den Primärschlüssel der Tabelle UnicodeUmwandlung")
+	public Long ID;
 
-    /** Unicodezeichen das umgewandelt werden muss */
-    @Schema(description = "Unicodezeichen das umgewandelt werden muss")
-    public String Unicodezeichen;
+	/** Unicodezeichen das umgewandelt werden muss */
+	@Schema(description = "Unicodezeichen das umgewandelt werden muss")
+	public String Unicodezeichen;
 
-    /** Ersatzzeichen für das Unicodezeichen */
-    @Schema(description = "Ersatzzeichen für das Unicodezeichen")
-    public String Ersatzzeichen;
+	/** Ersatzzeichen für das Unicodezeichen */
+	@Schema(description = "Ersatzzeichen für das Unicodezeichen")
+	public String Ersatzzeichen;
 
-    /** Unicodezeichen in Dezimaldarstellung */
-    @Schema(description = "Unicodezeichen in Dezimaldarstellung")
-    public String DecimalZeichen;
+	/** Unicodezeichen in Dezimaldarstellung */
+	@Schema(description = "Unicodezeichen in Dezimaldarstellung")
+	public String DecimalZeichen;
 
-    /** Ersatzzeichen in Dezimaldarstellung (bei zwei Zeichen mit + getrennt) */
-    @Schema(description = "Ersatzzeichen in Dezimaldarstellung (bei zwei Zeichen mit + getrennt)")
-    public String DecimalErsatzzeichen;
+	/** Ersatzzeichen in Dezimaldarstellung (bei zwei Zeichen mit + getrennt) */
+	@Schema(description = "Ersatzzeichen in Dezimaldarstellung (bei zwei Zeichen mit + getrennt)")
+	public String DecimalErsatzzeichen;
 
-    /** Hexdarstellung des Unicodezeichen das gewandelt werden muss */
-    @Schema(description = "Hexdarstellung des Unicodezeichen das gewandelt werden muss")
-    public String Hexzeichen;
+	/** Hexdarstellung des Unicodezeichen das gewandelt werden muss */
+	@Schema(description = "Hexdarstellung des Unicodezeichen das gewandelt werden muss")
+	public String Hexzeichen;
 
-    /** Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt) */
-    @Schema(description = "Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt)")
-    public String HexErsatzzeichen;
+	/** Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt) */
+	@Schema(description = "Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt)")
+	public String HexErsatzzeichen;
 
 }

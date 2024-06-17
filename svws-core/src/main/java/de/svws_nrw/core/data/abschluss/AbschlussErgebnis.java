@@ -18,7 +18,8 @@ import jakarta.validation.constraints.NotNull;
 public class AbschlussErgebnis {
 
 	/** Gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss erworben wurde. */
-	@Schema(description = "gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss vermutlich erworben wird.", example = "true")
+	@Schema(description = "gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss vermutlich erworben wird.",
+			example = "true")
 	public boolean erworben = false;
 
 	/** Gibt an, welcher Abschluss geprüft wurde. */
@@ -30,7 +31,8 @@ public class AbschlussErgebnis {
 	public List<@NotNull String> npFaecher = null;
 
 	/** Der Log der Abschlussberechnung. */
-	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung.", example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
+	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung.",
+			example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
 	public List<@NotNull String> log = null;
 
 }

@@ -32,7 +32,8 @@ public final class KursblockungAlgorithmusPermanentKOptimiereBest extends Kursbl
 	 * @param input   Die dynamischen Blockungsdaten.
 	 * @param best    Der Zustand des derzeit besten Ergebnisses.
 	 */
-	public KursblockungAlgorithmusPermanentKOptimiereBest(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input, final KursblockungDynDaten best) {
+	public KursblockungAlgorithmusPermanentKOptimiereBest(final @NotNull Random random, final @NotNull Logger logger,
+			final @NotNull GostBlockungsdatenManager input, final KursblockungDynDaten best) {
 		super(random, logger, input);
 		algoS = new KursblockungAlgorithmusSSchnellW(random, logger, super.gibDynDaten());
 

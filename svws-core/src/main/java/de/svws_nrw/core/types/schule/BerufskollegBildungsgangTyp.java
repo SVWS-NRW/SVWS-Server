@@ -12,27 +12,27 @@ public enum BerufskollegBildungsgangTyp {
 
 	/** Berufsfachschulen */
 	BERUFSFACHSCHULE(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(1000, "BF", "Berufsfachschulen", null, null)
+			new BildungsgangTypKatalogEintrag(1000, "BF", "Berufsfachschulen", null, null)
 	}),
 
 	/** Berufsfachschulen */
 	BERUFSSCHULE(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(2000, "BS", "Berufsschule", null, null)
+			new BildungsgangTypKatalogEintrag(2000, "BS", "Berufsschule", null, null)
 	}),
 
 	/** Berufliches Gymnasium */
 	BERUFLICHES_GYMNASIUM(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(3000, "BY", "Berufliches Gymnasium", null, null)
+			new BildungsgangTypKatalogEintrag(3000, "BY", "Berufliches Gymnasium", null, null)
 	}),
 
 	/** Fachoberschule */
 	FACHOBERSCHULE(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(4000, "FO", "Fachoberschule", null, null)
+			new BildungsgangTypKatalogEintrag(4000, "FO", "Fachoberschule", null, null)
 	}),
 
 	/** Fachschule */
 	FACHSCHULE(new BildungsgangTypKatalogEintrag[] {
-		new BildungsgangTypKatalogEintrag(5000, "FS", "Fachschule", null, null)
+			new BildungsgangTypKatalogEintrag(5000, "FS", "Fachschule", null, null)
 	});
 
 
@@ -43,7 +43,7 @@ public enum BerufskollegBildungsgangTyp {
 	public final @NotNull BildungsgangTypKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Berufsschultypen von Bildungsgängen */
-	public final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie;
+	public final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegBildungsgangTyp> _ebenen = new HashMap<>();
@@ -55,7 +55,7 @@ public enum BerufskollegBildungsgangTyp {
 	 * @param historie   die Historie der Berufsschultypen von Bildungsgängen, welches ein Array von
 	 *                   {@link BildungsgangTypKatalogEintrag} ist
 	 */
-	BerufskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
+	BerufskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

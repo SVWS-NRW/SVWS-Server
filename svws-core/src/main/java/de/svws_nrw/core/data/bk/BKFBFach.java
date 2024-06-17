@@ -23,7 +23,7 @@ public class BKFBFach {
 
 	/** Das im Alltag verwendete Kuerzel des Fachs. */
 	@Schema(description = "das im Alltag verwendete Kuerzel des Fachs", example = "FP")
-	public @NotNull String  kuerzel = "";
+	public @NotNull String kuerzel = "";
 
 	/** Die Zeugnisbezeichnung des Fachs */
 	@Schema(description = "die Zeugnisbezeichnung des Fachs", example = "Fertigungsprozesse")
@@ -34,11 +34,13 @@ public class BKFBFach {
 	public @NotNull List<@NotNull BKFachklassenSchluessel> fachklassen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigBis = null;
 
 }

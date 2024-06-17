@@ -14,9 +14,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchildReportingSchuelerSprachpruefungen {
 
-    /** Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören. */
-    @Schema(description = "die ID des Schülers, zu dem die Sprachprüfungen gehören", example = "4711")
-    public long schuelerID;
+	/** Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören. */
+	@Schema(description = "die ID des Schülers, zu dem die Sprachprüfungen gehören", example = "4711")
+	public long schuelerID;
 
 	/** Das Sprachkürzel des geprüften Faches */
 	@Schema(description = "Das Sprachkürzel des geprüften Faches", example = "R")

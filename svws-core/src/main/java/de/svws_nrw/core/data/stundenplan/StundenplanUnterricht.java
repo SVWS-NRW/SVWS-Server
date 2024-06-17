@@ -39,12 +39,14 @@ public class StundenplanUnterricht {
 	public long idFach = -1;
 
 	/** Die IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind."))
+	@ArraySchema(
+			schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<@NotNull Long> lehrer = new ArrayList<>();
 
 	/** Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
 	 *  Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!*/
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind."))
+	@ArraySchema(
+			schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<@NotNull Long> klassen = new ArrayList<>();
 
 	/** Die IDs der Räume, die dieser Unterrichtseinheit zugeordnet sind. */
@@ -52,7 +54,8 @@ public class StundenplanUnterricht {
 	public @NotNull List<@NotNull Long> raeume = new ArrayList<>();
 
 	/** Die IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere). */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere)."))
+	@ArraySchema(schema = @Schema(implementation = Long.class,
+			description = "Ein Array mit den IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere)."))
 	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
 
 }

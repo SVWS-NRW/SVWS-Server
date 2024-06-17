@@ -22,7 +22,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungLerngruppe")
-@Schema(name = "StundenplanblockungLerngruppe", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lerngruppe bei {@link StundenplanblockungInput}.")
+@Schema(name = "StundenplanblockungLerngruppe",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lerngruppe bei {@link StundenplanblockungInput}.")
 @TranspilerDTO
 public class StundenplanblockungLerngruppe {
 

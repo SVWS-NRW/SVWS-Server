@@ -15,7 +15,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Dabei handelt es sich um eine (Neu-)Zuweisung EINES Schülers auf eine existierende Kurslage.
  */
 @XmlRootElement(name = "SchuelerblockungInput")
-@Schema(name = "SchuelerblockungInput", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die dem Schüler-Blockungsalgorithmus übergeben werden. Dabei handelt es sich um eine (Neu-)Zuweisung EINES Schülers auf eine existierende Kurslage.")
+@Schema(name = "SchuelerblockungInput",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die dem Schüler-Blockungsalgorithmus übergeben werden. Dabei handelt es sich um eine (Neu-)Zuweisung EINES Schülers auf eine existierende Kurslage.")
 @TranspilerDTO
 public class SchuelerblockungInput {
 

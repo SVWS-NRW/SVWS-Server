@@ -16,42 +16,42 @@ public enum HerkunftBildungsgangsTyp {
 
 	/** Weiterbildungskolleg: Abendgymnasium */
 	AG(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(1000, WeiterbildungskollegBildungsgangTyp.ABENDGYMNASIUM, null, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(1000, WeiterbildungskollegBildungsgangTyp.ABENDGYMNASIUM, null, null, null)
 	}),
 
 	/** Weiterbildungskolleg: Abendrealschule */
 	AR(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(2000, WeiterbildungskollegBildungsgangTyp.ABENDREALSCHULE, null, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(2000, WeiterbildungskollegBildungsgangTyp.ABENDREALSCHULE, null, null, null)
 	}),
 
 	/** Weiterbildungskolleg: Abendrealschule */
 	KL(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(3000, WeiterbildungskollegBildungsgangTyp.KOLLEG, null, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(3000, WeiterbildungskollegBildungsgangTyp.KOLLEG, null, null, null)
 	}),
 
 	/** Berufskolleg: Berufsfachschule */
 	BF(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(10000, null, BerufskollegBildungsgangTyp.BERUFSFACHSCHULE, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(10000, null, BerufskollegBildungsgangTyp.BERUFSFACHSCHULE, null, null)
 	}),
 
 	/** Berufskolleg: Berufschule */
 	BS(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(11000, null, BerufskollegBildungsgangTyp.BERUFSSCHULE, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(11000, null, BerufskollegBildungsgangTyp.BERUFSSCHULE, null, null)
 	}),
 
 	/** Berufskolleg: Berufliches Gymnasium */
 	BY(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(12000, null, BerufskollegBildungsgangTyp.BERUFLICHES_GYMNASIUM, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(12000, null, BerufskollegBildungsgangTyp.BERUFLICHES_GYMNASIUM, null, null)
 	}),
 
 	/** Berufskolleg: Fachoberschule */
 	FO(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(13000, null, BerufskollegBildungsgangTyp.FACHOBERSCHULE, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(13000, null, BerufskollegBildungsgangTyp.FACHOBERSCHULE, null, null)
 	}),
 
 	/** Berufskolleg: Fachschule */
 	FS(new HerkunftBildungsgangTypKatalogEintrag[] {
-		new HerkunftBildungsgangTypKatalogEintrag(14000, null, BerufskollegBildungsgangTyp.FACHSCHULE, null, null)
+			new HerkunftBildungsgangTypKatalogEintrag(14000, null, BerufskollegBildungsgangTyp.FACHSCHULE, null, null)
 	});
 
 
@@ -62,7 +62,7 @@ public enum HerkunftBildungsgangsTyp {
 	public final @NotNull HerkunftBildungsgangTypKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Bildungsgangtyps */
-	public final @NotNull HerkunftBildungsgangTypKatalogEintrag@NotNull[] historie;
+	public final @NotNull HerkunftBildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Bildungsgangtypen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, HerkunftBildungsgangsTyp> _ebenen = new HashMap<>();
@@ -74,7 +74,7 @@ public enum HerkunftBildungsgangsTyp {
 	 * @param historie   die Historie des Herkunfts-Bildungsgangtyps, welche ein Array von
 	 *                   {@link HerkunftBildungsgangTypKatalogEintrag} ist
 	 */
-	HerkunftBildungsgangsTyp(final @NotNull HerkunftBildungsgangTypKatalogEintrag@NotNull[] historie) {
+	HerkunftBildungsgangsTyp(final @NotNull HerkunftBildungsgangTypKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

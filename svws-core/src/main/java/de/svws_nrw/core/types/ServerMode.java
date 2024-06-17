@@ -49,9 +49,9 @@ public enum ServerMode {
 	 */
 	public boolean checkServerMode(final ServerMode serverMode) {
 		return (serverMode == ServerMode.STABLE) && (this == ServerMode.STABLE)
-			|| (serverMode == ServerMode.BETA) && (this != ServerMode.DEV) && (this != ServerMode.ALPHA)
-			|| (serverMode == ServerMode.ALPHA) && (this != ServerMode.DEV)
-			|| (serverMode == ServerMode.DEV);
+				|| (serverMode == ServerMode.BETA) && (this != ServerMode.DEV) && (this != ServerMode.ALPHA)
+				|| (serverMode == ServerMode.ALPHA) && (this != ServerMode.DEV)
+				|| (serverMode == ServerMode.DEV);
 	}
 
 
@@ -69,7 +69,7 @@ public enum ServerMode {
 		for (final @NotNull ServerMode mode : values())
 			if (mode.text.equalsIgnoreCase(text))
 				return mode;
-	    return ServerMode.STABLE;
+		return ServerMode.STABLE;
 	}
 
 }

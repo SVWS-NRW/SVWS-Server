@@ -41,19 +41,23 @@ public class GostLaufbahnplanungDatenSchueler {
 	public @NotNull String geschlecht = "";
 
 	/** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
-	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example = "E")
+	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.",
+			example = "E")
 	public String bilingualeSprache = null;
 
 	/** Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt."))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt."))
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
-	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenFachbelegung.class, description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenFachbelegung.class,
+			description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
 	public final @NotNull List<@NotNull GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
-	@Schema(implementation = Sprachendaten.class, description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
+	@Schema(implementation = Sprachendaten.class,
+			description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
 	public @NotNull Sprachendaten sprachendaten = new Sprachendaten();
 
 }

@@ -25,7 +25,8 @@ public class HerkunftsartKatalogEintragBezeichnung {
 	public @NotNull String kurzBezeichnung = "";
 
 	/** Die Bezeichnung der Herkunftsart */
-	@Schema(description = "die Bezeichnung der Herkunftsart", example = "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
+	@Schema(description = "die Bezeichnung der Herkunftsart",
+			example = "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
 	public @NotNull String bezeichnung = "";
 
 

@@ -14,12 +14,12 @@ public enum WeiterbildungskollegOrganisationsformen {
 
 	/** Organisationsform: Teilbeleger */
 	TEILZEIT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(2001000, "T", "Teilbeleger", Arrays.asList(Schulform.WB), null, null)
+			new OrganisationsformKatalogEintrag(2001000, "T", "Teilbeleger", Arrays.asList(Schulform.WB), null, null)
 	}),
 
 	/** Organisationsform: Vollbeleger */
 	VOLLZEIT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(2002000, "V", "Vollbeleger", Arrays.asList(Schulform.WB), null, null)
+			new OrganisationsformKatalogEintrag(2002000, "V", "Vollbeleger", Arrays.asList(Schulform.WB), null, null)
 	});
 
 
@@ -30,7 +30,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	public final @NotNull OrganisationsformKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Organisationsform */
-	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
+	public final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull WeiterbildungskollegOrganisationsformen> _mapByID = new HashMap<>();
@@ -45,7 +45,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von
 	 *                   {@link OrganisationsformKatalogEintrag} ist
 	 */
-	WeiterbildungskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	WeiterbildungskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

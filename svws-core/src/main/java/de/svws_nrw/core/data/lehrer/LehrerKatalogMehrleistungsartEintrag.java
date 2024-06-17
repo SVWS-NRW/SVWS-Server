@@ -27,11 +27,13 @@ public class LehrerKatalogMehrleistungsartEintrag {
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt",
+			example = "2025")
 	public Integer gueltigBis = null;
 
 
@@ -51,7 +53,8 @@ public class LehrerKatalogMehrleistungsartEintrag {
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public LehrerKatalogMehrleistungsartEintrag(final long id, final @NotNull String kuerzel, final @NotNull String text, final Integer gueltigVon, final Integer gueltigBis) {
+	public LehrerKatalogMehrleistungsartEintrag(final long id, final @NotNull String kuerzel, final @NotNull String text, final Integer gueltigVon,
+			final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.text = text;

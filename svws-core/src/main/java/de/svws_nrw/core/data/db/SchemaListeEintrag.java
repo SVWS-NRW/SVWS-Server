@@ -31,7 +31,8 @@ public class SchemaListeEintrag {
 	public long revision = -1;
 
 	/** Gibt an, ob das Schema als "verdorben" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte. */
-	@Schema(description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte", example = "false")
+	@Schema(description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte",
+			example = "false")
 	public boolean isTainted = false;
 
 	/** Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers eingetragen ist. */
@@ -39,7 +40,7 @@ public class SchemaListeEintrag {
 	public boolean isInConfig = false;
 
 	/** Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist. */
-    @Schema(description = "gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist.", example = "true")
-    public boolean isDeactivated = false;
+	@Schema(description = "gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist.", example = "true")
+	public boolean isDeactivated = false;
 
 }

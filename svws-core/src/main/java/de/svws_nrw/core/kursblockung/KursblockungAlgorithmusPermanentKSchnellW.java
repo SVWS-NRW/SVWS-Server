@@ -29,7 +29,8 @@ public final class KursblockungAlgorithmusPermanentKSchnellW extends Kursblockun
 	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param input   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusPermanentKSchnellW(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
+	public KursblockungAlgorithmusPermanentKSchnellW(final @NotNull Random random, final @NotNull Logger logger,
+			final @NotNull GostBlockungsdatenManager input) {
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.

@@ -37,7 +37,7 @@ public enum GostFachbereich {
 			ZulaessigesFach.S, ZulaessigesFach.S0, ZulaessigesFach.S5, ZulaessigesFach.S6, ZulaessigesFach.S7, ZulaessigesFach.S8, ZulaessigesFach.S9,
 			ZulaessigesFach.T, ZulaessigesFach.T0, ZulaessigesFach.T5, ZulaessigesFach.T6, ZulaessigesFach.T7, ZulaessigesFach.T8, ZulaessigesFach.T9,
 			ZulaessigesFach.Z, ZulaessigesFach.Z0, ZulaessigesFach.Z5, ZulaessigesFach.Z6, ZulaessigesFach.Z7, ZulaessigesFach.Z8, ZulaessigesFach.Z9
-			),
+	),
 
 	/** Fachbereich künstlerisch musikalisch */
 	KUNST_MUSIK(null, ZulaessigesFach.KU, ZulaessigesFach.MU),
@@ -104,7 +104,8 @@ public enum GostFachbereich {
 	private static final @NotNull List<@NotNull ZulaessigesFach> _listAlleFaecher = new ArrayList<@NotNull ZulaessigesFach>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
-	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach = new ArrayMap<>(ZulaessigesFach.values());
+	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach =
+			new ArrayMap<>(ZulaessigesFach.values());
 
 
 	/** Eine Liste der Fächern dieses Fachbereichs */

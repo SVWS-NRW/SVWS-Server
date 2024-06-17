@@ -67,7 +67,8 @@ public class ENMBKAbschluss {
 	public boolean istFachpraktischerTeilAusreichend;
 
 	/** Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = ENMBKFach.class, description = "Ein Array mit den Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMBKFach.class,
+			description = "Ein Array mit den Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind."))
 	public @NotNull List<@NotNull ENMBKFach> faecher = new ArrayList<>();
 
 }

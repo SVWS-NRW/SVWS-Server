@@ -18,89 +18,89 @@ import jakarta.validation.constraints.NotNull;
 public enum Reformpaedagogik {
 
 	/** Reformpaedagogik KEIN_EINTRAG - Es ist kein Eintrag zur Reformpädagogik vorhanden */
-    KEIN_EINTRAG(new ReformpaedagogikKatalogEintrag[]{
-		new ReformpaedagogikKatalogEintrag(0, "*", "ohne Eintrag", Arrays.asList(
-				Schulform.FW, Schulform.HI, Schulform.WF,
-				Schulform.G,
-				Schulform.GE,
-				Schulform.GY,
-				Schulform.H,
-				Schulform.PS,
-				Schulform.R,
-				Schulform.SG,
-				Schulform.SK,
-				Schulform.SR,
-				Schulform.V
+	KEIN_EINTRAG(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(0, "*", "ohne Eintrag", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
 			), null, null)
 	}),
 
-    /** Reformpaedagogik Celestin Freinet */
-    FREINET(new ReformpaedagogikKatalogEintrag[]{
-        new ReformpaedagogikKatalogEintrag(1000, "C", "Celestin Freinet", Arrays.asList(
-                Schulform.G,
-                Schulform.GY
-            ), null, null)
-    }),
+	/** Reformpaedagogik Celestin Freinet */
+	FREINET(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(1000, "C", "Celestin Freinet", Arrays.asList(
+					Schulform.G,
+					Schulform.GY
+			), null, null)
+	}),
 
-    /** Reformpaedagogik Janusz Korczak (Pädagogik der Achtung) */
-    KORCZAK(new ReformpaedagogikKatalogEintrag[]{
-        new ReformpaedagogikKatalogEintrag(2000, "J", "Janusz Korczak (Pädagogik der Achtung)", Arrays.asList(
-                Schulform.G,
-                Schulform.GE,
-                Schulform.GY,
-                Schulform.H,
-                Schulform.PS,
-                Schulform.R,
-                Schulform.S, Schulform.KS,
-                Schulform.SG,
-                Schulform.SK,
-                Schulform.SR,
-                Schulform.V
-            ), null, null)
-    }),
+	/** Reformpaedagogik Janusz Korczak (Pädagogik der Achtung) */
+	KORCZAK(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(2000, "J", "Janusz Korczak (Pädagogik der Achtung)", Arrays.asList(
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.S, Schulform.KS,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
+			), null, null)
+	}),
 
-    /** Reformpaedagogik Montessori */
-    MONTESSORI(new ReformpaedagogikKatalogEintrag[]{
-        new ReformpaedagogikKatalogEintrag(3000, "M", "Montessori", Arrays.asList(
-                Schulform.G,
-                Schulform.GE,
-                Schulform.GY,
-                Schulform.H,
-                Schulform.PS,
-                Schulform.R,
-                Schulform.S, Schulform.KS,
-                Schulform.SG,
-                Schulform.SK,
-                Schulform.SR,
-                Schulform.V
-            ), null, null)
-    }),
+	/** Reformpaedagogik Montessori */
+	MONTESSORI(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(3000, "M", "Montessori", Arrays.asList(
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.S, Schulform.KS,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
+			), null, null)
+	}),
 
-    /** Reformpaedagogik Peter Petersen/Jena-Plan */
-    PETERSEN(new ReformpaedagogikKatalogEintrag[]{
-        new ReformpaedagogikKatalogEintrag(4000, "P", "Peter Petersen/Jena-Plan", Arrays.asList(
-                Schulform.G,
-                Schulform.GY,
-                Schulform.S, Schulform.KS,
-                Schulform.SG,
-                Schulform.SR
-            ), null, null)
-    }),
+	/** Reformpaedagogik Peter Petersen/Jena-Plan */
+	PETERSEN(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(4000, "P", "Peter Petersen/Jena-Plan", Arrays.asList(
+					Schulform.G,
+					Schulform.GY,
+					Schulform.S, Schulform.KS,
+					Schulform.SG,
+					Schulform.SR
+			), null, null)
+	}),
 
 	/** Sonstige Reformpaedagogik */
-	SONSTIGE(new ReformpaedagogikKatalogEintrag[]{
-		new ReformpaedagogikKatalogEintrag(5000, "S", "sonstige", Arrays.asList(
-                Schulform.FW, Schulform.HI, Schulform.WF,
-                Schulform.G,
-                Schulform.GE,
-                Schulform.GY,
-                Schulform.H,
-                Schulform.PS,
-                Schulform.R,
-                Schulform.SG,
-                Schulform.SK,
-                Schulform.SR,
-                Schulform.V
+	SONSTIGE(new ReformpaedagogikKatalogEintrag[] {
+			new ReformpaedagogikKatalogEintrag(5000, "S", "sonstige", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
 			), null, null)
 	});
 
@@ -113,7 +113,7 @@ public enum Reformpaedagogik {
 	public final @NotNull ReformpaedagogikKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen zu der Reformpädagogik */
-	public final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie;
+	public final @NotNull ReformpaedagogikKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> _schulgliederungenKuerzel = new HashMap<>();
@@ -122,7 +122,7 @@ public enum Reformpaedagogik {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -131,11 +131,11 @@ public enum Reformpaedagogik {
 	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
+	Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -225,7 +225,7 @@ public enum Reformpaedagogik {
 		final @NotNull ArrayList<@NotNull Reformpaedagogik> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
-		final @NotNull Reformpaedagogik@NotNull[] gliederungen = Reformpaedagogik.values();
+		final @NotNull Reformpaedagogik @NotNull [] gliederungen = Reformpaedagogik.values();
 		for (int i = 0; i < gliederungen.length; i++) {
 			final @NotNull Reformpaedagogik gliederung = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))

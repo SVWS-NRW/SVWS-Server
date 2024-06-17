@@ -12,28 +12,28 @@ public enum Kindergartenbesuch {
 
 	/** Kein Kindergartenbesuch */
 	KEINER(new KindergartenbesuchKatalogEintrag[] {
-		new KindergartenbesuchKatalogEintrag(1, 0, "kein Kindergarten", null, null)
+			new KindergartenbesuchKatalogEintrag(1, 0, "kein Kindergarten", null, null)
 	}),
 
 	/** Kindergartenbesuch unter einem Jahr */
 	MAX_1_JAHR(new KindergartenbesuchKatalogEintrag[] {
-		new KindergartenbesuchKatalogEintrag(2, 1, "unter 1 Jahr", null, null)
+			new KindergartenbesuchKatalogEintrag(2, 1, "unter 1 Jahr", null, null)
 	}),
 
-    /** Kindergartenbesuch unter einem Jahr */
-    MAX_2_JAHRE(new KindergartenbesuchKatalogEintrag[] {
-        new KindergartenbesuchKatalogEintrag(3, 2, "1 bis unter 2 Jahre", null, null)
-    }),
+	/** Kindergartenbesuch unter einem Jahr */
+	MAX_2_JAHRE(new KindergartenbesuchKatalogEintrag[] {
+			new KindergartenbesuchKatalogEintrag(3, 2, "1 bis unter 2 Jahre", null, null)
+	}),
 
-    /** Kindergartenbesuch unter einem Jahr */
-    MAX_3_JAHRE(new KindergartenbesuchKatalogEintrag[] {
-        new KindergartenbesuchKatalogEintrag(4, 3, "2 bis unter 3 Jahre", null, null)
-    }),
+	/** Kindergartenbesuch unter einem Jahr */
+	MAX_3_JAHRE(new KindergartenbesuchKatalogEintrag[] {
+			new KindergartenbesuchKatalogEintrag(4, 3, "2 bis unter 3 Jahre", null, null)
+	}),
 
-    /** Kindergartenbesuch unter einem Jahr */
-    MIN_3_JAHRE(new KindergartenbesuchKatalogEintrag[] {
-        new KindergartenbesuchKatalogEintrag(5, 4, "3 Jahre und mehr Jahre", null, null)
-    });
+	/** Kindergartenbesuch unter einem Jahr */
+	MIN_3_JAHRE(new KindergartenbesuchKatalogEintrag[] {
+			new KindergartenbesuchKatalogEintrag(5, 4, "3 Jahre und mehr Jahre", null, null)
+	});
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
 	public static final long VERSION = 1;
@@ -42,7 +42,7 @@ public enum Kindergartenbesuch {
 	public final @NotNull KindergartenbesuchKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Dauer des Kindergartenbesuchs */
-	public final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie;
+	public final @NotNull KindergartenbesuchKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull Long, Kindergartenbesuch> _mapKuerzel = new HashMap<>();
@@ -54,7 +54,7 @@ public enum Kindergartenbesuch {
 	 * @param historie   die Historie der Eintrags, welche ein Array von
 	 *                   {@link KindergartenbesuchKatalogEintrag} ist
 	 */
-	Kindergartenbesuch(final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie) {
+	Kindergartenbesuch(final @NotNull KindergartenbesuchKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

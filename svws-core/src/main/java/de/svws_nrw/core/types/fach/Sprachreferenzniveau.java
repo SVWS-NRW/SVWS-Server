@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Der Core-Type für die Sprachreferenzniveaus.
  */
-public enum Sprachreferenzniveau  {
+public enum Sprachreferenzniveau {
 
 	/** Referenzniveau nach GeR A1. */
 	A1(new SprachreferenzniveauKatalogEintrag[] {
@@ -83,7 +83,7 @@ public enum Sprachreferenzniveau  {
 	public final @NotNull SprachreferenzniveauKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Sprachprüfungsniveaus */
-	public final @NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie;
+	public final @NotNull SprachreferenzniveauKatalogEintrag @NotNull [] historie;
 
 	/** Die Zuordnung der Sprachreferenzniveaus zu ihren IDs */
 	private static final @NotNull HashMap<@NotNull Integer, @NotNull Sprachreferenzniveau> _mapID = new HashMap<>();
@@ -98,7 +98,7 @@ public enum Sprachreferenzniveau  {
 	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von
 	 *                   {@link SprachreferenzniveauKatalogEintrag} ist
 	 */
-	Sprachreferenzniveau(final @NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie) {
+	Sprachreferenzniveau(final @NotNull SprachreferenzniveauKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

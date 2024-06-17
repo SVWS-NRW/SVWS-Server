@@ -7,23 +7,23 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum KAOAZusatzmerkmaleOptionsarten {
 
-    /** Keine Option für das KAoA-Zusatzmerkmal */
-    KEINE(null),
+	/** Keine Option für das KAoA-Zusatzmerkmal */
+	KEINE(null),
 
-    /** Anschlussoptionen laut SBO 10.7 */
-    ANSCHLUSSOPTION("Anschlussoption"),
+	/** Anschlussoptionen laut SBO 10.7 */
+	ANSCHLUSSOPTION("Anschlussoption"),
 
-    /** Berufsfelder */
-    BERUFSFELD("Berufsfeld"),
+	/** Berufsfelder */
+	BERUFSFELD("Berufsfeld"),
 
-    /** Freitext */
-    FREITEXT("Freitext"),
+	/** Freitext */
+	FREITEXT("Freitext"),
 
-    /** Freitext Beruf */
-    FREITEXT_BERUF("Freitext Beruf"),
+	/** Freitext Beruf */
+	FREITEXT_BERUF("Freitext Beruf"),
 
-    /** SBO der Ebene 4 (SBO x.x.x.y) */
-    SBO_EBENE_4("SBO EB4");
+	/** SBO der Ebene 4 (SBO x.x.x.y) */
+	SBO_EBENE_4("SBO EB4");
 
 
 	/** Das Kürzel für die Optionsart */

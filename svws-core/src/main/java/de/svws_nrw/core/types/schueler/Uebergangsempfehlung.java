@@ -14,39 +14,39 @@ public enum Uebergangsempfehlung {
 
 	/** Übergangsempfehlung Hauptschule */
 	HAUPTSCHULE(new UebergangsempfehlungKatalogEintrag[] {
-		new UebergangsempfehlungKatalogEintrag(1, "H", "Hauptschule",
-		    Schulform.H, null, null, null)
+			new UebergangsempfehlungKatalogEintrag(1, "H", "Hauptschule",
+					Schulform.H, null, null, null)
 	}),
 
-    /** Übergangsempfehlung Hauptschule / Realschule (eingeschränkt) */
-    HAUPTSCHULE_REALSCHULE(new UebergangsempfehlungKatalogEintrag[] {
-        new UebergangsempfehlungKatalogEintrag(5, "H/R", "Hauptschule / Realschule (eingeschränkt)",
-            Schulform.H, Schulform.R, null, null)
-    }),
+	/** Übergangsempfehlung Hauptschule / Realschule (eingeschränkt) */
+	HAUPTSCHULE_REALSCHULE(new UebergangsempfehlungKatalogEintrag[] {
+			new UebergangsempfehlungKatalogEintrag(5, "H/R", "Hauptschule / Realschule (eingeschränkt)",
+					Schulform.H, Schulform.R, null, null)
+	}),
 
-    /** Übergangsempfehlung Realschule */
-    REALSCHULE(new UebergangsempfehlungKatalogEintrag[] {
-        new UebergangsempfehlungKatalogEintrag(2, "R", "Realschule",
-            Schulform.R, null, null, null)
-    }),
+	/** Übergangsempfehlung Realschule */
+	REALSCHULE(new UebergangsempfehlungKatalogEintrag[] {
+			new UebergangsempfehlungKatalogEintrag(2, "R", "Realschule",
+					Schulform.R, null, null, null)
+	}),
 
-    /** Übergangsempfehlung Realschule / Gymnasium (eingeschränkt) */
-    REALSCHULE_GYMNASIUM(new UebergangsempfehlungKatalogEintrag[] {
-        new UebergangsempfehlungKatalogEintrag(6, "R/GY", "Realschule / Gymnasium (eingeschränkt)",
-            Schulform.R, Schulform.GY, null, null)
-    }),
+	/** Übergangsempfehlung Realschule / Gymnasium (eingeschränkt) */
+	REALSCHULE_GYMNASIUM(new UebergangsempfehlungKatalogEintrag[] {
+			new UebergangsempfehlungKatalogEintrag(6, "R/GY", "Realschule / Gymnasium (eingeschränkt)",
+					Schulform.R, Schulform.GY, null, null)
+	}),
 
-    /** Übergangsempfehlung Gymnasium */
-    GYMNASIUM(new UebergangsempfehlungKatalogEintrag[] {
-        new UebergangsempfehlungKatalogEintrag(3, "GY", "Gymnasium",
-            Schulform.GY, null, null, null)
-    }),
+	/** Übergangsempfehlung Gymnasium */
+	GYMNASIUM(new UebergangsempfehlungKatalogEintrag[] {
+			new UebergangsempfehlungKatalogEintrag(3, "GY", "Gymnasium",
+					Schulform.GY, null, null, null)
+	}),
 
-    /** Keine Übergangsempfehlung */
-    KEINE(new UebergangsempfehlungKatalogEintrag[] {
-        new UebergangsempfehlungKatalogEintrag(4, "OHNE", "Keine Empfehlung",
-            null, null, null, null)
-    });
+	/** Keine Übergangsempfehlung */
+	KEINE(new UebergangsempfehlungKatalogEintrag[] {
+			new UebergangsempfehlungKatalogEintrag(4, "OHNE", "Keine Empfehlung",
+					null, null, null, null)
+	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
@@ -56,7 +56,7 @@ public enum Uebergangsempfehlung {
 	public final @NotNull UebergangsempfehlungKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Übergangsempfehlung */
-	public final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie;
+	public final @NotNull UebergangsempfehlungKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Uebergangsempfehlung> _mapKuerzel = new HashMap<>();
@@ -68,7 +68,7 @@ public enum Uebergangsempfehlung {
 	 * @param historie   die Historie der Eintrags, welche ein Array von
 	 *                   {@link UebergangsempfehlungKatalogEintrag} ist
 	 */
-	Uebergangsempfehlung(final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie) {
+	Uebergangsempfehlung(final @NotNull UebergangsempfehlungKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

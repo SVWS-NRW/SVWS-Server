@@ -15,93 +15,95 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerMinderleistungArt {
 
 	/** Minderleistungsart 'Pflichtstundenermäßigung aus Altersgründen' */
-	ID_200(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(37, "200", "Pflichtstundenermäßigung aus Altersgründen", null, null)
+	ID_200(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(37, "200", "Pflichtstundenermäßigung aus Altersgründen", null, null)
 	}),
 
 	/** Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)' */
-	ID_210(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(38, "210", "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)", null, null)
+	ID_210(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(38, "210", "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)", null, null)
 	}),
 
 	/** Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)' */
-	ID_220(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(39, "220", "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)", null, null)
+	ID_220(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(39, "220", "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)", null, null)
 	}),
 
 	/** Minderleistungsart 'Beurlaubung, Rückkehr im Laufe des Schuljahres' */
-	ID_230(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(40, "230", "Beurlaubung, Rückkehr im Laufe des Schuljahres", null, null)
+	ID_230(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(40, "230", "Beurlaubung, Rückkehr im Laufe des Schuljahres", null, null)
 	}),
 
 	/** Minderleistungsart 'Langfristige Erkrankung' */
-	ID_240(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(41, "240", "Langfristige Erkrankung", null, null)
+	ID_240(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(41, "240", "Langfristige Erkrankung", null, null)
 	}),
 
 	/** Minderleistungsart 'Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG' */
-	ID_250(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(42, "250", "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG", null, null)
+	ID_250(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(42, "250", "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG", null, null)
 	}),
 
 	/** Minderleistungsart 'Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG' */
-	ID_255(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(53, "255", "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG", null, null)
+	ID_255(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(53, "255", "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG", null, null)
 	}),
 
 	/** Minderleistungsart 'Wiedereingliederungsmaßnahme' */
-	ID_260(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(43, "260", "Wiedereingliederungsmaßnahme", null, null)
+	ID_260(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(43, "260", "Wiedereingliederungsmaßnahme", null, null)
 	}),
 
 	/** Minderleistungsart 'Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit' */
-	ID_270(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(44, "270", "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit", null, null)
+	ID_270(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(44, "270", "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit", null, null)
 	}),
 
 	/** Minderleistungsart 'Rückgabe der Vorgriffsstunden' */
-	ID_275(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(51, "275", "Rückgabe der Vorgriffsstunden", null, null)
+	ID_275(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(51, "275", "Rückgabe der Vorgriffsstunden", null, null)
 	}),
 
 	/** Minderleistungsart 'Seiteneinsteigerentlastung' */
-	ID_280(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(45, "280", "Seiteneinsteigerentlastung", null, null)
+	ID_280(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(45, "280", "Seiteneinsteigerentlastung", null, null)
 	}),
 
 	/** Minderleistungsart 'Ermäßigungs-/Freistellungsphase "Teilzeitbeschäftigung im Blockmodell" (§ 65 LBG) (vormals Sabbatjahr)' */
-	ID_290(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(46, "290", "Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)", null, null)
+	ID_290(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(46, "290",
+					"Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)", null, null)
 	}),
 
 	/** Minderleistungsart 'Sonstige Ermäßigungen aus besonderen persönlichen Gründen' */
-	ID_300(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(47, "300", "Sonstige Ermäßigungen aus besonderen persönlichen Gründen", null, null)
+	ID_300(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(47, "300", "Sonstige Ermäßigungen aus besonderen persönlichen Gründen", null, null)
 	}),
 
 	/** Minderleistungsart 'Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr ' */
-	ID_350(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr", null, null)
+	ID_350(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr", null, null)
 	}),
 
 	/** Minderleistungsart 'Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)' */
-	ID_360(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(49, "360", "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)
+	ID_360(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(49, "360",
+					"Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)
 	}),
 
 	/** Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen COVID-19' */
-	ID_365(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(54, "365", "Unterschreitung der Pflichtstundenzahl wegen COVID-19", null, null)
+	ID_365(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(54, "365", "Unterschreitung der Pflichtstundenzahl wegen COVID-19", null, null)
 	}),
 
 	/** Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite' */
-	ID_370(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(50, "370", "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)
+	ID_370(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(50, "370", "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)
 	}),
 
 	/** Minderleistungsart 'Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes' */
-	ID_380(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(52, "380", "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes", null, null)
+	ID_380(new LehrerKatalogMinderleistungsartEintrag[] {
+			new LehrerKatalogMinderleistungsartEintrag(52, "380", "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes", null, null)
 	});
 
 
@@ -113,7 +115,7 @@ public enum LehrerMinderleistungArt {
 	public final @NotNull LehrerKatalogMinderleistungsartEintrag daten;
 
 	/** Die Historie mit den Einträgen der Art von Minderleistung */
-	public final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogMinderleistungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> _artenByID = new HashMap<>();
@@ -127,7 +129,7 @@ public enum LehrerMinderleistungArt {
 	 *
 	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist
 	 */
-	LehrerMinderleistungArt(final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie) {
+	LehrerMinderleistungArt(final @NotNull LehrerKatalogMinderleistungsartEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

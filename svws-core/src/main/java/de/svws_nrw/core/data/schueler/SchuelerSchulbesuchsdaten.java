@@ -31,7 +31,8 @@ public class SchuelerSchulbesuchsdaten {
 	public String vorigeSchulnummer;
 
 	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. */
-	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule", example = "Grundschule (auch Primarstufe der Volkschule)")
+	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
+			example = "Grundschule (auch Primarstufe der Volkschule)")
 	public String vorigeAllgHerkunft;
 
 	/** Das Entlassdatum an der zuvor besuchten Schule. */
@@ -130,14 +131,16 @@ public class SchuelerSchulbesuchsdaten {
 	// **** Informationen zu besonderen Merkmalen für die Statistik
 
 	/** Die Informationen zu den besonderen Merkmalen für die Statistik. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class, description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
+	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class,
+			description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
 	public @NotNull List<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
 
 
 	// **** Informationen zu allen bisher besuchten Schulen (Array)
 
 	/** Die Informationen zu allen bisher besuchten Schulen. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class, description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
+	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class,
+			description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
 	public @NotNull List<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
 
 }

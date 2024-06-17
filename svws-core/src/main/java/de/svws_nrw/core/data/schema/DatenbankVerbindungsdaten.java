@@ -15,18 +15,18 @@ public class DatenbankVerbindungsdaten {
 
 	/** Gibt den Benutzernamen für die Datenbank an. */
 	@Schema(description = "Gibt den Benutzernamen für die Datenbank an.", example = "Admin")
-    public String username;
+	public String username;
 
 	/** Gibt das Kennwort für die Datenbank an. */
 	@Schema(description = "Gibt das Kennwort für die Datenbank an.", example = "Geheim")
-    public String password;
+	public String password;
 
 	/**  Gibt den Ort der Datenbank an. */
 	@Schema(description = "Gibt den Ort der Datenbank an.", example = "localhost:4711")
-    public String location;
+	public String location;
 
 	/** Gibt den Schema-Namen der Datenbank an. */
 	@Schema(description = "Gibt den Schema-Namen der Datenbank an.", example = "schild_nrw")
-    public String schema;
+	public String schema;
 
 }

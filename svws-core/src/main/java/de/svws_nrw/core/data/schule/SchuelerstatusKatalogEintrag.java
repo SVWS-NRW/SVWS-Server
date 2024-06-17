@@ -12,16 +12,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuelerstatusKatalogEintrag {
 
-    /** Die numerische ID des Schüler-Status. */
-    @Schema(description = "Die numerische ID des Schüler-Status")
-    public Integer StatusNr;
+	/** Die numerische ID des Schüler-Status. */
+	@Schema(description = "Die numerische ID des Schüler-Status")
+	public Integer StatusNr;
 
-    /** Klartext des Schülerstatus */
-    @Schema(description = "Klartext des Schülerstatus")
-    public String Bezeichnung;
+	/** Klartext des Schülerstatus */
+	@Schema(description = "Klartext des Schülerstatus")
+	public String Bezeichnung;
 
-    /** Sortierung des Schülerstatus */
-    @Schema(description = "Sortierung des Schülerstatus")
-    public Integer Sortierung;
+	/** Sortierung des Schülerstatus */
+	@Schema(description = "Sortierung des Schülerstatus")
+	public Integer Sortierung;
 
 }

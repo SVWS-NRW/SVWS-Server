@@ -15,88 +15,88 @@ import jakarta.validation.constraints.NotNull;
 public enum HerkunftSonstige {
 
 	/** Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind */
-	AS(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(
-			Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
-			Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-		), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022),
-        new HerkunftSonstigeKatalogEintrag(1001, "AS", Arrays.asList(
-            Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
-            Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
-            Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-        ), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)
+	AS(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+			), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022),
+			new HerkunftSonstigeKatalogEintrag(1001, "AS", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+			), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)
 	}),
 
 
 	/** Keine Schule bzw. kein Förderschulkindergarten (Einschulung) */
-	ES(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(2000, "ES", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
-		), "Keine Schule bzw. kein Förderschulkindergarten (Einschulung)", null, null)
+	ES(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(2000, "ES", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
+			), "Keine Schule bzw. kein Förderschulkindergarten (Einschulung)", null, null)
 	}),
 
 
 	/** Hausfrüherziehung für Hör- bzw. Sehgeschädigte */
-	FE(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(3000, "FE", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.KS, Schulform.S
-		), "Hausfrüherziehung für Hör- bzw. Sehgeschädigte", null, null)
+	FE(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(3000, "FE", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF, Schulform.KS, Schulform.S
+			), "Hausfrüherziehung für Hör- bzw. Sehgeschädigte", null, null)
 	}),
 
 
 	/** Hochschule, Universität */
-	HU(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(4000, "HU", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), "Hochschule, Universität", null, null)
+	HU(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(4000, "HU", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), "Hochschule, Universität", null, null)
 	}),
 
 
 	/** Förderschulkindergarten (einschließlich frühkindliche Förderung) */
-	SK(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(5000, "SK", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
-		), "Förderschulkindergarten (einschließlich frühkindliche Förderung)", null, null)
+	SK(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(5000, "SK", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
+			), "Förderschulkindergarten (einschließlich frühkindliche Förderung)", null, null)
 	}),
 
 
 	/** Herkunft noch unbekannt (nur Gliederung A12, A13) */
-	UN(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(6000, "UN", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), "Herkunft noch unbekannt (nur Gliederung A12, A13)", null, null)
+	UN(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(6000, "UN", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), "Herkunft noch unbekannt (nur Gliederung A12, A13)", null, null)
 	}),
 
 
 	/** Wehr-, Zivil- oder Bundesfreiwilligendienst */
-	WZ(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(8000, "WZ", Arrays.asList(
-			Schulform.BK, Schulform.SB, Schulform.WB
-		), "Wehr-, Zivil- oder Bundesfreiwilligendienst", null, null)
+	WZ(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(8000, "WZ", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB
+			), "Wehr-, Zivil- oder Bundesfreiwilligendienst", null, null)
 	}),
 
 
 	/** Berufstätigkeit (z. B. vor Besuch einer Fachschule) */
-	XB(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(9000, "XB", Arrays.asList(
-			Schulform.BK, Schulform.SB, Schulform.WB
-		), "Berufstätigkeit (z. B. vor Besuch einer Fachschule)", null, null)
+	XB(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(9000, "XB", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB
+			), "Berufstätigkeit (z. B. vor Besuch einer Fachschule)", null, null)
 	}),
 
 
 	/** Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler */
-	XS(new HerkunftSonstigeKatalogEintrag[]{
-		new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(
-			Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
-			Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-		), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022),
-        new HerkunftSonstigeKatalogEintrag(10001, "XS", Arrays.asList(
-            Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
-            Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
-            Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-        ), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", 2023, null)
+	XS(new HerkunftSonstigeKatalogEintrag[] {
+			new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022),
+			new HerkunftSonstigeKatalogEintrag(10001, "XS", Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", 2023, null)
 	});
 
 
@@ -107,7 +107,7 @@ public enum HerkunftSonstige {
 	public final @NotNull HerkunftSonstigeKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der sonstigen Herkunft */
-	public final @NotNull HerkunftSonstigeKatalogEintrag@NotNull[] historie;
+	public final @NotNull HerkunftSonstigeKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten sonstigen Herkünfte, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, HerkunftSonstige> _ebenen = new HashMap<>();
@@ -119,7 +119,7 @@ public enum HerkunftSonstige {
 	 * @param historie   die Historie der sonstigen Herkunft, welches ein Array von
 	 *                   {@link HerkunftSonstigeKatalogEintrag} ist
 	 */
-	HerkunftSonstige(final @NotNull HerkunftSonstigeKatalogEintrag@NotNull[] historie) {
+	HerkunftSonstige(final @NotNull HerkunftSonstigeKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

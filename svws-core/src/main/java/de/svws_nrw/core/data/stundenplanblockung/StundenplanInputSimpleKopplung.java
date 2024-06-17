@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Kopplung bei
  * {@link StundenplanInputSimple}. Kurse der selben Kopplung dürfen in einer Klasse parallel stattfinden. */
 @XmlRootElement(name = "StundenplanInputSimpleKopplung")
-@Schema(name = "StundenplanInputSimpleKopplung", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Kopplung bei {@link StundenplanInputSimple}. Kurse der selben Kopplung dürfen in einer Klasse parallel stattfinden.")
+@Schema(name = "StundenplanInputSimpleKopplung",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Kopplung bei {@link StundenplanInputSimple}. Kurse der selben Kopplung dürfen in einer Klasse parallel stattfinden.")
 @TranspilerDTO
 public class StundenplanInputSimpleKopplung {
 

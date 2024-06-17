@@ -52,7 +52,8 @@ public enum KursFortschreibungsart {
 	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis     gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	KursFortschreibungsart(final int id, final @NotNull String kuerzel, final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
+	KursFortschreibungsart(final int id, final @NotNull String kuerzel, final @NotNull String beschreibung, final Integer gueltigVon,
+			final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
@@ -73,11 +74,16 @@ public enum KursFortschreibungsart {
 		if (id == null)
 			return KursFortschreibungsart.KEINE;
 		switch (id) {
-			case 0: return KursFortschreibungsart.KEINE;
-			case 1: return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
-			case 2: return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
-			case 3: return KursFortschreibungsart.KOMPLETT;
-			default: return KursFortschreibungsart.KEINE;
+			case 0:
+				return KursFortschreibungsart.KEINE;
+			case 1:
+				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
+			case 2:
+				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
+			case 3:
+				return KursFortschreibungsart.KOMPLETT;
+			default:
+				return KursFortschreibungsart.KEINE;
 		}
 	}
 
@@ -94,11 +100,16 @@ public enum KursFortschreibungsart {
 		if (kuerzel == null)
 			return KursFortschreibungsart.KEINE;
 		switch (kuerzel) {
-			case "N": return KursFortschreibungsart.KEINE;
-			case "D": return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
-			case "B": return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
-			case "K": return KursFortschreibungsart.KOMPLETT;
-			default: return KursFortschreibungsart.KEINE;
+			case "N":
+				return KursFortschreibungsart.KEINE;
+			case "D":
+				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
+			case "B":
+				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
+			case "K":
+				return KursFortschreibungsart.KOMPLETT;
+			default:
+				return KursFortschreibungsart.KEINE;
 		}
 	}
 

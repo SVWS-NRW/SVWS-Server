@@ -12,32 +12,32 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Schild3KatalogEintragFilterFehlendeEintraege {
 
-    /** ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden */
-    @Schema(description = "ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden")
-    public Long ID;
+	/** ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden */
+	@Schema(description = "ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden")
+	public Long ID;
 
-    /** Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden */
-    @Schema(description = "Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden")
-    public String Beschreibung;
+	/** Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden */
+	@Schema(description = "Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden")
+	public String Beschreibung;
 
-    /** Feldname des zu prüfenden Feldes */
-    @Schema(description = "Feldname des zu prüfenden Feldes")
-    public String Feldname;
+	/** Feldname des zu prüfenden Feldes */
+	@Schema(description = "Feldname des zu prüfenden Feldes")
+	public String Feldname;
 
-    /** Tabellenname des zu prüfenden Feldes */
-    @Schema(description = "Tabellenname des zu prüfenden Feldes")
-    public String Tabellen;
+	/** Tabellenname des zu prüfenden Feldes */
+	@Schema(description = "Tabellenname des zu prüfenden Feldes")
+	public String Tabellen;
 
-    /** Abfrage die zur Prüfung des Feldes führt. */
-    @Schema(description = "Abfrage die zur Prüfung des Feldes führt")
-    public String SQLText;
+	/** Abfrage die zur Prüfung des Feldes führt. */
+	@Schema(description = "Abfrage die zur Prüfung des Feldes führt")
+	public String SQLText;
 
-    /** ggf. Schulform für bestimmte Schulformen */
-    @Schema(description = "ggf. Schulform für bestimmte Schulformen")
-    public String Schulform;
+	/** ggf. Schulform für bestimmte Schulformen */
+	@Schema(description = "ggf. Schulform für bestimmte Schulformen")
+	public String Schulform;
 
-    /** Feldtyp des zu prüfenden Feldes */
-    @Schema(description = "Feldtyp des zu prüfenden Feldes")
-    public String Feldtyp;
+	/** Feldtyp des zu prüfenden Feldes */
+	@Schema(description = "Feldtyp des zu prüfenden Feldes")
+	public String Feldtyp;
 
 }

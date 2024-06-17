@@ -57,11 +57,16 @@ public enum GostAbiturFach {
 		if (id == null)
 			return null;
 		switch (id) {
-			case 1: return LK1;
-			case 2: return LK2;
-			case 3: return AB3;
-			case 4: return AB4;
-			default: return null;
+			case 1:
+				return LK1;
+			case 2:
+				return LK2;
+			case 3:
+				return AB3;
+			case 4:
+				return AB4;
+			default:
+				return null;
 		}
 	}
 
@@ -77,11 +82,16 @@ public enum GostAbiturFach {
 		if (strID == null)
 			return null;
 		switch (strID) {
-			case "1": return LK1;
-			case "2": return LK2;
-			case "3": return AB3;
-			case "4": return AB4;
-			default: return null;
+			case "1":
+				return LK1;
+			case "2":
+				return LK2;
+			case "3":
+				return AB3;
+			case "4":
+				return AB4;
+			default:
+				return null;
 		}
 	}
 
@@ -95,11 +105,16 @@ public enum GostAbiturFach {
 	 * */
 	public static GostAbiturFach fromKuerzel(final String kuerzel) {
 		switch (kuerzel) {
-			case "LK1": return LK1;
-			case "LK2": return LK2;
-			case "AB3": return AB3;
-			case "AB4": return AB4;
-			default: return null;
+			case "LK1":
+				return LK1;
+			case "LK2":
+				return LK2;
+			case "AB3":
+				return AB3;
+			case "AB4":
+				return AB4;
+			default:
+				return null;
 		}
 	}
 

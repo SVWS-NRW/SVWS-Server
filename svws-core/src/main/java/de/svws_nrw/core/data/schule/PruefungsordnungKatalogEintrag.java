@@ -30,7 +30,8 @@ public class PruefungsordnungKatalogEintrag {
 	public String kuerzelSchild = "";
 
 	/** Die Bezeichnung der Verordnung. */
-	@Schema(description = "die Bezeichnung der Verordnung", example = "Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
+	@Schema(description = "die Bezeichnung der Verordnung",
+			example = "Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
 	public @NotNull String bezeichnung = "";
 
 	/** Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde */

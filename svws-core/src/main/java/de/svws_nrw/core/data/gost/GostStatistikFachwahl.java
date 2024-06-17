@@ -45,6 +45,6 @@ public class GostStatistikFachwahl {
 
 	/** Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostStatistikFachwahlHalbjahr.class))
-	public @NotNull GostStatistikFachwahlHalbjahr @NotNull[] fachwahlen = new GostStatistikFachwahlHalbjahr[6];
+	public @NotNull GostStatistikFachwahlHalbjahr @NotNull [] fachwahlen = new GostStatistikFachwahlHalbjahr[6];
 
 }

@@ -50,11 +50,12 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Überprüft, ob ein pWert NULL ist und wirft in diesem Fall eine DeveloperNotificationException.
 	 * Andernfalls wird pWert selbst zurückgegeben.
 	 *
-	 * @param pBeschreibung Die Beschreibung was nicht NULL sein darf.
-	 * @param pWert Der Rückgabewert, falls es keinen Fehler gibt.
-	 * @param <T> Der Typ von pErgebnis.
+	 * @param pBeschreibung   die Beschreibung was nicht NULL sein darf.
+	 * @param pWert           der Rückgabewert, falls es keinen Fehler gibt.
+	 * @param <T>   der Typ von pErgebnis.
 	 *
 	 * @return Liefert pWert, falls es nicht NULL ist.
+	 *
 	 * @throws DeveloperNotificationException falls pWert NULL ist.
 	 */
 	public static ifNull<T>(pBeschreibung : string, pWert : T | null) : T {
@@ -66,10 +67,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein pWert nicht in dem Bereich von min und max liegt und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
-	 * @param pVariablenname Der Name der Variablen.
-	 * @param pWert          Der Wert der Variablen.
-	 * @param pMinimum       Der kleinste noch erlaubte Wert.
-	 * @param pMaximum       Der größte noch erlaubte Wert.
+	 * @param pVariablenname   der Name der Variablen.
+	 * @param pWert            der Wert der Variablen.
+	 * @param pMinimum         der kleinste noch erlaubte Wert.
+	 * @param pMaximum         der größte noch erlaubte Wert.
 	 *
 	 * @throws DeveloperNotificationException falls pWert kleiner als pMinimum ist.
 	 */
@@ -81,9 +82,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob eine pWert kleiner ist als pMinimum und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
-	 * @param pVariablenname Der Name der Variablen.
-	 * @param pWert          Der Wert der Variablen.
-	 * @param pMinimum       Der kleinste noch erlaubte Wert.
+	 * @param pVariablenname   der Name der Variablen.
+	 * @param pWert            der Wert der Variablen.
+	 * @param pMinimum         der kleinste noch erlaubte Wert.
 	 *
 	 * @throws DeveloperNotificationException falls pWert kleiner als pMinimum ist.
 	 */
@@ -95,9 +96,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob eine pWert größer ist als pMaximum und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
-	 * @param pVariablenname Der Name der Variablen.
-	 * @param pWert          Der Wert der Variablen.
-	 * @param pMaximum       Der größte noch erlaubte Wert.
+	 * @param pVariablenname   der Name der Variablen.
+	 * @param pWert            der Wert der Variablen.
+	 * @param pMaximum         der größte noch erlaubte Wert.
 	 *
 	 * @throws DeveloperNotificationException falls pWert größer als pMaximum ist.
 	 */
@@ -109,9 +110,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob eine Variable einen Wert hat.
 	 *
-	 * @param pVariablenname Der Name der Variablen.
-	 * @param pVariable      Die Variable, die geprüft wird.
-	 * @param pWert          Der Wert der Variablen.
+	 * @param pVariablenname   der Name der Variablen.
+	 * @param pVariable        die Variable, die geprüft wird.
+	 * @param pWert            der Wert der Variablen.
 	 *
 	 * @throws DeveloperNotificationException falls pVariable gleich pWert ist..
 	 */
@@ -123,8 +124,8 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
-	 * @param nameDerVariablen Der Name der Variablen.
-	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 * @param nameDerVariablen   der Name der Variablen.
+	 * @param zeichenkette       der String, welcher nicht "blank" sein darf.
 	 *
 	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
 	 */
@@ -136,11 +137,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein Schlüssel bereits in einer Map existiert.
 	 *
-	 * @param <K> Der Schlüssel-Typ der Map.
-	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
-	 * @param pMapName Der Name der Map.
-	 * @param pMap     Die Map.
-	 * @param pKey     Der Schlüssel der überprüft wird.
+	 * @param <K>   der Schlüssel-Typ der Map.
+	 * @param <V>   der zum Schlüssel zugeordnete Typ der Map.
+	 * @param pMapName   der Name der Map.
+	 * @param pMap       die Map.
+	 * @param pKey       der Schlüssel der überprüft wird.
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel in der Map bereits existiert.
 	 */
@@ -152,11 +153,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein Schlüssel nicht in einer Map existiert.
 	 *
-	 * @param <K> Der Schlüssel-Typ der Map.
-	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
-	 * @param pMapName Der Name der Map.
-	 * @param pMap     Die Map.
-	 * @param pKey     Der Schlüssel der überprüft wird.
+	 * @param <K>   der Schlüssel-Typ der Map.
+	 * @param <V>   der zum Schlüssel zugeordnete Typ der Map.
+	 * @param pMapName   der Name der Map.
+	 * @param pMap       die Map.
+	 * @param pKey       der Schlüssel der überprüft wird.
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel nicht in der Map bereits existiert.
 	 */
@@ -169,11 +170,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Fügt das Mapping K --> V der Map hinzu. <br>
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 *
-	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
-	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
-	 * @param map   Die Map.
-	 * @param key   Der Schlüssel des Mappings K --> V.
-	 * @param value Der Wert des Mappings K --> V.
+	 * @param <K>   der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V>   der Schlüssel-Wert des Mappings K --> V.
+	 * @param map     die Map.
+	 * @param key     der Schlüssel des Mappings K --> V.
+	 * @param value   der Wert des Mappings K --> V.
 	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 */
@@ -187,13 +188,13 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Fügt das Mapping (K1, K2) --> V der Map hinzu. <br>
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 *
-	 * @param <K1>  Der Typ des 1. Schlüssels.
-	 * @param <K2>  Der Typ des 2. Schlüssels.
-	 * @param <V>   Der Typ des zugeordneten Wertes.
-	 * @param map   Die Map.
-	 * @param key1  Der 1. Schlüssel.
-	 * @param key2  Der 2. Schlüssel.
-	 * @param value Der zugeordnete Wert.
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map     die Map.
+	 * @param key1    der 1. Schlüssel.
+	 * @param key2    der 2. Schlüssel.
+	 * @param value   der zugeordnete Wert.
 	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 */
@@ -207,12 +208,13 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K nichts oder NULL zugeordnet ist.
 	 *
-	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
-	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
-	 * @param map Die Map.
-	 * @param key Der Schlüssel des Mappings K --> V.
+	 * @param <K>   der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V>   der Schlüssel-Wert des Mappings K --> V.
+	 * @param map   die Map.
+	 * @param key   der Schlüssel des Mappings K --> V.
 	 *
 	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel K nichts oder NULL zugeordnet ist.
 	 */
 	public static ifMapGetIsNull<K, V>(map : JavaMap<K, V>, key : K) : V {
@@ -227,12 +229,13 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Entfernt ein Mapping aus der Map, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
-	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
-	 * @param map Die Map.
-	 * @param key Der Schlüssel des Mappings K --> V.
+	 * @param <K>   der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V>   der Schlüssel-Wert des Mappings K --> V.
+	 * @param map   die Map.
+	 * @param key   der Schlüssel des Mappings K --> V.
 	 *
 	 * @return den zugeordneten (nicht NULL) Wert des gelöschten Schlüssels.
+	 *
 	 * @throws DeveloperNotificationException falls das Element nicht in der Map existiert.
 	 */
 	public static ifMapRemoveFailes<K, V>(map : JavaMap<K, V>, key : K) : V {
@@ -246,14 +249,15 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K nichts oder NULL zugeordnet ist.
 	 *
-	 * @param <K1>  Der Typ des 1. Schlüssels.
-	 * @param <K2>  Der Typ des 2. Schlüssels.
-	 * @param <V>   Der Typ des zugeordneten Wertes.
-	 * @param map   Die Map.
-	 * @param key1  Der 1. Schlüssel.
-	 * @param key2  Der 2. Schlüssel.
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map    die Map.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
 	 *
 	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel (K1, K2) nichts oder NULL zugeordnet ist.
 	 */
 	public static ifMap2DGetIsNull<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : V {
@@ -266,14 +270,15 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Versucht des Mapping (K1, K2) zu löschen.
 	 * Wirft eine DeveloperNotificationException, falls das Mapping(K1, K2) nicht existiert.
 	 *
-	 * @param <K1>  Der Typ des 1. Schlüssels.
-	 * @param <K2>  Der Typ des 2. Schlüssels.
-	 * @param <V>   Der Typ des zugeordneten Wertes.
-	 * @param map   Die Map.
-	 * @param key1  Der 1. Schlüssel.
-	 * @param key2  Der 2. Schlüssel.
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map    die Map.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
 	 *
 	 * @return den vor dem Löschen zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
 	 * @throws DeveloperNotificationException falls das Mapping(K1, K2) nicht existiert.
 	 */
 	public static ifMap2DRemoveFailes<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : V {
@@ -287,16 +292,17 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel (K1, K2, K3) nichts oder NULL zugeordnet ist.
 	 *
-	 * @param <K1>  Der Typ des 1. Schlüssels.
-	 * @param <K2>  Der Typ des 2. Schlüssels.
-	 * @param <K3>  Der Typ des 3. Schlüssels.
-	 * @param <V>   Der Typ des zugeordneten Wertes.
-	 * @param map   Die Map.
-	 * @param key1  Der 1. Schlüssel.
-	 * @param key2  Der 2. Schlüssel.
-	 * @param key3  Der 3. Schlüssel.
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map    die Map.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
+	 * @param key3   der 3. Schlüssel.
 	 *
 	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel (K1, K2, K3) nichts oder NULL zugeordnet ist.
 	 */
 	public static ifMap3DGetIsNull<K1, K2, K3, V>(map : HashMap3D<K1, K2, K3, V>, key1 : K1, key2 : K2, key3 : K3) : V {
@@ -308,10 +314,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob eins Liste ein Element nicht enthält, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente der Liste
-	 * @param listName Der Name der Liste.
-	 * @param list     Die Liste.
-	 * @param value    Das Element, welches vorkommen muss.
+	 * @param <E>   der Typ der Elemente der Liste
+	 * @param listName   der Name der Liste.
+	 * @param list       die Liste.
+	 * @param value      das Element, welches vorkommen muss.
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
@@ -323,10 +329,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente der Liste
-	 * @param listName Der Name der Liste.
-	 * @param list     Die Liste.
-	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 * @param <E>   der Typ der Elemente der Liste
+	 * @param listName   der Name der Liste.
+	 * @param list       die Liste.
+	 * @param value      das Element, welches hinzugefügt werden soll.
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
@@ -339,10 +345,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Entfernt ein Element aus der Liste, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente der Liste
-	 * @param listName Der Name der Liste.
-	 * @param list     Die Liste.
-	 * @param value    Das Element, welches entfernt werden soll.
+	 * @param <E>   der Typ der Elemente der Liste
+	 * @param listName   der Name der Liste.
+	 * @param list       die Liste.
+	 * @param value      das Element, welches entfernt werden soll.
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht in der Liste existiert.
 	 */
@@ -354,9 +360,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Liefert das erste NICHT-NULL Element der Liste.
 	 *
-	 * @param <E>      Der Typ der Elemente der Liste
-	 * @param listName Der Name der Liste.
-	 * @param list     Die Liste.
+	 * @param <E>   der Typ der Elemente der Liste
+	 * @param listName   der Name der Liste.
+	 * @param list       die Liste.
 	 *
 	 * @return das erste NICHT-NULL Element der Liste.
 	 *
@@ -374,9 +380,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Liefert das letzte NICHT-NULL Element der Liste.
 	 *
-	 * @param <E>      Der Typ der Elemente der Liste
-	 * @param listName Der Name der Liste.
-	 * @param list     Die Liste.
+	 * @param <E>   der Typ der Elemente der Liste
+	 * @param listName   der Name der Liste.
+	 * @param list       die Liste.
 	 *
 	 * @return das letzte NICHT-NULL Element der Liste.
 	 *
@@ -394,9 +400,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Wirft eine Exception, falls die übergebene Liste leer ist.
 	 *
-	 * @param <E>         Der Typ der Elemente der Liste.
-	 * @param listName    Der Name der Liste.
-	 * @param collection  Die Liste.
+	 * @param <E>   der Typ der Elemente der Liste.
+	 * @param listName     der Name der Liste.
+	 * @param collection   die Liste.
 	 *
 	 * @throws DeveloperNotificationException falls das Array leer ist.
 	 */
@@ -408,10 +414,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set.
-	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 * @param <E>   der Typ der Elemente des Sets
+	 * @param setName   der Name des Sets.
+	 * @param set       das Set.
+	 * @param value     das Element, welches hinzugefügt werden soll.
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
 	 */
@@ -423,10 +429,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Entfernt ein Element aus dem Set, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set.
-	 * @param value    Das Element, welches entfernt werden soll.
+	 * @param <E>   der Typ der Elemente des Sets
+	 * @param setName   der Name des Sets.
+	 * @param set       das Set.
+	 * @param value     das Element, welches entfernt werden soll.
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
 	 */
@@ -438,10 +444,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein Set ein Element bereits enthält, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set.
-	 * @param value    Das Element, welches nicht vorkommen darf.
+	 * @param <E>   der Typ der Elemente des Sets
+	 * @param setName   der Name des Sets.
+	 * @param set       das Set.
+	 * @param value     das Element, welches nicht vorkommen darf.
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
 	 */
@@ -453,10 +459,10 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Überprüft, ob ein Set ein Element nicht enthält, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set.
-	 * @param value    Das Element, welches vorkommen muss.
+	 * @param <E>   der Typ der Elemente des Sets
+	 * @param setName   der Name des Sets.
+	 * @param set       das Set.
+	 * @param value     das Element, welches vorkommen muss.
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
 	 */
@@ -468,7 +474,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Liefert die Zahl des umgewandelten Strings.
 	 *
-	 * @param s Der String der in ein int umgewandelt werden soll.
+	 * @param s   der String der in ein int umgewandelt werden soll.
 	 *
 	 * @return die Zahl des umgewandelten Strings.
 	 */
@@ -481,9 +487,9 @@ export class DeveloperNotificationException extends RuntimeException {
 	/**
 	 * Wirft eine Exception, falls das übergebene Array leer ist.
 	 *
-	 * @param <E>        Der Typ der Elemente des Arrays.
-	 * @param arrayName  Der Name des Arrays.
-	 * @param values     Das Array.
+	 * @param <E>         der Typ der Elemente des Arrays.
+	 * @param arrayName   der Name des Arrays.
+	 * @param values      das Array.
 	 *
 	 * @throws DeveloperNotificationException falls das Array leer ist.
 	 */

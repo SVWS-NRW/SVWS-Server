@@ -27,7 +27,8 @@ public class GEAbschlussFaecher {
 	public int abschnitt;
 
 	/** Gibt den Jahrgang an, für den die Abschlussberechnung durchgeführt werden soll. */
-	@Schema(description = "Der Jahrgang für den die Abschlussberechnung erstellt werden soll, im allgemeinen 10 - alles andere wird als voriger Jahrgang gewertet", example = "10")
+	@Schema(description = "Der Jahrgang für den die Abschlussberechnung erstellt werden soll, im allgemeinen 10 - alles andere wird als voriger Jahrgang gewertet",
+			example = "10")
 	public String jahrgang;
 
 	/** Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen. */

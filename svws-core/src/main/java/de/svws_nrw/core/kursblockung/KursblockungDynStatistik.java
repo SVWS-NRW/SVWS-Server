@@ -169,11 +169,12 @@ public class KursblockungDynStatistik {
 	 *
 	 * @return Debug-Informationen in einer Zeile.
 	 */
-	@NotNull String debugRow() {
+	@NotNull
+	String debugRow() {
 		return " RV = " + bewertungRegelverletzungen
-			+ ", NW = " + bewertungNichtwahlen
-			+ ", FW = " + bewertungFachartPaar
-			+ ", KDs = " + bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen);
+				+ ", NW = " + bewertungNichtwahlen
+				+ ", FW = " + bewertungFachartPaar
+				+ ", KDs = " + bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen);
 	}
 
 	/**
@@ -213,17 +214,23 @@ public class KursblockungDynStatistik {
 	 */
 	int gibBewertungZustandS_NW_KD() {
 		// Regelverletzungen
-		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveS) return -1;
-		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveS) return +1;
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveS)
+			return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveS)
+			return +1;
 
 		// Nichtwahlen
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveS) return -1;
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveS) return +1;
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveS)
+			return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveS)
+			return +1;
 
 		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveS[i]) return -1;
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveS[i]) return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveS[i])
+				return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveS[i])
+				return +1;
 		}
 
 		// Bewertungen identisch
@@ -239,22 +246,30 @@ public class KursblockungDynStatistik {
 	 */
 	int gibCompareZustandK_NW_KD_FW() {
 		// Regelverletzungen
-		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK) return -1;
-		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK) return +1;
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK)
+			return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK)
+			return +1;
 
 		// Nichtwahlen
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) return -1;
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) return +1;
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK)
+			return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK)
+			return +1;
 
 		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) return -1;
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i])
+				return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i])
+				return +1;
 		}
 
 		// FachartPaar
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) return -1;
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) return +1;
+		if (bewertungFachartPaar > bewertungFachartPaarSaveK)
+			return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveK)
+			return +1;
 
 		// Bewertungen identisch
 		return 0;
@@ -269,21 +284,29 @@ public class KursblockungDynStatistik {
 	 */
 	int gibCompareZustandK_FW_NW_KD() {
 		// Regelverletzungen
-		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK) return -1;
-		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK) return +1;
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK)
+			return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK)
+			return +1;
 
 		// FachartPaar
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) return -1;
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) return +1;
+		if (bewertungFachartPaar > bewertungFachartPaarSaveK)
+			return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveK)
+			return +1;
 
 		// Nichtwahlen
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) return -1;
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) return +1;
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK)
+			return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK)
+			return +1;
 
 		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) return -1;
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i])
+				return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i])
+				return +1;
 		}
 
 		// Bewertungen identisch
@@ -299,22 +322,30 @@ public class KursblockungDynStatistik {
 	 */
 	int gibCompareZustandG_NW_KD_FW() {
 		// Regelverletzungen
-		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveG) return -1;
-		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveG) return +1;
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveG)
+			return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveG)
+			return +1;
 
 		// Nichtwahlen
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveG) return -1;
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveG) return +1;
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveG)
+			return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveG)
+			return +1;
 
 		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveG[i]) return -1;
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveG[i]) return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveG[i])
+				return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveG[i])
+				return +1;
 		}
 
 		// FachartPaar
-		if (bewertungFachartPaar > bewertungFachartPaarSaveG) return -1;
-		if (bewertungFachartPaar < bewertungFachartPaarSaveG) return +1;
+		if (bewertungFachartPaar > bewertungFachartPaarSaveG)
+			return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveG)
+			return +1;
 
 		// Bewertungen identisch
 		return 0;
@@ -329,17 +360,23 @@ public class KursblockungDynStatistik {
 	 */
 	public boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynStatistik b) {
 		// Regelverletzungen
-		if (bewertungRegelverletzungen < b.bewertungRegelverletzungen) return true;
-		if (bewertungRegelverletzungen > b.bewertungRegelverletzungen) return false;
+		if (bewertungRegelverletzungen < b.bewertungRegelverletzungen)
+			return true;
+		if (bewertungRegelverletzungen > b.bewertungRegelverletzungen)
+			return false;
 
 		// Nichtwahlen
-		if (bewertungNichtwahlen < b.bewertungNichtwahlen) return true;
-		if (bewertungNichtwahlen > b.bewertungNichtwahlen) return false;
+		if (bewertungNichtwahlen < b.bewertungNichtwahlen)
+			return true;
+		if (bewertungNichtwahlen > b.bewertungNichtwahlen)
+			return false;
 
 		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i]) return true;
-			if (bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i]) return false;
+			if (bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i])
+				return true;
+			if (bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i])
+				return false;
 		}
 
 		// FachartPaar
@@ -351,7 +388,8 @@ public class KursblockungDynStatistik {
 	 *
 	 * @return das Array bzw. das Histogramm der Kursdifferenzen.
 	 */
-	@NotNull int[] gibArrayDerKursdifferenzen() {
+	@NotNull
+	int[] gibArrayDerKursdifferenzen() {
 		return bewertungKursdifferenzen;
 	}
 

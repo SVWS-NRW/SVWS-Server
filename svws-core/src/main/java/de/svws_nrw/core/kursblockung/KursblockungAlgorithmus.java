@@ -41,22 +41,22 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 		final @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new ArrayList<>();
 
 		final @NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
-			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
-			new KursblockungAlgorithmusKSchnellW(random, logger, dynDaten),
-			new KursblockungAlgorithmusKFachwahlmatrix(random, logger, dynDaten),
-			new KursblockungAlgorithmusKMatching(random, logger, dynDaten),
-			new KursblockungAlgorithmusKSchuelervorschlag(random, logger, dynDaten),
-			new KursblockungAlgorithmusKOptimiereBest(random, logger, dynDaten),
-			// ... Ende der K-Algorithmen.
+				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
+				new KursblockungAlgorithmusKSchnellW(random, logger, dynDaten),
+				new KursblockungAlgorithmusKFachwahlmatrix(random, logger, dynDaten),
+				new KursblockungAlgorithmusKMatching(random, logger, dynDaten),
+				new KursblockungAlgorithmusKSchuelervorschlag(random, logger, dynDaten),
+				new KursblockungAlgorithmusKOptimiereBest(random, logger, dynDaten),
+				// ... Ende der K-Algorithmen.
 		};
 
 		final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
-			// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
-			new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten),
-			new KursblockungAlgorithmusSZufaellig(random, logger, dynDaten),
-			new KursblockungAlgorithmusSMatching(random, logger, dynDaten),
-			new KursblockungAlgorithmusSMatchingW(random, logger, dynDaten),
-			// ... Ende der S-Algorithmen.
+				// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
+				new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten),
+				new KursblockungAlgorithmusSZufaellig(random, logger, dynDaten),
+				new KursblockungAlgorithmusSMatching(random, logger, dynDaten),
+				new KursblockungAlgorithmusSMatchingW(random, logger, dynDaten),
+				// ... Ende der S-Algorithmen.
 		};
 
 		// Hauptschleife: Jeder Algorithmus-K erhält stetig mehr Zeit.

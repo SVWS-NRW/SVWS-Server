@@ -21,12 +21,12 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "enthält die Informationen der gymnasialen Oberstufe eines Schülers in Bezug auf das Abitur.")
 @JsonPropertyOrder({ "schuelerID", "abiturjahr", "schuljahrAbitur", "fachbelegungen", "sprachenfolge", "sprachpruefungen", "bilingualeSprache",
-	"latinum", "kleinesLatinum", "graecum", "hebraicum",
-	"block1FehlstundenGesamt", "block1FehlstundenUnentschuldigt", "projektKursThema", "projektkursLeitfach1Kuerzel",
-	"projektkursLeitfach2Kuerzel", "besondereLernleistung", "besondereLernleistungNotenKuerzel", "besondereLernleistungThema",
-	"block1AnzahlKurse", "block1DefiziteGesamt", "block1DefiziteLK", "block1PunktSummeGK", "block1PunktSummeLK", "block1PunktSummeNormiert",
-	"block1NotenpunkteDurchschnitt", "block1Zulassung", "freiwilligerRuecktritt", "block2DefiziteGesamt", "block2DefiziteLK",
-	"block2PunktSumme", "gesamtPunkte", "gesamtPunkteVerbesserung", "gesamtPunkteVerschlechterung", "pruefungBestanden", "note" })
+		"latinum", "kleinesLatinum", "graecum", "hebraicum",
+		"block1FehlstundenGesamt", "block1FehlstundenUnentschuldigt", "projektKursThema", "projektkursLeitfach1Kuerzel",
+		"projektkursLeitfach2Kuerzel", "besondereLernleistung", "besondereLernleistungNotenKuerzel", "besondereLernleistungThema",
+		"block1AnzahlKurse", "block1DefiziteGesamt", "block1DefiziteLK", "block1PunktSummeGK", "block1PunktSummeLK", "block1PunktSummeNormiert",
+		"block1NotenpunkteDurchschnitt", "block1Zulassung", "freiwilligerRuecktritt", "block2DefiziteGesamt", "block2DefiziteLK",
+		"block2PunktSumme", "gesamtPunkte", "gesamtPunkteVerbesserung", "gesamtPunkteVerschlechterung", "pruefungBestanden", "note" })
 @TranspilerDTO
 public class Abiturdaten {
 
@@ -44,7 +44,8 @@ public class Abiturdaten {
 
 
 	/** Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt."))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt."))
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
@@ -52,11 +53,13 @@ public class Abiturdaten {
 	public final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
-	@Schema(implementation = Sprachendaten.class, description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
+	@Schema(implementation = Sprachendaten.class,
+			description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
 	public @NotNull Sprachendaten sprachendaten = new Sprachendaten();
 
 	/** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
-	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example = "E")
+	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.",
+			example = "E")
 	public String bilingualeSprache = null;
 
 	/** Gibt an, ob das große Latinum erworben wurde. */
@@ -94,12 +97,14 @@ public class Abiturdaten {
 	public String projektkursLeitfach1Kuerzel = null;
 
 	/** Das Kürzel des zweiten Leitfaches des belegten Projektkurs, sofern einer belegt wurde und ein zweites Leitfach für diesen festgelegt wurde */
-	@Schema(description = "Das Kürzel des zweiten Leitfaches des belegten Projektkurs, sofern einer belegt wurde und ein zweites Leitfach für diesen festgelegt wurde.", example = "E")
+	@Schema(description = "Das Kürzel des zweiten Leitfaches des belegten Projektkurs, sofern einer belegt wurde und ein zweites Leitfach für diesen festgelegt wurde.",
+			example = "E")
 	public String projektkursLeitfach2Kuerzel = null;
 
 
 	/** Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern). */
-	@Schema(defaultValue = "K", description = "Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern).", example = "K")
+	@Schema(defaultValue = "K", description = "Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern).",
+			example = "K")
 	public String besondereLernleistung = GostBesondereLernleistung.KEINE.kuerzel;
 
 	/** Gibt ggf. die Note einer externen besonderen Lernleistung an. */
@@ -178,7 +183,8 @@ public class Abiturdaten {
 
 
 	/** Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. */
-	@Schema(description = "Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.", example = "true")
+	@Schema(description = "Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.",
+			example = "true")
 	public Boolean pruefungBestanden = null;
 
 	/** Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde. */

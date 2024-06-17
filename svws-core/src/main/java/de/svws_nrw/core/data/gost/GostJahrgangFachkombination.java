@@ -20,7 +20,8 @@ public class GostJahrgangFachkombination {
 	public long id;
 
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt */
-	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt", example = "2042")
+	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt",
+			example = "2042")
 	public int abiturjahr;
 
 	/** Die ID des Faches (Fach 1), dessen Wahl die Kombination mit einem anderen Fach verlangt oder ausschließt */
@@ -40,15 +41,18 @@ public class GostJahrgangFachkombination {
 	public String kursart2;
 
 	/** Gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...) */
-	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...)"))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class,
+			description = "gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...)"))
 	public @NotNull boolean[] gueltigInHalbjahr = new boolean[6];
 
 	/** Der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig) */
-	@Schema(description = "der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)", example = "1")
+	@Schema(description = "der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)",
+			example = "1")
 	public int typ;
 
 	/** Der erläuternde Hinweistext zu der Fachkombination */
-	@Schema(description = "der erläuternde Hinweistext zu der Fachkombination", example = "Der Sport-Leistungskurs ist an dieser Schule nur in Verbindung mit einem Mathematik-Leistungskurs wählbar.")
+	@Schema(description = "der erläuternde Hinweistext zu der Fachkombination",
+			example = "Der Sport-Leistungskurs ist an dieser Schule nur in Verbindung mit einem Mathematik-Leistungskurs wählbar.")
 	public @NotNull String hinweistext = "";
 
 }

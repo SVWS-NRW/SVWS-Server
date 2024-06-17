@@ -15,33 +15,34 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerMehrleistungArt {
 
 	/** Mehrleistungsart 'Beschäftigungsphase Sabbatjahr' */
-	ID_100(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(1, "100", "Beschäftigungsphase Sabbatjahr", null, null)
+	ID_100(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(1, "100", "Beschäftigungsphase Sabbatjahr", null, null)
 	}),
 
 	/** Mehrleistungsart 'Mehrarbeit (angeordnet und regelmäßig)' */
-	ID_110(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(2, "110", "Mehrarbeit (angeordnet und regelmäßig)", null, null)
+	ID_110(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(2, "110", "Mehrarbeit (angeordnet und regelmäßig)", null, null)
 	}),
 
 	/** Mehrleistungsart 'Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ' */
-	ID_150(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(3, "150", "Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ", null, null)
+	ID_150(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(3, "150", "Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ", null, null)
 	}),
 
 	/** Mehrleistungsart 'Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)' */
-	ID_160(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(4, "160", "Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)
+	ID_160(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(4, "160", "Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
+					null, null)
 	}),
 
 	/** Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen COVID-19' */
-	ID_165(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(6, "165", "Überschreitung der Pflichtstundenzahl wegen COVID-19", null, null)
+	ID_165(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(6, "165", "Überschreitung der Pflichtstundenzahl wegen COVID-19", null, null)
 	}),
 
 	/** Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichtstunden-Bandbreite' */
-	ID_170(new LehrerKatalogMehrleistungsartEintrag[]{
-		new LehrerKatalogMehrleistungsartEintrag(5, "170", "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)
+	ID_170(new LehrerKatalogMehrleistungsartEintrag[] {
+			new LehrerKatalogMehrleistungsartEintrag(5, "170", "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)
 	});
 
 
@@ -53,7 +54,7 @@ public enum LehrerMehrleistungArt {
 	public final @NotNull LehrerKatalogMehrleistungsartEintrag daten;
 
 	/** Die Historie mit den Einträgen der Art von Mehrleistung */
-	public final @NotNull LehrerKatalogMehrleistungsartEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogMehrleistungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Mehrleistungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerMehrleistungArt> _artenByID = new HashMap<>();
@@ -67,7 +68,7 @@ public enum LehrerMehrleistungArt {
 	 *
 	 * @param historie   die Historie der Art von Mehrleistung, welches ein Array von {@link LehrerKatalogMehrleistungsartEintrag} ist
 	 */
-	LehrerMehrleistungArt(final @NotNull LehrerKatalogMehrleistungsartEintrag@NotNull[] historie) {
+	LehrerMehrleistungArt(final @NotNull LehrerKatalogMehrleistungsartEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

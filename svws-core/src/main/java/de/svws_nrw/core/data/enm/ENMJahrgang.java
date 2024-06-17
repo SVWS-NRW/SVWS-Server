@@ -30,7 +30,8 @@ public class ENMJahrgang {
 	public String beschreibung;
 
 	/** Die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3) */
-	@Schema(description = "Die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3).", example = "SII-1")
+	@Schema(description = "Die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3).",
+			example = "SII-1")
 	public String stufe;
 
 	/** Die Reihenfolge des Jahrgangs bei der Sortierung der Jahrgänge. (z.B. 8) */

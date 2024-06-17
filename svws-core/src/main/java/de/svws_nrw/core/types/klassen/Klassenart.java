@@ -26,7 +26,7 @@ public enum Klassenart {
 	UNDEFINIERT(new KlassenartKatalogEintrag[] {
 			new KlassenartKatalogEintrag(0, "**", "Kein Eintrag", Arrays.asList(
 					new Pair<>(Schulform.WB, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Hauptschulklasse 1A */
@@ -37,7 +37,7 @@ public enum Klassenart {
 					new Pair<>(Schulform.R, Schulgliederung.H),
 					new Pair<>(Schulform.SK, Schulgliederung.H),
 					new Pair<>(Schulform.V, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Hauptschulklasse 1B */
@@ -47,7 +47,7 @@ public enum Klassenart {
 					new Pair<>(Schulform.GM, Schulgliederung.H),
 					new Pair<>(Schulform.SK, Schulgliederung.H),
 					new Pair<>(Schulform.V, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Hauptschuleklasse ohne Differenzierung nach A und B */
@@ -57,14 +57,15 @@ public enum Klassenart {
 					new Pair<>(Schulform.GM, Schulgliederung.H),
 					new Pair<>(Schulform.SK, Schulgliederung.H),
 					new Pair<>(Schulform.V, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder) */
 	AM(new KlassenartKatalogEintrag[] {
-			new KlassenartKatalogEintrag(4000, "AM", "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)", Arrays.asList(
-					new Pair<>(Schulform.KS, (Schulgliederung) null),
-					new Pair<>(Schulform.S, (Schulgliederung) null)
+			new KlassenartKatalogEintrag(4000, "AM", "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)",
+					Arrays.asList(
+							new Pair<>(Schulform.KS, (Schulgliederung) null),
+							new Pair<>(Schulform.S, (Schulgliederung) null)
 					), null, null)
 	}),
 
@@ -73,7 +74,7 @@ public enum Klassenart {
 			new KlassenartKatalogEintrag(5000, "PG", "Frühförderung: SKG (Präsenzgruppe)", Arrays.asList(
 					new Pair<>(Schulform.KS, (Schulgliederung) null),
 					new Pair<>(Schulform.S, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Profilklasse (gemäß § 21 Abs. 3 APO-S I) */
@@ -82,7 +83,7 @@ public enum Klassenart {
 					new Pair<>(Schulform.GY, (Schulgliederung) null),
 					new Pair<>(Schulform.GE, Schulgliederung.GY9),
 					new Pair<>(Schulform.SK, Schulgliederung.GY)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Regelklasse */
@@ -104,7 +105,7 @@ public enum Klassenart {
 					new Pair<>(Schulform.SK, (Schulgliederung) null),
 					new Pair<>(Schulform.SR, (Schulgliederung) null),
 					new Pair<>(Schulform.V, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	}),
 
 	/** Klassenart: Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1) */
@@ -123,7 +124,7 @@ public enum Klassenart {
 					new Pair<>(Schulform.SK, (Schulgliederung) null),
 					new Pair<>(Schulform.SR, (Schulgliederung) null),
 					new Pair<>(Schulform.V, (Schulgliederung) null)
-					), null, null)
+			), null, null)
 	});
 
 
@@ -134,7 +135,7 @@ public enum Klassenart {
 	public final @NotNull KlassenartKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Klassenart */
-	public final @NotNull KlassenartKatalogEintrag@NotNull[] historie;
+	public final @NotNull KlassenartKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Klassenart> _mapID = new HashMap<>();
@@ -143,7 +144,7 @@ public enum Klassenart {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
-	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -152,11 +153,11 @@ public enum Klassenart {
 	 * @param historie   die Historie der Klassenart, welches ein Array von {@link KlassenartKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	Klassenart(final @NotNull KlassenartKatalogEintrag@NotNull[] historie) {
+	Klassenart(final @NotNull KlassenartKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {

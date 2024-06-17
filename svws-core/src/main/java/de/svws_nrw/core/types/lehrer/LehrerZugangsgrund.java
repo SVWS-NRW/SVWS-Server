@@ -13,28 +13,30 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerZugangsgrund {
 
 	/** Grund 'Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung' für das Kommen des Lehrers an die Schule */
-	NEU(new LehrerKatalogZugangsgrundEintrag[]{
-		new LehrerKatalogZugangsgrundEintrag(1, "NEU", "Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung", "1", null, null)
+	NEU(new LehrerKatalogZugangsgrundEintrag[] {
+			new LehrerKatalogZugangsgrundEintrag(1, "NEU",
+					"Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung", "1", null, null)
 	}),
 
 	/** Grund 'Übertritt aus dem Schuldienst eines anderen Bundeslandes' für das Kommen des Lehrers an die Schule */
-	AndBuLand(new LehrerKatalogZugangsgrundEintrag[]{
-		new LehrerKatalogZugangsgrundEintrag(2, "AndBuLand", "Übertritt aus dem Schuldienst eines anderen Bundeslandes", "2", null, null)
+	AndBuLand(new LehrerKatalogZugangsgrundEintrag[] {
+			new LehrerKatalogZugangsgrundEintrag(2, "AndBuLand", "Übertritt aus dem Schuldienst eines anderen Bundeslandes", "2", null, null)
 	}),
 
 	/** Grund 'Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule' für das Kommen des Lehrers an die Schule */
-	WECHSEL(new LehrerKatalogZugangsgrundEintrag[]{
-		new LehrerKatalogZugangsgrundEintrag(3, "WECHSEL", "Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule", "3", null, null)
+	WECHSEL(new LehrerKatalogZugangsgrundEintrag[] {
+			new LehrerKatalogZugangsgrundEintrag(3, "WECHSEL", "Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule", "3", null,
+					null)
 	}),
 
 	/** Grund 'Wiedereintritt in den Schuldienst' für das Kommen des Lehrers an die Schule */
-	WIEDER(new LehrerKatalogZugangsgrundEintrag[]{
-		new LehrerKatalogZugangsgrundEintrag(4, "WIEDER", "Wiedereintritt in den Schuldienst", "4", null, null)
+	WIEDER(new LehrerKatalogZugangsgrundEintrag[] {
+			new LehrerKatalogZugangsgrundEintrag(4, "WIEDER", "Wiedereintritt in den Schuldienst", "4", null, null)
 	}),
 
 	/** Grund 'Sonstige Zugänge' für das Kommen des Lehrers an die Schule */
-	SONSTIG(new LehrerKatalogZugangsgrundEintrag[]{
-		new LehrerKatalogZugangsgrundEintrag(5, "SONSTIG", "Sonstige Zugänge", "5", null, null)
+	SONSTIG(new LehrerKatalogZugangsgrundEintrag[] {
+			new LehrerKatalogZugangsgrundEintrag(5, "SONSTIG", "Sonstige Zugänge", "5", null, null)
 	});
 
 
@@ -45,7 +47,7 @@ public enum LehrerZugangsgrund {
 	public final @NotNull LehrerKatalogZugangsgrundEintrag daten;
 
 	/** Die Historie mit den Einträgen des Zugangsgrundes */
-	public final @NotNull LehrerKatalogZugangsgrundEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogZugangsgrundEintrag @NotNull [] historie;
 
 
 	/**
@@ -53,7 +55,7 @@ public enum LehrerZugangsgrund {
 	 *
 	 * @param historie   die Historie des Zugangsgrundes, welches ein Array von {@link LehrerKatalogZugangsgrundEintrag} ist
 	 */
-	LehrerZugangsgrund(final @NotNull LehrerKatalogZugangsgrundEintrag@NotNull[] historie) {
+	LehrerZugangsgrund(final @NotNull LehrerKatalogZugangsgrundEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

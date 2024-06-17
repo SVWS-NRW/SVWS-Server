@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class KursblockungAlgorithmusPermanent  {
+public final class KursblockungAlgorithmusPermanent {
 	private static final long MILLIS_START = 1000;
 	// private static final long MILLIS_INCREMENT = 1000 --> lineares Wachstum doch nicht so gut.
 	private static final int TOP_ERGEBNISSE = 10;
@@ -46,7 +46,7 @@ public final class KursblockungAlgorithmusPermanent  {
 	 */
 	public KursblockungAlgorithmusPermanent(final @NotNull GostBlockungsdatenManager pInput) {
 		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
-		final long seed =  _random.nextLong();
+		final long seed = _random.nextLong();
 		_logger.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
 
 		_input = pInput;
@@ -55,13 +55,13 @@ public final class KursblockungAlgorithmusPermanent  {
 		_top = new ArrayList<>();
 
 		algorithmenK = new KursblockungAlgorithmusPermanentK @NotNull [] {
-			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
-			new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input),
-			new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input),
-			new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input),
-			new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input),
-			new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, null),
-			// ... Ende der K-Algorithmen.
+				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
+				new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input),
+				new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input),
+				new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input),
+				new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input),
+				new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, null),
+				// ... Ende der K-Algorithmen.
 		};
 	}
 
@@ -148,12 +148,12 @@ public final class KursblockungAlgorithmusPermanent  {
 		final @NotNull KursblockungDynDaten dynDaten = k.gibDynDaten();
 
 		final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
-			// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
-			new KursblockungAlgorithmusSSchnellW(_random, _logger, dynDaten),
-			new KursblockungAlgorithmusSZufaellig(_random, _logger, dynDaten),
-			new KursblockungAlgorithmusSMatching(_random, _logger, dynDaten),
-			new KursblockungAlgorithmusSMatchingW(_random, _logger, dynDaten),
-			// ... Ende der S-Algorithmen.
+				// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
+				new KursblockungAlgorithmusSSchnellW(_random, _logger, dynDaten),
+				new KursblockungAlgorithmusSZufaellig(_random, _logger, dynDaten),
+				new KursblockungAlgorithmusSMatching(_random, _logger, dynDaten),
+				new KursblockungAlgorithmusSMatchingW(_random, _logger, dynDaten),
+				// ... Ende der S-Algorithmen.
 		};
 
 		// Verteilung der SuS (nur die beste Verteilung bleibt im Zustand K).

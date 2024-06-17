@@ -19,7 +19,7 @@ public class BenutzergruppeDaten {
 
 	/** Die ID der Benutzergruppe. */
 	@Schema(description = "die ID der Benutzergruppe", example = "4711")
-	public @NotNull long  id = -1;
+	public @NotNull long id = -1;
 
 	/** Die Bezeichnung der Benutzergruppe. */
 	@Schema(description = "die Bezeichnung der Benutzergruppe", example = "Administrator")

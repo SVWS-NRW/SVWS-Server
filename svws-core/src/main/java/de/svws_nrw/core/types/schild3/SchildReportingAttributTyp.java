@@ -8,41 +8,41 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum SchildReportingAttributTyp {
 
-    /** Boolean */
-    BOOLEAN("boolean"),
+	/** Boolean */
+	BOOLEAN("boolean"),
 
-    /** Ganzzahl */
-    INT("integer"),
+	/** Ganzzahl */
+	INT("integer"),
 
-    /** Zahl, auch Kommazahlen */
-    NUMBER("number"),
+	/** Zahl, auch Kommazahlen */
+	NUMBER("number"),
 
-    /** Zeichenkette */
-    STRING("string"),
+	/** Zeichenkette */
+	STRING("string"),
 
-    /** Mehrzeilige Zeichenkette */
-    MEMO("memo"),
+	/** Mehrzeilige Zeichenkette */
+	MEMO("memo"),
 
-    /** Datumsangabe */
-    DATE("date");
-
-
-    /** Der JSON-Typ als String */
-    private final @NotNull String type;
+	/** Datumsangabe */
+	DATE("date");
 
 
-    /**
-     * Initialisiert den Datentyp für die Aufzählung
-     *
-     * @param type   der JSON-Datentyp
-     */
-    SchildReportingAttributTyp(final @NotNull String type) {
-        this.type = type;
-    }
+	/** Der JSON-Typ als String */
+	private final @NotNull String type;
 
-    @Override
-    public @NotNull String toString() {
-        return this.type;
-    }
+
+	/**
+	 * Initialisiert den Datentyp für die Aufzählung
+	 *
+	 * @param type   der JSON-Datentyp
+	 */
+	SchildReportingAttributTyp(final @NotNull String type) {
+		this.type = type;
+	}
+
+	@Override
+	public @NotNull String toString() {
+		return this.type;
+	}
 
 }

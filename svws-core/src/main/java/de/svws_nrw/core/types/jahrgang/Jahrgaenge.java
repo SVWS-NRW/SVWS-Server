@@ -27,18 +27,18 @@ public enum Jahrgaenge {
 			new JahrgangsKatalogEintrag(0L, "00", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Frühkindliche Förderung, Förderschulkindergarten"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Frühkindliche Förderung, Förderschulkindergarten")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte
 	 */
-	JG_90(new JahrgangsKatalogEintrag[]{
-		new JahrgangsKatalogEintrag(4090000000L, "90", Arrays.asList(
-			new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte"),
-			new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte")
-		), null, null)
+	JG_90(new JahrgangsKatalogEintrag[] {
+			new JahrgangsKatalogEintrag(4090000000L, "90", Arrays.asList(
+					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte"),
+					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte")
+			), null, null)
 	}),
 
 
@@ -55,7 +55,7 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 1. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 1. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 1. Schulbesuchsjahr")
-					), null, null)
+			), null, null)
 	}),
 
 
@@ -72,7 +72,7 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 2. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 2. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 2. Schulbesuchsjahr")
-					), null, null)
+			), null, null)
 	}),
 
 
@@ -89,27 +89,27 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 3. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 3. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 3. Schulbesuchsjahr")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 91: Vorkurs/ 1. Semester
 	 */
-	JG_91(new JahrgangsKatalogEintrag[]{
-		new JahrgangsKatalogEintrag(4091000000L, "91", Arrays.asList(
-			new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 1. Semester")
-		), null, null)
+	JG_91(new JahrgangsKatalogEintrag[] {
+			new JahrgangsKatalogEintrag(4091000000L, "91", Arrays.asList(
+					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 1. Semester")
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 92: Vorkurs/ 2. Semester
 	 */
-	JG_92(new JahrgangsKatalogEintrag[]{
-		new JahrgangsKatalogEintrag(4092000000L, "92", Arrays.asList(
-			new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 2. Semester")
-		), null, null)
+	JG_92(new JahrgangsKatalogEintrag[] {
+			new JahrgangsKatalogEintrag(4092000000L, "92", Arrays.asList(
+					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 2. Semester")
+			), null, null)
 	}),
 
 
@@ -122,27 +122,27 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "1. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "1. Semester (Seiteneinsteiger)"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "1. Semester (Einführungs-/Hauptphase)")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 02: 2. Jahrgang / 2. Semester
 	 */
-	JG_02(new JahrgangsKatalogEintrag[]{
+	JG_02(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(1002000000L, "02", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "2. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "2. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "2. Semester (Seiteneinsteiger)"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "2. Semester (Einführungs-/Hauptphase)")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 03: 3. Jahrgang / 3. Semester
 	 */
-	JG_03(new JahrgangsKatalogEintrag[]{
+	JG_03(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(1003000000L, "03", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "3. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "3. Jahrgang dieser Schulgliederung"),
@@ -155,14 +155,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "3. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "3. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "3. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 04: 4. Jahrgang / 4. Semester
 	 */
-	JG_04(new JahrgangsKatalogEintrag[]{
+	JG_04(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(1004000000L, "04", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "4. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "4. Jahrgang dieser Schulgliederung"),
@@ -175,14 +175,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "4. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "4. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "4. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 05: 5. Jahrgang / 5. Semester
 	 */
-	JG_05(new JahrgangsKatalogEintrag[]{
+	JG_05(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2005000000L, "05", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "5. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "5. Jahrgang dieser Schulgliederung"),
@@ -202,14 +202,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "5. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "5. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "5. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 06: 6. Jahrgang / 6. Semester
 	 */
-	JG_06(new JahrgangsKatalogEintrag[]{
+	JG_06(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2006000000L, "06", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "6. Jahrgang dieser Schulgliederung"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "6. Jahrgang dieser Schulgliederung"),
@@ -229,14 +229,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "6. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "6. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "6. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 07: 7. Jahrgang
 	 */
-	JG_07(new JahrgangsKatalogEintrag[]{
+	JG_07(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2007000000L, "07", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "7. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "7. Jahrgang"),
@@ -253,14 +253,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "7. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "7. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "7. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 08: 8. Jahrgang
 	 */
-	JG_08(new JahrgangsKatalogEintrag[]{
+	JG_08(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2008000000L, "08", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "8. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "8. Jahrgang"),
@@ -277,14 +277,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "8. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "8. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "8. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 09: 9. Jahrgang
 	 */
-	JG_09(new JahrgangsKatalogEintrag[]{
+	JG_09(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2009000000L, "09", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "9. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "9. Jahrgang"),
@@ -302,14 +302,14 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "9. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "9. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "9. Jahrgang dieser Schulgliederung")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 10: 10. Jahrgang
 	 */
-	JG_10(new JahrgangsKatalogEintrag[]{
+	JG_10(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2010000000L, "10", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "10. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "10. Jahrgang"),
@@ -327,123 +327,123 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "10. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "10. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "10. Jahrgang dieser Schulgliederung")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 11: 11. Jahrgang
 	 */
-	JG_11(new JahrgangsKatalogEintrag[]{
+	JG_11(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2011000000L, "11", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "11. Jahrgang, Berufskolleg"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "11. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "11. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 12: 12. Jahrgang
 	 */
-	JG_12(new JahrgangsKatalogEintrag[]{
+	JG_12(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2012000000L, "12", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "12. Jahrgang, Berufskolleg"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "12. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "12. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 13: 13. Jahrgang
 	 */
-	JG_13(new JahrgangsKatalogEintrag[]{
+	JG_13(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(2013000000L, "13", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "13. Jahrgang"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "13. Jahrgang")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 71: Schule für Kranke
 	 */
-	JG_71(new JahrgangsKatalogEintrag[]{
+	JG_71(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(4071000000L, "71", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Kranke"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Kranke"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Kranke"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Kranke")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 85: Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform
 	 */
-	JG_85(new JahrgangsKatalogEintrag[]{
+	JG_85(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(4085000000L, "85", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang 86: Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform
 	 */
-	JG_86(new JahrgangsKatalogEintrag[]{
+	JG_86(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(4086000000L, "86", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang EF: Einführungsphase
 	 */
-	JG_EF(new JahrgangsKatalogEintrag[]{
+	JG_EF(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(3000000000L, "EF", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Einführungsphase"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Einführungsphase"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Einführungsphase"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Einführungsphase"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Einführungsphase")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang Q1: Qualifikationsphase 1. Jahr
 	 */
-	JG_Q1(new JahrgangsKatalogEintrag[]{
+	JG_Q1(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(3001000000L, "Q1", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Qualifikationsphase 1. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Qualifikationsphase 1. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Qualifikationsphase 1. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Qualifikationsphase 1. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Qualifikationsphase 1. Jahr")
-					), null, null)
+			), null, null)
 	}),
 
 
 	/**
 	 * Jahrgang Q2: Qualifikationsphase 2. Jahr
 	 */
-	JG_Q2(new JahrgangsKatalogEintrag[]{
+	JG_Q2(new JahrgangsKatalogEintrag[] {
 			new JahrgangsKatalogEintrag(3002000000L, "Q2", Arrays.asList(
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Qualifikationsphase 2. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Qualifikationsphase 2. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Qualifikationsphase 2. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Qualifikationsphase 2. Jahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Qualifikationsphase 2. Jahr")
-					), null, null)
+			), null, null)
 	});
 
 
@@ -454,7 +454,7 @@ public enum Jahrgaenge {
 	public final @NotNull JahrgangsKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Jahrgangs */
-	public final @NotNull JahrgangsKatalogEintrag@NotNull[] historie;
+	public final @NotNull JahrgangsKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs */
 	private static final @NotNull HashMap<@NotNull String, Jahrgaenge> _mapKuerzel = new HashMap<>();
@@ -463,10 +463,10 @@ public enum Jahrgaenge {
 	private static final @NotNull HashMap<@NotNull Long, Jahrgaenge> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<@NotNull String> @NotNull[] bezeichnungen;
+	private final @NotNull ArrayList<@NotNull String> @NotNull [] bezeichnungen;
 
 
 	/**
@@ -475,13 +475,13 @@ public enum Jahrgaenge {
 	 * @param historie   die Historie des Jahrgangs, welches ein Array von {@link JahrgangsKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	Jahrgaenge(final @NotNull JahrgangsKatalogEintrag@NotNull[] historie) {
+	Jahrgaenge(final @NotNull JahrgangsKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
-		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			this.bezeichnungen[i] = new ArrayList<>();
@@ -593,7 +593,7 @@ public enum Jahrgaenge {
 		final @NotNull ArrayList<@NotNull Jahrgaenge> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
-		final @NotNull Jahrgaenge@NotNull[] jahrgaenge = Jahrgaenge.values();
+		final @NotNull Jahrgaenge @NotNull [] jahrgaenge = Jahrgaenge.values();
 		for (int i = 0; i < jahrgaenge.length; i++) {
 			final @NotNull Jahrgaenge jahrgang = jahrgaenge[i];
 			if (jahrgang.hasSchulform(schulform))
@@ -771,7 +771,8 @@ public enum Jahrgaenge {
 			case JG_08:
 				return vergleichsjahrgang == JG_09;
 			case JG_09:
-				return (vergleichsjahrgang == JG_10) || ((schulform == Schulform.GY) && ((gl == Schulgliederung.GY8) || (gl == Schulgliederung.DEFAULT)) && (vergleichsjahrgang == JG_EF));
+				return (vergleichsjahrgang == JG_10)
+						|| ((schulform == Schulform.GY) && ((gl == Schulgliederung.GY8) || (gl == Schulgliederung.DEFAULT)) && (vergleichsjahrgang == JG_EF));
 			case JG_10:
 				return (vergleichsjahrgang == JG_11) || ((schulform.daten.hatGymOb) && (vergleichsjahrgang == JG_EF));
 			case JG_11:
@@ -966,10 +967,10 @@ public enum Jahrgaenge {
 		return switch (schulform) {
 			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
 			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
-				? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
+					? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
 			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) && (schuljahr <= 2024))
-				|| ((this == Jahrgaenge.JG_09) && (schuljahr <= 2023))
-				|| ((this == Jahrgaenge.JG_08) && (schuljahr <= 2022));
+					|| ((this == Jahrgaenge.JG_09) && (schuljahr <= 2023))
+					|| ((this == Jahrgaenge.JG_08) && (schuljahr <= 2022));
 			case HI -> (this == Jahrgaenge.JG_10);
 			case KS -> (this == Jahrgaenge.JG_10);
 			case V -> (this == Jahrgaenge.JG_10);
@@ -1012,7 +1013,7 @@ public enum Jahrgaenge {
 		return switch (schulform) {
 			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
 			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
-				? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
+					? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
 			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) || (this == Jahrgaenge.JG_09) || (this == Jahrgaenge.JG_08));
 			case HI -> (this == Jahrgaenge.JG_10);
 			case KS -> (this == Jahrgaenge.JG_10);

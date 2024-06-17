@@ -313,8 +313,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
 				let von : number = param.get(1).valueOf()
 				let bis : number = param.get(2).valueOf()
-				von = pSchienenNr < von ? von - 1 : von;
-				bis = pSchienenNr <= bis ? bis - 1 : bis;
+				von = (pSchienenNr < von) ? (von - 1) : von;
+				bis = (pSchienenNr <= bis) ? (bis - 1) : bis;
 				if (von <= bis)
 					return [param.get(0), von, bis];
 				return null;

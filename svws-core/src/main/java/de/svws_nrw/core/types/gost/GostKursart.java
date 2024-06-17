@@ -23,27 +23,27 @@ public enum GostKursart {
 	/** Leistungskurs = LK */
 	LK(1, "LK", "Leistungskurs", Arrays.asList(
 			ZulaessigeKursart.LK1, ZulaessigeKursart.LK2
-			)),
+	)),
 
 	/** Grundkurs = GK */
 	GK(2, "GK", "Grundkurs", Arrays.asList(
 			ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP
-			)),
+	)),
 
 	/** Zusatzkurs = ZK */
 	ZK(3, "ZK", "Zusatzkurs", Arrays.asList(
 			ZulaessigeKursart.ZK
-			)),
+	)),
 
 	/** Projektkurs = PJK */
 	PJK(4, "PJK", "Projektkurs", Arrays.asList(
 			ZulaessigeKursart.PJK
-			)),
+	)),
 
 	/** Vertiefungskurs = VTF */
 	VTF(5, "VTF", "Vertiefungskurs", Arrays.asList(
 			ZulaessigeKursart.VTF
-			));
+	));
 
 
 	private static final long FACHART_ID_FAKTOR = 1000L;
@@ -93,12 +93,18 @@ public enum GostKursart {
 	 */
 	public boolean pruefeWochenstunden(final int anzahl) {
 		switch (kuerzel) {
-			case "GK":  return (anzahl == 3) || (anzahl == 4);  // neu einsetzende Fremdsprachen können 4-stündig sein
-			case "LK":  return (anzahl == 5);
-			case "PJK": return (anzahl == 2) || (anzahl == 3);
-			case "VTF": return (anzahl == 2);
-			case "ZK":  return (anzahl == 3);
-			default:    return false;
+			case "GK":
+				return (anzahl == 3) || (anzahl == 4);  // neu einsetzende Fremdsprachen können 4-stündig sein
+			case "LK":
+				return (anzahl == 5);
+			case "PJK":
+				return (anzahl == 2) || (anzahl == 3);
+			case "VTF":
+				return (anzahl == 2);
+			case "ZK":
+				return (anzahl == 3);
+			default:
+				return false;
 		}
 	}
 
@@ -112,12 +118,18 @@ public enum GostKursart {
 	 */
 	public int getWochenstunden(final boolean istFSNeu) {
 		switch (kuerzel) {
-			case "GK":  return istFSNeu ? 4 : 3;
-			case "LK":  return 5;
-			case "PJK": return 2;    // hier nur default, kann auch 3 sein
-			case "VTF": return 2;
-			case "ZK":  return 3;
-			default:    return 3;
+			case "GK":
+				return istFSNeu ? 4 : 3;
+			case "LK":
+				return 5;
+			case "PJK":
+				return 2;    // hier nur default, kann auch 3 sein
+			case "VTF":
+				return 2;
+			case "ZK":
+				return 3;
+			default:
+				return 3;
 		}
 	}
 
@@ -172,12 +184,18 @@ public enum GostKursart {
 	 */
 	public static @NotNull GostKursart fromID(final int id) throws DeveloperNotificationException {
 		switch (id) {
-			case 1: return GostKursart.LK;
-			case 2: return GostKursart.GK;
-			case 3: return GostKursart.ZK;
-			case 4: return GostKursart.PJK;
-			case 5: return GostKursart.VTF;
-			default: throw new DeveloperNotificationException("Invalid ID value.");
+			case 1:
+				return GostKursart.LK;
+			case 2:
+				return GostKursart.GK;
+			case 3:
+				return GostKursart.ZK;
+			case 4:
+				return GostKursart.PJK;
+			case 5:
+				return GostKursart.VTF;
+			default:
+				throw new DeveloperNotificationException("Invalid ID value.");
 		}
 	}
 
@@ -201,12 +219,18 @@ public enum GostKursart {
 	 */
 	public static GostKursart fromIDorNull(final int id) {
 		switch (id) {
-			case 1: return GostKursart.LK;
-			case 2: return GostKursart.GK;
-			case 3: return GostKursart.ZK;
-			case 4: return GostKursart.PJK;
-			case 5: return GostKursart.VTF;
-			default: return null;
+			case 1:
+				return GostKursart.LK;
+			case 2:
+				return GostKursart.GK;
+			case 3:
+				return GostKursart.ZK;
+			case 4:
+				return GostKursart.PJK;
+			case 5:
+				return GostKursart.VTF;
+			default:
+				return null;
 		}
 	}
 

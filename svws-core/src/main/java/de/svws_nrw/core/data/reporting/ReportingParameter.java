@@ -24,11 +24,13 @@ public class ReportingParameter {
 	public long idSchuljahresabschnitt = -1;
 
 	/** Das Dateiformat, in dem der Report ausgegeben werden soll, als Wert gemäß CoreType {@link ReportingAusgabeformat} */
-	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2).", example = "2")
+	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2).",
+			example = "2")
 	public int ausgabeformat = ReportingAusgabeformat.PDF.getId();
 
 	/** Die Bezeichnung des auszugebenden Reports gemäß Definition im CoreType {@link ReportingReportvorlage} */
-	@Schema(description = "Die Bezeichnung der Vorlage des auszugebenden Reports gemäß Definition im Core Type ReportingReportvorlage", example = "Schueler-GostAbiturApoAnlage12")
+	@Schema(description = "Die Bezeichnung der Vorlage des auszugebenden Reports gemäß Definition im Core Type ReportingReportvorlage",
+			example = "Schueler-GostAbiturApoAnlage12")
 	public @NotNull String reportvorlage = "";
 
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */

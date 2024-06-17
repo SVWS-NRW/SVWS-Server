@@ -14,121 +14,124 @@ public enum BerufskollegOrganisationsformen {
 
 	/** Organisationsform: Teilzeitunterricht (außerhalb der TZ-Berufsschule) */
 	TEILZEIT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1001000, "T", "Teilzeitunterricht (außerhalb der TZ-Berufsschule)", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1001000, "T", "Teilzeitunterricht (außerhalb der TZ-Berufsschule)", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule */
 	TEILZEIT_NORMALKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1002000, "A", "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1002000, "A", "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule */
 	TEILZEIT_BEZIRKSFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1003000, "C", "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1003000, "C", "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule */
 	TEILZEIT_LANDESFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1004000, "I", "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1004000, "I", "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Vollzeitunterricht */
 	VOLLZEIT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1005000, "V", "Vollzeitunterricht", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1005000, "V", "Vollzeitunterricht", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System */
 	DUAL_BLOCK_IM_UNTERRICHT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1006000, "B", "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1006000, "B", "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System */
 	DUAL_BLOCK_NICHT_IM_UNTERRICHT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1007000, "E", "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1007000, "E", "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System */
 	DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1008000, "G", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1008000, "G", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System",
+					Arrays.asList(
+							Schulform.BK, Schulform.SB
+					), null, null)
 	}),
 
 	/** Organisationsform: Ganztagsunterricht (Normalklasse) im dualen System */
 	DUAL_GANZTAG(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1000, "K", "Ganztagsunterricht (Normalklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1000, "K", "Ganztagsunterricht (Normalklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System */
 	DUAL_BLOCK_IM_UNTERRICHT_BEZIRKSFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1009000, "D", "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1009000, "D", "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System */
 	DUAL_BLOCK_NICHT_IM_UNTERRICHT_BEZIRKSFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1010000, "F", "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1010000, "F", "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System */
 	DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_BEZIRKSFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1011000, "H", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1011000, "H",
+					"Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
+							Schulform.BK, Schulform.SB
+					), null, null)
 	}),
 
 	/** Organisationsform: Ganztagsunterricht (Bezirksfachklasse) im dualen System */
 	DUAL_GANZTAG_BEZIRKSFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1012000, "L", "Ganztagsunterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1012000, "L", "Ganztagsunterricht (Bezirksfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System */
 	DUAL_BLOCK_IM_UNTERRICHT_LANDESFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1013000, "O", "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1013000, "O", "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System */
 	DUAL_BLOCK_NICHT_IM_UNTERRICHT_LANDESFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1014000, "P", "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1014000, "P", "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	}),
 
 	/** Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System */
 	DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_LANDESFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1015000, "U", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1015000, "U",
+					"Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System", Arrays.asList(
+							Schulform.BK, Schulform.SB
+					), null, null)
 	}),
 
 	/** Organisationsform: Ganztagsunterricht (Landesfachklasse) im dualen System */
 	DUAL_GANZTAG_LANDESFACHKLASSE(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(1016000, "M", "Ganztagsunterricht (Landesfachklasse) im dualen System", Arrays.asList(
-			Schulform.BK, Schulform.SB
-		), null, null)
+			new OrganisationsformKatalogEintrag(1016000, "M", "Ganztagsunterricht (Landesfachklasse) im dualen System", Arrays.asList(
+					Schulform.BK, Schulform.SB
+			), null, null)
 	});
 
 
@@ -141,7 +144,7 @@ public enum BerufskollegOrganisationsformen {
 	public final @NotNull OrganisationsformKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Organisationsform */
-	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
+	public final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BerufskollegOrganisationsformen> _mapByID = new HashMap<>();
@@ -156,7 +159,7 @@ public enum BerufskollegOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von
 	 *                   {@link OrganisationsformKatalogEintrag} ist
 	 */
-	BerufskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	BerufskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

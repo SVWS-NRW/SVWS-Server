@@ -137,7 +137,8 @@ public enum Note {
 	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
+	Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text,
+			final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.sortierung = sortierung;
 		this.notenpunkte = notenpunkte;
@@ -174,13 +175,20 @@ public enum Note {
 		if (noteSekI == null)
 			return null;
 		switch (noteSekI) {
-			case 1: return SEHR_GUT;
-			case 2: return GUT;
-			case 3: return BEFRIEDIGEND;
-			case 4: return AUSREICHEND;
-			case 5: return MANGELHAFT;
-			case 6: return UNGENUEGEND;
-			default: return null;
+			case 1:
+				return SEHR_GUT;
+			case 2:
+				return GUT;
+			case 3:
+				return BEFRIEDIGEND;
+			case 4:
+				return AUSREICHEND;
+			case 5:
+				return MANGELHAFT;
+			case 6:
+				return UNGENUEGEND;
+			default:
+				return null;
 		}
 	}
 
@@ -196,23 +204,40 @@ public enum Note {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
-			case 0: return UNGENUEGEND;
-			case 1: return MANGELHAFT_MINUS;
-			case 2: return MANGELHAFT;
-			case 3: return MANGELHAFT_PLUS;
-			case 4: return AUSREICHEND_MINUS;
-			case 5: return AUSREICHEND;
-			case 6: return AUSREICHEND_PLUS;
-			case 7: return BEFRIEDIGEND_MINUS;
-			case 8: return BEFRIEDIGEND;
-			case 9: return BEFRIEDIGEND_PLUS;
-			case 10: return GUT_MINUS;
-			case 11: return GUT;
-			case 12: return GUT_PLUS;
-			case 13: return SEHR_GUT_MINUS;
-			case 14: return SEHR_GUT;
-			case 15: return SEHR_GUT_PLUS;
-			default: return KEINE;
+			case 0:
+				return UNGENUEGEND;
+			case 1:
+				return MANGELHAFT_MINUS;
+			case 2:
+				return MANGELHAFT;
+			case 3:
+				return MANGELHAFT_PLUS;
+			case 4:
+				return AUSREICHEND_MINUS;
+			case 5:
+				return AUSREICHEND;
+			case 6:
+				return AUSREICHEND_PLUS;
+			case 7:
+				return BEFRIEDIGEND_MINUS;
+			case 8:
+				return BEFRIEDIGEND;
+			case 9:
+				return BEFRIEDIGEND_PLUS;
+			case 10:
+				return GUT_MINUS;
+			case 11:
+				return GUT;
+			case 12:
+				return GUT_PLUS;
+			case 13:
+				return SEHR_GUT_MINUS;
+			case 14:
+				return SEHR_GUT;
+			case 15:
+				return SEHR_GUT_PLUS;
+			default:
+				return KEINE;
 		}
 	}
 
@@ -230,32 +255,58 @@ public enum Note {
 			return KEINE;
 		final String kuerzelUppercase = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
-			case "6": return UNGENUEGEND;
-			case "5-": return MANGELHAFT_MINUS;
-			case "5": return MANGELHAFT;
-			case "5+": return MANGELHAFT_PLUS;
-			case "4-": return AUSREICHEND_MINUS;
-			case "4": return AUSREICHEND;
-			case "4+": return AUSREICHEND_PLUS;
-			case "3-": return BEFRIEDIGEND_MINUS;
-			case "3": return BEFRIEDIGEND;
-			case "3+": return BEFRIEDIGEND_PLUS;
-			case "2-": return GUT_MINUS;
-			case "2": return GUT;
-			case "2+": return GUT_PLUS;
-			case "1-": return SEHR_GUT_MINUS;
-			case "1": return SEHR_GUT;
-			case "1+": return SEHR_GUT_PLUS;
-			case "E1": return E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
-			case "E2": return E2_MIT_ERFOLG_TEILGENOMMEN;
-			case "E3": return E3_TEILGENOMMEN;
-			case "AT": return ATTEST;
-			case "AM": return ABGEMELDET;
-			case "NB": return NICHT_BEURTEILT;
-			case "NT": return NICHT_TEILGENOMMEN;
-			case "NE": return NICHT_ERTEILT;
-			case "LM": return LEHRERMANGEL;
-			default: return KEINE;
+			case "6":
+				return UNGENUEGEND;
+			case "5-":
+				return MANGELHAFT_MINUS;
+			case "5":
+				return MANGELHAFT;
+			case "5+":
+				return MANGELHAFT_PLUS;
+			case "4-":
+				return AUSREICHEND_MINUS;
+			case "4":
+				return AUSREICHEND;
+			case "4+":
+				return AUSREICHEND_PLUS;
+			case "3-":
+				return BEFRIEDIGEND_MINUS;
+			case "3":
+				return BEFRIEDIGEND;
+			case "3+":
+				return BEFRIEDIGEND_PLUS;
+			case "2-":
+				return GUT_MINUS;
+			case "2":
+				return GUT;
+			case "2+":
+				return GUT_PLUS;
+			case "1-":
+				return SEHR_GUT_MINUS;
+			case "1":
+				return SEHR_GUT;
+			case "1+":
+				return SEHR_GUT_PLUS;
+			case "E1":
+				return E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
+			case "E2":
+				return E2_MIT_ERFOLG_TEILGENOMMEN;
+			case "E3":
+				return E3_TEILGENOMMEN;
+			case "AT":
+				return ATTEST;
+			case "AM":
+				return ABGEMELDET;
+			case "NB":
+				return NICHT_BEURTEILT;
+			case "NT":
+				return NICHT_TEILGENOMMEN;
+			case "NE":
+				return NICHT_ERTEILT;
+			case "LM":
+				return LEHRERMANGEL;
+			default:
+				return KEINE;
 		}
 	}
 
@@ -272,23 +323,40 @@ public enum Note {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
-			case "0": return UNGENUEGEND;
-			case "1": return MANGELHAFT_MINUS;
-			case "2": return MANGELHAFT;
-			case "3": return MANGELHAFT_PLUS;
-			case "4": return AUSREICHEND_MINUS;
-			case "5": return AUSREICHEND;
-			case "6": return AUSREICHEND_PLUS;
-			case "7": return BEFRIEDIGEND_MINUS;
-			case "8": return BEFRIEDIGEND;
-			case "9": return BEFRIEDIGEND_PLUS;
-			case "10": return GUT_MINUS;
-			case "11": return GUT;
-			case "12": return GUT_PLUS;
-			case "13": return SEHR_GUT_MINUS;
-			case "14": return SEHR_GUT;
-			case "15": return SEHR_GUT_PLUS;
-			default: return KEINE;
+			case "0":
+				return UNGENUEGEND;
+			case "1":
+				return MANGELHAFT_MINUS;
+			case "2":
+				return MANGELHAFT;
+			case "3":
+				return MANGELHAFT_PLUS;
+			case "4":
+				return AUSREICHEND_MINUS;
+			case "5":
+				return AUSREICHEND;
+			case "6":
+				return AUSREICHEND_PLUS;
+			case "7":
+				return BEFRIEDIGEND_MINUS;
+			case "8":
+				return BEFRIEDIGEND;
+			case "9":
+				return BEFRIEDIGEND_PLUS;
+			case "10":
+				return GUT_MINUS;
+			case "11":
+				return GUT;
+			case "12":
+				return GUT_PLUS;
+			case "13":
+				return SEHR_GUT_MINUS;
+			case "14":
+				return SEHR_GUT;
+			case "15":
+				return SEHR_GUT_PLUS;
+			default:
+				return KEINE;
 		}
 	}
 
@@ -331,13 +399,20 @@ public enum Note {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
-			case 0: return UNGENUEGEND;
-			case 1, 2, 3: return MANGELHAFT;
-			case 4, 5, 6: return AUSREICHEND;
-			case 7, 8, 9: return BEFRIEDIGEND;
-			case 10, 11, 12: return GUT;
-			case 13, 14, 15: return SEHR_GUT;
-			default: return KEINE;
+			case 0:
+				return UNGENUEGEND;
+			case 1, 2, 3:
+				return MANGELHAFT;
+			case 4, 5, 6:
+				return AUSREICHEND;
+			case 7, 8, 9:
+				return BEFRIEDIGEND;
+			case 10, 11, 12:
+				return GUT;
+			case 13, 14, 15:
+				return SEHR_GUT;
+			default:
+				return KEINE;
 		}
 	}
 
@@ -357,13 +432,20 @@ public enum Note {
 	@JsonIgnore
 	public Integer getNoteSekI() {
 		switch (notenpunkte) {
-			case 15, 14, 13: return 1;
-			case 12, 11, 10: return 2;
-			case 9, 8, 7: return 3;
-			case 6, 5, 4: return 4;
-			case 3, 2, 1: return 5;
-			case 0: return 6;
-			default: return null;
+			case 15, 14, 13:
+				return 1;
+			case 12, 11, 10:
+				return 2;
+			case 9, 8, 7:
+				return 3;
+			case 6, 5, 4:
+				return 4;
+			case 3, 2, 1:
+				return 5;
+			case 0:
+				return 6;
+			default:
+				return null;
 		}
 	}
 

@@ -18,11 +18,11 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description = "Informationen zu einem Fach der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "kuerzel", "kuerzelAnzeige", "bezeichnung", "sortierung", "istFremdsprache",
-	"istFremdSpracheNeuEinsetzendMoeglich", "biliSprache",  // TODO istFremdSpracheNeuEinsetzendMoeglich --> kein Attribut
-	"istMoeglichEF1", "istMoeglichEF2", "istMoeglichQ11", "istMoeglichQ12",
-	"istMoeglichQ21", "istMoeglichQ22", "istMoeglichAbiLK", "istMoeglichAbiGK",
-	"wochenstundenEF1", "wochenstundenEF2", "wochenstundenQualifikationsphase",
-	"projektKursLeitfach1ID", "projektKursLeitfach1Kuerzel", "projektKursLeitfach2ID", "projektKursLeitfach2Kuerzel" })
+		"istFremdSpracheNeuEinsetzendMoeglich", "biliSprache",  // TODO istFremdSpracheNeuEinsetzendMoeglich --> kein Attribut
+		"istMoeglichEF1", "istMoeglichEF2", "istMoeglichQ11", "istMoeglichQ12",
+		"istMoeglichQ21", "istMoeglichQ22", "istMoeglichAbiLK", "istMoeglichAbiGK",
+		"wochenstundenEF1", "wochenstundenEF2", "wochenstundenQualifikationsphase",
+		"projektKursLeitfach1ID", "projektKursLeitfach1Kuerzel", "projektKursLeitfach2ID", "projektKursLeitfach2Kuerzel" })
 @TranspilerDTO
 public class GostFach {
 

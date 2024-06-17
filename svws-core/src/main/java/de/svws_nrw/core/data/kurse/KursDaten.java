@@ -74,7 +74,8 @@ public class KursDaten {
 	public int idKursFortschreibungsart = 0;
 
 	/** Die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation). */
-	@Schema(description = "die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation)", example = "100001")
+	@Schema(description = "die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation)",
+			example = "100001")
 	public Integer schulnummer = null;
 
 	/** Gibt an, ob der Kurs epochal unterrichtet wird. */

@@ -20,7 +20,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class ENMDaten {
 
 	/** Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1 */
-	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1.", example = "1")
+	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1.",
+			example = "1")
 	public int enmRevision = -1;
 
 	/** Die Schulnummer, für welche die ENM-Daten generiert wurden. */
@@ -40,11 +41,13 @@ public class ENMDaten {
 	public int aktuellerAbschnitt;
 
 	/** Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll. */
-	@Schema(description = "Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.", example = "")
+	@Schema(description = "Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.",
+			example = "")
 	public String publicKey;
 
 	/** Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten. */
-	@Schema(description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.", example = "42")
+	@Schema(description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.",
+			example = "42")
 	public Long lehrerID;
 
 	/** Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. */
@@ -76,37 +79,45 @@ public class ENMDaten {
 	public @NotNull List<@NotNull ENMFoerderschwerpunkt> foerderschwerpunkte = new ArrayList<>();
 
 	/** Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.  */
-	@ArraySchema(schema = @Schema(implementation = ENMJahrgang.class, description = "Ein Array mit den Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMJahrgang.class,
+			description = "Ein Array mit den Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind."))
 	public @NotNull List<@NotNull ENMJahrgang> jahrgaenge = new ArrayList<>();
 
 	/** Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.  */
-	@ArraySchema(schema = @Schema(implementation = ENMKlasse.class, description = "Ein Array mit den Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMKlasse.class,
+			description = "Ein Array mit den Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind."))
 	public @NotNull List<@NotNull ENMKlasse> klassen = new ArrayList<>();
 
 	/** Die Informationen der vordefinierten Floskelgruppen und deren Floskeln. */
-	@ArraySchema(schema = @Schema(implementation = ENMFloskelgruppe.class, description = "Ein Array mit den Informationen der vordefinierten Floskelgruppen und deren Floskeln."))
+	@ArraySchema(schema = @Schema(implementation = ENMFloskelgruppe.class,
+			description = "Ein Array mit den Informationen der vordefinierten Floskelgruppen und deren Floskeln."))
 	public @NotNull List<@NotNull ENMFloskelgruppe> floskelgruppen = new ArrayList<>();
 
 	/** Die Informationen zu Lehrern, die in der Notendatei vorhanden sind. */
-	@ArraySchema(schema = @Schema(implementation = ENMLehrer.class, description = "Ein Array mit den Informationen zu Lehrern, die in der Notendatei vorhanden sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMLehrer.class,
+			description = "Ein Array mit den Informationen zu Lehrern, die in der Notendatei vorhanden sind."))
 	public @NotNull List<@NotNull ENMLehrer> lehrer = new ArrayList<>();
 
 	/** Die Informationen zu den Fächern, die in der Notendatei vorhanden sind. */
-	@ArraySchema(schema = @Schema(implementation = ENMFach.class, description = "Ein Array mit den Informationen zu den Fächern, die in der Notendatei vorhanden sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMFach.class,
+			description = "Ein Array mit den Informationen zu den Fächern, die in der Notendatei vorhanden sind."))
 	public @NotNull List<@NotNull ENMFach> faecher = new ArrayList<>();
 
 	// TODO Katalog der Kursarten
 
 	/** Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind. */
-	@ArraySchema(schema = @Schema(implementation = ENMTeilleistungsart.class, description = "Ein Array mit den Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMTeilleistungsart.class,
+			description = "Ein Array mit den Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind."))
 	public @NotNull List<@NotNull ENMTeilleistungsart> teilleistungsarten = new ArrayList<>();
 
 	/** Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind. */
-	@ArraySchema(schema = @Schema(implementation = ENMLerngruppe.class, description = "Ein Array mit den Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind."))
+	@ArraySchema(schema = @Schema(implementation = ENMLerngruppe.class,
+			description = "Ein Array mit den Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind."))
 	public @NotNull List<@NotNull ENMLerngruppe> lerngruppen = new ArrayList<>();
 
 	/** Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden. */
-	@ArraySchema(schema = @Schema(implementation = ENMSchueler.class, description = "Ein Array mit den Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden."))
+	@ArraySchema(schema = @Schema(implementation = ENMSchueler.class,
+			description = "Ein Array mit den Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden."))
 	public @NotNull List<@NotNull ENMSchueler> schueler = new ArrayList<>();
 
 }

@@ -31,7 +31,8 @@ public class StundenplanPausenaufsicht {
 	public long idLehrer = -1;
 
 	/** Die Zuordnung der Aufsichtsbereiche ({@link StundenplanAufsichtsbereich}) zu den Pausenaufsichten ({@link StundenplanPausenaufsicht}) und dem Wochentyp. */
-	@ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsichtBereich.class, description = "Ein Array mit den Zuordnungen der Aufsichtsbeiche zu den Pausenaufsichten und dem Wochentyp."))
+	@ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsichtBereich.class,
+			description = "Ein Array mit den Zuordnungen der Aufsichtsbeiche zu den Pausenaufsichten und dem Wochentyp."))
 	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> bereiche = new ArrayList<>();
 
 }

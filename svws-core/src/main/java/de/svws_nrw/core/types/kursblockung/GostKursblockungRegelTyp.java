@@ -50,9 +50,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
 	KURSART_SPERRE_SCHIENEN_VON_BIS(1, "Kursart: Sperre Schienen von/bis", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURSART,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			GostKursblockungRegelParameterTyp.KURSART,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
 	/**
@@ -64,9 +64,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
 	KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(6, "Kursart: Allein in Schienen von/bis", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURSART,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			GostKursblockungRegelParameterTyp.KURSART,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
 	/**
@@ -77,8 +77,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_FIXIERE_IN_SCHIENE(2, "Kurs: Fixiere in Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
 	/**
@@ -89,8 +89,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_SPERRE_IN_SCHIENE(3, "Kurs: Sperre in Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
 	/**
@@ -100,8 +100,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_FIXIEREN_IN_KURS(4, "Schüler: Fixiere in Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
 	/**
@@ -111,8 +111,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter A: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_VERBIETEN_IN_KURS(5, "Schüler: Verbiete in Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
 	/**
@@ -122,8 +122,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	KURS_VERBIETEN_MIT_KURS(7, "Kurs: Verbiete mit Kurs in gleicher Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
 	/**
@@ -133,8 +133,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	KURS_ZUSAMMEN_MIT_KURS(8, "Kurs: Zusammen mit Kurs in gleicher Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
 	/**
@@ -143,8 +143,8 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
 	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Kurs: Fülle mit Dummy-SuS auf", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.GANZZAHL
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.GANZZAHL
 	)),
 
 	/**
@@ -159,9 +159,9 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter C: Datenbank-ID des Faches
 	 */
 	SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(11, "Schüler: Zusammen mit Schüler in Fach", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.FACH_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.FACH_ID
 	)),
 
 	/**
@@ -171,9 +171,9 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter C: Datenbank-ID des Faches
 	 */
 	SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(12, "Schüler: Verbieten mit Schüler in Fach", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.FACH_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.FACH_ID
 	)),
 
 	/**
@@ -182,8 +182,8 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
 	 */
 	SCHUELER_ZUSAMMEN_MIT_SCHUELER(13, "Schüler: Zusammen mit Schüler", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.SCHUELER_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.SCHUELER_ID
 	)),
 
 	/**
@@ -192,8 +192,8 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
 	 */
 	SCHUELER_VERBIETEN_MIT_SCHUELER(14, "Schüler: Verbieten mit Schüler", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID,
-		GostKursblockungRegelParameterTyp.SCHUELER_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.SCHUELER_ID
 	)),
 
 	/**
@@ -202,8 +202,8 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter B: Die maximal erlaubte Schüleranzahl. Gültige Werte sind im Intervall 0 bis 100.
 	 */
 	KURS_MAXIMALE_SCHUELERANZAHL(15, "Kurs: Maximale Schüleranzahl", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID,
-		GostKursblockungRegelParameterTyp.GANZZAHL
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.GANZZAHL
 	)),
 
 	/**
@@ -213,7 +213,7 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter A: Datenbank-ID des Schülers (long)
 	 */
 	SCHUELER_IGNORIEREN(16, "Schüler: Ignorieren", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID
+			GostKursblockungRegelParameterTyp.SCHUELER_ID
 	)),
 
 	/**
@@ -222,7 +222,7 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter A: Datenbank-ID des Kurses (long)
 	 */
 	KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(17, "Kurs: Kursdifferenz bei der Visualisierung ignorieren", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
 	/**
@@ -232,13 +232,13 @@ public enum GostKursblockungRegelTyp {
 	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9. (int)
 	 */
 	FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.FACH_ID,
-		GostKursblockungRegelParameterTyp.KURSART,
-		GostKursblockungRegelParameterTyp.GANZZAHL
+			GostKursblockungRegelParameterTyp.FACH_ID,
+			GostKursblockungRegelParameterTyp.KURSART,
+			GostKursblockungRegelParameterTyp.GANZZAHL
 	));
 
 	/** Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen. */
-	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] { 1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
 
 	/** Die ID des Regel-Typs */
 	public final int typ;
@@ -290,7 +290,8 @@ public enum GostKursblockungRegelTyp {
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
 	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
-	GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
+	GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes)
+			throws IllegalArgumentException {
 		this.typ = id;
 		this.bezeichnung = bezeichnung;
 		this.paramTypes = paramTypes;
@@ -378,8 +379,8 @@ public enum GostKursblockungRegelTyp {
 			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 1, 6
 				long von = param.get(1);
 				long bis = param.get(2);
-				von = pSchienenNr < von  ? von - 1 : von;
-				bis = pSchienenNr <= bis  ? bis - 1 : bis;
+				von = (pSchienenNr < von) ? (von - 1) : von;
+				bis = (pSchienenNr <= bis) ? (bis - 1) : bis;
 				if (von <= bis)
 					return new long[] { param.get(0), von, bis };
 				return null;

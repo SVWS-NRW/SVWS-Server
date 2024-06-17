@@ -39,7 +39,8 @@ public class SchuelerLeistungsdaten {
 	public Integer abifach = null;
 
 	/** Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8) */
-	@Schema(description = "gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)", example = "false")
+	@Schema(description = "gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)",
+			example = "false")
 	public boolean istZP10oderZK10 = false;
 
 	// --- Informationen zum Fachlehrer
@@ -96,7 +97,8 @@ public class SchuelerLeistungsdaten {
 
 	// TODO in einem anderen Format bereitstellen:
 	/** Gibt an, ob es sich um eine Leistung handelt, welche über das "Holen von abgeschlossenen Fächern" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben aus welchem die Daten geholt wurden */
-	@Schema(description = "gibt an, ob es sich um eine Leistung handelt, welche über das \"Holen von abgeschlossenen Fächern\" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben aus welchem die Daten geholt wurden", example = "06")
+	@Schema(description = "gibt an, ob es sich um eine Leistung handelt, welche über das \"Holen von abgeschlossenen Fächern\" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben aus welchem die Daten geholt wurden",
+			example = "06")
 	public String geholtJahrgangAbgeschlossen = null;
 
 	/** Die Gewichtung für den allgemeinbildenden Teil (am Berufskolleg) */

@@ -96,7 +96,8 @@ public class KlassenDaten {
 	public String pruefungsordnung = null;
 
 	/** Die ID für die Schulgliederung der Klasse oder -1, wenn der Klasse keine eindeutige Schulgliederung zugeordnet ist. */
-	@Schema(description = "die ID für die Schulgliederung der Klasse oder -1, wenn der Klasse keine eindeutige Schulgliederung zugeordnet ist.", example = "4711")
+	@Schema(description = "die ID für die Schulgliederung der Klasse oder -1, wenn der Klasse keine eindeutige Schulgliederung zugeordnet ist.",
+			example = "4711")
 	public long idSchulgliederung = -1;
 
 	/** Die ID für Klassenart */

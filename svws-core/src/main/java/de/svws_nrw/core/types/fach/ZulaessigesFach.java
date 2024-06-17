@@ -33,7 +33,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -45,7 +45,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -62,7 +62,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, Schulgliederung.H),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -79,7 +79,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -102,7 +102,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -125,7 +125,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -142,7 +142,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, Schulgliederung.H),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -154,7 +154,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -171,7 +171,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, Schulgliederung.H),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -185,7 +185,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GM, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -199,7 +199,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GM, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -211,7 +211,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -223,7 +223,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -235,7 +235,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -256,7 +256,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -281,7 +281,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -293,7 +293,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -316,7 +316,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -327,7 +327,7 @@ public enum ZulaessigesFach {
 					false, false, false, false, false, false, true,
 					Arrays.asList(
 							new Pair<>(Schulform.S, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -339,7 +339,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -351,7 +351,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -363,7 +363,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -375,7 +375,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.GE, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -387,7 +387,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -399,7 +399,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -412,7 +412,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -427,7 +427,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -442,7 +442,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -460,7 +460,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -478,7 +478,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -495,7 +495,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -513,7 +513,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -529,7 +529,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -554,7 +554,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -577,7 +577,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -593,7 +593,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -619,7 +619,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -631,7 +631,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -652,7 +652,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -664,7 +664,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -679,7 +679,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -691,7 +691,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -719,7 +719,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -733,7 +733,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, Schulgliederung.H),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -754,7 +754,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -779,7 +779,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -797,7 +797,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -820,7 +820,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -846,7 +846,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -872,7 +872,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -892,7 +892,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, Schulgliederung.H),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -907,7 +907,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -922,7 +922,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -940,7 +940,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -958,7 +958,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -975,7 +975,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -993,7 +993,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1011,7 +1011,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1023,7 +1023,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1035,7 +1035,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1047,7 +1047,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1065,7 +1065,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1080,7 +1080,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1095,7 +1095,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1110,7 +1110,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1125,7 +1125,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -1141,7 +1141,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1157,7 +1157,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1172,7 +1172,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1188,7 +1188,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1204,7 +1204,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1216,7 +1216,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1228,7 +1228,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1253,7 +1253,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1274,7 +1274,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1290,7 +1290,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1313,7 +1313,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1324,7 +1324,7 @@ public enum ZulaessigesFach {
 					false, false, false, false, false, false, true,
 					Arrays.asList(
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1336,7 +1336,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1352,7 +1352,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1364,7 +1364,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1376,7 +1376,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1387,7 +1387,7 @@ public enum ZulaessigesFach {
 					false, false, false, false, false, false, true,
 					Arrays.asList(
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1400,7 +1400,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1415,7 +1415,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1430,7 +1430,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -1446,7 +1446,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1462,7 +1462,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1477,7 +1477,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1493,7 +1493,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1509,7 +1509,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1530,7 +1530,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1546,7 +1546,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1572,7 +1572,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1598,7 +1598,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1619,7 +1619,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1631,7 +1631,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1649,7 +1649,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1664,7 +1664,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1679,7 +1679,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -1697,7 +1697,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1715,7 +1715,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1732,7 +1732,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1750,7 +1750,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1768,7 +1768,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1788,7 +1788,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1813,7 +1813,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1834,7 +1834,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1854,7 +1854,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1880,7 +1880,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1903,7 +1903,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1918,7 +1918,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1936,7 +1936,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1956,7 +1956,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1969,7 +1969,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1984,7 +1984,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -1999,7 +1999,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -2017,7 +2017,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2035,7 +2035,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2052,7 +2052,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2070,7 +2070,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2086,7 +2086,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2112,7 +2112,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2124,7 +2124,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2140,7 +2140,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2166,7 +2166,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2178,7 +2178,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2204,7 +2204,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2222,7 +2222,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2237,7 +2237,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2252,7 +2252,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -2270,7 +2270,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2288,7 +2288,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2305,7 +2305,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2323,7 +2323,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2341,7 +2341,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2362,7 +2362,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2380,7 +2380,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2403,7 +2403,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2421,7 +2421,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2447,7 +2447,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2458,7 +2458,7 @@ public enum ZulaessigesFach {
 					false, false, false, false, false, false, true,
 					Arrays.asList(
 							new Pair<>(Schulform.G, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2470,7 +2470,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2482,7 +2482,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2503,7 +2503,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2526,7 +2526,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2538,7 +2538,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2564,7 +2564,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2576,7 +2576,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2589,7 +2589,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2601,7 +2601,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2617,7 +2617,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, Schulgliederung.H),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2632,7 +2632,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2647,7 +2647,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -2665,7 +2665,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2683,7 +2683,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2700,7 +2700,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2718,7 +2718,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2736,7 +2736,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2757,7 +2757,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2781,7 +2781,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2799,7 +2799,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2819,7 +2819,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2831,7 +2831,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.H, Schulgliederung.R),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2846,7 +2846,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2861,7 +2861,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -2879,7 +2879,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2897,7 +2897,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2914,7 +2914,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2932,7 +2932,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2950,7 +2950,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2971,7 +2971,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -2983,7 +2983,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3006,7 +3006,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3024,7 +3024,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3050,7 +3050,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3074,7 +3074,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3099,7 +3099,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3124,7 +3124,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3145,7 +3145,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3168,7 +3168,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3193,7 +3193,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3217,7 +3217,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3229,7 +3229,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3241,7 +3241,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3255,7 +3255,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3272,7 +3272,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.S, Schulgliederung.R00),
 							new Pair<>(Schulform.SK, Schulgliederung.R),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3293,7 +3293,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3317,7 +3317,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3336,7 +3336,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, Schulgliederung.H),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3351,7 +3351,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3366,7 +3366,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -3384,7 +3384,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3402,7 +3402,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3419,7 +3419,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3437,7 +3437,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3455,7 +3455,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3467,7 +3467,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3488,7 +3488,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3503,7 +3503,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3526,7 +3526,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3544,7 +3544,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3556,7 +3556,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3572,7 +3572,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3587,7 +3587,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3602,7 +3602,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -3625,7 +3625,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3648,7 +3648,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3666,7 +3666,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3684,7 +3684,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3701,7 +3701,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3719,7 +3719,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3737,7 +3737,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3749,7 +3749,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3772,7 +3772,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3793,7 +3793,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3807,7 +3807,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3820,7 +3820,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3843,7 +3843,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3869,7 +3869,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3887,7 +3887,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3914,7 +3914,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3929,7 +3929,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3954,7 +3954,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3971,7 +3971,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -3986,7 +3986,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, Schulgliederung.H),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4001,7 +4001,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4016,7 +4016,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -4034,7 +4034,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4052,7 +4052,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4069,7 +4069,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4087,7 +4087,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4105,7 +4105,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4128,7 +4128,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4140,7 +4140,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4161,7 +4161,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4173,7 +4173,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4196,7 +4196,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4214,7 +4214,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4226,7 +4226,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4248,7 +4248,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4260,7 +4260,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4281,7 +4281,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4305,7 +4305,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4320,7 +4320,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4334,7 +4334,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GM, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4346,7 +4346,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4370,7 +4370,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4391,7 +4391,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4403,7 +4403,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4427,7 +4427,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4442,7 +4442,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4454,7 +4454,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4466,7 +4466,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4479,7 +4479,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4493,7 +4493,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4505,7 +4505,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4517,7 +4517,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4529,7 +4529,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4551,7 +4551,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4575,7 +4575,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4589,7 +4589,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), 2021, null)
+					), 2021, null)
 	}),
 
 
@@ -4603,7 +4603,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), 2021, null)
+					), 2021, null)
 	}),
 
 
@@ -4617,7 +4617,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), 2021, null)
+					), 2021, null)
 	}),
 
 
@@ -4638,7 +4638,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4661,7 +4661,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4673,7 +4673,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.FW, (Schulgliederung) null),
 							new Pair<>(Schulform.HI, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4694,7 +4694,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4718,7 +4718,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4744,7 +4744,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4758,7 +4758,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.H, Schulgliederung.R),
 							new Pair<>(Schulform.SB, (Schulgliederung) null),
 							new Pair<>(Schulform.WB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4773,7 +4773,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4788,7 +4788,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.GY, (Schulgliederung) null),
 							new Pair<>(Schulform.PS, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null)
-							), null, 2012)
+					), null, 2012)
 	}),
 
 
@@ -4806,7 +4806,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4824,7 +4824,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4840,7 +4840,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.R, (Schulgliederung) null),
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4858,7 +4858,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4876,7 +4876,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4891,7 +4891,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.KS, (Schulgliederung) null),
 							new Pair<>(Schulform.S, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4912,7 +4912,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4936,7 +4936,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null),
 							new Pair<>(Schulform.V, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4954,7 +4954,7 @@ public enum ZulaessigesFach {
 							new Pair<>(Schulform.SG, (Schulgliederung) null),
 							new Pair<>(Schulform.SK, (Schulgliederung) null),
 							new Pair<>(Schulform.SR, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	}),
 
 
@@ -4966,7 +4966,7 @@ public enum ZulaessigesFach {
 					Arrays.asList(
 							new Pair<>(Schulform.BK, (Schulgliederung) null),
 							new Pair<>(Schulform.SB, (Schulgliederung) null)
-							), null, null)
+					), null, null)
 	});
 
 
@@ -4982,7 +4982,7 @@ public enum ZulaessigesFach {
 	public final @NotNull FachKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Faches */
-	public final @NotNull FachKatalogEintrag@NotNull[] historie;
+	public final @NotNull FachKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit allen zulässigen Fächern. Der Zugriff erfolgt dabei über die ID */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull ZulaessigesFach> _mapID = new HashMap<>();
@@ -4997,7 +4997,7 @@ public enum ZulaessigesFach {
 	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapFremdsprachenKuerzelAtomar = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist */
-	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -5006,11 +5006,11 @@ public enum ZulaessigesFach {
 	 * @param historie   die Historie des Faches, welches ein Array von {@link FachKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	ZulaessigesFach(final @NotNull FachKatalogEintrag@NotNull[] historie) {
+	ZulaessigesFach(final @NotNull FachKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {

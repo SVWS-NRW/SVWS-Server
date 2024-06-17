@@ -38,7 +38,8 @@ public class LehrerPersonalabschnittsdaten {
 	public Double pflichtstundensoll;
 
 	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. */
-	@Schema(description = "Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.", example = "L")
+	@Schema(description = "Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.",
+			example = "L")
 	public String rechtsverhaeltnis;
 
 	/** Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. */
@@ -54,19 +55,23 @@ public class LehrerPersonalabschnittsdaten {
 	public String stammschulnummer;
 
 	/** Die allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class, description = "Ein Array mit den allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind."))
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
+			description = "Ein Array mit den allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdatenAnrechnungsstunden> anrechnungen = new ArrayList<>();
 
 	/** Die Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class, description = "Ein Array mit den Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
+			description = "Ein Array mit den Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdatenAnrechnungsstunden> mehrleistung = new ArrayList<>();
 
 	/** Die Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class, description = "Ein Array mit den Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
+			description = "Ein Array mit den Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdatenAnrechnungsstunden> minderleistung = new ArrayList<>();
 
 	/** Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class, description = "Ein Array mit schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind."))
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
+			description = "Ein Array mit schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdatenLehrerfunktion> funktionen = new ArrayList<>();
 
 }

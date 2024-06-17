@@ -15,28 +15,28 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerLehramtAnerkennung {
 
 	/** Lehramtsanerkennung 'Zweite Staatsprüfung für ein Lehramt' */
-	ST(new LehrerKatalogLehramtAnerkennungEintrag[]{
-		new LehrerKatalogLehramtAnerkennungEintrag(1, "ST", "Zweite Staatsprüfung für ein Lehramt", null, null)
+	ST(new LehrerKatalogLehramtAnerkennungEintrag[] {
+			new LehrerKatalogLehramtAnerkennungEintrag(1, "ST", "Zweite Staatsprüfung für ein Lehramt", null, null)
 	}),
 
 	/** Lehramtsanerkennung 'Anerkennung Lehramt' */
-	AL(new LehrerKatalogLehramtAnerkennungEintrag[]{
-		new LehrerKatalogLehramtAnerkennungEintrag(2, "AL", "Anerkennung Lehramt", null, null)
+	AL(new LehrerKatalogLehramtAnerkennungEintrag[] {
+			new LehrerKatalogLehramtAnerkennungEintrag(2, "AL", "Anerkennung Lehramt", null, null)
 	}),
 
 	/** Lehramtsanerkennung 'Anerkennung geeignete Prüfung' */
-	AP(new LehrerKatalogLehramtAnerkennungEintrag[]{
-		new LehrerKatalogLehramtAnerkennungEintrag(3, "AP", "Anerkennung geeignete Prüfung", null, null)
+	AP(new LehrerKatalogLehramtAnerkennungEintrag[] {
+			new LehrerKatalogLehramtAnerkennungEintrag(3, "AP", "Anerkennung geeignete Prüfung", null, null)
 	}),
 
 	/** Lehramtsanerkennung 'Förderliche Berufstätigkeit' */
-	BT(new LehrerKatalogLehramtAnerkennungEintrag[]{
-		new LehrerKatalogLehramtAnerkennungEintrag(4, "BT", "Förderliche Berufstätigkeit", null, null)
+	BT(new LehrerKatalogLehramtAnerkennungEintrag[] {
+			new LehrerKatalogLehramtAnerkennungEintrag(4, "BT", "Förderliche Berufstätigkeit", null, null)
 	}),
 
 	/** Lehramtsanerkennung 'ohne' */
-	OH(new LehrerKatalogLehramtAnerkennungEintrag[]{
-		new LehrerKatalogLehramtAnerkennungEintrag(5, "OH", "ohne", null, null)
+	OH(new LehrerKatalogLehramtAnerkennungEintrag[] {
+			new LehrerKatalogLehramtAnerkennungEintrag(5, "OH", "ohne", null, null)
 	});
 
 
@@ -48,7 +48,7 @@ public enum LehrerLehramtAnerkennung {
 	public final @NotNull LehrerKatalogLehramtAnerkennungEintrag daten;
 
 	/** Die Historie mit den Einträgen der Lehramtsanerkennung */
-	public final @NotNull LehrerKatalogLehramtAnerkennungEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogLehramtAnerkennungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerLehramtAnerkennung> _anerkennungenByID = new HashMap<>();
@@ -62,7 +62,7 @@ public enum LehrerLehramtAnerkennung {
 	 *
 	 * @param historie   die Historie der Lehramtsanerkennung, welches ein Array von {@link LehrerKatalogLehramtAnerkennungEintrag} ist
 	 */
-	LehrerLehramtAnerkennung(final @NotNull LehrerKatalogLehramtAnerkennungEintrag@NotNull[] historie) {
+	LehrerLehramtAnerkennung(final @NotNull LehrerKatalogLehramtAnerkennungEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

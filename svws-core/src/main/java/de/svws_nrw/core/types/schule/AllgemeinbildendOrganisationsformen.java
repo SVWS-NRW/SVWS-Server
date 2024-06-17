@@ -14,68 +14,68 @@ public enum AllgemeinbildendOrganisationsformen {
 
 	/** Organisationsform: Nicht zuordenbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen) */
 	NICHT_ZUGEORDNET(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(3000000, "*", "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)", Arrays.asList(
-			Schulform.S, Schulform.KS
-		), null, null)
+			new OrganisationsformKatalogEintrag(3000000, "*", "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)", Arrays.asList(
+					Schulform.S, Schulform.KS
+			), null, null)
 	}),
 
 	/** Organisationsform: Halbtagsunterricht */
 	HALBTAG(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(3001000, "1", "Halbtagsunterricht", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.GE,
-			Schulform.GM,
-			Schulform.GY,
-			Schulform.H,
-			Schulform.PS,
-			Schulform.R,
-			Schulform.S, Schulform.KS,
-			Schulform.SG,
-			Schulform.SK,
-			Schulform.SR,
-			Schulform.V
-		), null, null)
+			new OrganisationsformKatalogEintrag(3001000, "1", "Halbtagsunterricht", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GM,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.S, Schulform.KS,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilnahme am gebundenen Ganztag */
 	GANZTAG(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(3002000, "2", "Teilnahme am gebundenen Ganztag", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.GE,
-			Schulform.GM,
-			Schulform.GY,
-			Schulform.H,
-			Schulform.PS,
-			Schulform.R,
-			Schulform.S, Schulform.KS,
-			Schulform.SG,
-			Schulform.SK,
-			Schulform.SR,
-			Schulform.V
-		), null, null)
+			new OrganisationsformKatalogEintrag(3002000, "2", "Teilnahme am gebundenen Ganztag", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G,
+					Schulform.GE,
+					Schulform.GM,
+					Schulform.GY,
+					Schulform.H,
+					Schulform.PS,
+					Schulform.R,
+					Schulform.S, Schulform.KS,
+					Schulform.SG,
+					Schulform.SK,
+					Schulform.SR,
+					Schulform.V
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilnahme am erweiterten Ganztag */
 	GANZTAG_ERWEITERT(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(3003000, "3", "Teilnahme am erweiterten Ganztag", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.H,
-			Schulform.R,
-			Schulform.S, Schulform.KS,
-			Schulform.SK
-		), null, null)
+			new OrganisationsformKatalogEintrag(3003000, "3", "Teilnahme am erweiterten Ganztag", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.H,
+					Schulform.R,
+					Schulform.S, Schulform.KS,
+					Schulform.SK
+			), null, null)
 	}),
 
 	/** Organisationsform: Teilnahme am offenen Ganztag */
 	GANZTAG_OFFEN(new OrganisationsformKatalogEintrag[] {
-		new OrganisationsformKatalogEintrag(3004000, "4", "Teilnahme am offenen Ganztag", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.PS,
-			Schulform.S, Schulform.KS
-		), null, null)
+			new OrganisationsformKatalogEintrag(3004000, "4", "Teilnahme am offenen Ganztag", Arrays.asList(
+					Schulform.FW, Schulform.HI, Schulform.WF,
+					Schulform.G,
+					Schulform.PS,
+					Schulform.S, Schulform.KS
+			), null, null)
 	});
 
 
@@ -86,7 +86,7 @@ public enum AllgemeinbildendOrganisationsformen {
 	public final @NotNull OrganisationsformKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Organisationsform */
-	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
+	public final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull AllgemeinbildendOrganisationsformen> _mapByID = new HashMap<>();
@@ -101,7 +101,7 @@ public enum AllgemeinbildendOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von
 	 *                   {@link OrganisationsformKatalogEintrag} ist
 	 */
-	AllgemeinbildendOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	AllgemeinbildendOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

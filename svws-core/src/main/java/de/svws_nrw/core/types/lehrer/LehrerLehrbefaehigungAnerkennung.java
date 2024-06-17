@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerLehrbefaehigungAnerkennung {
 
 	/** Anerkennung der Lehrbefähigung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  */
-	ID_1(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[]{
-		new LehrerKatalogLehrbefaehigungAnerkennungEintrag(1, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)
+	ID_1(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[] {
+			new LehrerKatalogLehrbefaehigungAnerkennungEintrag(1, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)
 	}),
 
 	/** Anerkennung der Lehrbefähigung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'  */
-	ID_2(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[]{
-		new LehrerKatalogLehrbefaehigungAnerkennungEintrag(2, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)
+	ID_2(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[] {
+			new LehrerKatalogLehrbefaehigungAnerkennungEintrag(2, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)
 	}),
 
 	/** Anerkennung der Lehrbefähigung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'  */
-	ID_3(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[]{
-		new LehrerKatalogLehrbefaehigungAnerkennungEintrag(3, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)
+	ID_3(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[] {
+			new LehrerKatalogLehrbefaehigungAnerkennungEintrag(3, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)
 	}),
 
 	/** Anerkennung der Lehrbefähigung 'sonstige'  */
-	ID_9(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[]{
-		new LehrerKatalogLehrbefaehigungAnerkennungEintrag(4, "9", "sonstige", null, null)
+	ID_9(new LehrerKatalogLehrbefaehigungAnerkennungEintrag[] {
+			new LehrerKatalogLehrbefaehigungAnerkennungEintrag(4, "9", "sonstige", null, null)
 	});
 
 
@@ -42,7 +42,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	public final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag daten;
 
 	/** Die Historie mit den Einträgen der Lehrbefähigung */
-	public final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigungAnerkennung> _anerkennungenByID = new HashMap<>();
@@ -56,7 +56,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 *
 	 * @param historie   die Historie der Lehrbefähigung, welches ein Array von {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag} ist
 	 */
-	LehrerLehrbefaehigungAnerkennung(final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag@NotNull[] historie) {
+	LehrerLehrbefaehigungAnerkennung(final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

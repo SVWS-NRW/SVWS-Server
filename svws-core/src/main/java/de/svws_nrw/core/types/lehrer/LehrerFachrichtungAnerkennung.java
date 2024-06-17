@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotNull;
 public enum LehrerFachrichtungAnerkennung {
 
 	/** Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  */
-	ID4(new LehrerKatalogFachrichtungAnerkennungEintrag[]{
-		new LehrerKatalogFachrichtungAnerkennungEintrag(4, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)
+	ID4(new LehrerKatalogFachrichtungAnerkennungEintrag[] {
+			new LehrerKatalogFachrichtungAnerkennungEintrag(4, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)
 	}),
 
 	/** Fachrichtungsanerkennung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'  */
-	ID5(new LehrerKatalogFachrichtungAnerkennungEintrag[]{
-		new LehrerKatalogFachrichtungAnerkennungEintrag(5, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)
+	ID5(new LehrerKatalogFachrichtungAnerkennungEintrag[] {
+			new LehrerKatalogFachrichtungAnerkennungEintrag(5, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)
 	}),
 
 	/** Fachrichtungsanerkennung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'  */
-	ID6(new LehrerKatalogFachrichtungAnerkennungEintrag[]{
-		new LehrerKatalogFachrichtungAnerkennungEintrag(6, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)
+	ID6(new LehrerKatalogFachrichtungAnerkennungEintrag[] {
+			new LehrerKatalogFachrichtungAnerkennungEintrag(6, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)
 	}),
 
 	/** Fachrichtungsanerkennung 'sonstige'  */
-	ID7(new LehrerKatalogFachrichtungAnerkennungEintrag[]{
-		new LehrerKatalogFachrichtungAnerkennungEintrag(7, "9", "sonstige", null, null)
+	ID7(new LehrerKatalogFachrichtungAnerkennungEintrag[] {
+			new LehrerKatalogFachrichtungAnerkennungEintrag(7, "9", "sonstige", null, null)
 	});
 
 
@@ -42,7 +42,7 @@ public enum LehrerFachrichtungAnerkennung {
 	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag daten;
 
 	/** Die Historie mit den Einträgen für die Anerkennung der Fachrichtung  */
-	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie;
+	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> _anerkennungenByID = new HashMap<>();
@@ -56,7 +56,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 *
 	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist
 	 */
-	LehrerFachrichtungAnerkennung(final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie) {
+	LehrerFachrichtungAnerkennung(final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

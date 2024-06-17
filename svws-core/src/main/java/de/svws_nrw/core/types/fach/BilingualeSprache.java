@@ -19,57 +19,64 @@ public enum BilingualeSprache {
 	/** Bilinguale Sprache Englisch */
 	ENGLISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(1000L, ZulaessigesFach.E, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(1001L, ZulaessigesFach.E, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(1001L, ZulaessigesFach.E, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Französisch */
 	FRANZOESISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(2000L, ZulaessigesFach.F, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(2001L, ZulaessigesFach.F, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(2001L, ZulaessigesFach.F, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Italienisch */
 	ITALIENISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(3000L, ZulaessigesFach.I, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(3001L, ZulaessigesFach.I, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(3001L, ZulaessigesFach.I, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Niederländisch */
 	NIEDERLAENDISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(4000L, ZulaessigesFach.N, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(4001L, ZulaessigesFach.N, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(4001L, ZulaessigesFach.N, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Spanisch */
 	SPANISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(5000L, ZulaessigesFach.S, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(5001L, ZulaessigesFach.S, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(5001L, ZulaessigesFach.S, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Türkisch */
 	TUERKISCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(6000L, ZulaessigesFach.T, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(6001L, ZulaessigesFach.T, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(6001L, ZulaessigesFach.T, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	}),
 
 	/** Bilinguale Sprache Neugriechisch */
 	NEUGRIECHIESCH(new BilingualeSpracheKatalogEintrag[] {
 			new BilingualeSpracheKatalogEintrag(7000L, ZulaessigesFach.Z, Arrays.asList(
-					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022),
-            new BilingualeSpracheKatalogEintrag(7001L, ZulaessigesFach.Z, Arrays.asList(
-                    Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR),
+					null, 2022),
+			new BilingualeSpracheKatalogEintrag(7001L, ZulaessigesFach.Z, Arrays.asList(
+					Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)
 	});
 
 
@@ -80,7 +87,7 @@ public enum BilingualeSprache {
 	public final @NotNull BilingualeSpracheKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der bilingualen Sprache */
-	public final @NotNull BilingualeSpracheKatalogEintrag@NotNull[] historie;
+	public final @NotNull BilingualeSpracheKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map, welche der ID der bilingualen Sprache die Instanz dieser Aufzählung zuordnet. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BilingualeSpracheKatalogEintrag> _mapEintragByID = new HashMap<>();
@@ -92,7 +99,7 @@ public enum BilingualeSprache {
 	private static final @NotNull HashMap<@NotNull String, @NotNull BilingualeSprache> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die bilingualen Sprache vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -102,11 +109,11 @@ public enum BilingualeSprache {
 	 *                   {@link BilingualeSpracheKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	BilingualeSprache(final @NotNull BilingualeSpracheKatalogEintrag@NotNull[] historie) {
+	BilingualeSprache(final @NotNull BilingualeSpracheKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -239,7 +246,7 @@ public enum BilingualeSprache {
 		final @NotNull ArrayList<@NotNull BilingualeSprache> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
-		final @NotNull BilingualeSprache@NotNull[] fachgruppen = BilingualeSprache.values();
+		final @NotNull BilingualeSprache @NotNull [] fachgruppen = BilingualeSprache.values();
 		for (int i = 0; i < fachgruppen.length; i++) {
 			final BilingualeSprache fg = fachgruppen[i];
 			if (fg.hasSchulform(schulform))

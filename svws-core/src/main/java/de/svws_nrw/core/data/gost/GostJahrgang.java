@@ -28,7 +28,8 @@ public class GostJahrgang {
 	public String bezeichnung = "Allgemein / Vorlage";
 
 	/** Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
-	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet", example = "false")
+	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet",
+			example = "false")
 	public boolean istAbgeschlossen = false;
 
 }

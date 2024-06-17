@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus eine
  * Fachwahl des Schülers definiert. */
 @XmlRootElement(name = "SchuelerblockungInputFachwahl")
-@Schema(name = "SchuelerblockungInputFachwahl", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus eine Fachwahl des Schülers definiert.")
+@Schema(name = "SchuelerblockungInputFachwahl",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus eine Fachwahl des Schülers definiert.")
 @TranspilerDTO
 public class SchuelerblockungInputFachwahl {
 

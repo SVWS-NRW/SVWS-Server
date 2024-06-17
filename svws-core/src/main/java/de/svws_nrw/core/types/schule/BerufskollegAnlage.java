@@ -12,42 +12,42 @@ public enum BerufskollegAnlage {
 
 	/** Anlage A: Fachklassen duales System und Ausbildungsvorbereitung */
 	A(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(1000, "A", "Fachklassen duales System und Ausbildungsvorbereitung", null, null)
+			new BerufskollegAnlageKatalogEintrag(1000, "A", "Fachklassen duales System und Ausbildungsvorbereitung", null, null)
 	}),
 
 	/** Anlage B: Berufsfachschule */
 	B(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(2000, "B", "Berufsfachschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(2000, "B", "Berufsfachschule", null, null)
 	}),
 
 	/** Anlage C: Berufsfachschule und Fachoberschule */
 	C(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(3000, "C", "Berufsfachschule und Fachoberschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(3000, "C", "Berufsfachschule und Fachoberschule", null, null)
 	}),
 
 	/** Anlage D: Berufliches Gymnasium und Fachoberschule */
 	D(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(4000, "D", "Berufliches Gymnasium und Fachoberschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(4000, "D", "Berufliches Gymnasium und Fachoberschule", null, null)
 	}),
 
 	/** Anlage E: Fachschule */
 	E(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(5000, "E", "Fachschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(5000, "E", "Fachschule", null, null)
 	}),
 
 	/** Anlage H: Berufsgrundbildung und Berufsausbildung an einer freien Waldorfschule / Hiberniakolleg */
 	H(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(6000, "H", "Bildungsgänge an freien Waldorfschulen / Hiberniakolleg", null, null)
+			new BerufskollegAnlageKatalogEintrag(6000, "H", "Bildungsgänge an freien Waldorfschulen / Hiberniakolleg", null, null)
 	}),
 
 	/** Anlage X: Ehemalige Kollegschule */
 	X(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(24000, "X", "Ehemalige Kollegschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(24000, "X", "Ehemalige Kollegschule", null, null)
 	}),
 
 	/** Anlage Z: TODO */
 	Z(new BerufskollegAnlageKatalogEintrag[] {
-		new BerufskollegAnlageKatalogEintrag(26000, "Z", "Kooperationsklasse Hauptschule", null, null)
+			new BerufskollegAnlageKatalogEintrag(26000, "Z", "Kooperationsklasse Hauptschule", null, null)
 	});
 
 
@@ -58,7 +58,7 @@ public enum BerufskollegAnlage {
 	public final @NotNull BerufskollegAnlageKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Anlage*/
-	public final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie;
+	public final @NotNull BerufskollegAnlageKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln*/
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> _anlagen = new HashMap<>();
@@ -69,7 +69,7 @@ public enum BerufskollegAnlage {
 	 *
 	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist
 	 */
-	BerufskollegAnlage(final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie) {
+	BerufskollegAnlage(final @NotNull BerufskollegAnlageKatalogEintrag @NotNull [] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];

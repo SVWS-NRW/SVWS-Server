@@ -32,8 +32,8 @@ public class BenutzerKompetenzKatalogEintrag {
 	public @NotNull String bezeichnung = "";
 
 	/** Die Schulformen. */
-    @Schema(description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
-    public List<@NotNull Long> nurSchulformen = null;
+	@Schema(description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
+	public List<@NotNull Long> nurSchulformen = null;
 
 
 	/**
@@ -52,7 +52,7 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
 	 */
 	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe,
-			final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen) {
+			final @NotNull String bezeichnung, final List<@NotNull Schulform> schulformen) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id;

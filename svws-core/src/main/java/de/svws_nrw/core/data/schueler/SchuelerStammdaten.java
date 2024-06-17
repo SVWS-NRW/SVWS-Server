@@ -193,7 +193,8 @@ public class SchuelerStammdaten {
 	public boolean hatMasernimpfnachweis;
 
 	/** Gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.*/
-	@Schema(description = "gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.", example = "true")
+	@Schema(description = "gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.",
+			example = "true")
 	public boolean keineAuskunftAnDritte;
 
 	/** Gibt an, ob der Schüler BAFÖG erhält oder nicht. */

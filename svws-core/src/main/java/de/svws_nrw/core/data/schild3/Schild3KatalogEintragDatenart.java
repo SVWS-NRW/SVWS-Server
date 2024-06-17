@@ -12,28 +12,28 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Schild3KatalogEintragDatenart {
 
-    /** Kürzel der Datenart */
+	/** Kürzel der Datenart */
 	@Schema(description = "Kürzel der Datenart")
-    public String DatenartKrz;
+	public String DatenartKrz;
 
-    /** Datenart  */
-    @Schema(description = "Datenart")
-    public String Datenart;
+	/** Datenart  */
+	@Schema(description = "Datenart")
+	public String Datenart;
 
-    /** Name der Tabelle */
-    @Schema(description = "Name der Tabelle")
-    public String Tabellenname;
+	/** Name der Tabelle */
+	@Schema(description = "Name der Tabelle")
+	public String Tabellenname;
 
-    /** Reihenfolge */
-    @Schema(description = "Reihenfolge")
-    public Integer Reihenfolge;
+	/** Reihenfolge */
+	@Schema(description = "Reihenfolge")
+	public Integer Reihenfolge;
 
-    /** Gültig ab Schuljahr */
-    @Schema(description = "Gültig ab Schuljahr")
-    public Integer gueltigVon;
+	/** Gültig ab Schuljahr */
+	@Schema(description = "Gültig ab Schuljahr")
+	public Integer gueltigVon;
 
-    /** Gültig bis Schuljahr */
-    @Schema(description = "Gültig bis Schuljahr")
-    public Integer gueltigBis;
+	/** Gültig bis Schuljahr */
+	@Schema(description = "Gültig bis Schuljahr")
+	public Integer gueltigBis;
 
 }

@@ -13,7 +13,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Stundenplanberechnung. Es ist ein simples Austauschformat bei der viele Informationen nicht vorhanden
  * sind. */
 @XmlRootElement(name = "StundenplanInputSimple")
-@Schema(name = "StundenplanInputSimple", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für die Eingabedaten einer Stundenplanberechnung. Es ist ein simples Austauschformat bei der viele Informationen nicht vorhanden sind.")
+@Schema(name = "StundenplanInputSimple",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für die Eingabedaten einer Stundenplanberechnung. Es ist ein simples Austauschformat bei der viele Informationen nicht vorhanden sind.")
 @TranspilerDTO
 public class StundenplanInputSimple {
 

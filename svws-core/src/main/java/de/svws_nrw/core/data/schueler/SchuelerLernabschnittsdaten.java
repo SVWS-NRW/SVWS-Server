@@ -30,7 +30,8 @@ public class SchuelerLernabschnittsdaten {
 	public long schuljahresabschnitt;
 
 	/** Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). */
-	@Schema(description = "eine Nr, zur Unterscheidung von Lernabschnissdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, 0=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)", example = "NULL")
+	@Schema(description = "eine Nr, zur Unterscheidung von Lernabschnissdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, 0=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)",
+			example = "NULL")
 	public int wechselNr = 0;
 
 	// TODO Version 1.x: Prüfen ob die Datumsangaben des Lernabschnitts nicht besser in der Klassen- oder Jahrgangstabelle des Schuljahresabschnitts aufgehoben ist
@@ -148,7 +149,8 @@ public class SchuelerLernabschnittsdaten {
 	public String bilingualerZweig = null;
 
 	/** Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung */
-	@Schema(description = "gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung", example = "true")
+	@Schema(description = "gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung",
+			example = "true")
 	public boolean istFachpraktischerAnteilAusreichend = true;
 
 	/** Das Kürzel des Versetzungsvermerks */
@@ -156,7 +158,8 @@ public class SchuelerLernabschnittsdaten {
 	public String versetzungsvermerk = null;
 
 	/** Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden */
-	@Schema(description = "die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden", example = "null")
+	@Schema(description = "die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden",
+			example = "null")
 	public String noteDurchschnitt = null;
 
 	/** Die Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre für den Hauptschulabschluss nach Klassen 10 */
@@ -201,7 +204,8 @@ public class SchuelerLernabschnittsdaten {
 	public @NotNull SchuelerLernabschnittBemerkungen bemerkungen = new SchuelerLernabschnittBemerkungen();
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class, description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
+	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class,
+			description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
 	public @NotNull List<@NotNull SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
 
 }

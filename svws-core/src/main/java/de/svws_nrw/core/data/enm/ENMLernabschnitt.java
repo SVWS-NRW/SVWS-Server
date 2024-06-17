@@ -26,7 +26,8 @@ public class ENMLernabschnitt {
 	public Integer fehlstundenGesamt;
 
 	/** Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
-	@Schema(description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.",
+			example = "2013-11-14 13:12:48.774")
 	public String tsFehlstundenGesamt;
 
 	/** Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
@@ -34,7 +35,8 @@ public class ENMLernabschnitt {
 	public Integer fehlstundenGesamtUnentschuldigt;
 
 	/** Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
-	@Schema(description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittel werden.", example = "2013-11-14 13:12:48.774")
+	@Schema(description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittel werden.",
+			example = "2013-11-14 13:12:48.774")
 	public String tsFehlstundenGesamtUnentschuldigt;
 
 	/** Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss */

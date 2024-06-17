@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei
  * {@link StundenplanInputSimple}. */
 @XmlRootElement(name = "StundenplanInputSimpleLehrkraft")
-@Schema(name = "StundenplanInputSimpleLehrkraft", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei {@link StundenplanInputSimple}.")
+@Schema(name = "StundenplanInputSimpleLehrkraft",
+		description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei {@link StundenplanInputSimple}.")
 @TranspilerDTO
 public class StundenplanInputSimpleLehrkraft {
 
