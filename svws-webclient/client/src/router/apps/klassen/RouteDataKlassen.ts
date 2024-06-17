@@ -71,6 +71,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+		klassenListeManager.setFilterNurSichtbar(false);
 
 		// Versuche die ausgewählte Klasse von vorher zu laden
 		const vorherigeAuswahl = this.klassenListeManager.hasDaten() ? this.klassenListeManager.auswahl() : null;

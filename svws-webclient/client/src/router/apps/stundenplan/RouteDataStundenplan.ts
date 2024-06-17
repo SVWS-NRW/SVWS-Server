@@ -148,7 +148,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete raum.id;
 		api.status.start();
-		const _raum = await api.server.addStundenplanRaum(raum, api.schema, id)
+		const _raum = await api.server.addStundenplanRaum(raum, api.schema, id);
 		this.stundenplanManager.raumAdd(_raum);
 		this.commit();
 		api.status.stop();

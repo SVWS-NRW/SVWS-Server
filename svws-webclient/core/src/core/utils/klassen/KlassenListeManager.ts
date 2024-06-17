@@ -123,6 +123,8 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		this.initKlassen();
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.WARTELISTE);
 	}
 
 	private initKlassen() : void {

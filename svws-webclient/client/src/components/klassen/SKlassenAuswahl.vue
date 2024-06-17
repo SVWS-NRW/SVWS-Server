@@ -5,14 +5,13 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="gotoEintrag"
+			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoEintrag(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
@@ -61,14 +60,6 @@
 		return schulgliederung.daten.kuerzel;
 	}
 
-	const filterNurSichtbare = computed<boolean>({
-		get: () => props.klassenListeManager().filterNurSichtbar(),
-		set: (value) => {
-			props.klassenListeManager().setFilterNurSichtbar(value);
-			void props.setFilter();
-		}
-	});
-
 	const filterSchulgliederung = computed<Schulgliederung[]>({
 		get: () => [...props.klassenListeManager().schulgliederungen.auswahl()],
 		set: (value) => {
@@ -114,7 +105,7 @@
 		props.klassenListeManager().schulgliederungen.auswahlClear();
 		props.klassenListeManager().lehrer.auswahlClear();
 		props.klassenListeManager().jahrgaenge.auswahlClear();
-		props.klassenListeManager().setFilterNurSichtbar(true);
+		props.klassenListeManager().setFilterNurSichtbar(false);
 		await props.setFilter();
 	}
 
@@ -127,10 +118,6 @@
 	const clickedEintrag = computed(() => {
 		return props.klassenListeManager().liste.auswahlExists() ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
 	})
-
-	async function gotoEintrag(eintrag: KlassenDaten){
-		await props.gotoEintrag(eintrag.id);
-	}
 
 	async function setAuswahl(items : KlassenDaten[]) {
 		props.klassenListeManager().liste.auswahlClear();

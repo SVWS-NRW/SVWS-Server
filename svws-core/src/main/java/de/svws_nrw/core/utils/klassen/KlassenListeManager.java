@@ -99,6 +99,8 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 		initKlassen();
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.WARTELISTE);
 	}
 
 
