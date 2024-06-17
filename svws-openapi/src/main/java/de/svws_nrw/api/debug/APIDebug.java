@@ -43,26 +43,24 @@ public class APIDebug {
 
 	/** Die Liste der zulässigen Dateien */
 	private static final Map<String, String> mapMediaType = Map.ofEntries(
-	    Map.entry("index.html", MediaType.TEXT_HTML),
-	    Map.entry("swagger-initializer.js", "text/javascript"),
-	    Map.entry("swagger-ui.js", "text/javascript"),
-	    Map.entry("swagger-ui-bundle.js", "text/javascript"),
-	    Map.entry("swagger-ui-standalone-preset.js", "text/javascript"),
-	    Map.entry("index.css", "text/css"),
-	    Map.entry("swagger-ui.css", "text/css"),
-	    Map.entry("swagger-ui.js.map", MediaType.TEXT_PLAIN),
-	    Map.entry("swagger-ui-bundle.js.map", MediaType.TEXT_PLAIN),
-	    Map.entry("swagger-ui-standalone-preset.js.map", MediaType.TEXT_PLAIN),
-	    Map.entry("swagger-ui.css.map", MediaType.TEXT_PLAIN),
-	    Map.entry("favicon-16x16.png", "image/png"),
-	    Map.entry("favicon-32x32.png", "image/png")
-	);
+			Map.entry("index.html", MediaType.TEXT_HTML),
+			Map.entry("swagger-initializer.js", "text/javascript"),
+			Map.entry("swagger-ui.js", "text/javascript"),
+			Map.entry("swagger-ui-bundle.js", "text/javascript"),
+			Map.entry("swagger-ui-standalone-preset.js", "text/javascript"),
+			Map.entry("index.css", "text/css"),
+			Map.entry("swagger-ui.css", "text/css"),
+			Map.entry("swagger-ui.js.map", MediaType.TEXT_PLAIN),
+			Map.entry("swagger-ui-bundle.js.map", MediaType.TEXT_PLAIN),
+			Map.entry("swagger-ui-standalone-preset.js.map", MediaType.TEXT_PLAIN),
+			Map.entry("swagger-ui.css.map", MediaType.TEXT_PLAIN),
+			Map.entry("favicon-16x16.png", "image/png"),
+			Map.entry("favicon-32x32.png", "image/png"));
 
 	/** Die Lister der verfügbaren APIs */
 	private static final Map<String, Boolean> mapApiIsPrivileged = Map.ofEntries(
-		Map.entry("server", false),
-		Map.entry("privileged", true)
-	);
+			Map.entry("server", false),
+			Map.entry("privileged", true));
 
 
 	/**
@@ -85,11 +83,13 @@ public class APIDebug {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		final boolean apiIsPrivileged = mapApiIsPrivileged.get(api);
 		if (config.isDBRootAccessDisabled() && apiIsPrivileged)
-			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.").type(MediaType.TEXT_PLAIN).build();
+			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.")
+					.type(MediaType.TEXT_PLAIN).build();
 		if (config.hatPortHTTPPrivilegedAccess()) {
 			final boolean portIsPrivileged = (request.getServerPort() == config.getPortHTTPPrivilegedAccess());
 			if (apiIsPrivileged && (!portIsPrivileged))
-				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.").type(MediaType.TEXT_PLAIN).build();
+				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.")
+						.type(MediaType.TEXT_PLAIN).build();
 			if (!apiIsPrivileged && (portIsPrivileged)) { // Redirect
 				final URI uri = UriBuilder.fromPath(request.getServletPath() + request.getPathInfo())
 						.scheme(request.getScheme())
@@ -101,25 +101,25 @@ public class APIDebug {
 		}
 		// Lese die zugehörige Datei aus der Swagger-UI ein
 		String data = null;
-    	try {
-    		final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
-    		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
-	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
-	    		if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
-	    			final String openapi_file = api + (isYAML ? ".yaml" : ".json");
-	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
-	    			data = data.replace(
-    					"\"https://petstore.swagger.io/v2/swagger.json\"",
-    					"\"" + openapi_url + "\""
-	    			);
-	    		}
-    		}
-    	} catch (NullPointerException | IOException e) {
-    		e.printStackTrace();
-    	}
-    	if (data == null)
-    		return Response.status(Status.NOT_FOUND).build();
-        return Response.ok(data).type(mediaType).build();
+		try {
+			final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
+			try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
+				data = IOUtils.toString(in, StandardCharsets.UTF_8);
+				if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
+					final String openapi_file = api + (isYAML ? ".yaml" : ".json");
+					final String openapi_url =
+							StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
+					data = data.replace(
+							"\"https://petstore.swagger.io/v2/swagger.json\"",
+							"\"" + openapi_url + "\"");
+				}
+			}
+		} catch (NullPointerException | IOException e) {
+			e.printStackTrace();
+		}
+		if (data == null)
+			return Response.status(Status.NOT_FOUND).build();
+		return Response.ok(data).type(mediaType).build();
 	}
 
 
@@ -133,13 +133,13 @@ public class APIDebug {
 	 * @return die HTTP-Response für den Redirect
 	 */
 	@GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/debug{yaml : (/yaml)?}")
-    public Response debugRootWrong(@PathParam("yaml") final String yaml, @Context final HttpServletRequest request) {
+	@Produces(MediaType.TEXT_HTML)
+	@Path("/debug{yaml : (/yaml)?}")
+	public Response debugRootWrong(@PathParam("yaml") final String yaml, @Context final HttpServletRequest request) {
 		if ("/yaml".equals(yaml))
 			return Response.temporaryRedirect(UriBuilder.fromPath("/debug/yaml/index.html").build()).build();
 		return Response.temporaryRedirect(UriBuilder.fromPath("/debug/index.html").build()).build();
-    }
+	}
 
 
 	/**
@@ -152,15 +152,12 @@ public class APIDebug {
 	 *
 	 * @return die HTTP-Response
 	 */
-    @GET
-    @Produces({ MediaType.TEXT_HTML, "text/javascript", "text/css", MediaType.TEXT_PLAIN })
-    @Path("/debug{yaml : (/yaml)?}{api : (/\\w+)?}/{filename}")
-    public Response debugFile(@PathParam("yaml") final String yaml, @PathParam("api") final String api,
-    		@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
-        return getResource(filename, request, "/yaml".equals(yaml), (api == null || api.isBlank()) ? "server" : api.substring(1));
-    }
-
-
-
+	@GET
+	@Produces({ MediaType.TEXT_HTML, "text/javascript", "text/css", MediaType.TEXT_PLAIN })
+	@Path("/debug{yaml : (/yaml)?}{api : (/\\w+)?}/{filename}")
+	public Response debugFile(@PathParam("yaml") final String yaml, @PathParam("api") final String api,
+			@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
+		return getResource(filename, request, "/yaml".equals(yaml), (api == null || api.isBlank()) ? "server" : api.substring(1));
+	}
 
 }
