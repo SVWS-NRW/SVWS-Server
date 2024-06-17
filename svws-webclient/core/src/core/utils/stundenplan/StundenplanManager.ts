@@ -1047,9 +1047,9 @@ export class StundenplanManager extends JavaObject {
 			this._pausenzeitWochentagMin = BlockungsUtils.minVI(this._pausenzeitWochentagMin, p.wochentag);
 			this._pausenzeitWochentagMax = BlockungsUtils.maxVI(this._pausenzeitWochentagMax, p.wochentag);
 		}
-		this._pausenzeitWochentagMin = (this._pausenzeitWochentagMin === Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMin;
-		this._pausenzeitWochentagMax = (this._pausenzeitWochentagMax === Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMax;
-		this._pausenzeitWochentageAlsEnumRange = Array(this._pausenzeitWochentagMax - this._pausenzeitWochentagMin + 1).fill(null);
+		this._pausenzeitWochentagMin = (this._pausenzeitWochentagMin === (Wochentag.SONNTAG.id + 1)) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMin;
+		this._pausenzeitWochentagMax = (this._pausenzeitWochentagMax === (Wochentag.MONTAG.id - 1)) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMax;
+		this._pausenzeitWochentageAlsEnumRange = Array((this._pausenzeitWochentagMax - this._pausenzeitWochentagMin) + 1).fill(null);
 		for (let i : number = 0; i < this._pausenzeitWochentageAlsEnumRange.length; i++)
 			this._pausenzeitWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._pausenzeitWochentagMin + i);
 	}
@@ -1486,14 +1486,14 @@ export class StundenplanManager extends JavaObject {
 			this._zeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(this._zeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
 			this._zeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(this._zeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.stundenende));
 		}
-		this._zeitrasterWochentagMin = (this._zeitrasterWochentagMin === Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMin;
-		this._zeitrasterWochentagMax = (this._zeitrasterWochentagMax === Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMax;
+		this._zeitrasterWochentagMin = (this._zeitrasterWochentagMin === (Wochentag.SONNTAG.id + 1)) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMin;
+		this._zeitrasterWochentagMax = (this._zeitrasterWochentagMax === (Wochentag.MONTAG.id - 1)) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMax;
 		this._zeitrasterStundeMin = (this._zeitrasterStundeMin === 999) ? 1 : this._zeitrasterStundeMin;
 		this._zeitrasterStundeMax = (this._zeitrasterStundeMax === -999) ? 1 : this._zeitrasterStundeMax;
-		this._zeitrasterWochentageAlsEnumRange = Array(this._zeitrasterWochentagMax - this._zeitrasterWochentagMin + 1).fill(null);
+		this._zeitrasterWochentageAlsEnumRange = Array((this._zeitrasterWochentagMax - this._zeitrasterWochentagMin) + 1).fill(null);
 		for (let i : number = 0; i < this._zeitrasterWochentageAlsEnumRange.length; i++)
 			this._zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._zeitrasterWochentagMin + i);
-		this._zeitrasterStundenRange = Array(this._zeitrasterStundeMax - this._zeitrasterStundeMin + 1).fill(0);
+		this._zeitrasterStundenRange = Array((this._zeitrasterStundeMax - this._zeitrasterStundeMin) + 1).fill(0);
 		for (let i : number = 0; i < this._zeitrasterStundenRange.length; i++)
 			this._zeitrasterStundenRange[i] = this._zeitrasterStundeMin + i;
 	}
@@ -1515,7 +1515,7 @@ export class StundenplanManager extends JavaObject {
 		}
 		this._zeitrasterStundeMinOhneLeere = (this._zeitrasterStundeMinOhneLeere === 999) ? 1 : this._zeitrasterStundeMinOhneLeere;
 		this._zeitrasterStundeMaxOhneLeere = (this._zeitrasterStundeMaxOhneLeere === -999) ? 1 : this._zeitrasterStundeMaxOhneLeere;
-		this._zeitrasterStundenRangeOhneLeere = Array(this._zeitrasterStundeMaxOhneLeere - this._zeitrasterStundeMinOhneLeere + 1).fill(0);
+		this._zeitrasterStundenRangeOhneLeere = Array((this._zeitrasterStundeMaxOhneLeere - this._zeitrasterStundeMinOhneLeere) + 1).fill(0);
 		for (let i : number = 0; i < this._zeitrasterStundenRangeOhneLeere.length; i++)
 			this._zeitrasterStundenRangeOhneLeere[i] = this._zeitrasterStundeMinOhneLeere + i;
 	}
@@ -4351,7 +4351,7 @@ export class StundenplanManager extends JavaObject {
 			return "Alle";
 		const zahl : number = wochenTyp - 1;
 		const z2 : number = Math.trunc(zahl / 26);
-		const z1 : number = zahl - z2 * 26;
+		const z1 : number = zahl - (z2 * 26);
 		return StringUtils.numberToLetterIndex1(z2)! + StringUtils.numberToLetterIndex0(z1)!;
 	}
 
@@ -5258,7 +5258,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
 	 */
 	public zeitrasterGetDefaultStundenbeginnByStunde(stunde : number) : number {
-		return 480 + (stunde - 1) * (45 + 5);
+		return 480 + ((stunde - 1) * (45 + 5));
 	}
 
 	/**

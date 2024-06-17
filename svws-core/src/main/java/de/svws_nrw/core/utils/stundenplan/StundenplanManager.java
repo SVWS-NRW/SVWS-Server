@@ -55,97 +55,158 @@ public class StundenplanManager {
 	public static final int FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN = 45;
 
 	// Comparators
-	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
-		if (a.sortierung < b.sortierung) return -1;
-		if (a.sortierung > b.sortierung) return +1;
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang = (final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ = (final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
-		if (a.jahr < b.jahr) return -1;
-		if (a.jahr > b.jahr) return +1;
-		if (a.kw < b.kw) return -1;
-		if (a.kw > b.kw) return +1;
-		if (a.wochentyp < b.wochentyp) return -1;
-		if (a.wochentyp > b.wochentyp) return +1;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanKlasse> _compKlasse = (final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich =
+			(final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach =
+			(final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
+				if (a.sortierung < b.sortierung)
+					return -1;
+				if (a.sortierung > b.sortierung)
+					return +1;
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang =
+			(final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ =
+			(final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
+				if (a.jahr < b.jahr)
+					return -1;
+				if (a.jahr > b.jahr)
+					return +1;
+				if (a.kw < b.kw)
+					return -1;
+				if (a.kw > b.kw)
+					return +1;
+				if (a.wochentyp < b.wochentyp)
+					return -1;
+				if (a.wochentyp > b.wochentyp)
+					return +1;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanKlasse> _compKlasse =
+			(final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
 	private final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> _compKlassenunterricht;
-	private static final @NotNull Comparator<@NotNull StundenplanKurs> _compKurs = (final @NotNull StundenplanKurs a, final @NotNull StundenplanKurs b) -> {
-		if (a.sortierung < b.sortierung) return -1;
-		if (a.sortierung > b.sortierung) return +1;
-		final int result = a.bezeichnung.compareTo(b.bezeichnung);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer = (final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
-	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit = (final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
-		if (a.wochentag < b.wochentag) return -1;
-		if (a.wochentag > b.wochentag) return +1;
-		final int beginnA = a.beginn == null ? -1 : a.beginn;
-		final int beginnB = b.beginn == null ? -1 : b.beginn;
-		if (beginnA < beginnB) return -1;
-		if (beginnA > beginnB) return +1;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanSchiene> _compSchiene = (final @NotNull StundenplanSchiene a, final @NotNull StundenplanSchiene b) -> {
-		if (a.idJahrgang < b.idJahrgang) return -1;
-		if (a.idJahrgang > b.idJahrgang) return +1;
-		if (a.nummer < b.nummer) return -1;
-		if (a.nummer > b.nummer) return +1;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler = (final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
-		if (a.idKlasse < b.idKlasse) return -1;
-		if (a.idKlasse > b.idKlasse) return +1;
-		final int cmpNachname = a.nachname.compareTo(b.nachname);
-		if (cmpNachname != 0) return cmpNachname;
-		final int cmpVorname = a.vorname.compareTo(b.vorname);
-		if (cmpVorname != 0) return cmpVorname;
-		return Long.compare(a.id, b.id);
-	};
+
+	private static final @NotNull Comparator<@NotNull StundenplanKurs> _compKurs =
+			(final @NotNull StundenplanKurs a, final @NotNull StundenplanKurs b) -> {
+				if (a.sortierung < b.sortierung)
+					return -1;
+				if (a.sortierung > b.sortierung)
+					return +1;
+				final int result = a.bezeichnung.compareTo(b.bezeichnung);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer =
+			(final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht =
+			(final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
+
+	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit =
+			(final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
+				if (a.wochentag < b.wochentag)
+					return -1;
+				if (a.wochentag > b.wochentag)
+					return +1;
+				final int beginnA = a.beginn == null ? -1 : a.beginn;
+				final int beginnB = b.beginn == null ? -1 : b.beginn;
+				if (beginnA < beginnB)
+					return -1;
+				if (beginnA > beginnB)
+					return +1;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum =
+			(final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanSchiene> _compSchiene =
+			(final @NotNull StundenplanSchiene a, final @NotNull StundenplanSchiene b) -> {
+				if (a.idJahrgang < b.idJahrgang)
+					return -1;
+				if (a.idJahrgang > b.idJahrgang)
+					return +1;
+				if (a.nummer < b.nummer)
+					return -1;
+				if (a.nummer > b.nummer)
+					return +1;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler =
+			(final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
+				if (a.idKlasse < b.idKlasse)
+					return -1;
+				if (a.idKlasse > b.idKlasse)
+					return +1;
+				final int cmpNachname = a.nachname.compareTo(b.nachname);
+				if (cmpNachname != 0)
+					return cmpNachname;
+				final int cmpVorname = a.vorname.compareTo(b.vorname);
+				if (cmpVorname != 0)
+					return cmpVorname;
+				return Long.compare(a.id, b.id);
+			};
 
 	private final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht;
 
-	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
-		if (a.wochentag < b.wochentag) return -1;
-		if (a.wochentag > b.wochentag) return +1;
-		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
-		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster =
+			(final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
+				if (a.wochentag < b.wochentag)
+					return -1;
+				if (a.wochentag > b.wochentag)
+					return +1;
+				if (a.unterrichtstunde < b.unterrichtstunde)
+					return -1;
+				if (a.unterrichtstunde > b.unterrichtstunde)
+					return +1;
+				return Long.compare(a.id, b.id);
+			};
 
-	private static final @NotNull Comparator<@NotNull Long> _compID = (final @NotNull Long a, final @NotNull Long b) -> {
-		if (a < b) return -1;
-		if (a > b) return +1;
-		return 0;
-	};
+	private static final @NotNull Comparator<@NotNull Long> _compID =
+			(final @NotNull Long a, final @NotNull Long b) -> {
+				if (a < b)
+					return -1;
+				if (a > b)
+					return +1;
+				return 0;
+			};
 
 	// StundenplanAufsichtsbereich
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereich_by_id = new HashMap<>();
@@ -178,10 +239,12 @@ public class StundenplanManager {
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idUnterricht = new HashMap<>();
 
 	// StundenplanKlassenunterricht
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _klassenunterricht_by_idKlasse_and_idFach = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _klassenunterricht_by_idKlasse_and_idFach =
+			new HashMap2D<>();
 	private @NotNull List<@NotNull StundenplanKlassenunterricht> _klassenunterrichtmenge = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idKlasse = new HashMap<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idKlasse_and_idSchiene = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idKlasse_and_idSchiene =
+			new HashMap2D<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idSchueler = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idLehrer = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _klassenunterrichtmenge_by_idSchiene = new HashMap<>();
@@ -200,7 +263,8 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _lehrer_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanLehrer> _lehrermenge_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _lehrermenge_by_idUnterricht = new HashMap<>();
-	private @NotNull HashMap3D<@NotNull Long, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanLehrer>> _lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
+	private @NotNull HashMap3D<@NotNull Long, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanLehrer>> _lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp =
+			new HashMap3D<>();
 
 	// StundenplanPausenaufsicht
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsicht> _pausenaufsicht_by_id = new HashMap<>();
@@ -209,21 +273,33 @@ public class StundenplanManager {
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idPausenzeit = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idLehrer = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich = new HashMap2D<>();
-	private @NotNull HashMap3D<@NotNull Long, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich =
+			new HashMap2D<>();
+	private @NotNull HashMap3D<@NotNull Long, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp =
+			new HashMap3D<>();
 
 	// StundenplanPausenaufsichtBereich
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsichtBereich> _pausenaufsichtbereich_by_id = new HashMap<>();
-	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht = new HashMap<>();
-	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich = new HashMap<>();
-	private @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_Wochentyp = new HashMap<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp = new HashMap2D<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht =
+			new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich =
+			new HashMap<>();
+	private @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_Wochentyp =
+			new HashMap<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp =
+			new HashMap2D<>();
 
 	// StundenplanPausenzeit
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _pausenzeit_by_id = new HashMap<>();
@@ -235,10 +311,14 @@ public class StundenplanManager {
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idSchueler = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idLehrer = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idJahrgang = new HashMap<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idKlasse_and_wochentag = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idLehrer_and_wochentag = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idSchueler_and_wochentag = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idJahrgang_and_wochentag = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idKlasse_and_wochentag =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idLehrer_and_wochentag =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idSchueler_and_wochentag =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idJahrgang_and_wochentag =
+			new HashMap2D<>();
 	private Integer _pausenzeitMinutenMin = null;
 	private Integer _pausenzeitMinutenMax = null;
 	private Integer _pausenzeitMinutenMinOhneLeere = null;
@@ -246,7 +326,7 @@ public class StundenplanManager {
 
 	private int _pausenzeitWochentagMin = Wochentag.MONTAG.id;
 	private int _pausenzeitWochentagMax = Wochentag.MONTAG.id;
-	private @NotNull Wochentag @NotNull [] _pausenzeitWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
+	private @NotNull Wochentag @NotNull [] _pausenzeitWochentageAlsEnumRange = new Wochentag[] { Wochentag.MONTAG };
 
 	// StundenplanRaum
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _raum_by_id = new HashMap<>();
@@ -278,13 +358,20 @@ public class StundenplanManager {
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idUnterricht = new HashMap<>();  // u --> Partner von u (inklusive u selbst)
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idLehrer_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D<>();
-	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idZeitraster =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idRaum_and_idZeitraster =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idSchueler_and_idZeitraster =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idLehrer_and_idZeitraster =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang_and_idZeitraster =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idFach =
+			new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp =
+			new HashMap2D<>();
 	private boolean _unterrichtHatMultiWochen = false;
 	private @NotNull List<@NotNull List<@NotNull StundenplanUnterricht>> _unterrichtsgruppenMergeable = new ArrayList<>();
 
@@ -304,15 +391,15 @@ public class StundenplanManager {
 
 	private int _zeitrasterWochentagMin = Wochentag.MONTAG.id;
 	private int _zeitrasterWochentagMax = Wochentag.MONTAG.id;
-	private @NotNull Wochentag @NotNull [] _zeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
+	private @NotNull Wochentag @NotNull [] _zeitrasterWochentageAlsEnumRange = new Wochentag[] { Wochentag.MONTAG };
 
 	private int _zeitrasterStundeMin = 1;
 	private int _zeitrasterStundeMax = 1;
-	private @NotNull int @NotNull [] _zeitrasterStundenRange = new int[] {1};
+	private @NotNull int @NotNull [] _zeitrasterStundenRange = new int[] { 1 };
 
 	private int _zeitrasterStundeMinOhneLeere = 1;
 	private int _zeitrasterStundeMaxOhneLeere = 1;
-	private @NotNull int @NotNull [] _zeitrasterStundenRangeOhneLeere = new int[] {1};
+	private @NotNull int @NotNull [] _zeitrasterStundenRangeOhneLeere = new int[] { 1 };
 
 	// wert ... by
 	private @NotNull HashMap<@NotNull Long, @NotNull Double> _wertWochenminuten_by_idKurs = new HashMap<>();
@@ -334,7 +421,8 @@ public class StundenplanManager {
 	 * @param pausenaufsichten      liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
 	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
-	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
+	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte,
+			final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_compUnterricht = unterrichtCreateComparator();
 		_stundenplanID = daten.id;
@@ -369,9 +457,7 @@ public class StundenplanManager {
 				uv.klassenunterricht,
 				pausenaufsichten,
 				uv.kurse,
-				unterrichte
-				);
-
+				unterrichte);
 	}
 
 	/**
@@ -390,7 +476,8 @@ public class StundenplanManager {
 		_stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 
 		// Spezielle Prüfungen.
-		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", stundenplanKomplett.daten.id != stundenplanKomplett.unterrichtsverteilung.id);
+		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id",
+				stundenplanKomplett.daten.id != stundenplanKomplett.unterrichtsverteilung.id);
 
 		initAll(stundenplanKomplett.daten.kalenderwochenZuordnung,
 				stundenplanKomplett.unterrichtsverteilung.faecher,
@@ -429,20 +516,20 @@ public class StundenplanManager {
 	}
 
 	private void initAll(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listKWZ,
-			             final @NotNull List<@NotNull StundenplanFach> listFach,
-			             final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang,
-			             final @NotNull List<@NotNull StundenplanZeitraster> listZeitraster,
-			             final @NotNull List<@NotNull StundenplanRaum> listRaum,
-			             final @NotNull List<@NotNull StundenplanPausenzeit> listPausenzeit,
-			             final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich,
-			             final @NotNull List<@NotNull StundenplanLehrer> listLehrer,
-			             final @NotNull List<@NotNull StundenplanSchueler> listSchueler,
-			             final @NotNull List<@NotNull StundenplanSchiene> listSchiene,
-			             final @NotNull List<@NotNull StundenplanKlasse> listKlasse,
-			             final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht,
-			             final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht,
-			             final @NotNull List<@NotNull StundenplanKurs> listKurs,
-			             final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
+			final @NotNull List<@NotNull StundenplanFach> listFach,
+			final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang,
+			final @NotNull List<@NotNull StundenplanZeitraster> listZeitraster,
+			final @NotNull List<@NotNull StundenplanRaum> listRaum,
+			final @NotNull List<@NotNull StundenplanPausenzeit> listPausenzeit,
+			final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich,
+			final @NotNull List<@NotNull StundenplanLehrer> listLehrer,
+			final @NotNull List<@NotNull StundenplanSchueler> listSchueler,
+			final @NotNull List<@NotNull StundenplanSchiene> listSchiene,
+			final @NotNull List<@NotNull StundenplanKlasse> listKlasse,
+			final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht,
+			final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht,
+			final @NotNull List<@NotNull StundenplanKurs> listKurs,
+			final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
 
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", _stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", _stundenplanWochenTypModell == 1);
@@ -577,7 +664,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert) {
 			final long beginn = pausenzeit.beginn == null ? -1 : pausenzeit.beginn;
 			final long ende = pausenzeit.ende == null ? -1 : pausenzeit.ende;
-			final @NotNull LongArrayKey key = new LongArrayKey(new long[] {pausenzeit.wochentag, beginn, ende});
+			final @NotNull LongArrayKey key = new LongArrayKey(new long[] { pausenzeit.wochentag, beginn, ende });
 			_pausenzeit_by_tag_and_beginn_and_ende.put(key, pausenzeit);
 		}
 	}
@@ -918,7 +1005,8 @@ public class StundenplanManager {
 	private void update_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich() {
 		_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich = new HashMap2D<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : _aufsichtsbereichmenge_sortiert) {
-			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.id)) {
+			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich,
+					aufsichtsbereich.id)) {
 				Map2DUtils.addToList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich, aufsicht.idPausenzeit, aufsichtsbereich.id, aufsicht);
 			}
 		}
@@ -927,10 +1015,13 @@ public class StundenplanManager {
 	private void update_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp() {
 		_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : _aufsichtsbereichmenge_sortiert)
-			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, aufsichtsbereich.id))
-				for (final @NotNull StundenplanPausenaufsichtBereich zuordnung : MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht, aufsicht.id))
+			for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich,
+					aufsichtsbereich.id))
+				for (final @NotNull StundenplanPausenaufsichtBereich zuordnung : MapUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht,
+						aufsicht.id))
 					if (aufsichtsbereich.id == zuordnung.idAufsichtsbereich)
-						Map3DUtils.addToList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, aufsicht.idPausenzeit, aufsichtsbereich.id, zuordnung.wochentyp, aufsicht);
+						Map3DUtils.addToList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, aufsicht.idPausenzeit,
+								aufsichtsbereich.id, zuordnung.wochentyp, aufsicht);
 	}
 
 	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht() {
@@ -954,7 +1045,8 @@ public class StundenplanManager {
 	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich() {
 		_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich = new HashMap2D<>();
 		for (final @NotNull StundenplanPausenaufsichtBereich bereich : _pausenaufsichtbereich_by_id.values())
-			Map2DUtils.addToList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich);
+			Map2DUtils.addToList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, bereich.idPausenaufsicht, bereich.idAufsichtsbereich,
+					bereich);
 	}
 
 	private void update_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp() {
@@ -1012,11 +1104,11 @@ public class StundenplanManager {
 			_pausenzeitWochentagMin = BlockungsUtils.minVI(_pausenzeitWochentagMin, p.wochentag);
 			_pausenzeitWochentagMax = BlockungsUtils.maxVI(_pausenzeitWochentagMax, p.wochentag);
 		}
-		_pausenzeitWochentagMin = (_pausenzeitWochentagMin == Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : _pausenzeitWochentagMin;
-		_pausenzeitWochentagMax = (_pausenzeitWochentagMax == Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : _pausenzeitWochentagMax;
+		_pausenzeitWochentagMin = (_pausenzeitWochentagMin == (Wochentag.SONNTAG.id + 1)) ? Wochentag.MONTAG.id : _pausenzeitWochentagMin;
+		_pausenzeitWochentagMax = (_pausenzeitWochentagMax == (Wochentag.MONTAG.id - 1)) ? Wochentag.MONTAG.id : _pausenzeitWochentagMax;
 
 		// _pausenzeitWochentageAlsEnumRange
-		_pausenzeitWochentageAlsEnumRange = new Wochentag[_pausenzeitWochentagMax - _pausenzeitWochentagMin + 1];
+		_pausenzeitWochentageAlsEnumRange = new Wochentag[(_pausenzeitWochentagMax - _pausenzeitWochentagMin) + 1];
 		for (int i = 0; i < _pausenzeitWochentageAlsEnumRange.length; i++)
 			_pausenzeitWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_pausenzeitWochentagMin + i);
 	}
@@ -1096,7 +1188,7 @@ public class StundenplanManager {
 	private void update_pausenzeitmenge_by_idJahrgang() {
 		_pausenzeitmenge_by_idJahrgang = new HashMap<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
-			for (final @NotNull StundenplanKlasse  klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
+			for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (final @NotNull Long idJahrgang : klasse.jahrgaenge)
 					MapUtils.addToListIfNotExists(_pausenzeitmenge_by_idJahrgang, idJahrgang, pausenzeit);
 	}
@@ -1145,7 +1237,8 @@ public class StundenplanManager {
 		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
 		final int kwVon = infoVon[5]; // 5 = kalenderwoche
 		final int kwBis = infoBis[5]; // 5 = kalenderwoche
-		DeveloperNotificationException.ifTrue("Das Start-Datum '" + _stundenplanGueltigAb + "' ist größer als das End-Datum '" + _stundenplanGueltigBis + "'!", (jahrVon > jahrBis) || ((jahrVon == jahrBis) && (kwVon > kwBis)));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + _stundenplanGueltigAb + "' ist größer als das End-Datum '" + _stundenplanGueltigBis + "'!",
+				(jahrVon > jahrBis) || ((jahrVon == jahrBis) && (kwVon > kwBis)));
 
 		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
 			final int von = (jahr == jahrVon) ? kwVon : 1;
@@ -1247,17 +1340,21 @@ public class StundenplanManager {
 	private void update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp() {
 		_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
 		for (final long idPausenZeit : _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getKeySet()) {
-			final Map<@NotNull Long, Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>>> map2 = _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap2OrNull(idPausenZeit);
+			final Map<@NotNull Long, Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>>> map2 =
+					_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap2OrNull(idPausenZeit);
 			if (map2 == null)
 				continue;
 			for (final long idAufsichtsbereich : map2.keySet()) {
-				final Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> map3 = _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap3OrNull(idPausenZeit, idAufsichtsbereich);
+				final Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> map3 =
+						_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap3OrNull(idPausenZeit, idAufsichtsbereich);
 				if (map3 == null)
 					continue;
 				for (final int wochentyp : map3.keySet()) {
-					for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getNonNullOrException(idPausenZeit, idAufsichtsbereich, wochentyp)) {
+					for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
+							.getNonNullOrException(idPausenZeit, idAufsichtsbereich, wochentyp)) {
 						final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, pausenaufsicht.idLehrer);
-						Map3DUtils.addToList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenZeit, idAufsichtsbereich, wochentyp, lehrer);
+						Map3DUtils.addToList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenZeit, idAufsichtsbereich, wochentyp,
+								lehrer);
 					}
 				}
 			}
@@ -1298,7 +1395,7 @@ public class StundenplanManager {
 		}
 	}
 
-    private void update_unterrichtmenge() {
+	private void update_unterrichtmenge() {
 		_unterrichtmenge = new ArrayList<>(_unterricht_by_id.values());
 		_unterrichtmenge.sort(_compUnterricht);
 
@@ -1344,7 +1441,7 @@ public class StundenplanManager {
 			}
 	}
 
-    private void update_unterrichtmenge_by_idKlasse_and_idZeitraster() {
+	private void update_unterrichtmenge_by_idKlasse_and_idZeitraster() {
 		_unterrichtmenge_by_idKlasse_and_idZeitraster = new HashMap2D<>();
 
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
@@ -1357,7 +1454,7 @@ public class StundenplanManager {
 				for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, u.idKurs))
 					Map2DUtils.addToList(_unterrichtmenge_by_idKlasse_and_idZeitraster, klasse.id, u.idZeitraster, u);
 			}
-    }
+	}
 
 	private void update_unterrichtmenge_by_idSchueler_and_idZeitraster() {
 		_unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D<>();
@@ -1480,19 +1577,19 @@ public class StundenplanManager {
 			_zeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(_zeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
 			_zeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(_zeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.stundenende));
 		}
-		_zeitrasterWochentagMin = (_zeitrasterWochentagMin == Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : _zeitrasterWochentagMin;
-		_zeitrasterWochentagMax = (_zeitrasterWochentagMax == Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : _zeitrasterWochentagMax;
-		_zeitrasterStundeMin = (_zeitrasterStundeMin ==  999) ? 1 : _zeitrasterStundeMin;
+		_zeitrasterWochentagMin = (_zeitrasterWochentagMin == (Wochentag.SONNTAG.id + 1)) ? Wochentag.MONTAG.id : _zeitrasterWochentagMin;
+		_zeitrasterWochentagMax = (_zeitrasterWochentagMax == (Wochentag.MONTAG.id - 1)) ? Wochentag.MONTAG.id : _zeitrasterWochentagMax;
+		_zeitrasterStundeMin = (_zeitrasterStundeMin == 999) ? 1 : _zeitrasterStundeMin;
 		_zeitrasterStundeMax = (_zeitrasterStundeMax == -999) ? 1 : _zeitrasterStundeMax;
 
 
 		// _zeitrasterWochentageAlsEnumRange
-		_zeitrasterWochentageAlsEnumRange = new Wochentag[_zeitrasterWochentagMax - _zeitrasterWochentagMin + 1];
+		_zeitrasterWochentageAlsEnumRange = new Wochentag[(_zeitrasterWochentagMax - _zeitrasterWochentagMin) + 1];
 		for (int i = 0; i < _zeitrasterWochentageAlsEnumRange.length; i++)
 			_zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_zeitrasterWochentagMin + i);
 
 		// _zeitrasterStundenRange
-		_zeitrasterStundenRange = new int[_zeitrasterStundeMax - _zeitrasterStundeMin + 1];
+		_zeitrasterStundenRange = new int[(_zeitrasterStundeMax - _zeitrasterStundeMin) + 1];
 		for (int i = 0; i < _zeitrasterStundenRange.length; i++)
 			_zeitrasterStundenRange[i] = _zeitrasterStundeMin + i;
 	}
@@ -1513,11 +1610,11 @@ public class StundenplanManager {
 			_zeitrasterStundeMinOhneLeere = BlockungsUtils.minVI(_zeitrasterStundeMinOhneLeere, z.unterrichtstunde);
 			_zeitrasterStundeMaxOhneLeere = BlockungsUtils.maxVI(_zeitrasterStundeMaxOhneLeere, z.unterrichtstunde);
 		}
-		_zeitrasterStundeMinOhneLeere = (_zeitrasterStundeMinOhneLeere ==  999) ? 1 : _zeitrasterStundeMinOhneLeere;
+		_zeitrasterStundeMinOhneLeere = (_zeitrasterStundeMinOhneLeere == 999) ? 1 : _zeitrasterStundeMinOhneLeere;
 		_zeitrasterStundeMaxOhneLeere = (_zeitrasterStundeMaxOhneLeere == -999) ? 1 : _zeitrasterStundeMaxOhneLeere;
 
 		// _uZeitrasterStundenRangeOhneLeere
-		_zeitrasterStundenRangeOhneLeere = new int[_zeitrasterStundeMaxOhneLeere - _zeitrasterStundeMinOhneLeere + 1];
+		_zeitrasterStundenRangeOhneLeere = new int[(_zeitrasterStundeMaxOhneLeere - _zeitrasterStundeMinOhneLeere) + 1];
 		for (int i = 0; i < _zeitrasterStundenRangeOhneLeere.length; i++)
 			_zeitrasterStundenRangeOhneLeere[i] = _zeitrasterStundeMinOhneLeere + i;
 	}
@@ -1583,8 +1680,10 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichCheckAttributes(aufsichtsbereich);
-			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!", _aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
-			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " doppelt in der Liste!", !setOfIDs.add(aufsichtsbereich.id));
+			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!",
+					_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
+			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " doppelt in der Liste!",
+					!setOfIDs.add(aufsichtsbereich.id));
 		}
 
 		// add all
@@ -1656,8 +1755,9 @@ public class StundenplanManager {
 
 	private void aufsichtsbereichRemoveOhneUpdateById(final long idAufsichtsbereich) {
 		// Kaskade: StundenplanPausenaufsicht
-		for (final @NotNull StundenplanPausenaufsicht aufsicht: MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich))
-			for (final @NotNull StundenplanPausenaufsichtBereich bereich: pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(idAufsichtsbereich, aufsicht.id))
+		for (final @NotNull StundenplanPausenaufsicht aufsicht : MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich))
+			for (final @NotNull StundenplanPausenaufsichtBereich bereich : pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(
+					idAufsichtsbereich, aufsicht.id))
 				aufsicht.bereiche.remove(bereich);
 
 		// Entfernen
@@ -1820,7 +1920,8 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : list) {
 			jahrgangCheckAttributes(jahrgang);
-			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!", _jahrgang_by_id.containsKey(jahrgang.id));
+			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!",
+					_jahrgang_by_id.containsKey(jahrgang.id));
 			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " doppelt in der Liste!", !setOfIDs.add(jahrgang.id));
 		}
 
@@ -1896,15 +1997,15 @@ public class StundenplanManager {
 
 	private void jahrgangRemoveOhneUpdateById(final long idJahrgang) {
 		// Kaskade: StundenplanSchiene
-		for (final @NotNull StundenplanSchiene schiene: MapUtils.getOrCreateArrayList(_schienenmenge_by_idJahrgang, idJahrgang))
+		for (final @NotNull StundenplanSchiene schiene : MapUtils.getOrCreateArrayList(_schienenmenge_by_idJahrgang, idJahrgang))
 			schieneRemoveOhneUpdateById(schiene.id);
 
 		// Kaskade: StundenplanKurs
-		for (final @NotNull StundenplanKurs kurs: MapUtils.getOrCreateArrayList(_kursmenge_by_idJahrgang, idJahrgang))
+		for (final @NotNull StundenplanKurs kurs : MapUtils.getOrCreateArrayList(_kursmenge_by_idJahrgang, idJahrgang))
 			kurs.jahrgaenge.remove(idJahrgang);
 
 		// Kaskade: StundenplanKlasse
-		for (final @NotNull StundenplanKlasse klasse: MapUtils.getOrCreateArrayList(_klassenmenge_by_idJahrgang, idJahrgang))
+		for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idJahrgang, idJahrgang))
 			klasse.jahrgaenge.remove(idJahrgang);
 
 		DeveloperNotificationException.ifMapRemoveFailes(_jahrgang_by_id, idJahrgang);
@@ -1962,8 +2063,10 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull String> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : list) {
 			kalenderwochenzuordnungCheck(kwz, true);
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", _kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!",
+					_kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
+			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!",
+					!setOfIDs.add(kwz.jahr + ";" + kwz.kw));
 		}
 
 		// add all
@@ -1974,9 +2077,12 @@ public class StundenplanManager {
 	private void kalenderwochenzuordnungCheck(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
 		if (checkID)
 			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
-		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
-		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
-		DeveloperNotificationException.ifTrue("kwz.wochentyp (" + kwz.wochentyp + ") > stundenplanWochenTypModell (" + _stundenplanWochenTypModell + ")", kwz.wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)",
+				(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
+		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))",
+				(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
+		DeveloperNotificationException.ifTrue("kwz.wochentyp (" + kwz.wochentyp + ") > stundenplanWochenTypModell (" + _stundenplanWochenTypModell + ")",
+				kwz.wochentyp > _stundenplanWochenTypModell);
 		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0);
 	}
 
@@ -2034,7 +2140,8 @@ public class StundenplanManager {
 			return kwz;
 
 		// Datum kleiner First?
-		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst =
+				DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
 		if ((jahr < kwzFirst.jahr) || ((jahr == kwzFirst.jahr) && (kalenderwoche < kwzFirst.kw)))
 			return kwzFirst;
 
@@ -2085,7 +2192,7 @@ public class StundenplanManager {
 		kalenderwochenzuordnungCheck(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
 		return (kwz.kw < max) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw + 1)
-                              : _kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
+				: _kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
 	}
 
 	/**
@@ -2102,7 +2209,7 @@ public class StundenplanManager {
 		kalenderwochenzuordnungCheck(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1)
-		                    : _kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
+				: _kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
 	}
 
 	/**
@@ -2281,15 +2388,18 @@ public class StundenplanManager {
 	}
 
 	private int klasseCompareByKlassenIDs(final @NotNull List<@NotNull Long> a, final @NotNull List<@NotNull Long> b) {
-		if (a.size() < b.size()) return -1;
-		if (a.size() > b.size()) return +1;
+		if (a.size() < b.size())
+			return -1;
+		if (a.size() > b.size())
+			return +1;
 		for (int i = 0; i < a.size(); i++) {
 			final @NotNull Long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
 			final @NotNull Long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
 			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
 			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
 			final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
-			if (cmpKlasse != 0) return cmpKlasse;
+			if (cmpKlasse != 0)
+				return cmpKlasse;
 		}
 		return 0;
 	}
@@ -2415,13 +2525,18 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull String> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list) {
 			klassenunterrichtCheckAttributes(klassenunterricht);
-			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!", _klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
-			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: ID=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " doppelt in der Liste!", !setOfIDs.add(klassenunterricht.idKlasse + ";" + klassenunterricht.idFach));
+			DeveloperNotificationException.ifTrue(
+					"klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!",
+					_klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
+			DeveloperNotificationException.ifTrue(
+					"klassenunterrichtAddAllOhneUpdate: ID=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " doppelt in der Liste!",
+					!setOfIDs.add(klassenunterricht.idKlasse + ";" + klassenunterricht.idFach));
 		}
 
 		// add all
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list)
-			DeveloperNotificationException.ifMap2DPutOverwrites(_klassenunterricht_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
+			DeveloperNotificationException.ifMap2DPutOverwrites(_klassenunterricht_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach,
+					klassenunterricht);
 	}
 
 	private void klassenunterrichtCheckAttributes(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
@@ -2433,24 +2548,30 @@ public class StundenplanManager {
 
 	private @NotNull Comparator<@NotNull StundenplanKlassenunterricht> klassenunterrichtCreateComparator() {
 
-		final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> comp = (final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
-				final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, a.idKlasse);
-				final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, b.idKlasse);
-				final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
-				if (cmpKlasse != 0) return cmpKlasse;
+		final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> comp =
+				(final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
+					final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, a.idKlasse);
+					final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, b.idKlasse);
+					final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
+					if (cmpKlasse != 0)
+						return cmpKlasse;
 
-				final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
-				final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
-				final int cmpFach = _compFach.compare(aFach, bFach);
-				if (cmpFach != 0) return cmpFach;
+					final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
+					final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
+					final int cmpFach = _compFach.compare(aFach, bFach);
+					if (cmpFach != 0)
+						return cmpFach;
 
-				final int cmpLehrer = lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
-				if (cmpLehrer != 0) return cmpLehrer;
+					final int cmpLehrer = lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
+					if (cmpLehrer != 0)
+						return cmpLehrer;
 
-				if (a.wochenstunden < b.wochenstunden) return -1;
-				if (a.wochenstunden > b.wochenstunden) return +1;
-				return a.bezeichnung.compareTo(b.bezeichnung);
-			};
+					if (a.wochenstunden < b.wochenstunden)
+						return -1;
+					if (a.wochenstunden > b.wochenstunden)
+						return +1;
+					return a.bezeichnung.compareTo(b.bezeichnung);
+				};
 
 		return comp;
 	}
@@ -2465,8 +2586,10 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
 	 */
-	public boolean klassenunterrichtDarfInZelle(final @NotNull StundenplanKlassenunterricht klassenunterricht, final int wochentag, final int stunde, final int wochentyp) {
-		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach)) {
+	public boolean klassenunterrichtDarfInZelle(final @NotNull StundenplanKlassenunterricht klassenunterricht, final int wochentag, final int stunde,
+			final int wochentyp) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach,
+				klassenunterricht.idKlasse, klassenunterricht.idFach)) {
 			final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMap2DGetIsNull(_zeitraster_by_wochentag_and_stunde, wochentag, stunde);
 			if ((partner.idZeitraster == z.id) && ((partner.wochentyp == 0) || (wochentyp == 0) || (wochentyp == partner.wochentyp)))
 				return false;
@@ -2544,7 +2667,8 @@ public class StundenplanManager {
 	 * @return die SOLL-Wochenminuten des {@link StundenplanKlassenunterricht}.
 	 */
 	public int klassenunterrichtGetWochenminutenSOLL(final long idKlasse, final long idFach) {
-		return DeveloperNotificationException.ifMap2DGetIsNull(_klassenunterricht_by_idKlasse_and_idFach, idKlasse, idFach).wochenstunden * FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN;
+		return DeveloperNotificationException.ifMap2DGetIsNull(_klassenunterricht_by_idKlasse_and_idFach, idKlasse, idFach).wochenstunden
+				* FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN;
 	}
 
 	/**
@@ -2624,7 +2748,8 @@ public class StundenplanManager {
 
 	private void klassenunterrichtRemoveOhneUpdateById(final long idKlasse, final long idFach) {
 		// Kaskade: StundenplanUnterricht (des Klassenunterrichts)
-		for (final @NotNull StundenplanUnterricht u : DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach))
+		for (final @NotNull StundenplanUnterricht u : DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse,
+				idFach))
 			unterrichtRemoveByIdOhneUpdate(u.id);
 
 		// Entfernen
@@ -2724,7 +2849,8 @@ public class StundenplanManager {
 	 */
 	public boolean kursDarfInZelle(final @NotNull StundenplanKurs quellKurs, final int zielWochentag, final int zielStunde, final int zielWochentyp) {
 		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idKurs, quellKurs.id)) {
-			final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMap2DGetIsNull(_zeitraster_by_wochentag_and_stunde, zielWochentag, zielStunde);
+			final @NotNull StundenplanZeitraster z =
+					DeveloperNotificationException.ifMap2DGetIsNull(_zeitraster_by_wochentag_and_stunde, zielWochentag, zielStunde);
 
 			// Ein anderes Zeitraster kollidiert nie.
 			if (partner.idZeitraster != z.id)
@@ -2762,7 +2888,7 @@ public class StundenplanManager {
 	 */
 	public boolean kursGetHatUnterrichtAm(final long idKurs, final int wochentyp, final @NotNull Wochentag wochentag, final int unterrichtstunde) {
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKursIdAndWochentyp(idKurs, wochentyp)) {
-			final @NotNull StundenplanZeitraster z =  zeitrasterGetByIdOrException(u.idZeitraster);
+			final @NotNull StundenplanZeitraster z = zeitrasterGetByIdOrException(u.idZeitraster);
 			if ((z.wochentag == wochentag.id) && (z.unterrichtstunde == unterrichtstunde))
 				return true;
 		}
@@ -2825,8 +2951,10 @@ public class StundenplanManager {
 	 *
 	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 */
-	public @NotNull List<@NotNull Long> kursGetMengeGefiltertByWochentypAndWochentagAndStunde(final @NotNull List<@NotNull Long> idsKurs, final int wochentyp, final @NotNull Wochentag wochentag, final int unterrichtstunde) {
-		return CollectionUtils.toFilteredArrayList(idsKurs, (final @NotNull Long idKurs) -> kursGetHatUnterrichtAm(idKurs, wochentyp, wochentag, unterrichtstunde));
+	public @NotNull List<@NotNull Long> kursGetMengeGefiltertByWochentypAndWochentagAndStunde(final @NotNull List<@NotNull Long> idsKurs, final int wochentyp,
+			final @NotNull Wochentag wochentag, final int unterrichtstunde) {
+		return CollectionUtils.toFilteredArrayList(idsKurs,
+				(final @NotNull Long idKurs) -> kursGetHatUnterrichtAm(idKurs, wochentyp, wochentag, unterrichtstunde));
 	}
 
 	/**
@@ -2838,7 +2966,8 @@ public class StundenplanManager {
 	 *
 	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
 	 */
-	public @NotNull List<@NotNull Long> kursGetMengeGefiltertByDatumAndStunde(final @NotNull List<@NotNull Long> idsKurs, final @NotNull String datumISO8601, final int unterrichtstunde) {
+	public @NotNull List<@NotNull Long> kursGetMengeGefiltertByDatumAndStunde(final @NotNull List<@NotNull Long> idsKurs, final @NotNull String datumISO8601,
+			final int unterrichtstunde) {
 		final int[] e = DateUtils.extractFromDateISO8601(datumISO8601);
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]); // 6 = kalenderwochenjahr, 5 = kalenderwoche
 		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(e[3]); // 3 = tagInWoche
@@ -2968,16 +3097,16 @@ public class StundenplanManager {
 
 	private void kursRemoveAllOhneUpdate(final @NotNull Set<@NotNull Long> idKurse) {
 		// Überprüfen der Konsistent.
-		for (final long idKurs :  idKurse)
+		for (final long idKurs : idKurse)
 			DeveloperNotificationException.ifTrue("Es wurde nicht der Kurs (" + idKurs + ") in der Map gefunden!", !_kurs_by_id.containsKey(idKurs));
 
 		// Kaskade: StundenplanUnterricht
-		for (final long idKurs :  idKurse)
+		for (final long idKurs : idKurse)
 			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idKurs))
 				unterrichtRemoveByIdOhneUpdate(u.id);
 
 		// Entfernen der Kurse
-		for (final long idKurs :  idKurse)
+		for (final long idKurs : idKurse)
 			DeveloperNotificationException.ifMapRemoveFailes(_kurs_by_id, idKurs);
 	}
 
@@ -3000,7 +3129,7 @@ public class StundenplanManager {
 		// Umwandeln in IDs.
 		final @NotNull Set<@NotNull Long> idKurse = new HashSet<>();
 		for (final @NotNull StundenplanKurs kurs : listKurs)
-				idKurse.add(kurs.id);
+			idKurse.add(kurs.id);
 
 		// Entfernen und Update
 		kursRemoveAllOhneUpdate(idKurse);
@@ -3054,15 +3183,18 @@ public class StundenplanManager {
 	}
 
 	private int lehrerCompareByLehrerIDs(final @NotNull List<@NotNull Long> a, final @NotNull List<@NotNull Long> b) {
-		if (a.size() < b.size()) return -1;
-		if (a.size() > b.size()) return +1;
+		if (a.size() < b.size())
+			return -1;
+		if (a.size() > b.size())
+			return +1;
 		for (int i = 0; i < a.size(); i++) {
 			final @NotNull Long aIdLehrer = ListUtils.getNonNullElementAtOrException(a, i);
 			final @NotNull Long bIdLehrer = ListUtils.getNonNullElementAtOrException(b, i);
 			final @NotNull StundenplanLehrer aLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, aIdLehrer);
 			final @NotNull StundenplanLehrer bLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, bIdLehrer);
 			final int cmpLehrer = _compLehrer.compare(aLehrer, bLehrer);
-			if (cmpLehrer != 0) return cmpLehrer;
+			if (cmpLehrer != 0)
+				return cmpLehrer;
 		}
 		return 0;
 	}
@@ -3101,11 +3233,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanLehrer}-Objekte einer bestimmten Pausenzeit und einem bestimmten Aufsichtsbereich.
 	 */
-	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(final long idPausenzeit, final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(final long idPausenzeit,
+			final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanLehrer> list = new ArrayList<>();
-		list.addAll(Map3DUtils.getOrCreateArrayList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich, wochentyp));
+		list.addAll(Map3DUtils.getOrCreateArrayList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich,
+				wochentyp));
 		if (inklWoche0)
-			list.addAll(Map3DUtils.getOrCreateArrayList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich, 0));
+			list.addAll(
+					Map3DUtils.getOrCreateArrayList(_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich, 0));
 		return list;
 	}
 
@@ -3216,8 +3351,10 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list) {
 			pausenaufsichtCheckAttributes(pausenaufsicht);
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!", _pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " doppelt in der Liste!", !setOfIDs.add(pausenaufsicht.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!",
+					_pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " doppelt in der Liste!",
+					!setOfIDs.add(pausenaufsicht.id));
 		}
 
 		// add all
@@ -3306,10 +3443,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(final long idKlasse, final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(final long idKlasse,
+			final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, idPausenzeit))
+		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse,
+				idPausenzeit))
 			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
@@ -3327,10 +3466,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers zu einer bestimmten Pausenzeit.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(final long idLehrer, final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(final long idLehrer,
+			final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer, idPausenzeit))
+		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer,
+				idPausenzeit))
 			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
@@ -3348,10 +3489,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Schülers zu einer bestimmten Pausenzeit.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(final long idSchueler, final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(final long idSchueler,
+			final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler, idPausenzeit))
+		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler,
+				idPausenzeit))
 			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
@@ -3369,10 +3512,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Jahrgangs zu einer bestimmten Pausenzeit.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByJahrgangIdAndPausenzeitIdAndWochentypAndInklusive(final long idJahrgang, final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByJahrgangIdAndPausenzeitIdAndWochentypAndInklusive(final long idJahrgang,
+			final long idPausenzeit, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, idJahrgang, idPausenzeit))
+		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, idJahrgang,
+				idPausenzeit))
 			if (!pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(a.id, wochentyp, inklWoche0).isEmpty())
 				list.add(a);
 
@@ -3389,9 +3534,11 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Pausenzeit und einem bestimmten Aufsichtsbereich.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichId(final long idPausenzeit, final long idAufsichtsbereich) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichId(final long idPausenzeit,
+			final long idAufsichtsbereich) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich, idPausenzeit, idAufsichtsbereich))
+		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich,
+				idPausenzeit, idAufsichtsbereich))
 			list.add(a);
 		return list;
 	}
@@ -3409,11 +3556,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Pausenzeit und einem bestimmten Aufsichtsbereich.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(final long idPausenzeit, final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(
+			final long idPausenzeit, final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
-		list.addAll(Map3DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich, wochentyp));
+		list.addAll(Map3DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich,
+				wochentyp));
 		if (inklWoche0)
-			list.addAll(Map3DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit, idAufsichtsbereich, 0));
+			list.addAll(Map3DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp, idPausenzeit,
+					idAufsichtsbereich, 0));
 		return list;
 	}
 
@@ -3487,15 +3637,18 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
 			pausenaufsichtbereichCheckAttributes(pausenaufsichtbereich);
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " existiert bereits!", _pausenaufsichtbereich_by_id.containsKey(pausenaufsichtbereich.id));
-			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " doppelt in der Liste!", !setOfIDs.add(pausenaufsichtbereich.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " existiert bereits!",
+					_pausenaufsichtbereich_by_id.containsKey(pausenaufsichtbereich.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsichtbereich.id + " doppelt in der Liste!",
+					!setOfIDs.add(pausenaufsichtbereich.id));
 		}
 
 		// add all
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : list) {
 			DeveloperNotificationException.ifMapPutOverwrites(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id, pausenaufsichtbereich);
 			if (!isIntern) {
-				final @NotNull StundenplanPausenaufsicht pausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+				final @NotNull StundenplanPausenaufsicht pausenaufsicht =
+						DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
 				pausenaufsicht.bereiche.add(pausenaufsichtbereich);
 			}
 		}
@@ -3504,8 +3657,10 @@ public class StundenplanManager {
 	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
 		// DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", _pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
-		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id, pausenaufsichtbereich.idAufsichtsbereich);
-		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)", (pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > _stundenplanWochenTypModell));
+		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id,
+				pausenaufsichtbereich.idAufsichtsbereich);
+		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)",
+				(pausenaufsichtbereich.wochentyp > 0) && (pausenaufsichtbereich.wochentyp > _stundenplanWochenTypModell));
 	}
 
 	/**
@@ -3567,9 +3722,11 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht und eines
 	 *         bestimmten Aufsichtsbereichs.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(final long idPausenaufsicht, final long idAufsichtsbereich) {
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndAufsichtsbereichId(
+			final long idPausenaufsicht, final long idAufsichtsbereich) {
 		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
-		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, idPausenaufsicht, idAufsichtsbereich));
+		list.addAll(
+				Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_idAufsichtsbereich, idPausenaufsicht, idAufsichtsbereich));
 		return list;
 	}
 
@@ -3584,7 +3741,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte einer bestimmten Pausenaufsicht für den Wochentyp.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(final long idPausenaufsicht, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByPausenaufsichtIdAndWochentypAndInklusive(
+			final long idPausenaufsicht, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
 		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idPausenaufsicht_and_Wochentyp, idPausenaufsicht, wochentyp));
 		if (inklWoche0)
@@ -3603,7 +3761,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsichtBereich}-Objekte eines bestimmten Aufsichtsbereichs für den Wochentyp.
 	 */
-	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByAufsichtsbereichIdAndWochentypAndInklusive(final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereichGetMengeByAufsichtsbereichIdAndWochentypAndInklusive(
+			final long idAufsichtsbereich, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> list = new ArrayList<>();
 		list.addAll(Map2DUtils.getOrCreateArrayList(_pausenaufsichtbereichmenge_by_idAufsichtsbereich_and_Wochentyp, idAufsichtsbereich, wochentyp));
 		if (inklWoche0)
@@ -3615,7 +3774,8 @@ public class StundenplanManager {
 	private void pausenaufsichtbereichRemoveAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereiche) {
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : pausenaufsichtbereiche) {
 			DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
-			final @NotNull StundenplanPausenaufsicht pausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
+			final @NotNull StundenplanPausenaufsicht pausenaufsicht =
+					DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
 			for (int i = 0; i < pausenaufsicht.bereiche.size(); i++) {
 				final @NotNull StundenplanPausenaufsichtBereich bereich = pausenaufsicht.bereiche.get(i);
 				if (bereich.id == pausenaufsichtbereich.id) {
@@ -3666,7 +3826,8 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : list) {
 			pausenzeitCheckAttributes(pausenzeit);
-			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!", _pausenzeit_by_id.containsKey(pausenzeit.id));
+			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!",
+					_pausenzeit_by_id.containsKey(pausenzeit.id));
 			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " doppelt in der Liste!", !setOfIDs.add(pausenzeit.id));
 		}
 
@@ -3695,7 +3856,7 @@ public class StundenplanManager {
 	public boolean pausenzeitExistsByWochentagAndBeginnAndEnde(final int wochentag, final Integer beginnOrNull, final Integer endeOrNull) {
 		final long beginn = beginnOrNull == null ? -1 : beginnOrNull;
 		final long ende = endeOrNull == null ? -1 : endeOrNull;
-		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {wochentag, beginn, ende});
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 		return _pausenzeit_by_tag_and_beginn_and_ende.containsKey(key);
 	}
 
@@ -3721,7 +3882,7 @@ public class StundenplanManager {
 	 * @return die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String pausenzeitGetByIdStringOfUhrzeitBeginn(final long idPausenzeit) {
-		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, idPausenzeit);
+		final @NotNull StundenplanPausenzeit pausenzeit = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, idPausenzeit);
 		return (pausenzeit.beginn == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.beginn);
 	}
 
@@ -3735,7 +3896,7 @@ public class StundenplanManager {
 	 * @return die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String pausenzeitGetByIdStringOfUhrzeitEnde(final long idPausenzeit) {
-		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, idPausenzeit);
+		final @NotNull StundenplanPausenzeit pausenzeit = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, idPausenzeit);
 		return (pausenzeit.ende == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.ende);
 	}
 
@@ -3814,8 +3975,8 @@ public class StundenplanManager {
 	 * <br> Laufzeit: O(1)
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
-     * @param wochentag  Die ID des ENUMS {@link Wochentag}.
-   	 *
+	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
+	 *
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Klasse zu einem bestimmten Wochentag.
 	 */
 	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeitGetMengeByKlasseIdAndWochentagAsList(final long idKlasse, final int wochentag) {
@@ -3933,7 +4094,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
- 	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #pausenzeitGetWochentagMin} bis {@link #pausenzeitGetWochentagMax()}.
+	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #pausenzeitGetWochentagMin} bis {@link #pausenzeitGetWochentagMax()}.
 	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
 	 *
 	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
@@ -4252,10 +4413,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idKlasse,
+			final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag,
+				stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
 
 		list.sort(_compSchiene);
@@ -4286,9 +4449,11 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Lehrers am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idLehrer,
+			final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag,
+				stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
 		list.sort(_compSchiene);
 		return list;
@@ -4306,9 +4471,11 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Schülers am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idSchueler,
+			final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler,
+				wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
 		list.sort(_compSchiene);
 		return list;
@@ -4326,9 +4493,11 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idJahrgang,
+			final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang,
+				wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
 		list.sort(_compSchiene);
 		return list;
@@ -4379,7 +4548,8 @@ public class StundenplanManager {
 		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchueler schueler : list) {
 			schuelerCheckAttributes(schueler);
-			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!", _schueler_by_id.containsKey(schueler.id));
+			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!",
+					_schueler_by_id.containsKey(schueler.id));
 			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " doppelt in der Liste!", !setOfIDs.add(schueler.id));
 		}
 
@@ -4499,7 +4669,7 @@ public class StundenplanManager {
 			kurs.schueler.remove(idSchueler);
 
 		// Kaskade: StundenplanKlassenunterricht
-		for (final @NotNull StundenplanKlassenunterricht ku: MapUtils.getOrCreateArrayList(_klassenunterrichtmenge_by_idSchueler, idSchueler))
+		for (final @NotNull StundenplanKlassenunterricht ku : MapUtils.getOrCreateArrayList(_klassenunterrichtmenge_by_idSchueler, idSchueler))
 			ku.schueler.remove(idSchueler);
 
 		// Remove
@@ -4603,7 +4773,8 @@ public class StundenplanManager {
 			return;
 
 		// check
-		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp == 1));
+		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!",
+				(modellTyp < 0) || (modellTyp == 1));
 
 		// Alle Unterrichte müssen revalidiert werden, falls sie außerhalb der gültigen Wochen liegen.
 		for (final @NotNull StundenplanUnterricht u : _unterricht_by_id.values())
@@ -4634,7 +4805,8 @@ public class StundenplanManager {
 	 */
 	public int stundenplanGetWochenTypModellSimulation(final int modellTyp) {
 		// check
-		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp == 1));
+		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!",
+				(modellTyp < 0) || (modellTyp == 1));
 
 		// count changes
 		int summe = 0;
@@ -4646,40 +4818,40 @@ public class StundenplanManager {
 	}
 
 
-    /**
-     * Liefert zum übergebenen Wochentyp einen passenden verkürzten String.
-     * <br>Beispiel: 0 -> "Alle", 1 -> "A", ...
-     * <br>Laufzeit: O(1)
-     *
-     * @param wochenTyp  Der umzuwandelnde Wochentyp.
-     *
-     * @return zum übergebenen Wochentyp einen passenden String.
-     */
-    public @NotNull String stundenplanGetWochenTypAsStringKurz(final int wochenTyp) {
-        if (wochenTyp <= 0)
-            return "Alle";
+	/**
+	 * Liefert zum übergebenen Wochentyp einen passenden verkürzten String.
+	 * <br>Beispiel: 0 -> "Alle", 1 -> "A", ...
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
+	 *
+	 * @return zum übergebenen Wochentyp einen passenden String.
+	 */
+	public @NotNull String stundenplanGetWochenTypAsStringKurz(final int wochenTyp) {
+		if (wochenTyp <= 0)
+			return "Alle";
 
-        final int zahl = wochenTyp - 1; // 0-basierter Wochentyp
-        final int z2 = zahl / 26;       // 2. Stelle im 26. System
-        final int z1 = zahl - z2 * 26;  // 1. Stelle im 26. System
+		final int zahl = wochenTyp - 1; // 0-basierter Wochentyp
+		final int z2 = zahl / 26;       // 2. Stelle im 26. System
+		final int z1 = zahl - (z2 * 26);  // 1. Stelle im 26. System
 
-        return StringUtils.numberToLetterIndex1(z2) + StringUtils.numberToLetterIndex0(z1);
-    }
+		return StringUtils.numberToLetterIndex1(z2) + StringUtils.numberToLetterIndex0(z1);
+	}
 
-    /**
-     * Liefert zum übergebenen Wochentyp einen passenden String.
-     * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
-     * <br>Laufzeit: O(1)
-     *
-     * @param wochenTyp  Der umzuwandelnde Wochentyp.
-     *
-     * @return zum übergebenen Wochentyp einen passenden String.
-     */
-    public @NotNull String stundenplanGetWochenTypAsString(final int wochenTyp) {
-        if (wochenTyp <= 0)
-            return "Alle Wochen";
-        return stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
-    }
+	/**
+	 * Liefert zum übergebenen Wochentyp einen passenden String.
+	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
+	 *
+	 * @return zum übergebenen Wochentyp einen passenden String.
+	 */
+	public @NotNull String stundenplanGetWochenTypAsString(final int wochenTyp) {
+		if (wochenTyp <= 0)
+			return "Alle Wochen";
+		return stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
+	}
 
 	/**
 	 * Liefert die Datenbank-ID des Stundenplans.
@@ -4761,33 +4933,43 @@ public class StundenplanManager {
 			final StundenplanJahrgang aJahrgang = jahrgangGetMinimumByKlassenIDs(a.klassen);
 			final StundenplanJahrgang bJahrgang = jahrgangGetMinimumByKlassenIDs(b.klassen);
 			if ((aJahrgang != null) || (bJahrgang != null)) {
-				if (aJahrgang == null) return -1;
-				if (bJahrgang == null) return +1;
+				if (aJahrgang == null)
+					return -1;
+				if (bJahrgang == null)
+					return +1;
 				final int cmpJahrgang = _compJahrgang.compare(aJahrgang, bJahrgang);
-				if (cmpJahrgang != 0) return cmpJahrgang;
+				if (cmpJahrgang != 0)
+					return cmpJahrgang;
 			}
 
 			// Sortierung nach Kurs
-			if ((a.idKurs != null) && (b.idKurs == null)) return -1;
-			if ((a.idKurs == null) && (b.idKurs != null)) return +1;
+			if ((a.idKurs != null) && (b.idKurs == null))
+				return -1;
+			if ((a.idKurs == null) && (b.idKurs != null))
+				return +1;
 
 			// Sortierung nach Klassen-Listen
 			final int cmpKlasse = klasseCompareByKlassenIDs(a.klassen, b.klassen);
-			if (cmpKlasse != 0) return cmpKlasse;
+			if (cmpKlasse != 0)
+				return cmpKlasse;
 
 			// Sortierung nach Fach
 			final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
 			final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
 			final int cmpFach = _compFach.compare(aFach, bFach);
-			if (cmpFach != 0) return cmpFach;
+			if (cmpFach != 0)
+				return cmpFach;
 
 			// Sortierung nach Lehrkraft-Listen
 			final int cmpLehrer = lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
-			if (cmpLehrer != 0) return cmpLehrer;
+			if (cmpLehrer != 0)
+				return cmpLehrer;
 
 			// Sortierung nach Wochentyp
-			if (a.wochentyp < b.wochentyp) return -1;
-			if (a.wochentyp > b.wochentyp) return +1;
+			if (a.wochentyp < b.wochentyp)
+				return -1;
+			if (a.wochentyp > b.wochentyp)
+				return +1;
 
 			// Sortierung nach ID
 			return Long.compare(a.id, b.id);
@@ -4834,7 +5016,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndJahrAndKW(final long idKlasse, final int jahr, final int kalenderwoche) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndJahrAndKW(final long idKlasse, final int jahr,
+			final int kalenderwoche) {
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return unterrichtGetMengeByKlasseIdAndWochentyp(idKlasse, wochentyp);
 	}
@@ -4848,12 +5031,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(final long idKlasse, final long idFach, final int wochentyp) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(final long idKlasse, final long idFach,
+			final int wochentyp) {
 		// Überprüfen
 		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > _stundenplanWochenTypModell);
 
 		// Filtern
-		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
+		final @NotNull List<@NotNull StundenplanUnterricht> listU =
+				DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
 		return CollectionUtils.toFilteredArrayList(listU, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));
 	}
 
@@ -4867,7 +5052,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndJahrAndKW(final long idKlasse, final long idFach, final int jahr, final int kalenderwoche) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndJahrAndKW(final long idKlasse, final long idFach,
+			final int jahr, final int kalenderwoche) {
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse, idFach, wochentyp);
 	}
@@ -4928,7 +5114,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKursIdsAndJahrAndKW(final @NotNull long[] idsKurs, final int jahr, final int kalenderwoche) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKursIdsAndJahrAndKW(final @NotNull long[] idsKurs, final int jahr,
+			final int kalenderwoche) {
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return unterrichtGetMengeByKursIdsAndWochentyp(idsKurs, wochentyp);
 	}
@@ -4955,7 +5142,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(final long idZeitraster, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(final long idZeitraster,
+			final int wochentyp, final boolean inklWoche0) {
 		if ((wochentyp == 0) || (!inklWoche0))
 			return unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp);
 
@@ -4974,7 +5162,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(final @NotNull Wochentag wochentag, final int stunde, final int wochentyp) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(final @NotNull Wochentag wochentag,
+			final int stunde, final int wochentyp) {
 		final StundenplanZeitraster zeitraster = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		if (zeitraster != null)
 			return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
@@ -4992,7 +5181,8 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, die in der Stundenplanzelle "wochentag, stunde" und "wochentyp" liegen.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final @NotNull Wochentag wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(
+			final @NotNull Wochentag wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final long idZeitraster = zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde).id;
 		return unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(idZeitraster, wochentyp, inklWoche0);
 	}
@@ -5009,13 +5199,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(
+			final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
-				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
+				if ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
@@ -5034,10 +5225,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag,
+				stunde, wochentyp, inklWoche0))
 			if (unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
 
@@ -5056,13 +5249,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(
+			final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, z.id))
-				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
+				if ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
@@ -5081,10 +5275,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag,
+				stunde, wochentyp, inklWoche0))
 			if (unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
 
@@ -5103,13 +5299,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(
+			final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idSchueler_and_idZeitraster, idSchueler, z.id))
-				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
+				if ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
@@ -5128,10 +5325,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler,
+				wochentag, stunde, wochentyp, inklWoche0))
 			if (unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
 
@@ -5150,13 +5349,14 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(
+			final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, z.id))
-				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
+				if ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		list.sort(_compUnterricht);
@@ -5176,10 +5376,12 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
 		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
 
-		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang,
+				wochentag, stunde, wochentyp, inklWoche0))
 			if (unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
 
@@ -5195,16 +5397,16 @@ public class StundenplanManager {
 	 * @return eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
 	 */
 	public @NotNull String unterrichtGetByIDStringOfFachOderKursKuerzel(final long idUnterricht) {
-		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenunterricht?
 		if (unterricht.idKurs == null) {
-			final @NotNull StundenplanFach fach =  DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, unterricht.idFach);
+			final @NotNull StundenplanFach fach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, unterricht.idFach);
 			return fach.kuerzel;
 		}
 
 		// Kursunterricht
-		final @NotNull StundenplanKurs kurs =  DeveloperNotificationException.ifMapGetIsNull(_kurs_by_id, unterricht.idKurs);
+		final @NotNull StundenplanKurs kurs = DeveloperNotificationException.ifMapGetIsNull(_kurs_by_id, unterricht.idKurs);
 		return kurs.bezeichnung;
 	}
 
@@ -5217,13 +5419,13 @@ public class StundenplanManager {
 	 * @return eine String-Repräsentation der Klassenmenge des {@link StundenplanUnterricht}.
 	 */
 	public @NotNull String unterrichtGetByIDStringOfKlassen(final long idUnterricht) {
-		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
 
 		for (final @NotNull Long idKlasse : unterricht.klassen) {
-			final @NotNull StundenplanKlasse klasse =  DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
+			final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
 			kuerzel.add(klasse.kuerzel);
 		}
 
@@ -5239,12 +5441,12 @@ public class StundenplanManager {
 	 * @return eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
 	 */
 	public @NotNull String unterrichtGetByIDStringOfRaeume(final long idUnterricht) {
-		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
 		for (final @NotNull Long idRaum : unterricht.raeume) {
-			final @NotNull StundenplanRaum raum =  DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, idRaum);
+			final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, idRaum);
 			kuerzel.add(raum.kuerzel);
 		}
 
@@ -5260,12 +5462,12 @@ public class StundenplanManager {
 	 * @return eine String-Repräsentation der Schienenmenge des {@link StundenplanUnterricht}.
 	 */
 	public @NotNull String unterrichtGetByIDStringOfSchienen(final long idUnterricht) {
-		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+		final @NotNull StundenplanUnterricht unterricht = DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
 
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
 		for (final @NotNull Long idSchiene : unterricht.schienen) {
-			final @NotNull StundenplanSchiene schiene =  DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
+			final @NotNull StundenplanSchiene schiene = DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 			kuerzel.add(schiene.bezeichnung);
 		}
 
@@ -5391,8 +5593,10 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
-	public boolean unterrichtIstVerschiebenErlaubtNach(final @NotNull StundenplanUnterricht quellUnterricht, final @NotNull StundenplanZeitraster zielZeitraster, final int zielWochentyp) {
-		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, quellUnterricht.id)) {
+	public boolean unterrichtIstVerschiebenErlaubtNach(final @NotNull StundenplanUnterricht quellUnterricht,
+			final @NotNull StundenplanZeitraster zielZeitraster, final int zielWochentyp) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht,
+				quellUnterricht.id)) {
 			// Ein anderes Zeitraster kollidiert nie.
 			if (partner.idZeitraster != zielZeitraster.id)
 				continue;
@@ -5591,8 +5795,11 @@ public class StundenplanManager {
 			zeitrasterCheck(z);
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", _zeitraster_by_id.containsKey(z.id));
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " doppelt in der Liste!", !setOfIDs.add(z.id));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + z.unterrichtstunde + " existiert bereits!", _zeitraster_by_wochentag_and_stunde.contains(z.wochentag, z.unterrichtstunde));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!", !setOfWochentagStunde.add(z.wochentag + ";" + z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue(
+					"zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + z.unterrichtstunde + " existiert bereits!",
+					_zeitraster_by_wochentag_and_stunde.contains(z.wochentag, z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!",
+					!setOfWochentagStunde.add(z.wochentag + ";" + z.unterrichtstunde));
 		}
 
 		// add all
@@ -5603,7 +5810,8 @@ public class StundenplanManager {
 	private static void zeitrasterCheck(final @NotNull StundenplanZeitraster zeitraster) {
 		DeveloperNotificationException.ifInvalidID("zeitraster.id", zeitraster.id);
 		Wochentag.fromIDorException(zeitraster.wochentag);
-		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
+		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)",
+				(zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
 		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
 			final int beginn = zeitraster.stundenbeginn;
 			final int ende = zeitraster.stundenende;
@@ -5670,7 +5878,7 @@ public class StundenplanManager {
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
 	 */
 	public int zeitrasterGetDefaultStundenbeginnByStunde(final int stunde) {
-		return 480 + (stunde - 1) * (45 + 5);
+		return 480 + ((stunde - 1) * (45 + 5));
 	}
 
 	/**
@@ -5715,7 +5923,8 @@ public class StundenplanManager {
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
-	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitrasterStart, final int minutenVerstrichen) {
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitrasterStart,
+			final int minutenVerstrichen) {
 		final Wochentag wochentag = Wochentag.fromIDorException(zeitrasterStart.wochentag);
 		final int startzeit = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn);
 		return getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
@@ -5730,9 +5939,11 @@ public class StundenplanManager {
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final int beginn, final int minutenVerstrichen) {
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final int beginn,
+			final int minutenVerstrichen) {
 		final int ende = beginn + minutenVerstrichen;
-		return CollectionUtils.toFilteredArrayList(_zeitrastermenge, (final @NotNull StundenplanZeitraster z) -> (wochentag.id == z.wochentag) &&  zeitrasterGetSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende));
+		return CollectionUtils.toFilteredArrayList(_zeitrastermenge, (final @NotNull StundenplanZeitraster z) -> (wochentag.id == z.wochentag)
+				&& zeitrasterGetSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende));
 	}
 
 	/**
@@ -5893,7 +6104,7 @@ public class StundenplanManager {
 	 * @return die Beginn-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String zeitrasterGetByIdStringOfUhrzeitBeginn(final long idZeitraster) {
-		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, idZeitraster);
+		final @NotNull StundenplanZeitraster zeitraster = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, idZeitraster);
 		return (zeitraster.stundenbeginn == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 	}
 
@@ -5907,7 +6118,7 @@ public class StundenplanManager {
 	 * @return die End-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String zeitrasterGetByIdStringOfUhrzeitEnde(final long idZeitraster) {
-		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, idZeitraster);
+		final @NotNull StundenplanZeitraster zeitraster = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, idZeitraster);
 		return (zeitraster.stundenende == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 	}
 
@@ -6017,7 +6228,8 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls die Klasse in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
 	 */
-	public boolean zeitrasterHatUnterrichtByKlasseIdWochentagAndStundeAndWochentyp(final long idKlasse, final int wochentag, final int stunde, final int wochentyp) {
+	public boolean zeitrasterHatUnterrichtByKlasseIdWochentagAndStundeAndWochentyp(final long idKlasse, final int wochentag, final int stunde,
+			final int wochentyp) {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 
 		if (z != null)
@@ -6038,7 +6250,8 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls die Lehrkraft in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
 	 */
-	public boolean zeitrasterHatUnterrichtByLehrerIdWochentagAndStundeAndWochentyp(final long idLehrer, final int wochentag, final int stunde, final int wochentyp) {
+	public boolean zeitrasterHatUnterrichtByLehrerIdWochentagAndStundeAndWochentyp(final long idLehrer, final int wochentag, final int stunde,
+			final int wochentyp) {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 
 		if (z != null)
@@ -6059,7 +6272,8 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls der Schüler in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
 	 */
-	public boolean zeitrasterHatUnterrichtBySchuelerIdWochentagAndStundeAndWochentyp(final long idSchueler, final int wochentag, final int stunde, final int wochentyp) {
+	public boolean zeitrasterHatUnterrichtBySchuelerIdWochentagAndStundeAndWochentyp(final long idSchueler, final int wochentag, final int stunde,
+			final int wochentyp) {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 
 		if (z != null)
@@ -6080,7 +6294,8 @@ public class StundenplanManager {
 	 *
 	 * @return TRUE, falls der Jahrgang in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
 	 */
-	public boolean zeitrasterHatUnterrichtByJahrgangIdWochentagAndStundeAndWochentyp(final long idJahrgang, final int wochentag, final int stunde, final int wochentyp) {
+	public boolean zeitrasterHatUnterrichtByJahrgangIdWochentagAndStundeAndWochentyp(final long idJahrgang, final int wochentag, final int stunde,
+			final int wochentyp) {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 
 		if (z != null)
@@ -6117,7 +6332,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert TRUE, falls die Klasse am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
-     *
+	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
 	 * @param wochentag  Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde     Die Unterrichtsstunde.
@@ -6130,7 +6345,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert TRUE, falls die Lehrkraft am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
-     *
+	 *
 	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
 	 * @param wochentag  Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde     Die Unterrichtsstunde.
@@ -6143,7 +6358,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert TRUE, falls der Schüler am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
-     *
+	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param wochentag   Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde      Die Unterrichtsstunde.
@@ -6156,7 +6371,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert TRUE, falls der Jahrgang am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
-     *
+	 *
 	 * @param idJahrgang  Die Datenbank-ID des Jahrgangs.
 	 * @param wochentag   Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde      Die Unterrichtsstunde.
