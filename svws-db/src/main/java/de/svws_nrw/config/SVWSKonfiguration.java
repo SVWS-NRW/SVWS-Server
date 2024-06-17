@@ -138,9 +138,9 @@ public final class SVWSKonfiguration {
 			final URL url = classLoader.getResource(filename);
 			if (url != null)
 				return Paths.get(url.toURI());
-	       	throw new IOException("File not found");
+			throw new IOException("File not found");
 		} catch (final URISyntaxException e) {
-	       	throw new IOException("File not found", e);
+			throw new IOException("File not found", e);
 		}
 	}
 
@@ -160,12 +160,12 @@ public final class SVWSKonfiguration {
 			instanceConfig.dto = mapper.readValue(xml, SVWSKonfigurationDTO.class);
 			instanceConfig.dto.isXMLConfig = true;
 			instanceConfig.dto.filepath = p;
-		    for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
-		    	final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
-		    	if (schema.svwslogin == null)
-			    	schema.svwslogin = false;
-		    	instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
-		    }
+			for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
+				final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
+				if (schema.svwslogin == null)
+					schema.svwslogin = false;
+				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
+			}
 		} catch (final JsonMappingException e) {
 			// TODO log error into logger
 			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
@@ -187,16 +187,16 @@ public final class SVWSKonfiguration {
 		try {
 			final Path p = findKonfiguration(path, filename);
 			final ObjectMapper mapper = new ObjectMapper();
-		    final String json = Files.readString(p);
+			final String json = Files.readString(p);
 
-		    instanceConfig.dto = mapper.readValue(json, SVWSKonfigurationDTO.class);
-		    instanceConfig.dto.filepath = p;
-		    for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
-		    	final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
-		    	if (schema.svwslogin == null)
-			    	schema.svwslogin = false;
-		    	instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
-		    }
+			instanceConfig.dto = mapper.readValue(json, SVWSKonfigurationDTO.class);
+			instanceConfig.dto.filepath = p;
+			for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
+				final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
+				if (schema.svwslogin == null)
+					schema.svwslogin = false;
+				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
+			}
 		} catch (final JsonMappingException e) {
 			// TODO log error into logger
 			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
@@ -287,7 +287,8 @@ public final class SVWSKonfiguration {
 	 *
 	 * @return die neue SVWS-Konfiguration oder null im Fehlerfall
 	 */
-	public static SVWSKonfiguration getDefault(final String clientPath, final String adminClientPath, final String loggingPath, final String tempPath, final String keystorePath, final String keystorePassword, final DBDriver dbms,
+	public static SVWSKonfiguration getDefault(final String clientPath, final String adminClientPath, final String loggingPath, final String tempPath,
+			final String keystorePath, final String keystorePassword, final DBDriver dbms,
 			final String dbLocation, final int dbPort, final boolean noSchema, final String schema, final String schemaUser, final String schemaPassword) {
 		instanceConfig = new SVWSKonfiguration();
 		instanceConfig.dto = new SVWSKonfigurationDTO();
@@ -475,7 +476,7 @@ public final class SVWSKonfiguration {
 	public int getPortHTTPPrivilegedAccess() {
 		if ((dto == null) || (this.dto.portHTTPPrivilegedAccess == null))
 			throw new NullPointerException("Es ist kein zweiter Port für den priviligierten Zugriff auf die SVWS-Datenbank definiert.");
-		return  this.dto.portHTTPPrivilegedAccess;
+		return this.dto.portHTTPPrivilegedAccess;
 	}
 
 
@@ -544,7 +545,8 @@ public final class SVWSKonfiguration {
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
 		final SVWSKonfigurationSchemaDTO schema = dto.dbKonfiguration.schemata.get(i);
-		return new DBConfig(driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password, true, false, dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
+		return new DBConfig(driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password, true, false,
+				dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
 	}
 
 	/**
@@ -572,7 +574,8 @@ public final class SVWSKonfiguration {
 		if (dto == null)
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
-		return new DBConfig(driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false, dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
+		return new DBConfig(driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false,
+				dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
 	}
 
 
@@ -729,15 +732,15 @@ public final class SVWSKonfiguration {
 	public List<DBSchemaListeEintrag> getSchemaList() {
 		if (dto == null)
 			return Collections.emptyList();
-    	final String defaultSchema = this.getDefaultSchema();
-    	return dto.dbconfigs.values().stream()
-    			.map(c -> c.getDBSchema())
-    			.filter(s -> s != null).sorted().map(s -> {
-    				final DBSchemaListeEintrag result = new DBSchemaListeEintrag();
-    				result.name = s;
-    				result.isDefault = (defaultSchema != null) && (defaultSchema.equals(s));
-    				return result;
-    			}).toList();
+		final String defaultSchema = this.getDefaultSchema();
+		return dto.dbconfigs.values().stream()
+				.map(c -> c.getDBSchema())
+				.filter(s -> s != null).sorted().map(s -> {
+					final DBSchemaListeEintrag result = new DBSchemaListeEintrag();
+					result.name = s;
+					result.isDefault = (defaultSchema != null) && (defaultSchema.equals(s));
+					return result;
+				}).toList();
 
 	}
 
@@ -771,13 +774,17 @@ public final class SVWSKonfiguration {
 	 *
 	 * @throws SVWSKonfigurationException   falls ein Fehler beim Erstellen oder Aktualisieren der Schema-Konfiguration auftritt
 	 */
-	public void createOrUpdateSchema(final String schemaName, final String userName, final String userPassword, final boolean userSVWSLogin) throws SVWSKonfigurationException {
+	public void createOrUpdateSchema(final String schemaName, final String userName, final String userPassword, final boolean userSVWSLogin)
+			throws SVWSKonfigurationException {
 		if (dto == null)
-			throw new SVWSKonfigurationException("Es ist keine Konfiguration geladen. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+			throw new SVWSKonfigurationException(
+					"Es ist keine Konfiguration geladen. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
 		if ((schemaName == null) || ("".equals(schemaName)))
-			throw new SVWSKonfigurationException("Es ist kein Schemaname angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+			throw new SVWSKonfigurationException(
+					"Es ist kein Schemaname angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
 		if ((userName == null) || ("".equals(userName)))
-			throw new SVWSKonfigurationException("Es ist kein Benutzername angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+			throw new SVWSKonfigurationException(
+					"Es ist kein Benutzername angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
 		String password = userPassword;
 		if (password == null)
 			password = "";
@@ -914,12 +921,12 @@ public final class SVWSKonfiguration {
 	 */
 	public static KeyStore getKeystore() throws KeyStoreException {
 		try {
-	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
-	    	try (FileInputStream is = new FileInputStream(config.getTLSKeystorePath() + "/keystore")) {
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			try (FileInputStream is = new FileInputStream(config.getTLSKeystorePath() + "/keystore")) {
 				final KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 				keystore.load(is, config.getTLSKeystorePassword().toCharArray());
 				return keystore;
-	    	}
+			}
 		} catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
 			throw new KeyStoreException("Zugriff azuf Keystore fehlgeschlagen.", e);
 		}
@@ -936,8 +943,8 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder den Private Key nicht möglich ist.
 	 */
 	public static PrivateKey getPrivateKey() throws KeyStoreException {
-        try {
-	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
+		try {
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore keystore = getKeystore();
 			final Key key = keystore.getKey(config.getTLSKeyAlias(), config.getTLSKeystorePassword().toCharArray());
 			if (key instanceof final PrivateKey privateKey)
@@ -959,8 +966,8 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder das Zertifikat nicht möglich ist.
 	 */
 	public static Certificate getCertificate() throws KeyStoreException {
-        try {
-	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
+		try {
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore keystore = getKeystore();
 			return keystore.getCertificate(config.getTLSKeyAlias());
 		} catch (final KeyStoreException e) {
@@ -979,8 +986,8 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder das Zertifikat nicht möglich ist.
 	 */
 	public static String getCertificateBase64() throws KeyStoreException {
-        try {
-	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
+		try {
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore keystore = getKeystore();
 			final Certificate cert = keystore.getCertificate(config.getTLSKeyAlias());
 			return "-----BEGIN CERTIFICATE-----\n" + Base64.getMimeEncoder().encodeToString(cert.getEncoded()) + "\n-----END CERTIFICATE-----\n";
@@ -1015,7 +1022,7 @@ public final class SVWSKonfiguration {
 	 *                             Keystore oder den öffentlichen Schlüssel nicht möglich ist.
 	 */
 	public static String getPublicKeyBase64() throws KeyStoreException {
-    	final PublicKey pubKey = SVWSKonfiguration.getPublicKey();
+		final PublicKey pubKey = SVWSKonfiguration.getPublicKey();
 		return Base64.getMimeEncoder().encodeToString(pubKey.getEncoded());
 	}
 
