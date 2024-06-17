@@ -598,6 +598,28 @@ public final class SVWSKonfiguration {
 
 
 	/**
+	 * Setzt das Default-Schema.
+	 *
+	 * @param schemaname   das zu setzende Schema
+	 *
+	 * @return true, wenn das Default-Schema erfolgreich gesetzt wurde
+	 */
+	public boolean setDefaultschema(final String schemaname) {
+		if (dto == null)
+			return false;
+		if (schemaname == null) {
+			dto.dbKonfiguration.defaultschema = null;
+			return true;
+		}
+		final DBConfig schema = dto.dbconfigs.get(schemaname);
+		if (schema == null)
+			return false;
+		dto.dbKonfiguration.defaultschema = schemaname;
+		return true;
+	}
+
+
+	/**
 	 * Prüft, ob für den angebenen Schema-Namen eine Konfiguration vorliegt oder nicht.
 	 *
 	 * @param schemaName   der Name des Datenbank-Schemas

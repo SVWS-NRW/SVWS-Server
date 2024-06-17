@@ -461,10 +461,12 @@ public class APISchemaPrivileged {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
 
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
-			final String schemanameConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(schemaname);
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
 			if (schemanameConfig == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.");
-			SVWSKonfiguration.get().removeSchema(schemanameConfig);
+			config.removeSchema(schemanameConfig);
+			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();
 		},
 				request, ServerMode.STABLE,
