@@ -16,10 +16,9 @@ public final class RestAppDebug extends Application {
 	private static final String[] pathSpec = { "/debug/*" };
 
 	/// Enthält die API-Klasse für den Zugriff auf die Swagger-UI-Dateien
-    private final Set<Class<?>> classes = Set.of(
-    	OpenAPICorsFilter.class,
-    	APIDebug.class
-    );
+	private final Set<Class<?>> classes = Set.of(
+			OpenAPICorsFilter.class,
+			APIDebug.class);
 
 	@Override
 	public Set<Class<?>> getClasses() {

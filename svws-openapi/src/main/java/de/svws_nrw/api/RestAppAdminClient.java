@@ -17,9 +17,8 @@ public final class RestAppAdminClient extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
-		APIAdminClient.class,
-		OpenAPICorsFilter.class
-	);
+			APIAdminClient.class,
+			OpenAPICorsFilter.class);
 
 	@Override
 	public Set<Class<?>> getClasses() {

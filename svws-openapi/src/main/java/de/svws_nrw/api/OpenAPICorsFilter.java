@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 /**
  * Implementiert einen Filter, um HTTP-Requests zu prüfen und HTTP-Responses zu erweitern.
  */
-public final class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequestFilter  {
+public final class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequestFilter {
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
@@ -28,13 +28,13 @@ public final class OpenAPICorsFilter implements ContainerResponseFilter, Contain
 			throws IOException {
 		if (SVWSKonfiguration.get().useCORSHeader()) {
 			final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
-	        final MultivaluedMap<String, Object> headers = responseContext.getHeaders();
-	        headers.add("Access-Control-Allow-Origin", "*");
-	        headers.add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
-	        headers.add("Access-Control-Allow-Credentials", "true");
-	        headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
-	        headers.add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
-	        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
+			final MultivaluedMap<String, Object> headers = responseContext.getHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+			headers.add("Access-Control-Allow-Credentials", "true");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
+			headers.add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
+			headers.add("Access-Control-Expose-Headers", "Content-Disposition");
 		}
 	}
 

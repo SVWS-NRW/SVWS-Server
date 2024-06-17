@@ -14,9 +14,8 @@ public final class RestAppClient extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
-		APIClient.class,
-		OpenAPICorsFilter.class
-	);
+			APIClient.class,
+			OpenAPICorsFilter.class);
 
 	@Override
 	public Set<Class<?>> getClasses() {

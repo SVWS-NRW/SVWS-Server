@@ -17,11 +17,10 @@ public final class RestAppSchemaRoot extends Application {
 			"/api/schema/import/*", "/api/schema/migrate/*", "/api/schema/update/*", "/openapi/privileged.json", "/openapi/privileged.yaml" };
 
 	/// Enthält die API-Klassen für diese Applikation
-    private final Set<Class<?>> classes = Set.of(
-    	OpenAPICorsFilter.class,
-    	APISchemaPrivileged.class,
-    	OpenApiSchemaRoot.class
-    );
+	private final Set<Class<?>> classes = Set.of(
+			OpenAPICorsFilter.class,
+			APISchemaPrivileged.class,
+			OpenApiSchemaRoot.class);
 
 	@Override
 	public Set<Class<?>> getClasses() {

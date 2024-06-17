@@ -15,11 +15,10 @@ public final class RestAppDav extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
-		APIAdressbuch.class,
-		APIKalender.class,
+			APIAdressbuch.class,
+			APIKalender.class,
 
-		OpenAPICorsFilter.class
-	);
+			OpenAPICorsFilter.class);
 
 	@Override
 	public Set<Class<?>> getClasses() {

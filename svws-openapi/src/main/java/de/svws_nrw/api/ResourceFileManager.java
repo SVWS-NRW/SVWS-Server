@@ -35,7 +35,7 @@ public final class ResourceFileManager {
 	 * @param path   der Pfad, aus welchem die Datei-Ressourcen hinzuzufügen sind.
 	 */
 	private ResourceFileManager(final String path) {
-    	addDirectory(path, new File(path));
+		addDirectory(path, new File(path));
 	}
 
 	/**
@@ -97,11 +97,11 @@ public final class ResourceFileManager {
 	}
 
 
-    /**
-     * Entfernt alle registrierten Datei-Ressourcen.
-     */
+	/**
+	 * Entfernt alle registrierten Datei-Ressourcen.
+	 */
 	public void clearAll() {
-    	files.clear();
+		files.clear();
 	}
 
 
@@ -119,36 +119,36 @@ public final class ResourceFileManager {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public boolean handleResponse(final String path, final HttpServletResponse response) throws ApiOperationException {
-    	final ResourceFile res = files.get(path);
-    	if (res == null)
-    		return false;
-    	try {
+	public boolean handleResponse(final String path, final HttpServletResponse response) throws ApiOperationException {
+		final ResourceFile res = files.get(path);
+		if (res == null)
+			return false;
+		try {
 			res.write(response);
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
-    	return true;
-    }
+		return true;
+	}
 
 
-    /**
-     * Prüft zunächst, ob eine Datei-Ressource unter dem angegebenen Pfad registriert ist.
-     * Ist die nicht der Fall, so wird null zurückgegeben. Ansonsten werden
-     * die Daten der registrierten Datei-Ressource zurückgeben (siehe auch
-     * {@link ResourceFile#getData()}).
-     *
-     * @param path   der Pfad der Datei-Ressource
-     *
-     * @return die Daten der Datei-Ressource oder null im Fehlerfall
+	/**
+	 * Prüft zunächst, ob eine Datei-Ressource unter dem angegebenen Pfad registriert ist.
+	 * Ist die nicht der Fall, so wird null zurückgegeben. Ansonsten werden
+	 * die Daten der registrierten Datei-Ressource zurückgeben (siehe auch
+	 * {@link ResourceFile#getData()}).
+	 *
+	 * @param path   der Pfad der Datei-Ressource
+	 *
+	 * @return die Daten der Datei-Ressource oder null im Fehlerfall
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public byte[] getData(final String path) throws ApiOperationException {
-    	final ResourceFile res = files.get(path);
-    	if (res == null)
-    		return new byte[0];
-    	return res.getData();
-    }
+	 */
+	public byte[] getData(final String path) throws ApiOperationException {
+		final ResourceFile res = files.get(path);
+		if (res == null)
+			return new byte[0];
+		return res.getData();
+	}
 
 }

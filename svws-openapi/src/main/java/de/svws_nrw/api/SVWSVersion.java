@@ -13,8 +13,8 @@ import de.svws_nrw.base.ResourceUtils;
  */
 public final class SVWSVersion {
 
-    /** Die Version des SVWS-Servers aus der version.properties (cache-Wert)*/
-    private static String _version = null;
+	/** Die Version des SVWS-Servers aus der version.properties (cache-Wert)*/
+	private static String _version = null;
 
 
 	private SVWSVersion() {
@@ -22,23 +22,23 @@ public final class SVWSVersion {
 	}
 
 
-    /**
-     * Ermittelt die Version des SVWS-Servers anhand der version.properties.
-     *
-     * @return die Version des SVWS-Servers
-     */
-    public static String version() {
-        if (_version == null) {
-            final Properties versionProperties = new Properties();
-            final Path path = ResourceUtils.getFile("config/version.properties");
-            try (InputStream is = Files.newInputStream(path)) {
-                versionProperties.load(is);
-                _version = versionProperties.getProperty("svws.version");
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return _version;
-    }
+	/**
+	 * Ermittelt die Version des SVWS-Servers anhand der version.properties.
+	 *
+	 * @return die Version des SVWS-Servers
+	 */
+	public static String version() {
+		if (_version == null) {
+			final Properties versionProperties = new Properties();
+			final Path path = ResourceUtils.getFile("config/version.properties");
+			try (InputStream is = Files.newInputStream(path)) {
+				versionProperties.load(is);
+				_version = versionProperties.getProperty("svws.version");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return _version;
+	}
 
 }
