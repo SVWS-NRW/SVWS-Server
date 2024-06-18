@@ -44,14 +44,15 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanKalenderwochenZuordnung} in einen Core-DTO {@link StundenplanKalenderwochenzuordnung}.
 	 */
-	private static final DTOMapper<DTOStundenplanKalenderwochenZuordnung, StundenplanKalenderwochenzuordnung> dtoMapper = (final DTOStundenplanKalenderwochenZuordnung k) -> {
-		final StundenplanKalenderwochenzuordnung daten = new StundenplanKalenderwochenzuordnung();
-		daten.id = k.ID;
-		daten.jahr = k.Jahr;
-		daten.kw = k.KW;
-		daten.wochentyp = k.Wochentyp;
-		return daten;
-	};
+	private static final DTOMapper<DTOStundenplanKalenderwochenZuordnung, StundenplanKalenderwochenzuordnung> dtoMapper =
+			(final DTOStundenplanKalenderwochenZuordnung k) -> {
+				final StundenplanKalenderwochenzuordnung daten = new StundenplanKalenderwochenzuordnung();
+				daten.id = k.ID;
+				daten.jahr = k.Jahr;
+				daten.kw = k.KW;
+				daten.wochentyp = k.Wochentyp;
+				return daten;
+			};
 
 
 	@Override
@@ -83,7 +84,7 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 	@Override
 	public Response getList() {
 		final List<StundenplanKalenderwochenzuordnung> daten = getKalenderwochenzuordnungen(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -94,24 +95,23 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 		if (raum == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Kalenderwochen-Zuordnung mit der ID %d gefunden.".formatted(id));
 		final StundenplanKalenderwochenzuordnung daten = dtoMapper.apply(raum);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanKalenderwochenZuordnung>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("jahr", (conn, dto, value, map) -> {
-			dto.Jahr = JSONMapper.convertToInteger(value, false);
-			if (DateUtils.gibIstJahrUngueltig(dto.Jahr))
-				throw new ApiOperationException(Status.BAD_REQUEST);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
-		Map.entry("kw", (conn, dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
-		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
-	);
+			Map.entry("jahr", (conn, dto, value, map) -> {
+				dto.Jahr = JSONMapper.convertToInteger(value, false);
+				if (DateUtils.gibIstJahrUngueltig(dto.Jahr))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kw", (conn, dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
+			Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)));
 
 
 	@Override

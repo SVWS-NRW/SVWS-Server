@@ -80,7 +80,7 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanJahrgang> daten = getJahrgaenge(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -112,7 +112,7 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Jahrgang mit der ID null ist unzulässig.");
 		final StundenplanJahrgang daten = getById(conn, stundenplanID, id);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

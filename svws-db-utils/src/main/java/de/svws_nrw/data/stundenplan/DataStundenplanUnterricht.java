@@ -125,7 +125,8 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
 		final List<Long> raeume = conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtRaum.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Raum_ID).toList();
-		final List<Long> schienen = conn.queryList(DTOStundenplanUnterrichtSchiene.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtSchiene.class, dtoUnterricht.ID)
+		final List<Long> schienen = conn.queryList(
+				DTOStundenplanUnterrichtSchiene.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtSchiene.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Schiene_ID).toList();
 		final List<Long> klassen = conn.queryList(DTOStundenplanUnterrichtKlasse.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtKlasse.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Klasse_ID).toList();
@@ -152,39 +153,42 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanUnterricht>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idZeitraster", (conn, dto, value, map) -> {
-			final DTOStundenplanZeitraster zeitraster = conn.queryByKey(DTOStundenplanZeitraster.class, value);
-			if (zeitraster == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Zeitraster_ID = zeitraster.ID;
-		}),
-		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToIntegerInRange(value, false, 0, 100)),
-		Map.entry("idKurs", (conn, dto, value, map) -> {
-			if (value == null) {
-				dto.Kurs_ID = null;
-			} else {
-				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
-				if (kurs == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
-				dto.Kurs_ID = kurs.ID;
-			}
-		}),
-		Map.entry("idFach", (conn, dto, value, map) -> {
-			final DTOFach fach = conn.queryByKey(DTOFach.class, value);
-			if (fach == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Fach mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Fach_ID = fach.ID;
-		}),
-		Map.entry("lehrer", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
-		Map.entry("klassen", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
-		Map.entry("raeume", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
-		Map.entry("schienen", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	})
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idZeitraster", (conn, dto, value, map) -> {
+				final DTOStundenplanZeitraster zeitraster = conn.queryByKey(DTOStundenplanZeitraster.class, value);
+				if (zeitraster == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Zeitraster_ID = zeitraster.ID;
+			}),
+			Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToIntegerInRange(value, false, 0, 100)),
+			Map.entry("idKurs", (conn, dto, value, map) -> {
+				if (value == null) {
+					dto.Kurs_ID = null;
+				} else {
+					final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
+					if (kurs == null)
+						throw new ApiOperationException(Status.NOT_FOUND, "Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
+					dto.Kurs_ID = kurs.ID;
+				}
+			}),
+			Map.entry("idFach", (conn, dto, value, map) -> {
+				final DTOFach fach = conn.queryByKey(DTOFach.class, value);
+				if (fach == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Fach mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Fach_ID = fach.ID;
+			}),
+			Map.entry("lehrer", (conn, dto, value, map) -> {
+				/* Dies wird an anderer Stelle gehandhabt */ }),
+			Map.entry("klassen", (conn, dto, value, map) -> {
+				/* Dies wird an anderer Stelle gehandhabt */ }),
+			Map.entry("raeume", (conn, dto, value, map) -> {
+				/* Dies wird an anderer Stelle gehandhabt */ }),
+			Map.entry("schienen", (conn, dto, value, map) -> {
+				/* Dies wird an anderer Stelle gehandhabt */ }));
 
 
 	private void patchLehrer(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {

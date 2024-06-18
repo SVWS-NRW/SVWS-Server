@@ -91,11 +91,12 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		schuelerIDs.removeAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.id).toList());
 		if (!schuelerIDs.isEmpty())
 			stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
-				.filter(s -> schuelerIDs.contains(s.id)).toList());
+					.filter(s -> schuelerIDs.contains(s.id)).toList());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
-	private void getUnterricht(final StundenplanKomplett stundenplan, final StundenplanKlasse klasse, final List<StundenplanZeitraster> zeitraster) throws ApiOperationException {
+	private void getUnterricht(final StundenplanKomplett stundenplan, final StundenplanKlasse klasse, final List<StundenplanZeitraster> zeitraster)
+			throws ApiOperationException {
 		final @NotNull List<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		final List<Long> zeitrasterIds = zeitraster.stream().map(z -> z.id).toList();
 		final List<DTOStundenplanUnterricht> unterrichte = conn.query(
@@ -103,7 +104,8 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 						+ "LEFT JOIN DTOKurs kurs ON u.Kurs_ID = kurs.ID "
 						+ "LEFT JOIN DTOKlassen klasse ON klasse.Jahrgang_ID = kurs.Jahrgang_ID "
 						+ "WHERE (uk.Klasse_ID = :klasseId OR klasse.ID = :klasseId2) "
-						+ "AND u.Zeitraster_ID IN :zrids", DTOStundenplanUnterricht.class)
+						+ "AND u.Zeitraster_ID IN :zrids",
+				DTOStundenplanUnterricht.class)
 				.setParameter("klasseId", klasse.id).setParameter("klasseId2", klasse.id)
 				.setParameter("zrids", zeitrasterIds).getResultList();
 		if (unterrichte.isEmpty())
@@ -111,7 +113,8 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		final List<Long> unterrichtIds = unterrichte.stream().map(u -> u.ID).toList();
 
 		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
-		final Map<Long, StundenplanLehrer> lehrerById = DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
+		final Map<Long, StundenplanLehrer> lehrerById =
+				DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
 		final List<DTOStundenplanUnterrichtLehrer> unterrichtLehrerList = unterrichtIds.isEmpty() ? new ArrayList<>()
 				: conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtLehrer.class, unterrichtIds);
 		final Map<Long, List<StundenplanLehrer>> lehrerByUnterrichtId = new HashMap<>();
@@ -121,7 +124,8 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 				listLehrer.add(lehrerById.get(ul.Lehrer_ID));
 		});
 
-		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId = DataStundenplanSchienen.getSchienenByUnterrichtId(conn, idStundenplan, unterrichtIds);
+		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId =
+				DataStundenplanSchienen.getSchienenByUnterrichtId(conn, idStundenplan, unterrichtIds);
 		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = DataStundenplanRaeume.getRaeumeByUnterrichtId(conn, idStundenplan, unterrichtIds);
 
 		final Set<Long> fachIDs = new HashSet<>();
@@ -184,7 +188,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		weitereLehrerIDs.removeAll(stundenplan.unterrichtsverteilung.lehrer.stream().map(l -> l.id).toList());
 		if (!weitereLehrerIDs.isEmpty())
 			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
-				.filter(l -> weitereLehrerIDs.contains(l.id)).toList());
+					.filter(l -> weitereLehrerIDs.contains(l.id)).toList());
 		// Füge die Fächer hinzu
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.lehrer.stream().flatMap(l -> l.faecher.stream()).toList());

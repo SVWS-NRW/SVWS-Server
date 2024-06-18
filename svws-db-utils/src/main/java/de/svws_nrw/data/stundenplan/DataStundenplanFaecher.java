@@ -90,8 +90,10 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 			faecherIDs.addAll(conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID, DTOStundenplanUnterricht.class, zeitrasterIDs)
 					.stream().map(u -> u.Fach_ID).filter(f -> f != null).toList());
 		// ... und dann der ggf. noch nicht zugeordneten Kurs- und Klassenunterrichte
-		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
-		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKurse.getKurse(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
+		faecherIDs = Stream.concat(faecherIDs.stream(),
+				DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
+		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKurse.getKurse(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct()
+				.toList();
 		if (faecherIDs.isEmpty())
 			return new ArrayList<>();
 		// Bestimme nun die Fächer-Daten...
@@ -108,7 +110,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanFach> daten = getFaecher(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -126,7 +128,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Fach mit der ID %d gefunden.".formatted(id));
 		final StundenplanFach daten = dtoMapper.apply(fach);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

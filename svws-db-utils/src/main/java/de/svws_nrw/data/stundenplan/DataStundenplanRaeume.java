@@ -122,8 +122,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static StundenplanRaum getOrCreateRaum(final @NotNull DBEntityManager conn, final long idStundenplan, final String kuerzel) throws ApiOperationException {
-		final List<DTOStundenplanRaum> raeume = conn.queryList("SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = ?1 AND e.Kuerzel = ?2", DTOStundenplanRaum.class, idStundenplan, kuerzel);
+	public static StundenplanRaum getOrCreateRaum(final @NotNull DBEntityManager conn, final long idStundenplan, final String kuerzel)
+			throws ApiOperationException {
+		final List<DTOStundenplanRaum> raeume = conn.queryList(
+				"SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = ?1 AND e.Kuerzel = ?2", DTOStundenplanRaum.class, idStundenplan, kuerzel);
 		final DTOStundenplanRaum raum;
 		if (raeume.isEmpty()) {
 			final long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
@@ -134,14 +136,15 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		}
 		if (raeume.size() == 1)
 			return dtoMapper.apply(raeume.get(0));
-		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+				"Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
 	}
 
 
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanRaum> daten = getRaeume(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -153,20 +156,19 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		if (raum == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Raum eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanRaum daten = dtoMapper.apply(raum);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanRaum>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
-		Map.entry("groesse", (conn, dto, value, map) -> dto.Groesse = JSONMapper.convertToInteger(value, false))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
+			Map.entry("groesse", (conn, dto, value, map) -> dto.Groesse = JSONMapper.convertToInteger(value, false)));
 
 
 	@Override

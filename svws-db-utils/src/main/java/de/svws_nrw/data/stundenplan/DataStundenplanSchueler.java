@@ -88,7 +88,9 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final Set<Long> schuelerIDs = new HashSet<>();
 		final Map<Long, Long> mapSchuelerKlasse = new HashMap<>();
 		if (!klassenIDs.isEmpty()) {
-			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klassenIDs);
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0",
+					DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klassenIDs);
 			mapSchuelerKlasse.putAll(lernabschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l.Klassen_ID)));
 			schuelerIDs.addAll(lernabschnitte.stream().map(l -> l.Schueler_ID).toList());
 		}
@@ -96,8 +98,9 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final List<Long> kursIDs = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, stundenplan.Schuljahresabschnitts_ID)
 				.stream().map(k -> k.ID).toList();
 		if (!kursIDs.isEmpty()) {
-			final List<Long> kursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
-					.stream().map(ks -> ks.Schueler_ID).distinct().toList();
+			final List<Long> kursSchuelerIDs = conn.queryList(
+					"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs).stream()
+					.map(ks -> ks.Schueler_ID).distinct().toList();
 			schuelerIDs.addAll(kursSchuelerIDs);
 		}
 		// Und bestimme nun die Schüler-Daten...
@@ -107,7 +110,8 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 			// TODO Filtere alle Schüler, die ein Abgangsdatum haben, welches vor dem Beginn des Stundenplans liegt
 			final Long idKlasse = mapSchuelerKlasse.get(s.ID);
 			if (idKlasse == null)
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Für den Schüler mit der ID %d konnte keine Klassen-ID ermittelt werden.".formatted(s.ID));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Für den Schüler mit der ID %d konnte keine Klassen-ID ermittelt werden.".formatted(s.ID));
 			final StundenplanSchueler schueler = dtoMapper.apply(s);
 			schueler.idKlasse = idKlasse;
 			daten.add(schueler);
@@ -119,7 +123,7 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanSchueler> daten = getSchueler(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -133,13 +137,15 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(id));
-		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
+		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
 		if (abschnitte.size() != 1)
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d hat keinen oder mehr als einen Lernabschnitt.".formatted(id));
 		final DTOSchuelerLernabschnittsdaten abschnitt = abschnitte.get(0);
 		final StundenplanSchueler daten = dtoMapper.apply(schueler);
 		daten.idKlasse = abschnitt.Klassen_ID;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

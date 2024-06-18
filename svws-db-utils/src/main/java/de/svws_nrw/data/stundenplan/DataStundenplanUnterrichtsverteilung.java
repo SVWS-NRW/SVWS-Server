@@ -68,7 +68,8 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		if (!idsLehrerFehlende.isEmpty()) {
 			final List<DTOLehrer> lehrerFehlende = conn.queryByKeyList(DTOLehrer.class, idsLehrerFehlende);
 			if (lehrerFehlende.size() != idsLehrerFehlende.size())
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Nicht alle Lehrer des Stundenplans mit der ID %d konnten auch in der Lehrer-Tabelle gefunden werden.".formatted(id));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Nicht alle Lehrer des Stundenplans mit der ID %d konnten auch in der Lehrer-Tabelle gefunden werden.".formatted(id));
 			lehrer.addAll(lehrerFehlende.stream().map(l -> {
 				final StundenplanLehrer sl = DataStundenplanLehrer.dtoMapper.apply(l);
 				sl.kuerzel = "*" + sl.kuerzel;
@@ -85,7 +86,8 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		if (!idsSchuelerFehlende.isEmpty()) {
 			final List<DTOSchueler> schuelerFehlende = conn.queryByKeyList(DTOSchueler.class, idsSchuelerFehlende);
 			if (schuelerFehlende.size() != idsSchuelerFehlende.size())
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Nicht alle Schüler des Stundenplans mit der ID %d konnten auch in der Schüler-Tabelle gefunden werden.".formatted(id));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Nicht alle Schüler des Stundenplans mit der ID %d konnten auch in der Schüler-Tabelle gefunden werden.".formatted(id));
 			schueler.addAll(schuelerFehlende.stream().map(s -> DataStundenplanSchueler.dtoMapper.apply(s)).toList());
 		}
 		// Erstelle das Core-DTO-Objekt für die Response

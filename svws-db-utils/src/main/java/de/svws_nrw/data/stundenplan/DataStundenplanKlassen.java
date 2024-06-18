@@ -83,7 +83,9 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		final List<Long> klassenIDs = klassen.stream().map(k -> k.ID).toList();
 		final List<Long> jahrgaengsIDs = DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan).stream().map(j -> j.id).toList();
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klassenIDs);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, idStundenplan, klassenIDs);
 		final Map<Long, List<Long>> mapKlasseSchuelerIDs = lernabschnitte.stream()
 				.collect(Collectors.groupingBy(la -> la.Klassen_ID, Collectors.mapping(la -> la.Schueler_ID, Collectors.toList())));
 		// Erstelle die Core-DTOs
@@ -129,8 +131,9 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		if (klasse == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		if (klasse.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
-					.formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
+							.formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		// Jahrgänge bestimmen
 		final List<Long> jahrgangsIDs = new ArrayList<>();
 		if (klasse.Jahrgang_ID == null) {
@@ -139,7 +142,9 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 			jahrgangsIDs.add(klasse.Jahrgang_ID);
 		}
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klasse.ID);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, idStundenplan, klasse.ID);
 		final List<Long> schuelerIDs = lernabschnitte.stream().map(la -> la.Schueler_ID).distinct().toList();
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);

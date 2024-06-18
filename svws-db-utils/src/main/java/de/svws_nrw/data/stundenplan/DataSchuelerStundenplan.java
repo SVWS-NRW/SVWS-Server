@@ -151,13 +151,13 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		weiterSchuelerIDs.removeAll(schuelerIDs);
 		if (!weiterSchuelerIDs.isEmpty())
 			stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
-				.filter(s -> weiterSchuelerIDs.contains(s.id)).toList());
+					.filter(s -> weiterSchuelerIDs.contains(s.id)).toList());
 		// Füge ggf. noch die Lehrer der Klassen und der Kurse hinzu
 		lehrerIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().flatMap(k -> k.lehrer.stream()).toList());
 		lehrerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.lehrer.stream()).toList());
 		if (!lehrerIDs.isEmpty())
 			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
-				.filter(l -> lehrerIDs.contains(l.id)).toList());
+					.filter(l -> lehrerIDs.contains(l.id)).toList());
 		// Füge die Fächer hinzu
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.lehrer.stream().flatMap(l -> l.faecher.stream()).toList());

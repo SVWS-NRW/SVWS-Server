@@ -56,13 +56,14 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanPausenaufsicht} in
 	 * einen Core-DTO {@link StundenplanPausenaufsicht}.
 	 */
-	private static final DTOMapper<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapperPausenaufsicht = (final DTOStundenplanPausenaufsichten dto) -> {
-		final StundenplanPausenaufsicht daten = new StundenplanPausenaufsicht();
-		daten.id = dto.ID;
-		daten.idPausenzeit = dto.Pausenzeit_ID;
-		daten.idLehrer = dto.Lehrer_ID;
-		return daten;
-	};
+	private static final DTOMapper<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapperPausenaufsicht =
+			(final DTOStundenplanPausenaufsichten dto) -> {
+				final StundenplanPausenaufsicht daten = new StundenplanPausenaufsicht();
+				daten.id = dto.ID;
+				daten.idPausenzeit = dto.Pausenzeit_ID;
+				daten.idLehrer = dto.Lehrer_ID;
+				return daten;
+			};
 
 
 	/**
@@ -151,25 +152,26 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanPausenaufsichten>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idPausenzeit", (conn, dto, value, map) -> {
-			final DTOStundenplanPausenzeit pzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, value);
-			if (pzeit == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Pausenzeit mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Pausenzeit_ID = pzeit.ID;
-		}),
-		Map.entry("idLehrer", (conn, dto, value, map) -> {
-			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, value);
-			if (lehrer == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Lehrer mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Lehrer_ID = lehrer.ID;
-		}),
-		Map.entry("bereiche", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	})
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idPausenzeit", (conn, dto, value, map) -> {
+				final DTOStundenplanPausenzeit pzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, value);
+				if (pzeit == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Pausenzeit mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Pausenzeit_ID = pzeit.ID;
+			}),
+			Map.entry("idLehrer", (conn, dto, value, map) -> {
+				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, value);
+				if (lehrer == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Lehrer mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Lehrer_ID = lehrer.ID;
+			}),
+			Map.entry("bereiche", (conn, dto, value, map) -> {
+				/* Dies wird an anderer Stelle gehandhabt */
+			}));
 
 	private void patchBereiche(final long id, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("bereiche"))
@@ -183,7 +185,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		for (final StundenplanPausenaufsichtBereich bereich : bereiche) {
 			// Prüfe die ID der Pausenaufsicht
 			if ((bereich.idPausenaufsicht != id) && (bereich.idPausenaufsicht != -1))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die zugeordneten Aufsichtsbereiche sind bei den übergebenen Daten nicht dieser Pausenaufsicht zugeordnet.");
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die zugeordneten Aufsichtsbereiche sind bei den übergebenen Daten nicht dieser Pausenaufsicht zugeordnet.");
 			// Prüfe die ID des Aufsichtsbereichs
 			if (!setIdsAufsichtsbereiche.contains(bereich.idAufsichtsbereich))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID eines zugeordneten Aufsichtsbereichs ist für den Stundenplan ungültig.");
@@ -193,10 +196,12 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		}
 		final Map<Long, StundenplanPausenaufsichtBereich> mapBereiche = bereiche.stream().collect(Collectors.toMap(b -> b.id, b -> b));
 		// Lese die bereits vorhanden Bereiche ein und prüfe deren Eintrag der Pausenaufsicht
-		final List<DTOStundenplanPausenaufsichtenBereiche> bereicheVorhanden = conn.queryByKeyList(DTOStundenplanPausenaufsichtenBereiche.class, mapBereiche.keySet());
+		final List<DTOStundenplanPausenaufsichtenBereiche> bereicheVorhanden =
+				conn.queryByKeyList(DTOStundenplanPausenaufsichtenBereiche.class, mapBereiche.keySet());
 		for (final DTOStundenplanPausenaufsichtenBereiche bereichVorhanden : bereicheVorhanden) {
 			if (bereichVorhanden.Pausenaufsicht_ID != id)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die zugeordneten Aufsichtsbereiche sind in der Datenbank nicht dieser Pausenaufsicht zugeordnet.");
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die zugeordneten Aufsichtsbereiche sind in der Datenbank nicht dieser Pausenaufsicht zugeordnet.");
 			// Entferne die nicht mehr vorhandenen Aufsichtsbereiche
 			if (!mapBereiche.containsKey(bereichVorhanden.ID)) {
 				conn.transactionRemove(bereichVorhanden);
@@ -224,7 +229,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		// Schreibe die neuen Bereiche
 		long nextID = conn.transactionGetNextID(DTOStundenplanPausenaufsichtenBereiche.class);
 		for (final StundenplanPausenaufsichtBereich bereich : mapBereiche.values())
-			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, bereich.idPausenaufsicht == -1 ? id : bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich.wochentyp));
+			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, bereich.idPausenaufsicht == -1 ? id : bereich.idPausenaufsicht,
+					bereich.idAufsichtsbereich, bereich.wochentyp));
 		conn.transactionFlush();
 	}
 
@@ -258,7 +264,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	private static final Set<String> requiredCreateAttributes = Set.of("idPausenzeit", "idLehrer");
 
 
-	private final DTOMapper<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapper = (final DTOStundenplanPausenaufsichten u) -> getAufsicht(u.ID);
+	private final DTOMapper<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapper =
+			(final DTOStundenplanPausenaufsichten u) -> getAufsicht(u.ID);
 
 
 	private StundenplanPausenaufsicht addInternal(final long newID, final Map<String, Object> map) throws ApiOperationException {
@@ -304,7 +311,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		for (final Map<String, Object> map : multipleMaps)
 			for (final String attr : requiredCreateAttributes)
 				if (!map.containsKey(attr))
-					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage bei mindestens einer Pausenaufsicht".formatted(attr));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Das Attribut %s fehlt in der Anfrage bei mindestens einer Pausenaufsicht".formatted(attr));
 		final List<StundenplanPausenaufsicht> daten = new ArrayList<>();
 		long newID = conn.transactionGetNextID(DTOStundenplanPausenaufsichten.class);
 		for (final Map<String, Object> map : multipleMaps)
@@ -342,7 +350,8 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 			final List<DTOStundenplanPausenzeit> dtos = conn.queryByKeyList(DTOStundenplanPausenzeit.class, idsPausenzeiten);
 			for (final DTOStundenplanPausenzeit dto : dtos)
 				if (dto.Stundenplan_ID != this.idStundenplan)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag einer Pausenaufsicht gehört nicht zu dem angegebenen Stundenplan.");
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Der Pausenzeit-Eintrag einer Pausenaufsicht gehört nicht zu dem angegebenen Stundenplan.");
 		}
 		return super.deleteBasicMultiple(ids, DTOStundenplanPausenaufsichten.class, dtoMapper);
 	}

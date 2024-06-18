@@ -67,7 +67,8 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanAufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
+	public static List<StundenplanAufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn, final long idStundenplan)
+			throws ApiOperationException {
 		final List<DTOStundenplanAufsichtsbereich> aufsichtsbereiche = conn.queryList(DTOStundenplanAufsichtsbereich.QUERY_BY_STUNDENPLAN_ID,
 				DTOStundenplanAufsichtsbereich.class, idStundenplan);
 		final ArrayList<StundenplanAufsichtsbereich> daten = new ArrayList<>();
@@ -79,7 +80,7 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanAufsichtsbereich> daten = getAufsichtsbereiche(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -90,19 +91,18 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 		if (aufsichtsbereich == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Aufsichtsbereich eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanAufsichtsbereich daten = dtoMapper.apply(aufsichtsbereich);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanAufsichtsbereich>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

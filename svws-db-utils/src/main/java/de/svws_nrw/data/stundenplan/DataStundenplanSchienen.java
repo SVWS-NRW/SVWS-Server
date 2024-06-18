@@ -73,7 +73,8 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	 * @return die Liste der Schienen
 	 */
 	public static List<StundenplanSchiene> getSchienen(final @NotNull DBEntityManager conn, final long idStundenplan) {
-		final List<DTOStundenplanSchienen> schienen = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
+		final List<DTOStundenplanSchienen> schienen = conn.queryList(
+				DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
 		final ArrayList<StundenplanSchiene> daten = new ArrayList<>();
 		for (final DTOStundenplanSchienen s : schienen)
 			daten.add(dtoMapper.apply(s));
@@ -108,7 +109,7 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	@Override
 	public Response getList() {
 		final List<StundenplanSchiene> daten = getSchienen(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -120,7 +121,7 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 		if (schiene == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Schiene eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanSchiene daten = dtoMapper.apply(schiene);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -148,15 +149,14 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanSchienen>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idJahrgang", (conn, dto, value, map) -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false)),
-		Map.entry("nummer", (conn, dto, value, map) -> dto.Nummer = JSONMapper.convertToInteger(value, false)),
-		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 100))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idJahrgang", (conn, dto, value, map) -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false)),
+			Map.entry("nummer", (conn, dto, value, map) -> dto.Nummer = JSONMapper.convertToInteger(value, false)),
+			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 100)));
 
 
 	@Override

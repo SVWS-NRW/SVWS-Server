@@ -55,14 +55,15 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanPausenaufsichtenBereiche} in
 	 * einen Core-DTO {@link StundenplanPausenaufsichtBereich}.
 	 */
-	public static final DTOMapper<DTOStundenplanPausenaufsichtenBereiche, StundenplanPausenaufsichtBereich> dtoMapper = (final DTOStundenplanPausenaufsichtenBereiche dto) -> {
-		final StundenplanPausenaufsichtBereich daten = new StundenplanPausenaufsichtBereich();
-		daten.id = dto.ID;
-		daten.idAufsichtsbereich = dto.Aufsichtsbereich_ID;
-		daten.idPausenaufsicht = dto.Pausenaufsicht_ID;
-		daten.wochentyp = dto.Wochentyp;
-		return daten;
-	};
+	public static final DTOMapper<DTOStundenplanPausenaufsichtenBereiche, StundenplanPausenaufsichtBereich> dtoMapper =
+			(final DTOStundenplanPausenaufsichtenBereiche dto) -> {
+				final StundenplanPausenaufsichtBereich daten = new StundenplanPausenaufsichtBereich();
+				daten.id = dto.ID;
+				daten.idAufsichtsbereich = dto.Aufsichtsbereich_ID;
+				daten.idPausenaufsicht = dto.Pausenaufsicht_ID;
+				daten.wochentyp = dto.Wochentyp;
+				return daten;
+			};
 
 
 	@Override
@@ -88,25 +89,24 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanPausenaufsichtenBereiche>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idPausenaufsicht", (conn, dto, value, map) -> {
-			final DTOStundenplanPausenaufsichten paufsicht = conn.queryByKey(DTOStundenplanPausenaufsichten.class, value);
-			if (paufsicht == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Pausenaufsicht mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Pausenaufsicht_ID = paufsicht.ID;
-		}),
-		Map.entry("idAufsichtsbereich", (conn, dto, value, map) -> {
-			final DTOStundenplanAufsichtsbereich pbereich = conn.queryByKey(DTOStundenplanAufsichtsbereich.class, value);
-			if (pbereich == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Aufsichtsbereich mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Aufsichtsbereich_ID = pbereich.ID;
-		}),
-		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idPausenaufsicht", (conn, dto, value, map) -> {
+				final DTOStundenplanPausenaufsichten paufsicht = conn.queryByKey(DTOStundenplanPausenaufsichten.class, value);
+				if (paufsicht == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Pausenaufsicht mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Pausenaufsicht_ID = paufsicht.ID;
+			}),
+			Map.entry("idAufsichtsbereich", (conn, dto, value, map) -> {
+				final DTOStundenplanAufsichtsbereich pbereich = conn.queryByKey(DTOStundenplanAufsichtsbereich.class, value);
+				if (pbereich == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Aufsichtsbereich mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Aufsichtsbereich_ID = pbereich.ID;
+			}),
+			Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
@@ -191,7 +191,7 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public Response update(final @NotNull StundenplanPausenaufsichtBereichUpdate update) throws ApiOperationException {
+	public Response update(final @NotNull StundenplanPausenaufsichtBereichUpdate update) throws ApiOperationException {
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		// Bestimme den zugehörigen Stundenplan
@@ -202,7 +202,8 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 		if (!update.listEntfernen.isEmpty()) {
 			// Überprüfe die zu entfernenden Zuordnungen
 			final @NotNull List<@NotNull Long> listEntfernenIDs = update.listEntfernen.stream().map(r -> r.id).toList();
-			final List<DTOStundenplanPausenaufsichtenBereiche> zuordnungen = conn.queryByKeyList(DTOStundenplanPausenaufsichtenBereiche.class, listEntfernenIDs);
+			final List<DTOStundenplanPausenaufsichtenBereiche> zuordnungen =
+					conn.queryByKeyList(DTOStundenplanPausenaufsichtenBereiche.class, listEntfernenIDs);
 			if (zuordnungen.size() != update.listEntfernen.size())
 				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Zuordnungen zum Löschen wurden in der Datenbank gefunden.");
 			final List<Long> idsPausenaufsichten = zuordnungen.stream().map(z -> z.Pausenaufsicht_ID).toList();
@@ -211,7 +212,9 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 			final List<DTOStundenplanPausenzeit> pausenzeiten = conn.queryByKeyList(DTOStundenplanPausenzeit.class, idsPausenzeiten);
 			final List<Long> idsStundenplan = pausenzeiten.stream().map(z -> z.Stundenplan_ID).toList();
 			if ((idsStundenplan.size() != 1) || (idsStundenplan.get(0) != idStundenplan.longValue()))
-				throw new ApiOperationException(Status.NOT_FOUND, "Alle Zuordnungen der zu löschenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall.".formatted(idStundenplan));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Alle Zuordnungen der zu löschenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall."
+								.formatted(idStundenplan));
 			// Entferne die Zuordnungen
 			conn.transactionRemoveAll(zuordnungen);
 			conn.transactionFlush();
@@ -222,31 +225,40 @@ public final class DataStundenplanPausenaufsichtenBereich extends DataManager<Lo
 			final List<Long> idsPausenaufsichten = update.listHinzuzufuegen.stream().map(z -> z.idPausenaufsicht).toList();
 			final List<DTOStundenplanPausenaufsichten> pausenaufsichten = conn.queryByKeyList(DTOStundenplanPausenaufsichten.class, idsPausenaufsichten);
 			if (pausenaufsichten.size() != idsPausenaufsichten.size())
-				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Pausenaufsichten der hinzuzüfügenden Zuordnungen wurden in der Datenbank gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Nicht alle Pausenaufsichten der hinzuzüfügenden Zuordnungen wurden in der Datenbank gefunden.");
 			final List<Long> idsPausenzeiten = pausenaufsichten.stream().map(a -> a.Pausenzeit_ID).toList();
 			final List<DTOStundenplanPausenzeit> pausenzeiten = conn.queryByKeyList(DTOStundenplanPausenzeit.class, idsPausenzeiten);
 			List<Long> idsStundenplan = pausenzeiten.stream().map(z -> z.Stundenplan_ID).toList();
 			if ((idsStundenplan.size() != 1) || (idsStundenplan.get(0) != idStundenplan.longValue()))
-				throw new ApiOperationException(Status.NOT_FOUND, "Alle Pausenzeiten der hinzuzufügenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall.".formatted(idStundenplan));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Alle Pausenzeiten der hinzuzufügenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall."
+								.formatted(idStundenplan));
 			final List<Long> idsAufsichtsbereiche = update.listHinzuzufuegen.stream().map(z -> z.idAufsichtsbereich).toList();
 			final List<DTOStundenplanAufsichtsbereich> aufsichtsbereiche = conn.queryByKeyList(DTOStundenplanAufsichtsbereich.class, idsAufsichtsbereiche);
 			if (aufsichtsbereiche.size() != idsAufsichtsbereiche.size())
-				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Aufsichtsbereiche der hinzuzüfügenden Zuordnungen wurden in der Datenbank gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Nicht alle Aufsichtsbereiche der hinzuzüfügenden Zuordnungen wurden in der Datenbank gefunden.");
 			idsStundenplan = aufsichtsbereiche.stream().map(a -> a.Stundenplan_ID).toList();
 			if ((idsStundenplan.size() != 1) || (idsStundenplan.get(0) != idStundenplan.longValue()))
-				throw new ApiOperationException(Status.NOT_FOUND, "Alle Aufsichtsbereiche der hinzuzufügenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall.".formatted(idStundenplan));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Alle Aufsichtsbereiche der hinzuzufügenden Zuordnungen müssen zu dem Stundenplan mit der ID %d gehören. Dies ist nicht der Fall."
+								.formatted(idStundenplan));
 			// ... und prüfe den Wochentyp
 			for (final StundenplanPausenaufsichtBereich bereich : update.listHinzuzufuegen)
 				if ((bereich.wochentyp < 0) || (bereich.wochentyp > stundenplan.WochentypModell))
-					throw new ApiOperationException(Status.NOT_FOUND, "Der Wochentyp %d der Zuordnung liegt nicht nicht im Bereich des Wochentyp-Modells %d des Stundenplans.".formatted(bereich.wochentyp, stundenplan.WochentypModell));
+					throw new ApiOperationException(Status.NOT_FOUND,
+							"Der Wochentyp %d der Zuordnung liegt nicht nicht im Bereich des Wochentyp-Modells %d des Stundenplans."
+									.formatted(bereich.wochentyp, stundenplan.WochentypModell));
 			// Füge die Zuordnungen hinzu
 			long id = conn.transactionGetNextID(DTOStundenplanPausenaufsichtenBereiche.class);
 			for (final StundenplanPausenaufsichtBereich bereich : update.listHinzuzufuegen) {
 				bereich.id = id++;
-				conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(bereich.id, bereich.idPausenaufsicht, bereich.idAufsichtsbereich, bereich.wochentyp));
+				conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(bereich.id, bereich.idPausenaufsicht, bereich.idAufsichtsbereich,
+						bereich.wochentyp));
 			}
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(update.listHinzuzufuegen).build();
-    }
+	}
 
 }

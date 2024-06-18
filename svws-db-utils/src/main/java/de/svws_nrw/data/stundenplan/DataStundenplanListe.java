@@ -67,13 +67,13 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	public static List<StundenplanListeEintrag> getStundenplaene(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
 		final ArrayList<StundenplanListeEintrag> daten = new ArrayList<>();
 		final List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null)
-			? conn.queryAll(DTOStundenplan.class)
-			: conn.queryList(DTOStundenplan.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOStundenplan.class, idSchuljahresabschnitt);
+				? conn.queryAll(DTOStundenplan.class)
+				: conn.queryList(DTOStundenplan.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOStundenplan.class, idSchuljahresabschnitt);
 		if (plaene.isEmpty())
 			return daten;
 		final List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
 		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, idsSchuljahresabschnitte)
-			.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+				.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
 		for (final DTOStundenplan s : plaene) {
 			final DTOSchuljahresabschnitte a = mapAbschnitte.get(s.Schuljahresabschnitts_ID);
@@ -102,7 +102,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	@Override
 	public Response getList() {
 		// Stundenpläne für alle Schuljahresabschnitte
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStundenplaene(conn, null)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStundenplaene(conn, null)).build();
 	}
 
 
@@ -120,10 +120,10 @@ public final class DataStundenplanListe extends DataManager<Long> {
 
 
 	/**
-     * Fügt einen leeren Stundenplan für den angegebenen Schuljahresabschnitt
-     * hinzu und gibt den neuen Listen-Eintrag zurück.
+	 * Fügt einen leeren Stundenplan für den angegebenen Schuljahresabschnitt
+	 * hinzu und gibt den neuen Listen-Eintrag zurück.
 	 *
-     * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 *
 	 * @return Eine Response mit dem neuen Stundenplan-Listeneintrag
 	 *
@@ -134,7 +134,8 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			// Bestimme den Schuljahresabschnitt
 			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresabschnitt);
 			if (abschnitt == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTOSchemaAutoInkremente dbStundenplanID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Stundenplan");
 			final long idStundenplan = dbStundenplanID == null ? 1 : dbStundenplanID.MaxID + 1;
@@ -145,18 +146,18 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			if (!stundenplaene.isEmpty()) {
 				// TODO Bestimme den Folgetag auf das Datum, nicht den Tag selbst
 				final String vorherEnde = stundenplaene.get(stundenplaene.size() - 1).gueltigBis;
-				if ((vorherEnde != null) && vorherEnde.compareTo(ende) < 0)
+				if ((vorherEnde != null) && (vorherEnde.compareTo(ende) < 0))
 					beginn = stundenplaene.get(stundenplaene.size() - 1).gueltigBis;
 			}
-	    	// Erstelle und persistiere den leeren Stundenplan mit Wochentyp-Modell 0
-	    	final DTOStundenplan stundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, "Neuer Stundenplan", 0);
-	    	stundenplan.Ende = ende;
-	    	conn.transactionPersist(stundenplan);
-	    	conn.transactionFlush();
-	    	// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
-	    	final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
-	    	DataStundenplanSchienen.addSchienenFromKursliste(conn, stundenplan.ID, kurse);
-	    	// Geben den neuen Stundenplan-Listeneintrag zurück
+			// Erstelle und persistiere den leeren Stundenplan mit Wochentyp-Modell 0
+			final DTOStundenplan stundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, "Neuer Stundenplan", 0);
+			stundenplan.Ende = ende;
+			conn.transactionPersist(stundenplan);
+			conn.transactionFlush();
+			// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
+			final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+			DataStundenplanSchienen.addSchienenFromKursliste(conn, stundenplan.ID, kurse);
+			// Geben den neuen Stundenplan-Listeneintrag zurück
 			final StundenplanListeEintrag daten = DataStundenplanListe.dtoMapper.apply(stundenplan);
 			daten.schuljahr = abschnitt.Jahr;
 			daten.abschnitt = abschnitt.Abschnitt;
@@ -172,9 +173,9 @@ public final class DataStundenplanListe extends DataManager<Long> {
 
 
 	/**
-     * Entfernt einen Stundenplan mit der angegebenen ID.
+	 * Entfernt einen Stundenplan mit der angegebenen ID.
 	 *
-     * @param idStundenplan   die ID des Stundenplans
+	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 *

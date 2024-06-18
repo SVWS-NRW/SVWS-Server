@@ -135,62 +135,68 @@ public final class DataStundenplan extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplan>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
 				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> { throw new ApiOperationException(Status.BAD_REQUEST); }),
-		Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-		Map.entry("wochenTypModell", (conn, dto, value, map) -> {
-			final long idStundenplan = dto.ID;
-			int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
-			if (wochentypmodell == 1)
-				wochentypmodell = 0;
-			if (dto.WochentypModell == wochentypmodell)
-				return;
-			// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
-			final List<Long> idsZeitraster = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
-					.stream().map(z -> z.ID).toList();
-			if (!idsZeitraster.isEmpty()) {
-				final List<DTOStundenplanUnterricht> unterrichte = conn.queryList("SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN ?1 AND e.Wochentyp > ?2", DTOStundenplanUnterricht.class, idsZeitraster, wochentypmodell);
-				if (!unterrichte.isEmpty()) {
-					for (final DTOStundenplanUnterricht unterricht : unterrichte)
-						unterricht.Wochentyp = 0;
-					conn.transactionPersistAll(unterrichte);
-					conn.transactionFlush();
-				}
-			}
-			// Bestimme alle Aufsichtsbereich des Stundenplans, wo zugeordnete Pausenaufsichten einen Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet haben und passe diesen ggf. an.
-			final List<Long> idsAufsichtsbereiche = conn.queryList(DTOStundenplanAufsichtsbereich.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanAufsichtsbereich.class, idStundenplan)
-					.stream().map(z -> z.ID).toList();
-			if (!idsAufsichtsbereiche.isEmpty()) {
-				final List<DTOStundenplanPausenaufsichtenBereiche> bereiche = conn.queryList("SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN ?1 AND e.Wochentyp > ?2",
-						DTOStundenplanPausenaufsichtenBereiche.class, idsAufsichtsbereiche, wochentypmodell);
-				if (!bereiche.isEmpty()) {
-					final HashMap2D<Long, Long, Boolean> updatedPausenaufsichtsbereich = new HashMap2D<>();
-					for (final DTOStundenplanPausenaufsichtenBereiche bereich : bereiche) {
-						final List<DTOStundenplanPausenaufsichtenBereiche> andereBereiche = conn.queryList("SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = ?1 AND e.Pausenaufsicht_ID = ?2 AND e.Wochentyp <= ?3",
-								DTOStundenplanPausenaufsichtenBereiche.class, bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, wochentypmodell);
-						if (andereBereiche.isEmpty() && !updatedPausenaufsichtsbereich.contains(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID)) {
-							bereich.Wochentyp = 0;
-							conn.transactionPersist(bereich);
-							updatedPausenaufsichtsbereich.put(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, true);
-						} else {
-							conn.transactionRemove(bereich);
-						}
+			}),
+			Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
+			Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
+			Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
+			Map.entry("wochenTypModell", (conn, dto, value, map) -> {
+				final long idStundenplan = dto.ID;
+				int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
+				if (wochentypmodell == 1)
+					wochentypmodell = 0;
+				if (dto.WochentypModell == wochentypmodell)
+					return;
+				// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
+				final List<Long> idsZeitraster = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
+						.stream().map(z -> z.ID).toList();
+				if (!idsZeitraster.isEmpty()) {
+					final List<DTOStundenplanUnterricht> unterrichte =
+							conn.queryList("SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN ?1 AND e.Wochentyp > ?2",
+									DTOStundenplanUnterricht.class, idsZeitraster, wochentypmodell);
+					if (!unterrichte.isEmpty()) {
+						for (final DTOStundenplanUnterricht unterricht : unterrichte)
+							unterricht.Wochentyp = 0;
+						conn.transactionPersistAll(unterrichte);
+						conn.transactionFlush();
 					}
-					conn.transactionFlush();
 				}
-			}
-			// Lösche die Kalenderwochenzuordnungen
-			conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
-			// Setze das Wochentyp-Modell
-			dto.WochentypModell = wochentypmodell;
-		})
-	);
+				// Bestimme alle Aufsichtsbereich des Stundenplans, wo zugeordnete Pausenaufsichten einen Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet haben und passe diesen ggf. an.
+				final List<Long> idsAufsichtsbereiche =
+						conn.queryList(DTOStundenplanAufsichtsbereich.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanAufsichtsbereich.class, idStundenplan)
+								.stream().map(z -> z.ID).toList();
+				if (!idsAufsichtsbereiche.isEmpty()) {
+					final List<DTOStundenplanPausenaufsichtenBereiche> bereiche =
+							conn.queryList("SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN ?1 AND e.Wochentyp > ?2",
+									DTOStundenplanPausenaufsichtenBereiche.class, idsAufsichtsbereiche, wochentypmodell);
+					if (!bereiche.isEmpty()) {
+						final HashMap2D<Long, Long, Boolean> updatedPausenaufsichtsbereich = new HashMap2D<>();
+						for (final DTOStundenplanPausenaufsichtenBereiche bereich : bereiche) {
+							final List<DTOStundenplanPausenaufsichtenBereiche> andereBereiche = conn.queryList(
+									"SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = ?1 AND e.Pausenaufsicht_ID = ?2 AND e.Wochentyp <= ?3",
+									DTOStundenplanPausenaufsichtenBereiche.class, bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, wochentypmodell);
+							if (andereBereiche.isEmpty() && !updatedPausenaufsichtsbereich.contains(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID)) {
+								bereich.Wochentyp = 0;
+								conn.transactionPersist(bereich);
+								updatedPausenaufsichtsbereich.put(bereich.Aufsichtsbereich_ID, bereich.Pausenaufsicht_ID, true);
+							} else {
+								conn.transactionRemove(bereich);
+							}
+						}
+						conn.transactionFlush();
+					}
+				}
+				// Lösche die Kalenderwochenzuordnungen
+				conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
+				// Setze das Wochentyp-Modell
+				dto.WochentypModell = wochentypmodell;
+			}));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

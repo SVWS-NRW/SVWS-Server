@@ -87,7 +87,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<StundenplanLehrer> daten = getLehrer(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -107,7 +107,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
-		if ((lehrer == null) || (lehrer.Sichtbar != null && !lehrer.Sichtbar))
+		if ((lehrer == null) || ((lehrer.Sichtbar != null) && !lehrer.Sichtbar))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Lehrkraft mit der ID %d gefunden.".formatted(idLehrer));
 		if ((lehrer.DatumAbgang != null)) {
 			// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
@@ -123,7 +123,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Lehrer mit der ID null ist unzulässig.");
 		final StundenplanLehrer daten = getById(conn, stundenplanID, id);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
