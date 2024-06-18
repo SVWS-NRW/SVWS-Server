@@ -160,7 +160,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (!data.kuerzel)
 			return;
 		if (data.groesse && data.groesse < 1)
-			throw new DeveloperNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
+			throw new UserNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
 		delete data.id;
 		api.status.start();
 		await api.server.patchStundenplanRaum(data, api.schema, id);
