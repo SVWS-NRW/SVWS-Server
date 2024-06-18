@@ -34,7 +34,7 @@ public final class UhrzeitConverter extends DBAttributeConverter<Integer, Timest
 		if (dbData == null)
 			return null;
 		final LocalTime time = dbData.toLocalDateTime().toLocalTime();
-		return time.getHour() * 60 + time.getMinute();
+		return (time.getHour() * 60) + time.getMinute();
 	}
 
 	@Override

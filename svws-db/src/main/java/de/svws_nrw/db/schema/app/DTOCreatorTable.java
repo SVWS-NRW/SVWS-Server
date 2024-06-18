@@ -128,7 +128,7 @@ public final class DTOCreatorTable {
 	 * @return der Java-Datentyp
 	 */
 	private static String getDataType(final SchemaTabelleSpalte spalte, final long rev) {
-		String dataType = spalte.datentyp().java(rev != 0 && spalte.notNull());
+		String dataType = spalte.datentyp().java((rev != 0) && spalte.notNull());
 		final DBAttributeConverter<?, ?> attrConverter = spalte.javaConverter(rev);
 		if (attrConverter != null)
 			dataType = attrConverter.getResultType().getSimpleName();
@@ -165,8 +165,8 @@ public final class DTOCreatorTable {
 				i++;
 				continue;
 			}
-			if (col.datentyp().isJavaPrimitiveType(rev != 0 && col.notNull())) {
-				if (i == pkspalten.size() - 1) {
+			if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull())) {
+				if (i == (pkspalten.size() - 1)) {
 					sb.append("\t\treturn " + colname + " == other." + colname + ";" + System.lineSeparator());
 					combinedReturn = true;
 				} else {
@@ -194,7 +194,7 @@ public final class DTOCreatorTable {
 					final String colname = getJavaAttributeName(col);
 					if (colname == null)
 						return null;
-					if (col.datentyp().isJavaPrimitiveType(rev != 0 && col.notNull()))
+					if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull()))
 						return "\t\tresult = prime * result + " + col.datentyp().java(false) + ".hashCode(" + colname + ");" + System.lineSeparator();
 					return "\t\tresult = prime * result + ((" + colname + " == null) ? 0 : " + colname + ".hashCode());" + System.lineSeparator();
 				})
@@ -340,7 +340,7 @@ public final class DTOCreatorTable {
 			sb.append("\t@Column(name = \"" + spalte.name() + "\")" + System.lineSeparator());
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
-		String dataType = spalte.datentyp().java(rev != 0 && spalte.notNull());
+		String dataType = spalte.datentyp().java((rev != 0) && spalte.notNull());
 		final DBAttributeConverter<?, ?> attrConverter = spalte.javaConverter(rev);
 		if (attrConverter != null) {
 			if (withAnnotations) {
@@ -455,7 +455,7 @@ public final class DTOCreatorTable {
 					.filter(spalte -> getJavaAttributeName(spalte) != null)
 					.map(spalte -> {
 						final String zuweisung = "\t\tthis." + getJavaAttributeName(spalte) + " = " + getJavaAttributeName(spalte) + ";" + System.lineSeparator();
-						if (spalte.datentyp().isJavaPrimitiveType(rev != 0 && spalte.notNull()))
+						if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull()))
 							return zuweisung;
 						return "\t\tif (" + getJavaAttributeName(spalte) + " == null) {" + System.lineSeparator()
 							+ "\t\t\tthrow new NullPointerException(\"" + getJavaAttributeName(spalte) + " must not be null\");" + System.lineSeparator()
@@ -557,7 +557,7 @@ public final class DTOCreatorTable {
 				.filter(spalte -> getJavaAttributeName(spalte) != null)
 				.map(spalte -> {
 					final String zuweisung = "\t\tthis." + getJavaAttributeName(spalte) + " = " + getJavaAttributeName(spalte) + ";" + System.lineSeparator();
-					if (spalte.datentyp().isJavaPrimitiveType(rev != 0 && spalte.notNull()))
+					if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull()))
 						return zuweisung;
 					return "\t\tif (" + getJavaAttributeName(spalte) + " == null) {" + System.lineSeparator()
 					+ "\t\t\tthrow new NullPointerException(\"" + getJavaAttributeName(spalte) + " must not be null\");" + System.lineSeparator()

@@ -326,7 +326,7 @@ public final class SVWSKonfiguration {
 	 */
 	public String getFilename() {
 		if ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString())))
-			return (dto == null || !dto.isXMLConfig ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
+			return ((dto == null) || !dto.isXMLConfig ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
 		return dto.filepath.toString();
 	}
 

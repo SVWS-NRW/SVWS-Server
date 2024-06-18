@@ -343,24 +343,24 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((AbiturFach == null) ? 0 : AbiturFach.hashCode());
-		result = prime * result + (int) (abschnittID ^ (abschnittID >>> 32));
-		result = prime * result + (int) (jahrgangID ^ (jahrgangID >>> 32));
-		result = prime * result + ((klasse == null) ? 0 : klasse.hashCode());
-		result = prime * result + ((fachbezogeneBemerkungen == null) ? 0 : fachbezogeneBemerkungen.hashCode());
-		result = prime * result + ((fehlstundenGesamt == null) ? 0 : fehlstundenGesamt.hashCode());
-		result = prime * result + ((fehlstundenUnentschuldigt == null) ? 0 : fehlstundenUnentschuldigt.hashCode());
-		result = prime * result + ((foerderschwerpunkt1Kuerzel == null) ? 0 : foerderschwerpunkt1Kuerzel.hashCode());
-		result = prime * result + ((foerderschwerpunkt2Kuerzel == null) ? 0 : foerderschwerpunkt2Kuerzel.hashCode());
-		result = prime * result + ((kursart == null) ? 0 : kursart.hashCode());
-		result = prime * result + (int) (kursID ^ (kursID >>> 32));
-		result = prime * result + (int) (leistungID ^ (leistungID >>> 32));
-		result = prime * result + ((lernbereich1note == null) ? 0 : lernbereich1note.hashCode());
-		result = prime * result + ((lernbereich2note == null) ? 0 : lernbereich2note.hashCode());
-		result = prime * result + ((note == null) ? 0 : note.hashCode());
-		result = prime * result + ((noteQuartal == null) ? 0 : noteQuartal.hashCode());
-		result = prime * result + ((pruefungsordnung == null) ? 0 : pruefungsordnung.hashCode());
-		result = prime * result + ((BilingualerZweig == null) ? 0 : BilingualerZweig.hashCode());
+		result = (prime * result) + ((AbiturFach == null) ? 0 : AbiturFach.hashCode());
+		result = (prime * result) + (int) (abschnittID ^ (abschnittID >>> 32));
+		result = (prime * result) + (int) (jahrgangID ^ (jahrgangID >>> 32));
+		result = (prime * result) + ((klasse == null) ? 0 : klasse.hashCode());
+		result = (prime * result) + ((fachbezogeneBemerkungen == null) ? 0 : fachbezogeneBemerkungen.hashCode());
+		result = (prime * result) + ((fehlstundenGesamt == null) ? 0 : fehlstundenGesamt.hashCode());
+		result = (prime * result) + ((fehlstundenUnentschuldigt == null) ? 0 : fehlstundenUnentschuldigt.hashCode());
+		result = (prime * result) + ((foerderschwerpunkt1Kuerzel == null) ? 0 : foerderschwerpunkt1Kuerzel.hashCode());
+		result = (prime * result) + ((foerderschwerpunkt2Kuerzel == null) ? 0 : foerderschwerpunkt2Kuerzel.hashCode());
+		result = (prime * result) + ((kursart == null) ? 0 : kursart.hashCode());
+		result = (prime * result) + (int) (kursID ^ (kursID >>> 32));
+		result = (prime * result) + (int) (leistungID ^ (leistungID >>> 32));
+		result = (prime * result) + ((lernbereich1note == null) ? 0 : lernbereich1note.hashCode());
+		result = (prime * result) + ((lernbereich2note == null) ? 0 : lernbereich2note.hashCode());
+		result = (prime * result) + ((note == null) ? 0 : note.hashCode());
+		result = (prime * result) + ((noteQuartal == null) ? 0 : noteQuartal.hashCode());
+		result = (prime * result) + ((pruefungsordnung == null) ? 0 : pruefungsordnung.hashCode());
+		result = (prime * result) + ((BilingualerZweig == null) ? 0 : BilingualerZweig.hashCode());
 		return result;
 	}
 

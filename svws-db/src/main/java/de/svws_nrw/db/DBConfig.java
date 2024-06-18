@@ -233,11 +233,11 @@ public final class DBConfig {
 		if (getClass() != obj.getClass())
 			return false;
 		final DBConfig other = (DBConfig) obj;
-		return create_db_file == other.create_db_file && db_driver == other.db_driver
+		return (create_db_file == other.create_db_file) && (db_driver == other.db_driver)
 				&& Objects.equals(db_location, other.db_location) && Objects.equals(db_schema, other.db_schema)
-				&& Objects.equals(password, other.password) && use_db_logging == other.use_db_logging
-				&& use_db_login == other.use_db_login && Objects.equals(username, other.username)
-				&& connectionRetries == other.connectionRetries && retryTimeout == other.retryTimeout;
+				&& Objects.equals(password, other.password) && (use_db_logging == other.use_db_logging)
+				&& (use_db_login == other.use_db_login) && Objects.equals(username, other.username)
+				&& (connectionRetries == other.connectionRetries) && (retryTimeout == other.retryTimeout);
 	}
 
 }

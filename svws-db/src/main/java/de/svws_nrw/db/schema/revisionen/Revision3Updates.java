@@ -73,7 +73,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			final Object[] aktAbschnitt = tmpAktAbschnitt.get(0);
 			final int aktSchuljahr = (Integer) aktAbschnitt[1];
 			final int aktQuartal = (Integer) aktAbschnitt[2];
-			final int aktHalbjahr = (aktQuartal % 2 == 1) ? aktQuartal / 2 + 1 : aktQuartal / 2;
+			final int aktHalbjahr = ((aktQuartal % 2) == 1) ? (aktQuartal / 2) + 1 : aktQuartal / 2;
 			final Long aktFolgeAbschnittID = (Long) aktAbschnitt[4];
 			// Lege temporär Indizes an, um die Umstellung zu beschleunigen
 			logger.logLn("* Lege temporär Indizes an, um die Umstellung zu beschleunigen");
@@ -154,7 +154,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				return false;
 			}
 			// Passe das aktuelle Quartal an, falls es Quartal 1 oder 3 ist
-			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " (Schuljahr " + aktSchuljahr + "/" + (aktSchuljahr + 1 - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
+			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " (Schuljahr " + aktSchuljahr + "/" + ((aktSchuljahr + 1) - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
 			logger.modifyIndent(2);
 			if ((aktQuartal == 1) || (aktQuartal == 3)) {
 				logger.logLn("... also im ersten Quartal eines Halbjahres");
@@ -296,9 +296,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				final long abschnittID = (Long) schuljahreAbschnitt[0];
 				final int schuljahr = (Integer) schuljahreAbschnitt[1];
 				final int quartal = (Integer) schuljahreAbschnitt[2];
-				final int halbjahr = (quartal % 2 == 1) ? quartal / 2 + 1 : quartal / 2;
+				final int halbjahr = ((quartal % 2) == 1) ? (quartal / 2) + 1 : quartal / 2;
 				final Long folgeAbschnittID = (Long) schuljahreAbschnitt[4];
-				logger.logLn("- Schuljahres-Abschnitt " + abschnittID + " (Schuljahr " + schuljahr + "/" + (schuljahr + 1 - 2000) + ", " + halbjahr + ". Halbjahr, Quartal " + quartal + "):");
+				logger.logLn("- Schuljahres-Abschnitt " + abschnittID + " (Schuljahr " + schuljahr + "/" + ((schuljahr + 1) - 2000) + ", " + halbjahr + ". Halbjahr, Quartal " + quartal + "):");
 				logger.modifyIndent(2);
 				// Bestimme die IDs aller Schüler-Lernabschnitte, die zu diesem Schuljahresabschnitt gehören
 				final List<Long> lernabschnittIDs = conn.queryNative("SELECT ID FROM SchuelerLernabschnittsdaten WHERE WechselNr = 0 AND Schuljahresabschnitts_ID = " + abschnittID);
@@ -636,11 +636,11 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					// Der gesetzte finale Eintrag hat einen definierten Sprachbeginn und ein definiertes Ende.
 					// Wenn der aktuell betrachtet Jahrgang nicht innerhalb des finalen beginnt oder lückenlos daran anschließt, dann behalte nur den jüngsten Eintrag.
 					// Ansonsten werden beide Einträge verschmolzen (ELSE-Teil)
-					if (jgFinalEnde != null && jgAktuellBeginn.compareTo(jgFinalEnde) > 0
+					if ((jgFinalEnde != null) && (jgAktuellBeginn.compareTo(jgFinalEnde) > 0)
 						&& (!jgAktuellBeginn.isMoeglicherNachfolgerVon(jgFinalEnde)
 							|| 	(jgAktuellBeginn.isMoeglicherNachfolgerVon(jgFinalEnde)
 								//	(finalAbsBis == 1) || (eintragSprachenfolge[iAbsVon] == 2), dann grenzen die Einträge nicht aneinander.
-								&& ((finalAbsBis != null && finalAbsBis != 2) || ((eintragSprachenfolge[iAbsVon] != null) && ((Integer) eintragSprachenfolge[iAbsVon] != 1)))
+								&& (((finalAbsBis != null) && (finalAbsBis != 2)) || ((eintragSprachenfolge[iAbsVon] != null) && ((Integer) eintragSprachenfolge[iAbsVon] != 1)))
 								)
 							)
 						) {
@@ -649,7 +649,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						finalASDBis = (String) eintragSprachenfolge[iASDBis];
 						finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
 						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
-						if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+						if ((finalNiveau == null) || (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
 							finalNiveau = (String) eintragSprachenfolge[iNiveau];
 						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
 							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
@@ -661,18 +661,18 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 							finalHeb = (Integer) eintragSprachenfolge[iHeb];
 					} else {
 						// Der aktuell betrachtete Eintrag beginnt vor bzw. mit dem bisher als final gesetzen Sprachbelegungsende. Verschmelze daher beide Einträge.
-						if (jgAktuellBeginn.compareTo(jgFinalBeginn) == 0 && ((finalAbsVon == null && eintragSprachenfolge[iAbsVon] != null) || (finalAbsVon != null && eintragSprachenfolge[iAbsVon] != null && ((Integer) eintragSprachenfolge[iAbsVon]) < finalAbsVon)))
+						if ((jgAktuellBeginn.compareTo(jgFinalBeginn) == 0) && (((finalAbsVon == null) && (eintragSprachenfolge[iAbsVon] != null)) || ((finalAbsVon != null) && (eintragSprachenfolge[iAbsVon] != null) && (((Integer) eintragSprachenfolge[iAbsVon]) < finalAbsVon))))
 							finalAbsVon = (Integer) eintragSprachenfolge[iAbsVon];
-						if (jgFinalEnde != null && (jgAktuellEnde == null || jgAktuellEnde.compareTo(jgFinalEnde) > 0)) {
+						if ((jgFinalEnde != null) && ((jgAktuellEnde == null) || (jgAktuellEnde.compareTo(jgFinalEnde) > 0))) {
 							finalASDBis = (String) eintragSprachenfolge[iASDBis];
 							if (finalASDBis == null)
 								finalAbsBis = null;
 							else
 								finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
 						}
-						if ((finalReihenfolge == null && (eintragSprachenfolge[iReihenfolge]) != null) || (finalReihenfolge != null && (eintragSprachenfolge[iReihenfolge]) != null && ((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))
+						if (((finalReihenfolge == null) && ((eintragSprachenfolge[iReihenfolge]) != null)) || ((finalReihenfolge != null) && ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge)))
 							finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
-						if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+						if ((finalNiveau == null) || (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
 							finalNiveau = (String) eintragSprachenfolge[iNiveau];
 						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
 							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
@@ -707,16 +707,16 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					final Jahrgaenge jgFinalEnde = Jahrgaenge.getByKuerzel(finalASDBis);
 					final Jahrgaenge jgAktuellEnde = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDBis]);
 
-					if (jgFinalEnde != null && (jgAktuellEnde == null || jgAktuellEnde.compareTo(jgFinalEnde) > 0)) {
+					if ((jgFinalEnde != null) && ((jgAktuellEnde == null) || (jgAktuellEnde.compareTo(jgFinalEnde) > 0))) {
 						finalASDBis = (String) eintragSprachenfolge[iASDBis];
 						if (finalASDBis == null)
 							finalAbsBis = null;
 						else
 							finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
 					}
-					if ((finalReihenfolge == null && (eintragSprachenfolge[iReihenfolge]) != null) || (finalReihenfolge != null && (eintragSprachenfolge[iReihenfolge]) != null && ((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))
+					if (((finalReihenfolge == null) && ((eintragSprachenfolge[iReihenfolge]) != null)) || ((finalReihenfolge != null) && ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge)))
 						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
-					if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+					if ((finalNiveau == null) || (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
 						finalNiveau = (String) eintragSprachenfolge[iNiveau];
 					if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
 						finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
@@ -805,7 +805,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			if (setBeginnNull)
 				eintragSprachenfolge[iASDVon] = null;
 
-			if (eintragSprachenfolge[iASDVon] != null && eintragSprachenfolge[iASDVon].toString().isEmpty())
+			if ((eintragSprachenfolge[iASDVon] != null) && eintragSprachenfolge[iASDVon].toString().isEmpty())
 				eintragSprachenfolge[iASDVon] = null;
 			if (eintragSprachenfolge[iASDVon] == null)
 				eintragSprachenfolge[iAbsVon] = null;
@@ -818,7 +818,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					eintragSprachenfolge[iAbsVon] = null;
 			}
 
-			if (eintragSprachenfolge[iASDBis] != null && eintragSprachenfolge[iASDBis].toString().isEmpty())
+			if ((eintragSprachenfolge[iASDBis] != null) && eintragSprachenfolge[iASDBis].toString().isEmpty())
 				eintragSprachenfolge[iASDBis] = null;
 			if (eintragSprachenfolge[iASDBis] == null)
 				eintragSprachenfolge[iAbsBis] = null;
@@ -831,17 +831,17 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					eintragSprachenfolge[iAbsBis] = null;
 			}
 
-			if (eintragSprachenfolge[iReihenfolge] != null && ((Integer) eintragSprachenfolge[iReihenfolge]) <= 0)
+			if ((eintragSprachenfolge[iReihenfolge] != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) <= 0))
 				eintragSprachenfolge[iReihenfolge] = null;
-			if (eintragSprachenfolge[iNiveau] != null && eintragSprachenfolge[iNiveau].toString().isEmpty())
+			if ((eintragSprachenfolge[iNiveau] != null) && eintragSprachenfolge[iNiveau].toString().isEmpty())
 				eintragSprachenfolge[iNiveau] = null;
-			if (eintragSprachenfolge[iKlLat] == null || (((Integer) eintragSprachenfolge[iKlLat]) != 0 && ((Integer) eintragSprachenfolge[iKlLat]) != 1))
+			if ((eintragSprachenfolge[iKlLat] == null) || ((((Integer) eintragSprachenfolge[iKlLat]) != 0) && (((Integer) eintragSprachenfolge[iKlLat]) != 1)))
 				eintragSprachenfolge[iKlLat] = 0;
-			if (eintragSprachenfolge[iLat] == null || (((Integer) eintragSprachenfolge[iLat]) != 0 && ((Integer) eintragSprachenfolge[iLat]) != 1))
+			if ((eintragSprachenfolge[iLat] == null) || ((((Integer) eintragSprachenfolge[iLat]) != 0) && (((Integer) eintragSprachenfolge[iLat]) != 1)))
 				eintragSprachenfolge[iLat] = 0;
-			if (eintragSprachenfolge[iGrae] == null || (((Integer) eintragSprachenfolge[iGrae]) != 0 && ((Integer) eintragSprachenfolge[iGrae]) != 1))
+			if ((eintragSprachenfolge[iGrae] == null) || ((((Integer) eintragSprachenfolge[iGrae]) != 0) && (((Integer) eintragSprachenfolge[iGrae]) != 1)))
 				eintragSprachenfolge[iGrae] = 0;
-			if (eintragSprachenfolge[iHeb] == null || (((Integer) eintragSprachenfolge[iHeb]) != 0 && ((Integer) eintragSprachenfolge[iHeb]) != 1))
+			if ((eintragSprachenfolge[iHeb] == null) || ((((Integer) eintragSprachenfolge[iHeb]) != 0) && (((Integer) eintragSprachenfolge[iHeb]) != 1)))
 				eintragSprachenfolge[iHeb] = 0;
 		}
 	}

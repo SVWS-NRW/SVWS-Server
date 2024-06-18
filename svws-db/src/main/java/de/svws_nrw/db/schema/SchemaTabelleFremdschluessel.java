@@ -202,8 +202,8 @@ public class SchemaTabelleFremdschluessel {
 				+ ") REFERENCES " + this._tabelleReferenziert.name() + '('
 				+ _spaltenReferenziert.stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
 				+ ")"
-				+ ((this._onUpdate == null) || this._onUpdate == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON UPDATE " + this._onUpdate.sql())
-				+ ((this._onDelete == null) || this._onDelete == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON DELETE " + this._onDelete.sql());
+				+ ((this._onUpdate == null) || (this._onUpdate == SchemaFremdschluesselAktionen.NO_ACTION) ? "" : " ON UPDATE " + this._onUpdate.sql())
+				+ ((this._onDelete == null) || (this._onDelete == SchemaFremdschluesselAktionen.NO_ACTION) ? "" : " ON DELETE " + this._onDelete.sql());
 	}
 
 

@@ -136,7 +136,7 @@ public final class DTOInformationSchema {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Name == null) ? 0 : Name.hashCode());
+		result = (prime * result) + ((Name == null) ? 0 : Name.hashCode());
 		return result;
 	}
 

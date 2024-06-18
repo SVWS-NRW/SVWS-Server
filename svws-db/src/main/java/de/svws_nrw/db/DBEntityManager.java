@@ -977,7 +977,7 @@ public final class DBEntityManager implements AutoCloseable {
 					sb.append(number);
 				else
 					return false;
-				if (j < colnames.size() - 1)
+				if (j < (colnames.size() - 1))
 					sb.append(",");
 			}
 			sb.append(")");
@@ -1187,7 +1187,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return doe Liste mit den Datensätzen
 	 */
 	public <T> List<T> queryByKeyList(final Class<T> cl, final Collection<?> ids) {
-		if (ids == null || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty())
 			return new ArrayList<>();
 		return queryList(getQueryString(cl, "QUERY_LIST_PK"), cl, ids);
 	}

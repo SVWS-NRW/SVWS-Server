@@ -147,7 +147,7 @@ public final class ConnectionManager {
 				url += ";newdatabaseversion=V2000";
 		}
 		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
-	        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
+	        .filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
 	        .limit(40)
 	        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 	        .toString();

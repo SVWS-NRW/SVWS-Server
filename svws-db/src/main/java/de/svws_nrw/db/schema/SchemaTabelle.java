@@ -541,7 +541,7 @@ public class SchemaTabelle {
 				+ (((pk == null) || ("".equals(pk))) ? "" : "," + newline + "  " + pk)
 				+ this.getSQLFremdschluessel(rev)
 				+ this.getSQLUniqueContraints(rev)
-				+ newline + ")" + ((dbms == DBDriver.MARIA_DB || dbms == DBDriver.MYSQL) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "") + ";";
+				+ newline + ")" + (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "") + ";";
     }
 
 

@@ -445,7 +445,7 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	         + this.getSQLAutoinkrement(dbms)
 	         + this.getSQLDefault(dbms, _datentyp)
 	         + (this._notNull ? " NOT NULL" : "")
-	         + ((dbms == DBDriver.MARIA_DB || dbms == DBDriver.MYSQL) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
+	         + (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
 	}
 
 

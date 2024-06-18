@@ -171,13 +171,13 @@ public final class DTOInformationSchemaTableColumn {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((DataLength == null) ? 0 : DataLength.hashCode());
-		result = prime * result + ((DataType == null) ? 0 : DataType.hashCode());
-		result = prime * result + ((DefaultValue == null) ? 0 : DefaultValue.hashCode());
-		result = prime * result + ((Name == null) ? 0 : Name.hashCode());
-		result = prime * result + ((NameTabelle == null) ? 0 : NameTabelle.hashCode());
-		result = prime * result + ((Nullable == null) ? 0 : Nullable.hashCode());
-		result = prime * result + ((Reihenfolge == null) ? 0 : Reihenfolge.hashCode());
+		result = (prime * result) + ((DataLength == null) ? 0 : DataLength.hashCode());
+		result = (prime * result) + ((DataType == null) ? 0 : DataType.hashCode());
+		result = (prime * result) + ((DefaultValue == null) ? 0 : DefaultValue.hashCode());
+		result = (prime * result) + ((Name == null) ? 0 : Name.hashCode());
+		result = (prime * result) + ((NameTabelle == null) ? 0 : NameTabelle.hashCode());
+		result = (prime * result) + ((Nullable == null) ? 0 : Nullable.hashCode());
+		result = (prime * result) + ((Reihenfolge == null) ? 0 : Reihenfolge.hashCode());
 		return result;
 	}
 
