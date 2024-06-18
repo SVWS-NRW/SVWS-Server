@@ -29,7 +29,7 @@ public final class DataKAoABerufsfelder extends DataManager<Long> {
 		final ArrayList<KAOABerufsfeldEintrag> daten = new ArrayList<>();
 		for (final KAOABerufsfeld b : KAOABerufsfeld.values())
 			daten.addAll(Arrays.asList(b.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

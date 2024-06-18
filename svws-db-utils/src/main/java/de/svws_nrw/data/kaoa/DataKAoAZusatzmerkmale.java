@@ -29,7 +29,7 @@ public final class DataKAoAZusatzmerkmale extends DataManager<Long> {
 		final ArrayList<KAOAZusatzmerkmalEintrag> daten = new ArrayList<>();
 		for (final KAOAZusatzmerkmal z : KAOAZusatzmerkmal.values())
 			daten.addAll(Arrays.asList(z.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

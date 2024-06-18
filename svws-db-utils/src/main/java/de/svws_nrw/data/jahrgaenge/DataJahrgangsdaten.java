@@ -74,8 +74,8 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	/**
 	 * Gibt die Jahrgangsdaten zur ID eines Jahrgangs zurück.
 	 *
- 	 * @param id	Die ID des Jahrgangs.
- 	 *
+	 * @param id	Die ID des Jahrgangs.
+	 *
 	 * @return		Die Jahrgangsdaten zur ID.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
@@ -103,47 +103,46 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	}
 
 	private static final Map<String, DataBasicMapper<DTOJahrgang>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
-		Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
-			final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.getByKuerzel(strJahrgang);
-			if ((jahrgang == null) && (strJahrgang != null))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten.kuerzel;
-			dto.ASDBezeichnung = (jahrgang == null) ? null : jahrgang.getBezeichnung(schule.Schulform);
-		}),
-		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.ASDBezeichnung = JSONMapper.convertToString(value, true, true, 100)),
-		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)),
-		Map.entry("kuerzelSchulgliederung", (conn, dto, value, map) -> {
-			final String str = JSONMapper.convertToString(value, true, false, null);
-			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			final Schulgliederung sgl = Schulgliederung.getBySchulformAndKuerzel(schule.Schulform, str);
-			if ((sgl == null) && (str != null))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Gliederung = sgl;
-		}),
-		Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
-			final Long idFolgejahrgang = JSONMapper.convertToLong(value, true);
-			if (idFolgejahrgang != null) {
-				conn.transactionFlush();
-				final DTOJahrgang folgeJahrgang = conn.queryByKey(DTOJahrgang.class, idFolgejahrgang);
-				if (folgeJahrgang == null)
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
+			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
+				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.getByKuerzel(strJahrgang);
+				if ((jahrgang == null) && (strJahrgang != null))
 					throw new ApiOperationException(Status.CONFLICT);
-				conn.transactionFlush();
-			}
-			dto.Folgejahrgang_ID = idFolgejahrgang;
-		}),
-		Map.entry("anzahlRestabschnitte", (conn, dto, value, map) -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 40)),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
-		Map.entry("gueltigVon", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000)),
-		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000))
-	);
+				dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten.kuerzel;
+				dto.ASDBezeichnung = (jahrgang == null) ? null : jahrgang.getBezeichnung(schule.Schulform);
+			}),
+			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.ASDBezeichnung = JSONMapper.convertToString(value, true, true, 100)),
+			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)),
+			Map.entry("kuerzelSchulgliederung", (conn, dto, value, map) -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				final Schulgliederung sgl = Schulgliederung.getBySchulformAndKuerzel(schule.Schulform, str);
+				if ((sgl == null) && (str != null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Gliederung = sgl;
+			}),
+			Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
+				final Long idFolgejahrgang = JSONMapper.convertToLong(value, true);
+				if (idFolgejahrgang != null) {
+					conn.transactionFlush();
+					final DTOJahrgang folgeJahrgang = conn.queryByKey(DTOJahrgang.class, idFolgejahrgang);
+					if (folgeJahrgang == null)
+						throw new ApiOperationException(Status.CONFLICT);
+					conn.transactionFlush();
+				}
+				dto.Folgejahrgang_ID = idFolgejahrgang;
+			}),
+			Map.entry("anzahlRestabschnitte", (conn, dto, value, map) -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 40)),
+			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
+			Map.entry("gueltigVon", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000)),
+			Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000)));
 
 
 	@Override
@@ -182,8 +181,8 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @return true, falls der Jahrgang sicher gelöscht werden kann und ansonsten false
 	 */
 	private boolean isDeletable(final Long id) {
-		if (id == null)
-			return false;
+		if (id == null) {
+		}
 		// TODO Prüfe, ob der Jahrgang sicher (true) gelöscht werden kann. Existiert auch nur eine Referenz, so muss dieser erhalten bleiben (false)
 		return false;
 	}

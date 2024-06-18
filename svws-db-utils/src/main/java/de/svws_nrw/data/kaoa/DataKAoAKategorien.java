@@ -29,7 +29,7 @@ public final class DataKAoAKategorien extends DataManager<Long> {
 		final ArrayList<KAOAKategorieEintrag> daten = new ArrayList<>();
 		for (final KAOAKategorie kategorie : KAOAKategorie.values())
 			daten.addAll(Arrays.asList(kategorie.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

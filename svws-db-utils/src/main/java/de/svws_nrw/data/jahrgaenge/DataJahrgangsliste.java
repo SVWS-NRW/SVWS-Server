@@ -58,17 +58,17 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<JahrgangsDaten> getJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
-    	final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
-    	if (jahrgaenge == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Keine Jahrgänge gefunden");
-    	return jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
+		if (jahrgaenge == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Jahrgänge gefunden");
+		return jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
 	}
 
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<JahrgangsDaten> daten = getJahrgangsliste(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<JahrgangsDaten> daten = getJahrgangsliste(conn);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

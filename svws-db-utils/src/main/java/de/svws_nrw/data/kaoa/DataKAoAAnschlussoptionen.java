@@ -29,7 +29,7 @@ public final class DataKAoAAnschlussoptionen extends DataManager<Long> {
 		final ArrayList<KAOAAnschlussoptionEintrag> daten = new ArrayList<>();
 		for (final KAOAAnschlussoption a : KAOAAnschlussoption.values())
 			daten.addAll(Arrays.asList(a.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

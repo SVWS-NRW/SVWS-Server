@@ -51,26 +51,26 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-    	if (schule == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID);
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID);
 	}
 
-    /**
-     * Fragt die Leistungsdaten aus dem angegebenen Abschnitt zu der ID eines Schüler für
-     * die Abschlussberechnung an der Gesamtschule ab..
-     *
-     * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
-     * @param abschnittID   der Schuljahresabschnitt, für den die Leistungsdaten ausgelesen werden sollen
-     *
-     * @return die Liste der Fächer
-     * @throws ApiOperationException
-     */
+	/**
+	 * Fragt die Leistungsdaten aus dem angegebenen Abschnitt zu der ID eines Schüler für
+	 * die Abschlussberechnung an der Gesamtschule ab..
+	 *
+	 * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
+	 * @param abschnittID   der Schuljahresabschnitt, für den die Leistungsdaten ausgelesen werden sollen
+	 *
+	 * @return die Liste der Fächer
+	 * @throws ApiOperationException
+	 */
 	public Response getByAbschnitt(final Long id, final Long abschnittID) throws ApiOperationException {
 		if ((id == null) || (abschnittID == null))
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	return getPrognoseLeistungsdaten(id, abschnittID);
+		return getPrognoseLeistungsdaten(id, abschnittID);
 	}
 
 	@Override
@@ -100,25 +100,27 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 			throw new ApiOperationException(Status.BAD_REQUEST);
 
 		// Lies alle Fächer ein, damit auf die Informationen bezüglich Kürzel und Statistikkürzel bei der Auswahl der Leistungsdaten zurückgegriffen werden kann.
-    	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-    	if (faecher == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+		if (faecher == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Lese die Schülerdaten aus, um zu prüfen, ob ein Schüler mit der angegebenen ID ind er Datenbank überhaupt existiert.
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme den Lernabschnitt anhand des angegebenen Schuljahres und des Abschnittes im Schuljahr
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, id)
-				.stream().filter(l -> (l.Schuljahresabschnitts_ID == idAbschnitt)).findFirst().orElse(null);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt =
+				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, id)
+						.stream().filter(l -> (l.Schuljahresabschnitts_ID == idAbschnitt)).findFirst().orElse(null);
 		if (lernabschnitt == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme die Leistungsdaten aus dem Lernabschnitt
-		final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
+		final List<DTOSchuelerLeistungsdaten> leistungen =
+				conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
 		if ((leistungen == null) || (leistungen.isEmpty()))
-    		throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		final GEAbschlussFaecher daten = new GEAbschlussFaecher();
 		daten.schuljahr = abschnitt.Jahr;
@@ -141,14 +143,14 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 						return null;
 					// Erkenne das WP-Fach anhand der Kursart bei den Leistungsdaten
 					if ("WPI".equals(l.KursartAllg)) {
-						return AbschlussManager.erstelleAbschlussFach("WP",  fach.Kuerzel, noteSekI, kursart, istFremdsprache);
+						return AbschlussManager.erstelleAbschlussFach("WP", fach.Kuerzel, noteSekI, kursart, istFremdsprache);
 					}
 					String kuerzel = fach.StatistikFach.daten.kuerzelASD;
 					if ("E5".equals(kuerzel))
 						kuerzel = "E";
 					if ((("M".equals(kuerzel)) || ("D".equals(kuerzel)) || ("E".equals(kuerzel))) && (kursart == GELeistungsdifferenzierteKursart.Sonstige))
 						return null;
-					return AbschlussManager.erstelleAbschlussFach(kuerzel,  fach.Kuerzel, noteSekI, kursart, istFremdsprache);
+					return AbschlussManager.erstelleAbschlussFach(kuerzel, fach.Kuerzel, noteSekI, kursart, istFremdsprache);
 				})
 				.filter(l -> l != null)
 				.collect(Collectors.toList());
@@ -160,7 +162,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 		final Integer noteAL = lernabschnitt.Gesamtnote_GS == null ? null : lernabschnitt.Gesamtnote_GS.getNoteSekI();
 		if (noteAL != null)
 			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBAL", "LBAL", noteAL, GELeistungsdifferenzierteKursart.Sonstige, false));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 }

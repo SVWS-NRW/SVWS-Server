@@ -29,7 +29,7 @@ public final class DataKatalogJahrgaenge extends DataManager<Long> {
 		final ArrayList<JahrgangsKatalogEintrag> daten = new ArrayList<>();
 		for (final Jahrgaenge jg : Jahrgaenge.values())
 			daten.addAll(Arrays.asList(jg.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

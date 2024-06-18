@@ -29,7 +29,7 @@ public final class DataKAoAMerkmale extends DataManager<Long> {
 		final ArrayList<KAOAMerkmalEintrag> daten = new ArrayList<>();
 		for (final KAOAMerkmal m : KAOAMerkmal.values())
 			daten.addAll(Arrays.asList(m.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
