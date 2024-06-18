@@ -372,7 +372,7 @@ public class DBBackupManager {
 		final int maxRangeSize = 100;
 		for (int i = 0; i <= ((entities.size() - 1) / maxRangeSize); i++) {
 			final int first = i * maxRangeSize;
-			int last = (i + 1) * maxRangeSize - 1;
+			int last = ((i + 1) * maxRangeSize) - 1;
 			if (last >= entities.size())
 				last = entities.size() - 1;
 			ranges.add(Map.entry(first, last));
@@ -400,11 +400,11 @@ public class DBBackupManager {
 					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
 							+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 					// Teile den Block auf
-					int step = (range.getValue() - range.getKey() + 1) / 10;
+					int step = ((range.getValue() - range.getKey()) + 1) / 10;
 					if (step < 1)
 						step = 1;
 					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
-						final int first = last - step + 1;
+						final int first = (last - step) + 1;
 						ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
 					}
 				}

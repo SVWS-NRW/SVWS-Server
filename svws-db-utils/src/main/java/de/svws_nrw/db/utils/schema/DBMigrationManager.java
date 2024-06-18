@@ -688,7 +688,7 @@ public final class DBMigrationManager {
 			final LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>();
 			for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
 				final int first = i * 10000;
-				int last = (i + 1) * 10000 - 1;
+				int last = ((i + 1) * 10000) - 1;
 				if (last >= entities.size())
 					last = entities.size() - 1;
 				ranges.add(Map.entry(first, last));
@@ -715,11 +715,11 @@ public final class DBMigrationManager {
 						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
 								+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 						// Teile den Block auf
-						int step = (range.getValue() - range.getKey() + 1) / 10;
+						int step = ((range.getValue() - range.getKey()) + 1) / 10;
 						if (step < 1)
 							step = 1;
 						for (int last = range.getValue(); last >= range.getKey(); last -= step) {
-							final int first = last - step + 1;
+							final int first = (last - step) + 1;
 							ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
 						}
 					}
@@ -889,8 +889,7 @@ public final class DBMigrationManager {
 				}
 			}
 		}
-		for (int i = 0; i < entities.size(); i++) {
-			final MigrationDTOTeilstandorte daten = entities.get(i);
+		for (final MigrationDTOTeilstandorte daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
 				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
@@ -965,8 +964,7 @@ public final class DBMigrationManager {
 				}
 			}
 		}
-		for (int i = 0; i < entities.size(); i++) {
-			final MigrationDTOSchuleNRW daten = entities.get(i);
+		for (final MigrationDTOSchuleNRW daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
 				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
@@ -2157,8 +2155,7 @@ public final class DBMigrationManager {
 	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
 	 */
 	private static boolean checkKatalogKindergarten(final List<MigrationDTOKindergarten> entities) {
-		for (int i = 0; i < entities.size(); i++) {
-			final MigrationDTOKindergarten daten = entities.get(i);
+		for (final MigrationDTOKindergarten daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
 				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);

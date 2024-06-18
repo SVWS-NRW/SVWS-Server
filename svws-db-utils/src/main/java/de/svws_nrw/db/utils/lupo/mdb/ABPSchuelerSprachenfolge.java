@@ -95,7 +95,7 @@ public final class ABPSchuelerSprachenfolge {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
 					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, 
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN,
 							true))
 					.addColumn(new ColumnBuilder(fieldJahrgangVon, DataType.INT))
 					.addColumn(new ColumnBuilder(fieldJahrgangBis, DataType.INT))

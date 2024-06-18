@@ -333,7 +333,7 @@ public class LupoMDB {
 		logger.modifyIndent(2);
 		for (final DTOKlassen kl : klassen) {
 			final List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(kl.ID);
-			if (klassenleitungen != null && !klassenleitungen.isEmpty()) {
+			if ((klassenleitungen != null) && !klassenleitungen.isEmpty()) {
 				for (final DTOKlassenLeitung kll : klassenleitungen) {
 					logger.logLn("- Klassenlehrer der Klasse " + kl.Klasse + "...");
 					final DTOLehrer l = lehrer.get(kll.Lehrer_ID);
@@ -478,10 +478,10 @@ public class LupoMDB {
 				lupoSFach.Q22_Punkte = convertBlankToNull(abpSFach.Punkte_Q4);
 				lupoSFach.AbiturFach = abpSFach.AbiturFach;
 				lupoSFach.Bemerkungen = convertBlankToNull(abpSFach.Bemerkungen);
-				lupoSFach.Markiert_Q1 = abpSFach.Markiert_Q1 != null && "J".equals(abpSFach.Markiert_Q1);
-				lupoSFach.Markiert_Q2 = abpSFach.Markiert_Q2 != null && "J".equals(abpSFach.Markiert_Q2);
-				lupoSFach.Markiert_Q3 = abpSFach.Markiert_Q3 != null && "J".equals(abpSFach.Markiert_Q3);
-				lupoSFach.Markiert_Q4 = abpSFach.Markiert_Q4 != null && "J".equals(abpSFach.Markiert_Q4);
+				lupoSFach.Markiert_Q1 = (abpSFach.Markiert_Q1 != null) && "J".equals(abpSFach.Markiert_Q1);
+				lupoSFach.Markiert_Q2 = (abpSFach.Markiert_Q2 != null) && "J".equals(abpSFach.Markiert_Q2);
+				lupoSFach.Markiert_Q3 = (abpSFach.Markiert_Q3 != null) && "J".equals(abpSFach.Markiert_Q3);
+				lupoSFach.Markiert_Q4 = (abpSFach.Markiert_Q4 != null) && "J".equals(abpSFach.Markiert_Q4);
 				lupoSFach.ergebnisAbiturpruefung = abpSFach.AbiPruefErgebnis;
 				lupoSFach.hatMuendlichePflichtpruefung = abpSFach.MdlPflichtPruefung == null ? null : "J".equals(abpSFach.MdlPflichtPruefung);
 				lupoSFach.ergebnisMuendlichePruefung = abpSFach.MdlPruefErgebnis;

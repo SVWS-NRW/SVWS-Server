@@ -1064,7 +1064,7 @@ public class MDBtoCSV {
 		for (int i = 0; i < cols.size(); i++) {
 			final Column col = cols.get(i);
 			sb.append(renameColumn(table, col.getName()));
-			if (i < cols.size() - 1)
+			if (i < (cols.size() - 1))
 				sb.append(";");
 		}
 		sb.append(System.lineSeparator());
@@ -1080,7 +1080,7 @@ public class MDBtoCSV {
 					final String output = getCSVOutput(table, r, colType, colName);
 					sb.append(output);
 				}
-				if (i < cols.size() - 1)
+				if (i < (cols.size() - 1))
 					sb.append(";");
 			}
 			sb.append(System.lineSeparator());

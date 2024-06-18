@@ -366,10 +366,10 @@ public class DBCoreTypeUpdater {
 		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet())
 				.toArray(new String[0]);
 		boolean isFirst = true;
-		for (int i = 0; i < jg_kuerzel.length; i++) {
+		for (final String kuerzel : jg_kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
-			sql.append("'").append(jg_kuerzel[i]).append("'").append(")");
+			sql.append("'").append(kuerzel).append("'").append(")");
 		}
 		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
 	};
@@ -411,8 +411,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(DEStatisCode) ");
 		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < codes.size(); i++) {
-			final String code = codes.get(i);
+		for (final String code : codes) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(code).append("')");
@@ -433,8 +432,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(ID, Kuerzel, IstTendenznote, Text, AufZeugnis, Notenpunkte, TextLaufbahnSII, AufLaufbahnSII, Sortierung, gueltigVon, gueltigBis) ");
 		final Note[] values = Note.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Note n = values[i];
+		for (final Note n : values) {
 			if (n == Note.KEINE)
 				continue;
 			sql.append(isFirst ? strValues : ", (");
@@ -447,7 +445,7 @@ public class DBCoreTypeUpdater {
 			sql.append(n.notenpunkte).append(",");
 			if (n.notenpunkte != null)
 				sql.append("'").append(String.format("%02d", n.notenpunkte)).append("'").append(",");
-			else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || n == (Note.E3_TEILGENOMMEN) || (n == Note.ATTEST))
+			else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST))
 				sql.append("'").append(n.kuerzel).append("'").append(",");
 			else
 				sql.append(strNullValue);
@@ -497,8 +495,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(ID, Kuerzel, Nummer, Bezeichnung, HatGymOb, gueltigVon, gueltigBis) ");
 		final Schulform[] values = Schulform.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Schulform schulform = values[i];
+		for (final Schulform schulform : values) {
 			for (final SchulformKatalogEintrag sf : schulform.historie) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
@@ -530,8 +527,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
 		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Herkunft herkunft = values[i];
+		for (final Herkunft herkunft : values) {
 			for (final HerkunftKatalogEintrag h : herkunft.historie) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
@@ -558,8 +554,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -580,8 +575,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(Herkunft_ID, Schulform_Kuerzel) ");
 		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Herkunft herkunft = values[i];
+		for (final Herkunft herkunft : values) {
 			for (final HerkunftKatalogEintrag h : herkunft.historie) {
 				final List<Schulform> schulformen = h.schulformen.stream().map(Schulform::getByKuerzel).toList();
 				for (final Schulform sf : schulformen) {
@@ -608,8 +602,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(ID, Kuerzel, gueltigVon, gueltigBis) ");
 		final Herkunftsarten[] values = Herkunftsarten.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Herkunftsarten herkunft = values[i];
+		for (final Herkunftsarten herkunft : values) {
 			for (final HerkunftsartKatalogEintrag h : herkunft.historie) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
@@ -635,8 +628,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -657,8 +649,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(Herkunftsart_ID, Schulform_Kuerzel, KurzBezeichnung, Bezeichnung) ");
 		final Herkunftsarten[] values = Herkunftsarten.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final Herkunftsarten herkunftsart = values[i];
+		for (final Herkunftsarten herkunftsart : values) {
 			for (final HerkunftsartKatalogEintrag h : herkunftsart.historie) {
 				for (final HerkunftsartKatalogEintragBezeichnung hb : h.bezeichnungen) {
 					sql.append(isFirst ? strValues : ", (");
@@ -686,8 +677,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -708,8 +698,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -731,8 +720,7 @@ public class DBCoreTypeUpdater {
 				"(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
 		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final ZulaessigesFach fach = values[i];
+		for (final ZulaessigesFach fach : values) {
 			for (final FachKatalogEintrag f : fach.historie) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
@@ -779,8 +767,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -801,8 +788,7 @@ public class DBCoreTypeUpdater {
 		sql.append("(Fach_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
 		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			final ZulaessigesFach fach = values[i];
+		for (final ZulaessigesFach fach : values) {
 			for (final FachKatalogEintrag f : fach.historie) {
 				for (final SchulformSchulgliederung sfsg : f.zulaessig) {
 					sql.append(isFirst ? strValues : ", (");
@@ -835,8 +821,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -857,8 +842,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -879,8 +863,7 @@ public class DBCoreTypeUpdater {
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -905,8 +888,7 @@ public class DBCoreTypeUpdater {
 				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)).flatMap(o -> o).distinct().toList();
 		boolean isFirst = true;
-		for (int i = 0; i < kuerzel.size(); i++) {
-			final String k = kuerzel.get(i);
+		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
