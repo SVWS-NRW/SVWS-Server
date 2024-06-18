@@ -14,9 +14,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SimpleBinaryMultipartBody {
 
 	/** Die Binärdaten */
-    @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    @Schema(type = "string", format = "binary", description = "database file")
+	@PartType(MediaType.APPLICATION_OCTET_STREAM)
+	@Schema(type = "string", format = "binary", description = "database file")
 	@FormParam("data")
-    public byte[] data;
+	public byte[] data;
 
 }

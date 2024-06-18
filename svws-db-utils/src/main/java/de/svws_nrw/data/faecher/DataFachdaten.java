@@ -77,11 +77,11 @@ public final class DataFachdaten extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	final DTOFach fach = conn.queryByKey(DTOFach.class, id);
-    	if (fach == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOFach fach = conn.queryByKey(DTOFach.class, id);
+		if (fach == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final FachDaten daten = dtoMapperFach.apply(fach);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
@@ -108,35 +108,35 @@ public final class DataFachdaten extends DataManager<Long> {
 	}
 
 	private static final Map<String, DataBasicMapper<DTOFach>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-			final ZulaessigesFach f = ZulaessigesFach.getByKuerzelASD(JSONMapper.convertToString(value, false, false, 2));
-			if (f == null)
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			dto.StatistikFach = f;
-		}),
-		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
-		Map.entry("istPruefungsordnungsRelevant", (conn, dto, value, map) -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("istOberstufenFach", (conn, dto, value, map) -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("sortierung", (conn, dto, value, map) -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("aufgabenfeld", (conn, dto, value, map) -> dto.Aufgabenfeld = JSONMapper.convertToString(value, true, true, 2)),
-		Map.entry("bilingualeSprache", (conn, dto, value, map) -> dto.Unterichtssprache = JSONMapper.convertToString(value, true, true, 1)),
-		Map.entry("istNachpruefungErlaubt", (conn, dto, value, map) -> dto.IstNachpruefungErlaubt = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.BezeichnungZeugnis = JSONMapper.convertToString(value, false, true, 255)),
-		Map.entry("bezeichnungUeberweisungszeugnis", (conn, dto, value, map) -> dto.BezeichnungUeberweisungsZeugnis = JSONMapper.convertToString(value, false, true, 255)),
-		Map.entry("maxZeichenInFachbemerkungen", (conn, dto, value, map) -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 1, null)),
-		Map.entry("istSchriftlichZK", (conn, dto, value, map) -> dto.IstSchriftlichZK = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("istSchriftlichBA", (conn, dto, value, map) -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("holeAusAltenLernabschnitten", (conn, dto, value, map) -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("istFHRFach", (conn, dto, value, map) -> dto.GewichtungFHR = Boolean.TRUE.equals(JSONMapper.convertToBoolean(value, false)) ? 1 : 0)
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
+				final ZulaessigesFach f = ZulaessigesFach.getByKuerzelASD(JSONMapper.convertToString(value, false, false, 2));
+				if (f == null)
+					throw new ApiOperationException(Status.BAD_REQUEST);
+				dto.StatistikFach = f;
+			}),
+			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
+			Map.entry("istPruefungsordnungsRelevant", (conn, dto, value, map) -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istOberstufenFach", (conn, dto, value, map) -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("sortierung", (conn, dto, value, map) -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
+			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("aufgabenfeld", (conn, dto, value, map) -> dto.Aufgabenfeld = JSONMapper.convertToString(value, true, true, 2)),
+			Map.entry("bilingualeSprache", (conn, dto, value, map) -> dto.Unterichtssprache = JSONMapper.convertToString(value, true, true, 1)),
+			Map.entry("istNachpruefungErlaubt", (conn, dto, value, map) -> dto.IstNachpruefungErlaubt = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.BezeichnungZeugnis = JSONMapper.convertToString(value, false, true, 255)),
+			Map.entry("bezeichnungUeberweisungszeugnis",
+					(conn, dto, value, map) -> dto.BezeichnungUeberweisungsZeugnis = JSONMapper.convertToString(value, false, true, 255)),
+			Map.entry("maxZeichenInFachbemerkungen", (conn, dto, value, map) -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 1, null)),
+			Map.entry("istSchriftlichZK", (conn, dto, value, map) -> dto.IstSchriftlichZK = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istSchriftlichBA", (conn, dto, value, map) -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("holeAusAltenLernabschnitten", (conn, dto, value, map) -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istFHRFach", (conn, dto, value, map) -> dto.GewichtungFHR = Boolean.TRUE.equals(JSONMapper.convertToBoolean(value, false)) ? 1 : 0));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

@@ -102,11 +102,11 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		// Prüfe, ob aufgrund der Konfiguration ein anonymer Zugriff auf den SVWS-Client ermöglicht werden soll
 		if ((!SVWSKonfiguration.get().isEnableClientProtection())
 				&& (path.matches("/") || path.matches("/.*\\.html")
-					|| path.matches("/.*\\.js") || path.matches("/.*\\.js.map") || path.matches("/js/.*")
-					|| path.matches("/.*\\.css") || path.matches("/.*\\.css.map") || path.matches("/css/.*")
-					|| path.matches("/fonts/.*")
-					|| path.matches("/.*\\.ico") || path.matches("/.*\\.png")
-					|| path.matches("/assets/.*"))) {
+						|| path.matches("/.*\\.js") || path.matches("/.*\\.js.map") || path.matches("/js/.*")
+						|| path.matches("/.*\\.css") || path.matches("/.*\\.css.map") || path.matches("/css/.*")
+						|| path.matches("/fonts/.*")
+						|| path.matches("/.*\\.ico") || path.matches("/.*\\.png")
+						|| path.matches("/assets/.*"))) {
 			isAnonymous = true;
 		}
 
@@ -176,9 +176,11 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if (config.getDBSchema() != null) {
 			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
-				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
+						"Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
-				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
+						"Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
 		}
 
 		if (config.useDBLogin()) {

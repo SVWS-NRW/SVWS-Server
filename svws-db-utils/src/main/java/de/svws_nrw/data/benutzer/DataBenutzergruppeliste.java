@@ -43,29 +43,29 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<DTOBenutzergruppe> benutzergruppe = conn.queryAll(DTOBenutzergruppe.class);
-    	if (benutzergruppe == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	// Erstelle die Benutzerliste und sortiere sie
-    	final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (benutzergruppe == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		// Erstelle die Benutzerliste und sortiere sie
+		final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	/**
-     * @param id ID des Benutzers
-     * @return Benutzergruppen, die den Benutzer enthalten.
-     */
-    public Response getBenutzergruppenMitBenutzerID(final Long id) {
-        // Lese die Informationen zu den Gruppen ein
-        final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
-                .map(g -> g.Gruppe_ID).toList();
-        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
-                ? new ArrayList<>()
-                : conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
-        // Erstelle die Benutzerliste und sortiere sie
-        final List<BenutzergruppeListeEintrag> daten = gruppen.stream().map(dtoMapper).sorted(dataComparator).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+	 * @param id ID des Benutzers
+	 * @return Benutzergruppen, die den Benutzer enthalten.
+	 */
+	public Response getBenutzergruppenMitBenutzerID(final Long id) {
+		// Lese die Informationen zu den Gruppen ein
+		final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
+				.map(g -> g.Gruppe_ID).toList();
+		final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
+				? new ArrayList<>()
+				: conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
+		// Erstelle die Benutzerliste und sortiere sie
+		final List<BenutzergruppeListeEintrag> daten = gruppen.stream().map(dtoMapper).sorted(dataComparator).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 
 	@Override

@@ -47,7 +47,8 @@ public final class DBUtilsFaecherGost {
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
-		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache))) ? fach.Unterichtssprache.substring(0, 1) : null;
+		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache)))
+				? fach.Unterichtssprache.substring(0, 1) : null;
 		eintrag.istMoeglichAbiLK = fach.IstMoeglichAbiLK;
 		eintrag.istMoeglichAbiGK = fach.IstMoeglichAbiGK;
 		eintrag.istMoeglichEF1 = fach.IstMoeglichEF1;
@@ -57,8 +58,10 @@ public final class DBUtilsFaecherGost {
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
 		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
-		final int defaultWochenstundenQ = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX) ? 2 : defaultWochenstundenQ_GK;
-		eintrag.wochenstundenQualifikationsphase = fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
+		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)) ? 2
+				: defaultWochenstundenQ_GK;
+		eintrag.wochenstundenQualifikationsphase =
+				fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		if (fach.ProjektKursLeitfach1_ID == null) {
 			eintrag.projektKursLeitfach1Kuerzel = null;
@@ -103,7 +106,8 @@ public final class DBUtilsFaecherGost {
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
-		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache))) ? fach.Unterichtssprache.substring(0, 1) : null;
+		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache)))
+				? fach.Unterichtssprache.substring(0, 1) : null;
 		if (jf != null) { // Ansonsten ist alles mit false initialisiert
 			eintrag.istMoeglichAbiLK = jf.WaehlbarAbiLK;
 			eintrag.istMoeglichAbiGK = jf.WaehlbarAbiGK;
@@ -115,16 +119,20 @@ public final class DBUtilsFaecherGost {
 			eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
 		}
 		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
-		final int defaultWochenstundenQ = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX) ? 2 : defaultWochenstundenQ_GK;
+		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)) ? 2
+				: defaultWochenstundenQ_GK;
 		if ((jf == null) || (jf.WochenstundenQPhase == null)) {
-			eintrag.wochenstundenQualifikationsphase = fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
+			eintrag.wochenstundenQualifikationsphase =
+					fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
 		} else {
 			eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase;
 		}
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
-		eintrag.projektKursLeitfach1Kuerzel = fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
+		eintrag.projektKursLeitfach1Kuerzel =
+				fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
 		eintrag.projektKursLeitfach2ID = fach.ProjektKursLeitfach2_ID;
-		eintrag.projektKursLeitfach2Kuerzel = fach.ProjektKursLeitfach2_ID == null ? null : faecher.get(fach.ProjektKursLeitfach2_ID).StatistikFach.daten.kuerzelASD;
+		eintrag.projektKursLeitfach2Kuerzel =
+				fach.ProjektKursLeitfach2_ID == null ? null : faecher.get(fach.ProjektKursLeitfach2_ID).StatistikFach.daten.kuerzelASD;
 		return eintrag;
 	}
 
@@ -141,7 +149,7 @@ public final class DBUtilsFaecherGost {
 	 */
 	public static @NotNull GostFaecherManager getFaecherManager(final DBEntityManager conn, final Integer abiJahrgang) throws ApiOperationException {
 		return getGostFaecherManager(conn, abiJahrgang, false);
-    }
+	}
 
 	/**
 	 * Ermittelt die Liste aller Fächer der gymnasialen Oberstufe, die in mindestens einem Halbjahr des Abiturjahrgangs wählbar sind.
@@ -153,7 +161,8 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) throws ApiOperationException {
+	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang)
+			throws ApiOperationException {
 		return getGostFaecherManager(conn, abiJahrgang, true);
 	}
 
@@ -168,7 +177,8 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static @NotNull GostFaecherManager getGostFaecherManager(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) throws ApiOperationException {
+	private static @NotNull GostFaecherManager getGostFaecherManager(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher)
+			throws ApiOperationException {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();
@@ -177,16 +187,18 @@ public final class DBUtilsFaecherGost {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
 			return new GostFaecherManager(faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
-				.map(fach -> mapFromDTOFach(fach, faecher)).filter(Objects::nonNull).toList()
-			);
+					.map(fach -> mapFromDTOFach(fach, faecher)).filter(Objects::nonNull).toList());
 		}
 
-		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryList(DTOGostJahrgangFaecher.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFaecher.class, abiJahrgang)
-			.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
+		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher =
+				conn.queryList(DTOGostJahrgangFaecher.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFaecher.class, abiJahrgang)
+						.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
 		List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
-			.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
+				.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
 		if (nurWaehlbareFaecher)
-			tmpFaecher = tmpFaecher.stream().filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22)).toList();
+			tmpFaecher = tmpFaecher.stream()
+					.filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22))
+					.toList();
 		return new GostFaecherManager(tmpFaecher);
 	}
 

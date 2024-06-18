@@ -33,13 +33,13 @@ public final class DataErzieherliste extends DataManager<Long> {
 	 */
 	private final Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher1 = (final DTOSchuelerErzieherAdresse e) -> {
 		final ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
-		eintrag.id = e.ID * 10 + 1;
-        eintrag.idSchueler = e.Schueler_ID;
-        eintrag.idErzieherArt = e.ErzieherArt_ID;
-        eintrag.anrede = e.Anrede1;
+		eintrag.id = (e.ID * 10) + 1;
+		eintrag.idSchueler = e.Schueler_ID;
+		eintrag.idErzieherArt = e.ErzieherArt_ID;
+		eintrag.anrede = e.Anrede1;
 		eintrag.name = e.Name1;
-        eintrag.vorname = e.Vorname1;
-        eintrag.email = e.ErzEmail;
+		eintrag.vorname = e.Vorname1;
+		eintrag.email = e.ErzEmail;
 		return eintrag;
 	};
 
@@ -48,24 +48,25 @@ public final class DataErzieherliste extends DataManager<Long> {
 	 */
 	private final Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher2 = (final DTOSchuelerErzieherAdresse e) -> {
 		final ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
-		eintrag.id = e.ID * 10 + 2;
-        eintrag.idSchueler = e.Schueler_ID;
-        eintrag.idErzieherArt = e.ErzieherArt_ID;
-        eintrag.anrede = e.Anrede2;
+		eintrag.id = (e.ID * 10) + 2;
+		eintrag.idSchueler = e.Schueler_ID;
+		eintrag.idErzieherArt = e.ErzieherArt_ID;
+		eintrag.anrede = e.Anrede2;
 		eintrag.name = e.Name2;
-        eintrag.vorname = e.Vorname2;
-        eintrag.email = e.ErzEmail2;
+		eintrag.vorname = e.Vorname2;
+		eintrag.email = e.ErzEmail2;
 		return eintrag;
 	};
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryAll(DTOSchuelerErzieherAdresse.class);
-    	if (erzieher == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        final List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList();
-        daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryAll(DTOSchuelerErzieherAdresse.class);
+		if (erzieher == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1)
+				.toList();
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

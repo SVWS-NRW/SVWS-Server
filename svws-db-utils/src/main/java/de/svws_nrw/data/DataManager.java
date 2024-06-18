@@ -130,11 +130,12 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
+	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
-			if (attributesForbidden != null && attributesForbidden.contains(key))
+			if ((attributesForbidden != null) && attributesForbidden.contains(key))
 				throw new ApiOperationException(Status.FORBIDDEN, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
 			if (mapper == null)
@@ -159,7 +160,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
+	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 		if (map.isEmpty())
@@ -189,7 +191,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
+	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, attributesForbidden);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -210,7 +213,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
+	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper)
+			throws ApiOperationException {
 		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, null);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -232,7 +236,8 @@ public abstract class DataManager<ID> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
+	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps)
 			patchBasicInternal((ID) map.get(idAttr), map, dtoClass, attributeMapper, null);
@@ -305,7 +310,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
+			final DTOMapper<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		for (final String attr : attributesRequired)
@@ -342,7 +348,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
+			final DTOMapper<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final long newID = conn.transactionGetNextID(dtoClass);
 		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper);
@@ -370,7 +377,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response addBasicMultiple(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+	protected <DTO, CoreData> Response addBasicMultiple(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
+			final DTOMapper<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Bestimme die nächste verfügbare ID für das DTO
 		long newID = conn.transactionGetNextID(dtoClass);
@@ -400,7 +408,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
+	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper)
+			throws ApiOperationException {
 		// Bestimme das DTO
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
@@ -430,7 +439,8 @@ public abstract class DataManager<ID> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
+	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass,
+			final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
 		// Bestimme die DTOs
 		if (ids == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");

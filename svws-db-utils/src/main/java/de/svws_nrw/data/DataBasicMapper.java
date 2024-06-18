@@ -27,6 +27,6 @@ public interface DataBasicMapper<DTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    void map(DBEntityManager conn, DTO t, Object value, Map<String, Object> map) throws ApiOperationException;
+	void map(DBEntityManager conn, DTO t, Object value, Map<String, Object> map) throws ApiOperationException;
 
 }

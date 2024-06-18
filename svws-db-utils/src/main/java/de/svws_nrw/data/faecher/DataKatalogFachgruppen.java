@@ -32,34 +32,34 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
-        for (final Fachgruppe gruppe : Fachgruppe.values())
-            daten.addAll(Arrays.asList(gruppe.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
+		for (final Fachgruppe gruppe : Fachgruppe.values())
+			daten.addAll(Arrays.asList(gruppe.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
-        final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-        if (schule == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-    	final var gruppen = Fachgruppe.get(schule.Schulform);
-    	if (gruppen == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
-        for (final Fachgruppe gruppe : gruppen)
-            daten.addAll(Arrays.asList(gruppe.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final var gruppen = Fachgruppe.get(schule.Schulform);
+		if (gruppen == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
+		for (final Fachgruppe gruppe : gruppen)
+			daten.addAll(Arrays.asList(gruppe.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-	    if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-	    final FachgruppenKatalogEintrag daten = Fachgruppe.getKatalogEintragByID(id);
-	    if (daten == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final FachgruppenKatalogEintrag daten = Fachgruppe.getKatalogEintragByID(id);
+		if (daten == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

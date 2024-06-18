@@ -47,7 +47,7 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static String toString(final InputStream in) throws ApiOperationException {
-	    try {
+		try {
 			return mapper.readValue(in, String.class);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren des JSON-Textes");
@@ -68,8 +68,8 @@ public final class JSONMapper {
 		final String text = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		if ((text == null) || "".equals(text) || "null".equals(text))
 			return null;
-	    try {
-	    	return Long.parseLong(text);
+		try {
+			return Long.parseLong(text);
 		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren des JSON-Textes in einen Long-Wert");
 		}
@@ -112,10 +112,10 @@ public final class JSONMapper {
 		final String text = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		if ((text == null) || "".equals(text) || "null".equals(text))
 			return null;
-	    try {
+		try {
 			if (rfc8259compliance && !text.matches("-*(0|[1-9]\\d*)([.]\\d+)?([eE][+-]\\d*)?"))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren des JSON-Textes nach RFC 8259 in einen Double-Wert");
-	    	return Double.valueOf(text);
+			return Double.valueOf(text);
 		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren des JSON-Textes in einen Double-Wert");
 		}
@@ -135,7 +135,7 @@ public final class JSONMapper {
 		final String text = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		if ((text == null) || "".equals(text) || "null".equals(text))
 			return null;
-	    try {
+		try {
 			return Integer.parseInt(text);
 		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren des JSON-Textes");
@@ -155,7 +155,8 @@ public final class JSONMapper {
 	public static Map<String, Object> toMap(final InputStream in) throws ApiOperationException {
 		final String json = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		try {
-			return mapper.readValue(json, new TypeReference<Map<String, Object>>() { /**/ });
+			return mapper.readValue(json, new TypeReference<Map<String, Object>>() {
+				/**/ });
 		} catch (final JsonProcessingException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler beim Parsen des JSON-Strings.");
 		}
@@ -211,7 +212,9 @@ public final class JSONMapper {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das übergebene JSON ist kein Array bzw. keine Liste");
 			for (final JsonNode element : node) {
 				final String json = element.toString();
-				result.add(mapper.readValue(json, new TypeReference<Map<String, Object>>() { /**/ }));
+				result.add(mapper.readValue(json, new TypeReference<Map<String, Object>>() {
+					/**/
+				}));
 			}
 			return result;
 		} catch (final JsonProcessingException e) {
@@ -358,7 +361,8 @@ public final class JSONMapper {
 		}
 		if (obj instanceof final Number n) {
 			if ((obj instanceof Float) || (obj instanceof Double))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer: Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer:"
+						+ " Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.");
 			final int value = n.intValue();
 			if ((value >= lower) && ((upper == null) || (value < upper)))
 				return value;
@@ -403,7 +407,8 @@ public final class JSONMapper {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer maxLength) throws ApiOperationException {
+	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer maxLength)
+			throws ApiOperationException {
 		if (obj == null) {
 			if (nullable)
 				return null;
@@ -433,16 +438,17 @@ public final class JSONMapper {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Boolean[] convertToBooleanArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size) throws ApiOperationException {
+	@SuppressWarnings("unchecked")
+	public static Boolean[] convertToBooleanArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size)
+			throws ApiOperationException {
 		if (obj == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
 		if (!(obj instanceof List))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Arrays erwartet, aber keines übergeben.");
-		@SuppressWarnings("unchecked")
-		final
-		List<Boolean> params = (List<Boolean>) obj;
+		final List<Boolean> params = (List<Boolean>) obj;
 		if ((size != null) && (size != params.size()))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size()
+					+ " übergeben.");
 		if ((params.isEmpty()) && ((size == null) || (size == 0)))
 			return new Boolean[0];
 		final Boolean[] result = new Boolean[params.size()];
@@ -469,15 +475,17 @@ public final class JSONMapper {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static String[] convertToStringArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size) throws ApiOperationException {
+	@SuppressWarnings("unchecked")
+	public static String[] convertToStringArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size)
+			throws ApiOperationException {
 		if (obj == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
 		if (!(obj instanceof List))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Arrays erwartet, aber keines übergeben.");
-		@SuppressWarnings("unchecked")
 		final List<String> params = (List<String>) obj;
 		if ((size != null) && (size != params.size()))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size()
+					+ " übergeben.");
 		if ((params.isEmpty()) && ((size == null) || (size == 0)))
 			return new String[0];
 		final String[] result = new String[params.size()];
@@ -590,9 +598,8 @@ public final class JSONMapper {
 		final List<T> result = new ArrayList<>();
 		if (listObj instanceof final List<?> liste) {
 			for (final Object obj : liste) {
-				//mapper.writer().withAttributes(obj).write
 				try {
-					final String str = mapper.writer().writeValueAsString((Map<?, ?>) obj);
+					final String str = mapper.writer().writeValueAsString(obj);
 					final T value = mapper.reader().forType(dtoClass).readValue(str);
 					result.add(value);
 				} catch (final IOException e) {

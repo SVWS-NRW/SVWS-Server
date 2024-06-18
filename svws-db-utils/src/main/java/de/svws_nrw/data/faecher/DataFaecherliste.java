@@ -63,17 +63,17 @@ public final class DataFaecherliste extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<FachDaten> getFaecherListe(final DBEntityManager conn) throws ApiOperationException {
-    	final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
-    	if (faecher == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer in der Datenbank gefunden.");
-    	return faecher.stream().map(dtoMapperFach::apply).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
+		if (faecher == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer in der Datenbank gefunden.");
+		return faecher.stream().map(dtoMapperFach::apply).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
 	}
 
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<FachDaten> daten = getFaecherListe(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<FachDaten> daten = getFaecherListe(conn);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -114,38 +114,38 @@ public final class DataFaecherliste extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Fächer
 		final @NotNull List<@NotNull DTOFach> faecher = conn.queryAll(DTOFach.class);
-    	if ((faecher == null) || (faecher.isEmpty()))
-    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer gefunden.");
-    	if (!schulform.daten.hatGymOb)
-    		throw new ApiOperationException(Status.BAD_REQUEST, "Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
-    	// Lege Datenstrukturen für die Zuordnung zu den einzelnen Statistik-Fächern an und befülle diese
-    	final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
-    	final @NotNull ArrayMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(ZulaessigesFach.values());
-    	final @NotNull List<@NotNull DTOFach> nichtZugeordnet = new ArrayList<>();
-    	for (final @NotNull DTOFach fach : faecher) {
-    		if (setGostFaecher.contains(fach.StatistikFach))
-    			map.computeIfAbsent(fach.StatistikFach, k -> new ArrayList<>()).add(fach);
-    		else
-    			nichtZugeordnet.add(fach);
-    	}
-    	// Bestimme die Fächer der Oberstufe in Standard-Sortierung
-    	final @NotNull List<@NotNull ZulaessigesFach> gostFaecher = GostFachbereich.getAlleFaecherSortiert();
-    	final @NotNull List<@NotNull DTOFach> faecherSortiert = new ArrayList<>();
-    	for (final @NotNull ZulaessigesFach gostFach : gostFaecher) {
-    		final List<@NotNull DTOFach> tmpFach = map.get(gostFach);
-    		if (tmpFach == null)
-    			continue;
-    		tmpFach.sort((final @NotNull DTOFach a, final @NotNull DTOFach b) -> a.Kuerzel.compareToIgnoreCase(b.Kuerzel));
-    		faecherSortiert.addAll(tmpFach);
-    	}
-    	faecherSortiert.addAll(nichtZugeordnet);
-    	int i = 1;
-    	for (final DTOFach fach : faecherSortiert) {
-    		fach.SortierungAllg = i++;
-    		fach.SortierungSekII = fach.SortierungAllg;
-    		conn.transactionPersist(fach);
-    	}
-    	return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
+		if ((faecher == null) || (faecher.isEmpty()))
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer gefunden.");
+		if (!schulform.daten.hatGymOb)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
+		// Lege Datenstrukturen für die Zuordnung zu den einzelnen Statistik-Fächern an und befülle diese
+		final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
+		final @NotNull ArrayMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(ZulaessigesFach.values());
+		final @NotNull List<@NotNull DTOFach> nichtZugeordnet = new ArrayList<>();
+		for (final @NotNull DTOFach fach : faecher) {
+			if (setGostFaecher.contains(fach.StatistikFach))
+				map.computeIfAbsent(fach.StatistikFach, k -> new ArrayList<>()).add(fach);
+			else
+				nichtZugeordnet.add(fach);
+		}
+		// Bestimme die Fächer der Oberstufe in Standard-Sortierung
+		final @NotNull List<@NotNull ZulaessigesFach> gostFaecher = GostFachbereich.getAlleFaecherSortiert();
+		final @NotNull List<@NotNull DTOFach> faecherSortiert = new ArrayList<>();
+		for (final @NotNull ZulaessigesFach gostFach : gostFaecher) {
+			final List<@NotNull DTOFach> tmpFach = map.get(gostFach);
+			if (tmpFach == null)
+				continue;
+			tmpFach.sort((final @NotNull DTOFach a, final @NotNull DTOFach b) -> a.Kuerzel.compareToIgnoreCase(b.Kuerzel));
+			faecherSortiert.addAll(tmpFach);
+		}
+		faecherSortiert.addAll(nichtZugeordnet);
+		int i = 1;
+		for (final DTOFach fach : faecherSortiert) {
+			fach.SortierungAllg = i++;
+			fach.SortierungSekII = fach.SortierungAllg;
+			conn.transactionPersist(fach);
+		}
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}
 
 }

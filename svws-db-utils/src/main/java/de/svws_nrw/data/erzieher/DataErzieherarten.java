@@ -34,26 +34,26 @@ public final class DataErzieherarten extends DataManager<Long> {
 	private final Function<DTOErzieherart, Erzieherart> dtoMapper = (final DTOErzieherart e) -> {
 		final Erzieherart eintrag = new Erzieherart();
 		eintrag.id = e.ID;
-        eintrag.bezeichnung = e.Bezeichnung;
-    	return eintrag;
+		eintrag.bezeichnung = e.Bezeichnung;
+		return eintrag;
 	};
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
-    	if (erzieherarten == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
+		if (erzieherarten == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
-    	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
-    	if (erzieherarten == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<Erzieherart> daten = erzieherarten.stream().filter(e -> (e.Sichtbar == null) || e.Sichtbar).map(dtoMapper).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
+		if (erzieherarten == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<Erzieherart> daten = erzieherarten.stream().filter(e -> (e.Sichtbar == null) || e.Sichtbar).map(dtoMapper).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

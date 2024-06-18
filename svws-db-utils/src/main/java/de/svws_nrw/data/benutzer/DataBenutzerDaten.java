@@ -45,381 +45,404 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 
 	private static final String strBenutzerMitIDExistiertNicht = "Der Benutzer mit der ID existiert nicht.";
 
-    /**
-     * Erstellt einen neuen {@link DataManager} für den Core-DTO
-     * {@link BenutzerDaten}.
-     *
-     * @param conn die Datenbank-Verbindung für den Datenbankzugriff
-     */
-    public DataBenutzerDaten(final DBEntityManager conn) {
-        super(conn);
-    }
+	/**
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * {@link BenutzerDaten}.
+	 *
+	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
+	 */
+	public DataBenutzerDaten(final DBEntityManager conn) {
+		super(conn);
+	}
 
-    /**
-     * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
-     * {@link DTOViewBenutzerdetails} in einen Core-DTO {@link BenutzerDaten}.
-     */
-    private final Function<DTOViewBenutzerdetails, BenutzerDaten> dtoMapper = (final DTOViewBenutzerdetails b) -> {
-        final BenutzerDaten daten = new BenutzerDaten();
-        daten.id = b.ID;
-        daten.typ = b.Typ.id;
-        daten.typID = b.TypID;
-        daten.anzeigename = b.AnzeigeName;
-        daten.name = b.Benutzername;
-        daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
-        daten.idCredentials = b.credentialID;
-        return daten;
-    };
+	/**
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
+	 * {@link DTOViewBenutzerdetails} in einen Core-DTO {@link BenutzerDaten}.
+	 */
+	private final Function<DTOViewBenutzerdetails, BenutzerDaten> dtoMapper = (final DTOViewBenutzerdetails b) -> {
+		final BenutzerDaten daten = new BenutzerDaten();
+		daten.id = b.ID;
+		daten.typ = b.Typ.id;
+		daten.typID = b.TypID;
+		daten.anzeigename = b.AnzeigeName;
+		daten.name = b.Benutzername;
+		daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
+		daten.idCredentials = b.credentialID;
+		return daten;
+	};
 
-    /**
-     * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBenutzergruppe}
-     * in einen Core-DTO {@link BenutzergruppeDaten}.
-     */
-    private final Function<DTOBenutzergruppe, BenutzergruppeDaten> dtoMapperGruppe = (final DTOBenutzergruppe b) -> {
-        final BenutzergruppeDaten daten = new BenutzergruppeDaten();
-        daten.id = b.ID;
-        daten.bezeichnung = b.Bezeichnung;
-        daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
-        return daten;
-    };
+	/**
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBenutzergruppe}
+	 * in einen Core-DTO {@link BenutzergruppeDaten}.
+	 */
+	private final Function<DTOBenutzergruppe, BenutzergruppeDaten> dtoMapperGruppe = (final DTOBenutzergruppe b) -> {
+		final BenutzergruppeDaten daten = new BenutzergruppeDaten();
+		daten.id = b.ID;
+		daten.bezeichnung = b.Bezeichnung;
+		daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
+		return daten;
+	};
 
-    /**
-     * Bestimmt das DTO für den Benutzer aus der Datenbank.
-     *
-     * @param id die ID des Benutzers
-     *
-     * @return das DTO
-     */
-    private DTOViewBenutzerdetails getDTO(final Long id) throws ApiOperationException {
-        if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu änderden Benutzers darf nicht null sein.");
-        final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
-        if (benutzer == null)
-            throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
-        return benutzer;
-    }
+	/**
+	 * Bestimmt das DTO für den Benutzer aus der Datenbank.
+	 *
+	 * @param id die ID des Benutzers
+	 *
+	 * @return das DTO
+	 */
+	private DTOViewBenutzerdetails getDTO(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des zu änderden Benutzers darf nicht null sein.");
+		final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
+		if (benutzer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
+		return benutzer;
+	}
 
-    /**
-     * Bestimmt die Anzahl der administrativen Gruppen, welche dem aktuellen
-     * Benutzer administrative Rechte verleihen.
-     *
-     * @return die Anzahl der Gruppen über die der Benutzer administrative
-     *         Berechtigungen hat
-     */
-    private int getAnzahlAdminGruppen() {
-        // Ermittle die administrativen Gruppen des aktuellen Benutzers
-        final List<DTOBenutzergruppe> bgs = conn.queryList(
-                "SELECT bg FROM DTOBenutzergruppenMitglied bgm JOIN DTOBenutzergruppe bg "
-                        + "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ",
-                DTOBenutzergruppe.class,
-                conn.getUser().getId(), true);
-        return bgs.size();
-    }
+	/**
+	 * Bestimmt die Anzahl der administrativen Gruppen, welche dem aktuellen
+	 * Benutzer administrative Rechte verleihen.
+	 *
+	 * @return die Anzahl der Gruppen über die der Benutzer administrative
+	 *         Berechtigungen hat
+	 */
+	private int getAnzahlAdminGruppen() {
+		// Ermittle die administrativen Gruppen des aktuellen Benutzers
+		final List<DTOBenutzergruppe> bgs = conn.queryList(
+				"SELECT bg FROM DTOBenutzergruppenMitglied bgm JOIN DTOBenutzergruppe bg "
+						+ "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ",
+				DTOBenutzergruppe.class,
+				conn.getUser().getId(), true);
+		return bgs.size();
+	}
 
-    /**
-     * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
-     *
-     * @param kids die IDs der Kompetenzen
-     *
-     * @return true, wenn alle Kompetenzen zulässig sind, sonst false
-     *
-     */
-    private boolean istKompetenzZulaessig(final List<Long> kids) throws ApiOperationException {
-      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-        //Nehme als Schulform GY als Beispiel
-        final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-        if (schule == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-        final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
+	/**
+	 * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
+	 *
+	 * @param kids die IDs der Kompetenzen
+	 *
+	 * @return true, wenn alle Kompetenzen zulässig sind, sonst false
+	 *
+	 */
+	private boolean istKompetenzZulaessig(final List<Long> kids) throws ApiOperationException {
+		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+		//Nehme als Schulform GY als Beispiel
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
+		final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
 
-        final List<BenutzerKompetenz> bks = new ArrayList<>();
-        for (final Long kid:kids) {
-            bks.add(BenutzerKompetenz.getByID(kid));
-        }
+		final List<BenutzerKompetenz> bks = new ArrayList<>();
+		for (final Long kid : kids) {
+			bks.add(BenutzerKompetenz.getByID(kid));
+		}
 
-        for (final BenutzerKompetenz bk : bks) {
-            if (!bk.hatSchulform(schulform))
-                throw new ApiOperationException(Status.FORBIDDEN, "Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
-                            + schulform.daten.bezeichnung + "nicht zulässig");
-        }
-        return true;
-    }
+		for (final BenutzerKompetenz bk : bks) {
+			if (!bk.hatSchulform(schulform))
+				throw new ApiOperationException(Status.FORBIDDEN, "Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
+						+ schulform.daten.bezeichnung + "nicht zulässig");
+		}
+		return true;
+	}
 
 
-    /**
-     * Setzt für die angegebene Benutzer-ID den Benutzer administrativ.
-     *
-     * @param id die ID des Benutzers
-     *
-     * @return bei Erfolg eine HTTP-Response 200
+	/**
+	 * Setzt für die angegebene Benutzer-ID den Benutzer administrativ.
+	 *
+	 * @param id die ID des Benutzers
+	 *
+	 * @return bei Erfolg eine HTTP-Response 200
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response addAdmin(final Long id) throws ApiOperationException {
-        if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
-        final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
-        if (benutzer == null)
-            throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
-        if (benutzer.IstAdmin)
-            throw new ApiOperationException(Status.BAD_REQUEST, "Der Benutzer hat bereits administrative Rechte.");
-        benutzer.IstAdmin = true;
-        conn.transactionPersist(benutzer);
-        return Response.status(Status.OK).build();
-    }
+	 */
+	public Response addAdmin(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
+		if (benutzer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
+		if (benutzer.IstAdmin)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Benutzer hat bereits administrative Rechte.");
+		benutzer.IstAdmin = true;
+		conn.transactionPersist(benutzer);
+		return Response.status(Status.OK).build();
+	}
 
-    /**
-     * Setzt für die angegebene Benutzer-ID die Benutzerkompetenzen.
-     *
-     * @param id   die ID des Benutzers
-     * @param kids die IDs der Kompetenzen
-     *
-     * @return bei Erfolg eine HTTP-Response 200
-     *
-     * @throws ApiOperationException   eine Exception mit dem entsprechenden HTTP-Fehlercode im Fehlerfall
-     */
-    public Response addKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
-        // Prüft, die Zulässigkeit der Kompetenzen für die Schulform
-        this.istKompetenzZulaessig(kids);
-    	if ((id == null) || (kids == null))
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
-        // Prüfe, ob der Benutzer mit der ID existiert.
-        getDTO(id);
-        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-        for (final Long kid : kids)
-            if (BenutzerKompetenz.getByID(kid) == null)
-                throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-        // Füge die Kompetenzen hinzu
-        for (final Long kid : kids) {
-            DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
-            if (bk == null) {
-                bk = new DTOBenutzerKompetenz(id, kid);
-                conn.transactionPersist(bk);
-            }
-        }
-        return Response.status(Status.OK).build();
-    }
+	/**
+	 * Setzt für die angegebene Benutzer-ID die Benutzerkompetenzen.
+	 *
+	 * @param id   die ID des Benutzers
+	 * @param kids die IDs der Kompetenzen
+	 *
+	 * @return bei Erfolg eine HTTP-Response 200
+	 *
+	 * @throws ApiOperationException   eine Exception mit dem entsprechenden HTTP-Fehlercode im Fehlerfall
+	 */
+	public Response addKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
+		// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
+		this.istKompetenzZulaessig(kids);
+		if ((id == null) || (kids == null))
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+		// Prüfe, ob der Benutzer mit der ID existiert.
+		getDTO(id);
+		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
+		for (final Long kid : kids)
+			if (BenutzerKompetenz.getByID(kid) == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+		// Füge die Kompetenzen hinzu
+		for (final Long kid : kids) {
+			DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
+			if (bk == null) {
+				bk = new DTOBenutzerKompetenz(id, kid);
+				conn.transactionPersist(bk);
+			}
+		}
+		return Response.status(Status.OK).build();
+	}
 
-    /**
-     * Erstellt einen neuen Benutzer *
-     *
-     * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
-     *
-     * @return Eine Response mit dem neuen Benutzer
+	/**
+	 * Erstellt einen neuen Benutzer *
+	 *
+	 * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
+	 *
+	 * @return Eine Response mit dem neuen Benutzer
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response createBenutzerAllgemein(final BenutzerAllgemeinCredentials cred) throws ApiOperationException {
-        DTOBenutzerAllgemein benutzer_allg = null;
-        DTOBenutzer benutzer = null;
-        DTOCredentials credential = null;
+	 */
+	public Response createBenutzerAllgemein(final BenutzerAllgemeinCredentials cred) throws ApiOperationException {
+		DTOBenutzerAllgemein benutzer_allg = null;
+		DTOBenutzer benutzer = null;
+		DTOCredentials credential = null;
 
-        if ((cred.benutzername == null) || (cred.password == null))
-        	throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
+		if ((cred.benutzername == null) || (cred.password == null))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Benuzername oder Passwort leer!");
 
-        // Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
-        final long idBenutzerAllgemein = conn.transactionGetNextID(DTOBenutzerAllgemein.class);
-        final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
-        final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
+		// Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
+		final long idBenutzerAllgemein = conn.transactionGetNextID(DTOBenutzerAllgemein.class);
+		final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
+		final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
 
-        // Zuerst die Credentials anlegen ...
-        credential = new DTOCredentials(idCredential, cred.benutzername);
-        credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
-        conn.transactionPersist(credential);
-        conn.transactionFlush();
+		// Zuerst die Credentials anlegen ...
+		credential = new DTOCredentials(idCredential, cred.benutzername);
+		credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
+		conn.transactionPersist(credential);
+		conn.transactionFlush();
 
-        // ... dann die Informationen zum allgemeinen Benutzer mit den Credentials verknüpft ...
-        benutzer_allg = new DTOBenutzerAllgemein(idBenutzerAllgemein);
-        benutzer_allg.AnzeigeName = cred.anzeigename.isBlank() ? cred.benutzername : cred.anzeigename;
-        benutzer_allg.CredentialID = idCredential;
-        conn.transactionPersist(benutzer_allg);
-        conn.transactionFlush();
+		// ... dann die Informationen zum allgemeinen Benutzer mit den Credentials verknüpft ...
+		benutzer_allg = new DTOBenutzerAllgemein(idBenutzerAllgemein);
+		benutzer_allg.AnzeigeName = cred.anzeigename.isBlank() ? cred.benutzername : cred.anzeigename;
+		benutzer_allg.CredentialID = idCredential;
+		conn.transactionPersist(benutzer_allg);
+		conn.transactionFlush();
 
-        // ... und dann das Benutzer-Objekt anlegen, welches auf den allgemeinen Benutzer verweist
-        benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.ALLGEMEIN, false);
-        benutzer.Allgemein_ID = idBenutzerAllgemein;
-        conn.transactionPersist(benutzer);
+		// ... und dann das Benutzer-Objekt anlegen, welches auf den allgemeinen Benutzer verweist
+		benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.ALLGEMEIN, false);
+		benutzer.Allgemein_ID = idBenutzerAllgemein;
+		conn.transactionPersist(benutzer);
 
-        final BenutzerDaten daten = new BenutzerDaten();
-        daten.id = idBenutzer;
-        daten.typ = BenutzerTyp.ALLGEMEIN.id;
-        daten.typID = benutzer_allg.ID;
-        daten.anzeigename = benutzer_allg.AnzeigeName;
-        daten.name = credential.Benutzername;
-        daten.istAdmin = (benutzer.IstAdmin != null) && benutzer.IstAdmin;
-        daten.idCredentials = credential.ID;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+		final BenutzerDaten daten = new BenutzerDaten();
+		daten.id = idBenutzer;
+		daten.typ = BenutzerTyp.ALLGEMEIN.id;
+		daten.typID = benutzer_allg.ID;
+		daten.anzeigename = benutzer_allg.AnzeigeName;
+		daten.name = credential.Benutzername;
+		daten.istAdmin = (benutzer.IstAdmin != null) && benutzer.IstAdmin;
+		daten.idCredentials = credential.ID;
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
-    /**
-     * Erstellt einen neuen Benutzer mit dem Benutzertyp Erzieher
-     *
-     * @return Eine Response mit dem neuen Benutzer
-     */
-    public Response createBenutzerErzieher() {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * Erstellt einen neuen Benutzer mit dem Benutzertyp Erzieher
+	 *
+	 * @return Eine Response mit dem neuen Benutzer
+	 */
+	public Response createBenutzerErzieher() {
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
-     *
-     * @return Eine Response mit dem neuen Benutzer
-     */
-    public Response createBenutzerLehrer() {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
+	 *
+	 * @return Eine Response mit dem neuen Benutzer
+	 */
+	public Response createBenutzerLehrer() {
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
-     *
-     * @return Eine Response mit dem neuen Benutzer
-     */
-    public Response createBenutzerSchueler() {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
+	 *
+	 * @return Eine Response mit dem neuen Benutzer
+	 */
+	public Response createBenutzerSchueler() {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public Response getAll() {
-        return this.getList();
-    }
+	@Override
+	public Response getAll() {
+		return this.getList();
+	}
 
-    @Override
-    public Response getList() {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public Response getList() {
+		throw new UnsupportedOperationException();
+	}
 
 
 
-    @Override
-    public Response get(final Long id) throws ApiOperationException {
-        // Lese die Informationen zu den Gruppen ein
-        final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
-                .map(g -> g.Gruppe_ID).toList();
-        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
-                ? new ArrayList<>()
-                : conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
-        // Lese die Informationen zu den Kompetenzen ein
-        final List<Long> kompetenzIDs = conn.queryList(DTOBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOBenutzerKompetenz.class, id)
-                .stream().map(b -> b.Kompetenz_ID).sorted().toList();
-        final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.isEmpty())
-                ? new ArrayList<>()
-                : conn.queryList(DTOBenutzergruppenKompetenz.QUERY_LIST_BY_GRUPPE_ID, DTOBenutzergruppenKompetenz.class, gruppenIDs);
-        final Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()
-                .collect(Collectors.groupingBy(k -> k.Gruppe_ID));
-        // Erstelle den Core-DTO für die API und gebe diesen zurück
-        final BenutzerDaten daten = dtoMapper.apply(getDTO(id));
+	@Override
+	public Response get(final Long id) throws ApiOperationException {
+		// Lese die Informationen zu den Gruppen ein
+		final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
+				.map(g -> g.Gruppe_ID).toList();
+		final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
+				? new ArrayList<>()
+				: conn.queryByKeyList(DTOBenutzergruppe.class, gruppenIDs);
+		// Lese die Informationen zu den Kompetenzen ein
+		final List<Long> kompetenzIDs = conn.queryList(DTOBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOBenutzerKompetenz.class, id)
+				.stream().map(b -> b.Kompetenz_ID).sorted().toList();
+		final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.isEmpty())
+				? new ArrayList<>()
+				: conn.queryList(DTOBenutzergruppenKompetenz.QUERY_LIST_BY_GRUPPE_ID, DTOBenutzergruppenKompetenz.class, gruppenIDs);
+		final Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()
+				.collect(Collectors.groupingBy(k -> k.Gruppe_ID));
+		// Erstelle den Core-DTO für die API und gebe diesen zurück
+		final BenutzerDaten daten = dtoMapper.apply(getDTO(id));
 
-        for (final Long kompetenzID : kompetenzIDs)
-            daten.kompetenzen.add(BenutzerKompetenz.getByID(kompetenzID).daten.id);
+		for (final Long kompetenzID : kompetenzIDs)
+			daten.kompetenzen.add(BenutzerKompetenz.getByID(kompetenzID).daten.id);
 
-        for (final DTOBenutzergruppe gruppe : gruppen) {
-            final BenutzergruppeDaten gdaten = dtoMapperGruppe.apply(gruppe);
-            final List<DTOBenutzergruppenKompetenz> gruppenkompetenzen = mapGruppenKompetenzen.get(gruppe.ID);
-            if (gruppenkompetenzen != null)
-                for (final Long kompetenzID : gruppenkompetenzen.stream().map(k -> k.Kompetenz_ID).distinct().sorted()
-                        .toList())
-                    gdaten.kompetenzen.add(kompetenzID);
-            daten.gruppen.add(gdaten);
-        }
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+		for (final DTOBenutzergruppe gruppe : gruppen) {
+			final BenutzergruppeDaten gdaten = dtoMapperGruppe.apply(gruppe);
+			final List<DTOBenutzergruppenKompetenz> gruppenkompetenzen = mapGruppenKompetenzen.get(gruppe.ID);
+			if (gruppenkompetenzen != null)
+				for (final Long kompetenzID : gruppenkompetenzen.stream().map(k -> k.Kompetenz_ID).distinct().sorted()
+						.toList())
+					gdaten.kompetenzen.add(kompetenzID);
+			daten.gruppen.add(gdaten);
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
-    /**
-     * Entfernt die Admin-Berechtigung des Benutzers.
-     *
-     * @param id die ID des Benutzers
-     *
-     * @return bei Erfolg eine HTTP-Response 200
+	/**
+	 * Entfernt die Admin-Berechtigung des Benutzers.
+	 *
+	 * @param id die ID des Benutzers
+	 *
+	 * @return bei Erfolg eine HTTP-Response 200
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response removeAdmin(final Long id) throws ApiOperationException {
-        if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
-        final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
-        if (benutzer == null)
-            throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
-        if (!benutzer.IstAdmin)
-            throw new ApiOperationException(Status.BAD_REQUEST, "Der Benutzer mit der ID " + id
-                    + " besitzt selbst direkt keine administrative Berechtigung, die entfernt werden könnte.");
-        if (id.equals(conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
-            throw new ApiOperationException(Status.BAD_REQUEST,
-                    "Der aktuelle Benutzer darf seine Admin-Berechtigung nicht entfernen, wenn er diese nicht zusätzlich über administrative Gruppen besitzt.");
-        benutzer.IstAdmin = false;
-        conn.transactionPersist(benutzer);
-        return Response.status(Status.OK).build();
-    }
+	 */
+	public Response removeAdmin(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+		final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
+		if (benutzer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
+		if (!benutzer.IstAdmin)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Benutzer mit der ID " + id
+					+ " besitzt selbst direkt keine administrative Berechtigung, die entfernt werden könnte.");
+		if (id.equals(conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der aktuelle Benutzer darf seine Admin-Berechtigung nicht entfernen, wenn er diese nicht zusätzlich über administrative Gruppen besitzt.");
+		benutzer.IstAdmin = false;
+		conn.transactionPersist(benutzer);
+		return Response.status(Status.OK).build();
+	}
 
 
-    private void _removeBenutzerAllgemein(final DTOBenutzer benutzer) throws ApiOperationException {
+	private void _removeBenutzerAllgemein(final DTOBenutzer benutzer) throws ApiOperationException {
 		if (benutzer.Allgemein_ID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Benutzer mit der ID %d vom Typ ALLGEMEIN hat keine entsprechende allgemeine ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Benutzer mit der ID %d vom Typ ALLGEMEIN hat keine entsprechende allgemeine ID zugeordnet. Dies ist nicht zulässig."
+							.formatted(benutzer.ID));
 		final DTOBenutzerAllgemein benutzerAllgemein = conn.queryByKey(DTOBenutzerAllgemein.class, benutzer.Allgemein_ID);
 		if (benutzerAllgemein == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der allgemeine Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Allgemein_ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der allgemeine Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Allgemein_ID));
 		if (benutzerAllgemein.CredentialID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der allgemeine Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerAllgemein.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der allgemeine Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerAllgemein.ID));
 		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerAllgemein.CredentialID);
 		if (credential == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Credentials mit der ID %d für den allgemeinen Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerAllgemein.CredentialID, benutzerAllgemein.ID));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Die Credentials mit der ID %d für den allgemeinen Benutzer mit der ID %d konnten nicht gefunden werden."
+							.formatted(benutzerAllgemein.CredentialID, benutzerAllgemein.ID));
 		conn.transactionRemove(credential);
 		conn.transactionFlush();
 		conn.transactionRemove(benutzerAllgemein);
 		conn.transactionFlush();
 		conn.transactionRemove(benutzer);
 		conn.transactionFlush();
-    }
+	}
 
-    private void _removeBenutzerErzieher(final DTOBenutzer benutzer) throws ApiOperationException {
+	private void _removeBenutzerErzieher(final DTOBenutzer benutzer) throws ApiOperationException {
 		if (benutzer.Erzieher_ID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Benutzer mit der ID %d vom Typ ERZIEHER hat keine entsprechende Erzieher-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Benutzer mit der ID %d vom Typ ERZIEHER hat keine entsprechende Erzieher-ID zugeordnet. Dies ist nicht zulässig."
+							.formatted(benutzer.ID));
 		final DTOSchuelerErzieherAdresse benutzerErzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, benutzer.Erzieher_ID);
 		if (benutzerErzieher == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Erzieher-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Erzieher_ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Erzieher-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Erzieher_ID));
 		if (benutzerErzieher.CredentialID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Erzieher-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerErzieher.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Erzieher-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerErzieher.ID));
 		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerErzieher.CredentialID);
 		if (credential == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Credentials mit der ID %d für den Erzieher-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerErzieher.CredentialID, benutzerErzieher.ID));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Die Credentials mit der ID %d für den Erzieher-Benutzer mit der ID %d konnten nicht gefunden werden."
+							.formatted(benutzerErzieher.CredentialID, benutzerErzieher.ID));
 		conn.transactionRemove(credential);
 		conn.transactionFlush();
 		conn.transactionRemove(benutzer);
 		conn.transactionFlush();
-    }
+	}
 
-    private void _removeBenutzerLehrer(final DTOBenutzer benutzer) throws ApiOperationException {
+	private void _removeBenutzerLehrer(final DTOBenutzer benutzer) throws ApiOperationException {
 		if (benutzer.Lehrer_ID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Benutzer mit der ID %d vom Typ LEHRER hat keine entsprechende Lehrer-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Benutzer mit der ID %d vom Typ LEHRER hat keine entsprechende Lehrer-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
 		final DTOLehrer benutzerLehrer = conn.queryByKey(DTOLehrer.class, benutzer.Lehrer_ID);
 		if (benutzerLehrer == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Lehrer-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Lehrer_ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Lehrer-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Lehrer_ID));
 		if (benutzerLehrer.CredentialID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Lehrer-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerLehrer.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Lehrer-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerLehrer.ID));
 		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerLehrer.CredentialID);
 		if (credential == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Credentials mit der ID %d für den Lehrer-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerLehrer.CredentialID, benutzerLehrer.ID));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Die Credentials mit der ID %d für den Lehrer-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerLehrer.CredentialID,
+							benutzerLehrer.ID));
 		conn.transactionRemove(credential);
 		conn.transactionFlush();
 		conn.transactionRemove(benutzer);
 		conn.transactionFlush();
-    }
+	}
 
-    private void _removeBenutzerSchueler(final DTOBenutzer benutzer) throws ApiOperationException {
+	private void _removeBenutzerSchueler(final DTOBenutzer benutzer) throws ApiOperationException {
 		if (benutzer.Schueler_ID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Benutzer mit der ID %d vom Typ SCHUELER hat keine entsprechende Schüler-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Benutzer mit der ID %d vom Typ SCHUELER hat keine entsprechende Schüler-ID zugeordnet. Dies ist nicht zulässig."
+							.formatted(benutzer.ID));
 		final DTOSchueler benutzerSchueler = conn.queryByKey(DTOSchueler.class, benutzer.Schueler_ID);
 		if (benutzerSchueler == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Schüler-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Schueler_ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Schüler-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Schueler_ID));
 		if (benutzerSchueler.CredentialID == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Schüler-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerSchueler.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Der Schüler-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerSchueler.ID));
 		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerSchueler.CredentialID);
 		if (credential == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Credentials mit der ID %d für den Schüler-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerSchueler.CredentialID, benutzerSchueler.ID));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Die Credentials mit der ID %d für den Schüler-Benutzer mit der ID %d konnten nicht gefunden werden."
+							.formatted(benutzerSchueler.CredentialID, benutzerSchueler.ID));
 		conn.transactionRemove(credential);
 		conn.transactionFlush();
 		conn.transactionRemove(benutzer);
 		conn.transactionFlush();
-    }
+	}
 
 	/**
 	 * Entfernt die Benutzer mit den übergebenen IDs
@@ -449,156 +472,159 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-    /**
-     * Entfernt für die angegebene Benutzer-ID die Benutzerkompetenzen.
-     *
-     * @param id   die ID des Benutzers
-     * @param kids die IDs der Kompetenzen
-     *
-     * @return bei Erfolg eine HTTP-Response 204
+	/**
+	 * Entfernt für die angegebene Benutzer-ID die Benutzerkompetenzen.
+	 *
+	 * @param id   die ID des Benutzers
+	 * @param kids die IDs der Kompetenzen
+	 *
+	 * @return bei Erfolg eine HTTP-Response 204
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response removeKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
-    	// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
-        this.istKompetenzZulaessig(kids);
+	 */
+	public Response removeKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
+		// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
+		this.istKompetenzZulaessig(kids);
 
-        if (id == null || kids == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
-        // Prüfe, ob der Benutzer mit der ID existiert.
-        getDTO(id);
-        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-        for (final Long kid : kids) {
-            if (BenutzerKompetenz.getByID(kid) == null)
-            	throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-        }
-        try {
-            for (final Long kid : kids) {
-                // Bestimme den Datensatz aus DTOBenutzerKompetenz
-                final DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
-                if (bk == null)
-                    throw new ApiOperationException(Status.NOT_FOUND, "Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID " + id + "und Kompetenz_ID" + kid + " existiert nicht");
-                // Entferne die Kompetenz
-                conn.transactionRemove(bk);
-            }
-        } catch (final Exception e) {
-            if (e instanceof final ApiOperationException aoe)
-                throw aoe;
-            throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-        }
-        return Response.status(Status.OK).build();
-    }
+		if ((id == null) || (kids == null))
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+		// Prüfe, ob der Benutzer mit der ID existiert.
+		getDTO(id);
+		// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
+		for (final Long kid : kids) {
+			if (BenutzerKompetenz.getByID(kid) == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+		}
+		try {
+			for (final Long kid : kids) {
+				// Bestimme den Datensatz aus DTOBenutzerKompetenz
+				final DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
+				if (bk == null)
+					throw new ApiOperationException(Status.NOT_FOUND,
+							"Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID " + id + "und Kompetenz_ID" + kid + " existiert nicht");
+				// Entferne die Kompetenz
+				conn.transactionRemove(bk);
+			}
+		} catch (final Exception e) {
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
+		return Response.status(Status.OK).build();
+	}
 
-    @Override
-    public Response patch(final Long id, final InputStream is) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public Response patch(final Long id, final InputStream is) {
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * Setzt für die angegebene Benutzer-ID den Anzeigenamen.
-     *
-     * @param id   die ID der Benutzergruppe
-     * @param name der neue Azeigename
-     *
-     * @return die Response 200 bei Erfolg.
+	/**
+	 * Setzt für die angegebene Benutzer-ID den Anzeigenamen.
+	 *
+	 * @param id   die ID der Benutzergruppe
+	 * @param name der neue Azeigename
+	 *
+	 * @return die Response 200 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response setAnzeigename(final Long id, final String name) throws ApiOperationException {
-        if ((name == null) || "".equals(name))
-        	throw new ApiOperationException(Status.CONFLICT, "Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
-        if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
-        final DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
-        if (benutzerallgemein == null)
-            throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
-        // Der Anzeigename wird nur bei den Benutzern mit dem Benutzertyp Allgemein
-        // geändert.
-        final DTOViewBenutzerdetails benutzerdetails = getDTO(id);
-        if (benutzerdetails.Typ != BenutzerTyp.ALLGEMEIN)
-        	throw new ApiOperationException(Status.BAD_REQUEST, "Der Anzeigename kann bei dem Benutzer mit der ID " + id + "aufgrund des Benutzertyps nicht geändert werden");
-        // Der alte Anzeigename wurde übergeben.
-        if (name.equals(benutzerallgemein.AnzeigeName))
-            return Response.status(Status.OK).build();
-        // Der Anzeigename wird angepasst...
-        benutzerallgemein.AnzeigeName = name;
-        conn.transactionPersist(benutzerallgemein);
-        return Response.status(Status.OK).build();
-    }
+	 */
+	public Response setAnzeigename(final Long id, final String name) throws ApiOperationException {
+		if ((name == null) || "".equals(name))
+			throw new ApiOperationException(Status.CONFLICT, "Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu änderden Benutzer darf nicht null sein.");
+		final DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
+		if (benutzerallgemein == null)
+			throw new ApiOperationException(Status.NOT_FOUND, strBenutzerMitIDExistiertNicht);
+		// Der Anzeigename wird nur bei den Benutzern mit dem Benutzertyp Allgemein
+		// geändert.
+		final DTOViewBenutzerdetails benutzerdetails = getDTO(id);
+		if (benutzerdetails.Typ != BenutzerTyp.ALLGEMEIN)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der Anzeigename kann bei dem Benutzer mit der ID " + id + "aufgrund des Benutzertyps nicht geändert werden");
+		// Der alte Anzeigename wurde übergeben.
+		if (name.equals(benutzerallgemein.AnzeigeName))
+			return Response.status(Status.OK).build();
+		// Der Anzeigename wird angepasst...
+		benutzerallgemein.AnzeigeName = name;
+		conn.transactionPersist(benutzerallgemein);
+		return Response.status(Status.OK).build();
+	}
 
 
 
-    /**
-     * Setzt für die angegebene Benutzer-ID den Name des Benutzers (Anmeldename).
-     *
-     * @param id     die ID des Benutzers
-     * @param name   der neue Benutzername für die Anmeldung
-     *
-     * @return die Response 200 bei Erfolg.
+	/**
+	 * Setzt für die angegebene Benutzer-ID den Name des Benutzers (Anmeldename).
+	 *
+	 * @param id     die ID des Benutzers
+	 * @param name   der neue Benutzername für die Anmeldung
+	 *
+	 * @return die Response 200 bei Erfolg.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response setBenutzername(final Long id, final String name) throws ApiOperationException {
-        if ((name == null) || "".equals(name))
-        	throw new ApiOperationException(Status.CONFLICT, "Der Name für die Anmeldung muss gültig sein und darf nicht null oder leer sein");
-        if (id.equals(conn.getUser().getId()))
-        	throw new ApiOperationException(Status.CONFLICT, "Der aktuelle Benutzer darf seinen eigenen Benutzernamen nicht ändern.");
-        final DTOViewBenutzerdetails benutzer = getDTO(id);
-        // der alte Benutzername wurde übergeben...
-        if (name.equals(benutzer.Benutzername))
-            return Response.status(Status.OK).build();
-        final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
-        if (cred == null)
-        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Dem Benutzer sind keine gültigen Credentials zugeordnet.");
-        // Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
-        final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
-        for (final DTOCredentials data : creds) {
-            if (name.trim().equals(data.Benutzername))
-            	throw new ApiOperationException(Status.CONFLICT, "Ein Benutzer mit dem Namen existiert bereits - die Umbenennung kann nicht durchgeführt werden");
-        }
-        cred.Benutzername = name;
-        conn.transactionPersist(cred);
-        return Response.status(Status.OK).build();
-    }
+	 */
+	public Response setBenutzername(final Long id, final String name) throws ApiOperationException {
+		if ((name == null) || "".equals(name))
+			throw new ApiOperationException(Status.CONFLICT, "Der Name für die Anmeldung muss gültig sein und darf nicht null oder leer sein");
+		if (id.equals(conn.getUser().getId()))
+			throw new ApiOperationException(Status.CONFLICT, "Der aktuelle Benutzer darf seinen eigenen Benutzernamen nicht ändern.");
+		final DTOViewBenutzerdetails benutzer = getDTO(id);
+		// der alte Benutzername wurde übergeben...
+		if (name.equals(benutzer.Benutzername))
+			return Response.status(Status.OK).build();
+		final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
+		if (cred == null)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Dem Benutzer sind keine gültigen Credentials zugeordnet.");
+		// Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
+		final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
+		for (final DTOCredentials data : creds) {
+			if (name.trim().equals(data.Benutzername))
+				throw new ApiOperationException(Status.CONFLICT,
+						"Ein Benutzer mit dem Namen existiert bereits - die Umbenennung kann nicht durchgeführt werden");
+		}
+		cred.Benutzername = name;
+		conn.transactionPersist(cred);
+		return Response.status(Status.OK).build();
+	}
 
 
-    /**
-     * Erstellt für den Benutzer mit der übergebenen ID einen neuen Kennwort-Hash
-     * basierend auf dem übergebenen Kennwort
-     *
-     * @param id       die ID des Benutzers, dessen Kennwort neu gesetzt werden soll
-     * @param password das Kennwort
-     *
-     * @return bei Erfolg eine HTTP-Response 204
+	/**
+	 * Erstellt für den Benutzer mit der übergebenen ID einen neuen Kennwort-Hash
+	 * basierend auf dem übergebenen Kennwort
+	 *
+	 * @param id       die ID des Benutzers, dessen Kennwort neu gesetzt werden soll
+	 * @param password das Kennwort
+	 *
+	 * @return bei Erfolg eine HTTP-Response 204
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response setPassword(final Long id, final String password) throws ApiOperationException {
-        final String hash = Benutzer.erstellePasswortHash(password);
-        final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
-        if ((benutzer == null) || (benutzer.credentialID == null))
-            throw new ApiOperationException(Status.NOT_FOUND);
-        final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
-        if (credential == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-        credential.PasswordHash = hash;
-        conn.transactionPersist(credential);
-        // Prüfe, ob es sich bei der ID um die ID des angemeldeten Benutzers handelt. Falls ja, dann aktualisiere ggf. auch das SMTP-Email-Kennwort
-        if (Objects.equals(id, conn.getUser().getId())) {
-        	try {
-	        	final DTOBenutzerMail dtoMail = conn.queryByKey(DTOBenutzerMail.class, id);
-	        	if ((dtoMail != null) && (dtoMail.SMTPPassword != null) && (!dtoMail.SMTPPassword.isBlank())) {
-                	conn.transactionFlush();
+	 */
+	public Response setPassword(final Long id, final String password) throws ApiOperationException {
+		final String hash = Benutzer.erstellePasswortHash(password);
+		final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
+		if ((benutzer == null) || (benutzer.credentialID == null))
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
+		if (credential == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		credential.PasswordHash = hash;
+		conn.transactionPersist(credential);
+		// Prüfe, ob es sich bei der ID um die ID des angemeldeten Benutzers handelt. Falls ja, dann aktualisiere ggf. auch das SMTP-Email-Kennwort
+		if (Objects.equals(id, conn.getUser().getId())) {
+			try {
+				final DTOBenutzerMail dtoMail = conn.queryByKey(DTOBenutzerMail.class, id);
+				if ((dtoMail != null) && (dtoMail.SMTPPassword != null) && (!dtoMail.SMTPPassword.isBlank())) {
+					conn.transactionFlush();
 					final byte[] smtpPassword = conn.getUser().getAES().decryptBase64(dtoMail.SMTPPassword);
 					final AES aesneu = Benutzer.getAESInstance(conn.getUser().getUsername(), password);
 					dtoMail.SMTPPassword = aesneu.encryptBase64(smtpPassword);
 					conn.transactionPersist(dtoMail);
-	        	}
+				}
 			} catch (@SuppressWarnings("unused") final AESException e) {
 				//
 			}
-        }
-        return Response.status(Status.NO_CONTENT).build();
-    }
+		}
+		return Response.status(Status.NO_CONTENT).build();
+	}
 
 }

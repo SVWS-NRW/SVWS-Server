@@ -158,44 +158,46 @@ public final class DataENMDaten extends DataManager<Long> {
 	private static ENMDaten getDaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank ein
 		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
-    	final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(conn, schule);
-    	final Map<Long, DTOLehrer> mapLehrer = getLehrerListe(conn);
+		final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(conn, schule);
+		final Map<Long, DTOLehrer> mapLehrer = getLehrerListe(conn);
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
-    	if ((id != null) && (dtoLehrer == null))
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, schule);
-    	final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
-    	final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe(conn);
-    	final Map<String, DTOKlassen> mapKlassen = getKlassenListe(conn, schule);
-    	final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(conn, mapKlassen);
-    	final Map<Long, DTOKurs> mapKurse = getKurse(conn, schule);
-		final Map<Long, DTOTeilleistungsarten> mapTeilleistungsarten = conn.queryAll(DTOTeilleistungsarten.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		if ((id != null) && (dtoLehrer == null))
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, schule);
+		final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
+		final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe(conn);
+		final Map<String, DTOKlassen> mapKlassen = getKlassenListe(conn, schule);
+		final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(conn, mapKlassen);
+		final Map<Long, DTOKurs> mapKurse = getKurse(conn, schule);
+		final Map<Long, DTOTeilleistungsarten> mapTeilleistungsarten =
+				conn.queryAll(DTOTeilleistungsarten.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
-    	// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
-    	final ENMDatenManager manager = new ENMDatenManager(id);
-    	if (dtoLehrer != null)
-    		manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht, dtoLehrer.eMailDienstlich);
+		// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
+		final ENMDatenManager manager = new ENMDatenManager(id);
+		if (dtoLehrer != null)
+			manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht,
+					dtoLehrer.eMailDienstlich);
 		initManager(manager, schule, abschnitt);
 
-   	    // Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM.
-    	// Dabei wird unter anderem auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge)
-   	    // bei den Daten für das ENM einzutragen sind.
-    	final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = dtoLehrer == null
-    			? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, schule.Schuljahresabschnitts_ID)
-    			: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
-    	// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
-    	final List<Long> idsLeistungen = schuelerabschnitte.stream().map(a -> a.leistungID).toList();
-    	final List<DTOSchuelerTeilleistung> listTeilleistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
-    			: conn.queryList(DTOSchuelerTeilleistung.QUERY_LIST_BY_LEISTUNG_ID, DTOSchuelerTeilleistung.class, idsLeistungen);
-    	final Map<Long, List<DTOSchuelerTeilleistung>> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
-    	final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
-    	final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
-    			: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
-    	for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
-    		final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
+		// Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM.
+		// Dabei wird unter anderem auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge)
+		// bei den Daten für das ENM einzutragen sind.
+		final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = dtoLehrer == null
+				? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, schule.Schuljahresabschnitts_ID)
+				: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
+		// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
+		final List<Long> idsLeistungen = schuelerabschnitte.stream().map(a -> a.leistungID).toList();
+		final List<DTOSchuelerTeilleistung> listTeilleistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
+				: conn.queryList(DTOSchuelerTeilleistung.QUERY_LIST_BY_LEISTUNG_ID, DTOSchuelerTeilleistung.class, idsLeistungen);
+		final Map<Long, List<DTOSchuelerTeilleistung>> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
+		final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
+		final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+		for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
+			final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
 			if (dtoKlasse == null)
 				throw new NullPointerException();
-    		ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
+			ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
 			if (enmKlasse == null) {
 				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
 				enmKlasse = manager.getKlasse(dtoKlasse.ID);
@@ -206,7 +208,7 @@ public final class DataENMDaten extends DataManager<Long> {
 							final DTOLehrer dtoKlassenlehrer = mapLehrer.get(kl.Lehrer_ID);
 							if (dtoKlassenlehrer != null) {
 								manager.addLehrer(dtoKlassenlehrer.ID, dtoKlassenlehrer.Kuerzel,
-										          dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname, dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich);
+										dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname, dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich);
 							}
 						}
 						enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
@@ -214,55 +216,55 @@ public final class DataENMDaten extends DataManager<Long> {
 				}
 			}
 
-    		final ZulaessigeKursart kursart = (schuelerabschnitt.kursID == null) ? null : ZulaessigeKursart.getByASDKursart(schuelerabschnitt.kursart);
+			final ZulaessigeKursart kursart = (schuelerabschnitt.kursID == null) ? null : ZulaessigeKursart.getByASDKursart(schuelerabschnitt.kursart);
 
-    		ENMSchueler enmSchueler = manager.getSchueler(schuelerabschnitt.schuelerID);
-    		if (enmSchueler == null) {
-    			final var dtoSchueler = mapSchueler.get(schuelerabschnitt.schuelerID);
-    			ENMJahrgang enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
-    			if (enmJahrgang == null) {
-    				final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(schuelerabschnitt.jahrgangID);
-    				if (dtoJahrgang == null)
-    					throw new NullPointerException();
-    				manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
-    						dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
-    				enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
-    			}
+			ENMSchueler enmSchueler = manager.getSchueler(schuelerabschnitt.schuelerID);
+			if (enmSchueler == null) {
+				final var dtoSchueler = mapSchueler.get(schuelerabschnitt.schuelerID);
+				ENMJahrgang enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
+				if (enmJahrgang == null) {
+					final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(schuelerabschnitt.jahrgangID);
+					if (dtoJahrgang == null)
+						throw new NullPointerException();
+					manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
+							dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
+					enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
+				}
 
-    			manager.addSchueler(dtoSchueler.ID, schuelerabschnitt.jahrgangID, dtoKlasse.ID, dtoSchueler.Nachname, dtoSchueler.Vorname,
-    					            dtoSchueler.Geschlecht, schuelerabschnitt.BilingualerZweig, schuelerabschnitt.ZieldifferentesLernen,
-    								dtoSchueler.Lernstandsbericht);  // Deutsch als Fremdsprache liegt vor, wenn für den Schüler Lernstandsberichte geschrieben werden...
-    			enmSchueler = manager.getSchueler(schuelerabschnitt.schuelerID);
-    			enmSchueler.lernabschnitt.id = schuelerabschnitt.abschnittID;
-    			enmSchueler.lernabschnitt.fehlstundenGesamt = schuelerabschnitt.fehlstundenSummeGesamt;
-    			enmSchueler.lernabschnitt.tsFehlstundenGesamt = schuelerabschnitt.tsFehlstundenSummeGesamt;
-    			enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
-    			enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
-    			enmSchueler.lernabschnitt.pruefungsordnung = schuelerabschnitt.pruefungsordnung;
-    			enmSchueler.lernabschnitt.lernbereich1note = schuelerabschnitt.lernbereich1note == null ? null : schuelerabschnitt.lernbereich1note.kuerzel;
-    			enmSchueler.lernabschnitt.lernbereich2note = schuelerabschnitt.lernbereich2note == null ? null : schuelerabschnitt.lernbereich2note.kuerzel;
-    			enmSchueler.lernabschnitt.foerderschwerpunkt1 = schuelerabschnitt.foerderschwerpunkt1Kuerzel;
-    			enmSchueler.lernabschnitt.foerderschwerpunkt2 = schuelerabschnitt.foerderschwerpunkt2Kuerzel;
-    			enmSchueler.bemerkungen.ASV = schuelerabschnitt.ASV;
-    			enmSchueler.bemerkungen.tsASV = schuelerabschnitt.tsASV;
-    			enmSchueler.bemerkungen.AUE = schuelerabschnitt.AUE;
-    			enmSchueler.bemerkungen.tsAUE = schuelerabschnitt.tsAUE;
-    			enmSchueler.bemerkungen.ZB = schuelerabschnitt.zeugnisBemerkungen;
-    			enmSchueler.bemerkungen.tsZB = schuelerabschnitt.tsZeugnisBemerkungen;
-    			enmSchueler.bemerkungen.LELS = schuelerabschnitt.LELS;
-    			// TODO Schulform-Empfehlung enmSchueler.bemerkungen.schulformEmpf = ...
-    			enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
-    			enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
-    			enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;
-    		}
+				manager.addSchueler(dtoSchueler.ID, schuelerabschnitt.jahrgangID, dtoKlasse.ID, dtoSchueler.Nachname, dtoSchueler.Vorname,
+						dtoSchueler.Geschlecht, schuelerabschnitt.BilingualerZweig, schuelerabschnitt.ZieldifferentesLernen,
+						dtoSchueler.Lernstandsbericht);  // Deutsch als Fremdsprache liegt vor, wenn für den Schüler Lernstandsberichte geschrieben werden...
+				enmSchueler = manager.getSchueler(schuelerabschnitt.schuelerID);
+				enmSchueler.lernabschnitt.id = schuelerabschnitt.abschnittID;
+				enmSchueler.lernabschnitt.fehlstundenGesamt = schuelerabschnitt.fehlstundenSummeGesamt;
+				enmSchueler.lernabschnitt.tsFehlstundenGesamt = schuelerabschnitt.tsFehlstundenSummeGesamt;
+				enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
+				enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
+				enmSchueler.lernabschnitt.pruefungsordnung = schuelerabschnitt.pruefungsordnung;
+				enmSchueler.lernabschnitt.lernbereich1note = schuelerabschnitt.lernbereich1note == null ? null : schuelerabschnitt.lernbereich1note.kuerzel;
+				enmSchueler.lernabschnitt.lernbereich2note = schuelerabschnitt.lernbereich2note == null ? null : schuelerabschnitt.lernbereich2note.kuerzel;
+				enmSchueler.lernabschnitt.foerderschwerpunkt1 = schuelerabschnitt.foerderschwerpunkt1Kuerzel;
+				enmSchueler.lernabschnitt.foerderschwerpunkt2 = schuelerabschnitt.foerderschwerpunkt2Kuerzel;
+				enmSchueler.bemerkungen.ASV = schuelerabschnitt.ASV;
+				enmSchueler.bemerkungen.tsASV = schuelerabschnitt.tsASV;
+				enmSchueler.bemerkungen.AUE = schuelerabschnitt.AUE;
+				enmSchueler.bemerkungen.tsAUE = schuelerabschnitt.tsAUE;
+				enmSchueler.bemerkungen.ZB = schuelerabschnitt.zeugnisBemerkungen;
+				enmSchueler.bemerkungen.tsZB = schuelerabschnitt.tsZeugnisBemerkungen;
+				enmSchueler.bemerkungen.LELS = schuelerabschnitt.LELS;
+				// TODO Schulform-Empfehlung enmSchueler.bemerkungen.schulformEmpf = ...
+				enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
+				enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
+				enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;
+			}
 
-    		// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse ENMDaten gearbeitet wird.
-    		// Es wird eine eindeutige ID benötigt, die Kurs- und Klassenübergreifend diese Lerngruppe identifiziert.
-    		final String strLerngruppenID = (schuelerabschnitt.kursID == null)
-    			? "Klasse:" + schuelerabschnitt.klasse + "/" + schuelerabschnitt.fachID
-    			: "Kurs:" + schuelerabschnitt.kursID;
-    		ENMLerngruppe lerngruppe = manager.getLerngruppe(strLerngruppenID);
-    		if (lerngruppe == null) {
+			// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse ENMDaten gearbeitet wird.
+			// Es wird eine eindeutige ID benötigt, die Kurs- und Klassenübergreifend diese Lerngruppe identifiziert.
+			final String strLerngruppenID = (schuelerabschnitt.kursID == null)
+					? "Klasse:" + schuelerabschnitt.klasse + "/" + schuelerabschnitt.fachID
+					: "Kurs:" + schuelerabschnitt.kursID;
+			ENMLerngruppe lerngruppe = manager.getLerngruppe(strLerngruppenID);
+			if (lerngruppe == null) {
 				final DTOFach fach = mapFaecher.get(schuelerabschnitt.fachID);
 				final String kursartAllg = (kursart == null) ? null : (kursart.daten.kuerzelAllg == null) || "".equals(kursart.daten.kuerzelAllg)
 						? kursart.daten.kuerzel : kursart.daten.kuerzelAllg;
@@ -270,18 +272,18 @@ public final class DataENMDaten extends DataManager<Long> {
 				if (manager.getFach(fach.ID) == null)
 					manager.addFach(fach.ID, fach.StatistikFach.daten.kuerzelASD, fach.Kuerzel, fach.SortierungAllg, fach.IstFremdsprache);
 				// Unterscheidung zwischen den beiden Lerngruppen-Typen...
-    			if (schuelerabschnitt.kursID == null) {  // es ist eine Klasse
-    				manager.addLerngruppe(strLerngruppenID, dtoKlasse.ID, schuelerabschnitt.fachID, null,
-        					            fach.Kuerzel, kursartAllg, fach.Unterichtssprache,
-        					            schuelerabschnitt.wochenstunden == null ? 0 : schuelerabschnitt.wochenstunden);
-    			} else {  // es ist ein Kurs
-    				final DTOKurs kurs = mapKurse.get(schuelerabschnitt.kursID);
-    				manager.addLerngruppe(strLerngruppenID, schuelerabschnitt.kursID, schuelerabschnitt.fachID,
-        					kursart == null ? -1 : Integer.parseInt(kursart.daten.nummer), kurs.KurzBez, kursartAllg,
-        					fach.Unterichtssprache, kurs.WochenStd);
-    			}
-    			lerngruppe = manager.getLerngruppe(strLerngruppenID);
-    			lerngruppe.lehrerID.add(schuelerabschnitt.lehrerID);
+				if (schuelerabschnitt.kursID == null) {  // es ist eine Klasse
+					manager.addLerngruppe(strLerngruppenID, dtoKlasse.ID, schuelerabschnitt.fachID, null,
+							fach.Kuerzel, kursartAllg, fach.Unterichtssprache,
+							schuelerabschnitt.wochenstunden == null ? 0 : schuelerabschnitt.wochenstunden);
+				} else {  // es ist ein Kurs
+					final DTOKurs kurs = mapKurse.get(schuelerabschnitt.kursID);
+					manager.addLerngruppe(strLerngruppenID, schuelerabschnitt.kursID, schuelerabschnitt.fachID,
+							kursart == null ? -1 : Integer.parseInt(kursart.daten.nummer), kurs.KurzBez, kursartAllg,
+							fach.Unterichtssprache, kurs.WochenStd);
+				}
+				lerngruppe = manager.getLerngruppe(strLerngruppenID);
+				lerngruppe.lehrerID.add(schuelerabschnitt.lehrerID);
 				if (manager.getLehrer(schuelerabschnitt.lehrerID) == null) {
 					final DTOLehrer dtoFachlehrer = mapLehrer.get(schuelerabschnitt.lehrerID);
 					if (dtoFachlehrer != null) {
@@ -290,66 +292,67 @@ public final class DataENMDaten extends DataManager<Long> {
 					}
 				}
 				// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
-    		}
+			}
 
-    		final int halbjahr = (schule.AnzahlAbschnitte == 4) ? abschnitt.Abschnitt / 2 : abschnitt.Abschnitt;
-    		final boolean istSchriftlich = (schuelerabschnitt.kursID != null)
-    			&& ((kursart == ZulaessigeKursart.LK1) || (kursart == ZulaessigeKursart.LK2)
-    				|| (kursart == ZulaessigeKursart.GKS) || (kursart == ZulaessigeKursart.AB3)
-    				|| ((kursart == ZulaessigeKursart.AB4) && (!("Q2".equals(dtoKlasse.ASDKlasse) && (halbjahr == 2)))));
+			final int halbjahr = (schule.AnzahlAbschnitte == 4) ? abschnitt.Abschnitt / 2 : abschnitt.Abschnitt;
+			final boolean istSchriftlich = (schuelerabschnitt.kursID != null)
+					&& ((kursart == ZulaessigeKursart.LK1) || (kursart == ZulaessigeKursart.LK2)
+							|| (kursart == ZulaessigeKursart.GKS) || (kursart == ZulaessigeKursart.AB3)
+							|| ((kursart == ZulaessigeKursart.AB4) && (!("Q2".equals(dtoKlasse.ASDKlasse) && (halbjahr == 2)))));
 
-    		final String tmpAbiFach = schuelerabschnitt.AbiturFach;
-    		final Integer abiFach = (tmpAbiFach == null) ? null : switch (tmpAbiFach) {
-    			case "1" -> 1;
-    			case "2" -> 2;
-    			case "3" -> 3;
-    			case "4" -> 4;
-    			default -> null;
-    		};
-    		final boolean istGemahnt = (schuelerabschnitt.istGemahnt != null) && schuelerabschnitt.istGemahnt;
-    		final String mahndatum = schuelerabschnitt.mahndatum;
-    		final ENMLeistung enmLeistung = manager.addSchuelerLeistungsdaten(enmSchueler,
-    				schuelerabschnitt.leistungID, lerngruppe.id, schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote,
-    				schuelerabschnitt.noteQuartal.kuerzel, schuelerabschnitt.tsNoteQuartal, istSchriftlich, abiFach,
-    				schuelerabschnitt.fehlstundenGesamt, schuelerabschnitt.tsFehlstundenGesamt,
-    				schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.tsFehlstundenUnentschuldigt,
-    				schuelerabschnitt.fachbezogeneBemerkungen, schuelerabschnitt.tsFachbezogeneBemerkungen, null,
-    				istGemahnt, schuelerabschnitt.tsIstGemahnt, mahndatum);
+			final String tmpAbiFach = schuelerabschnitt.AbiturFach;
+			final Integer abiFach = (tmpAbiFach == null) ? null : switch (tmpAbiFach) {
+				case "1" -> 1;
+				case "2" -> 2;
+				case "3" -> 3;
+				case "4" -> 4;
+				default -> null;
+			};
+			final boolean istGemahnt = (schuelerabschnitt.istGemahnt != null) && schuelerabschnitt.istGemahnt;
+			final String mahndatum = schuelerabschnitt.mahndatum;
+			final ENMLeistung enmLeistung = manager.addSchuelerLeistungsdaten(enmSchueler,
+					schuelerabschnitt.leistungID, lerngruppe.id, schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote,
+					schuelerabschnitt.noteQuartal.kuerzel, schuelerabschnitt.tsNoteQuartal, istSchriftlich, abiFach,
+					schuelerabschnitt.fehlstundenGesamt, schuelerabschnitt.tsFehlstundenGesamt,
+					schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.tsFehlstundenUnentschuldigt,
+					schuelerabschnitt.fachbezogeneBemerkungen, schuelerabschnitt.tsFachbezogeneBemerkungen, null,
+					istGemahnt, schuelerabschnitt.tsIstGemahnt, mahndatum);
 
-    		// Teilleistungen und deren Arten hinzufügen
-    		final List<DTOSchuelerTeilleistung> teilleistungen = mapTeilleistungen.get(schuelerabschnitt.leistungID);
-    		if (teilleistungen != null) {
-	    		for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
-	    			if (teilleistung.Art_ID == null)
-	    				continue;
-	    			// Prüfe die Teilleistungsart und ergänze sie ggf.
-	    			ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
-	    			if (enmTeilleistungsart == null) {
-	        			final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
-	    				if (dtoArt == null) // DB-Error -> should not happen
-	    					throw new NullPointerException();
-	    				manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
-	    						dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
-	    						dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
-	    				enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
-	    			}
-	    			// Füge die Teilleistung hinzu
-	    			final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
-	    			if (teilleistungTimestamps == null)
-	    				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
-	    			manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
-	    					teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
-	    					teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
-	    		}
-    		}
-    		// TODO check and add ZP10 - Data
-    		// TODO check and add BKAbschluss - Data
-    	}
+			// Teilleistungen und deren Arten hinzufügen
+			final List<DTOSchuelerTeilleistung> teilleistungen = mapTeilleistungen.get(schuelerabschnitt.leistungID);
+			if (teilleistungen != null) {
+				for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
+					if (teilleistung.Art_ID == null)
+						continue;
+					// Prüfe die Teilleistungsart und ergänze sie ggf.
+					ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+					if (enmTeilleistungsart == null) {
+						final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
+						if (dtoArt == null) // DB-Error -> should not happen
+							throw new NullPointerException();
+						manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
+								dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
+								dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
+						enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+					}
+					// Füge die Teilleistung hinzu
+					final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
+					if (teilleistungTimestamps == null)
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+								"Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+					manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
+							teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
+							teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
+				}
+			}
+			// TODO check and add ZP10 - Data
+			// TODO check and add BKAbschluss - Data
+		}
 
-    	// Kopiere den Floskel-Katalog in die ENM-Daten
-    	getFloskeln(conn, manager, mapJahrgaenge);
+		// Kopiere den Floskel-Katalog in die ENM-Daten
+		getFloskeln(conn, manager, mapJahrgaenge);
 
-    	return manager.daten;
+		return manager.daten;
 	}
 
 
@@ -361,12 +364,12 @@ public final class DataENMDaten extends DataManager<Long> {
 
 	private static void initManager(final ENMDatenManager manager, final DTOEigeneSchule schule, final DTOSchuljahresabschnitte abschnitt) {
 		// Setze die grundlegenden Schuldaten
-    	manager.setSchuldaten(schule.SchulNr, abschnitt.Jahr, schule.AnzahlAbschnitte, abschnitt.Abschnitt,
-    			/* TODO */ null, /* TODO */ true, /* TODO */ false, /* TODO */ true,
-    			schule.Schulform.daten.kuerzel, /* TODO */ null);
-    	// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
+		manager.setSchuldaten(schule.SchulNr, abschnitt.Jahr, schule.AnzahlAbschnitte, abschnitt.Abschnitt,
+				/* TODO */ null, /* TODO */ true, /* TODO */ false, /* TODO */ true,
+				schule.Schulform.daten.kuerzel, /* TODO */ null);
+		// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
 		manager.addNoten();
-    	// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
+		// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
 		manager.addFoerderschwerpunkte(schule.Schulform);
 	}
 
@@ -390,7 +393,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (schueler.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return schueler.stream()
-				.filter(s -> s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN)
+				.filter(s -> (s.Status == SchuelerStatus.AKTIV) || (s.Status == SchuelerStatus.EXTERN))
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
@@ -451,7 +454,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 		final List<DTOFloskeln> dtoFloskeln = conn.queryAll(DTOFloskeln.class);
 		for (final DTOFloskeln dto : dtoFloskeln) {
-		    final ENMFach fach = manager.getFachByKuerzel(dto.FloskelFach);
+			final ENMFach fach = manager.getFachByKuerzel(dto.FloskelFach);
 			final ENMFloskel enmFl = new ENMFloskel();
 			enmFl.kuerzel = dto.Kuerzel;
 			enmFl.text = dto.FloskelText;
@@ -524,7 +527,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		final List<Long> idsSchueler = listEnmSchueler.stream().map(s -> s.id).distinct().toList();
 		if (idsSchueler.size() != listEnmSchueler.size())
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten haben mindestens eine Schüler-ID doppelt enthalten. Dies ist nicht zulässig.");
-		final Map<Long, DTOSchueler> mapSchuelerDTOs = conn.queryByKeyList(DTOSchueler.class, idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final Map<Long, DTOSchueler> mapSchuelerDTOs = conn.queryByKeyList(DTOSchueler.class,
+				idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		if (mapSchuelerDTOs.keySet().size() != idsSchueler.size())
 			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Schüler in den ENM-Daten konnten auch in der Datenbank gefunden werden.");
 
@@ -538,7 +542,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = listLernabschnitte.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 
 		// Bestimme die Fachbemerkungen zu den Lernabschnitten und erzeuge eine Map für die Abschnitts-ID
-		final List<DTOSchuelerPSFachBemerkungen> listLernabschnittsbemerkungen = conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, idsLernabschnitte);
+		final List<DTOSchuelerPSFachBemerkungen> listLernabschnittsbemerkungen = conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOSchuelerPSFachBemerkungen.class, idsLernabschnitte);
 		final Map<Long, DTOSchuelerPSFachBemerkungen> mapLernabschnittsbemerkungen = listLernabschnittsbemerkungen.isEmpty() ? new HashMap<>()
 				: listLernabschnittsbemerkungen.stream().collect(Collectors.toMap(b -> b.Abschnitt_ID, b -> b));
 
@@ -760,12 +765,12 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @return true, wenn tsCheckStr nach tsOtherStr liegt
 	 */
 	private static boolean isTimestampAfter(final String tsCheckStr, final String tsOtherStr) {
-		if (tsCheckStr == null || tsCheckStr.isBlank())
+		if ((tsCheckStr == null) || tsCheckStr.isBlank())
 			return false;
 		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
 				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 		final Timestamp tsCheck = Timestamp.valueOf(LocalDateTime.parse(tsCheckStr, ofPattern));
-		if (tsOtherStr == null || tsOtherStr.isBlank())
+		if ((tsOtherStr == null) || tsOtherStr.isBlank())
 			return true;
 		final Timestamp tsOther = Timestamp.valueOf(LocalDateTime.parse(tsOtherStr, ofPattern));
 		return tsCheck.after(tsOther);

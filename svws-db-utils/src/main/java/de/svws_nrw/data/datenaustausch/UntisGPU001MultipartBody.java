@@ -15,15 +15,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class UntisGPU001MultipartBody {
 
 	/** die Minimal-Informationen zu dem Stundenplan */
-    @PartType(MediaType.TEXT_PLAIN)
-    @Schema(description = "die Minimal-Informationen zu dem Stundenplan", implementation = StundenplanListeEintragMinimal.class)
+	@PartType(MediaType.TEXT_PLAIN)
+	@Schema(description = "die Minimal-Informationen zu dem Stundenplan", implementation = StundenplanListeEintragMinimal.class)
 	@FormParam("entry")
-    public String entry;
+	public String entry;
 
 	/** Die Textdatei */
-    @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    @Schema(type = "string", format = "binary", description = "file")
+	@PartType(MediaType.APPLICATION_OCTET_STREAM)
+	@Schema(type = "string", format = "binary", description = "file")
 	@FormParam("data")
-    public byte[] data;
+	public byte[] data;
 
 }

@@ -12,25 +12,25 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface ThrowingFunction<T, R> extends Function<T, R> {
 
-    /**
-     * Führt die Funktion auf den Input-Wert t aus und gibt das
-     * Ergebnis zurück.
-     *
-     * @param t   der Input-Wert
-     *
-     * @return das Ergebnis der Funktion für den Eingabewert
-     *
-     * @throws Exception   im Fehlerfall
-     */
-    R applyThrows(T t) throws Exception;
+	/**
+	 * Führt die Funktion auf den Input-Wert t aus und gibt das
+	 * Ergebnis zurück.
+	 *
+	 * @param t   der Input-Wert
+	 *
+	 * @return das Ergebnis der Funktion für den Eingabewert
+	 *
+	 * @throws Exception   im Fehlerfall
+	 */
+	R applyThrows(T t) throws Exception;
 
-    @Override
-    default R apply(final T t) {
-        try {
-            return applyThrows(t);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	@Override
+	default R apply(final T t) {
+		try {
+			return applyThrows(t);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

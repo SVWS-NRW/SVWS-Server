@@ -66,7 +66,7 @@ public final class DataBetriebsliste extends DataManager<Long> {
 		if (betriebe == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Betriebe vorhanden.");
 		final List<BetriebListeEintrag> daten = betriebe.stream().map(dtoMapper).sorted(dataComparator).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

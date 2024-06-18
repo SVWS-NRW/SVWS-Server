@@ -29,7 +29,7 @@ public final class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 		final ArrayList<FachKatalogEintrag> daten = new ArrayList<>();
 		for (final ZulaessigesFach f : ZulaessigesFach.values())
 			daten.addAll(Arrays.asList(f.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

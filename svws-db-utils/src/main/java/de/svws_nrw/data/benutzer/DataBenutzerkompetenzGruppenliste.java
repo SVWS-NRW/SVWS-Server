@@ -35,7 +35,7 @@ public final class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 		final List<BenutzerKompetenzGruppenKatalogEintrag> daten = new ArrayList<>();
 		for (final BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values())
 			daten.add(k.daten);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

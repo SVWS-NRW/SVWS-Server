@@ -123,7 +123,7 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response  persistDTO(final InputStream is, final DTOBeschaeftigungsart dtoObjekt, final Long id) throws ApiOperationException {
+	public Response persistDTO(final InputStream is, final DTOBeschaeftigungsart dtoObjekt, final Long id) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			if (dtoObjekt == null)
@@ -140,7 +140,8 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 						}
 					}
 					// TODO  Überbrüfe bei create Duplikate in DB mit dem gleichem "text"
-					case "text" -> dtoObjekt.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_BeschaeftigungsArt.col_Bezeichnung.datenlaenge());
+					case "text" -> dtoObjekt.Bezeichnung =
+							JSONMapper.convertToString(value, true, true, Schema.tab_K_BeschaeftigungsArt.col_Bezeichnung.datenlaenge());
 					case "istSichtbar" -> dtoObjekt.Sichtbar = JSONMapper.convertToBoolean(value, true);
 					case "istAenderbar" -> dtoObjekt.Aenderbar = JSONMapper.convertToBoolean(value, true);
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);

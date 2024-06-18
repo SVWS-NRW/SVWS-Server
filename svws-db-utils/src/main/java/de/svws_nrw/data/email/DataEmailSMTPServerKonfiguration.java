@@ -36,13 +36,13 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleEmail} in einen Core-DTO {@link SMTPServerKonfiguration}.
 	 */
 	private static final Function<DTOSchuleEmail, SMTPServerKonfiguration> dtoMapper = (final DTOSchuleEmail dto) -> {
-    	final SMTPServerKonfiguration daten = new SMTPServerKonfiguration();
-    	daten.id = dto.ID;
-    	daten.host = dto.SMTPServer;
-    	daten.port = dto.SMTPPort;
-    	daten.useStartTLS = dto.SMTPStartTLS;
-    	daten.useTLS = dto.SMTPUseTLS;
-    	daten.trustTLSHost = dto.SMTPTrustTLSHost;
+		final SMTPServerKonfiguration daten = new SMTPServerKonfiguration();
+		daten.id = dto.ID;
+		daten.host = dto.SMTPServer;
+		daten.port = dto.SMTPPort;
+		daten.useStartTLS = dto.SMTPStartTLS;
+		daten.useTLS = dto.SMTPUseTLS;
+		daten.trustTLSHost = dto.SMTPTrustTLSHost;
 		return daten;
 	};
 
@@ -107,17 +107,16 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOSchuleEmail>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("host", (conn, dto, value, map) -> dto.SMTPServer = JSONMapper.convertToString(value, false, true, 256)),
-		Map.entry("port", (conn, dto, value, map) -> dto.SMTPPort = JSONMapper.convertToIntegerInRange(value, false, 1, 65536)),
-		Map.entry("useStartTLS", (conn, dto, value, map) -> dto.SMTPStartTLS = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("useTLS", (conn, dto, value, map) -> dto.SMTPUseTLS = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("trustTLSHost", (conn, dto, value, map) -> dto.SMTPTrustTLSHost = JSONMapper.convertToString(value, true, false, 256))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("host", (conn, dto, value, map) -> dto.SMTPServer = JSONMapper.convertToString(value, false, true, 256)),
+			Map.entry("port", (conn, dto, value, map) -> dto.SMTPPort = JSONMapper.convertToIntegerInRange(value, false, 1, 65536)),
+			Map.entry("useStartTLS", (conn, dto, value, map) -> dto.SMTPStartTLS = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("useTLS", (conn, dto, value, map) -> dto.SMTPUseTLS = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("trustTLSHost", (conn, dto, value, map) -> dto.SMTPTrustTLSHost = JSONMapper.convertToString(value, true, false, 256)));
 
 
 	@Override

@@ -26,20 +26,20 @@ public final class DataKatalogSprachreferenzniveaus extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final ArrayList<SprachreferenzniveauKatalogEintrag> daten = new ArrayList<>();
-        for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values())
-            daten.addAll(Arrays.asList(ref.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final ArrayList<SprachreferenzniveauKatalogEintrag> daten = new ArrayList<>();
+		for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values())
+			daten.addAll(Arrays.asList(ref.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() {
-	    return this.getAll();
+		return this.getAll();
 	}
 
 	@Override
 	public Response get(final Long id) {
-        throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

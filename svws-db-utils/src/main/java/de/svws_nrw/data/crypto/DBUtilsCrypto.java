@@ -30,7 +30,8 @@ public final class DBUtilsCrypto {
 	}
 
 	private static String nameToAscii(final String name) {
-		final String keineUmlaute = name.trim().replaceAll("Ä", "Ae").replaceAll("Ö", "Oe").replaceAll("Ü", "Ue").replaceAll("ä", "ae").replaceAll("ö", "oe").replaceAll("ü", "ue").replaceAll("ß", "ss");
+		final String keineUmlaute = name.trim().replaceAll("Ä", "Ae").replaceAll("Ö", "Oe").replaceAll("Ü", "Ue").replaceAll("ä", "ae").replaceAll("ö", "oe")
+				.replaceAll("ü", "ue").replaceAll("ß", "ss");
 		final String normalized = Normalizer.normalize(keineUmlaute, Normalizer.Form.NFD).replace('\u0141', 'L').replace('\u0142', 'l');
 		final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 		final String noAccents = pattern.matcher(normalized).replaceAll("");
@@ -41,7 +42,7 @@ public final class DBUtilsCrypto {
 	private static String determineUsername(final String nachname, final String vorname, final int maxlen, final Set<String> existingUsernames) {
 		final String vn = nameToAscii(vorname);
 		String nn = nameToAscii(nachname);
-		if (nn.length() > maxlen - 2)
+		if (nn.length() > (maxlen - 2))
 			nn = nn.substring(0, maxlen - 2);
 		// Erster Versuch mit vorname.nachname
 		String username = vn + "." + nn;
@@ -108,7 +109,7 @@ public final class DBUtilsCrypto {
 			final List<DTOCredentials> allCreds = conn.queryAll(DTOCredentials.class);
 			final Set<String> allUsernames = allCreds.stream().map(c -> c.Benutzername).collect(Collectors.toSet());
 			final Set<String> allUserPseudonyms = allCreds.stream().map(c -> c.BenutzernamePseudonym).collect(Collectors.toSet());
- 			cred = new DTOCredentials(credId, determineUsername(schueler.Vorname, schueler.Nachname, 16, allUsernames));
+			cred = new DTOCredentials(credId, determineUsername(schueler.Vorname, schueler.Nachname, 16, allUsernames));
 			cred.BenutzernamePseudonym = determinePseudonym("s", credId, allUserPseudonyms);
 			cred.Initialkennwort = Passwords.generateRandomPassword(12);
 			cred.PasswordHash = Benutzer.erstellePasswortHash(cred.Initialkennwort);
@@ -139,7 +140,8 @@ public final class DBUtilsCrypto {
 	 */
 	public static void addRSAKeyPair(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
 		if ((cred.RSAPrivateKey != null) || (cred.RSAPublicKey != null))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Erstellen eines neuen RSA-Schlüsselpaares ist fehlgeschlagen, da bereits ein Schlüsselpaar vorhanden ist.");
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Das Erstellen eines neuen RSA-Schlüsselpaares ist fehlgeschlagen, da bereits ein Schlüsselpaar vorhanden ist.");
 		conn.transactionFlush();
 		try {
 			final var keypair = RSA.createKey();
@@ -148,7 +150,8 @@ public final class DBUtilsCrypto {
 			conn.transactionPersist(cred);
 			conn.transactionFlush();
 		} catch (@SuppressWarnings("unused") final RSAException e) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim erstellen des RSA-Schlüsselpaares für die Credentials mit der ID %d.".formatted(cred.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Fehler beim erstellen des RSA-Schlüsselpaares für die Credentials mit der ID %d.".formatted(cred.ID));
 		}
 	}
 
@@ -165,14 +168,16 @@ public final class DBUtilsCrypto {
 	 */
 	public static void addAESKey(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
 		if (cred.AES != null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Erstellen eines neuen AES-Schlüssel ist fehlgeschlagen, da bereits ein Schlüssel vorhanden ist.");
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Das Erstellen eines neuen AES-Schlüssel ist fehlgeschlagen, da bereits ein Schlüssel vorhanden ist.");
 		conn.transactionFlush();
 		try {
 			cred.AES = Base64.getEncoder().encodeToString(AES.getRandomKey256().getEncoded());
 			conn.transactionPersist(cred);
 			conn.transactionFlush();
 		} catch (@SuppressWarnings("unused") final AESException e) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim erstellen des AES-Schlüssels für die Credentials mit der ID %d.".formatted(cred.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Fehler beim erstellen des AES-Schlüssels für die Credentials mit der ID %d.".formatted(cred.ID));
 		}
 	}
 

@@ -34,36 +34,37 @@ public final class DataLupo {
 
 	private static final Random random = new Random();
 
-    /**
-     * Importiert die in dem Multipart übergebene Datei.
-     *
-     * @param user               der Datenbank-Benutzer
-     * @param multipart          der Multipart-Body mmit der Datei
+	/**
+	 * Importiert die in dem Multipart übergebene Datei.
+	 *
+	 * @param user               der Datenbank-Benutzer
+	 * @param multipart          der Multipart-Body mmit der Datei
 	 * @param replaceJahrgang    gibt an, ob alte Daten für den Jahrgang der LuPO-Datei ersetzt werden
 	 *                           sollen, sofern sie bereits vorhanden sind.
 	 * @param replaceSchueler    gibt an, ob alte Daten für die Schüler der LuPO-Datei ersetzt werden
 	 *                           sollen, sofern sie bereits vorhanden sind.
-     *
-     * @return die HTTP-Response mit dem Log
+	 *
+	 * @return die HTTP-Response mit dem Log
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang, final boolean replaceSchueler) throws ApiOperationException {
-    	final Logger logger = new Logger();
-    	final LogConsumerList log = new LogConsumerList();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
+	 */
+	public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang,
+			final boolean replaceSchueler) throws ApiOperationException {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
 
-    	// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
-    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        final String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-          .limit(40)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString() + ".lup";
-        logger.logLn("Erstelle eine temporäre LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-    	try {
-    		Files.createDirectories(Paths.get(tmpDirectory));
+		// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
+		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
+		final String tmpFilename = user.connectionManager.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
+				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
+				.limit(40)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString() + ".lup";
+		logger.logLn("Erstelle eine temporäre LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
+		try {
+			Files.createDirectories(Paths.get(tmpDirectory));
 			Files.write(Paths.get(tmpDirectory + "/" + tmpFilename), multipart.data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			logger.logLn(2, "Fehler beim Erstellen der temporären LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
@@ -72,7 +73,7 @@ public final class DataLupo {
 			return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
 
-    	logger.logLn("Importiere in die temporäre LuPO-Datenbank:");
+		logger.logLn("Importiere in die temporäre LuPO-Datenbank:");
 		final LupoMDB lupoMDB = new LupoMDB(tmpDirectory + "/" + tmpFilename);
 		lupoMDB.logger.copyConsumer(logger);
 		try {
@@ -104,35 +105,35 @@ public final class DataLupo {
 		daten.success = true;
 		daten.log = log.getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+	}
 
 
-    /**
-     * Export eine LuPO-MDB für den angegebenen Jahrgang
-     *
-     * @param user       der Datenbank-Benutzer
-     * @param jahrgang   der Jahrgang, für den die LuPO-Datenbank erstellt werden soll
-     *
-     * @return die HTTP-Response
+	/**
+	 * Export eine LuPO-MDB für den angegebenen Jahrgang
+	 *
+	 * @param user       der Datenbank-Benutzer
+	 * @param jahrgang   der Jahrgang, für den die LuPO-Datenbank erstellt werden soll
+	 *
+	 * @return die HTTP-Response
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public static Response exportMDB(final Benutzer user, final String jahrgang) throws ApiOperationException {
-    	final Logger logger = new Logger();
-    	final LogConsumerList log = new LogConsumerList();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
+	 */
+	public static Response exportMDB(final Benutzer user, final String jahrgang) throws ApiOperationException {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
 
-    	// Bestimme den Dateinamen für eine temporäre LuPO-Datei
-    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        final String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-          .limit(40)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString() + ".lup";
+		// Bestimme den Dateinamen für eine temporäre LuPO-Datei
+		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
+		final String tmpFilename = user.connectionManager.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
+				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
+				.limit(40)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString() + ".lup";
 
-        // Exportiere
-        logger.logLn("Exportiere die Laufbahndaten in eine temporäre LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\": ");
+		// Exportiere
+		logger.logLn("Exportiere die Laufbahndaten in eine temporäre LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\": ");
 		final LupoMDB lupoMDB = new LupoMDB(tmpDirectory + "/" + tmpFilename);
 		lupoMDB.logger.copyConsumer(logger);
 		lupoMDB.getFromLeistungsdaten(user, jahrgang);
@@ -148,7 +149,7 @@ public final class DataLupo {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 
-        // Lese die Datenbank in die Response ein
+		// Lese die Datenbank in die Response ein
 		logger.logLn("Lese die temporären LuPO-Datei unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\" ein.");
 		final Response response = Response.ok((StreamingOutput) output -> {
 			try {
@@ -157,11 +158,11 @@ public final class DataLupo {
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
-        }).header("Content-Disposition", "attachment; filename=\"" + user.connectionManager.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
+		}).header("Content-Disposition", "attachment; filename=\"" + user.connectionManager.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
 		if (!response.hasEntity())
 			logger.logLn(2, "[FEHLER]");
 		logger.logLn("LuPO-Datei für die Antwort eingelesen.");
 		return response;
-    }
+	}
 
 }

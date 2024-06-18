@@ -54,16 +54,17 @@ public final class DBBenutzerUtils {
 		user.getKompetenzen().clear();
 		try (DBEntityManager conn = user.getEntityManager()) {
 			// Bestimme den Benutzer in der Datenbank
-			final DTOViewBenutzerdetails dbBenutzer = conn.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class, user.getUsername()).stream().findFirst().orElse(null);
+			final DTOViewBenutzerdetails dbBenutzer = conn.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class,
+					user.getUsername()).stream().findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return;
 			// Ordne dem Benutzer die Kompetenzen zu
 			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin))
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
 			conn.queryList(DTOViewBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOViewBenutzerKompetenz.class, dbBenutzer.ID).stream()
-				.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
-				.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
-				.forEach(komp -> user.getKompetenzen().add(komp));
+					.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
+					.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
+					.forEach(komp -> user.getKompetenzen().add(komp));
 			// Funktionsbezogene Rechte bei Lehrern
 			if ((dbBenutzer.Typ == BenutzerTyp.LEHRER) && (dbBenutzer.TypID != null)) {
 				// Bestimme die Klassen mit Klassenlehrern oder Abteilungsleiterrechten ...
@@ -73,7 +74,8 @@ public final class DBBenutzerUtils {
 				final List<Long> listAbteilungsIDs = conn.queryList(DTOAbteilungen.QUERY_BY_ABTEILUNGSLEITER_ID, DTOAbteilungen.class, idLehrer)
 						.stream().map(a -> a.ID).toList();
 				if (!listAbteilungsIDs.isEmpty()) {
-					final List<DTOAbteilungsKlassen> listAbteilungenKlassen = conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, listAbteilungsIDs);
+					final List<DTOAbteilungsKlassen> listAbteilungenKlassen =
+							conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, listAbteilungsIDs);
 					idsKlassen.addAll(listAbteilungenKlassen.stream().map(ak -> ak.Klassen_ID).toList());
 				}
 				// ... die Klassen-IDs von Klassenleitungen anhand der Klassenlehrer-Tabelle - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
@@ -145,7 +147,8 @@ public final class DBBenutzerUtils {
 	 */
 	private static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode) throws ApiOperationException {
 		if (!mode.checkServerMode(SVWSKonfiguration.get().getServerMode()))
-			throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Der Dienst ist noch nicht verfügbar, da er sich zur Zeit noch in der Entwicklung befindet (Stand: %s).".formatted(mode.name()));
+			throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
+					"Der Dienst ist noch nicht verfügbar, da er sich zur Zeit noch in der Entwicklung befindet (Stand: %s).".formatted(mode.name()));
 		if (request.getUserPrincipal() instanceof final BenutzerApiPrincipal openAPIPrincipal) {
 			final Benutzer user = openAPIPrincipal.getUser();
 			if (user == null)
@@ -158,9 +161,11 @@ public final class DBBenutzerUtils {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Der Dienst ist noch nicht verfügbar, da kein gültiger Pfad angegeben wurde.");
 			final boolean allowDeactivatedSchema = path.matches("/api/schema/import/.*") || path.matches("/api/schema/migrate/.*");
 			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()) && !allowDeactivatedSchema)
-				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
+						"Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
-				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
+						"Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
 			return user;
 		}
 		return null;
@@ -179,10 +184,11 @@ public final class DBBenutzerUtils {
 	 * @throws ApiOperationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                 so wird eine ApiOperationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
+	public static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen)
+			throws ApiOperationException {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
-		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)))
+		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen))))
 			throw new ApiOperationException(Status.FORBIDDEN);
 		return user;
 	}
@@ -202,10 +208,11 @@ public final class DBBenutzerUtils {
 	 * @throws ApiOperationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                 so wird eine ApiOperationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	private static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
+	private static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id,
+			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
-		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id))
+		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id)))
 			throw new ApiOperationException(Status.FORBIDDEN);
 		return user;
 	}
@@ -225,7 +232,8 @@ public final class DBBenutzerUtils {
 	 * @throws ApiOperationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                 so wird eine ApiOperationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnection(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
+	public static DBEntityManager getDBConnection(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen)
+			throws ApiOperationException {
 		return getSVWSUser(request, mode, kompetenzen).getEntityManager();
 	}
 
@@ -246,7 +254,8 @@ public final class DBBenutzerUtils {
 	 * @throws ApiOperationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                 so wird eine ApiOperationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
+	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id,
+			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
 	}
 

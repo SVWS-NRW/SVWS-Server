@@ -62,10 +62,10 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<DTOKatalogAdressart> katalog = conn.queryAll(DTOKatalogAdressart.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -85,71 +85,72 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 	}
 
 	/**
-     * Erstellt eine neue Betriebsart
-     *
-     * @param is            das JSON-Objekt mit den Daten
-     *
-     * @return Eine Response mit der neuen Betriebsart
+	 * Erstellt eine neue Betriebsart
+	 *
+	 * @param is            das JSON-Objekt mit den Daten
+	 *
+	 * @return Eine Response mit der neuen Betriebsart
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response create(final InputStream is) throws ApiOperationException {
-        DTOKatalogAdressart k_addressart = null;
-        final Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0) {
-            // Bestimme die ID der neuen Ansprechpartners
-            final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Adressart");
-            final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+	 */
+	public Response create(final InputStream is) throws ApiOperationException {
+		DTOKatalogAdressart k_addressart = null;
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			// Bestimme die ID der neuen Ansprechpartners
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Adressart");
+			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
-            // Schülerbetrieb anlegen
-            k_addressart = new DTOKatalogAdressart(id, "");
+			// Schülerbetrieb anlegen
+			k_addressart = new DTOKatalogAdressart(id, "");
 
-            for (final Entry<String, Object> entry : map.entrySet()) {
-                final String key = entry.getKey();
-                final Object value = entry.getValue();
-                switch (key) {
-                    case "id" -> {
-                        // ignoriere eine angegebene ID
-                    }
-                    case "text" -> k_addressart.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
-                    case "istSichtbar" -> k_addressart.Sichtbar = JSONMapper.convertToBoolean(value, true);
-                    case "istAenderbar" -> k_addressart.Aenderbar = JSONMapper.convertToBoolean(value, true);
-                    default -> throw new ApiOperationException(Status.BAD_REQUEST);
-                }
-            }
-            conn.transactionPersist(k_addressart);
-        }
-        final KatalogEintrag daten = dtoMapper.apply(k_addressart);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "id" -> {
+						// ignoriere eine angegebene ID
+					}
+					case "text" ->
+						k_addressart.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
+					case "istSichtbar" -> k_addressart.Sichtbar = JSONMapper.convertToBoolean(value, true);
+					case "istAenderbar" -> k_addressart.Aenderbar = JSONMapper.convertToBoolean(value, true);
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
+				}
+			}
+			conn.transactionPersist(k_addressart);
+		}
+		final KatalogEintrag daten = dtoMapper.apply(k_addressart);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
-        final Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0) {
-            final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
-            if (art == null)
-                throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
-            for (final Entry<String, Object> entry : map.entrySet()) {
-                final String key = entry.getKey();
-                final Object value = entry.getValue();
-                switch (key) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
+			if (art == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
-                    case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
+					case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
 					case "istSichtbar" -> art.Sichtbar = JSONMapper.convertToBoolean(value, true);
 					case "istAenderbar" -> art.Aenderbar = JSONMapper.convertToBoolean(value, true);
-                   	default -> throw new ApiOperationException(Status.BAD_REQUEST);
-                }
-            }
-            conn.transactionPersist(art);
-        }
-        return Response.status(Status.OK).build();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
+				}
+			}
+			conn.transactionPersist(art);
+		}
+		return Response.status(Status.OK).build();
 	}
 
 }
