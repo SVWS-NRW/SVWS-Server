@@ -29,7 +29,7 @@ public final class DataKatalogLehrerLehramtAnerkennungen extends DataManager<Lon
 		final ArrayList<LehrerKatalogLehramtAnerkennungEintrag> daten = new ArrayList<>();
 		for (final LehrerLehramtAnerkennung status : LehrerLehramtAnerkennung.values())
 			daten.addAll(Arrays.asList(status.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

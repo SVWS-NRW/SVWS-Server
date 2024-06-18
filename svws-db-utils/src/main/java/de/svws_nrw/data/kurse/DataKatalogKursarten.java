@@ -29,7 +29,7 @@ public final class DataKatalogKursarten extends DataManager<Long> {
 		final ArrayList<KursartKatalogEintrag> daten = new ArrayList<>();
 		for (final ZulaessigeKursart ka : ZulaessigeKursart.values())
 			daten.addAll(Arrays.asList(ka.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

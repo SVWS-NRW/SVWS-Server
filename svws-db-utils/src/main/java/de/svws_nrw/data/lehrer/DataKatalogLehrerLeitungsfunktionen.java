@@ -17,19 +17,19 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataKatalogLehrerLeitungsfunktionen extends DataManager<Long> {
 
-    /**
-     * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogLeitungsfunktionenEintrag}.
-     */
+	/**
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogLeitungsfunktionenEintrag}.
+	 */
 	public DataKatalogLehrerLeitungsfunktionen() {
 		super(null);
 	}
 
 	@Override
 	public Response getAll() {
-        final ArrayList<LehrerKatalogLeitungsfunktionenEintrag> daten = new ArrayList<>();
-        for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values())
-            daten.addAll(Arrays.asList(slf.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final ArrayList<LehrerKatalogLeitungsfunktionenEintrag> daten = new ArrayList<>();
+		for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values())
+			daten.addAll(Arrays.asList(slf.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

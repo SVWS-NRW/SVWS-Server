@@ -65,16 +65,18 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 	 *
 	 * @return die Liste mit den Mehrleistungen
 	 */
-	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
+	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn,
+			final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> result = new ArrayList<>();
-    	// Bestimme die Anrechungen für die Lehrerabschnittsdaten
-		final List<DTOLehrerMehrleistung> dtos = conn.queryList(DTOLehrerMehrleistung.QUERY_BY_ABSCHNITT_ID, DTOLehrerMehrleistung.class, idLehrerabschnittsdaten);
-    	if (dtos == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerMehrleistung dto : dtos)
-    		result.add(dtoMapper.apply(dto));
-    	return result;
+		// Bestimme die Anrechungen für die Lehrerabschnittsdaten
+		final List<DTOLehrerMehrleistung> dtos =
+				conn.queryList(DTOLehrerMehrleistung.QUERY_BY_ABSCHNITT_ID, DTOLehrerMehrleistung.class, idLehrerabschnittsdaten);
+		if (dtos == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerMehrleistung dto : dtos)
+			result.add(dtoMapper.apply(dto));
+		return result;
 	}
 
 	@Override
@@ -82,34 +84,33 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerMehrleistung dto = conn.queryByKey(DTOLehrerMehrleistung.class, id);
-    	if (dto == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = dtoMapper.apply(dto);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = dtoMapper.apply(dto);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private final Map<String, DataBasicMapper<DTOLehrerMehrleistung>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, anrechnung, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if ((patch_id != anrechnung.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idAbschnittsdaten", (conn, anrechnung, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if (patch_id != anrechnung.Abschnitt_ID)
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idGrund", (conn, anrechnung, value, map) -> {
-			final long idGrund = JSONMapper.convertToLong(value, false);
-			final LehrerMehrleistungArt grund = LehrerMehrleistungArt.getByID(idGrund);
-			if (grund == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			anrechnung.MehrleistungsgrundKrz = grund.daten.kuerzel;
-		}),
-		Map.entry("anzahl", (conn, anrechnung, value, map) -> {
-			anrechnung.MehrleistungStd = JSONMapper.convertToDouble(value, false);
-		})
-	);
+			Map.entry("id", (conn, anrechnung, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if ((patch_id != anrechnung.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idAbschnittsdaten", (conn, anrechnung, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if (patch_id != anrechnung.Abschnitt_ID)
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idGrund", (conn, anrechnung, value, map) -> {
+				final long idGrund = JSONMapper.convertToLong(value, false);
+				final LehrerMehrleistungArt grund = LehrerMehrleistungArt.getByID(idGrund);
+				if (grund == null)
+					throw new ApiOperationException(Status.NOT_FOUND);
+				anrechnung.MehrleistungsgrundKrz = grund.daten.kuerzel;
+			}),
+			Map.entry("anzahl", (conn, anrechnung, value, map) -> {
+				anrechnung.MehrleistungStd = JSONMapper.convertToDouble(value, false);
+			}));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

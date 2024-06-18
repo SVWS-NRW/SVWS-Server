@@ -75,21 +75,21 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 	 */
 	public static List<LehrerPersonalabschnittsdaten> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerPersonalabschnittsdaten> result = new ArrayList<>();
-    	// Bestimme die Abschnittsdaten des Lehrers
+		// Bestimme die Abschnittsdaten des Lehrers
 		final List<DTOLehrerAbschnittsdaten> abschnittsdaten = conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_LEHRER_ID,
 				DTOLehrerAbschnittsdaten.class, idLehrer);
-    	if (abschnittsdaten == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
-    		final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(l);
-    		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, l.ID));
-    		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
-    		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
-    		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
-    		result.add(daten);
-    	}
-    	return result;
+		if (abschnittsdaten == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
+			final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(l);
+			daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, l.ID));
+			daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
+			daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
+			daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
+			result.add(daten);
+		}
+		return result;
 	}
 
 	@Override
@@ -97,62 +97,61 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerAbschnittsdaten abschnittsdaten = conn.queryByKey(DTOLehrerAbschnittsdaten.class, id);
-    	if (abschnittsdaten == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		if (abschnittsdaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(abschnittsdaten);
 		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private final Map<String, DataBasicMapper<DTOLehrerAbschnittsdaten>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, abschnittsdaten, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != abschnittsdaten.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("pflichtstundensoll", (conn, abschnittsdaten, value, map) -> {
-			abschnittsdaten.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
-		}),
-		Map.entry("rechtsverhaeltnis", (conn, abschnittsdaten, value, map) -> {
-			final String strData = JSONMapper.convertToString(value, true, false, null);
-			if (strData == null) {
-				abschnittsdaten.Rechtsverhaeltnis = null;
-			} else {
-				final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getByKuerzel(strData);
-				if (rv == null)
-					throw new ApiOperationException(Status.NOT_FOUND);
-				abschnittsdaten.Rechtsverhaeltnis = rv.daten.kuerzel;
-			}
-		}),
-		Map.entry("beschaeftigungsart", (conn, abschnittsdaten, value, map) -> {
-			final String strData = JSONMapper.convertToString(value, true, false, null);
-			if (strData == null) {
-				abschnittsdaten.Beschaeftigungsart = null;
-			} else {
-				final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.getByKuerzel(strData);
-				if (ba == null)
-					throw new ApiOperationException(Status.NOT_FOUND);
-				abschnittsdaten.Beschaeftigungsart = ba.daten.kuerzel;
-			}
-		}),
-		Map.entry("einsatzstatus", (conn, abschnittsdaten, value, map) -> {
-			final String strData = JSONMapper.convertToString(value, true, false, null);
-			if (strData == null) {
-				abschnittsdaten.Einsatzstatus = null;
-			} else {
-				final LehrerEinsatzstatus es = LehrerEinsatzstatus.getByKuerzel(strData);
-				if (es == null)
-					throw new ApiOperationException(Status.NOT_FOUND);
-				abschnittsdaten.Einsatzstatus = es.daten.kuerzel;
-			}
-		}),
-		Map.entry("stammschulnummer", (conn, lehrer, value, map) -> {
-			lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.datenlaenge());
-		})
-	);
+			Map.entry("id", (conn, abschnittsdaten, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != abschnittsdaten.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("pflichtstundensoll", (conn, abschnittsdaten, value, map) -> {
+				abschnittsdaten.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
+			}),
+			Map.entry("rechtsverhaeltnis", (conn, abschnittsdaten, value, map) -> {
+				final String strData = JSONMapper.convertToString(value, true, false, null);
+				if (strData == null) {
+					abschnittsdaten.Rechtsverhaeltnis = null;
+				} else {
+					final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getByKuerzel(strData);
+					if (rv == null)
+						throw new ApiOperationException(Status.NOT_FOUND);
+					abschnittsdaten.Rechtsverhaeltnis = rv.daten.kuerzel;
+				}
+			}),
+			Map.entry("beschaeftigungsart", (conn, abschnittsdaten, value, map) -> {
+				final String strData = JSONMapper.convertToString(value, true, false, null);
+				if (strData == null) {
+					abschnittsdaten.Beschaeftigungsart = null;
+				} else {
+					final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.getByKuerzel(strData);
+					if (ba == null)
+						throw new ApiOperationException(Status.NOT_FOUND);
+					abschnittsdaten.Beschaeftigungsart = ba.daten.kuerzel;
+				}
+			}),
+			Map.entry("einsatzstatus", (conn, abschnittsdaten, value, map) -> {
+				final String strData = JSONMapper.convertToString(value, true, false, null);
+				if (strData == null) {
+					abschnittsdaten.Einsatzstatus = null;
+				} else {
+					final LehrerEinsatzstatus es = LehrerEinsatzstatus.getByKuerzel(strData);
+					if (es == null)
+						throw new ApiOperationException(Status.NOT_FOUND);
+					abschnittsdaten.Einsatzstatus = es.daten.kuerzel;
+				}
+			}),
+			Map.entry("stammschulnummer", (conn, lehrer, value, map) -> {
+				lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.datenlaenge());
+			}));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

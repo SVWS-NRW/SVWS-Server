@@ -61,22 +61,22 @@ public final class DataLehrerliste extends DataManager<Long> {
 			return 0;
 		int result = collator.compare(a.kuerzel, b.kuerzel);
 		if (result == 0) {
-    		if ((a.nachname == null) && (b.nachname != null))
-    			return -1;
-    		else if ((a.nachname != null) && (b.nachname == null))
-    			return 1;
-    		else if ((a.nachname == null) && (b.nachname == null))
-    			return 0;
-    		result = collator.compare(a.nachname, b.nachname);
+			if ((a.nachname == null) && (b.nachname != null))
+				return -1;
+			else if ((a.nachname != null) && (b.nachname == null))
+				return 1;
+			else if ((a.nachname == null) && (b.nachname == null))
+				return 0;
+			result = collator.compare(a.nachname, b.nachname);
 		}
 		if (result == 0) {
-    		if ((a.vorname == null) && (b.vorname != null))
-    			return -1;
-    		else if ((a.vorname != null) && (b.vorname == null))
-    			return 1;
-    		else if ((a.vorname == null) && (b.vorname == null))
-    			return 0;
-    		result = collator.compare(a.vorname, b.vorname);
+			if ((a.vorname == null) && (b.vorname != null))
+				return -1;
+			else if ((a.vorname != null) && (b.vorname == null))
+				return 1;
+			else if ((a.vorname == null) && (b.vorname == null))
+				return 0;
+			result = collator.compare(a.vorname, b.vorname);
 		}
 		return result;
 	};
@@ -92,26 +92,26 @@ public final class DataLehrerliste extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static List<LehrerListeEintrag> getLehrerListe(final DBEntityManager conn) throws ApiOperationException {
-    	final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
-    	if (lehrer == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Lehrer in der Datenbank gefunden.");
-    	return lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
+		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
+		if (lehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Lehrer in der Datenbank gefunden.");
+		return lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<LehrerListeEintrag> daten = getLehrerListe(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<LehrerListeEintrag> daten = getLehrerListe(conn);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
-    	if (lehrer == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (lehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

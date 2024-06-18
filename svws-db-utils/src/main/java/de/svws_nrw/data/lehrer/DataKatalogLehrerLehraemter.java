@@ -29,7 +29,7 @@ public final class DataKatalogLehrerLehraemter extends DataManager<Long> {
 		final ArrayList<LehrerKatalogLehramtEintrag> daten = new ArrayList<>();
 		for (final LehrerLehramt status : LehrerLehramt.values())
 			daten.addAll(Arrays.asList(status.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

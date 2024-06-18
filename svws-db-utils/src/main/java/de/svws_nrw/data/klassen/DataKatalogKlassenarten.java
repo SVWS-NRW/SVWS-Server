@@ -29,7 +29,7 @@ public final class DataKatalogKlassenarten extends DataManager<Long> {
 		final ArrayList<KlassenartKatalogEintrag> daten = new ArrayList<>();
 		for (final Klassenart ka : Klassenart.values())
 			daten.addAll(Arrays.asList(ka.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

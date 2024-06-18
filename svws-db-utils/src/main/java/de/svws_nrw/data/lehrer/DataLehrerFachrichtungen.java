@@ -63,14 +63,15 @@ public final class DataLehrerFachrichtungen extends DataManager<Long> {
 	 */
 	public static List<LehrerFachrichtungEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerFachrichtungEintrag> result = new ArrayList<>();
-    	// Bestimme die Fachrichtungen des Lehrers
-		final List<DTOLehrerLehramtFachrichtung> daten = conn.queryList(DTOLehrerLehramtFachrichtung.QUERY_BY_LEHRER_ID, DTOLehrerLehramtFachrichtung.class, idLehrer);
-    	if (daten == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerLehramtFachrichtung l : daten)
-    		result.add(dtoMapper.apply(l));
-    	return result;
+		// Bestimme die Fachrichtungen des Lehrers
+		final List<DTOLehrerLehramtFachrichtung> daten =
+				conn.queryList(DTOLehrerLehramtFachrichtung.QUERY_BY_LEHRER_ID, DTOLehrerLehramtFachrichtung.class, idLehrer);
+		if (daten == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerLehramtFachrichtung l : daten)
+			result.add(dtoMapper.apply(l));
+		return result;
 	}
 
 	@Override

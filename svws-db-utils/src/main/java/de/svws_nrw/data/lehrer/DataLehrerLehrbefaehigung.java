@@ -63,14 +63,15 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 	 */
 	public static List<LehrerLehrbefaehigungEintrag> getByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerLehrbefaehigungEintrag> result = new ArrayList<>();
-    	// Bestimme die Lehrbefähigungen des Lehrers
-		final List<DTOLehrerLehramtBefaehigung> daten = conn.queryList(DTOLehrerLehramtBefaehigung.QUERY_BY_LEHRER_ID, DTOLehrerLehramtBefaehigung.class, idLehrer);
-    	if (daten == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerLehramtBefaehigung l : daten)
-    		result.add(dtoMapper.apply(l));
-    	return result;
+		// Bestimme die Lehrbefähigungen des Lehrers
+		final List<DTOLehrerLehramtBefaehigung> daten =
+				conn.queryList(DTOLehrerLehramtBefaehigung.QUERY_BY_LEHRER_ID, DTOLehrerLehramtBefaehigung.class, idLehrer);
+		if (daten == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerLehramtBefaehigung l : daten)
+			result.add(dtoMapper.apply(l));
+		return result;
 	}
 
 	@Override

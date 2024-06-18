@@ -29,7 +29,7 @@ public final class DataKatalogLehrerLehrbefaehigungen extends DataManager<Long> 
 		final ArrayList<LehrerKatalogLehrbefaehigungEintrag> daten = new ArrayList<>();
 		for (final LehrerLehrbefaehigung status : LehrerLehrbefaehigung.values())
 			daten.addAll(Arrays.asList(status.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

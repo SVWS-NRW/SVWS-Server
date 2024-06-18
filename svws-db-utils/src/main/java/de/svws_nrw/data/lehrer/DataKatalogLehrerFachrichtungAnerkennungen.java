@@ -29,7 +29,7 @@ public final class DataKatalogLehrerFachrichtungAnerkennungen extends DataManage
 		final ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag> daten = new ArrayList<>();
 		for (final LehrerFachrichtungAnerkennung status : LehrerFachrichtungAnerkennung.values())
 			daten.addAll(Arrays.asList(status.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

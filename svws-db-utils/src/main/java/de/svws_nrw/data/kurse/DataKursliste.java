@@ -86,46 +86,46 @@ public final class DataKursliste extends DataManager<Long> {
 	 */
 	public static @NotNull List<@NotNull KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn,
 			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) {
-    	final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
-    		? conn.queryAll(DTOKurs.class)
-    		: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
-    	if (kurse.isEmpty())
-    		return new ArrayList<>();
-    	// Erstelle die Liste der Kurse
-    	final List<KursDaten> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
-    	if (!mitSchuelerInfo)
-    		return daten;
-    	// Ergänze die Liste der Schüler in den Kursen
-    	final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
-    	final List<DTOKursSchueler> listKursSchueler =
-    			conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs);
-    	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-    	final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-    	final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
-    	for (final DTOKursSchueler ks : listKursSchueler) {
-    		final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
-    		if (dtoSchueler == null)
-    			continue;
-    		List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
-    		if (listSchueler == null) {
-    			listSchueler = new ArrayList<>();
-    			mapKursSchueler.put(ks.Kurs_ID, listSchueler);
-    		}
-    		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
-    	}
-    	for (final KursDaten eintrag : daten) {
-    		final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
-    		if (listSchueler != null)
-    			eintrag.schueler.addAll(listSchueler);
-    	}
-    	return daten;
+		final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
+				? conn.queryAll(DTOKurs.class)
+				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
+		if (kurse.isEmpty())
+			return new ArrayList<>();
+		// Erstelle die Liste der Kurse
+		final List<KursDaten> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+		if (!mitSchuelerInfo)
+			return daten;
+		// Ergänze die Liste der Schüler in den Kursen
+		final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
+		final List<DTOKursSchueler> listKursSchueler = conn.queryList(
+				"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs);
+		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
+		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
+		for (final DTOKursSchueler ks : listKursSchueler) {
+			final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
+			if (dtoSchueler == null)
+				continue;
+			List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
+			if (listSchueler == null) {
+				listSchueler = new ArrayList<>();
+				mapKursSchueler.put(ks.Kurs_ID, listSchueler);
+			}
+			listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
+		}
+		for (final KursDaten eintrag : daten) {
+			final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
+			if (listSchueler != null)
+				eintrag.schueler.addAll(listSchueler);
+		}
+		return daten;
 	}
 
 
 	@Override
 	public Response getAll() {
 		final @NotNull List<@NotNull KursDaten> daten = getKursListenFuerAbschnitt(conn, abschnitt, true);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

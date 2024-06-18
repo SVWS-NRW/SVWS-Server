@@ -53,7 +53,7 @@ public final class DataOrtsteile extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<OrtsteilKatalogEintrag> daten = getOrtsteile();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

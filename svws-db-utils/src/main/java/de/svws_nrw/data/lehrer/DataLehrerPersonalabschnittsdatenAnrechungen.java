@@ -38,14 +38,15 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrerAnrechnungsstunde} in einen Core-DTO {@link LehrerPersonalabschnittsdatenAnrechnungsstunden}.
 	 */
-	private static final Function<DTOLehrerAnrechnungsstunde, LehrerPersonalabschnittsdatenAnrechnungsstunden> dtoMapper = (final DTOLehrerAnrechnungsstunde dto) -> {
-		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
-		daten.id = dto.ID;
-		daten.idAbschnittsdaten = dto.Abschnitt_ID;
-		daten.idGrund = LehrerAnrechnungsgrund.getByKuerzel(dto.AnrechnungsgrundKrz).daten.id;
-		daten.anzahl = dto.AnrechnungStd == null ? 0.0 : dto.AnrechnungStd;
-		return daten;
-	};
+	private static final Function<DTOLehrerAnrechnungsstunde, LehrerPersonalabschnittsdatenAnrechnungsstunden> dtoMapper =
+			(final DTOLehrerAnrechnungsstunde dto) -> {
+				final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
+				daten.id = dto.ID;
+				daten.idAbschnittsdaten = dto.Abschnitt_ID;
+				daten.idGrund = LehrerAnrechnungsgrund.getByKuerzel(dto.AnrechnungsgrundKrz).daten.id;
+				daten.anzahl = dto.AnrechnungStd == null ? 0.0 : dto.AnrechnungStd;
+				return daten;
+			};
 
 	@Override
 	public Response getAll() {
@@ -65,17 +66,18 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 	 *
 	 * @return die Liste mit den Anrechnungen
 	 */
-	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
+	public static List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getByLehrerabschnittsdatenId(final DBEntityManager conn,
+			final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> result = new ArrayList<>();
-    	// Bestimme die Anrechungen für die Lehrerabschnittsdaten
+		// Bestimme die Anrechungen für die Lehrerabschnittsdaten
 		final List<DTOLehrerAnrechnungsstunde> dtos = conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_BY_ABSCHNITT_ID,
 				DTOLehrerAnrechnungsstunde.class, idLehrerabschnittsdaten);
-    	if (dtos == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerAnrechnungsstunde dto : dtos)
-    		result.add(dtoMapper.apply(dto));
-    	return result;
+		if (dtos == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerAnrechnungsstunde dto : dtos)
+			result.add(dtoMapper.apply(dto));
+		return result;
 	}
 
 	@Override
@@ -83,34 +85,33 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerAnrechnungsstunde dto = conn.queryByKey(DTOLehrerAnrechnungsstunde.class, id);
-    	if (dto == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = dtoMapper.apply(dto);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = dtoMapper.apply(dto);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private final Map<String, DataBasicMapper<DTOLehrerAnrechnungsstunde>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, anrechnung, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if ((patch_id != anrechnung.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idAbschnittsdaten", (conn, anrechnung, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if (patch_id != anrechnung.Abschnitt_ID)
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idGrund", (conn, anrechnung, value, map) -> {
-			final long idGrund = JSONMapper.convertToLong(value, false);
-			final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.getByID(idGrund);
-			if (grund == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			anrechnung.AnrechnungsgrundKrz = grund.daten.kuerzel;
-		}),
-		Map.entry("anzahl", (conn, anrechnung, value, map) -> {
-			anrechnung.AnrechnungStd = JSONMapper.convertToDouble(value, false);
-		})
-	);
+			Map.entry("id", (conn, anrechnung, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if ((patch_id != anrechnung.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idAbschnittsdaten", (conn, anrechnung, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if (patch_id != anrechnung.Abschnitt_ID)
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idGrund", (conn, anrechnung, value, map) -> {
+				final long idGrund = JSONMapper.convertToLong(value, false);
+				final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.getByID(idGrund);
+				if (grund == null)
+					throw new ApiOperationException(Status.NOT_FOUND);
+				anrechnung.AnrechnungsgrundKrz = grund.daten.kuerzel;
+			}),
+			Map.entry("anzahl", (conn, anrechnung, value, map) -> {
+				anrechnung.AnrechnungStd = JSONMapper.convertToDouble(value, false);
+			}));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

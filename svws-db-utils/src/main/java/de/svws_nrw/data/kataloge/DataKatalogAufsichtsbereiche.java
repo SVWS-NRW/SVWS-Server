@@ -73,7 +73,7 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<Aufsichtsbereich> daten = getAufsichtsbereiche(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -84,19 +84,18 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 		if (aufsichtsbereich == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Aufsichtsbereich der Schule mit der ID %d gefunden.".formatted(id));
 		final Aufsichtsbereich daten = dtoMapper.apply(aufsichtsbereich);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOKatalogAufsichtsbereich>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

@@ -64,16 +64,17 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	 *
 	 * @return die Liste mit den Lehrerfunktionen
 	 */
-	public static List<LehrerPersonalabschnittsdatenLehrerfunktion> getByLehrerabschnittsdatenId(final DBEntityManager conn, final Long idLehrerabschnittsdaten) {
+	public static List<LehrerPersonalabschnittsdatenLehrerfunktion> getByLehrerabschnittsdatenId(final DBEntityManager conn,
+			final Long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenLehrerfunktion> result = new ArrayList<>();
-    	// Bestimme die Lehrerfunktionen für die Lehrerabschnittsdaten
+		// Bestimme die Lehrerfunktionen für die Lehrerabschnittsdaten
 		final List<DTOLehrerFunktion> dtos = conn.queryList(DTOLehrerFunktion.QUERY_BY_ABSCHNITT_ID, DTOLehrerFunktion.class, idLehrerabschnittsdaten);
-    	if (dtos == null)
-    		return result;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerFunktion dto : dtos)
-    		result.add(dtoMapper.apply(dto));
-    	return result;
+		if (dtos == null)
+			return result;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOLehrerFunktion dto : dtos)
+			result.add(dtoMapper.apply(dto));
+		return result;
 	}
 
 	@Override
@@ -81,31 +82,30 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerFunktion dto = conn.queryByKey(DTOLehrerFunktion.class, id);
-    	if (dto == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final LehrerPersonalabschnittsdatenLehrerfunktion daten = dtoMapper.apply(dto);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final LehrerPersonalabschnittsdatenLehrerfunktion daten = dtoMapper.apply(dto);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private final Map<String, DataBasicMapper<DTOLehrerFunktion>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, funktion, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if ((patch_id != funktion.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idAbschnittsdaten", (conn, funktion, value, map) -> {
-			final long patch_id = JSONMapper.convertToLong(value, false);
-			if (patch_id != funktion.Abschnitt_ID)
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("idFunktion", (conn, funktion, value, map) -> {
-			final long idFunktion = JSONMapper.convertToLong(value, false);
-			final DTOSchulfunktion f = conn.queryByKey(DTOSchulfunktion.class, idFunktion);
-			if (f == null)
-				throw new ApiOperationException(Status.NOT_FOUND);
-			funktion.Funktion_ID = idFunktion;
-		})
-	);
+			Map.entry("id", (conn, funktion, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if ((patch_id != funktion.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idAbschnittsdaten", (conn, funktion, value, map) -> {
+				final long patch_id = JSONMapper.convertToLong(value, false);
+				if (patch_id != funktion.Abschnitt_ID)
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("idFunktion", (conn, funktion, value, map) -> {
+				final long idFunktion = JSONMapper.convertToLong(value, false);
+				final DTOSchulfunktion f = conn.queryByKey(DTOSchulfunktion.class, idFunktion);
+				if (f == null)
+					throw new ApiOperationException(Status.NOT_FOUND);
+				funktion.Funktion_ID = idFunktion;
+			}));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

@@ -122,15 +122,16 @@ public final class DataKursdaten extends DataManager<Long> {
 	public static KursDaten getKursdaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
-    	if (kurs == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
+		if (kurs == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final KursDaten daten = dtoMapper.apply(kurs);
 		// Bestimme die Schüler des Kurses
-		final List<DTOKursSchueler> listKursSchueler = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
-    	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-    	final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
-    			: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
+		final List<DTOKursSchueler> listKursSchueler =
+				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
+		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
+		final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
+				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		for (final DTOSchueler dto : listSchueler)
 			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		return daten;
@@ -145,101 +146,102 @@ public final class DataKursdaten extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOKurs>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch stimmt nicht mit der ID des Datenbank-Objektes überein");
-		}),
-		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
-			final Long idAbschnitt = JSONMapper.convertToLong(value, true);
-			if (idAbschnitt == null)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Shuljahresabschnittes darf nicht null sein.");
-			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idAbschnitt);
-			if (abschnitt == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der angegebenen ID gefunden werden.");
-			dto.Schuljahresabschnitts_ID = idAbschnitt;
-		}),
-		Map.entry("idFach", (conn, dto, value, map) -> {
-			final Long idFach = JSONMapper.convertToLong(value, true);
-			if (idFach == null)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
-			final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-			if (fach == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Fach mit der angegebenen ID gefunden werden.");
-			dto.Fach_ID = idFach;
-		}),
-		Map.entry("lehrer", (conn, dto, value, map) -> {
-			dto.Lehrer_ID = JSONMapper.convertToLong(value, true);
-			if (dto.Lehrer_ID != null) {
-				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, dto.Lehrer_ID);
-				if (lehrer == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID gefunden werden.");
-			}
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 21)),
-		Map.entry("kursartAllg", (conn, dto, value, map) -> {
-			dto.KursartAllg = JSONMapper.convertToString(value, false, true, 11);
-			// TODO Prüfe Kursart
-		}),
-		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("wochenstunden", (conn, dto, value, map) -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40)),
-		Map.entry("wochenstundenLehrer", (conn, dto, value, map) -> {
-			dto.WochenstdKL = JSONMapper.convertToDouble(value, true);
-			if (dto.WochenstdKL == null)
-				dto.WochenstdKL = 0.0;
-		}),
-		Map.entry("idKursFortschreibungsart", (conn, dto, value, map) -> dto.Fortschreibungsart = KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4))),
-		Map.entry("schulnummer", (conn, dto, value, map) -> {
-			dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999);
-			// TODO Prüfe die Schulnummer anhand des Katalogs
-		}),
-		Map.entry("istEpochalunterricht", (conn, dto, value, map) -> dto.EpochU = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131)),
-		Map.entry("schienen", (conn, dto, value, map) -> {
-			final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false);
-			final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
-			boolean changed = (neu.size() != vorher.size());
-			for (final int n : neu) {
-				if (n < 0)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
-				if (!vorher.contains(n))
-					changed = true;
-			}
-			if (changed) {
-				dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
-			}
-		}),
-		Map.entry("idJahrgaenge", (conn, dto, value, map) -> {
-			final List<Long> neu = JSONMapper.convertToListOfLong(value, false);
-			final List<Long> vorher = convertJahrgaenge(dto);
-			boolean changed = (neu.size() != vorher.size());
-			for (final long n : neu) {
-				if (!vorher.contains(n))
-					changed = true;
-			}
-			if (!changed)
-				return;
-			if (neu.isEmpty()) {
-				dto.ASDJahrgang = null;
-				dto.Jahrgang_ID = null;
-				dto.Jahrgaenge = null;
-			} else {
-				final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
-				if (dtoJahrgaenge.size() != neu.size())
-					throw new ApiOperationException(Status.BAD_REQUEST, "Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
-				if (neu.size() > 1) {
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch stimmt nicht mit der ID des Datenbank-Objektes überein");
+			}),
+			Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
+				final Long idAbschnitt = JSONMapper.convertToLong(value, true);
+				if (idAbschnitt == null)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Shuljahresabschnittes darf nicht null sein.");
+				final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idAbschnitt);
+				if (abschnitt == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der angegebenen ID gefunden werden.");
+				dto.Schuljahresabschnitts_ID = idAbschnitt;
+			}),
+			Map.entry("idFach", (conn, dto, value, map) -> {
+				final Long idFach = JSONMapper.convertToLong(value, true);
+				if (idFach == null)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
+				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+				if (fach == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Fach mit der angegebenen ID gefunden werden.");
+				dto.Fach_ID = idFach;
+			}),
+			Map.entry("lehrer", (conn, dto, value, map) -> {
+				dto.Lehrer_ID = JSONMapper.convertToLong(value, true);
+				if (dto.Lehrer_ID != null) {
+					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, dto.Lehrer_ID);
+					if (lehrer == null)
+						throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID gefunden werden.");
+				}
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 21)),
+			Map.entry("kursartAllg", (conn, dto, value, map) -> {
+				dto.KursartAllg = JSONMapper.convertToString(value, false, true, 11);
+				// TODO Prüfe Kursart
+			}),
+			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
+			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("wochenstunden", (conn, dto, value, map) -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40)),
+			Map.entry("wochenstundenLehrer", (conn, dto, value, map) -> {
+				dto.WochenstdKL = JSONMapper.convertToDouble(value, true);
+				if (dto.WochenstdKL == null)
+					dto.WochenstdKL = 0.0;
+			}),
+			Map.entry("idKursFortschreibungsart",
+					(conn, dto, value, map) -> dto.Fortschreibungsart = KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4))),
+			Map.entry("schulnummer", (conn, dto, value, map) -> {
+				dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999);
+				// TODO Prüfe die Schulnummer anhand des Katalogs
+			}),
+			Map.entry("istEpochalunterricht", (conn, dto, value, map) -> dto.EpochU = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131)),
+			Map.entry("schienen", (conn, dto, value, map) -> {
+				final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false);
+				final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
+				boolean changed = (neu.size() != vorher.size());
+				for (final int n : neu) {
+					if (n < 0)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
+					if (!vorher.contains(n))
+						changed = true;
+				}
+				if (changed) {
+					dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+				}
+			}),
+			Map.entry("idJahrgaenge", (conn, dto, value, map) -> {
+				final List<Long> neu = JSONMapper.convertToListOfLong(value, false);
+				final List<Long> vorher = convertJahrgaenge(dto);
+				boolean changed = (neu.size() != vorher.size());
+				for (final long n : neu) {
+					if (!vorher.contains(n))
+						changed = true;
+				}
+				if (!changed)
+					return;
+				if (neu.isEmpty()) {
 					dto.ASDJahrgang = null;
 					dto.Jahrgang_ID = null;
-					dto.Jahrgaenge = neu.stream().map(Object::toString).collect(Collectors.joining(","));
-				} else {
-					dto.Jahrgang_ID = neu.get(0);
-					dto.ASDJahrgang = dtoJahrgaenge.get(0).ASDJahrgang;
 					dto.Jahrgaenge = null;
+				} else {
+					final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
+					if (dtoJahrgaenge.size() != neu.size())
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
+					if (neu.size() > 1) {
+						dto.ASDJahrgang = null;
+						dto.Jahrgang_ID = null;
+						dto.Jahrgaenge = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+					} else {
+						dto.Jahrgang_ID = neu.get(0);
+						dto.ASDJahrgang = dtoJahrgaenge.get(0).ASDJahrgang;
+						dto.Jahrgaenge = null;
+					}
 				}
-			}
-		})
-	);
+			}));
 
 
 	@Override

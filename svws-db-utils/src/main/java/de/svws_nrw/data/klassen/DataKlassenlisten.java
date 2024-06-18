@@ -62,12 +62,14 @@ public final class DataKlassenlisten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByDTOs(final DBEntityManager conn, final long idSchuljahresabschnitt, final List<DTOKlassen> klassen) throws ApiOperationException {
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByDTOs(final DBEntityManager conn, final long idSchuljahresabschnitt,
+			final List<DTOKlassen> klassen) throws ApiOperationException {
 		// Bestimme alle Klassen des aktuellen Schuljahresabschnitts und deren Klassenleitungen
 		if ((klassen == null) || (klassen.isEmpty()))
 			return new ArrayList<>();
 		final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
-		final Map<Long, List<DTOKlassenLeitung>> klassenLeitungen = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, klassenIDs)
+		final Map<Long, List<DTOKlassenLeitung>> klassenLeitungen = conn.queryList(
+				DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, klassenIDs)
 				.stream().collect(Collectors.groupingBy(kll -> kll.Klassen_ID));
 		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
@@ -81,17 +83,18 @@ public final class DataKlassenlisten extends DataManager<Long> {
 		final Map<String, DTOKlassen> klassenVorher = (schuljahresabschnitt.VorigerAbschnitt_ID == null)
 				? new HashMap<>()
 				: conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.VorigerAbschnitt_ID)
-					.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
+						.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
 		final Map<String, DTOKlassen> klassenNachher = (schuljahresabschnitt.FolgeAbschnitt_ID == null)
 				? new HashMap<>()
 				: conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.FolgeAbschnitt_ID)
-					.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
+						.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme die Schüler der Klasse
-		final List<DTOSchuelerLernabschnittsdaten> listSchuelerLernabschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class)
-				.setParameter(1, klassenIDs).getResultList();
+		final List<DTOSchuelerLernabschnittsdaten> listSchuelerLernabschnitte =
+				conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class)
+						.setParameter(1, klassenIDs).getResultList();
 		final List<Long> schuelerIDs = listSchuelerLernabschnitte.stream().map(sla -> sla.Schueler_ID).toList();
-		final Map<Long, DTOSchueler> mapSchueler = schuelerIDs == null || schuelerIDs.isEmpty() ? new HashMap<>()
+		final Map<Long, DTOSchueler> mapSchueler = (schuelerIDs == null) || schuelerIDs.isEmpty() ? new HashMap<>()
 				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		final Map<Long, List<DTOSchueler>> mapKlassenSchueler = new HashMap<>();
 		for (final DTOSchuelerLernabschnittsdaten sla : listSchuelerLernabschnitte) {
@@ -122,7 +125,8 @@ public final class DataKlassenlisten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByIDs(final DBEntityManager conn, final long idSchuljahresabschnitt, final List<Long> idsKlassen) throws ApiOperationException {
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByIDs(final DBEntityManager conn, final long idSchuljahresabschnitt,
+			final List<Long> idsKlassen) throws ApiOperationException {
 		if (idsKlassen.isEmpty())
 			return new ArrayList<>();
 		return getKlassenListeByDTOs(conn, idSchuljahresabschnitt, conn.queryByKeyList(DTOKlassen.class, idsKlassen));
@@ -139,7 +143,8 @@ public final class DataKlassenlisten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull KlassenDaten> getKlassenListe(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListe(final DBEntityManager conn, final long idSchuljahresabschnitt)
+			throws ApiOperationException {
 		// Bestimme alle Klassen des aktuellen Schuljahresabschnitts und deren Klassenleitungen
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt);
 		return getKlassenListeByDTOs(conn, idSchuljahresabschnitt, klassen);

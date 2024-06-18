@@ -43,19 +43,19 @@ public final class DataHaltestellen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<DTOHaltestellen> katalog = conn.queryAll(DTOHaltestellen.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted((a, b) -> {
-    		if ((a.text == null) && (b.text == null))
-    			return 0;
-    		if (a.text == null)
-    			return -1;
-    		if (b.text == null)
-    			return 1;
-    		return a.text.compareTo(b.text);
-    	}).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<DTOHaltestellen> katalog = conn.queryAll(DTOHaltestellen.class);
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted((a, b) -> {
+			if ((a.text == null) && (b.text == null))
+				return 0;
+			if (a.text == null)
+				return -1;
+			if (b.text == null)
+				return 1;
+			return a.text.compareTo(b.text);
+		}).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

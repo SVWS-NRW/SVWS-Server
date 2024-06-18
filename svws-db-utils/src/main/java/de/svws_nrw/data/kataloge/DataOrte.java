@@ -60,8 +60,8 @@ public final class DataOrte extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final List<OrtKatalogEintrag> daten = this.getOrte();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<OrtKatalogEintrag> daten = this.getOrte();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
