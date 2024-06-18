@@ -86,7 +86,8 @@ public final class DataAbteilungenKlassenzuordnungen extends DataManager<Long> {
 	public static AbteilungKlassenzuordnung getZuordung(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOAbteilungsKlassen zuordnung = conn.queryByKey(DTOAbteilungsKlassen.class, id);
 		if (zuordnung == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Eine Zuordnung mit der ID %d von einer Klasse zu einer Abteilung konnte nicht gefunden werden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Eine Zuordnung mit der ID %d von einer Klasse zu einer Abteilung konnte nicht gefunden werden.".formatted(id));
 		return dtoMapper.apply(zuordnung);
 	}
 
@@ -94,13 +95,13 @@ public final class DataAbteilungenKlassenzuordnungen extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<AbteilungKlassenzuordnung> daten = getZuordnungen(conn, this.idAbteilung);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final AbteilungKlassenzuordnung daten = getZuordung(conn, id);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

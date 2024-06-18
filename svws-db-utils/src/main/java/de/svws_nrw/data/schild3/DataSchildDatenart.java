@@ -27,9 +27,9 @@ public final class DataSchildDatenart extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragDatenart> katalog = CsvReader.fromResource("daten/csv/schild3/Datenart.csv", Schild3KatalogEintragDatenart.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

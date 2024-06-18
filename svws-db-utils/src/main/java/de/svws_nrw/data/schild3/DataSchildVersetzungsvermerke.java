@@ -26,11 +26,12 @@ public final class DataSchildVersetzungsvermerke extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<Schild3KatalogEintragVersetzungsvermerke> katalog = CsvReader.fromResource("daten/csv/schild3/PrfSemAbschl.csv", Schild3KatalogEintragVersetzungsvermerke.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	katalog.sort((a, b) -> Integer.compare(a.Sortierung, b.Sortierung));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		final List<Schild3KatalogEintragVersetzungsvermerke> katalog =
+				CsvReader.fromResource("daten/csv/schild3/PrfSemAbschl.csv", Schild3KatalogEintragVersetzungsvermerke.class);
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		katalog.sort((a, b) -> Integer.compare(a.Sortierung, b.Sortierung));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

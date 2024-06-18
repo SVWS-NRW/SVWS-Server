@@ -49,25 +49,25 @@ public final class DataSQLite {
 		return response;
 	}
 
-    /**
-     * Exportiert eine SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
-     * administrative Rechte.
-     *
-     * @param conn         die Datenbank-Verbindung zu dem aktuellen Schema
-     * @param schemaname   Name des Schemas, in das hinein migriert werden soll
-     *
-     * @return Die SQLite-Datenbank
+	/**
+	 * Exportiert eine SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
+	 * administrative Rechte.
+	 *
+	 * @param conn         die Datenbank-Verbindung zu dem aktuellen Schema
+	 * @param schemaname   Name des Schemas, in das hinein migriert werden soll
+	 *
+	 * @return Die SQLite-Datenbank
 	 *
 	 * @throws ApiOperationException im Fehlerfall
-     */
-    public static Response exportSQLite(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
-    	final Logger logger = new Logger();
-    	final LogConsumerList log = new LogConsumerList();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
+	 */
+	public static Response exportSQLite(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
 
-    	// Bestimme den Dateinamen für eine temporäre SQLite-Datei
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
+		// Bestimme den Dateinamen für eine temporäre SQLite-Datei
+		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
 			if (srcManager == null)
@@ -78,11 +78,12 @@ public final class DataSQLite {
 			srcManager.backup.exportDB(sqlite.getFilename(), logger);
 			logger.modifyIndent(-2);
 
-	        // Lese die Datenbank in die Response ein
+			// Lese die Datenbank in die Response ein
 			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
 			final ZoneId berlin = ZoneId.of("Europe/Berlin");
 			final ZonedDateTime jetzt = ZonedDateTime.now(berlin);
-			final String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(), jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
+			final String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(),
+					jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
 			final Response response = Response.ok((StreamingOutput) output -> {
 				try {
 					FileUtils.move(sqlite.getFilename(), output);
@@ -90,13 +91,13 @@ public final class DataSQLite {
 				} catch (@SuppressWarnings("unused") final Exception e) {
 					// TODO throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 				}
-	        }).header("Content-Disposition", "attachment; filename=\"" + schemanameMitDatum + ".sqlite\"").build();
+			}).header("Content-Disposition", "attachment; filename=\"" + schemanameMitDatum + ".sqlite\"").build();
 			if (!response.hasEntity())
 				logger.logLn(2, "[FEHLER]");
 			logger.logLn("Datei eingelesen.");
 			return response;
-    	}
-    }
+		}
+	}
 
 
 	/**
@@ -111,19 +112,19 @@ public final class DataSQLite {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-    public static Response importSQLite(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
-    	final Logger logger = new Logger();
-    	final LogConsumerList log = new LogConsumerList();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
+	public static Response importSQLite(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
 
-    	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, true)) {
-	    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
-	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
-	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
+		// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
+		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, true)) {
+			logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+			logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
+			logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
 
-	    	// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
+			// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
 			final DBConfig srcConfig = sqlite.getConfig();
 
 			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
@@ -131,7 +132,8 @@ public final class DataSQLite {
 			final boolean hatSchemaConfig = (tgtConfig != null);
 			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
-				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
+				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
+						.switchSchema(conn.getDBSchema());
 
 			try {
 				final Benutzer srcUser = Benutzer.create(srcConfig);
@@ -161,11 +163,11 @@ public final class DataSQLite {
 				final SimpleOperationResponse daten = simpleResponse(false, log);
 				return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
 			}
-    	}
+		}
 
 		logger.logLn("Import abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-    }
+	}
 
 }

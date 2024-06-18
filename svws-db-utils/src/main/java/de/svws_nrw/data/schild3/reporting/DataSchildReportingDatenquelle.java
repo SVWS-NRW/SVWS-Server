@@ -32,308 +32,304 @@ import java.util.List;
  */
 public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 
-    /** Eine Map mit der Zuordnung der Datenquellen zu dem Namen der Datenquelle */
-    private static LinkedHashMap<String, DataSchildReportingDatenquelle<?, ?>> datenquellen = null;
+	/** Eine Map mit der Zuordnung der Datenquellen zu dem Namen der Datenquelle */
+	private static LinkedHashMap<String, DataSchildReportingDatenquelle<?, ?>> datenquellen = null;
 
-    /** Die Definition der Datenquelle */
-    final SchildReportingDatenquelle datenquelle;
+	/** Die Definition der Datenquelle */
+	final SchildReportingDatenquelle datenquelle;
 
-    /** Der Typ der Master-Datenquelle */
-    private SchildReportingAttributTyp mastertyp = null;
+	/** Der Typ der Master-Datenquelle */
+	private SchildReportingAttributTyp mastertyp = null;
 
-    /** Der Java-Typ für das genutzte Attribut der Master-Datenquelle */
-    private Class<JMT> masterclass = null;
+	/** Der Java-Typ für das genutzte Attribut der Master-Datenquelle */
+	private Class<JMT> masterclass = null;
 
-    /** Enthält die Schulformen, auf welche die Datenquelle eingeschränkt ist. Ist die Menge leer, so steht die
-     * Datenquelle an allen Schulformen zur Verfügung. */
-    private final HashSet<Schulform> schulformen = new HashSet<>();
+	/** Enthält die Schulformen, auf welche die Datenquelle eingeschränkt ist. Ist die Menge leer, so steht die
+	 * Datenquelle an allen Schulformen zur Verfügung. */
+	private final HashSet<Schulform> schulformen = new HashSet<>();
 
 	private static final String meldungKeinParameter = "Kein Parameter für das Attribut der Master-Datenquelle angegeben";
 	private static final String meldungUngueltigerParameter = "Ungültiger Parameter für das Attribut der Master-Datenquelle angegeben";
 
 
 
-    /**
-     * Erstellt eine neue Datenquelle für Schild-Reports
-     *
-     * @param dtoClass   die Klasse des Core-DTOs
-     */
-    DataSchildReportingDatenquelle(final Class<DTO> dtoClass) {
-        this.datenquelle = new SchildReportingDatenquelle();
-        this.datenquelle.name = this.getClass().getSimpleName().replace("DataSchildReportingDatenquelle", "");
-        this.datenquelle.datenart = dtoClass.getSimpleName().replace("SchildReporting", "");
-        final Schema schema = dtoClass.getAnnotation(Schema.class);
-        if ((schema == null) || (schema.description() == null))
-            throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
-        this.datenquelle.beschreibung = schema.description();
-        this.addAttribute(dtoClass);
-        DataSchildReportingDatenquelle.datenquellen.put(this.datenquelle.name, this);
-    }
+	/**
+	 * Erstellt eine neue Datenquelle für Schild-Reports
+	 *
+	 * @param dtoClass   die Klasse des Core-DTOs
+	 */
+	DataSchildReportingDatenquelle(final Class<DTO> dtoClass) {
+		this.datenquelle = new SchildReportingDatenquelle();
+		this.datenquelle.name = this.getClass().getSimpleName().replace("DataSchildReportingDatenquelle", "");
+		this.datenquelle.datenart = dtoClass.getSimpleName().replace("SchildReporting", "");
+		final Schema schema = dtoClass.getAnnotation(Schema.class);
+		if ((schema == null) || (schema.description() == null))
+			throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
+		this.datenquelle.beschreibung = schema.description();
+		this.addAttribute(dtoClass);
+		DataSchildReportingDatenquelle.datenquellen.put(this.datenquelle.name, this);
+	}
 
 
-    /**
-     * Setzt die Informationen zu der Master-Datenquelle dieser Datenquelle
-     *
-     * @param linkattribut     der Name des Attributs dieser Datenquelle, welches für
-     *                         die Verbindung zu der Master-Datenquelle genutzt wird
-     * @param master           der Name der Master-Datenquelle
-     * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
-     * @param mastertyp        der Datentyp des identifzierenden Master-Attributes
-     * @param masterclass      die Java-Klasse für den Datentyp des zu identifzierenden Master-Attributes
-     */
-    void setMaster(@NotNull final String linkattribut, @NotNull final String master, @NotNull final String masterattribut,
-    		@NotNull final SchildReportingAttributTyp mastertyp, @NotNull final Class<JMT> masterclass) {
-        this.mastertyp = mastertyp;
-        this.masterclass = masterclass;
-        this.datenquelle.linkattribut = linkattribut;
-        this.datenquelle.master = master;
-        this.datenquelle.masterattribut = masterattribut;
-        this.datenquelle.mastertyp = mastertyp.toString();
-    }
+	/**
+	 * Setzt die Informationen zu der Master-Datenquelle dieser Datenquelle
+	 *
+	 * @param linkattribut     der Name des Attributs dieser Datenquelle, welches für
+	 *                         die Verbindung zu der Master-Datenquelle genutzt wird
+	 * @param master           der Name der Master-Datenquelle
+	 * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
+	 * @param mastertyp        der Datentyp des identifzierenden Master-Attributes
+	 * @param masterclass      die Java-Klasse für den Datentyp des zu identifzierenden Master-Attributes
+	 */
+	void setMaster(@NotNull final String linkattribut, @NotNull final String master, @NotNull final String masterattribut,
+			@NotNull final SchildReportingAttributTyp mastertyp, @NotNull final Class<JMT> masterclass) {
+		this.mastertyp = mastertyp;
+		this.masterclass = masterclass;
+		this.datenquelle.linkattribut = linkattribut;
+		this.datenquelle.master = master;
+		this.datenquelle.masterattribut = masterattribut;
+		this.datenquelle.mastertyp = mastertyp.toString();
+	}
 
 
-    /**
-     * Fügt ein Attribut zu der Definition der Datenquelle hinzu
-     *
-     * @param name           der Name des Attributes
-     * @param typ            der Datentyp des Attributes
-     * @param beschreibung   eine erläuternde Erklärung zu dem Attribut
-     */
-    private void addAttribut(@NotNull final String name, @NotNull final SchildReportingAttributTyp typ, @NotNull final String beschreibung) {
-        final SchildReportingDatenquelleAttribut attr = new SchildReportingDatenquelleAttribut();
-        attr.name = name;
-        attr.typ = typ.toString();
-        attr.beschreibung = beschreibung;
-        datenquelle.attribute.add(attr);
-    }
+	/**
+	 * Fügt ein Attribut zu der Definition der Datenquelle hinzu
+	 *
+	 * @param name           der Name des Attributes
+	 * @param typ            der Datentyp des Attributes
+	 * @param beschreibung   eine erläuternde Erklärung zu dem Attribut
+	 */
+	private void addAttribut(@NotNull final String name, @NotNull final SchildReportingAttributTyp typ, @NotNull final String beschreibung) {
+		final SchildReportingDatenquelleAttribut attr = new SchildReportingDatenquelleAttribut();
+		attr.name = name;
+		attr.typ = typ.toString();
+		attr.beschreibung = beschreibung;
+		datenquelle.attribute.add(attr);
+	}
 
 
-    /**
-     * Fügt die Attribute aus dem übergebenen Core-DTO zu dieser Datenquelle hinzu.
-     *
-     * @param clazz   die Klasse des Core-DTOs
-     */
-    private void addAttribute(final Class<?> clazz) {
-        for (final Field field : clazz.getFields()) {
-            final SchildReportingAttributTyp typ = switch (field.getType().getSimpleName()) {
-                case "long", "int", "short", "byte", "Long", "Integer", "Short", "Byte" -> SchildReportingAttributTyp.INT;
-                case "float", "double", "Float", "Double" -> SchildReportingAttributTyp.NUMBER;
-                case "boolean", "Boolean" -> SchildReportingAttributTyp.BOOLEAN;
-                default -> {
-                	if (field.getAnnotation(SchildReportingDate.class) != null)
-                		yield SchildReportingAttributTyp.DATE;
-                	if (field.getAnnotation(SchildReportingMemo.class) != null)
-                		yield SchildReportingAttributTyp.MEMO;
-                	yield SchildReportingAttributTyp.STRING;
-                }
-            };
-            final Schema schema = field.getAnnotation(Schema.class);
-            if ((schema == null) || (schema.description() == null))
-                throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
-            addAttribut(field.getName(), typ, schema.description());
-        }
-    }
+	/**
+	 * Fügt die Attribute aus dem übergebenen Core-DTO zu dieser Datenquelle hinzu.
+	 *
+	 * @param clazz   die Klasse des Core-DTOs
+	 */
+	private void addAttribute(final Class<?> clazz) {
+		for (final Field field : clazz.getFields()) {
+			final SchildReportingAttributTyp typ = switch (field.getType().getSimpleName()) {
+				case "long", "int", "short", "byte", "Long", "Integer", "Short", "Byte" -> SchildReportingAttributTyp.INT;
+				case "float", "double", "Float", "Double" -> SchildReportingAttributTyp.NUMBER;
+				case "boolean", "Boolean" -> SchildReportingAttributTyp.BOOLEAN;
+				default -> {
+					if (field.getAnnotation(SchildReportingDate.class) != null)
+						yield SchildReportingAttributTyp.DATE;
+					if (field.getAnnotation(SchildReportingMemo.class) != null)
+						yield SchildReportingAttributTyp.MEMO;
+					yield SchildReportingAttributTyp.STRING;
+				}
+			};
+			final Schema schema = field.getAnnotation(Schema.class);
+			if ((schema == null) || (schema.description() == null))
+				throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
+			addAttribut(field.getName(), typ, schema.description());
+		}
+	}
 
 
-    /**
-     * Beschränkt die Gültigkeit der Datenquelle auf die übergebenen Schulformen.
-     * Sollte die Methode bereits vorher aufgerufen worden sein,
-     * so werden die Schulformen zu den vorher übergebenen Schulformen ergänzt.
-     *
-     * @param schulformen   die Schulformen, für welche die Datenquelle zulässig ist
-     */
-    public void restrictTo(final Schulform... schulformen) {
-        for (final Schulform sf : schulformen)
-            this.schulformen.add(sf);
-    }
+	/**
+	 * Beschränkt die Gültigkeit der Datenquelle auf die übergebenen Schulformen.
+	 * Sollte die Methode bereits vorher aufgerufen worden sein,
+	 * so werden die Schulformen zu den vorher übergebenen Schulformen ergänzt.
+	 *
+	 * @param schulformen   die Schulformen, für welche die Datenquelle zulässig ist
+	 */
+	public void restrictTo(final Schulform... schulformen) {
+		for (final Schulform sf : schulformen)
+			this.schulformen.add(sf);
+	}
 
 
-    /**
-     * Bestimmt die Datensätze der Datenquelle, sofern keine Master-Datenquelle
-     * angegeben wurde.
-     *
-     * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
-     *
-     * @return die Datensätze der Datenquelle
+	/**
+	 * Bestimmt die Datensätze der Datenquelle, sofern keine Master-Datenquelle
+	 * angegeben wurde.
+	 *
+	 * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
+	 *
+	 * @return die Datensätze der Datenquelle
 	 *
 	 * @throws ApiOperationException im Fehlerfall
-     */
-    List<DTO> getDaten(final DBEntityManager conn) throws ApiOperationException {
-        throw new UnsupportedOperationException();
-    }
+	 */
+	List<DTO> getDaten(final DBEntityManager conn) throws ApiOperationException {
+		throw new UnsupportedOperationException();
+	}
 
 
-    /**
-     * Bestimmt die Datensätze der Datenquelle, sofern der Attributtyp des
-     * Attributes der Master-Datenquelle definiert wurde und BOOLEAN, INT,
-     * NUMBER, STRING oder MEMO ist.
-     *
-     * @param conn     die Datenbankverbindung des aktuellen SVWS-Benutzers
-     * @param params   die Parameter für das Attribut der Masterdatenquelle
-     *
-     * @return die Datensätze der Datenquelle
+	/**
+	 * Bestimmt die Datensätze der Datenquelle, sofern der Attributtyp des
+	 * Attributes der Master-Datenquelle definiert wurde und BOOLEAN, INT,
+	 * NUMBER, STRING oder MEMO ist.
+	 *
+	 * @param conn     die Datenbankverbindung des aktuellen SVWS-Benutzers
+	 * @param params   die Parameter für das Attribut der Masterdatenquelle
+	 *
+	 * @return die Datensätze der Datenquelle
 	 *
 	 * @throws ApiOperationException im Fehlerfall
-     */
-    List<DTO> getDaten(final DBEntityManager conn, final List<JMT> params) throws ApiOperationException {
-        throw new UnsupportedOperationException();
-    }
+	 */
+	List<DTO> getDaten(final DBEntityManager conn, final List<JMT> params) throws ApiOperationException {
+		throw new UnsupportedOperationException();
+	}
 
 
 	private List<DTO> getDatenBoolean(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
-        // Daten vorhanden?
-        if (params.isEmpty())
-            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-        if (this.masterclass != Boolean.class)
-            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        // Prüfe, ob alle Parameter vom Typ Boolean sind
-        for (final Object p : params)
-            if (!(p instanceof Boolean))
-                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        @SuppressWarnings("unchecked")
-		final List<JMT> paramListe = (List<JMT>) params;
-        return getDaten(conn, paramListe);
-    }
+		// Daten vorhanden?
+		if (params.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
+		if (this.masterclass != Boolean.class)
+			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		// Prüfe, ob alle Parameter vom Typ Boolean sind
+		for (final Object p : params)
+			if (!(p instanceof Boolean))
+				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		@SuppressWarnings("unchecked") final List<JMT> paramListe = (List<JMT>) params;
+		return getDaten(conn, paramListe);
+	}
 
 
 	private List<DTO> getDatenInteger(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
-        // Daten vorhanden?
-        if (params.isEmpty())
-            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-        if (this.masterclass != Long.class)
-            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        // Prüfe, ob alle Parameter vom Typ Long sind
-        final ArrayList<Long> paramListe = new ArrayList<>();
-        for (final Object p : params) {
-            if (p instanceof final Long l)
-                paramListe.add(l);
-            else if (p instanceof final Integer i)
-                paramListe.add(i.longValue());
-            else if (p instanceof final Short s)
-                paramListe.add(s.longValue());
-            else if (p instanceof final Byte b)
-                paramListe.add(b.longValue());
-            else
-                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        }
-        @SuppressWarnings("unchecked")
-		final List<JMT> paramListeJMT = (List<JMT>) paramListe;
-        return getDaten(conn, paramListeJMT);
+		// Daten vorhanden?
+		if (params.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
+		if (this.masterclass != Long.class)
+			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		// Prüfe, ob alle Parameter vom Typ Long sind
+		final ArrayList<Long> paramListe = new ArrayList<>();
+		for (final Object p : params) {
+			if (p instanceof final Long l)
+				paramListe.add(l);
+			else if (p instanceof final Integer i)
+				paramListe.add(i.longValue());
+			else if (p instanceof final Short s)
+				paramListe.add(s.longValue());
+			else if (p instanceof final Byte b)
+				paramListe.add(b.longValue());
+			else
+				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
+		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) paramListe;
+		return getDaten(conn, paramListeJMT);
 	}
 
 
 	private List<DTO> getDatenNumber(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
-        // Daten vorhanden?
-        if (params.isEmpty())
-            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-        if (this.masterclass != Double.class)
-            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        // Prüfe, ob alle Parameter vom Typ Double sind
-        final ArrayList<Double> paramListe = new ArrayList<>();
-        for (final Object p : params) {
-            if (p instanceof final Double d)
-                paramListe.add(d);
-            else if (p instanceof final Float f)
-                paramListe.add(f.doubleValue());
-            else
-                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        }
-        @SuppressWarnings("unchecked")
-		final List<JMT> paramListeJMT = (List<JMT>) paramListe;
-        return getDaten(conn, paramListeJMT);
+		// Daten vorhanden?
+		if (params.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
+		if (this.masterclass != Double.class)
+			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		// Prüfe, ob alle Parameter vom Typ Double sind
+		final ArrayList<Double> paramListe = new ArrayList<>();
+		for (final Object p : params) {
+			if (p instanceof final Double d)
+				paramListe.add(d);
+			else if (p instanceof final Float f)
+				paramListe.add(f.doubleValue());
+			else
+				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
+		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) paramListe;
+		return getDaten(conn, paramListeJMT);
 	}
 
 
 	private List<DTO> getDatenString(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
-        // Daten vorhanden?
-        if (params.isEmpty())
-            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-        if (this.masterclass != String.class)
-            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        // Prüfe, ob alle Parameter vom Typ String sind
-        for (final Object p : params)
-            if (!(p instanceof String))
-                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
-        @SuppressWarnings("unchecked")
-		final List<JMT> paramListeJMT = (List<JMT>) params;
-        return getDaten(conn, paramListeJMT);
+		// Daten vorhanden?
+		if (params.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
+		if (this.masterclass != String.class)
+			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		// Prüfe, ob alle Parameter vom Typ String sind
+		for (final Object p : params)
+			if (!(p instanceof String))
+				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) params;
+		return getDaten(conn, paramListeJMT);
 	}
 
 
-    /**
-     * Bestimmt mithilfe des registrierten Datenobjektes die Daten für die
-     * über den Pfad spezifizierten Datenquelle.
-     *
-     * @param conn     die aktuelle Datenverbindung (des SVWS-Benutzers)
-     * @param name     der Name der Datenquelle
-     * @param params   die Parameter der Datenquelle, d.h. die Werte für das Attribut der
-     *                 Master-Datenquelle, welche bei dieser Datenquelle berücksichtigt
-     *                 werden sollen - ist keine Masterquelle definiert, so muss diese Liste leer sein
-     *
-     * @return die HTTP-Response, im Erfolgsfall mit den Daten der Datenquelle
+	/**
+	 * Bestimmt mithilfe des registrierten Datenobjektes die Daten für die
+	 * über den Pfad spezifizierten Datenquelle.
+	 *
+	 * @param conn     die aktuelle Datenverbindung (des SVWS-Benutzers)
+	 * @param name     der Name der Datenquelle
+	 * @param params   die Parameter der Datenquelle, d.h. die Werte für das Attribut der
+	 *                 Master-Datenquelle, welche bei dieser Datenquelle berücksichtigt
+	 *                 werden sollen - ist keine Masterquelle definiert, so muss diese Liste leer sein
+	 *
+	 * @return die HTTP-Response, im Erfolgsfall mit den Daten der Datenquelle
 	 *
 	 * @throws ApiOperationException im Fehlerfall
-     */
-    public static Response getDaten(final DBEntityManager conn, final String name, final List<? extends Object> params) throws ApiOperationException {
-        final DataSchildReportingDatenquelle<?, ?> datenquelle = getMapDatenquellen().get(name);
-        if (datenquelle == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenquelle \"" + name + "\" vorhanden.");
-        List<? extends Object> result = null;
-        result = switch (datenquelle.mastertyp) {
-            case BOOLEAN -> datenquelle.getDatenBoolean(conn, params);
-            case INT -> datenquelle.getDatenInteger(conn, params);
-            case NUMBER -> datenquelle.getDatenNumber(conn, params);
+	 */
+	public static Response getDaten(final DBEntityManager conn, final String name, final List<? extends Object> params) throws ApiOperationException {
+		final DataSchildReportingDatenquelle<?, ?> datenquelle = getMapDatenquellen().get(name);
+		if (datenquelle == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenquelle \"" + name + "\" vorhanden.");
+		List<? extends Object> result = null;
+		result = switch (datenquelle.mastertyp) {
+			case BOOLEAN -> datenquelle.getDatenBoolean(conn, params);
+			case INT -> datenquelle.getDatenInteger(conn, params);
+			case NUMBER -> datenquelle.getDatenNumber(conn, params);
 			case STRING, MEMO -> datenquelle.getDatenString(conn, params);
-            default -> {
-                if (!params.isEmpty())
-                    throw new ApiOperationException(Status.CONFLICT, "Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
-                yield datenquelle.getDaten(conn);
-            }
-        };
-        if (result == null)
-            throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Lesen der Daten aus der Datenquelle \"" + name + "\".");
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
-    }
+			default -> {
+				if (!params.isEmpty())
+					throw new ApiOperationException(Status.CONFLICT, "Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
+				yield datenquelle.getDaten(conn);
+			}
+		};
+		if (result == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Lesen der Daten aus der Datenquelle \"" + name + "\".");
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+	}
 
 
-    /**
-     * Liefert eine Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen zurück.
-     *
-     * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
-     *
-     * @return die HTTP-Response mit der Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen
+	/**
+	 * Liefert eine Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen zurück.
+	 *
+	 * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
+	 *
+	 * @return die HTTP-Response mit der Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen
 	 *
 	 * @throws ApiOperationException im Fehlerfall
-     */
-    public static Response getDatenquellen(final DBEntityManager conn) throws ApiOperationException {
-        final var datenquellen = getMapDatenquellen();
-        final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-        if (schule == null)
-            throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
-        final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
-        for (final var datenquelle : datenquellen.values()) {
-            if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schule.Schulform)))
-                result.add(datenquelle.datenquelle);
-        }
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
-    }
+	 */
+	public static Response getDatenquellen(final DBEntityManager conn) throws ApiOperationException {
+		final var datenquellen = getMapDatenquellen();
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
+		final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
+		for (final var datenquelle : datenquellen.values()) {
+			if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schule.Schulform)))
+				result.add(datenquelle.datenquelle);
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+	}
 
 
-    /**
-     * Erstellt die Liste der im SVWS-Server verfügbaren Datenquellen. An dieser Stelle
-     * müssen einzelnen Data-Objekte des svws-openapi- Projektes erzeugt werden.
-     *
-     * @return die Liste der im SVWS-Server verfügbaren Datenquellen
-     */
-    @SuppressWarnings("unused")
+	/**
+	 * Erstellt die Liste der im SVWS-Server verfügbaren Datenquellen. An dieser Stelle
+	 * müssen einzelnen Data-Objekte des svws-openapi- Projektes erzeugt werden.
+	 *
+	 * @return die Liste der im SVWS-Server verfügbaren Datenquellen
+	 */
+	@SuppressWarnings("unused")
 	private static LinkedHashMap<String, DataSchildReportingDatenquelle<?, ?>> getMapDatenquellen() {
-        if (datenquellen == null) {
-            datenquellen = new LinkedHashMap<>();
-            new DataSchildReportingDatenquelleSchuelerLernabschnitte();
-            new DataSchildReportingDatenquelleSchuelerLeistungsdaten();
+		if (datenquellen == null) {
+			datenquellen = new LinkedHashMap<>();
+			new DataSchildReportingDatenquelleSchuelerLernabschnitte();
+			new DataSchildReportingDatenquelleSchuelerLeistungsdaten();
 			new DataSchildReportingDatenquelleSchuelerSprachpruefungen();
-        }
-        return datenquellen;
-    }
+		}
+		return datenquellen;
+	}
 
 }

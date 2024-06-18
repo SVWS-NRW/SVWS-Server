@@ -32,7 +32,7 @@ public final class DataKatalogAllgemeineMerkmale extends DataManager<Long> {
 		final ArrayList<AllgemeineMerkmaleKatalogEintrag> daten = new ArrayList<>();
 		for (final AllgemeineMerkmale art : AllgemeineMerkmale.values())
 			daten.addAll(Arrays.asList(art.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

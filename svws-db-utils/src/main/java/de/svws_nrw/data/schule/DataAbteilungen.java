@@ -85,7 +85,8 @@ public final class DataAbteilungen extends DataManager<Long> {
 			result.add(dtoMapper.apply(abteilung));
 		// ... ermittle die Klassenzuordnungen ...
 		final List<Long> idsAbteilungen = abteilungen.stream().map(a -> a.ID).toList();
-		final List<DTOAbteilungsKlassen> dtosZuordnungen = conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idsAbteilungen);
+		final List<DTOAbteilungsKlassen> dtosZuordnungen =
+				conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, idsAbteilungen);
 		final List<AbteilungKlassenzuordnung> zuordnungen = new ArrayList<>();
 		for (final DTOAbteilungsKlassen dtoZuordnung : dtosZuordnungen)
 			zuordnungen.add(DataAbteilungenKlassenzuordnungen.dtoMapper.apply(dtoZuordnung));
@@ -121,13 +122,13 @@ public final class DataAbteilungen extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<Abteilung> daten = getAbteilungen(conn, this.idSchuljahresabschnitt);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final Abteilung daten = getAbteilung(conn, id);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

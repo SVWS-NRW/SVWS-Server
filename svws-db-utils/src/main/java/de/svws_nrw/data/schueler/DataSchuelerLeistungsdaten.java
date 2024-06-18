@@ -68,18 +68,18 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			daten.abifach = null;
 		}
-		daten.istZP10oderZK10 = dto.Prf10Fach != null && dto.Prf10Fach;
+		daten.istZP10oderZK10 = (dto.Prf10Fach != null) && dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
 		daten.lehrerID = dto.Fachlehrer_ID;
 		daten.wochenstunden = dto.Wochenstunden == null ? 0 : dto.Wochenstunden;
 		daten.zusatzkraftID = dto.Zusatzkraft_ID;
 		daten.zusatzkraftWochenstunden = dto.WochenstdZusatzkraft == null ? 0 : dto.WochenstdZusatzkraft;
-		daten.aufZeugnis = dto.AufZeugnis == null || dto.AufZeugnis;
+		daten.aufZeugnis = (dto.AufZeugnis == null) || dto.AufZeugnis;
 		daten.note = dto.NotenKrz == null ? Note.KEINE.kuerzel : dto.NotenKrz.kuerzel;
 		daten.noteQuartal = dto.NotenKrzQuartal == null ? Note.KEINE.kuerzel : dto.NotenKrzQuartal.kuerzel;
-		daten.istGemahnt = dto.Warnung != null && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
+		daten.istGemahnt = (dto.Warnung != null) && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
 		daten.mahndatum = dto.Warndatum;
-		daten.istEpochal = dto.VorherAbgeschl != null && dto.VorherAbgeschl;
+		daten.istEpochal = (dto.VorherAbgeschl != null) && dto.VorherAbgeschl;
 		daten.geholtJahrgangAbgeschlossen = dto.AbschlussJahrgang;
 		daten.gewichtungAllgemeinbildend = dto.Gewichtung == null ? 1 : dto.Gewichtung;
 		daten.noteBerufsabschluss = dto.NoteAbschlussBA;
@@ -102,15 +102,15 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) throws ApiOperationException {
-    	// Bestimme die Leistungsdaten des Lernabschnitts
-    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
-    			DTOSchuelerLeistungsdaten.class, abschnittID);
-    	if (leistungsdaten == null)
-    		return false;
-    	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
-    		list.add(dtoMapper.apply(l));
-    	return true;
+		// Bestimme die Leistungsdaten des Lernabschnitts
+		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
+				DTOSchuelerLeistungsdaten.class, abschnittID);
+		if (leistungsdaten == null)
+			return false;
+		// Konvertiere sie und füge sie zur Liste hinzu
+		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
+			list.add(dtoMapper.apply(l));
+		return true;
 	}
 
 
@@ -120,132 +120,132 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
-    	if (dto == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
 		final SchuelerLeistungsdaten daten = dtoMapper.apply(dto);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOSchuelerLeistungsdaten>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("lernabschnittID", (conn, dto, value, map) -> {
-			final long idAbschnitt = JSONMapper.convertToLong(value, false);
-			if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Abschnitt_ID = idAbschnitt;
-		}),
-		Map.entry("fachID", (conn, dto, value, map) -> {
-			final long idFach = JSONMapper.convertToLong(value, false);
-			final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-			if (fach == null)
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Fach_ID = idFach;
-			dto.Sortierung = fach.SortierungAllg;
-			dto.Kurs_ID = null;
-		}),
-		Map.entry("kursID", (conn, dto, value, map) -> {
-			final Long idKurs = JSONMapper.convertToLong(value, true);
-			if (idKurs != null)	{
-				/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
-				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
-				if (kurs == null)
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("lernabschnittID", (conn, dto, value, map) -> {
+				final long idAbschnitt = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
 					throw new ApiOperationException(Status.CONFLICT);
-				// Setze Fachlehrer
-				dto.Fachlehrer_ID = kurs.Lehrer_ID;
-				// Passe ggf. die Kursart an, wenn sie sich geändert hat
-				if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
-					final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
-					dto.KursartAllg = kurs.KursartAllg;
-					if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
-						dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
-					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
-						dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
-						dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
-						ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
-						if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
-							dto.AbiFach = null;
-						if ("3".equals(dto.AbiFach))
-							kursart = ZulaessigeKursart.AB3;
-						else if ("4".equals(dto.AbiFach))
-							kursart = ZulaessigeKursart.AB4;
-						dto.Kursart = kursart.daten.kuerzel;
-					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
-						dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
-						if ("2".equals(dto.AbiFach))
-							dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
-						if (dto.AbiFach == null)
-							dto.AbiFach = "1";
-					} else {
-						dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
+				dto.Abschnitt_ID = idAbschnitt;
+			}),
+			Map.entry("fachID", (conn, dto, value, map) -> {
+				final long idFach = JSONMapper.convertToLong(value, false);
+				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+				if (fach == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Fach_ID = idFach;
+				dto.Sortierung = fach.SortierungAllg;
+				dto.Kurs_ID = null;
+			}),
+			Map.entry("kursID", (conn, dto, value, map) -> {
+				final Long idKurs = JSONMapper.convertToLong(value, true);
+				if (idKurs != null) {
+					/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
+					final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
+					if (kurs == null)
+						throw new ApiOperationException(Status.CONFLICT);
+					// Setze Fachlehrer
+					dto.Fachlehrer_ID = kurs.Lehrer_ID;
+					// Passe ggf. die Kursart an, wenn sie sich geändert hat
+					if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
+						final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
+						dto.KursartAllg = kurs.KursartAllg;
+						if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
+							dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
+						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
+							dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+							dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+							ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
+							if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
+								dto.AbiFach = null;
+							if ("3".equals(dto.AbiFach))
+								kursart = ZulaessigeKursart.AB3;
+							else if ("4".equals(dto.AbiFach))
+								kursart = ZulaessigeKursart.AB4;
+							dto.Kursart = kursart.daten.kuerzel;
+						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+							dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
+							if ("2".equals(dto.AbiFach))
+								dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
+							if (dto.AbiFach == null)
+								dto.AbiFach = "1";
+						} else {
+							dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
+						}
 					}
 				}
-			}
-			dto.Kurs_ID = idKurs;
-		}),
-		Map.entry("kursart", (conn, dto, value, map) -> {
-			final String strKursart = JSONMapper.convertToString(value, true, false, null);
-			final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
-			if (kursart == null)
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Kursart = kursart.daten.kuerzel;
-			dto.KursartAllg = kursart.daten.kuerzelAllg;
-		}),
-		Map.entry("abifach", (conn, dto, value, map) -> {
-			final Integer abiFach = JSONMapper.convertToInteger(value, true);
-			if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.AbiFach = (abiFach == null) ? null : "" + abiFach;
-		}),
-		Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("koopSchule", (conn, dto, value, map) -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000)),
-		Map.entry("lehrerID", (conn, dto, value, map) -> {
-			final Long idLehrer = JSONMapper.convertToLong(value, true);
-			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Fachlehrer_ID = idLehrer;
-		}),
-		Map.entry("wochenstunden", (conn, dto, value, map) -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
-		Map.entry("zusatzkraftID", (conn, dto, value, map) -> {
-			final Long idLehrer = JSONMapper.convertToLong(value, true);
-			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Zusatzkraft_ID = idLehrer;
-		}),
-		Map.entry("zusatzkraftWochenstunden", (conn, dto, value, map) -> dto.WochenstdZusatzkraft = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
-		Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("note", (conn, dto, value, map) -> dto.NotenKrz = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
-		Map.entry("noteQuartal", (conn, dto, value, map) -> dto.NotenKrzQuartal = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
-		Map.entry("istGemahnt", (conn, dto, value, map) -> dto.Warnung = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("mahndatum", (conn, dto, value, map) -> {
-			final String strMahndatum = JSONMapper.convertToString(value, true, false, null);
-			// TODO Datum validieren
-			dto.Warndatum = strMahndatum;
-		}),
-		Map.entry("istEpochal", (conn, dto, value, map) -> dto.VorherAbgeschl = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("geholtJahrgangAbgeschlossen", (conn, dto, value, map) -> {
-			final String strJahrgang = JSONMapper.convertToString(value, true, false, null);
-			// TODO Jahrgang validieren
-			dto.AbschlussJahrgang = strJahrgang;
-		}),
-		Map.entry("gewichtungAllgemeinbildend", (conn, dto, value, map) -> dto.Gewichtung = JSONMapper.convertToIntegerInRange(value, true, 0, 10)),
-		// noteBerufsabschluss -> dto.NoteAbschlussBA
-		Map.entry("textFachbezogeneLernentwicklung", (conn, dto, value, map) -> dto.Lernentw = JSONMapper.convertToString(value, true, true, null)),
-		Map.entry("umfangLernstandsbericht", (conn, dto, value, map) -> {
-			final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
-			if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.Umfang = (strUmfang == null) || strUmfang.isBlank() ? null : strUmfang;
-		}),
-		Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
-		Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000))
-	);
+				dto.Kurs_ID = idKurs;
+			}),
+			Map.entry("kursart", (conn, dto, value, map) -> {
+				final String strKursart = JSONMapper.convertToString(value, true, false, null);
+				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
+				if (kursart == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Kursart = kursart.daten.kuerzel;
+				dto.KursartAllg = kursart.daten.kuerzelAllg;
+			}),
+			Map.entry("abifach", (conn, dto, value, map) -> {
+				final Integer abiFach = JSONMapper.convertToInteger(value, true);
+				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.AbiFach = (abiFach == null) ? null : "" + abiFach;
+			}),
+			Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("koopSchule", (conn, dto, value, map) -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000)),
+			Map.entry("lehrerID", (conn, dto, value, map) -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Fachlehrer_ID = idLehrer;
+			}),
+			Map.entry("wochenstunden", (conn, dto, value, map) -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
+			Map.entry("zusatzkraftID", (conn, dto, value, map) -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Zusatzkraft_ID = idLehrer;
+			}),
+			Map.entry("zusatzkraftWochenstunden", (conn, dto, value, map) -> dto.WochenstdZusatzkraft =
+					JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
+			Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("note", (conn, dto, value, map) -> dto.NotenKrz = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
+			Map.entry("noteQuartal", (conn, dto, value, map) -> dto.NotenKrzQuartal = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
+			Map.entry("istGemahnt", (conn, dto, value, map) -> dto.Warnung = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("mahndatum", (conn, dto, value, map) -> {
+				final String strMahndatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.Warndatum = strMahndatum;
+			}),
+			Map.entry("istEpochal", (conn, dto, value, map) -> dto.VorherAbgeschl = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("geholtJahrgangAbgeschlossen", (conn, dto, value, map) -> {
+				final String strJahrgang = JSONMapper.convertToString(value, true, false, null);
+				// TODO Jahrgang validieren
+				dto.AbschlussJahrgang = strJahrgang;
+			}),
+			Map.entry("gewichtungAllgemeinbildend", (conn, dto, value, map) -> dto.Gewichtung = JSONMapper.convertToIntegerInRange(value, true, 0, 10)),
+			// noteBerufsabschluss -> dto.NoteAbschlussBA
+			Map.entry("textFachbezogeneLernentwicklung", (conn, dto, value, map) -> dto.Lernentw = JSONMapper.convertToString(value, true, true, null)),
+			Map.entry("umfangLernstandsbericht", (conn, dto, value, map) -> {
+				final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
+				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Umfang = (strUmfang == null) || strUmfang.isBlank() ? null : strUmfang;
+			}),
+			Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
+			Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

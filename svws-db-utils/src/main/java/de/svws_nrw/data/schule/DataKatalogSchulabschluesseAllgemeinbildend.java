@@ -32,7 +32,7 @@ public final class DataKatalogSchulabschluesseAllgemeinbildend extends DataManag
 		final ArrayList<SchulabschlussAllgemeinbildendKatalogEintrag> daten = new ArrayList<>();
 		for (final SchulabschlussAllgemeinbildend abschlussart : SchulabschlussAllgemeinbildend.values())
 			daten.addAll(Arrays.asList(abschlussart.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

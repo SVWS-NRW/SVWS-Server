@@ -32,7 +32,7 @@ public final class DataKatalogNationalitaeten extends DataManager<Long> {
 		final ArrayList<NationalitaetenKatalogEintrag> daten = new ArrayList<>();
 		for (final Nationalitaeten nat : Nationalitaeten.values())
 			daten.addAll(Arrays.asList(nat.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

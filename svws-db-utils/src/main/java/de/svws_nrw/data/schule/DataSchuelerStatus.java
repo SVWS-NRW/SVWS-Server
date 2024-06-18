@@ -28,15 +28,15 @@ public final class DataSchuelerStatus extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<SchuelerstatusKatalogEintrag> katalog = Arrays.stream(SchuelerStatus.values()).map(s -> {
-		    final var eintrag = new SchuelerstatusKatalogEintrag();
-		    eintrag.StatusNr = s.id;
-		    eintrag.Bezeichnung = s.bezeichnung;
-		    eintrag.Sortierung = s.ordinal();
-		    return eintrag;
+			final var eintrag = new SchuelerstatusKatalogEintrag();
+			eintrag.StatusNr = s.id;
+			eintrag.Bezeichnung = s.bezeichnung;
+			eintrag.Sortierung = s.ordinal();
+			return eintrag;
 		}).toList();
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

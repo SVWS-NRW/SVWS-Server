@@ -46,7 +46,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<FoerderschwerpunktEintrag> daten = getAllFromDB();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**

@@ -110,45 +110,47 @@ public final class DataSchulleitung extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<Schulleitung> daten = getSchulleitungsfunktionen(conn, this.idLehrer);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final Schulleitung daten = getSchulleitungsfunktion(conn, id);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private final Map<String, DataBasicMapper<DTOSchulleitung>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch (%d) stimmt nicht mit der ID des API-Aufrufs (%d) überein."
-						.formatted(patch_id, dto.ID));
-		}),
-		Map.entry("idLeitungsfunktion", (conn, dto, value, map) -> {
-			final long id = JSONMapper.convertToLong(value, false);
-			if (id != dto.LeitungsfunktionID) {
-				final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(id);
-				if (funktion == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Es gibt keine Leitungsfunktion mit der ID %d.".formatted(id));
-				dto.LeitungsfunktionID = id;
-				if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank()))
-					dto.Funktionstext = funktion.daten.bezeichnung;
-			}
-		}),
-		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Funktionstext = JSONMapper.convertToString(value, false, false, Schema.tab_Schulleitung.col_Funktionstext.datenlaenge())),
-		Map.entry("idLehrer", (conn, dto, value, map) -> {
-			final long id = JSONMapper.convertToLong(value, false);
-			if (id != dto.LehrerID) {
-				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-				if (lehrer == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der ID %d gefunden werden.".formatted(id));
-				dto.LehrerID = id;
-			}
-		}),
-		Map.entry("beginn", (conn, dto, value, map) -> dto.Von = JSONMapper.convertToString(value, true, false, null)),  // TODO convertToDate im JSONMapper
-		Map.entry("ende", (conn, dto, value, map) -> dto.Bis = JSONMapper.convertToString(value, true, false, null))  // TODO convertToDate im JSONMapper
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch (%d) stimmt nicht mit der ID des API-Aufrufs (%d) überein."
+							.formatted(patch_id, dto.ID));
+			}),
+			Map.entry("idLeitungsfunktion", (conn, dto, value, map) -> {
+				final long id = JSONMapper.convertToLong(value, false);
+				if (id != dto.LeitungsfunktionID) {
+					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(id);
+					if (funktion == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Es gibt keine Leitungsfunktion mit der ID %d.".formatted(id));
+					dto.LeitungsfunktionID = id;
+					if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank()))
+						dto.Funktionstext = funktion.daten.bezeichnung;
+				}
+			}),
+			Map.entry("bezeichnung",
+					(conn, dto, value, map) -> dto.Funktionstext =
+							JSONMapper.convertToString(value, false, false, Schema.tab_Schulleitung.col_Funktionstext.datenlaenge())),
+			Map.entry("idLehrer", (conn, dto, value, map) -> {
+				final long id = JSONMapper.convertToLong(value, false);
+				if (id != dto.LehrerID) {
+					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+					if (lehrer == null)
+						throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der ID %d gefunden werden.".formatted(id));
+					dto.LehrerID = id;
+				}
+			}),
+			Map.entry("beginn", (conn, dto, value, map) -> dto.Von = JSONMapper.convertToString(value, true, false, null)),  // TODO convertToDate im JSONMapper
+			Map.entry("ende", (conn, dto, value, map) -> dto.Bis = JSONMapper.convertToString(value, true, false, null))  // TODO convertToDate im JSONMapper
 	);
 
 

@@ -38,7 +38,7 @@ public final class DataKatalogBerufskollegBerufsebenen extends DataManager<Long>
 			daten.addAll(Arrays.asList(ebenen.historie));
 		for (final BerufskollegBerufsebene3 ebenen : BerufskollegBerufsebene3.values())
 			daten.addAll(Arrays.asList(ebenen.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

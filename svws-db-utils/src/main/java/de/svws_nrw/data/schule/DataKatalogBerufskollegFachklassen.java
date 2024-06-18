@@ -29,7 +29,7 @@ public final class DataKatalogBerufskollegFachklassen extends DataManager<Long> 
 	@Override
 	public Response getAll() {
 		final BerufskollegFachklassenKatalog daten = JsonDaten.fachklassenManager.getKatalog();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

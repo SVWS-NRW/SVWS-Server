@@ -94,7 +94,7 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	public Response getBySchuelerIDAsResponse(final Long id) {
 		try {
 			List<SchuelerKAoADaten> daten = this.getBySchuelerID(id);
-			if (daten == null || daten.isEmpty())
+			if ((daten == null) || daten.isEmpty())
 				daten = new ArrayList<>();
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (@SuppressWarnings("unused") final Exception e) {
@@ -298,7 +298,8 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateLernabschnittsdaten(final Long schuelerid, final DTOSchuelerLernabschnittsdaten lernabschnittsdaten) throws ApiOperationException {
+	protected static void validateLernabschnittsdaten(final Long schuelerid, final DTOSchuelerLernabschnittsdaten lernabschnittsdaten)
+			throws ApiOperationException {
 		if (lernabschnittsdaten == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "lernabschnittsdaten nicht gefunden");
 		if (!Objects.equals(schuelerid, lernabschnittsdaten.Schueler_ID))
@@ -361,7 +362,8 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateBerufsfeld(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOABerufsfeld berufsfeld) throws ApiOperationException {
+	protected static void validateBerufsfeld(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOABerufsfeld berufsfeld)
+			throws ApiOperationException {
 		if (KAOAZusatzmerkmaleOptionsarten.BERUFSFELD.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
 			validateValueFound(daten.berufsfeld, berufsfeld, "berufsfeld");
 		}
@@ -376,10 +378,11 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateAnschlussoption(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOAAnschlussoption anschlussoptionen) throws ApiOperationException {
+	protected static void validateAnschlussoption(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal,
+			final KAOAAnschlussoption anschlussoptionen) throws ApiOperationException {
 		if (KAOAZusatzmerkmaleOptionsarten.ANSCHLUSSOPTION.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
 			validateValueFound(daten.anschlussoption, anschlussoptionen, "anschlussoption");
-			if (anschlussoptionen != null && !anschlussoptionen.daten.anzeigeZusatzmerkmal.contains(zusatzmerkmal.daten.kuerzel)) {
+			if ((anschlussoptionen != null) && !anschlussoptionen.daten.anzeigeZusatzmerkmal.contains(zusatzmerkmal.daten.kuerzel)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "anschlussoptionen passt nicht zum zusatzmerkmal");
 			}
 		}
@@ -394,12 +397,13 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateEbene4(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOAEbene4 ebene4) throws ApiOperationException {
+	protected static void validateEbene4(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOAEbene4 ebene4)
+			throws ApiOperationException {
 		if (zusatzmerkmal == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "zusatzmerkmal nicht angegeben");
 		if (KAOAZusatzmerkmaleOptionsarten.SBO_EBENE_4.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
 			validateValueFound(daten.ebene4, ebene4, "ebene4");
-			if (ebene4 != null && !ebene4.daten.zusatzmerkmal.equals(zusatzmerkmal.daten.kuerzel)) {
+			if ((ebene4 != null) && !ebene4.daten.zusatzmerkmal.equals(zusatzmerkmal.daten.kuerzel)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "ebene4 passt nicht zum zusatzmerkmal");
 			}
 		}
@@ -414,7 +418,8 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateZusatzmerkmal(final SchuelerKAoADaten daten, final KAOAMerkmal merkmal, final KAOAZusatzmerkmal zusatzmerkmal) throws ApiOperationException {
+	protected static void validateZusatzmerkmal(final SchuelerKAoADaten daten, final KAOAMerkmal merkmal, final KAOAZusatzmerkmal zusatzmerkmal)
+			throws ApiOperationException {
 		validateValueFound(daten.zusatzmerkmal, zusatzmerkmal, "zusatzmerkmal");
 		if ((zusatzmerkmal != null) && !zusatzmerkmal.daten.merkmal.equals(merkmal.daten.kuerzel))
 			throw new ApiOperationException(Status.BAD_REQUEST, "zusatzmerkmal passt nicht zur merkmal");
@@ -429,7 +434,8 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateMerkmal(final SchuelerKAoADaten daten, final KAOAKategorie kategorie, final KAOAMerkmal merkmal) throws ApiOperationException {
+	protected static void validateMerkmal(final SchuelerKAoADaten daten, final KAOAKategorie kategorie, final KAOAMerkmal merkmal)
+			throws ApiOperationException {
 		validateValueFound(daten.merkmal, merkmal, "merkmal");
 		if ((merkmal != null) && !merkmal.daten.kategorie.equals(kategorie.daten.kuerzel))
 			throw new ApiOperationException(Status.BAD_REQUEST, "merkmal passt nicht zur kategorie");
@@ -458,7 +464,7 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	protected static void validateValueFound(final Long idFromData, final Object obj, final String fieldName) throws ApiOperationException {
-		if (idFromData != null && obj == null)
+		if ((idFromData != null) && (obj == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, fieldName + NICHT_GEFUNDEN);
 	}
 

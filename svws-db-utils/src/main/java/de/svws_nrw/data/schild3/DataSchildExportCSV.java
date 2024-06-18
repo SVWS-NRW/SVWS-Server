@@ -27,9 +27,9 @@ public final class DataSchildExportCSV extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragExportCSV> katalog = CsvReader.fromResource("daten/csv/schild3/TextExport.csv", Schild3KatalogEintragExportCSV.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public final class DataKatalogFoerderschwerpunkte extends DataManager<Long> {
 		final ArrayList<FoerderschwerpunktKatalogEintrag> daten = new ArrayList<>();
 		for (final Foerderschwerpunkt eintrag : Foerderschwerpunkt.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

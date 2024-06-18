@@ -32,7 +32,7 @@ public final class DataKatalogEinschulungsarten extends DataManager<Long> {
 		final ArrayList<EinschulungsartKatalogEintrag> daten = new ArrayList<>();
 		for (final Einschulungsart art : Einschulungsart.values())
 			daten.addAll(Arrays.asList(art.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

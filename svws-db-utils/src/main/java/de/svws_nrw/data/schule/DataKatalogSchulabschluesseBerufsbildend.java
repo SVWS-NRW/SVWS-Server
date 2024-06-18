@@ -32,7 +32,7 @@ public final class DataKatalogSchulabschluesseBerufsbildend extends DataManager<
 		final ArrayList<SchulabschlussBerufsbildendKatalogEintrag> daten = new ArrayList<>();
 		for (final SchulabschlussBerufsbildend abschlussart : SchulabschlussBerufsbildend.values())
 			daten.addAll(Arrays.asList(abschlussart.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

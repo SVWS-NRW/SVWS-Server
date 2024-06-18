@@ -16,24 +16,26 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Fehler der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen extends DataSchildReportingDatenquelle<SchildReportingSchuelerSprachpruefungen, Long> {
+public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen
+		extends DataSchildReportingDatenquelle<SchildReportingSchuelerSprachpruefungen, Long> {
 
-    /**
-     * Erstelle die Datenquelle SchildReportingSchuelerSprachpruefungen
-     */
-    DataSchildReportingDatenquelleSchuelerSprachpruefungen() {
-        super(SchildReportingSchuelerSprachpruefungen.class);
-        this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
-    }
+	/**
+	 * Erstelle die Datenquelle SchildReportingSchuelerSprachpruefungen
+	 */
+	DataSchildReportingDatenquelleSchuelerSprachpruefungen() {
+		super(SchildReportingSchuelerSprachpruefungen.class);
+		this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
+		// Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
+	}
 
 	@Override
-    List<SchildReportingSchuelerSprachpruefungen> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
+	List<SchildReportingSchuelerSprachpruefungen> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString()
+						+ " existiert nicht.");
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
@@ -66,12 +68,13 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen extend
 						result.add(schuelerSprachpruefung);
 					}
 				} catch (final Exception ex) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten zu den Sprachprüfungen des Schülers mit der ID " + schuelerID + " sind vermutlich inkonsistent. Folgender Fehler ist aufgetreten: " + ex.getMessage());
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten zu den Sprachprüfungen des Schülers mit der ID " + schuelerID
+							+ " sind vermutlich inkonsistent. Folgender Fehler ist aufgetreten: " + ex.getMessage());
 				}
 			}
 		}
 		// Geben die Ergebnis-Liste mit den Core-DTOs zurück
-        return result;
-    }
+		return result;
+	}
 
 }

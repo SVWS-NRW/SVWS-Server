@@ -43,36 +43,36 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerAllgemeineAdresse}
 	 * in einen Core-DTO {@link SchuelerBetriebsdaten}.
 	 */
-	 private final Function<DTOSchuelerAllgemeineAdresse, SchuelerBetriebsdaten> dtoMapper = (final DTOSchuelerAllgemeineAdresse e) -> {
-		 final SchuelerBetriebsdaten eintrag = new SchuelerBetriebsdaten();
-		 eintrag.id = e.ID;
-		 eintrag.schueler_id = e.Schueler_ID;
-		 eintrag.betrieb_id = e.Adresse_ID;
-		 eintrag.beschaeftigungsart_id = e.Vertragsart_ID;
-		 eintrag.vertragsbeginn = e.Vertragsbeginn;
-		 eintrag.vertragsende = e.Vertragsende;
-		 eintrag.ausbilder = e.Ausbilder;
-		 eintrag.allgadranschreiben = e.AllgAdrAnschreiben;
-		 eintrag.praktikum = e.Praktikum;
-		 eintrag.sortierung = e.Sortierung;
-		 eintrag.ansprechpartner_id = e.Ansprechpartner_ID;
-		 eintrag.betreuungslehrer_id = e.Betreuungslehrer_ID;
-		 return eintrag;
-	 };
+	private final Function<DTOSchuelerAllgemeineAdresse, SchuelerBetriebsdaten> dtoMapper = (final DTOSchuelerAllgemeineAdresse e) -> {
+		final SchuelerBetriebsdaten eintrag = new SchuelerBetriebsdaten();
+		eintrag.id = e.ID;
+		eintrag.schueler_id = e.Schueler_ID;
+		eintrag.betrieb_id = e.Adresse_ID;
+		eintrag.beschaeftigungsart_id = e.Vertragsart_ID;
+		eintrag.vertragsbeginn = e.Vertragsbeginn;
+		eintrag.vertragsende = e.Vertragsende;
+		eintrag.ausbilder = e.Ausbilder;
+		eintrag.allgadranschreiben = e.AllgAdrAnschreiben;
+		eintrag.praktikum = e.Praktikum;
+		eintrag.sortierung = e.Sortierung;
+		eintrag.ansprechpartner_id = e.Ansprechpartner_ID;
+		eintrag.betreuungslehrer_id = e.Betreuungslehrer_ID;
+		return eintrag;
+	};
 
-	 @Override
-	 public Response getAll() throws ApiOperationException {
-		 final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryAll(DTOSchuelerAllgemeineAdresse.class);
-		 if (betriebe == null)
-			 throw new ApiOperationException(Status.NOT_FOUND);
-		 final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
-		 return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	 }
+	@Override
+	public Response getAll() throws ApiOperationException {
+		final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryAll(DTOSchuelerAllgemeineAdresse.class);
+		if (betriebe == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
-	 @Override
-	 public Response getList() {
+	@Override
+	public Response getList() {
 		throw new UnsupportedOperationException();
-	 }
+	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
@@ -135,7 +135,8 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					}
 					case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
 					case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
-					case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
+					case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder
+							.datenlaenge());
 					case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
 					case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
 					case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
@@ -179,39 +180,40 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
-    	final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryList(DTOSchuelerAllgemeineAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerAllgemeineAdresse.class, schuelerID);
-    	if (betriebe == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
-        /*
-        // TODO Isak später bitte entfernen
-        // Bestimme die Namen aller Betriebe, die bei den Schüler-Betriebsdaten vorkommen
-        List<Long> betriebIDs = daten.stream().filter(sbd -> sbd.betrieb_id != null).map(sbd -> sbd.betrieb_id).toList();
-        Map<Long, String> mapBetriebeIDName = (betriebIDs.size() <= 0) ? new HashMap<>() :
-        	conn.queryNamed("DTOKatalogAllgemeineAdresse.id.multiple", betriebIDs, DTOKatalogAllgemeineAdresse.class).stream()
-        		.collect(Collectors.toMap(b -> b.ID, b -> b.name1));
-        // Bestimme die Namen aller Ansprechpartner, die bei den Schüler-Betriebsdaten vorkommen
-        List<Long> ansprechpartnerIDs = daten.stream().filter(sbd -> sbd.ansprechpartner_id != null).map(sbd -> sbd.ansprechpartner_id).toList();
-        Map<Long, String> mapAnsprechpartnerIDName = (ansprechpartnerIDs.size() <= 0) ? new HashMap<>() :
-        	conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.id.multiple", ansprechpartnerIDs, DTOAnsprechpartnerAllgemeineAdresse.class).stream()
-        		.collect(Collectors.toMap(b -> b.ID, b -> b.Name));
-        // Bestimme die Namen aller Betreuungslehrer, die bei den Schüler-Betriebsdaten vorkommen
-        List<Long> betreuungslehrerIDs = daten.stream().filter(sbd -> sbd.betreuungslehrer_id != null).map(sbd -> sbd.betreuungslehrer_id).toList();
-        Map<Long, String> mapBetreuungslehrerIDName = (betreuungslehrerIDs.size() <= 0) ? new HashMap<>() :
-        	conn.queryNamed("DTOLehrer.id.multiple", betreuungslehrerIDs, DTOLehrer.class).stream()
-        		.collect(Collectors.toMap(b -> b.ID, b -> b.Nachname));
-        // Setze nun alle Namen, welche für die obigen IDs bestimmt wurden
-        for (SchuelerBetriebsdaten sbd : daten) {
-        	if (sbd.id != null)
-        		sbd.betrieb_name = mapBetriebeIDName.get(sbd.betrieb_id);
-        	if (sbd.ansprechpartner_id != null)
-        		sbd.ansprechpartner_name = mapAnsprechpartnerIDName.get(sbd.ansprechpartner_id);
-        	if (sbd.betreuungslehrer_id != null)
-        		sbd.betreuungslehrer_name = mapBetreuungslehrerIDName.get(sbd.betreuungslehrer_id);
-        }
+		final List<DTOSchuelerAllgemeineAdresse> betriebe =
+				conn.queryList(DTOSchuelerAllgemeineAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerAllgemeineAdresse.class, schuelerID);
+		if (betriebe == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
+		/*
+		// TODO Isak später bitte entfernen
+		// Bestimme die Namen aller Betriebe, die bei den Schüler-Betriebsdaten vorkommen
+		List<Long> betriebIDs = daten.stream().filter(sbd -> sbd.betrieb_id != null).map(sbd -> sbd.betrieb_id).toList();
+		Map<Long, String> mapBetriebeIDName = (betriebIDs.size() <= 0) ? new HashMap<>() :
+			conn.queryNamed("DTOKatalogAllgemeineAdresse.id.multiple", betriebIDs, DTOKatalogAllgemeineAdresse.class).stream()
+				.collect(Collectors.toMap(b -> b.ID, b -> b.name1));
+		// Bestimme die Namen aller Ansprechpartner, die bei den Schüler-Betriebsdaten vorkommen
+		List<Long> ansprechpartnerIDs = daten.stream().filter(sbd -> sbd.ansprechpartner_id != null).map(sbd -> sbd.ansprechpartner_id).toList();
+		Map<Long, String> mapAnsprechpartnerIDName = (ansprechpartnerIDs.size() <= 0) ? new HashMap<>() :
+			conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.id.multiple", ansprechpartnerIDs, DTOAnsprechpartnerAllgemeineAdresse.class).stream()
+				.collect(Collectors.toMap(b -> b.ID, b -> b.Name));
+		// Bestimme die Namen aller Betreuungslehrer, die bei den Schüler-Betriebsdaten vorkommen
+		List<Long> betreuungslehrerIDs = daten.stream().filter(sbd -> sbd.betreuungslehrer_id != null).map(sbd -> sbd.betreuungslehrer_id).toList();
+		Map<Long, String> mapBetreuungslehrerIDName = (betreuungslehrerIDs.size() <= 0) ? new HashMap<>() :
+			conn.queryNamed("DTOLehrer.id.multiple", betreuungslehrerIDs, DTOLehrer.class).stream()
+				.collect(Collectors.toMap(b -> b.ID, b -> b.Nachname));
+		// Setze nun alle Namen, welche für die obigen IDs bestimmt wurden
+		for (SchuelerBetriebsdaten sbd : daten) {
+			if (sbd.id != null)
+				sbd.betrieb_name = mapBetriebeIDName.get(sbd.betrieb_id);
+			if (sbd.ansprechpartner_id != null)
+				sbd.ansprechpartner_name = mapAnsprechpartnerIDName.get(sbd.ansprechpartner_id);
+			if (sbd.betreuungslehrer_id != null)
+				sbd.betreuungslehrer_name = mapBetreuungslehrerIDName.get(sbd.betreuungslehrer_id);
+		}
 
-        */
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		*/
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
@@ -256,12 +258,14 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						if (sid == null)
 							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID darf nicht fehlen.");
 						if (sid != schueler_id)
-							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+							throw new ApiOperationException(Status.BAD_REQUEST,
+									"SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
 					case "betrieb_id" -> {
 						final Long bid = JSONMapper.convertToLong(value, true);
 						if ((bid == null) || (bid != betrieb_id))
-							throw new ApiOperationException(Status.BAD_REQUEST, "Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+							throw new ApiOperationException(Status.BAD_REQUEST,
+									"Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
 					case "beschaeftigungsart_id" -> {
 						final Long art_id = JSONMapper.convertToLong(value, true);
@@ -276,7 +280,8 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					}
 					case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
 					case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
-					case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
+					case "ausbilder" ->
+						s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
 					case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
 					case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
 					case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);

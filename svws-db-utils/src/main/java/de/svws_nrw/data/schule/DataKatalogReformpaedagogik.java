@@ -32,35 +32,35 @@ public final class DataKatalogReformpaedagogik extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
-        for (final Reformpaedagogik p : Reformpaedagogik.values())
-            daten.addAll(Arrays.asList(p.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
+		for (final Reformpaedagogik p : Reformpaedagogik.values())
+			daten.addAll(Arrays.asList(p.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
-        final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-        if (schule == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-    	final var liste = Reformpaedagogik.get(schule.Schulform);
-    	if (liste == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
-        for (final Reformpaedagogik p : liste)
-            daten.addAll(Arrays.asList(p.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final var liste = Reformpaedagogik.get(schule.Schulform);
+		if (liste == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
+		for (final Reformpaedagogik p : liste)
+			daten.addAll(Arrays.asList(p.historie));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-	    if (id == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-	    final Reformpaedagogik p = Reformpaedagogik.getByID(id);
-	    if (p == null)
-            throw new ApiOperationException(Status.NOT_FOUND);
-	    final ReformpaedagogikKatalogEintrag daten = p.daten;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final Reformpaedagogik p = Reformpaedagogik.getByID(id);
+		if (p == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final ReformpaedagogikKatalogEintrag daten = p.daten;
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public final class DataKatalogSchulformen extends DataManager<Long> {
 		final ArrayList<SchulformKatalogEintrag> daten = new ArrayList<>();
 		for (final Schulform schulform : Schulform.values())
 			daten.addAll(Arrays.asList(schulform.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

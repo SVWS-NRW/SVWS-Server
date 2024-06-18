@@ -111,7 +111,7 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 */
 	public static List<Long> getIDsByVermerkart(final DBEntityManager conn, final Long id) {
 		return conn.queryList(DTOSchuelerVermerke.QUERY_BY_VERMERKART_ID, DTOSchuelerVermerke.class, id)
-			.stream().map(v -> v.Schueler_ID).toList();
+				.stream().map(v -> v.Schueler_ID).toList();
 	}
 
 
@@ -138,32 +138,32 @@ public final class DataSchuelerVermerke extends DataManager<Long> {
 	 * Datenbank-DTOs {@link DTOSchuelerVermerke}.
 	 */
 	private static final Map<String, DataBasicMapper<DTOSchuelerVermerke>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (Long.compare(patch_id, dto.ID) != 0))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
-		}),
-		Map.entry("idSchueler", (conn, dto, value, map) -> {
-			dto.Schueler_ID = JSONMapper.convertToLong(value, false);
-			dto.VermerkArt_ID = 1L;
-			dto.Bemerkung = "";
-			dto.AngelegtVon = conn.getUser().getUsername();
-			dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
-		}),
-		Map.entry("bemerkung", (conn, dto, value, map) -> {
-			dto.Bemerkung = JSONMapper.convertToString(value, false, true, Schema.tab_SchuelerVermerke.col_Bemerkung.datenlaenge());
-			dto.GeaendertVon = conn.getUser().getUsername();
-			dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
-		}),
-		Map.entry("idVermerkart", (conn, dto, value, map) -> {
-			final long idVermerkart = JSONMapper.convertToLong(value, false);
-			if (conn.queryByKey(DTOVermerkArt.class, idVermerkart) == null)
-				throw new ApiOperationException(Status.CONFLICT);
-			dto.VermerkArt_ID = idVermerkart;
-			dto.GeaendertVon = conn.getUser().getUsername();
-			dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
-		})
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (Long.compare(patch_id, dto.ID) != 0))
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
+			}),
+			Map.entry("idSchueler", (conn, dto, value, map) -> {
+				dto.Schueler_ID = JSONMapper.convertToLong(value, false);
+				dto.VermerkArt_ID = 1L;
+				dto.Bemerkung = "";
+				dto.AngelegtVon = conn.getUser().getUsername();
+				dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
+			}),
+			Map.entry("bemerkung", (conn, dto, value, map) -> {
+				dto.Bemerkung = JSONMapper.convertToString(value, false, true, Schema.tab_SchuelerVermerke.col_Bemerkung.datenlaenge());
+				dto.GeaendertVon = conn.getUser().getUsername();
+				dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
+			}),
+			Map.entry("idVermerkart", (conn, dto, value, map) -> {
+				final long idVermerkart = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOVermerkArt.class, idVermerkart) == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.VermerkArt_ID = idVermerkart;
+				dto.GeaendertVon = conn.getUser().getUsername();
+				dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
+			}));
 
 	private static final Set<String> patchAttributesForbidden = Set.of("idSchueler");   // Nur beim Erstellen eines DTOs erlaubt, nicht beim Patchen selbst
 

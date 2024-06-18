@@ -27,9 +27,9 @@ public final class DataKatalogSchulen extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<SchulenKatalogEintrag> katalog = getKatalog();
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

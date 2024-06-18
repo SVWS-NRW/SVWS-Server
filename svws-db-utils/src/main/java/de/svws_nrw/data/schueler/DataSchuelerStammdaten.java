@@ -80,7 +80,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.religionanmeldung = schueler.Religionsanmeldung;
 		// Daten zum Migrationshintergrund
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
-		daten.hatMigrationshintergrund = schueler.Migrationshintergrund != null && schueler.Migrationshintergrund;
+		daten.hatMigrationshintergrund = (schueler.Migrationshintergrund != null) && schueler.Migrationshintergrund;
 		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug;
 		daten.geburtsland = schueler.GeburtslandSchueler == null ? null : schueler.GeburtslandSchueler.daten.iso3;
 		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
@@ -94,10 +94,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.haltestelleID = schueler.Haltestelle_ID;
 		daten.anmeldedatum = schueler.AnmeldeDatum;
 		daten.aufnahmedatum = schueler.Aufnahmedatum;
-		daten.istVolljaehrig = schueler.Volljaehrig != null && schueler.Volljaehrig; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istVolljaehrig = (schueler.Volljaehrig != null) && schueler.Volljaehrig; // TODO ermittle die Information aus den anderen Schülerdaten
 		daten.keineAuskunftAnDritte = schueler.KeineAuskunft;
-		daten.istSchulpflichtErfuellt = schueler.SchulpflichtErf != null && schueler.SchulpflichtErf; // TODO ermittle die Information aus den anderen Schülerdaten
-		daten.istBerufsschulpflichtErfuellt = schueler.BerufsschulpflErf != null && schueler.BerufsschulpflErf; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istSchulpflichtErfuellt = (schueler.SchulpflichtErf != null) && schueler.SchulpflichtErf; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istBerufsschulpflichtErfuellt = (schueler.BerufsschulpflErf != null) && schueler.BerufsschulpflErf; // TODO ermittle die Information aus den anderen Schülerdaten
 		daten.hatMasernimpfnachweis = schueler.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = schueler.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = schueler.MeisterBafoeg;
@@ -129,10 +129,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		if (ids.isEmpty())
 			return result;
 		final List<DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, ids);
-		if (schueler == null || schueler.isEmpty())
+		if ((schueler == null) || schueler.isEmpty())
 			return result;
 		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryByKeyList(DTOSchuelerFoto.class, ids)
-			.stream().collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
+				.stream().collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
 		for (final DTOSchueler s : schueler) {
 			final var tmp = dtoMapper.apply(s);
 			final var tmpFoto = mapFotos.get(tmp.id);
@@ -188,9 +188,15 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				schuelerFoto.FotoBase64 = strData;
 				conn.transactionPersist(schuelerFoto);
 			}),
-			Map.entry("nachname", (conn, schueler, value, map) -> schueler.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge())),
-			Map.entry("vorname", (conn, schueler, value, map) -> schueler.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge())),
-			Map.entry("alleVornamen", (conn, schueler, value, map) -> schueler.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge())),
+			Map.entry("nachname",
+					(conn, schueler, value, map) -> schueler.Nachname =
+							JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge())),
+			Map.entry("vorname",
+					(conn, schueler, value, map) -> schueler.Vorname =
+							JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge())),
+			Map.entry("alleVornamen",
+					(conn, schueler, value, map) -> schueler.AlleVornamen =
+							JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge())),
 			Map.entry("geschlecht", (conn, schueler, value, map) -> {
 				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 				if (geschlecht == null)
@@ -198,19 +204,30 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				schueler.Geschlecht = geschlecht;
 			}),
 			Map.entry("geburtsdatum", (conn, schueler, value, map) -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("geburtsort", (conn, schueler, value, map) -> schueler.Geburtsort = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsort.datenlaenge())),
-			Map.entry("geburtsname", (conn, schueler, value, map) -> schueler.Geburtsname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsname.datenlaenge())),
+			Map.entry("geburtsort", (conn, schueler, value, map) -> schueler.Geburtsort =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsort.datenlaenge())),
+			Map.entry("geburtsname", (conn, schueler, value, map) -> schueler.Geburtsname =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsname.datenlaenge())),
 
 			// Wohnort und Kontaktdaten
-			Map.entry("strassenname", (conn, schueler, value, map) -> schueler.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Strassenname.datenlaenge())),
-			Map.entry("hausnummer", (conn, schueler, value, map) -> schueler.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge())),
-			Map.entry("hausnummerZusatz", (conn, schueler, value, map) -> schueler.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge())),
-			Map.entry("wohnortID", (conn, schueler, value, map) -> setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
-			Map.entry("ortsteilID", (conn, schueler, value, map) -> setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true))),
-			Map.entry("telefon", (conn, schueler, value, map) -> schueler.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge())),
-			Map.entry("telefonMobil", (conn, schueler, value, map) -> schueler.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge())),
-			Map.entry("emailPrivat", (conn, schueler, value, map) -> schueler.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge())),
-			Map.entry("emailSchule", (conn, schueler, value, map) -> schueler.SchulEmail = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulEmail.datenlaenge())),
+			Map.entry("strassenname", (conn, schueler, value, map) -> schueler.Strassenname =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Strassenname.datenlaenge())),
+			Map.entry("hausnummer", (conn, schueler, value, map) -> schueler.HausNr =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge())),
+			Map.entry("hausnummerZusatz", (conn, schueler, value, map) -> schueler.HausNrZusatz =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge())),
+			Map.entry("wohnortID", (conn, schueler, value, map) -> setWohnort(schueler, JSONMapper.convertToLong(value, true),
+					map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
+			Map.entry("ortsteilID", (conn, schueler, value, map) -> setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID
+					: ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true))),
+			Map.entry("telefon", (conn, schueler, value, map) -> schueler.Telefon =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge())),
+			Map.entry("telefonMobil", (conn, schueler, value, map) -> schueler.Fax =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge())),
+			Map.entry("emailPrivat", (conn, schueler, value, map) -> schueler.Email =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge())),
+			Map.entry("emailSchule", (conn, schueler, value, map) -> schueler.SchulEmail =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulEmail.datenlaenge())),
 
 			// Daten zur Staatsangehörigkeit und zur Religion
 			Map.entry("staatsangehoerigkeitID", (conn, schueler, value, map) -> {
@@ -340,8 +357,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("keineAuskunftAnDritte", (conn, schueler, value, map) -> schueler.KeineAuskunft = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("erhaeltSchuelerBAFOEG", (conn, schueler, value, map) -> schueler.Bafoeg = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("erhaeltMeisterBAFOEG", (conn, schueler, value, map) -> schueler.MeisterBafoeg = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istDuplikat", (conn, schueler, value, map) -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false))
-	);
+			Map.entry("istDuplikat", (conn, schueler, value, map) -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {

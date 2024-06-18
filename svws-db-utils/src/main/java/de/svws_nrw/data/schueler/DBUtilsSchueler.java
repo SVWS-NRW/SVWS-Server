@@ -70,41 +70,43 @@ public final class DBUtilsSchueler {
 
 
 	private static Sprachpruefung dtoMapperSprachenpruefung(final DTOSchuelerSprachpruefungen dtoSprachpruefung) {
-        final Sprachpruefung pruefung = new Sprachpruefung();
-        pruefung.sprache = dtoSprachpruefung.Sprache;
-        pruefung.anspruchsniveauId = dtoSprachpruefung.Anspruchsniveau.daten.id;
-        pruefung.ersetzteSprache = dtoSprachpruefung.ErsetzteSprache;
-        pruefung.jahrgang = dtoSprachpruefung.ASDJahrgang;
-        pruefung.istHSUPruefung = dtoSprachpruefung.IstHSUPruefung;
-        pruefung.istFeststellungspruefung = dtoSprachpruefung.IstFeststellungspruefung;
-        pruefung.kannErstePflichtfremdspracheErsetzen = dtoSprachpruefung.KannErstePflichtfremdspracheErsetzen;
-        pruefung.kannZweitePflichtfremdspracheErsetzen = dtoSprachpruefung.KannZweitePflichtfremdspracheErsetzen;
-        pruefung.kannWahlpflichtfremdspracheErsetzen = dtoSprachpruefung.KannWahlpflichtfremdspracheErsetzen;
-        pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben = dtoSprachpruefung.KannBelegungAlsFortgefuehrteSpracheErlauben;
-        pruefung.note = dtoSprachpruefung.NotePruefung == null ? null : dtoSprachpruefung.NotePruefung.getNoteSekI();
-        if (dtoSprachpruefung.Referenzniveau != null) {
-            pruefung.referenzniveau = dtoSprachpruefung.Referenzniveau.daten.kuerzel;
-        } else {
-            pruefung.referenzniveau = null;
-        }
-        return pruefung;
+		final Sprachpruefung pruefung = new Sprachpruefung();
+		pruefung.sprache = dtoSprachpruefung.Sprache;
+		pruefung.anspruchsniveauId = dtoSprachpruefung.Anspruchsniveau.daten.id;
+		pruefung.ersetzteSprache = dtoSprachpruefung.ErsetzteSprache;
+		pruefung.jahrgang = dtoSprachpruefung.ASDJahrgang;
+		pruefung.istHSUPruefung = dtoSprachpruefung.IstHSUPruefung;
+		pruefung.istFeststellungspruefung = dtoSprachpruefung.IstFeststellungspruefung;
+		pruefung.kannErstePflichtfremdspracheErsetzen = dtoSprachpruefung.KannErstePflichtfremdspracheErsetzen;
+		pruefung.kannZweitePflichtfremdspracheErsetzen = dtoSprachpruefung.KannZweitePflichtfremdspracheErsetzen;
+		pruefung.kannWahlpflichtfremdspracheErsetzen = dtoSprachpruefung.KannWahlpflichtfremdspracheErsetzen;
+		pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben = dtoSprachpruefung.KannBelegungAlsFortgefuehrteSpracheErlauben;
+		pruefung.note = dtoSprachpruefung.NotePruefung == null ? null : dtoSprachpruefung.NotePruefung.getNoteSekI();
+		if (dtoSprachpruefung.Referenzniveau != null) {
+			pruefung.referenzniveau = dtoSprachpruefung.Referenzniveau.daten.kuerzel;
+		} else {
+			pruefung.referenzniveau = null;
+		}
+		return pruefung;
 	}
 
 
-	private static Sprachendaten dtoMapperSprachendaten(final long idSchueler, final List<DTOSchuelerSprachenfolge> dtoSprachbelegungen, final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen) {
-        final Sprachendaten sprachendaten = new Sprachendaten();
-        sprachendaten.schuelerID = idSchueler;
+	private static Sprachendaten dtoMapperSprachendaten(final long idSchueler, final List<DTOSchuelerSprachenfolge> dtoSprachbelegungen,
+			final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen) {
+		final Sprachendaten sprachendaten = new Sprachendaten();
+		sprachendaten.schuelerID = idSchueler;
 		for (final DTOSchuelerSprachenfolge dtoSprachbelegung : dtoSprachbelegungen) {
 			if (dtoSprachbelegung.ASDJahrgangVon == null)
 				continue;
 			sprachendaten.belegungen.add(dtoMapperSprachenfolge(dtoSprachbelegung));
 		}
-        for (final DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
-            if ((dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null) || (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
-                continue;
-            sprachendaten.pruefungen.add(dtoMapperSprachenpruefung(dtoSprachpruefung));
-        }
-        return sprachendaten;
+		for (final DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
+			if ((dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null)
+					|| (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
+				continue;
+			sprachendaten.pruefungen.add(dtoMapperSprachenpruefung(dtoSprachpruefung));
+		}
+		return sprachendaten;
 	}
 
 
@@ -118,11 +120,13 @@ public final class DBUtilsSchueler {
 	 * @return die Sprachendaten
 	 */
 	public static Sprachendaten getSchuelerSprachendaten(final DBEntityManager conn, final long id) {
-        // Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
-        final List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
-        final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, id);
-        // ... und gibt sie als Sprachendaten-Objekt zurück.
-        return dtoMapperSprachendaten(id, dtoSprachenfolge, dtoSprachpruefungen);
+		// Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
+		final List<DTOSchuelerSprachenfolge> dtoSprachenfolge =
+				conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
+		final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen =
+				conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, id);
+		// ... und gibt sie als Sprachendaten-Objekt zurück.
+		return dtoMapperSprachendaten(id, dtoSprachenfolge, dtoSprachpruefungen);
 	}
 
 
@@ -136,13 +140,16 @@ public final class DBUtilsSchueler {
 	 * @return die Sprachendaten der Schüler
 	 */
 	public static List<Sprachendaten> getSchuelerSprachendaten(final DBEntityManager conn, final List<Long> ids) {
-        // Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
-        final Map<Long, List<DTOSchuelerSprachenfolge>> mapSprachenfolgen = conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, ids)
-        		.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
-        final Map<Long, List<DTOSchuelerSprachpruefungen>> mapSprachpruefungen = conn.queryList(DTOSchuelerSprachpruefungen.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, ids)
-        		.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
-        // ... und gibt sie als Sprachendaten-Objekte zurück.
-        return ids.stream().map(id -> dtoMapperSprachendaten(id, mapSprachenfolgen.computeIfAbsent(id, k -> new ArrayList<>()), mapSprachpruefungen.computeIfAbsent(id, k -> new ArrayList<>()))).toList();
+		// Lese die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen aus der Datenbank ein
+		final Map<Long, List<DTOSchuelerSprachenfolge>> mapSprachenfolgen =
+				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, ids)
+						.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
+		final Map<Long, List<DTOSchuelerSprachpruefungen>> mapSprachpruefungen =
+				conn.queryList(DTOSchuelerSprachpruefungen.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, ids)
+						.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
+		// ... und gibt sie als Sprachendaten-Objekte zurück.
+		return ids.stream().map(id -> dtoMapperSprachendaten(id, mapSprachenfolgen.computeIfAbsent(id, k -> new ArrayList<>()),
+				mapSprachpruefungen.computeIfAbsent(id, k -> new ArrayList<>()))).toList();
 	}
 
 }

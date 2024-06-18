@@ -54,8 +54,8 @@ public final class DataReligionen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-    	final var daten = getReligionen(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final var daten = getReligionen(conn);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -82,9 +82,9 @@ public final class DataReligionen extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static List<ReligionEintrag> getReligionen(final @NotNull DBEntityManager conn) throws ApiOperationException {
-    	final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Keine Religion gefunden.");
+		final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Religion gefunden.");
 		final ArrayList<ReligionEintrag> daten = new ArrayList<>();
 		for (final DTOKonfession r : katalog)
 			daten.add(dtoMapper.apply(r));
@@ -126,24 +126,28 @@ public final class DataReligionen extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOKonfession>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> {
-			dto.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
-			if (dto.StatistikKrz != null) {
-				final ReligionKatalogEintrag rke = Religion.getByKuerzel(dto.StatistikKrz).daten;
-				if (rke == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
-			}
-		}),
-		Map.entry("text", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge())),
-		Map.entry("textZeugnis", (conn, dto, value, map) -> dto.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge())),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
-		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> {
+				dto.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
+				if (dto.StatistikKrz != null) {
+					final ReligionKatalogEintrag rke = Religion.getByKuerzel(dto.StatistikKrz).daten;
+					if (rke == null)
+						throw new ApiOperationException(Status.NOT_FOUND,
+								"Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
+				}
+			}),
+			Map.entry("text",
+					(conn, dto, value, map) -> dto.Bezeichnung =
+							JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge())),
+			Map.entry("textZeugnis",
+					(conn, dto, value, map) -> dto.ZeugnisBezeichnung =
+							JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge())),
+			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true)),
+			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)));
 
 
 	@Override

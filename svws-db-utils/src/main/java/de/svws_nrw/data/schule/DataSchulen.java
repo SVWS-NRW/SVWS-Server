@@ -110,7 +110,7 @@ public final class DataSchulen extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<SchulEintrag> daten = getSchulen(conn);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -122,50 +122,49 @@ public final class DataSchulen extends DataManager<Long> {
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Schulen mit der ID %d gefunden.".formatted(id));
 		final SchulEintrag daten = dtoMapper.apply(schule);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOSchuleNRW>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("schulnummer", (conn, dto, value, map) -> {
-			final String strSchulnummer = JSONMapper.convertToString(value, true, false, 6);
-			dto.SchulNr = strSchulnummer;
-		}),
-		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, true, false, 10)),
-		Map.entry("kurzbezeichnung", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, true, false, 40)),
-		Map.entry("name", (conn, dto, value, map) -> dto.Name = JSONMapper.convertToString(value, false, false, 120)),
-		Map.entry("schulformID", (conn, dto, value, map) -> {
-			final Long id = JSONMapper.convertToLong(value, true);
-			if (id == null) {
-				dto.SchulformBez = null;
-				dto.SchulformKrz = null;
-				dto.SchulformNr = null;
-			} else {
-				final SchulformKatalogEintrag sf = Schulform.getEintragByID(id);
-				if (sf == null)
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
-				dto.SchulformBez = sf.bezeichnung;
-				dto.SchulformKrz = sf.kuerzel;
-				dto.SchulformNr = sf.nummer;
-			}
-		}),
-		Map.entry("strassenname", (conn, dto, value, map) -> dto.Strassenname = JSONMapper.convertToString(value, false, true, 55)),
-		Map.entry("hausnummer", (conn, dto, value, map) -> dto.HausNr = JSONMapper.convertToString(value, false, true, 10)),
-		Map.entry("hausnummerZusatz", (conn, dto, value, map) -> dto.HausNrZusatz = JSONMapper.convertToString(value, false, true, 30)),
-		Map.entry("plz", (conn, dto, value, map) -> dto.PLZ = JSONMapper.convertToString(value, false, true, 10)),
-		Map.entry("ort", (conn, dto, value, map) -> dto.Ort = JSONMapper.convertToString(value, false, true, 50)),
-		Map.entry("telefon", (conn, dto, value, map) -> dto.Telefon = JSONMapper.convertToString(value, false, true, 20)),
-		Map.entry("fax", (conn, dto, value, map) -> dto.Fax = JSONMapper.convertToString(value, false, true, 20)),
-		Map.entry("email", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, false, true, 40)),
-		Map.entry("schulleiter", (conn, dto, value, map) -> dto.Schulleiter = JSONMapper.convertToString(value, false, true, 40)),
-		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, false)),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false))
-	);
+			}),
+			Map.entry("schulnummer", (conn, dto, value, map) -> {
+				final String strSchulnummer = JSONMapper.convertToString(value, true, false, 6);
+				dto.SchulNr = strSchulnummer;
+			}),
+			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, true, false, 10)),
+			Map.entry("kurzbezeichnung", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, true, false, 40)),
+			Map.entry("name", (conn, dto, value, map) -> dto.Name = JSONMapper.convertToString(value, false, false, 120)),
+			Map.entry("schulformID", (conn, dto, value, map) -> {
+				final Long id = JSONMapper.convertToLong(value, true);
+				if (id == null) {
+					dto.SchulformBez = null;
+					dto.SchulformKrz = null;
+					dto.SchulformNr = null;
+				} else {
+					final SchulformKatalogEintrag sf = Schulform.getEintragByID(id);
+					if (sf == null)
+						throw new ApiOperationException(Status.BAD_REQUEST);
+					dto.SchulformBez = sf.bezeichnung;
+					dto.SchulformKrz = sf.kuerzel;
+					dto.SchulformNr = sf.nummer;
+				}
+			}),
+			Map.entry("strassenname", (conn, dto, value, map) -> dto.Strassenname = JSONMapper.convertToString(value, false, true, 55)),
+			Map.entry("hausnummer", (conn, dto, value, map) -> dto.HausNr = JSONMapper.convertToString(value, false, true, 10)),
+			Map.entry("hausnummerZusatz", (conn, dto, value, map) -> dto.HausNrZusatz = JSONMapper.convertToString(value, false, true, 30)),
+			Map.entry("plz", (conn, dto, value, map) -> dto.PLZ = JSONMapper.convertToString(value, false, true, 10)),
+			Map.entry("ort", (conn, dto, value, map) -> dto.Ort = JSONMapper.convertToString(value, false, true, 50)),
+			Map.entry("telefon", (conn, dto, value, map) -> dto.Telefon = JSONMapper.convertToString(value, false, true, 20)),
+			Map.entry("fax", (conn, dto, value, map) -> dto.Fax = JSONMapper.convertToString(value, false, true, 20)),
+			Map.entry("email", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, false, true, 40)),
+			Map.entry("schulleiter", (conn, dto, value, map) -> dto.Schulleiter = JSONMapper.convertToString(value, false, true, 40)),
+			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, false)),
+			Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)));
 
 
 	@Override

@@ -25,7 +25,7 @@ public final class DataKatalogAbgangsartenAllgemeinbildend extends DataManager<L
 	@Override
 	public Response getAll() {
 		final AbgangsartKatalog daten = JsonDaten.abgangsartenManager.getKatalogAllgemeinbildend();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

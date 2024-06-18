@@ -69,7 +69,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, false);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, true);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -107,7 +107,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 *
 	 * @return der Schülerlisteneintrag
 	 */
-	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(final DTOSchueler schueler, final DTOSchuelerLernabschnittsdaten aktAbschnitt, final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
+	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(final DTOSchueler schueler, final DTOSchuelerLernabschnittsdaten aktAbschnitt,
+			final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
 		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
 		eintrag.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
@@ -128,7 +129,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.jahrgang = "";
 			} else {
 				eintrag.idJahrgang = jg.ID;
-				eintrag.jahrgang =  jg.ASDJahrgang;
+				eintrag.jahrgang = jg.ASDJahrgang;
 			}
 			if (aktAbschnitt.Schulgliederung == null) {
 				eintrag.schulgliederung = Schulgliederung.getDefault(schulform).daten.kuerzel;
@@ -170,22 +171,22 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		int result = Long.compare(a.idKlasse, b.idKlasse);
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		if (result == 0) {
-    		if ((a.nachname == null) && (b.nachname != null))
-    			return -1;
-    		else if ((a.nachname != null) && (b.nachname == null))
-    			return 1;
-    		else if ((a.nachname == null) && (b.nachname == null))
-    			return 0;
-    		result = collator.compare(a.nachname, b.nachname);
+			if ((a.nachname == null) && (b.nachname != null))
+				return -1;
+			else if ((a.nachname != null) && (b.nachname == null))
+				return 1;
+			else if ((a.nachname == null) && (b.nachname == null))
+				return 0;
+			result = collator.compare(a.nachname, b.nachname);
 		}
 		if (result == 0) {
-    		if ((a.vorname == null) && (b.vorname != null))
-    			return -1;
-    		else if ((a.vorname != null) && (b.vorname == null))
-    			return 1;
-    		else if ((a.vorname == null) && (b.vorname == null))
-    			return 0;
-    		result = collator.compare(a.vorname, b.vorname);
+			if ((a.vorname == null) && (b.vorname != null))
+				return -1;
+			else if ((a.vorname != null) && (b.vorname == null))
+				return 1;
+			else if ((a.vorname == null) && (b.vorname == null))
+				return 0;
+			result = collator.compare(a.vorname, b.vorname);
 		}
 		return result;
 	};
@@ -204,27 +205,29 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
 			Map<Long, List<DTOKursSchueler>> kursSchueler;
 			if (schuljahresabschnittsID == null) {
-				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
-		    	kursSchueler = conn.query(jpql, DTOKursSchueler.class)
-		    		.setParameter("ids", schuelerIDs)
-		    		.getResultList()
-		    		.stream()
-		    		.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
+				final String jpql =
+						"SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
+				kursSchueler = conn.query(jpql, DTOKursSchueler.class)
+						.setParameter("ids", schuelerIDs)
+						.getResultList()
+						.stream()
+						.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
 			} else {
-				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND k.Schuljahresabschnitts_ID = :abschnitt AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
-		    	kursSchueler = conn.query(jpql, DTOKursSchueler.class)
-		    		.setParameter("abschnitt", schuljahresabschnittsID)
-		    		.setParameter("ids", schuelerIDs)
-		    		.getResultList()
-		    		.stream()
-		    		.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
+				final String jpql =
+						"SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND k.Schuljahresabschnitts_ID = :abschnitt AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
+				kursSchueler = conn.query(jpql, DTOKursSchueler.class)
+						.setParameter("abschnitt", schuljahresabschnittsID)
+						.setParameter("ids", schuelerIDs)
+						.getResultList()
+						.stream()
+						.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
 			}
-	    	for (final SchuelerListeEintrag eintrag : schuelerListe) {
-	    		final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
-	    		if ((kurs_schueler != null) && (!kurs_schueler.isEmpty()))
-	    			for (final DTOKursSchueler ks : kurs_schueler)
-	    				eintrag.kurse.add(ks.Kurs_ID);
-	    	}
+			for (final SchuelerListeEintrag eintrag : schuelerListe) {
+				final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
+				if ((kurs_schueler != null) && (!kurs_schueler.isEmpty()))
+					for (final DTOKursSchueler ks : kurs_schueler)
+						eintrag.kurse.add(ks.Kurs_ID);
+			}
 		}
 	}
 
@@ -241,7 +244,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive) throws ApiOperationException {
+	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive)
+			throws ApiOperationException {
 		// Lese die Schüler aus der Datenbank
 		List<DTOSchueler> schueler = null;
 		if (nurAktive) {
@@ -253,24 +257,30 @@ public final class DataSchuelerliste extends DataManager<Long> {
 					+ "(s.Geloescht = null OR s.Geloescht = false)", DTOSchueler.class);
 			schueler = querySchueler.getResultList();
 		}
-    	if (schueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
-    	final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-    	if (schuelerIDs.isEmpty())
-    		return new ArrayList<>();
-		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte =
-			conn.queryList("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
-					+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
+		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
+		if (schuelerIDs.isEmpty())
+			return new ArrayList<>();
+		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = conn.queryList(
+				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
+						+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class,
+				schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		final List<Long> listAktSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, listAktSchuljahresabschnitteIDs);
-		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte = listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte =
+				conn.queryByKeyList(DTOSchuljahresabschnitte.class, listAktSchuljahresabschnitteIDs);
+		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte =
+				listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
-		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte =
-			conn.queryList("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
-					+ " AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
-		final Map<Long, DTOSchuelerLernabschnittsdaten> mapGewaehlteAbschnitte = listGewaehlteAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte = conn.queryList(
+				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
+						+ " AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0",
+				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapGewaehlteAbschnitte =
+				listGewaehlteAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		// Führe die beiden Maps zusammen und bevorzuge dabei die gewählten Abschnitte
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = new HashMap<>();
 		for (final long id : schuelerIDs) {
@@ -280,24 +290,25 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		// Bestimme die Jahrgänge der Schule
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-    	// Erstelle die Schüler-Liste und sortiere sie
-    	final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
-    		.map(s -> erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
-    		.sorted(dataComparator)
-	    	.toList();
-    	// Ermittle die Kurse, welche von den Schülern belegt wurden.
-    	getSchuelerKurse(conn, schuelerListe, abschnitt);
-    	// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
-    	if (schule.Schulform.daten.hatGymOb) {
-    		for (final SchuelerListeEintrag s : schuelerListe) {
-    			final DTOSchuljahresabschnitte schuljahresabschnitt = mapAktSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
-    			if (schuljahresabschnitt == null)
-    				continue;
-    			s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung), schuljahresabschnitt.Jahr, s.jahrgang);
-    		}
-    	}
-    	// Und gib die Schülerliste mit den belegten Kursen zurück...
-    	return schuelerListe;
+		// Erstelle die Schüler-Liste und sortiere sie
+		final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
+				.map(s -> erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+				.sorted(dataComparator)
+				.toList();
+		// Ermittle die Kurse, welche von den Schülern belegt wurden.
+		getSchuelerKurse(conn, schuelerListe, abschnitt);
+		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
+		if (schule.Schulform.daten.hatGymOb) {
+			for (final SchuelerListeEintrag s : schuelerListe) {
+				final DTOSchuljahresabschnitte schuljahresabschnitt = mapAktSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
+				if (schuljahresabschnitt == null)
+					continue;
+				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung),
+						schuljahresabschnitt.Jahr, s.jahrgang);
+			}
+		}
+		// Und gib die Schülerliste mit den belegten Kursen zurück...
+		return schuelerListe;
 	}
 
 
@@ -320,7 +331,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
 		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
 		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
+					.formatted(idSchuljahresabschnitt));
 		// Erstelle das Ergebnis-DTO ...
 		final SchuelerListe result = new SchuelerListe();
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
@@ -333,7 +345,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn));
 		// ... und ermittle ggf. weitere Klassen
 		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
-		final List<Long> idsFehlendeKlassen = result.schueler.stream().map(s -> s.idKlasse).filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id))).distinct().toList();
+		final List<Long> idsFehlendeKlassen = result.schueler.stream().map(s -> s.idKlasse)
+				.filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id))).distinct().toList();
 		if (!idsFehlendeKlassen.isEmpty())
 			result.klassen.addAll(DataKlassenlisten.getKlassenListeByIDs(conn, idSchuljahresabschnitt, idsFehlendeKlassen));
 		return result;

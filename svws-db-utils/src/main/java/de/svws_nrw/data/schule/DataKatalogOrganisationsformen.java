@@ -35,7 +35,7 @@ public final class DataKatalogOrganisationsformen extends DataManager<Long> {
 			daten.addAll(Arrays.asList(eintrag.historie));
 		for (final AllgemeinbildendOrganisationsformen eintrag : AllgemeinbildendOrganisationsformen.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

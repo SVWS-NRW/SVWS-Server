@@ -29,7 +29,7 @@ public final class DataKatalogHerkunftsschulnummern extends DataManager<Long> {
 		final ArrayList<HerkunftsschulnummerKatalogEintrag> daten = new ArrayList<>();
 		for (final Herkunftsschulnummern sn : Herkunftsschulnummern.values())
 			daten.addAll(Arrays.asList(sn.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

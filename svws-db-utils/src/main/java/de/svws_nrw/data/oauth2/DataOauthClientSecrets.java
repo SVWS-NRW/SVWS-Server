@@ -93,23 +93,22 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOSchuleOAuthSecrets>> patchMappings = Map.ofEntries(
-		Map.entry("id", (conn, dto, value, map) -> {
-			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID) || OAuth2ServerTyp.getByID(patch_id.longValue()) == null)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID bzw. der Servertyp darf für das OAuth2-Secret nicht angepasst werden.");
-		}),
-		Map.entry("authServer", (conn, dto, value, map) -> {
-			try {
-				final String authServer = JSONMapper.convertToString(value, false, false, 255);
-				new URI(authServer).toURL();
-				dto.AuthServer = authServer;
-			} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
-				throw new ApiOperationException(Status.BAD_REQUEST, e);
-			}
-		}),
-		Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, false, null))
-	);
+			Map.entry("id", (conn, dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID) || (OAuth2ServerTyp.getByID(patch_id.longValue()) == null))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID bzw. der Servertyp darf für das OAuth2-Secret nicht angepasst werden.");
+			}),
+			Map.entry("authServer", (conn, dto, value, map) -> {
+				try {
+					final String authServer = JSONMapper.convertToString(value, false, false, 255);
+					new URI(authServer).toURL();
+					dto.AuthServer = authServer;
+				} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
+					throw new ApiOperationException(Status.BAD_REQUEST, e);
+				}
+			}),
+			Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
+			Map.entry("clientSecret", (conn, dto, value, map) -> dto.ClientSecret = JSONMapper.convertToString(value, false, false, null)));
 
 
 	@Override
@@ -145,12 +144,13 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
 		try {
-			final OAuth2ClientSecret data =  JSONMapper.mapper.readValue(is, OAuth2ClientSecret.class);
+			final OAuth2ClientSecret data = JSONMapper.mapper.readValue(is, OAuth2ClientSecret.class);
 			final OAuth2ServerTyp serverTyp = OAuth2ServerTyp.getByID(data.id);
 			if (serverTyp == null)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein OAuth2-Servertyp mit der ID %d.".formatted(data.id));
 			if (getDto(serverTyp) != null)
-				throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Datensatz für den OAuth2-Servertyp %s.".formatted(serverTyp.toString()));
+				throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Datensatz für den OAuth2-Servertyp %s."
+						.formatted(serverTyp.toString()));
 			final DTOSchuleOAuthSecrets toPersist = new DTOSchuleOAuthSecrets(data.id, data.authServer, data.clientID, data.clientSecret);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(toPersist)) {

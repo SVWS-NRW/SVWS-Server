@@ -32,7 +32,7 @@ public final class DataKatalogVerkehrssprachen extends DataManager<Long> {
 		final ArrayList<VerkehrsspracheKatalogEintrag> daten = new ArrayList<>();
 		for (final Verkehrssprache sp : Verkehrssprache.values())
 			daten.addAll(Arrays.asList(sp.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

@@ -27,10 +27,10 @@ public final class DataSchildLaender extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragLaender> katalog = CsvReader.fromResource("daten/csv/schild3/Laender.csv", Schild3KatalogEintragLaender.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	katalog.sort((a, b) -> Integer.compare(a.Sortierung, b.Sortierung));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		katalog.sort((a, b) -> Integer.compare(a.Sortierung, b.Sortierung));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override

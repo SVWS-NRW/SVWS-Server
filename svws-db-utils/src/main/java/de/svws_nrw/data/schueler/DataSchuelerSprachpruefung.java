@@ -59,7 +59,8 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		daten.kannErstePflichtfremdspracheErsetzen = (dto.KannErstePflichtfremdspracheErsetzen != null) && dto.KannErstePflichtfremdspracheErsetzen;
 		daten.kannZweitePflichtfremdspracheErsetzen = (dto.KannZweitePflichtfremdspracheErsetzen != null) && dto.KannZweitePflichtfremdspracheErsetzen;
 		daten.kannWahlpflichtfremdspracheErsetzen = (dto.KannWahlpflichtfremdspracheErsetzen != null) && dto.KannWahlpflichtfremdspracheErsetzen;
-		daten.kannBelegungAlsFortgefuehrteSpracheErlauben = (dto.KannBelegungAlsFortgefuehrteSpracheErlauben != null) && dto.KannBelegungAlsFortgefuehrteSpracheErlauben;
+		daten.kannBelegungAlsFortgefuehrteSpracheErlauben =
+				(dto.KannBelegungAlsFortgefuehrteSpracheErlauben != null) && dto.KannBelegungAlsFortgefuehrteSpracheErlauben;
 		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
 		daten.note = (dto.NotePruefung == null) ? null : dto.NotePruefung.getNoteSekI();
 		return daten;
@@ -72,10 +73,10 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 
 	private List<DTOSchuelerSprachpruefungen> getDTOs() throws ApiOperationException {
 		// Überprüfe, ob die Schüler-ID gültig ist.
-    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (schueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
-    	// Bestimme die Sprachprüfungen des Schülers
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+		// Bestimme die Sprachprüfungen des Schülers
 		return conn.queryList(DTOSchuelerSprachpruefungen.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachpruefungen.class, idSchueler);
 	}
 
@@ -86,22 +87,25 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<Sprachpruefung> daten = getSprachpruefungen();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private DTOSchuelerSprachpruefungen getDTO(final @NotNull String kuerzel) throws ApiOperationException {
 		if ((kuerzel == null) || (kuerzel.isBlank()))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein gültiges Kürzel übergeben.");
 		// Überprüfe, ob die Schüler-ID gültig ist.
-    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (schueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
-    	// Bestimme die zugehörige Sprachprüfung
-		final List<DTOSchuelerSprachpruefungen> belegungen = conn.queryList("SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = ?1 AND e.Sprache = ?2", DTOSchuelerSprachpruefungen.class, idSchueler, kuerzel);
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+		// Bestimme die zugehörige Sprachprüfung
+		final List<DTOSchuelerSprachpruefungen> belegungen = conn.queryList(
+				"SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = ?1 AND e.Sprache = ?2", DTOSchuelerSprachpruefungen.class, idSchueler,
+				kuerzel);
 		if (belegungen.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachprüfung mit dem Kürzel gefunden.");
 		if (belegungen.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden.".formatted(idSchueler, kuerzel));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden."
+					.formatted(idSchueler, kuerzel));
 		return belegungen.get(0);
 	}
 
@@ -112,68 +116,71 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 	@Override
 	public Response get(final @NotNull String kuerzel) throws ApiOperationException {
 		final Sprachpruefung daten = getSprachpruefung(kuerzel);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	private static final Map<String, DataBasicMapper<DTOSchuelerSprachpruefungen>> patchMappings = Map.ofEntries(
-		Map.entry("sprache", (conn, dto, value, map) -> {
-			final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
-			if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-		}),
-		Map.entry("jahrgang", (conn, dto, value, map) -> {
-			final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-			if (kuerzel == null) {
-				dto.ASDJahrgang = null;
-			} else {
-				final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
-				if (jg == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-				dto.ASDJahrgang = jg.daten.kuerzel;
-			}
-		}),
-		Map.entry("anspruchsniveauId", (conn, dto, value, map) -> {
-			final Integer id = JSONMapper.convertToInteger(value, true);
-			if (id == null) {
-				dto.Anspruchsniveau = null;
-			} else {
-				final Sprachpruefungniveau niveau = Sprachpruefungniveau.getByID(id);
-				if (niveau == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachprüfungsniveau-Kürzel verwendet.");
-				dto.Anspruchsniveau = niveau;
-			}
-		}),
-		Map.entry("pruefungsdatum", (conn, dto, value, map) -> dto.Pruefungsdatum = JSONMapper.convertToString(value, true, false, null)),
-		Map.entry("ersetzteSprache", (conn, dto, value, map) -> dto.ErsetzteSprache = JSONMapper.convertToString(value, true, false, 2)),
-		Map.entry("istHSUPruefung", (conn, dto, value, map) -> dto.IstHSUPruefung = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("istFeststellungspruefung", (conn, dto, value, map) -> dto.IstFeststellungspruefung = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("kannErstePflichtfremdspracheErsetzen", (conn, dto, value, map) -> dto.KannErstePflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("kannZweitePflichtfremdspracheErsetzen", (conn, dto, value, map) -> dto.KannZweitePflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("kannWahlpflichtfremdspracheErsetzen", (conn, dto, value, map) -> dto.KannWahlpflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("kannBelegungAlsFortgefuehrteSpracheErlauben", (conn, dto, value, map) -> dto.KannBelegungAlsFortgefuehrteSpracheErlauben = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("referenzniveau", (conn, dto, value, map) -> {
-			final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-			if (kuerzel == null) {
-				dto.Referenzniveau = null;
-			} else {
-				final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
-				if (niveau == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
-				dto.Referenzniveau = niveau;
-			}
-		}),
-		Map.entry("note", (conn, dto, value, map) -> {
-			final Integer note = JSONMapper.convertToIntegerInRange(value, true, 1, 6);
-			if (note == null) {
-				dto.NotePruefung = null;
-			} else {
-				final Note notePruefung = Note.fromNoteSekI(note);
-				if (notePruefung == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültige Note angegeben.");
-				dto.NotePruefung = notePruefung;
-			}
-		})
-	);
+			Map.entry("sprache", (conn, dto, value, map) -> {
+				final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
+				if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("jahrgang", (conn, dto, value, map) -> {
+				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
+				if (kuerzel == null) {
+					dto.ASDJahrgang = null;
+				} else {
+					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					if (jg == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
+					dto.ASDJahrgang = jg.daten.kuerzel;
+				}
+			}),
+			Map.entry("anspruchsniveauId", (conn, dto, value, map) -> {
+				final Integer id = JSONMapper.convertToInteger(value, true);
+				if (id == null) {
+					dto.Anspruchsniveau = null;
+				} else {
+					final Sprachpruefungniveau niveau = Sprachpruefungniveau.getByID(id);
+					if (niveau == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachprüfungsniveau-Kürzel verwendet.");
+					dto.Anspruchsniveau = niveau;
+				}
+			}),
+			Map.entry("pruefungsdatum", (conn, dto, value, map) -> dto.Pruefungsdatum = JSONMapper.convertToString(value, true, false, null)),
+			Map.entry("ersetzteSprache", (conn, dto, value, map) -> dto.ErsetzteSprache = JSONMapper.convertToString(value, true, false, 2)),
+			Map.entry("istHSUPruefung", (conn, dto, value, map) -> dto.IstHSUPruefung = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istFeststellungspruefung", (conn, dto, value, map) -> dto.IstFeststellungspruefung = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("kannErstePflichtfremdspracheErsetzen",
+					(conn, dto, value, map) -> dto.KannErstePflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("kannZweitePflichtfremdspracheErsetzen",
+					(conn, dto, value, map) -> dto.KannZweitePflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("kannWahlpflichtfremdspracheErsetzen",
+					(conn, dto, value, map) -> dto.KannWahlpflichtfremdspracheErsetzen = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("kannBelegungAlsFortgefuehrteSpracheErlauben",
+					(conn, dto, value, map) -> dto.KannBelegungAlsFortgefuehrteSpracheErlauben = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("referenzniveau", (conn, dto, value, map) -> {
+				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
+				if (kuerzel == null) {
+					dto.Referenzniveau = null;
+				} else {
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
+					if (niveau == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
+					dto.Referenzniveau = niveau;
+				}
+			}),
+			Map.entry("note", (conn, dto, value, map) -> {
+				final Integer note = JSONMapper.convertToIntegerInRange(value, true, 1, 6);
+				if (note == null) {
+					dto.NotePruefung = null;
+				} else {
+					final Note notePruefung = Note.fromNoteSekI(note);
+					if (notePruefung == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültige Note angegeben.");
+					dto.NotePruefung = notePruefung;
+				}
+			}));
 
 	@Override
 	public Response patch(final @NotNull String kuerzel, final InputStream is) throws ApiOperationException {

@@ -75,19 +75,19 @@ public class APITempDBFile implements AutoCloseable {
 			_logger.logLn("Fehler: Das DBMS %s wird für das Erstellen von temporären DBMS nicht unterstützt.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 		}
-    	// Erstelle temporär eine Datenbank-Datei aus dem übergebenen Byte-Array
+		// Erstelle temporär eine Datenbank-Datei aus dem übergebenen Byte-Array
 		_tmpDir = SVWSKonfiguration.get().getTempPath();
-		_tmpFilename = praefix +  "_" + random.ints(48, 123)  // from 0 to z
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-          .limit(40)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString() + "." + dbms.getFileSuffix();
-        _logger.logLn("Erstelle eine temporäre Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\"");
-    	try {
-    		Files.createDirectories(Paths.get(_tmpDir));
-    		// Schreibe Daten nur, wenn die DB für den Import genutzt wird. Bei einem Export ist die Datei zunächst leer
-    		if (data != null)
-    			Files.write(Paths.get(_tmpDir + "/" + _tmpFilename), data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+		_tmpFilename = praefix + "_" + random.ints(48, 123)  // from 0 to z
+				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
+				.limit(40)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString() + "." + dbms.getFileSuffix();
+		_logger.logLn("Erstelle eine temporäre Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\"");
+		try {
+			Files.createDirectories(Paths.get(_tmpDir));
+			// Schreibe Daten nur, wenn die DB für den Import genutzt wird. Bei einem Export ist die Datei zunächst leer
+			if (data != null)
+				Files.write(Paths.get(_tmpDir + "/" + _tmpFilename), data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			_logger.logLn(2, "Fehler beim Erstellen der temporären Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\"");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));

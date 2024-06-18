@@ -120,8 +120,8 @@ public final class OAuth2Client {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static OAuth2Client getClient(final DTOSchuleOAuthSecrets dto) throws ApiOperationException {
-		if (dto == null || dto.AuthServer == null || dto.AuthServer.isBlank() || dto.ClientID == null
-				|| dto.ClientID.isBlank() || dto.ClientSecret == null || dto.ClientSecret.isBlank()) {
+		if ((dto == null) || (dto.AuthServer == null) || dto.AuthServer.isBlank() || (dto.ClientID == null)
+				|| dto.ClientID.isBlank() || (dto.ClientSecret == null) || dto.ClientSecret.isBlank()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
 		final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
@@ -137,8 +137,8 @@ public final class OAuth2Client {
 	private boolean isTokenValid() {
 		if (this.token == null)
 			return false;
-		return this.token.expiresIn * 1000
-				+ authenticateTimestamp > (System.currentTimeMillis() - TOKEN_EXPIRING_MODIFIER);
+		return ((this.token.expiresIn * 1000)
+				+ authenticateTimestamp) > (System.currentTimeMillis() - TOKEN_EXPIRING_MODIFIER);
 	}
 
 
@@ -161,7 +161,8 @@ public final class OAuth2Client {
 		// ... prüfe, den Response-Code ...
 		final int statusCode = response.statusCode();
 		if (statusCode == 401)
-			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten überprüft werden.");
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten"
+					+ " überprüft werden.");
 		if ((statusCode != 200) && (statusCode != 201))
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server fehlgeschlagen: " + statusCode);
 		// ... und validiere im Erfolgsfall die HTTP-Response
@@ -220,7 +221,8 @@ public final class OAuth2Client {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler) throws ApiOperationException {
+	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler)
+			throws ApiOperationException {
 		final URI uri = URI.create(url + path);
 		final String actualBoundary = UUID.randomUUID().toString() + "--";
 		final String boundary = "--" + actualBoundary;
@@ -253,7 +255,7 @@ public final class OAuth2Client {
 	 */
 	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) throws ApiOperationException {
 		final URI uri = URI.create(url + path);
-		if (keyValuePairs.length % 2 != 0)
+		if ((keyValuePairs.length % 2) != 0)
 			throw new IllegalArgumentException("Invalid nameValuePairs");
 		String input = "";
 		for (int i = 0; i < keyValuePairs.length; i += 2)

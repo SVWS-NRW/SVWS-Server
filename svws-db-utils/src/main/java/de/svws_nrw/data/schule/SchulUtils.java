@@ -32,7 +32,7 @@ public final class SchulUtils {
 	public static @NotNull DTOEigeneSchule getDTOSchule(@NotNull final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-    		throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
 		return schule;
 	}
 
@@ -65,8 +65,10 @@ public final class SchulUtils {
 	 *
 	 * @throws ApiOperationException    falls der Schuljahresabschnitt nicht existiert (NOT_FOUND)
 	 */
-	public static DTOSchuljahresabschnitte getSchuljahreabschnitt(final DBEntityManager conn, final long schuljahr, final int abschnitt) throws ApiOperationException {
-		final List<DTOSchuljahresabschnitte> dtos = conn.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 and e.Abschnitt = ?2", DTOSchuljahresabschnitte.class, schuljahr, abschnitt);
+	public static DTOSchuljahresabschnitte getSchuljahreabschnitt(final DBEntityManager conn, final long schuljahr, final int abschnitt)
+			throws ApiOperationException {
+		final List<DTOSchuljahresabschnitte> dtos = conn.queryList(
+				"SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 and e.Abschnitt = ?2", DTOSchuljahresabschnitte.class, schuljahr, abschnitt);
 		if (dtos.size() != 1)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return dtos.get(0);

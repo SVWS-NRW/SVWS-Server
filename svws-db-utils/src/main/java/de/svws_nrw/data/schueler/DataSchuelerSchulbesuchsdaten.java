@@ -52,12 +52,12 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-    	if (schueler == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final Map<String, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
-    	final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
-    	// Basisdaten
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final Map<String, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
+		final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
+		// Basisdaten
 		daten.id = schueler.ID;
 		// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 		daten.vorigeSchulnummer = schueler.LSSchulNr;
@@ -113,110 +113,114 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 			bisherigeSchule.jahrgangBis = dtoBisherigeSchule.LSJahrgang;
 			daten.alleSchulen.add(bisherigeSchule);
 		}
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-    	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
-    		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-	    	if (schueler == null)
-	    		throw new ApiOperationException(Status.NOT_FOUND);
-	    	final Map<Long, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+			if (schueler == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
+			final Map<Long, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
 
-	    			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
-	    			case "vorigeSchulnummer" -> schueler.LSSchulNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSSchulNr.datenlaenge());
-	    			case "vorigeAllgHerkunft" -> { /* TODO zur Zeit noch nicht implementiert */ }
-	    			case "vorigeEntlassdatum" -> schueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null);
-	    			case "vorigeEntlassjahrgang" -> schueler.LSJahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
-	    			case "vorigeArtLetzteVersetzung" -> schueler.LSVersetzung = JSONMapper.convertToString(value, true, true, null); // TODO Katalog
-	    			case "vorigeBemerkung" -> schueler.LSBemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSBemerkung.datenlaenge());
-	    			case "vorigeEntlassgrundID" -> {
-	    				final Long vorigeEntlassgrundID = JSONMapper.convertToLong(value, true);
-	    				if (vorigeEntlassgrundID == null) {
-	    					schueler.LSEntlassgrund = null;
-	    				} else {
-	    					final DTOEntlassarten tmpVorigeEntlassgrund = entlassgruende.get(vorigeEntlassgrundID);
-	    					if (tmpVorigeEntlassgrund == null)
-	    						throw new ApiOperationException(Status.CONFLICT);
-	    					schueler.LSEntlassgrund = tmpVorigeEntlassgrund.Bezeichnung;
-	    				}
-	    			}
-	    			case "vorigeAbschlussartID" -> schueler.LSEntlassArt = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
+					// Informationen zu der Schule, die vor der Aufnahme besucht wurde
+					case "vorigeSchulnummer" ->
+						schueler.LSSchulNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSSchulNr.datenlaenge());
+					case "vorigeAllgHerkunft" -> {
+						/* TODO zur Zeit noch nicht implementiert */ }
+					case "vorigeEntlassdatum" -> schueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null);
+					case "vorigeEntlassjahrgang" -> schueler.LSJahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
+					case "vorigeArtLetzteVersetzung" -> schueler.LSVersetzung = JSONMapper.convertToString(value, true, true, null); // TODO Katalog
+					case "vorigeBemerkung" ->
+						schueler.LSBemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSBemerkung.datenlaenge());
+					case "vorigeEntlassgrundID" -> {
+						final Long vorigeEntlassgrundID = JSONMapper.convertToLong(value, true);
+						if (vorigeEntlassgrundID == null) {
+							schueler.LSEntlassgrund = null;
+						} else {
+							final DTOEntlassarten tmpVorigeEntlassgrund = entlassgruende.get(vorigeEntlassgrundID);
+							if (tmpVorigeEntlassgrund == null)
+								throw new ApiOperationException(Status.CONFLICT);
+							schueler.LSEntlassgrund = tmpVorigeEntlassgrund.Bezeichnung;
+						}
+					}
+					case "vorigeAbschlussartID" -> schueler.LSEntlassArt = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
 
-	    			// Informationen zu der Entlassung von der eigenen Schule
-	    			case "entlassungDatum" -> schueler.Entlassdatum = JSONMapper.convertToString(value, true, true, null);
-	    			case "entlassungJahrgang" -> schueler.Entlassjahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
-	    			case "entlassungGrundID" -> {
-	    				final Long entlassungGrundID = JSONMapper.convertToLong(value, true);
-	    				if (entlassungGrundID == null) {
-	    					schueler.Entlassgrund = null;
-	    				} else {
-	    					final DTOEntlassarten tmpEntlassungGrund = entlassgruende.get(entlassungGrundID);
-	    					if (tmpEntlassungGrund == null)
-	    						throw new ApiOperationException(Status.CONFLICT);
-	    					schueler.Entlassgrund = tmpEntlassungGrund.Bezeichnung;
-	    				}
-	    			}
-	    			case "entlassungAbschlussartID" -> schueler.Entlassart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
+					// Informationen zu der Entlassung von der eigenen Schule
+					case "entlassungDatum" -> schueler.Entlassdatum = JSONMapper.convertToString(value, true, true, null);
+					case "entlassungJahrgang" -> schueler.Entlassjahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
+					case "entlassungGrundID" -> {
+						final Long entlassungGrundID = JSONMapper.convertToLong(value, true);
+						if (entlassungGrundID == null) {
+							schueler.Entlassgrund = null;
+						} else {
+							final DTOEntlassarten tmpEntlassungGrund = entlassgruende.get(entlassungGrundID);
+							if (tmpEntlassungGrund == null)
+								throw new ApiOperationException(Status.CONFLICT);
+							schueler.Entlassgrund = tmpEntlassungGrund.Bezeichnung;
+						}
+					}
+					case "entlassungAbschlussartID" -> schueler.Entlassart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
 
-	    			// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-	    			case "aufnehmdendSchulnummer" -> schueler.SchulwechselNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulwechselNr.datenlaenge());
-	    			case "aufnehmdendWechseldatum" -> schueler.Schulwechseldatum = JSONMapper.convertToString(value, true, true, null);
-	    			case "aufnehmdendBestaetigt" -> schueler.WechselBestaetigt = JSONMapper.convertToBoolean(value, true);
+					// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
+					case "aufnehmdendSchulnummer" ->
+						schueler.SchulwechselNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulwechselNr.datenlaenge());
+					case "aufnehmdendWechseldatum" -> schueler.Schulwechseldatum = JSONMapper.convertToString(value, true, true, null);
+					case "aufnehmdendBestaetigt" -> schueler.WechselBestaetigt = JSONMapper.convertToBoolean(value, true);
 
-	    			// Informationen zu der besuchten Grundschule
-	    			case "grundschuleEinschulungsjahr" -> schueler.Einschulungsjahr = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
-	    			case "grundschuleEinschulungsartID" -> schueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true);   // TODO Katalog ...
-	    			case "grundschuleJahreEingangsphase" -> schueler.EPJahre = JSONMapper.convertToInteger(value, true);   // TODO Auswahl auf 2 und 3 beschränken?
-	    			case "grundschuleUebergangsempfehlungID" -> schueler.Uebergangsempfehlung_JG5 = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog statkue_schueleruebergangsempfehlung5jg
+					// Informationen zu der besuchten Grundschule
+					case "grundschuleEinschulungsjahr" -> schueler.Einschulungsjahr = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
+					case "grundschuleEinschulungsartID" -> schueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true);   // TODO Katalog ...
+					case "grundschuleJahreEingangsphase" -> schueler.EPJahre = JSONMapper.convertToInteger(value, true);   // TODO Auswahl auf 2 und 3 beschränken?
+					case "grundschuleUebergangsempfehlungID" -> schueler.Uebergangsempfehlung_JG5 = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog statkue_schueleruebergangsempfehlung5jg
 
-	    			// Informationen zu dem Besuch der Sekundarstufe I
-	    			case "sekIWechsel" -> schueler.JahrWechsel_SI = JSONMapper.convertToInteger(value, true);  // TODO Überprüfung des Jahres
-	    			case "sekIErsteSchulform" -> schueler.ErsteSchulform_SI = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog ...
-	    			case "sekIIWechsel" -> schueler.JahrWechsel_SII = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
+					// Informationen zu dem Besuch der Sekundarstufe I
+					case "sekIWechsel" -> schueler.JahrWechsel_SI = JSONMapper.convertToInteger(value, true);  // TODO Überprüfung des Jahres
+					case "sekIErsteSchulform" -> schueler.ErsteSchulform_SI = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog ...
+					case "sekIIWechsel" -> schueler.JahrWechsel_SII = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
 
-	    			// Informationen zu besonderen Merkmalen für die Statistik
-	    			case "merkmale" -> {
-		    			// TODO Handhabung, der Patches für die Merkmale des Schülers - Getter und Patch über zusätzlichen API-Endpunkt oder über diesen?
-	    				// TODO DTOSchuelerMerkmale ...
-	    				// SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
-	    				// case "id"       -> dtoMerkmal.ID = (...);
-	    				// case "datumVon" -> dtoMerkmal.DatumVon = (...);
-	    				// case "datumBis" -> dtoMerkmal.DatumBis = (...);
-	    			}
+					// Informationen zu besonderen Merkmalen für die Statistik
+					case "merkmale" -> {
+						// TODO Handhabung, der Patches für die Merkmale des Schülers - Getter und Patch über zusätzlichen API-Endpunkt oder über diesen?
+						// TODO DTOSchuelerMerkmale ...
+						// SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
+						// case "id"       -> dtoMerkmal.ID = (...);
+						// case "datumVon" -> dtoMerkmal.DatumVon = (...);
+						// case "datumBis" -> dtoMerkmal.DatumBis = (...);
+					}
 
-	    			// Informationen zu allen bisher besuchten Schulen
-	    			case "alleSchulen" -> {
-		    			// TODO Handhabung, der Patches für bisher besuchte Schulen - Getter und Patch über zusätzlichen API-Endpunkt oder über diesen?
-	    				// TODO DTOSchuelerAbgaenge
-    					// SchuelerSchulbesuchSchule bisherigeSchule = new SchuelerSchulbesuchSchule();
-	    				// case "schulnummer"         -> dtoBisherigeSchule.AbgangsSchulNr = (...);
-	    				// case "schulgliederung"     -> dtoBisherigeSchule.LSSGL = (...);
-	    				// case "entlassgrundID"      -> dtoBisherigeSchule.BemerkungIntern = (...)
-	    				// case "abschlussartID"      -> dtoBisherigeSchule.LSEntlassArt = (...);
-	    				// case "organisationsFormID" -> dtoBisherigeSchule.OrganisationsformKrz = (...);
-	    				// case "datumVon"            -> dtoBisherigeSchule.LSBeginnDatum = (...);
-	    				// case "datumBis"            -> dtoBisherigeSchule.LSSchulEntlassDatum = (...);
-	    				// case "jahrgangVon"         -> dtoBisherigeSchule.LSBeginnJahrgang = (...);
-	    				// case "jahrgangBis"         -> dtoBisherigeSchule.LSJahrgang = (...);
-	    			}
-	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
-	    		}
-	    	}
-	    	conn.transactionPersist(schueler);
-    	}
-    	return Response.status(Status.OK).build();
+					// Informationen zu allen bisher besuchten Schulen
+					case "alleSchulen" -> {
+						// TODO Handhabung, der Patches für bisher besuchte Schulen - Getter und Patch über zusätzlichen API-Endpunkt oder über diesen?
+						// TODO DTOSchuelerAbgaenge
+						// SchuelerSchulbesuchSchule bisherigeSchule = new SchuelerSchulbesuchSchule();
+						// case "schulnummer"         -> dtoBisherigeSchule.AbgangsSchulNr = (...);
+						// case "schulgliederung"     -> dtoBisherigeSchule.LSSGL = (...);
+						// case "entlassgrundID"      -> dtoBisherigeSchule.BemerkungIntern = (...)
+						// case "abschlussartID"      -> dtoBisherigeSchule.LSEntlassArt = (...);
+						// case "organisationsFormID" -> dtoBisherigeSchule.OrganisationsformKrz = (...);
+						// case "datumVon"            -> dtoBisherigeSchule.LSBeginnDatum = (...);
+						// case "datumBis"            -> dtoBisherigeSchule.LSSchulEntlassDatum = (...);
+						// case "jahrgangVon"         -> dtoBisherigeSchule.LSBeginnJahrgang = (...);
+						// case "jahrgangBis"         -> dtoBisherigeSchule.LSJahrgang = (...);
+					}
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
+				}
+			}
+			conn.transactionPersist(schueler);
+		}
+		return Response.status(Status.OK).build();
 	}
 
 }

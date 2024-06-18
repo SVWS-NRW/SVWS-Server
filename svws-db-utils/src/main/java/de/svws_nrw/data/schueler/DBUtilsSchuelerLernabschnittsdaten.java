@@ -117,7 +117,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 		if ((idSchueler == null) || (idSchuljahresabschnitt == null))
 			return null;
 		return conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
-			DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt).stream().findFirst().orElse(null);
+				DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt).stream().findFirst().orElse(null);
 	}
 
 
@@ -132,10 +132,13 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 *
 	 * @return true, falls ein solcher Lernabschnitt existiert und ansonsten false
 	 */
-	public static boolean pruefeWiederholung(final DBEntityManager conn, final DTOSchuljahresabschnitte schuljahresabschnitt, final Long idSchueler, final Long idJahrgang) {
+	public static boolean pruefeWiederholung(final DBEntityManager conn, final DTOSchuljahresabschnitte schuljahresabschnitt, final Long idSchueler,
+			final Long idJahrgang) {
 		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null))
 			return false;
-		final List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr = 0 AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
+		final List<Long> schuljahresabschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr = 0 AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3",
+				DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
 		if (schuljahresabschnitte.isEmpty())
 			return false;
@@ -194,11 +197,15 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			sla.Folgeklasse_ID = null;
 			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
 			if (!conn.transactionPersist(sla))
-	        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr,
+								schuljahresabschnitt.Abschnitt, idSchueler));
 			conn.transactionFlush();
-	        return sla;
+			return sla;
 		}
-    	throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+		throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine"
+				+ " ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden."
+						.formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 	}
 
 }

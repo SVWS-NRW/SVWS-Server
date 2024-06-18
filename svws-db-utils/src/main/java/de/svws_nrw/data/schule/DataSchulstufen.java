@@ -29,7 +29,7 @@ public final class DataSchulstufen extends DataManager<Long> {
 		final ArrayList<SchulstufeKatalogEintrag> daten = new ArrayList<>();
 		for (final Schulstufe schulstufe : Schulstufe.values())
 			daten.addAll(Arrays.asList(schulstufe.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

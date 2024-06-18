@@ -58,14 +58,14 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        return this.getList();
+		return this.getList();
 	}
 
 
 	@Override
 	public Response getList() {
-    	final List<Schuljahresabschnitt> daten = this.getAbschnitte();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<Schuljahresabschnitt> daten = this.getAbschnitte();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -101,9 +101,9 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	public List<Schuljahresabschnitt> getAbschnitte() {
 		// Schuljahresabschnitte aus den Leistungsdaten bestimmen
 		final List<DTOSchuljahresabschnitte> abschnitte = conn.queryAll(DTOSchuljahresabschnitte.class);
-    	if ((abschnitte == null) || abschnitte.isEmpty())
-    		return new ArrayList<>();
-    	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).toList();
+		if ((abschnitte == null) || abschnitte.isEmpty())
+			return new ArrayList<>();
+		return abschnitte.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 
 	/**
@@ -148,7 +148,8 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	 * @return der Schuljahresabschnitt oder null
 	 */
 	public static Schuljahresabschnitt getFromSchuljahrUndAbschnitt(final DBEntityManager conn, final int schuljahr, final int abschnitt) {
-		final List<DTOSchuljahresabschnitte> liste = conn.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2", DTOSchuljahresabschnitte.class, schuljahr, abschnitt);
+		final List<DTOSchuljahresabschnitte> liste = conn.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
+				DTOSchuljahresabschnitte.class, schuljahr, abschnitt);
 		if ((liste == null) || (liste.size() != 1))
 			return null;
 		return dtoMapper.apply(liste.get(0));

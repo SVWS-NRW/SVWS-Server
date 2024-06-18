@@ -32,7 +32,7 @@ public final class DataKatalogBerufskollegAnlagen extends DataManager<Long> {
 		final ArrayList<BerufskollegAnlageKatalogEintrag> daten = new ArrayList<>();
 		for (final BerufskollegAnlage anlagen : BerufskollegAnlage.values())
 			daten.addAll(Arrays.asList(anlagen.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

@@ -44,10 +44,10 @@ public final class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final List<DTOFahrschuelerart> katalog = conn.queryAll(DTOFahrschuelerart.class);
-    	if (katalog == null)
-    		throw new ApiOperationException(Status.NOT_FOUND);
-    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		if (katalog == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).toList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

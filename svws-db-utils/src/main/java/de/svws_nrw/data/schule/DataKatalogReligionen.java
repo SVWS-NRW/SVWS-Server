@@ -29,7 +29,7 @@ public final class DataKatalogReligionen extends DataManager<Long> {
 		final ArrayList<ReligionKatalogEintrag> daten = new ArrayList<>();
 		for (final Religion eintrag : Religion.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
