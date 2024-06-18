@@ -21,31 +21,40 @@ import com.healthmarketscience.jackcess.TableBuilder;
 public final class ABPKursarten {
 
 	/** Gibt die Art des Kurses an z.B. GKM oder GKS oder LK */
-	@JsonProperty public String Kursart = null;
+	@JsonProperty
+	public String Kursart = null;
 
 	/** Gibt die Art des Kurses im Klartext an. */
-	@JsonProperty public String Klartext = null;
+	@JsonProperty
+	public String Klartext = null;
 
 	/** Gibt an, ob der Kurs im ersten Halbjahr der EF belegt wurde. */
-	@JsonProperty public boolean E1 = false;
+	@JsonProperty
+	public boolean E1 = false;
 
 	/** Gibt an, ob der Kurs im zweiten Halbjahr der EF belegt wurde. */
-	@JsonProperty public boolean E2 = false;
+	@JsonProperty
+	public boolean E2 = false;
 
 	/** Gibt an, ob der Kurs im ersten Halbjahr der Q-Phase belegt wurde. */
-	@JsonProperty public boolean Q1 = false;
+	@JsonProperty
+	public boolean Q1 = false;
 
 	/** Gibt an, ob der Kurs im zweiten Halbjahr der Q-Phase belegt wurde. */
-	@JsonProperty public boolean Q2 = false;
+	@JsonProperty
+	public boolean Q2 = false;
 
 	/** Gibt an, ob der Kurs im dritten Halbjahr der Q-Phase belegt wurde. */
-	@JsonProperty public boolean Q3 = false;
+	@JsonProperty
+	public boolean Q3 = false;
 
 	/** Gibt an, ob der Kurs im vierten Halbjahr der Q-Phase belegt wurde. */
-	@JsonProperty public boolean Q4 = false;
+	@JsonProperty
+	public boolean Q4 = false;
 
 	/** Die Sortierung der Kursart */
-	@JsonProperty public int Sortierung = 32000;
+	@JsonProperty
+	public int Sortierung = 32000;
 
 
 	private static final String fieldKursart = "Kursart";
@@ -99,28 +108,27 @@ public final class ABPKursarten {
 	public static void write(final Database db, final List<ABPKursarten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Kursarten")
-				.addColumn(new ColumnBuilder(fieldKursart, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldKlartext, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Q4", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
-			    .toTable(db);
-			for (final ABPKursarten zuordnung: list) {
+					.addColumn(new ColumnBuilder(fieldKursart, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldKlartext, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder("Q4", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
+					.toTable(db);
+			for (final ABPKursarten zuordnung : list) {
 				table.addRow(
-					zuordnung.Kursart,
-					zuordnung.Klartext,
-					zuordnung.E1 ? "J" : "N",
-					zuordnung.E2 ? "J" : "N",
-					zuordnung.Q1 ? "J" : "N",
-					zuordnung.Q2 ? "J" : "N",
-					zuordnung.Q3 ? "J" : "N",
-					zuordnung.Q4 ? "J" : "N",
-					zuordnung.Sortierung
-				);
+						zuordnung.Kursart,
+						zuordnung.Klartext,
+						zuordnung.E1 ? "J" : "N",
+						zuordnung.E2 ? "J" : "N",
+						zuordnung.Q1 ? "J" : "N",
+						zuordnung.Q2 ? "J" : "N",
+						zuordnung.Q3 ? "J" : "N",
+						zuordnung.Q4 ? "J" : "N",
+						zuordnung.Sortierung);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -134,40 +142,40 @@ public final class ABPKursarten {
 	 * @return der Standard-Eintrag für die Tabelle ABPKursarten
 	 */
 	public static List<ABPKursarten> getDefault() {
-	    final ABPKursarten gkm =  new ABPKursarten();
-	    gkm.Kursart = "GKM";
-	    gkm.Klartext = "Grundkurs mündlich";
-	    gkm.E1 = true;
-	    gkm.E2 = true;
-	    gkm.Q1 = true;
-        gkm.Q2 = true;
-        gkm.Q3 = true;
-        gkm.Q4 = true;
-        gkm.Sortierung = 1;
-        final ABPKursarten gks =  new ABPKursarten();
-        gks.Kursart = "GKS";
-        gks.Klartext = "Grundkurs schriftlich";
-        gks.E1 = true;
-        gks.E2 = true;
-        gks.Q1 = true;
-        gks.Q2 = true;
-        gks.Q3 = true;
-        gks.Q4 = true;
-        gks.Sortierung = 2;
-        final ABPKursarten lk =  new ABPKursarten();
-        lk.Kursart = "LK";
-        lk.Klartext = "Leistungskurs";
-        lk.E1 = false;
-        lk.E2 = false;
-        lk.Q1 = true;
-        lk.Q2 = true;
-        lk.Q3 = true;
-        lk.Q4 = true;
-        lk.Sortierung = 3;
-        final ArrayList<ABPKursarten> result = new ArrayList<>();
-        result.add(gkm);
-        result.add(gks);
-        result.add(lk);
+		final ABPKursarten gkm = new ABPKursarten();
+		gkm.Kursart = "GKM";
+		gkm.Klartext = "Grundkurs mündlich";
+		gkm.E1 = true;
+		gkm.E2 = true;
+		gkm.Q1 = true;
+		gkm.Q2 = true;
+		gkm.Q3 = true;
+		gkm.Q4 = true;
+		gkm.Sortierung = 1;
+		final ABPKursarten gks = new ABPKursarten();
+		gks.Kursart = "GKS";
+		gks.Klartext = "Grundkurs schriftlich";
+		gks.E1 = true;
+		gks.E2 = true;
+		gks.Q1 = true;
+		gks.Q2 = true;
+		gks.Q3 = true;
+		gks.Q4 = true;
+		gks.Sortierung = 2;
+		final ABPKursarten lk = new ABPKursarten();
+		lk.Kursart = "LK";
+		lk.Klartext = "Leistungskurs";
+		lk.E1 = false;
+		lk.E2 = false;
+		lk.Q1 = true;
+		lk.Q2 = true;
+		lk.Q3 = true;
+		lk.Q4 = true;
+		lk.Sortierung = 3;
+		final ArrayList<ABPKursarten> result = new ArrayList<>();
+		result.add(gkm);
+		result.add(gks);
+		result.add(lk);
 		return result;
 	}
 

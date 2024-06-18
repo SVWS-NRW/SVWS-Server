@@ -37,14 +37,16 @@ public class ImportKurs42Blockung {
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
-			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
-			cmdLine.addOption(new CommandLineOption("s", "schema", true, "Der Schema-Name für die SVWS-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
+			cmdLine.addOption(new CommandLineOption("cp", "configPath", true,
+					"Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
+			cmdLine.addOption(
+					new CommandLineOption("s", "schema", true, "Der Schema-Name für die SVWS-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
 			cmdLine.addOption(new CommandLineOption("d", "directory", true, "Das Verzeichnis, in dem sich die Textdateien der Kurs-42-Blockung befinden"));
 
 			// Lade die SVWS-Konfigurationsdatei
 			SVWSKonfiguration.getFrom(cmdLine.getValue("cp", null));
 
-		    // Lese das Schema ein und ermittle die Konfiguration für die SVWS-Datenbank
+			// Lese das Schema ein und ermittle die Konfiguration für die SVWS-Datenbank
 			final String schema = cmdLine.getValue("s", "svwsdb");
 			logger.logLn("-> Verbinde zur SVWS-Datenbank-Schema " + schema + "...");
 			final DBConfig cfg = SVWSKonfiguration.get().getDBConfig(schema);
@@ -58,7 +60,7 @@ public class ImportKurs42Blockung {
 				return;
 			}
 
-		    // Lese den Pfad für das Verzeichnis der Kurs42-Dateien ein
+			// Lese den Pfad für das Verzeichnis der Kurs42-Dateien ein
 			final String filename = cmdLine.getValue("d", "");
 			final Path path = Paths.get(filename);
 

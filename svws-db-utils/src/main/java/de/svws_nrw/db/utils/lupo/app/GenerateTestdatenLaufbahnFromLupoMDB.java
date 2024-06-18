@@ -77,7 +77,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			cmdLine.addOption(new CommandLineOption("js", "jahrgangStart", true, "Die ID bei der die Nummerierung der Jahrgänge startet (Default: 1)."));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
 
-		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei
+			// Lese den Namen für der LuPO-Datei ein und öffne die Datei
 			final String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
 			final LupoMDB lupoMDB = new LupoMDB(lupofilename);
 			lupoMDB.logger.copyConsumer(logger);
@@ -94,10 +94,10 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			// Prüfe die Schulform
 			final Schulform schulform = lupoMDB.retrieveSchulform();
 			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-	    		throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+				throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
-	    	final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
-	    	// Files.createDirectories(Paths.get(outPath));
+			final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
+			// Files.createDirectories(Paths.get(outPath));
 
 			final ObjectMapper mapper = new ObjectMapper()
 					.enable(SerializationFeature.INDENT_OUTPUT);
@@ -125,8 +125,10 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 				final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
+				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json",
+						mapper.writeValueAsString(ergebnisEF1));
+				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json",
+						mapper.writeValueAsString(ergebnisGesamt));
 			}
 			logger.logLn("Fertig!");
 		} catch (final CommandLineException e) {

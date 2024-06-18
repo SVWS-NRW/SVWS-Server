@@ -78,22 +78,21 @@ public final class ABPSchuelerFehlermeldungen {
 	public static void write(final Database db, final List<ABPSchuelerFehlermeldungen> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerFehlermeldungen")
-			     .addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
-			     .addColumn(new ColumnBuilder("Fehlercode", DataType.TEXT).setLengthInUnits(20))
-			     .addColumn(new ColumnBuilder("Fehlertext", DataType.MEMO).setLengthInUnits(16777216))
-			     .addColumn(new ColumnBuilder("Fehlergruppe", DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
-			     .toTable(db);
+					.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
+					.addColumn(new ColumnBuilder("Fehlercode", DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder("Fehlertext", DataType.MEMO).setLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder("Fehlergruppe", DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
+					.toTable(db);
 			if (list == null)
 				return;
-			for (final ABPSchuelerFehlermeldungen schueler: list) {
+			for (final ABPSchuelerFehlermeldungen schueler : list) {
 				table.addRow(
-					schueler.Schueler_ID,
-					schueler.Fehlercode,
-					schueler.Fehlertext,
-					schueler.Fehlergruppe,
-					schueler.Sortierung
-				);
+						schueler.Schueler_ID,
+						schueler.Fehlercode,
+						schueler.Fehlertext,
+						schueler.Fehlergruppe,
+						schueler.Sortierung);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

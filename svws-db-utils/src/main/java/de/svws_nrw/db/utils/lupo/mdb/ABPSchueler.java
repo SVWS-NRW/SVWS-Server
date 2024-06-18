@@ -156,47 +156,47 @@ public final class ABPSchueler {
 	public Boolean FS2_SekI_manuell = null;
 
 
-    private static final String fieldID = "ID";
-    private static final String fieldSchild_ID = "Schild_ID";
-    private static final String fieldGU_ID = "GU_ID";
-    private static final String fieldName = "Name";
-    private static final String fieldVorname = "Vorname";
-    private static final String fieldGeburtsdatum = "Geburtsdatum";
-    private static final String fieldGeschlecht = "Geschlecht";
-    private static final String fieldDatumBeratung = "DatumBeratung";
-    private static final String fieldDatumRuecklauf = "DatumRuecklauf";
-    private static final String fieldKlasse = "Klasse";
-    private static final String fieldSPP = "SPP";
-    private static final String fieldBilingual = "Bilingual";
-    private static final String fieldLatein = "Latein";
-    private static final String fieldSportattest = "Sportattest";
-    private static final String fieldKommentar = "Kommentar";
-    private static final String fieldPruefOrdnung = "PruefOrdnung";
-    private static final String fieldEmail = "Email";
-    private static final String fieldBeratungslehrer = "Beratungslehrer";
-    private static final String fieldAnzK_E1 = "AnzK_E1";
-    private static final String fieldAnzK_E2 = "AnzK_E2";
-    private static final String fieldAnzK_Q1 = "AnzK_Q1";
-    private static final String fieldAnzK_Q2 = "AnzK_Q2";
-    private static final String fieldAnzK_Q3 = "AnzK_Q3";
-    private static final String fieldAnzK_Q4 = "AnzK_Q4";
-    private static final String fieldAnzS_E1 = "AnzS_E1";
-    private static final String fieldAnzS_E2 = "AnzS_E2";
-    private static final String fieldAnzS_Q1 = "AnzS_Q1";
-    private static final String fieldAnzS_Q2 = "AnzS_Q2";
-    private static final String fieldAnzS_Q3 = "AnzS_Q3";
-    private static final String fieldAnzS_Q4 = "AnzS_Q4";
-    private static final String fieldAnzS_Summe = "AnzS_Summe";
-    private static final String fieldAnzK_Summe = "AnzK_Summe";
-    private static final String fieldPruefPhase = "PruefPhase";
-    private static final String fieldZeitstempel = "Zeitstempel";
-    private static final String fieldGliederung = "Gliederung";
-    private static final String fieldKonfession = "Konfession";
-    private static final String fieldEinsprachler_S1 = "Einsprachler_S1";
-    private static final String fieldBLL_Art = "BLL_Art";
-    private static final String fieldZulassung = "Zulassung";
-    private static final String fieldBLL_Punkte = "BLL_Punkte";
-    private static final String fieldFS2_SekI_manuell = "FS2_SekI_manuell";
+	private static final String fieldID = "ID";
+	private static final String fieldSchild_ID = "Schild_ID";
+	private static final String fieldGU_ID = "GU_ID";
+	private static final String fieldName = "Name";
+	private static final String fieldVorname = "Vorname";
+	private static final String fieldGeburtsdatum = "Geburtsdatum";
+	private static final String fieldGeschlecht = "Geschlecht";
+	private static final String fieldDatumBeratung = "DatumBeratung";
+	private static final String fieldDatumRuecklauf = "DatumRuecklauf";
+	private static final String fieldKlasse = "Klasse";
+	private static final String fieldSPP = "SPP";
+	private static final String fieldBilingual = "Bilingual";
+	private static final String fieldLatein = "Latein";
+	private static final String fieldSportattest = "Sportattest";
+	private static final String fieldKommentar = "Kommentar";
+	private static final String fieldPruefOrdnung = "PruefOrdnung";
+	private static final String fieldEmail = "Email";
+	private static final String fieldBeratungslehrer = "Beratungslehrer";
+	private static final String fieldAnzK_E1 = "AnzK_E1";
+	private static final String fieldAnzK_E2 = "AnzK_E2";
+	private static final String fieldAnzK_Q1 = "AnzK_Q1";
+	private static final String fieldAnzK_Q2 = "AnzK_Q2";
+	private static final String fieldAnzK_Q3 = "AnzK_Q3";
+	private static final String fieldAnzK_Q4 = "AnzK_Q4";
+	private static final String fieldAnzS_E1 = "AnzS_E1";
+	private static final String fieldAnzS_E2 = "AnzS_E2";
+	private static final String fieldAnzS_Q1 = "AnzS_Q1";
+	private static final String fieldAnzS_Q2 = "AnzS_Q2";
+	private static final String fieldAnzS_Q3 = "AnzS_Q3";
+	private static final String fieldAnzS_Q4 = "AnzS_Q4";
+	private static final String fieldAnzS_Summe = "AnzS_Summe";
+	private static final String fieldAnzK_Summe = "AnzK_Summe";
+	private static final String fieldPruefPhase = "PruefPhase";
+	private static final String fieldZeitstempel = "Zeitstempel";
+	private static final String fieldGliederung = "Gliederung";
+	private static final String fieldKonfession = "Konfession";
+	private static final String fieldEinsprachler_S1 = "Einsprachler_S1";
+	private static final String fieldBLL_Art = "BLL_Art";
+	private static final String fieldZulassung = "Zulassung";
+	private static final String fieldBLL_Punkte = "BLL_Punkte";
+	private static final String fieldFS2_SekI_manuell = "FS2_SekI_manuell";
 
 
 	/**
@@ -279,93 +279,92 @@ public final class ABPSchueler {
 	public static void write(final Database db, final List<ABPSchueler> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Schueler")
-			     .addColumn(new ColumnBuilder(fieldID, DataType.LONG))
-			     .addColumn(new ColumnBuilder(fieldSchild_ID, DataType.LONG))
-			     .addColumn(new ColumnBuilder(fieldGU_ID, DataType.TEXT).setLengthInUnits(40))
-			     .addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
-			     .addColumn(new ColumnBuilder(fieldVorname, DataType.TEXT).setLengthInUnits(50))
-			     .addColumn(new ColumnBuilder(fieldGeburtsdatum, DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder(fieldGeschlecht, DataType.INT).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
-				 .addColumn(new ColumnBuilder(fieldDatumBeratung, DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder(fieldDatumRuecklauf, DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder(fieldKlasse, DataType.TEXT).setLengthInUnits(15))
-				 .addColumn(new ColumnBuilder(fieldSPP, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldBilingual, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldLatein, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldSportattest, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldKommentar, DataType.MEMO).setLengthInUnits(16777216))
-				 .addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
-				 .addColumn(new ColumnBuilder(fieldEmail, DataType.TEXT).setLengthInUnits(100))
-				 .addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
-				 .addColumn(new ColumnBuilder(fieldAnzK_E1, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzK_E2, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzK_Q1, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzK_Q2, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzK_Q3, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzK_Q4, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_E1, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_E2, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_Q1, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_Q2, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_Q3, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_Q4, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldAnzS_Summe, DataType.TEXT).setLengthInUnits(5))
-				 .addColumn(new ColumnBuilder(fieldAnzK_Summe, DataType.TEXT).setLengthInUnits(5))
-				 .addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldZeitstempel, DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder(fieldGliederung, DataType.TEXT).setLengthInUnits(3))
-				 .addColumn(new ColumnBuilder(fieldKonfession, DataType.TEXT).setLengthInUnits(2))
-				 .addColumn(new ColumnBuilder(fieldEinsprachler_S1, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldBLL_Art, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldZulassung, DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder(fieldBLL_Punkte, DataType.LONG))
-				 .addColumn(new ColumnBuilder(fieldFS2_SekI_manuell, DataType.TEXT).setLengthInUnits(1))
-			     .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
-			     .toTable(db);
-			for (final ABPSchueler schueler: list) {
+					.addColumn(new ColumnBuilder(fieldID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldSchild_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldGU_ID, DataType.TEXT).setLengthInUnits(40))
+					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldVorname, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldGeburtsdatum, DataType.SHORT_DATE_TIME))
+					.addColumn(new ColumnBuilder(fieldGeschlecht, DataType.INT).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
+					.addColumn(new ColumnBuilder(fieldDatumBeratung, DataType.SHORT_DATE_TIME))
+					.addColumn(new ColumnBuilder(fieldDatumRuecklauf, DataType.SHORT_DATE_TIME))
+					.addColumn(new ColumnBuilder(fieldKlasse, DataType.TEXT).setLengthInUnits(15))
+					.addColumn(new ColumnBuilder(fieldSPP, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBilingual, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldLatein, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldSportattest, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKommentar, DataType.MEMO).setLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldEmail, DataType.TEXT).setLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldAnzK_E1, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzK_E2, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzK_Q1, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzK_Q2, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzK_Q3, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzK_Q4, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_E1, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_E2, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_Q1, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_Q2, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_Q3, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_Q4, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAnzS_Summe, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldAnzK_Summe, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldZeitstempel, DataType.SHORT_DATE_TIME))
+					.addColumn(new ColumnBuilder(fieldGliederung, DataType.TEXT).setLengthInUnits(3))
+					.addColumn(new ColumnBuilder(fieldKonfession, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldEinsprachler_S1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBLL_Art, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldZulassung, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBLL_Punkte, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFS2_SekI_manuell, DataType.TEXT).setLengthInUnits(1))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
+					.toTable(db);
+			for (final ABPSchueler schueler : list) {
 				table.addRow(
-					schueler.ID,
-					schueler.Schild_ID,
-					schueler.GU_ID,
-					schueler.Name,
-					schueler.Vorname,
-					schueler.Geburtsdatum,
-					schueler.geschlecht,
-					schueler.DatumBeratung,
-					schueler.DatumRuecklauf,
-					schueler.Klasse,
-					toStringJN(schueler.SPP),
-					schueler.Bilingual,
-					toStringJN(schueler.Latein),
-					schueler.Sportattest,
-					schueler.Kommentar,
-					schueler.PruefOrdnung,
-					schueler.Email,
-					schueler.Beratungslehrer,
-					schueler.AnzK_E1,
-					schueler.AnzK_E2,
-					schueler.AnzK_Q1,
-					schueler.AnzK_Q2,
-					schueler.AnzK_Q3,
-					schueler.AnzK_Q4,
-					schueler.AnzS_E1,
-					schueler.AnzS_E2,
-					schueler.AnzS_Q1,
-					schueler.AnzS_Q2,
-					schueler.AnzS_Q3,
-					schueler.AnzS_Q4,
-					schueler.AnzS_Summe,
-					schueler.AnzK_Summe,
-					schueler.PruefPhase,
-					schueler.Zeitstempel,
-					schueler.Gliederung,
-					schueler.Konfession,
-					schueler.Einsprachler_S1 == null ? null : toStringJN(schueler.Einsprachler_S1),
-					schueler.BLL_Art,
-					schueler.Zulassung == null ? null : toStringJN(schueler.Zulassung),
-					schueler.BLL_Punkte,
-					schueler.FS2_SekI_manuell == null ? null : toStringJN(schueler.FS2_SekI_manuell)
-				);
+						schueler.ID,
+						schueler.Schild_ID,
+						schueler.GU_ID,
+						schueler.Name,
+						schueler.Vorname,
+						schueler.Geburtsdatum,
+						schueler.geschlecht,
+						schueler.DatumBeratung,
+						schueler.DatumRuecklauf,
+						schueler.Klasse,
+						toStringJN(schueler.SPP),
+						schueler.Bilingual,
+						toStringJN(schueler.Latein),
+						schueler.Sportattest,
+						schueler.Kommentar,
+						schueler.PruefOrdnung,
+						schueler.Email,
+						schueler.Beratungslehrer,
+						schueler.AnzK_E1,
+						schueler.AnzK_E2,
+						schueler.AnzK_Q1,
+						schueler.AnzK_Q2,
+						schueler.AnzK_Q3,
+						schueler.AnzK_Q4,
+						schueler.AnzS_E1,
+						schueler.AnzS_E2,
+						schueler.AnzS_Q1,
+						schueler.AnzS_Q2,
+						schueler.AnzS_Q3,
+						schueler.AnzS_Q4,
+						schueler.AnzS_Summe,
+						schueler.AnzK_Summe,
+						schueler.PruefPhase,
+						schueler.Zeitstempel,
+						schueler.Gliederung,
+						schueler.Konfession,
+						schueler.Einsprachler_S1 == null ? null : toStringJN(schueler.Einsprachler_S1),
+						schueler.BLL_Art,
+						schueler.Zulassung == null ? null : toStringJN(schueler.Zulassung),
+						schueler.BLL_Punkte,
+						schueler.FS2_SekI_manuell == null ? null : toStringJN(schueler.FS2_SekI_manuell));
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -397,7 +396,9 @@ public final class ABPSchueler {
 	 *
 	 * @return die Liste der Einträge für die Tabelle ABP_Schueler
 	 */
-	public static List<ABPSchueler> get(final List<DTOSchueler> schuelerListe, final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte, final Map<Long, DTOKlassen> mapKlassen, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOGostSchueler> schuelerLupoInfo, final Map<Long, GostLeistungen> gostInfo) {
+	public static List<ABPSchueler> get(final List<DTOSchueler> schuelerListe, final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte,
+			final Map<Long, DTOKlassen> mapKlassen, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOGostSchueler> schuelerLupoInfo,
+			final Map<Long, GostLeistungen> gostInfo) {
 		final List<ABPSchueler> liste = new ArrayList<>();
 		if (schuelerListe == null)
 			return liste;
@@ -437,7 +438,8 @@ public final class ABPSchueler {
 				eintrag.Bilingual = gostLeistungen.bilingualeSprache;
 				if (gostLeistungen.sprachendaten != null) {
 					eintrag.Latein = SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(gostLeistungen.sprachendaten, "L");
-					eintrag.Einsprachler_S1 = !(SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(gostLeistungen.sprachendaten) || SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(gostLeistungen.sprachendaten));
+					eintrag.Einsprachler_S1 = !(SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(gostLeistungen.sprachendaten)
+							|| SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(gostLeistungen.sprachendaten));
 				}
 			}
 			liste.add(eintrag);

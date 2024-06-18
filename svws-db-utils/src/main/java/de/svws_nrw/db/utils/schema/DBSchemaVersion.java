@@ -46,9 +46,9 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @throws DeveloperNotificationException   tritt auf, wenn das Schema keine gültige Revision hat
 	 */
 	public long getRevision() throws DeveloperNotificationException {
-	  if (_revision == null)
-		  throw new DeveloperNotificationException("Das Schema besitzt keine gültige Revision");
-	  return _revision;
+		if (_revision == null)
+			throw new DeveloperNotificationException("Das Schema besitzt keine gültige Revision");
+		return _revision;
 	}
 
 
@@ -73,9 +73,9 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return die Revision des Schemas oder der Default-Wert
 	 */
 	public long getRevisionOrDefault(final long default_revision) {
-		  if (_revision == null)
-			  return default_revision;
-		  return _revision;
+		if (_revision == null)
+			return default_revision;
+		return _revision;
 	}
 
 

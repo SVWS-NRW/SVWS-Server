@@ -99,12 +99,12 @@ public final class ABPFaecher {
 	public boolean NurMuendlich = false;
 
 
-    private static final String fieldID = "ID";
-    private static final String fieldFachKrz = "FachKrz";
-    private static final String fieldBezeichnung = "Bezeichnung";
-    private static final String fieldStatistikKrz = "StatistikKrz";
-    private static final String fieldSortierung = "Sortierung";
-    private static final String fieldIstSprache = "IstSprache";
+	private static final String fieldID = "ID";
+	private static final String fieldFachKrz = "FachKrz";
+	private static final String fieldBezeichnung = "Bezeichnung";
+	private static final String fieldStatistikKrz = "StatistikKrz";
+	private static final String fieldSortierung = "Sortierung";
+	private static final String fieldIstSprache = "IstSprache";
 	private static final String fieldUnterichtssprache = "Unterichtssprache";
 	private static final String fieldE1 = "E1";
 	private static final String fieldE2 = "E2";
@@ -187,62 +187,65 @@ public final class ABPFaecher {
 	public static void write(final Database db, final Map<String, ABPFaecher> map) {
 		try {
 			final Table table = new TableBuilder("ABP_Faecher")
-			     .addColumn(new ColumnBuilder(fieldID, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
-			     .addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
-			     .addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).setLengthInUnits(80))
-			     .addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "32000"))
-			     .addColumn(new ColumnBuilder(fieldIstSprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'N'"))
-			     .addColumn(new ColumnBuilder(fieldUnterichtssprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'D'"))
-			     .addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldQ4, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldAbi_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldLK_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-			     .addColumn(new ColumnBuilder(fieldAlsNeueFSInSII, DataType.TEXT).setLengthInUnits(1))
-			     .addColumn(new ColumnBuilder(fieldLeitfach, DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder(fieldLeitfach2, DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder(fieldE1_WStd, DataType.LONG))
-			     .addColumn(new ColumnBuilder(fieldE2_WStd, DataType.LONG))
-			     .addColumn(new ColumnBuilder(fieldE1_S_M, DataType.TEXT).setLengthInUnits(1))
-			     .addColumn(new ColumnBuilder(fieldE2_S_M, DataType.TEXT).setLengthInUnits(1))
-			     .addColumn(new ColumnBuilder(fieldQ_WStd, DataType.LONG))
-			     .addColumn(new ColumnBuilder(fieldE_ExportKursart, DataType.TEXT).setLengthInUnits(5))
-			     .addColumn(new ColumnBuilder(fieldNurMuendlich, DataType.TEXT).setLengthInUnits(1))
-			     .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldFachKrz).setPrimaryKey())
-			     .toTable(db);
+					.addColumn(new ColumnBuilder(fieldID, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).setLengthInUnits(80))
+					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "32000"))
+					.addColumn(new ColumnBuilder(fieldIstSprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+							"'N'"))
+					.addColumn(new ColumnBuilder(fieldUnterichtssprache, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+							DataType.TEXT, "'D'"))
+					.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldQ4, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldAbi_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+							"'J'"))
+					.addColumn(new ColumnBuilder(fieldLK_Moegl, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+							"'J'"))
+					.addColumn(new ColumnBuilder(fieldAlsNeueFSInSII, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldLeitfach, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldLeitfach2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldE1_WStd, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldE2_WStd, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldE1_S_M, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldE2_S_M, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldQ_WStd, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldE_ExportKursart, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldNurMuendlich, DataType.TEXT).setLengthInUnits(1))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldFachKrz).setPrimaryKey())
+					.toTable(db);
 			map.values().stream().sorted((f1, f2) -> Integer.compare(f1.ID, f2.ID)).forEach(fach -> {
 				try {
 					table.addRow(
-						fach.ID,
-						fach.FachKrz,
-						fach.Bezeichnung,
-						fach.StatistikKrz,
-						fach.Sortierung,
-						toStringJN(fach.IstSprache),
-						fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache,
-						toStringJN(fach.E1),
-						toStringJN(fach.E2),
-						toStringJN(fach.Q1),
-						toStringJN(fach.Q2),
-						toStringJN(fach.Q3),
-						toStringJN(fach.Q4),
-						toStringJN(fach.Abi_Moegl),
-						toStringJN(fach.LK_Moegl),
-						toStringJN(fach.AlsNeueFSInSII),
-						fach.Leitfach,
-						fach.Leitfach2,
-						fach.E1_WStd,
-						fach.E2_WStd,
-						toStringJN(fach.E1_S_M),
-						toStringJN(fach.E2_S_M),
-						fach.Q_WStd,
-						fach.E_ExportKursart,
-						toStringJN(fach.NurMuendlich)
-					);
+							fach.ID,
+							fach.FachKrz,
+							fach.Bezeichnung,
+							fach.StatistikKrz,
+							fach.Sortierung,
+							toStringJN(fach.IstSprache),
+							fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache,
+							toStringJN(fach.E1),
+							toStringJN(fach.E2),
+							toStringJN(fach.Q1),
+							toStringJN(fach.Q2),
+							toStringJN(fach.Q3),
+							toStringJN(fach.Q4),
+							toStringJN(fach.Abi_Moegl),
+							toStringJN(fach.LK_Moegl),
+							toStringJN(fach.AlsNeueFSInSII),
+							fach.Leitfach,
+							fach.Leitfach2,
+							fach.E1_WStd,
+							fach.E2_WStd,
+							toStringJN(fach.E1_S_M),
+							toStringJN(fach.E2_S_M),
+							fach.Q_WStd,
+							fach.E_ExportKursart,
+							toStringJN(fach.NurMuendlich));
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
@@ -280,8 +283,8 @@ public final class ABPFaecher {
 
 		// Filtere alle Fächer, für die keine Fachgruppe definiert ist
 		final List<DTOFach> faecherGefiltert = faecher.stream()
-			.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikFach.daten.kuerzelASD) != null))
-			.toList();
+				.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikFach.daten.kuerzelASD) != null))
+				.toList();
 		for (int i = 0; i < faecherGefiltert.size(); i++) {
 			final DTOFach fach = faecherGefiltert.get(i);
 			final ABPFaecher lupofach = new ABPFaecher();
@@ -290,7 +293,8 @@ public final class ABPFaecher {
 			lupofach.Bezeichnung = fach.Bezeichnung;
 			lupofach.StatistikKrz = fach.StatistikFach.daten.kuerzelASD;
 			lupofach.Sortierung = fach.SortierungAllg;
-			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD)) && (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
+			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD))
+					&& (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
 			lupofach.Unterichtssprache = fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;
 			lupofach.E2 = fach.IstMoeglichEF2;

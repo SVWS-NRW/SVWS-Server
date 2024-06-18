@@ -55,17 +55,18 @@ public class SQLGenerator {
 			sb.append(newline + newline + newline);
 		}
 		sb.append(newline
-		        + ((dbms == DBDriver.MSSQL) ? "GO" + newline + newline : "")
-		        + Schema.tabellen.values().stream()
-		       		.map(tab -> tab.getSQLTrigger(dbms, rev, true))
-		       		.filter(sql -> (sql != null) && (!"".equals(sql)))
-					.collect(Collectors.joining(newline + newline))
-                + newline + newline + newline
-				+ "INSERT INTO " + Schema.tab_Schema_Status.name() + "(Revision) VALUES (" + ((rev == -1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
-		        + newline
-		        + getInserts(rev)
-		        + newline
-		        + Schema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline);
+				+ ((dbms == DBDriver.MSSQL) ? "GO" + newline + newline : "")
+				+ Schema.tabellen.values().stream()
+						.map(tab -> tab.getSQLTrigger(dbms, rev, true))
+						.filter(sql -> (sql != null) && (!"".equals(sql)))
+						.collect(Collectors.joining(newline + newline))
+				+ newline + newline + newline
+				+ "INSERT INTO " + Schema.tab_Schema_Status.name() + "(Revision) VALUES (" + ((rev == -1) ? SchemaRevisionen.maxRevision.revision : rev) + ");"
+				+ newline
+				+ newline
+				+ getInserts(rev)
+				+ newline
+				+ Schema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline);
 		return sb.toString();
 	}
 
@@ -99,14 +100,14 @@ public class SQLGenerator {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		final StringBuilder result = new StringBuilder();
 		for (final SchemaTabelle tab : Schema.tabellen.values()) {
-		    if (!tab.isDefined(rev))
-		        continue;
-		    if (tab.hasCoreType()) {
-		        result.append(tab.getCoreType().getSQLInsert(rev)).append(";");
-	            result.append(System.lineSeparator());
-	            result.append(System.lineSeparator());
-	            result.append(System.lineSeparator());
-		    }
+			if (!tab.isDefined(rev))
+				continue;
+			if (tab.hasCoreType()) {
+				result.append(tab.getCoreType().getSQLInsert(rev)).append(";");
+				result.append(System.lineSeparator());
+				result.append(System.lineSeparator());
+				result.append(System.lineSeparator());
+			}
 		}
 		return result.toString();
 	}
@@ -174,9 +175,9 @@ public class SQLGenerator {
 
 	/**
 	 * Dieses Programm erstellt die Skripte für die aktuelle Revision in dem Verzeichnis
-     * schema/sql/[n]/[dbms]/, wobei n die Revision und dbms der Name des DBMS ist
-     * (z.B. MARIA_DB).
-     *
+	 * schema/sql/[n]/[dbms]/, wobei n die Revision und dbms der Name des DBMS ist
+	 * (z.B. MARIA_DB).
+	 *
 	 * @param args   die Kommandozeilen-Optionen für dieses Programm
 	 *
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
@@ -185,9 +186,12 @@ public class SQLGenerator {
 		logger.addConsumer(new LogConsumerConsole());
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
-			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ort, an welchem die Skripte in Unterordnern paltziert werden sollen (Default: " + dirOutput + ")"));
-			cmdLine.addOption(new CommandLineOption("a", "all", false, "Gibt an, dass Skripte für alle Schema-Revision bis zu der mit r angegebenen Revision erstellt werden"));
-			cmdLine.addOption(new CommandLineOption("r", "revision", true, "Die Schema-Revision für die das Skript erstellt wird (Default: -1 für die aktuelle Revision)"));
+			cmdLine.addOption(new CommandLineOption("o", "output", true,
+					"Der Ort, an welchem die Skripte in Unterordnern paltziert werden sollen (Default: " + dirOutput + ")"));
+			cmdLine.addOption(new CommandLineOption("a", "all", false,
+					"Gibt an, dass Skripte für alle Schema-Revision bis zu der mit r angegebenen Revision erstellt werden"));
+			cmdLine.addOption(new CommandLineOption("r", "revision", true,
+					"Die Schema-Revision für die das Skript erstellt wird (Default: -1 für die aktuelle Revision)"));
 
 			// Lese ggf. den Ausgabe-Pfad ein
 			final Path dirScripts = Paths.get(cmdLine.getValue("o", dirOutput));

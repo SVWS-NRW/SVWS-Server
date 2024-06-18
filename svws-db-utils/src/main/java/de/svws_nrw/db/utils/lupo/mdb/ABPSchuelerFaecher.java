@@ -306,99 +306,98 @@ public final class ABPSchuelerFaecher {
 	public static void write(final Database db, final List<ABPSchuelerFaecher> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerFaecher")
-				.addColumn(new ColumnBuilder(fieldID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-				.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFach_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_E1, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_E2, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_Q1, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_Q2, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_Q3, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKonflikt_Q4, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAbiturFach, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldKonflikt_AF, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldBemerkungen, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
-				.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldMarkiert_Q1, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldMarkiert_Q2, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldMarkiert_Q3, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldMarkiert_Q4, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAbiPruefErgebnis, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldMdlPflichtPruefung, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldMdlPruefErgebnis, DataType.LONG))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
-			    .toTable(db);
+					.addColumn(new ColumnBuilder(fieldID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
+					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFach_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_E1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_E2, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_Q1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_Q2, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_Q3, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKonflikt_Q4, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAbiturFach, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldKonflikt_AF, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBemerkungen, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+					.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldMarkiert_Q1, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldMarkiert_Q2, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldMarkiert_Q3, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldMarkiert_Q4, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAbiPruefErgebnis, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldMdlPflichtPruefung, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldMdlPruefErgebnis, DataType.LONG))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
+					.toTable(db);
 			if (list == null)
 				return;
-			for (final ABPSchuelerFaecher zuordnung: list) {
+			for (final ABPSchuelerFaecher zuordnung : list) {
 				table.addRow(
-					zuordnung.ID,
-					zuordnung.Schueler_ID,
-					zuordnung.Fach_ID,
-					zuordnung.FachKrz,
-					zuordnung.FS_BeginnJg,
-					zuordnung.Sprachenfolge,
-					zuordnung.Kursart_E1,
-					zuordnung.Punkte_E1,
-					zuordnung.Konflikt_E1 ? "J" : "N",
-					zuordnung.Kursart_E2,
-					zuordnung.Punkte_E2,
-					zuordnung.Konflikt_E2 ? "J" : "N",
-					zuordnung.Kursart_Q1,
-					zuordnung.Punkte_Q1,
-					zuordnung.Konflikt_Q1 ? "J" : "N",
-					zuordnung.Kursart_Q2,
-					zuordnung.Punkte_Q2,
-					zuordnung.Konflikt_Q2 ? "J" : "N",
-					zuordnung.Kursart_Q3,
-					zuordnung.Punkte_Q3,
-					zuordnung.Konflikt_Q3 ? "J" : "N",
-					zuordnung.Kursart_Q4,
-					zuordnung.Punkte_Q4,
-					zuordnung.Konflikt_Q4 ? "J" : "N",
-					zuordnung.AbiturFach,
-					zuordnung.Konflikt_AF ? "J" : "N",
-					zuordnung.Bemerkungen,
-					zuordnung.Sortierung,
-					zuordnung.Fachgruppe,
-					zuordnung.Aufgabenfeld,
-					zuordnung.Aendern_E1,
-					zuordnung.Aendern_E2,
-					zuordnung.Aendern_Q1,
-					zuordnung.Aendern_Q2,
-					zuordnung.Aendern_Q3,
-					zuordnung.Aendern_Q4,
-					zuordnung.Markiert_Q1,
-					zuordnung.Markiert_Q2,
-					zuordnung.Markiert_Q3,
-					zuordnung.Markiert_Q4,
-					zuordnung.AbiPruefErgebnis,
-					zuordnung.MdlPflichtPruefung,
-					zuordnung.MdlPruefErgebnis
-				);
+						zuordnung.ID,
+						zuordnung.Schueler_ID,
+						zuordnung.Fach_ID,
+						zuordnung.FachKrz,
+						zuordnung.FS_BeginnJg,
+						zuordnung.Sprachenfolge,
+						zuordnung.Kursart_E1,
+						zuordnung.Punkte_E1,
+						zuordnung.Konflikt_E1 ? "J" : "N",
+						zuordnung.Kursart_E2,
+						zuordnung.Punkte_E2,
+						zuordnung.Konflikt_E2 ? "J" : "N",
+						zuordnung.Kursart_Q1,
+						zuordnung.Punkte_Q1,
+						zuordnung.Konflikt_Q1 ? "J" : "N",
+						zuordnung.Kursart_Q2,
+						zuordnung.Punkte_Q2,
+						zuordnung.Konflikt_Q2 ? "J" : "N",
+						zuordnung.Kursart_Q3,
+						zuordnung.Punkte_Q3,
+						zuordnung.Konflikt_Q3 ? "J" : "N",
+						zuordnung.Kursart_Q4,
+						zuordnung.Punkte_Q4,
+						zuordnung.Konflikt_Q4 ? "J" : "N",
+						zuordnung.AbiturFach,
+						zuordnung.Konflikt_AF ? "J" : "N",
+						zuordnung.Bemerkungen,
+						zuordnung.Sortierung,
+						zuordnung.Fachgruppe,
+						zuordnung.Aufgabenfeld,
+						zuordnung.Aendern_E1,
+						zuordnung.Aendern_E2,
+						zuordnung.Aendern_Q1,
+						zuordnung.Aendern_Q2,
+						zuordnung.Aendern_Q3,
+						zuordnung.Aendern_Q4,
+						zuordnung.Markiert_Q1,
+						zuordnung.Markiert_Q2,
+						zuordnung.Markiert_Q3,
+						zuordnung.Markiert_Q4,
+						zuordnung.AbiPruefErgebnis,
+						zuordnung.MdlPflichtPruefung,
+						zuordnung.MdlPruefErgebnis);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -449,8 +448,7 @@ public final class ABPSchuelerFaecher {
 	 * @return die Liste der Einträge für die Tabelle ABPSchuelerFaecher
 	 */
 	public static List<ABPSchuelerFaecher> get(final Map<String, ABPFaecher> faecher, final Map<String, ABPFachgruppen> fachgruppen,
-			                                   final List<DTOSchueler> schuelerListe, final Map<Long, DTOGostSchueler> schuelerLupoInfo,
-			                                   final Map<Long, GostLeistungen> gostInfo) {
+			final List<DTOSchueler> schuelerListe, final Map<Long, DTOGostSchueler> schuelerLupoInfo, final Map<Long, GostLeistungen> gostInfo) {
 		final List<ABPSchuelerFaecher> liste = new ArrayList<>();
 		if (schuelerListe == null)
 			return liste;
@@ -467,7 +465,8 @@ public final class ABPSchuelerFaecher {
 				final ABPFaecher fach = faecher.get(eintrag.FachKrz);
 				eintrag.Fach_ID = fach.ID;
 				if (fach.IstSprache) {
-					final Sprachbelegung belegung = SprachendatenUtils.getSprachbelegung(gostLeistungen.sprachendaten, fach.StatistikKrz.toUpperCase().substring(0, 1));
+					final Sprachbelegung belegung = SprachendatenUtils.getSprachbelegung(gostLeistungen.sprachendaten,
+							fach.StatistikKrz.toUpperCase().substring(0, 1));
 					if (belegung != null) {
 						eintrag.FS_BeginnJg = "" + belegung.belegungVonJahrgang;
 						eintrag.Sprachenfolge = "" + belegung.reihenfolge;
@@ -491,7 +490,8 @@ public final class ABPSchuelerFaecher {
 						}
 					}
 					if (belegung != null) {
-						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? "" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte : Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
+						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? "" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte
+								: Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
 						if (halbjahr == GostHalbjahr.EF1) {
 							eintrag.Kursart_E1 = getKursart(belegung);
 							eintrag.Punkte_E1 = note;
@@ -521,34 +521,34 @@ public final class ABPSchuelerFaecher {
 			}
 			// Füge ggf. Fächer der Sprachenfolge hinzu, die nicht in den Leistungsdaten vorhanden sind, deren Belegung aber relevant ist -> Prüfung zweite Fremdsprache
 // TODO Hinzufügen von Einträgen für alle Sprachfächer aus dem Methoden-Parameter faecher (LUPO-Export)
-/*			for (Sprachbelegung belegung: gostLeistungen.getSprachenNichtFortgefuehrt()) {
-				ABPSchuelerFaecher eintrag = new ABPSchuelerFaecher();
-				eintrag.ID = j;
-				eintrag.Schueler_ID = sid+1;
-				ABPFaecher fach = faecher.get(belegung.fachKuerzel);
-				if (fach == null)
-					fach = faecher.get(belegung.sprache);
-				eintrag.FachKrz = fach.StatistikKrz;
-				eintrag.Fach_ID = fach.ID;
-				if (fach.IstSprache) {
-					eintrag.FS_BeginnJg = "" + belegung.belegungVonJahrgang;
-					if (belegung.istSprachpruefungSI) {
-						eintrag.Sprachenfolge = "P";
-					} else if (belegung.istSprachnachweisSI) {
-						eintrag.Sprachenfolge = "N";
-					} else {
-						eintrag.Sprachenfolge = "" + belegung.reihenfolge;
-					}
-				}
-				eintrag.Sortierung = fach.Sortierung;
-				ABPFachgruppen fachgruppe = fachgruppen.get(fach.StatistikKrz);
-				if (fachgruppe == null)   // Eine Fachgruppe muss definiert sein, damit das Fach übernommen wird
-					continue;
-				eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
-				eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
-				liste.add(eintrag);
-				j++;
-			}*/
+			/*			for (Sprachbelegung belegung: gostLeistungen.getSprachenNichtFortgefuehrt()) {
+							ABPSchuelerFaecher eintrag = new ABPSchuelerFaecher();
+							eintrag.ID = j;
+							eintrag.Schueler_ID = sid+1;
+							ABPFaecher fach = faecher.get(belegung.fachKuerzel);
+							if (fach == null)
+								fach = faecher.get(belegung.sprache);
+							eintrag.FachKrz = fach.StatistikKrz;
+							eintrag.Fach_ID = fach.ID;
+							if (fach.IstSprache) {
+								eintrag.FS_BeginnJg = "" + belegung.belegungVonJahrgang;
+								if (belegung.istSprachpruefungSI) {
+									eintrag.Sprachenfolge = "P";
+								} else if (belegung.istSprachnachweisSI) {
+									eintrag.Sprachenfolge = "N";
+								} else {
+									eintrag.Sprachenfolge = "" + belegung.reihenfolge;
+								}
+							}
+							eintrag.Sortierung = fach.Sortierung;
+							ABPFachgruppen fachgruppe = fachgruppen.get(fach.StatistikKrz);
+							if (fachgruppe == null)   // Eine Fachgruppe muss definiert sein, damit das Fach übernommen wird
+								continue;
+							eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
+							eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
+							liste.add(eintrag);
+							j++;
+						}*/
 		}
 		return liste;
 	}

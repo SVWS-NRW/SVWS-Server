@@ -54,7 +54,8 @@ public class DBBackupManager {
 	 *
 	 * @return true, falls der Import erfolgreich durchgeführt wurde
 	 */
-	public boolean importDB(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final boolean devMode, final Logger logger) {
+	public boolean importDB(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final boolean devMode,
+			final Logger logger) {
 		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
 			boolean success = true;
 			final long timeStart = System.currentTimeMillis();
@@ -84,7 +85,9 @@ public class DBBackupManager {
 
 				importDBInternal(conn, tgtConfig, maxUpdateRevision, devMode, logger);
 
-				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+						+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+						+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 				logger.logLn("-> Import erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 			} catch (final DBException e) {
 				logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
@@ -140,7 +143,9 @@ public class DBBackupManager {
 
 				importDBInternal(conn, tgtConfig, maxUpdateRevision, devMode, logger);
 
-				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+						+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+						+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 				logger.logLn("-> Import erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 			} catch (final DBException e) {
 				logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
@@ -171,7 +176,8 @@ public class DBBackupManager {
 	 *
 	 * @throws DBException falls ein Fehler beim Import auftritt
 	 */
-	private void importDBInternal(final DBEntityManager conn, final DBConfig tgtConfig, final long maxUpdateRevision, final boolean devMode, final Logger logger) throws DBException {
+	private void importDBInternal(final DBEntityManager conn, final DBConfig tgtConfig, final long maxUpdateRevision, final boolean devMode,
+			final Logger logger) throws DBException {
 		logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
 		logger.modifyIndent(2);
 		final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
@@ -183,11 +189,14 @@ public class DBBackupManager {
 		try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 			if (tgtConn == null) {
 				logger.logLn(0, " [Fehler]");
-				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', schema='"
+						+ tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')"
+						+ System.lineSeparator());
 				throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
 			}
 			logger.logLn(0, " [OK]");
-			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema()
+					+ "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
 
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 			if (tgtManager == null) {
@@ -228,7 +237,8 @@ public class DBBackupManager {
 			logger.logLn("[OK]");
 
 			if (maxUpdateRevision != 0) {
-				logger.logLn("-> Aktualisiere die Ziel-DB ggf. auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+				logger.logLn("-> Aktualisiere die Ziel-DB ggf. auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision"
+						+ ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
 				result = tgtManager.updater.update(tgtUser, maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
@@ -275,11 +285,13 @@ public class DBBackupManager {
 				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 					if (tgtConn == null) {
 						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', location='"
+								+ tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
 						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 					}
 					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='"
+							+ tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
 
 					tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 					if (tgtManager == null) {
@@ -325,7 +337,9 @@ public class DBBackupManager {
 					}
 					logger.logLn("[OK]");
 
-					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 					logger.logLn("-> Export erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 				}
 			} catch (final DBException e) {
@@ -346,11 +360,11 @@ public class DBBackupManager {
 	 * @param tab          die Tabelle
 	 * @param rev          die Revision der Tabelle
 	 */
+	@SuppressWarnings("resource")
 	private void writeEntities(final DBSchemaManager tgtManager, final List<Object[]> entities, final SchemaTabelle tab, final long rev) {
 		// Schreibe die Datensätze in die Zieltabelle
 		logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
 		logger.modifyIndent(2);
-		@SuppressWarnings("resource")
 		final DBEntityManager tgtConn = tgtManager.getUser().getEntityManager();
 		// Versuche zunächst in Blöcken von maxRangeSize Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
 		int write_errors = 0;
@@ -368,16 +382,23 @@ public class DBBackupManager {
 			if (tgtConn.insertRangeNativeUnprepared(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).toList(), entities,
 					range.getKey(), range.getValue(), 1000000)) {
 				if (range.getKey().equals(range.getValue()))
-					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
+					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
+							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 				else
-					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
+					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
+							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 			} else {
 				if (range.getKey().equals(range.getValue())) {
 					logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
 					logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
 					write_errors++;
 				} else {
-					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
+					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
+							+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 					// Teile den Block auf
 					int step = (range.getValue() - range.getKey() + 1) / 10;
 					if (step < 1)
@@ -402,6 +423,7 @@ public class DBBackupManager {
 	 * @param tgtManager   der Schema-Manager der Ziel-Datenbank
 	 * @param rev          die gemeinsame Revision der beiden Schemata
 	 */
+	@SuppressWarnings("resource")
 	private void expimpCopyFrom(final DBSchemaManager tgtManager, final long rev) {
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
 		for (final SchemaTabelle tab : Schema.getTabellen(rev)) {
@@ -409,7 +431,6 @@ public class DBBackupManager {
 			if (!tab.importExport())
 				continue;
 
-			@SuppressWarnings("resource")
 			final DBEntityManager srcConn = schemaManager.getUser().getEntityManager();
 			logger.logLn("Tabelle " + tab.name() + ":");
 			logger.modifyIndent(2);
@@ -424,7 +445,10 @@ public class DBBackupManager {
 				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
 				continue;
 			}
-			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: "
+					+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 
 			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
 			if (entities.isEmpty()) {

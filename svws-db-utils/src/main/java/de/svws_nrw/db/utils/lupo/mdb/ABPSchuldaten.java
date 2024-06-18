@@ -180,7 +180,8 @@ public final class ABPSchuldaten {
 				zuordnung.Beratungslehrer = r.getString(fieldBeratungslehrer);
 				zuordnung.BeratungslehrerEMail = r.getString(fieldBeratungslehrerEMail);
 				zkGeBeginn = r.getString(fieldZK_Beginn_GE);
-				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkGeBeginn)) {
+				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkGeBeginn)
+						|| GostHalbjahr.Q21.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkGeBeginn)) {
 					zuordnung.ZusatzkursGeschichteVorhanden = true;
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.fromKuerzelAlt(zkGeBeginn);
 				} else {
@@ -188,7 +189,8 @@ public final class ABPSchuldaten {
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.Q21;
 				}
 				zkSoWiBeginn = r.getString(fieldZK_Beginn_SW);
-				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkSoWiBeginn)) {
+				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkSoWiBeginn)
+						|| GostHalbjahr.Q21.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkSoWiBeginn)) {
 					zuordnung.ZusatzkursSoWiVorhanden = true;
 					zuordnung.ZusatzkursSoWiBeginn = GostHalbjahr.fromKuerzelAlt(zkSoWiBeginn);
 				} else {
@@ -233,71 +235,74 @@ public final class ABPSchuldaten {
 	public static void write(final Database db, final List<ABPSchuldaten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Schuldaten")
-				.addColumn(new ColumnBuilder(fieldSchulnr, DataType.TEXT).setLengthInUnits(6))
-				.addColumn(new ColumnBuilder(fieldSchulformKrz, DataType.TEXT).setLengthInUnits(3))
-				.addColumn(new ColumnBuilder(fieldSchulformBez, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldBezeichnung1, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldBezeichnung2, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldBezeichnung3, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldBilingualSprachen, DataType.TEXT).setLengthInUnits(10))
-				.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldBeratungslehrerEMail, DataType.TEXT).setLengthInUnits(100))
-				.addColumn(new ColumnBuilder(fieldZK_Beginn_GE, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
-				.addColumn(new ColumnBuilder(fieldZK_Beginn_SW, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
-				.addColumn(new ColumnBuilder(fieldAusdruckAlleFaecher, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder(fieldBeratungshalbjahr, DataType.TEXT).setLengthInUnits(5).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'EF.1'"))
-				.addColumn(new ColumnBuilder(fieldBeratungsText, DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder(fieldMailText, DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder(fieldMailTextBoegen, DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder(fieldFS_NurMitSF, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKomprimieren, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAenderungenErlauben, DataType.TEXT).setLengthInUnits(6))
-				.addColumn(new ColumnBuilder(fieldAutoPruefModus, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldDauerUnterrichtseinheit, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder(fieldSMTP_Server, DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder(fieldSMTP_Port, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldSMTP_SSL, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldSMTP_StartTLS, DataType.TEXT).setLengthInUnits(1))
-			    .toTable(db);
+					.addColumn(new ColumnBuilder(fieldSchulnr, DataType.TEXT).setLengthInUnits(6))
+					.addColumn(new ColumnBuilder(fieldSchulformKrz, DataType.TEXT).setLengthInUnits(3))
+					.addColumn(new ColumnBuilder(fieldSchulformBez, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung1, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung2, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBezeichnung3, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldBilingualSprachen, DataType.TEXT).setLengthInUnits(10))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldBeratungslehrerEMail, DataType.TEXT).setLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldZK_Beginn_GE, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+							DataType.TEXT, "'Q3'"))
+					.addColumn(new ColumnBuilder(fieldZK_Beginn_SW, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+							DataType.TEXT, "'Q3'"))
+					.addColumn(new ColumnBuilder(fieldAusdruckAlleFaecher, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+							DataType.TEXT, "'J'"))
+					.addColumn(new ColumnBuilder(fieldBeratungshalbjahr, DataType.TEXT).setLengthInUnits(5).putProperty(PropertyMap.DEFAULT_VALUE_PROP,
+							DataType.TEXT, "'EF.1'"))
+					.addColumn(new ColumnBuilder(fieldBeratungsText, DataType.MEMO).setLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldMailText, DataType.MEMO).setLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldMailTextBoegen, DataType.MEMO).setLengthInUnits(16777216))
+					.addColumn(new ColumnBuilder(fieldFS_NurMitSF, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKomprimieren, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAenderungenErlauben, DataType.TEXT).setLengthInUnits(6))
+					.addColumn(new ColumnBuilder(fieldAutoPruefModus, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldDauerUnterrichtseinheit, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Server, DataType.TEXT).setLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Port, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldSMTP_SSL, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldSMTP_StartTLS, DataType.TEXT).setLengthInUnits(1))
+					.toTable(db);
 
-			for (final ABPSchuldaten zuordnung: list) {
+			for (final ABPSchuldaten zuordnung : list) {
 				table.addRow(
-					zuordnung.Schulnr,
-					zuordnung.SchulformKrz,
-					zuordnung.SchulformBez,
-					zuordnung.Bezeichnung1,
-					zuordnung.Bezeichnung2,
-					zuordnung.Bezeichnung3,
-					zuordnung.Kennwort,
-					zuordnung.PruefOrdnung,
-					zuordnung.PruefPhase,
-					zuordnung.BilingualSprachen,
-					zuordnung.Beratungslehrer,
-					zuordnung.BeratungslehrerEMail,
-					(!zuordnung.ZusatzkursGeschichteVorhanden) ? "N" : zuordnung.ZusatzkursGeschichteBeginn.kuerzelAlt,
-					(!zuordnung.ZusatzkursSoWiVorhanden) ? "N" : zuordnung.ZusatzkursSoWiBeginn.kuerzelAlt,
-					toStringJN(zuordnung.AusdruckAlleFaecher),
-					zuordnung.Beratungshalbjahr,
-					zuordnung.BeratungsText,
-					zuordnung.MailText,
-					zuordnung.MailTextBoegen,
-					zuordnung.FS_NurMitSF,
-					zuordnung.Komprimieren == null ? null : toStringJN(zuordnung.Komprimieren),
-					zuordnung.AenderungenErlauben,
-					toStringJN(zuordnung.AutoPruefModus),
-					zuordnung.DauerUnterrichtseinheit,
-					zuordnung.SMTP_User,
-					zuordnung.SMTP_Password,
-					zuordnung.SMTP_Server,
-					zuordnung.SMTP_Port,
-					zuordnung.SMTP_SSL,
-					zuordnung.SMTP_StartTLS
-				);
+						zuordnung.Schulnr,
+						zuordnung.SchulformKrz,
+						zuordnung.SchulformBez,
+						zuordnung.Bezeichnung1,
+						zuordnung.Bezeichnung2,
+						zuordnung.Bezeichnung3,
+						zuordnung.Kennwort,
+						zuordnung.PruefOrdnung,
+						zuordnung.PruefPhase,
+						zuordnung.BilingualSprachen,
+						zuordnung.Beratungslehrer,
+						zuordnung.BeratungslehrerEMail,
+						(!zuordnung.ZusatzkursGeschichteVorhanden) ? "N" : zuordnung.ZusatzkursGeschichteBeginn.kuerzelAlt,
+						(!zuordnung.ZusatzkursSoWiVorhanden) ? "N" : zuordnung.ZusatzkursSoWiBeginn.kuerzelAlt,
+						toStringJN(zuordnung.AusdruckAlleFaecher),
+						zuordnung.Beratungshalbjahr,
+						zuordnung.BeratungsText,
+						zuordnung.MailText,
+						zuordnung.MailTextBoegen,
+						zuordnung.FS_NurMitSF,
+						zuordnung.Komprimieren == null ? null : toStringJN(zuordnung.Komprimieren),
+						zuordnung.AenderungenErlauben,
+						toStringJN(zuordnung.AutoPruefModus),
+						zuordnung.DauerUnterrichtseinheit,
+						zuordnung.SMTP_User,
+						zuordnung.SMTP_Password,
+						zuordnung.SMTP_Server,
+						zuordnung.SMTP_Port,
+						zuordnung.SMTP_SSL,
+						zuordnung.SMTP_StartTLS);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -373,7 +378,8 @@ public final class ABPSchuldaten {
 				+ ", Bezeichnung1=" + Bezeichnung1 + ", Bezeichnung2=" + Bezeichnung2 + ", Bezeichnung3=" + Bezeichnung3
 				+ ", Kennwort=" + Kennwort + ", PruefOrdnung=" + PruefOrdnung + ", PruefPhase=" + PruefPhase
 				+ ", BilingualSprachen=" + BilingualSprachen + ", Beratungslehrer=" + Beratungslehrer
-				+ ", BeratungslehrerEMail=" + BeratungslehrerEMail + ", ZK_Angebot_GE=" + ZusatzkursGeschichteVorhanden + ", ZK_Beginn_GE=" + ZusatzkursGeschichteBeginn
+				+ ", BeratungslehrerEMail=" + BeratungslehrerEMail + ", ZK_Angebot_GE=" + ZusatzkursGeschichteVorhanden + ", ZK_Beginn_GE="
+				+ ZusatzkursGeschichteBeginn
 				+ ", ZK_Angebot_SW=" + ZusatzkursSoWiVorhanden + ", ZK_Beginn_SW=" + ZusatzkursSoWiBeginn + ", AusdruckAlleFaecher=" + AusdruckAlleFaecher
 				+ ", Beratungshalbjahr=" + Beratungshalbjahr + ", BeratungsText=" + BeratungsText + ", MailText="
 				+ MailText + ", MailTextBoegen=" + MailTextBoegen + ", FS_NurMitSF=" + FS_NurMitSF + ", Komprimieren=" + Komprimieren
@@ -382,6 +388,5 @@ public final class ABPSchuldaten {
 				+ ", SMTP_Password=" + SMTP_Password + ", SMTP_Server=" + SMTP_Server + ", SMTP_Port=" + SMTP_Port
 				+ ", SMTP_SSL=" + SMTP_SSL + ", SMTP_StartTLS=" + SMTP_StartTLS + "]";
 	}
-
 
 }

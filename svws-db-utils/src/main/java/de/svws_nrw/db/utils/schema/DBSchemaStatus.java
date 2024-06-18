@@ -175,7 +175,9 @@ public final class DBSchemaStatus {
 		if (!hasTable("EigeneSchule"))
 			return null;
 		try {
-			final List<Object[]> results = conn.query("SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM `%s`.`EigeneSchule`".formatted(schemaName));
+			final List<Object[]> results = conn.query(
+					"SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM `%s`.`EigeneSchule`"
+							.formatted(schemaName));
 			if (results.isEmpty())
 				return null;
 			if (results.size() > 1)
@@ -237,7 +239,7 @@ public final class DBSchemaStatus {
 	public DTOSchemaCoreTypeVersion getCoreTypeVersion(final DBEntityManager conn, final String tabname) {
 		if (coreTypeVersionen == null) {
 			coreTypeVersionen = conn.queryAll(DTOSchemaCoreTypeVersion.class).stream()
-				.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
+					.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
 		}
 		return coreTypeVersionen.get(tabname);
 	}

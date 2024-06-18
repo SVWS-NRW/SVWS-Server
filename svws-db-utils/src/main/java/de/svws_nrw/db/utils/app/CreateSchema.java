@@ -70,22 +70,31 @@ public class CreateSchema {
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
-			cmdLine.addOption(new CommandLineOption("r", "revision", true, "Gibt die maximale Revision an, bis zu der die migrierte DB maximal aktualsiert wird (Default: -1 für so weit wie möglich)"));
-			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet den Hinweise auf das notwendige Löschen der Ziel-DB automatisch mit \"Ja\""));
-			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
-			cmdLine.addOption(new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
-			cmdLine.addOption(new CommandLineOption("tl", "tgtLoc", true, "Der Ort, wo die Ziel-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
-			cmdLine.addOption(new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
+			cmdLine.addOption(new CommandLineOption("r", "revision", true,
+					"Gibt die maximale Revision an, bis zu der die migrierte DB maximal aktualsiert wird (Default: -1 für so weit wie möglich)"));
+			cmdLine.addOption(
+					new CommandLineOption("j", "ja", false, "Beantwortet den Hinweise auf das notwendige Löschen der Ziel-DB automatisch mit \"Ja\""));
+			cmdLine.addOption(new CommandLineOption("cp", "configPath", true,
+					"Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
+			cmdLine.addOption(
+					new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
+			cmdLine.addOption(new CommandLineOption("tl", "tgtLoc", true,
+					"Der Ort, wo die Ziel-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
+			cmdLine.addOption(
+					new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
 			cmdLine.addOption(new CommandLineOption("tu", "tgtUser", true, "Der DB-Benutzer für die Ziel-DB"));
 			cmdLine.addOption(new CommandLineOption("tp", "tgtPwd", true, "Das DB-Kennwort für die Ziel-DB"));
-			cmdLine.addOption(new CommandLineOption("tq", "tgtRootUser", true, "Ein DB-Root-User für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
-			cmdLine.addOption(new CommandLineOption("tr", "tgtRootPwd", true, "Das DB-Root-Kennwort für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
+			cmdLine.addOption(
+					new CommandLineOption("tq", "tgtRootUser", true, "Ein DB-Root-User für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
+			cmdLine.addOption(
+					new CommandLineOption("tr", "tgtRootPwd", true, "Das DB-Root-Kennwort für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
 
 			try (Scanner scan = new Scanner(System.in)) {
 				// Frage ggf. nach, ob die Quelldatenbank aufgeräumt werden soll
 				boolean hinweis_akzpetiert = cmdLine.isSet("j");
 				if (!hinweis_akzpetiert) {
-					hinweis_akzpetiert = konsoleFrageJaNein("Die Zieldatenbank wird neu angelegt. Dabei gehen alle Daten in der Ziel-Datenbank verloren. Fortfahren? (J/N) ", scan);
+					hinweis_akzpetiert = konsoleFrageJaNein(
+							"Die Zieldatenbank wird neu angelegt. Dabei gehen alle Daten in der Ziel-Datenbank verloren. Fortfahren? (J/N) ", scan);
 					if (!hinweis_akzpetiert) {
 						cmdLine.printOptionsAndExit(2, "Die Zieldatenbank muss neu angelegt werden. Breche die Erstellung ab.");
 					}
@@ -97,10 +106,10 @@ public class CreateSchema {
 
 			final int maxUpdateRevision = NumberUtils.toInt(cmdLine.getValue("r", "-1"), -1);
 
-		    // Lese die Optionen für die Ziel-Datenbank ein
-		    final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
-		    if (tgtDrv == null)
-		    	cmdLine.printOptionsAndExit(4, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
+			// Lese die Optionen für die Ziel-Datenbank ein
+			final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
+			if (tgtDrv == null)
+				cmdLine.printOptionsAndExit(4, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
 			final String tgtLoc = cmdLine.getValue("tl", "localhost");
 			final String tgtDB = cmdLine.getValue("ts", "svwsschema");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");

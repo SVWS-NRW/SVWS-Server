@@ -103,29 +103,29 @@ public final class ABPNichtMoeglAbiFachKombi {
 	public static void write(final Database db, final List<ABPNichtMoeglAbiFachKombi> list) {
 		try {
 			final Table table = new TableBuilder("ABP_NichtMoeglAbiFachKombi")
-				.addColumn(new ColumnBuilder(fieldFach1_Krz, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldFach1_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFach2_Krz, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldFach2_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldKursart1, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldKursart2, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPhase, DataType.TEXT).setLengthInUnits(10).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
-				.addColumn(new ColumnBuilder(fieldPK, DataType.TEXT).setLengthInUnits(30))
-				.addColumn(new ColumnBuilder(fieldTyp, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldPK).setPrimaryKey())
-			    .toTable(db);
-			for (final ABPNichtMoeglAbiFachKombi zuordnung: list) {
+					.addColumn(new ColumnBuilder(fieldFach1_Krz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFach1_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFach2_Krz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFach2_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldKursart1, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldKursart2, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPhase, DataType.TEXT).setLengthInUnits(10).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT,
+							"'-'"))
+					.addColumn(new ColumnBuilder(fieldPK, DataType.TEXT).setLengthInUnits(30))
+					.addColumn(new ColumnBuilder(fieldTyp, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldPK).setPrimaryKey())
+					.toTable(db);
+			for (final ABPNichtMoeglAbiFachKombi zuordnung : list) {
 				table.addRow(
-					zuordnung.Fach1_Krz,
-					zuordnung.Fach1_ID,
-					zuordnung.Fach2_Krz,
-					zuordnung.Fach2_ID,
-					zuordnung.Kursart1,
-					zuordnung.Kursart2,
-					zuordnung.Phase,
-					zuordnung.PK,
-					zuordnung.Typ
-				);
+						zuordnung.Fach1_Krz,
+						zuordnung.Fach1_ID,
+						zuordnung.Fach2_Krz,
+						zuordnung.Fach2_ID,
+						zuordnung.Kursart1,
+						zuordnung.Kursart2,
+						zuordnung.Phase,
+						zuordnung.PK,
+						zuordnung.Typ);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -144,7 +144,8 @@ public final class ABPNichtMoeglAbiFachKombi {
 	 *
 	 * @return die Liste der Einträge für die Tabelle ABP_NichtMoeglAbiFachKombi
 	 */
-	public static List<ABPNichtMoeglAbiFachKombi> get(final List<DTOFaecherNichtMoeglicheKombination> nichtMoeglicheKombinationen, final List<DTOFach> faecher, final Map<Long, DTOFach> faecherMap) {
+	public static List<ABPNichtMoeglAbiFachKombi> get(final List<DTOFaecherNichtMoeglicheKombination> nichtMoeglicheKombinationen, final List<DTOFach> faecher,
+			final Map<Long, DTOFach> faecherMap) {
 		final List<ABPNichtMoeglAbiFachKombi> liste = new ArrayList<>();
 		if (nichtMoeglicheKombinationen == null)
 			return liste;

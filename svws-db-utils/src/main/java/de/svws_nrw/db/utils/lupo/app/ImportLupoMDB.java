@@ -35,23 +35,29 @@ public class ImportLupoMDB {
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Gibt an, dass alle vorhandenen Daten ersetzt werden sollen"));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
-			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
-			cmdLine.addOption(new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
-			cmdLine.addOption(new CommandLineOption("tl", "tgtLoc", true, "Der Ort, wo die Ziel-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
-			cmdLine.addOption(new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
+			cmdLine.addOption(new CommandLineOption("cp", "configPath", true,
+					"Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
+			cmdLine.addOption(
+					new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
+			cmdLine.addOption(new CommandLineOption("tl", "tgtLoc", true,
+					"Der Ort, wo die Ziel-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
+			cmdLine.addOption(
+					new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
 			cmdLine.addOption(new CommandLineOption("tu", "tgtUser", true, "Der DB-Benutzer für die Ziel-DB"));
 			cmdLine.addOption(new CommandLineOption("tp", "tgtPwd", true, "Das DB-Kennwort für die Ziel-DB"));
-			cmdLine.addOption(new CommandLineOption("rj", "replaceJahrgang", false, "Gibt, an dass die Jahrgangs-spezifischen Informationen ersetzt werden sollen"));
-			cmdLine.addOption(new CommandLineOption("rs", "replaceSchueler", false, "Gibt, an dass die Schüler-spezifischen Informationen ersetzt werden sollen"));
+			cmdLine.addOption(
+					new CommandLineOption("rj", "replaceJahrgang", false, "Gibt, an dass die Jahrgangs-spezifischen Informationen ersetzt werden sollen"));
+			cmdLine.addOption(
+					new CommandLineOption("rs", "replaceSchueler", false, "Gibt, an dass die Schüler-spezifischen Informationen ersetzt werden sollen"));
 
 			// Lade die Konfigurationsdatei für den Datenbankzugriff
 			logger.logLn("Lese SVWS Konfiguration ein...");
 			SVWSKonfiguration.getFrom(cmdLine.getValue("cp", null));
 
-		    // Lese die Optionen für die Ziel-Datenbank ein
-		    final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
-		    if (tgtDrv == null)
-		    	cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
+			// Lese die Optionen für die Ziel-Datenbank ein
+			final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
+			if (tgtDrv == null)
+				cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
 			final String tgtLoc = cmdLine.getValue("tl", "localhost");
 			final String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");
@@ -59,7 +65,7 @@ public class ImportLupoMDB {
 			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false, 0, 0);
 			final Benutzer user = Benutzer.create(tgtConfig);
 
-		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei
+			// Lese den Namen für der LuPO-Datei ein und öffne die Datei
 			final String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
 			final LupoMDB lupoMDB = new LupoMDB(lupofilename);
 			lupoMDB.logger.copyConsumer(logger);

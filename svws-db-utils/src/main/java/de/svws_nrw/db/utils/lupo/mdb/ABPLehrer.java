@@ -78,21 +78,20 @@ public final class ABPLehrer {
 	public static void write(final Database db, final List<ABPLehrer> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Lehrer")
-				.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder(fieldEMail, DataType.TEXT).setLengthInUnits(100))
-				.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldName).setPrimaryKey())
-			    .toTable(db);
-			for (final ABPLehrer zuordnung: list) {
+					.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
+					.addColumn(new ColumnBuilder(fieldEMail, DataType.TEXT).setLengthInUnits(100))
+					.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
+					.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldName).setPrimaryKey())
+					.toTable(db);
+			for (final ABPLehrer zuordnung : list) {
 				table.addRow(
-					zuordnung.Name,
-					zuordnung.EMail,
-					zuordnung.Kennwort,
-					zuordnung.SMTP_User,
-					zuordnung.SMTP_Password
-				);
+						zuordnung.Name,
+						zuordnung.EMail,
+						zuordnung.Kennwort,
+						zuordnung.SMTP_User,
+						zuordnung.SMTP_Password);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

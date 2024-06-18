@@ -182,8 +182,10 @@ public final class DBMigrationManager {
 	private static final String strOK = "[OK]";
 	private static final String strFehler = "[Fehler]";
 
-	private static final String strFehlerKeinLernabschnitt = "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.";
-	private static final String strFehlerLernabschnittUngueltigNull = "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.";
+	private static final String strFehlerKeinLernabschnitt =
+			"Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.";
+	private static final String strFehlerLernabschnittUngueltigNull =
+			"Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.";
 	private static final String strFehlerLernabschnittUngueltig = "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.";
 
 	private static final String strFehlerKeinLehrer = "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.";
@@ -201,7 +203,8 @@ public final class DBMigrationManager {
 	 * @param schulNr              die Schulnummer, für welche die Daten migriert werden sollen (null, wenn alle Daten gelesen werden sollen).
 	 * @param logger               ein Logger, welcher die Migration loggt.
 	 */
-	private DBMigrationManager(final DBSchemaManager srcManager, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+	private DBMigrationManager(final DBSchemaManager srcManager, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode,
+			final Integer schulNr, final Logger logger) {
 		this.srcManager = srcManager;
 		this.tgtConfig = tgtConfig;
 		this.maxUpdateRevision = maxUpdateRevision;
@@ -271,7 +274,8 @@ public final class DBMigrationManager {
 		try {
 			return getSchemaManager(srcConfig, Benutzer.create(srcConfig), true, logger);
 		} catch (final Exception e) {
-			final DBException result = (e instanceof final DBException de) ? de : new DBException("Unbekannter Fehler beim Aufbau der Verbindung zur Quelldatenbank.");
+			final DBException result = (e instanceof final DBException de) ? de
+					: new DBException("Unbekannter Fehler beim Aufbau der Verbindung zur Quelldatenbank.");
 			logger.logLn(0, " " + strFehler);
 			logger.logLn(result.getMessage());
 			throw result;
@@ -292,9 +296,10 @@ public final class DBMigrationManager {
 	 *
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
-	public static boolean migrateInto(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+	public static boolean migrateInto(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode,
+			final Integer schulNr, final Logger logger) {
 		logger.logLn("Migriere von " + srcConfig.getDBDriver() + " (" + srcConfig.getDBLocation() + "/" + srcConfig.getDBSchema() + ") nach "
-                + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
+				+ tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
 		logger.modifyIndent(2);
 		// Baue die Verbindung zur Quell-Datenbank auf
 		final DBSchemaManager srcManager;
@@ -339,9 +344,10 @@ public final class DBMigrationManager {
 	 *
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
-	public static boolean migrate(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+	public static boolean migrate(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW,
+			final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
 		logger.logLn("Migriere von " + srcConfig.getDBDriver() + " (" + srcConfig.getDBLocation() + "/" + srcConfig.getDBSchema() + ") nach "
-                + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
+				+ tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
 		logger.modifyIndent(2);
 		// Baue die Verbindung zur Quell-Datenbank auf
 		final DBSchemaManager srcManager;
@@ -376,11 +382,13 @@ public final class DBMigrationManager {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn == null) {
 				logger.logLn(0, " " + strFehler);
-				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
+				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='"
+						+ cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
 				throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
 			}
 			logger.logLn(0, " " + strOK);
-			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
+			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation()
+					+ "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
 		}
 		return DBSchemaManager.create(user, true, logger);
 	}
@@ -480,7 +488,8 @@ public final class DBMigrationManager {
 			}
 
 			if (maxUpdateRevision != 0) {
-				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision"
+						+ ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
 				final boolean result = tgtManager.updater.update(tgtManager.getUser(), maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
@@ -491,7 +500,9 @@ public final class DBMigrationManager {
 				logger.logLn(strOK);
 			}
 
-			logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+			logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 			logger.logLn("-> Migration erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 			SVWSKonfiguration.get().activateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 		} catch (final DBException e) {
@@ -503,7 +514,8 @@ public final class DBMigrationManager {
 			srcManager = null;
 			System.gc();
 			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
-				logger.logLn("-> Migration evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+				logger.logLn("-> Migration evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt"
+						+ " - dies wird an dieser Stelle nicht erwartet!)");
 				success = false;
 			}
 		}
@@ -544,14 +556,13 @@ public final class DBMigrationManager {
 
 	/** Eine Menge von Tabellen  */
 	private static final Set<String> zentralKatalogeGemeinsam = Set.of(
-		"K_ErzieherArt".toLowerCase(),
-		"K_Religion".toLowerCase(),
-		"K_Staat".toLowerCase(),
-		"K_Ort".toLowerCase(),
-		"K_Ortsteil".toLowerCase(),
-		"K_Verkehrssprachen".toLowerCase(),
-		"K_Kindergarten".toLowerCase()
-	);
+			"K_ErzieherArt".toLowerCase(),
+			"K_Religion".toLowerCase(),
+			"K_Staat".toLowerCase(),
+			"K_Ort".toLowerCase(),
+			"K_Ortsteil".toLowerCase(),
+			"K_Verkehrssprachen".toLowerCase(),
+			"K_Kindergarten".toLowerCase());
 
 
 	/**
@@ -608,16 +619,17 @@ public final class DBMigrationManager {
 					})
 					.toList();
 			final List<Field> missing_fields = Arrays.asList(dtoClass.getDeclaredFields())
-					.stream().filter(f ->  {
+					.stream().filter(f -> {
 						final var col_annotation = f.getAnnotation(Column.class);
 						if (col_annotation == null)
 							return false;
-					    return !spaltenIst.contains(col_annotation.name()) && !spaltenIst.contains(col_annotation.name().toUpperCase());
+						return !spaltenIst.contains(col_annotation.name()) && !spaltenIst.contains(col_annotation.name().toUpperCase());
 					})
 					.toList();
 			fields.stream().forEach(f -> f.setAccessible(true));
 			missing_fields.stream().forEach(f -> f.setAccessible(true));
-			String jpql = "SELECT " + fields.stream().map(f -> "e." + f.getName()).collect(Collectors.joining(",")) + " FROM " + dtoClass.getSimpleName() + " e";
+			String jpql =
+					"SELECT " + fields.stream().map(f -> "e." + f.getName()).collect(Collectors.joining(",")) + " FROM " + dtoClass.getSimpleName() + " e";
 			if (!tab.pkSpalten().isEmpty()) {
 				final List<SchemaTabelleSpalte> pkSpalten = tab.pkSpalten().stream().filter(col -> spaltenIst.contains(col.name())).toList();
 				if (!pkSpalten.isEmpty()) {
@@ -626,7 +638,7 @@ public final class DBMigrationManager {
 							.collect(Collectors.joining(" AND "));
 				}
 				if ((filterSchulNummer != null) && spaltenIst.contains("SchulnrEigner")) {
-					jpql += ((!pkSpalten.isEmpty()) ? " AND " : " WHERE ") +  "(e.SchulnrEigner = " + filterSchulNummer + "";
+					jpql += ((!pkSpalten.isEmpty()) ? " AND " : " WHERE ") + "(e.SchulnrEigner = " + filterSchulNummer + "";
 					if (zentralKatalogeGemeinsam.contains(tab.name().toLowerCase()))
 						jpql += " OR e.SchulnrEigner = 0";
 					jpql += ")";
@@ -643,14 +655,16 @@ public final class DBMigrationManager {
 					for (final Field f : fields)
 						f.set(entity, obj[i++]);
 					for (final Field f : missing_fields) {
-						final SchemaTabelleSpalte column = tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
+						final SchemaTabelleSpalte column =
+								tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
 						f.set(entity, column == null ? null : column.getDefaultWertConverted());
 					}
 					list.add(entity);
 				}
 				return list;
 			}
-		} catch (PersistenceException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException  e) {
+		} catch (PersistenceException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			lastError = e.getMessage();
 			return null;
 		}
@@ -683,16 +697,23 @@ public final class DBMigrationManager {
 				final Map.Entry<Integer, Integer> range = ranges.removeFirst();
 				if (tgtConn.persistRange(entities, range.getKey(), range.getValue())) {
 					if (range.getKey().equals(range.getValue()))
-						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
+						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
+								+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+								+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+								+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 					else
-						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
+								+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+								+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+								+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 				} else {
 					if (range.getKey().equals(range.getValue())) {
 						logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
 						logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
 						write_errors++;
 					} else {
-						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
+								+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 						// Teile den Block auf
 						int step = (range.getValue() - range.getKey() + 1) / 10;
 						if (step < 1)
@@ -747,19 +768,22 @@ public final class DBMigrationManager {
 					logger.logLn("Programmfehler: Es ist kein Folgeabschnitt eingetragen, obwohl dies in der Map notwendig ist.");
 					return false;
 				}
-				final List<MigrationDTOSchuljahresabschnitte> abschnitte = tgtConn.queryList("SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2", MigrationDTOSchuljahresabschnitte.class, schuljahr, abschnitt);
+				final List<MigrationDTOSchuljahresabschnitte> abschnitte = tgtConn.queryList(
+						"SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
+						MigrationDTOSchuljahresabschnitte.class, schuljahr, abschnitt);
 				if (abschnitte.size() != 1) {
 					logger.logLn("Fehler: Genau ein Abschnitt %d.%d müsste bereits angelegt sein.".formatted(schuljahr, abschnitt));
 					return false;
 				}
 				// Prüfe, ob der Folge-Abschnitt bereits existiert
-				final List<MigrationDTOSchuljahresabschnitte> folgeAbschnitte = tgtConn.queryList("SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2", MigrationDTOSchuljahresabschnitte.class, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b);
+				final List<MigrationDTOSchuljahresabschnitte> folgeAbschnitte = tgtConn.queryList(
+						"SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
+						MigrationDTOSchuljahresabschnitte.class, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b);
 				if (!folgeAbschnitte.isEmpty())
 					continue;
 				logger.logLn("Ergänze Schuljahresabschnitt %d.%d ...".formatted(pairFolgeAbschnitt.a, pairFolgeAbschnitt.b));
-				tgtConn.persistNewWithAutoInkrement(MigrationDTOSchuljahresabschnitte.class, (final long id) ->
-					new MigrationDTOSchuljahresabschnitte(id, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b)
-				);
+				tgtConn.persistNewWithAutoInkrement(MigrationDTOSchuljahresabschnitte.class,
+						(final long id) -> new MigrationDTOSchuljahresabschnitte(id, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b));
 			}
 		}
 		return true;
@@ -792,13 +816,16 @@ public final class DBMigrationManager {
 					continue;
 				final MigrationDTOEigeneSchule daten = entities.get(i);
 				if (daten.SchulNr == null) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit leerer Schulnummer. Die Quell-Datenbank war fehlerhaft. Das Ergebnis der Migration sollte ausführlich geprüft werden.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit leerer Schulnummer. Die Quell-Datenbank war fehlerhaft."
+							+ " Das Ergebnis der Migration sollte ausführlich geprüft werden.");
 					entities.remove(i);
 				} else if (daten.SchulNr.equals(schulNummer)) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit gleicher Schulnummer, wie der erste Datensatz. Die Quell-Datenbank war fehlerhaft. Das Ergebnis der Migration sollte ausführlich geprüft werden.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit gleicher Schulnummer, wie der erste Datensatz. Die Quell-Datenbank war"
+							+ " fehlerhaft. Das Ergebnis der Migration sollte ausführlich geprüft werden.");
 					entities.remove(i);
 				} else {
-					logger.logLn(LogLevel.ERROR, "Es existieren mehrere Schul-Datensätze mit unterschiedlichen Schulnummern in einem Datenbankschema. Solche Datenbanken werden von der SVWS-DB nicht mehr unterstützt.");
+					logger.logLn(LogLevel.ERROR, "Es existieren mehrere Schul-Datensätze mit unterschiedlichen Schulnummern in einem Datenbankschema."
+							+ " Solche Datenbanken werden von der SVWS-DB nicht mehr unterstützt.");
 					return false;
 				}
 			}
@@ -833,8 +860,9 @@ public final class DBMigrationManager {
 		}
 		// Passe ggf. die Anzahl der Abschnitte bei WBKs an
 		if (daten.SchulformNr.equals(Schulform.WB.daten.nummer) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
-				logger.logLn(LogLevel.ERROR, "Passe die Anzahl der Abschnitte am Witerbildungskolleg an. Es gibt hier im Jahr 2 Abschnitte, wobei jeder Abschnitt als Jahrgangsstufe zählt.");
-				daten.AnzahlAbschnitte = 2;
+			logger.logLn(LogLevel.ERROR, "Passe die Anzahl der Abschnitte am Witerbildungskolleg an. Es gibt hier im Jahr 2 Abschnitte, wobei jeder"
+					+ " Abschnitt als Jahrgangsstufe zählt.");
+			daten.AnzahlAbschnitte = 2;
 		}
 		schuleAnzahlAbschnitte = daten.AnzahlAbschnitte;
 		return true;
@@ -855,7 +883,8 @@ public final class DBMigrationManager {
 				final MigrationDTOTeilstandorte daten = entities.get(i);
 				final boolean isNotSchule = (daten.SchulnrEigner == null) || (schulNummer == null) || (Integer.compare(daten.SchulnrEigner, schulNummer) != 0);
 				if (isNotSchule) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer des Teilstandorts nicht mit der Schulnummer aus EigeneSchule übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer des Teilstandorts nicht mit der Schulnummer aus"
+							+ " EigeneSchule übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
 					entities.remove(i);
 				}
 			}
@@ -888,7 +917,8 @@ public final class DBMigrationManager {
 				final MigrationDTOKursarten daten = entities.get(i);
 				final boolean isNotSchule = (daten.SchulnrEigner == null) || (schulNummer == null) || (Integer.compare(daten.SchulnrEigner, schulNummer) != 0);
 				if (isNotSchule) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer der Kursarten nicht mit der Schulnummer aus EigeneSchule übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer der Kursarten nicht mit der Schulnummer aus EigeneSchule"
+							+ " übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
 					entities.remove(i);
 				}
 			}
@@ -1032,7 +1062,8 @@ public final class DBMigrationManager {
 			}
 			final String uc1 = daten.LernplattformID + "-" + daten.Benutzername;
 			if (credsUC1.contains(uc1)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die Kombination auf Lernplattform und Benutzername ist nicht eindeutig (ID " + daten.ID + ").");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: "
+						+ "Die Kombination auf Lernplattform und Benutzername ist nicht eindeutig (ID " + daten.ID + ").");
 				entities.remove(i);
 				continue;
 			}
@@ -1119,7 +1150,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOPersonengruppenPersonen daten = entities.get(i);
 			if ((daten.Gruppe_ID == null) || (!personengruppenIDs.contains(daten.Gruppe_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in PersonengruppenPersonen: Es gibt keine Personengruppe mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in PersonengruppenPersonen: "
+						+ "Es gibt keine Personengruppe mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
@@ -1147,44 +1179,53 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerLernabschnittsdaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if (daten.Jahr < 1990) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Schuljahre vor 1990 werden nicht übernommen.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Schuljahre vor 1990 werden nicht übernommen.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Abschnitt < 1) || (daten.Abschnitt > 4)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Abschnitte müssen zwischen 1 und 4 liegen.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Abschnitte müssen zwischen 1 und 4 liegen.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if (daten.Abschnitt > schuleAnzahlAbschnitte) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitt (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl"
+						+ " der Abschnitt (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
 				entities.remove(i);
 				continue;
 			}
 			// Prüfe die Fachklasse im Lernabschnitt und setze diese ggf. auf NULL
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
-				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d):"
+						+ " Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.".formatted(daten.ID));
 				daten.Fachklasse_ID = null;
 			}
 			// Prüfe die Schulgliederung im Lernabschnitt und setze diese ggf. auf NULL
 			if (daten.Schulgliederung != null) {
 				if ("".equals(daten.Schulgliederung)) {
-					logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen leeren Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
+					logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d):"
+							+ " Die Lernabschnittsdaten haben einen leeren Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
 					daten.Schulgliederung = null;
 				} else {
 					final Schulgliederung sgl = Schulgliederung.getByKuerzel(daten.Schulgliederung);
 					if ((sgl == null) || (!sgl.hasSchulform(this.schulform))) {
-						logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
+						logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): "
+								+ "Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
 						daten.Schulgliederung = null;
 					}
 				}
@@ -1219,7 +1260,8 @@ public final class DBMigrationManager {
 				continue;
 			}
 			if (!faecherIDs.contains(daten.Fach_ID)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Fächer-ID (hier %d) muss in der Tabelle EigeneSchule_Faecher definiert sein.".formatted(daten.ID, daten.Fach_ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Fächer-ID (hier %d) muss in der Tabelle EigeneSchule_Faecher definiert sein.".formatted(daten.ID, daten.Fach_ID));
 				entities.remove(i);
 				continue;
 			}
@@ -1271,7 +1313,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerBKFach daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d):"
+						+ " Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
@@ -1440,7 +1483,8 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else if ((daten.Abschnitt < 1) || (daten.Abschnitt > schuleAnzahlAbschnitte)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lehrer-Abschnittsdaten müssen einen gültigen Abschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitte (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lehrer-Abschnittsdaten müssen einen gültigen Abschnitt haben - "
+						+ "Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitte (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
 				entities.remove(i);
 			} else {
 				lehrerAbschnittsIDs.add(daten.ID);
@@ -1485,7 +1529,8 @@ public final class DBMigrationManager {
 					map.put(key, daten);
 				} else {
 					other.AnrechnungStd += daten.AnrechnungStd;
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Anrechungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Anrechnungsstunden auf den vorigen Eintrag.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Anrechungsgrund darf nur einmal in den Abschnittsdaten vorkommen."
+							+ " Addiere die Anrechnungsstunden auf den vorigen Eintrag.");
 					entities.remove(i);
 				}
 			}
@@ -1529,7 +1574,8 @@ public final class DBMigrationManager {
 					map.put(key, daten);
 				} else {
 					other.EntlastungStd += daten.EntlastungStd;
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Entlastungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Entlastungsstunden auf den vorigen Eintrag.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Entlastungsgrund darf nur einmal in den Abschnittsdaten vorkommen."
+							+ " Addiere die Entlastungsstunden auf den vorigen Eintrag.");
 					entities.remove(i);
 				}
 			}
@@ -1572,7 +1618,8 @@ public final class DBMigrationManager {
 					map.put(key, daten);
 				} else {
 					other.MehrleistungStd += daten.MehrleistungStd;
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Mehrleistungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Mehrleistungsstunden auf den vorigen Eintrag.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Mehrleistungsgrund darf nur einmal in den Abschnittsdaten vorkommen."
+							+ " Addiere die Mehrleistungsstunden auf den vorigen Eintrag.");
 					entities.remove(i);
 				}
 			}
@@ -1834,7 +1881,8 @@ public final class DBMigrationManager {
 				daten.Fachklasse_ID = null;
 			}
 			if (!SchuelerStatus.isValidID(daten.Status)) {
-				logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz: Der Schüler-Status is ungültig. Dieser wird auf Neuaufnahme gesetzt. Bitte überprüfen Sie die Neuaufnahmen nach der Migration.");
+				logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz: Der Schüler-Status is ungültig. Dieser wird auf Neuaufnahme gesetzt."
+						+ " Bitte überprüfen Sie die Neuaufnahmen nach der Migration.");
 				daten.Status = SchuelerStatus.NEUAUFNAHME.id;
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
@@ -1894,7 +1942,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerDatenschutz daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerDatenschutz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerDatenschutz:"
+						+ " Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
 			}
 		}
@@ -1913,7 +1962,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerGrundschuldaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten:"
+						+ " Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
 				entities.remove(i);
 			}
 		}
@@ -1933,12 +1983,14 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerKAoADaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten:"
+						+ " Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Abschnitt_ID == null) || (!schuelerLeistungsdatenIDs.contains(daten.Abschnitt_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Lernabschnitt mit der angebenen ID (" + daten.Abschnitt_ID + ") in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Lernabschnitt mit der angebenen ID ("
+						+ daten.Abschnitt_ID + ") in der Datenbank.");
 				entities.remove(i);
 				continue;
 			}
@@ -2056,7 +2108,8 @@ public final class DBMigrationManager {
 				}
 				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(daten.StatistikFach);
 				if (zulFach == null) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt.".formatted(daten.StatistikFach));
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Fach muss ein gültiges Statistik-Kürzel haben."
+							+ " Das Kürzel %s ist unbekannt.".formatted(daten.StatistikFach));
 					entities.remove(i);
 				} else
 					faecherIDs.add(daten.ID);
@@ -2254,7 +2307,10 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, srcManager.getLastError());
 				continue;
 			}
-			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: "
+					+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+					+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 
 			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
 			if (entities.isEmpty()) {

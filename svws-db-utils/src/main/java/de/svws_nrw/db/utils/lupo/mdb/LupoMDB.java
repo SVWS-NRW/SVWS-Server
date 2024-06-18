@@ -233,23 +233,24 @@ public class LupoMDB {
 			final List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
 			final TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
 					"SELECT s FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-					+ "s.ID IS NOT NULL AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID "
-					+ "AND (s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
-					+ "ORDER BY s.Nachname, s.Vorname", DTOSchueler.class
-			);
+							+ "s.ID IS NOT NULL AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID "
+							+ "AND (s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
+							+ "ORDER BY s.Nachname, s.Vorname",
+					DTOSchueler.class);
 			final List<DTOSchueler> dtoSchueler = queryDtoSchueler
 					.setParameter("status", SchuelerStatus.AKTIV)
 					.setParameter("jahrgang", jahrgang)
 					.getResultList();
 			final List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).toList();
 			final Map<Long, GostLeistungen> gostLeistungen = DBUtilsGost.getLeistungsdaten(conn, schuelerIDs);
-			final Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+			final Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream()
+					.collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 			final Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 			final Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 			final TypedQuery<DTOSchuelerLernabschnittsdaten> queryDtoSchuelerLernabschnitte = conn.query(
-					"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-					+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID", DTOSchuelerLernabschnittsdaten.class
-			);
+					"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN :value AND s.ID = l.Schueler_ID AND"
+							+ " s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID",
+					DTOSchuelerLernabschnittsdaten.class);
 			final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = queryDtoSchuelerLernabschnitte
 					.setParameter("value", schuelerIDs)
 					.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
@@ -286,7 +287,8 @@ public class LupoMDB {
 	 * @param replace       gibt an, ob alte Daten für den Jahrgang der LuPO-Datei ersetzt werden
 	 *                      sollen, sofern sie bereits vorhanden sind.
 	 */
-	private void setLUPOJahrgang(final DBEntityManager conn, final DTOSchuljahresabschnitte abschnitt, final int abiJahrgang, final String klasse, final Map<String, DTOFach> dtoFaecher, final boolean replace) {
+	private void setLUPOJahrgang(final DBEntityManager conn, final DTOSchuljahresabschnitte abschnitt, final int abiJahrgang, final String klasse,
+			final Map<String, DTOFach> dtoFaecher, final boolean replace) {
 		DTOGostJahrgangsdaten lupoJahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiJahrgang);
 		if (lupoJahrgangsdaten != null) {
 			logger.log("* Abiturjahrgang ist bereits angelegt");
@@ -323,7 +325,7 @@ public class LupoMDB {
 		logger.logLn("- die Beratungslehrer anhand der Klassenlehrerinformationen...");
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, abschnitt.ID)
 				.stream().filter(kl -> kl.Klasse.equals(klasse)).toList();
-    	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
+		final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
 		final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID,
 				DTOKlassenLeitung.class, klassenIDs).stream().collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 
@@ -510,7 +512,8 @@ public class LupoMDB {
 				conn.transactionBegin();
 
 				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream()
+						.collect(Collectors.toMap(a -> a.ID, a -> a));
 				final Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 				final DTOSchuljahresabschnitte schuleAbschnitt = mapSchuljahresabschnitte.get(schule.Schuljahresabschnitts_ID);
 
@@ -537,10 +540,13 @@ public class LupoMDB {
 				logger.logLn("  - Lese Schüler aus der DB ein, um diese mit den Daten der LuPO-Datei abzugleichen...");
 				final Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryByKeyList(DTOSchueler.class, schuelerIDs)
 						.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-				logger.logLn("  - Lese die aktuellen Lernabschnitte der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei abzugleichen...");
+				logger.logLn("  - Lese die aktuellen Lernabschnitte der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei"
+						+ " abzugleichen...");
 				final Map<Long, DTOSchuelerLernabschnittsdaten> mapSchuelerAktLernabschnitt = conn.query(
-						"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON l.Schueler_ID = s.ID AND l.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND l.Schueler_ID IN :value", DTOSchuelerLernabschnittsdaten.class)
-							.setParameter("value", schuelerIDs).getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+						"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON l.Schueler_ID = s.ID AND"
+								+ " l.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND l.Schueler_ID IN :value",
+						DTOSchuelerLernabschnittsdaten.class).setParameter("value", schuelerIDs).getResultList().stream()
+						.collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 				logger.logLn("  - Lese Jahrgänge aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
 				final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 				logger.logLn("  - Lese Fächer aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
@@ -596,7 +602,8 @@ public class LupoMDB {
 					} else if (Integer.compare(lupoAbijahrgang, abiJahrgang) == 0) {
 						logger.logLn(0, "Ja");
 					} else {
-						throw new UserNotificationException("Fehler: Es dürfen für den Import nicht Schüler aus mehreren Abiturjahrgänge in einer LuPO-Datei vorkommen. Bitte passen Sie die LuPO-Datei für den Import an.");
+						throw new UserNotificationException("Fehler: Es dürfen für den Import nicht Schüler aus mehreren Abiturjahrgänge in einer LuPO-Datei"
+								+ " vorkommen. Bitte passen Sie die LuPO-Datei für den Import an.");
 					}
 
 					// Prüfe, ob dem Schüler bereits Laufbahnplanungsdaten zugewiesen wurden
@@ -777,7 +784,8 @@ public class LupoMDB {
 			if (lupoSchuelerFach.Kursart_Q1 != null) {
 				fachbelegung.belegungen[2] = new AbiturFachbelegungHalbjahr();
 				fachbelegung.belegungen[2].halbjahrKuerzel = GostHalbjahr.Q11.kuerzel;
-				setFachbelegung(fachbelegung.belegungen[2], lupoSchuelerFach.Kursart_Q1, fachKursart, lupoFach.Q_WStd, "J".equals(lupoSchuelerFach.Markiert_Q1));
+				setFachbelegung(fachbelegung.belegungen[2], lupoSchuelerFach.Kursart_Q1, fachKursart, lupoFach.Q_WStd,
+						"J".equals(lupoSchuelerFach.Markiert_Q1));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[2].kursartKuerzel;
 				fachbelegung.belegungen[2].biliSprache = lupoFach.Unterichtssprache;
 				fachbelegung.belegungen[2].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q1);
@@ -785,7 +793,8 @@ public class LupoMDB {
 			if (lupoSchuelerFach.Kursart_Q2 != null) {
 				fachbelegung.belegungen[3] = new AbiturFachbelegungHalbjahr();
 				fachbelegung.belegungen[3].halbjahrKuerzel = GostHalbjahr.Q12.kuerzel;
-				setFachbelegung(fachbelegung.belegungen[3], lupoSchuelerFach.Kursart_Q2, fachKursart, lupoFach.Q_WStd, "J".equals(lupoSchuelerFach.Markiert_Q2));
+				setFachbelegung(fachbelegung.belegungen[3], lupoSchuelerFach.Kursart_Q2, fachKursart, lupoFach.Q_WStd,
+						"J".equals(lupoSchuelerFach.Markiert_Q2));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[3].kursartKuerzel;
 				fachbelegung.belegungen[3].biliSprache = lupoFach.Unterichtssprache;
 				fachbelegung.belegungen[3].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q2);
@@ -793,7 +802,8 @@ public class LupoMDB {
 			if (lupoSchuelerFach.Kursart_Q3 != null) {
 				fachbelegung.belegungen[4] = new AbiturFachbelegungHalbjahr();
 				fachbelegung.belegungen[4].halbjahrKuerzel = GostHalbjahr.Q21.kuerzel;
-				setFachbelegung(fachbelegung.belegungen[4], lupoSchuelerFach.Kursart_Q3, fachKursart, lupoFach.Q_WStd, "J".equals(lupoSchuelerFach.Markiert_Q3));
+				setFachbelegung(fachbelegung.belegungen[4], lupoSchuelerFach.Kursart_Q3, fachKursart, lupoFach.Q_WStd,
+						"J".equals(lupoSchuelerFach.Markiert_Q3));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[4].kursartKuerzel;
 				fachbelegung.belegungen[4].biliSprache = lupoFach.Unterichtssprache;
 				fachbelegung.belegungen[4].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q3);
@@ -801,7 +811,8 @@ public class LupoMDB {
 			if (lupoSchuelerFach.Kursart_Q4 != null) {
 				fachbelegung.belegungen[5] = new AbiturFachbelegungHalbjahr();
 				fachbelegung.belegungen[5].halbjahrKuerzel = GostHalbjahr.Q22.kuerzel;
-				setFachbelegung(fachbelegung.belegungen[5], lupoSchuelerFach.Kursart_Q4, fachKursart, lupoFach.Q_WStd, "J".equals(lupoSchuelerFach.Markiert_Q4));
+				setFachbelegung(fachbelegung.belegungen[5], lupoSchuelerFach.Kursart_Q4, fachKursart, lupoFach.Q_WStd,
+						"J".equals(lupoSchuelerFach.Markiert_Q4));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[5].kursartKuerzel;
 				fachbelegung.belegungen[5].biliSprache = lupoFach.Unterichtssprache;
 				fachbelegung.belegungen[5].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q4);
@@ -821,8 +832,8 @@ public class LupoMDB {
 				sprachbelegung.belegungVonJahrgang = lupoSchuelerFach.FS_BeginnJg;
 				if (sprachbelegung.belegungVonJahrgang.length() == 1)
 					sprachbelegung.belegungVonJahrgang = "0" + sprachbelegung.belegungVonJahrgang;
-                if ("10".equals(sprachbelegung.belegungVonJahrgang))
-                    sprachbelegung.belegungVonJahrgang = "EF";
+				if ("10".equals(sprachbelegung.belegungVonJahrgang))
+					sprachbelegung.belegungVonJahrgang = "EF";
 				sprachbelegung.belegungVonAbschnitt = 1;
 				abidaten.sprachendaten.belegungen.add(sprachbelegung);
 			}
@@ -856,8 +867,8 @@ public class LupoMDB {
 				sprachbelegung.belegungVonJahrgang = "" + lupoSchuelerSprachenfolge.JahrgangVon;
 				if (sprachbelegung.belegungVonJahrgang.length() == 1)
 					sprachbelegung.belegungVonJahrgang = "0" + sprachbelegung.belegungVonJahrgang;
-                if ("10".equals(sprachbelegung.belegungVonJahrgang))
-                    sprachbelegung.belegungVonJahrgang = "EF";
+				if ("10".equals(sprachbelegung.belegungVonJahrgang))
+					sprachbelegung.belegungVonJahrgang = "EF";
 				sprachbelegung.belegungVonAbschnitt = lupoSchuelerSprachenfolge.AbschnittVon == null ? 1 : ((int) lupoSchuelerSprachenfolge.AbschnittVon);
 				abidaten.sprachendaten.belegungen.add(sprachbelegung);
 			}
@@ -894,8 +905,8 @@ public class LupoMDB {
 	}
 
 
-    private static void setFachbelegung(final AbiturFachbelegungHalbjahr belegung, final String belegungPlanungKursart,
-    		final GostKursart fachKursart, final Integer wochenstunden, final boolean istInAbiwertung) {
+	private static void setFachbelegung(final AbiturFachbelegungHalbjahr belegung, final String belegungPlanungKursart,
+			final GostKursart fachKursart, final Integer wochenstunden, final boolean istInAbiwertung) {
 		belegung.kursartKuerzel = fachKursart.toString();
 		if ("AT".equals(belegungPlanungKursart))
 			belegung.kursartKuerzel = "AT";
@@ -912,6 +923,6 @@ public class LupoMDB {
 		else
 			belegung.wochenstunden = wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
-    }
+	}
 
 }

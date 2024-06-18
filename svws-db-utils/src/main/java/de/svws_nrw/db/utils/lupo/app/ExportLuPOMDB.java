@@ -78,23 +78,29 @@ public class ExportLuPOMDB {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("k", "jahrgang", true, "Der Jahrgang, für den die LuPO-Datei erzeugt werden soll."));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei erzeugt wird"));
-			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
-			cmdLine.addOption(new CommandLineOption("sd", "srcDrv", true, "Der Treiber für die Quell-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
-			cmdLine.addOption(new CommandLineOption("sl", "srcLoc", true, "Der Ort, wo die Quell-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
-			cmdLine.addOption(new CommandLineOption("ss", "srcDB", true, "Der Schema-Name für die Quell-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
+			cmdLine.addOption(new CommandLineOption("cp", "configPath", true,
+					"Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
+			cmdLine.addOption(
+					new CommandLineOption("sd", "srcDrv", true, "Der Treiber für die Quell-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
+			cmdLine.addOption(new CommandLineOption("sl", "srcLoc", true,
+					"Der Ort, wo die Quell-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
+			cmdLine.addOption(
+					new CommandLineOption("ss", "srcDB", true, "Der Schema-Name für die Quell-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
 			cmdLine.addOption(new CommandLineOption("su", "srcUser", true, "Der DB-Benutzer für die Quell-DB"));
 			cmdLine.addOption(new CommandLineOption("sp", "srcPwd", true, "Das DB-Kennwort für die Quell-DB"));
 
-		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei
+			// Lese den Namen für der LuPO-Datei ein und öffne die Datei
 			final String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
 			if (Files.exists(Paths.get(lupofilename))) {
 				try (Scanner scan = new Scanner(System.in)) {
 					// Frage ggf. nach, ob die bestehende LuPO-Datei gelöscht und überschrieben werden soll
 					boolean antwort_ja = cmdLine.isSet("j");
 					if (!antwort_ja) {
-						antwort_ja = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren. Fortfahren? (J/N) ", scan);
+						antwort_ja = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren."
+								+ " Fortfahren? (J/N) ", scan);
 						if (!antwort_ja) {
-							cmdLine.printOptionsAndExit(2, "Die LuPO-Datei darf nicht überschrieben werden und kann daher nicht neu erzeugt werden. Breche ab.");
+							cmdLine.printOptionsAndExit(2, "Die LuPO-Datei darf nicht überschrieben werden und kann daher nicht neu erzeugt werden."
+									+ " Breche ab.");
 							System.exit(1);
 						}
 					}
@@ -105,10 +111,10 @@ public class ExportLuPOMDB {
 			logger.logLn("Lese SVWS Konfiguration ein...");
 			SVWSKonfiguration.getFrom(cmdLine.getValue("cp", null));
 
-		    // Lese die Optionen für die Quell-Datenbank ein
-		    final DBDriver srcDrv = DBDriver.fromString(cmdLine.getValue("sd", "MARIA_DB"));
-		    if (srcDrv == null)
-		    	cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Quell-DB");
+			// Lese die Optionen für die Quell-Datenbank ein
+			final DBDriver srcDrv = DBDriver.fromString(cmdLine.getValue("sd", "MARIA_DB"));
+			if (srcDrv == null)
+				cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Quell-DB");
 			final String srcLoc = cmdLine.getValue("sl", "localhost");
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUser = cmdLine.getValue("su", "svwsadmin");

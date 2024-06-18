@@ -94,29 +94,29 @@ public final class ABPSchuelerSprachenfolge {
 	public static void write(final Database db, final List<ABPSchuelerSprachenfolge> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
-				.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-				.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-				.addColumn(new ColumnBuilder(fieldJahrgangVon, DataType.INT))
-				.addColumn(new ColumnBuilder(fieldJahrgangBis, DataType.INT))
-				.addColumn(new ColumnBuilder(fieldReihenfolge, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldAbschnittVon, DataType.INT))
-				.addColumn(new ColumnBuilder(fieldAbschnittBis, DataType.INT))
-				.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldSchueler_ID, fieldFachKrz).setPrimaryKey())
-			    .toTable(db);
+					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, 
+							true))
+					.addColumn(new ColumnBuilder(fieldJahrgangVon, DataType.INT))
+					.addColumn(new ColumnBuilder(fieldJahrgangBis, DataType.INT))
+					.addColumn(new ColumnBuilder(fieldReihenfolge, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldAbschnittVon, DataType.INT))
+					.addColumn(new ColumnBuilder(fieldAbschnittBis, DataType.INT))
+					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
+					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldSchueler_ID, fieldFachKrz).setPrimaryKey())
+					.toTable(db);
 			if (list == null)
 				return;
-			for (final ABPSchuelerSprachenfolge zuordnung: list) {
+			for (final ABPSchuelerSprachenfolge zuordnung : list) {
 				table.addRow(
-					zuordnung.Schueler_ID,
-					zuordnung.FachKrz,
-					zuordnung.JahrgangVon,
-					zuordnung.JahrgangBis,
-					zuordnung.Reihenfolge,
-					zuordnung.AbschnittVon,
-					zuordnung.AbschnittBis,
-					zuordnung.StatistikKrz
-				);
+						zuordnung.Schueler_ID,
+						zuordnung.FachKrz,
+						zuordnung.JahrgangVon,
+						zuordnung.JahrgangBis,
+						zuordnung.Reihenfolge,
+						zuordnung.AbschnittVon,
+						zuordnung.AbschnittBis,
+						zuordnung.StatistikKrz);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

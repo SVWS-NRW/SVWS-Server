@@ -192,68 +192,67 @@ public final class ABPSchuelerFaecherSicherung {
 	public static void write(final Database db, final List<ABPSchuelerFaecherSicherung> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerFaecherSicherung")
-				.addColumn(new ColumnBuilder(fieldID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFach_ID, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAbiturFach, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG))
-				.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).setLengthInUnits(2))
-				.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).setLengthInUnits(2))
-			    .toTable(db);
+					.addColumn(new ColumnBuilder(fieldID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFach_ID, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20))
+					.addColumn(new ColumnBuilder(fieldFS_BeginnJg, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldSprachenfolge, DataType.TEXT).setLengthInUnits(1))
+					.addColumn(new ColumnBuilder(fieldKursart_E1, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_E2, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_E2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q1, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q2, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q3, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q3, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldKursart_Q4, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldPunkte_Q4, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAbiturFach, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).setLengthInUnits(5))
+					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG))
+					.addColumn(new ColumnBuilder(fieldAendern_E1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_E2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q1, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q2, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q3, DataType.TEXT).setLengthInUnits(2))
+					.addColumn(new ColumnBuilder(fieldAendern_Q4, DataType.TEXT).setLengthInUnits(2))
+					.toTable(db);
 			if (list == null)
 				return;
-			for (final ABPSchuelerFaecherSicherung zuordnung: list) {
+			for (final ABPSchuelerFaecherSicherung zuordnung : list) {
 				table.addRow(
-					zuordnung.ID,
-					zuordnung.Schueler_ID,
-					zuordnung.Fach_ID,
-					zuordnung.FachKrz,
-					zuordnung.FS_BeginnJg,
-					zuordnung.Sprachenfolge,
-					zuordnung.Kursart_E1,
-					zuordnung.Punkte_E1,
-					zuordnung.Kursart_E2,
-					zuordnung.Punkte_E2,
-					zuordnung.Kursart_Q1,
-					zuordnung.Punkte_Q1,
-					zuordnung.Kursart_Q2,
-					zuordnung.Punkte_Q2,
-					zuordnung.Kursart_Q3,
-					zuordnung.Punkte_Q3,
-					zuordnung.Kursart_Q4,
-					zuordnung.Punkte_Q4,
-					zuordnung.AbiturFach,
-					zuordnung.Sortierung,
-					zuordnung.Fachgruppe,
-					zuordnung.Aufgabenfeld,
-					zuordnung.Aendern_E1,
-					zuordnung.Aendern_E2,
-					zuordnung.Aendern_Q1,
-					zuordnung.Aendern_Q2,
-					zuordnung.Aendern_Q3,
-					zuordnung.Aendern_Q4
-				);
+						zuordnung.ID,
+						zuordnung.Schueler_ID,
+						zuordnung.Fach_ID,
+						zuordnung.FachKrz,
+						zuordnung.FS_BeginnJg,
+						zuordnung.Sprachenfolge,
+						zuordnung.Kursart_E1,
+						zuordnung.Punkte_E1,
+						zuordnung.Kursart_E2,
+						zuordnung.Punkte_E2,
+						zuordnung.Kursart_Q1,
+						zuordnung.Punkte_Q1,
+						zuordnung.Kursart_Q2,
+						zuordnung.Punkte_Q2,
+						zuordnung.Kursart_Q3,
+						zuordnung.Punkte_Q3,
+						zuordnung.Kursart_Q4,
+						zuordnung.Punkte_Q4,
+						zuordnung.AbiturFach,
+						zuordnung.Sortierung,
+						zuordnung.Fachgruppe,
+						zuordnung.Aufgabenfeld,
+						zuordnung.Aendern_E1,
+						zuordnung.Aendern_E2,
+						zuordnung.Aendern_Q1,
+						zuordnung.Aendern_Q2,
+						zuordnung.Aendern_Q3,
+						zuordnung.Aendern_Q4);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

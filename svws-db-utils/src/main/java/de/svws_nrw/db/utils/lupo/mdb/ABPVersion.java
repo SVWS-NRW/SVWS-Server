@@ -54,12 +54,10 @@ public final class ABPVersion {
 	public static void write(final Database db, final List<ABPVersion> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Version")
-			     .addColumn(new ColumnBuilder("Version", DataType.TEXT).setLengthInUnits(8))
-			     .toTable(db);
-			for (final ABPVersion version: list) {
-				table.addRow(
-					version.Version
-				);
+					.addColumn(new ColumnBuilder("Version", DataType.TEXT).setLengthInUnits(8))
+					.toTable(db);
+			for (final ABPVersion version : list) {
+				table.addRow(version.Version);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

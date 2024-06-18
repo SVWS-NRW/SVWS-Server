@@ -70,7 +70,9 @@ public class DBCoreTypeUpdater {
 	 * @param version  die Version des Core-Types
 	 * @param updater  der Lambda-Ausdruck zum Aktualisieren der DB-Tabellen mit Daten des Core-Types
 	 */
-	private record CoreTypeTable(String name, long version, BiConsumer<DBEntityManager, Logger> updater) { /**/ }
+	private record CoreTypeTable(String name, long version, BiConsumer<DBEntityManager, Logger> updater) {
+		/**/
+	}
 
 	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable}. */
 	private final ArrayList<CoreTypeTable> tables = new ArrayList<>();
@@ -182,7 +184,7 @@ public class DBCoreTypeUpdater {
 			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tab.name());
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
-			if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
+			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
 		}
 		// TODO unten deprecated, oben aktuell
@@ -190,7 +192,7 @@ public class DBCoreTypeUpdater {
 			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, entry.name);
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
-			if  (Long.compare(entry.version, v.Version) < 0)
+			if (Long.compare(entry.version, v.Version) < 0)
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
 		}
 		return true;
@@ -274,7 +276,8 @@ public class DBCoreTypeUpdater {
 		} finally {
 			// Entsperre ggf. das Datenbankschema
 			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName)))
-				_logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+				_logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt"
+						+ " - dies wird an dieser Stelle nicht erwartet!)");
 		}
 	}
 
@@ -296,7 +299,8 @@ public class DBCoreTypeUpdater {
 	 * @param version     die neu zu setzende Version des Core-Type
 	 * @param sqlInsert   der Befehl zum Einfügen der Core-type-Daten
 	 */
-	private static void updateCoreTypeTabelle(final DBEntityManager conn, final String tabname, final String typename, final long version, final String sqlInsert) {
+	private static void updateCoreTypeTabelle(final DBEntityManager conn, final String tabname, final String typename, final long version,
+			final String sqlInsert) {
 		// Lösche alle Daten
 		conn.transactionNativeDelete("DELETE FROM " + tabname);
 		conn.transactionFlush();
@@ -324,7 +328,8 @@ public class DBCoreTypeUpdater {
 		final StringBuilder sql = new StringBuilder();
 		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(ID, Fachbereich, SchildFgID, FG_Bezeichnung, FG_Kuerzel, Schulformen, FarbeR, FarbeG, FarbeB, Sortierung, FuerZeugnis, gueltigVon, gueltigBis) ");
+		sql.append(
+				"(ID, Fachbereich, SchildFgID, FG_Bezeichnung, FG_Kuerzel, Schulformen, FarbeR, FarbeG, FarbeB, Sortierung, FuerZeugnis, gueltigVon, gueltigBis) ");
 		final Fachgruppe[] values = Fachgruppe.values();
 		for (int i = 0; i < values.length; i++) {
 			final Fachgruppe f = values[i];
@@ -358,7 +363,8 @@ public class DBCoreTypeUpdater {
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
 		final Jahrgaenge[] values = Jahrgaenge.values();
-		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet()).toArray(new String[0]);
+		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet())
+				.toArray(new String[0]);
 		boolean isFirst = true;
 		for (int i = 0; i < jg_kuerzel.length; i++) {
 			sql.append(isFirst ? strValues : ", (");
@@ -721,7 +727,8 @@ public class DBCoreTypeUpdater {
 		final StringBuilder sql = new StringBuilder();
 		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
+		sql.append(
+				"(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
 		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
@@ -896,8 +903,7 @@ public class DBCoreTypeUpdater {
 		final List<String> kuerzel = Stream.of(
 				Stream.of(BerufskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
-				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)
-				).flatMap(o -> o).distinct().toList();
+				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)).flatMap(o -> o).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -906,10 +912,10 @@ public class DBCoreTypeUpdater {
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(conn, tabname,
-				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
+				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", "
+						+ AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
 				BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
-				sql.toString()
-				);
+				sql.toString());
 	};
 
 
@@ -921,8 +927,7 @@ public class DBCoreTypeUpdater {
 		logger.logLn(strAktualisiereTabelle + tabname);
 		updateCoreTypeTabelle(conn, tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
 				Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
-				.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (", ")"))
-				);
+						.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (", ")")));
 	};
 
 

@@ -625,7 +625,8 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final Logger logger) {
+	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision,
+			final Logger logger) {
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = maxUpdateRevision;
 		if (rev < 0)

@@ -178,7 +178,8 @@ public class DBUpdater {
 				logger.logLn("Das Schema ist bereits in der angegebenen Revision.");
 				return true;
 			} else if (revision > max_revision) {
-				logger.logLn("Warnung: Das Schema ist bereits aktueller, als in der Datenbank eingetragen. Es sollte eine aktuellere Version des SVWS-Server-Projektes verwendet werden!");
+				logger.logLn("Warnung: Das Schema ist bereits aktueller, als in der Datenbank eingetragen."
+						+ " Es sollte eine aktuellere Version des SVWS-Server-Projektes verwendet werden!");
 				return true;
 			}
 			return false;
@@ -278,7 +279,8 @@ public class DBUpdater {
 
 		// Entsperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
-			logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+			logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas."
+					+ " Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
 			return false;
 		}
 		return success;

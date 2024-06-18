@@ -48,9 +48,9 @@ public final class ApiUtils {
 		logger.logLn(e.getMessage());
 		if (e instanceof final ApiOperationException aoe)
 			code = aoe.getStatus();
-	    final StackTraceElement[] stack = e.getStackTrace();
-	    for (final StackTraceElement s : stack)
-	    	logger.logLn(2, s.toString());
+		final StackTraceElement[] stack = e.getStackTrace();
+		for (final StackTraceElement s : stack)
+			logger.logLn(2, s.toString());
 		simpleOperationResponse.log = log.getStrings();
 		return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();
 	}

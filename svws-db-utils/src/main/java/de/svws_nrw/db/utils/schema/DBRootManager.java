@@ -113,7 +113,8 @@ public final class DBRootManager {
 			case MARIA_DB, MYSQL -> {
 				if ((collation == null) || "".equals(collation))
 					yield false;
-				yield conn.executeNativeUpdate("CREATE SCHEMA IF NOT EXISTS `" + nameSchema + "` DEFAULT CHARACTER SET 'utf8mb4' DEFAULT COLLATE '" + collation + "'") > Integer.MIN_VALUE;
+				yield conn.executeNativeUpdate("CREATE SCHEMA IF NOT EXISTS `" + nameSchema + "` DEFAULT CHARACTER SET 'utf8mb4' DEFAULT COLLATE '" + collation
+						+ "'") > Integer.MIN_VALUE;
 			}
 			case MSSQL -> {
 				if ((collation == null) || "".equals(collation))
@@ -476,7 +477,8 @@ public final class DBRootManager {
 				rootUser = Benutzer.create(rootConfig);
 			} catch (@SuppressWarnings("unused") final DBException db) {
 				logger.logLn(2, " [Fehler]");
-				logger.log(LogLevel.ERROR, 2, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+				logger.log(LogLevel.ERROR, 2, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='"
+						+ config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
 				logger.log(LogLevel.ERROR, 2, "Überprüfen Sie das verwendete Kennwort.");
 				return false;
 			}
@@ -485,10 +487,12 @@ public final class DBRootManager {
 				logger.log("- ");
 				if (rootConn == null) {
 					logger.logLn(0, " [Fehler]");
-					logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+					logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='"
+							+ config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
 					throw new DBException("");
 				}
-				logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+				logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema()
+						+ "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
 				final DBRootManager root_manager = new DBRootManager(rootConn);
 
 				logger.log("- Prüfe, ob der Benutzer noch angelegt werden kann oder ob das angebene Kennwort zu einem existierenden Benutzer passt...");
@@ -512,7 +516,10 @@ public final class DBRootManager {
 				if (e instanceof final DBException dbe)
 					throw dbe;
 				if (e instanceof final SVWSKonfigurationException ske)
-					throw new DBException("Ein unerwarteter Fehler ist beim Zugriff auf die SVWS-Konfiguration nach dem Erstellen des Datenbank-Schemas aufgetreten: " + ske.getMessage(), ske.getCause());
+					throw new DBException(
+							"Ein unerwarteter Fehler ist beim Zugriff auf die SVWS-Konfiguration nach dem Erstellen des Datenbank-Schemas aufgetreten: "
+									+ ske.getMessage(),
+							ske.getCause());
 				throw new DBException("Ein unerwarteter Fehler ist beim Erstellen des Datenbank-Schemas aufgetreten.", e);
 			} finally {
 				logger.modifyIndent(-2);

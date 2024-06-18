@@ -97,7 +97,8 @@ public class GenerateTestdatenLaufbahn {
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("js", "jahrgangStart", true, "Die ID bei der die Nummerierung der Jahrgänge startet (Default: 1)."));
-			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
+			cmdLine.addOption(new CommandLineOption("cp", "configPath", true,
+					"Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
 			cmdLine.addOption(new CommandLineOption("s", "schema", true, "Der Schema-Name für Datenbank, aus der die Testdaten eingelesen werden sollen."));
 
 			// Lade die Konfigurationsdatei für den Datenbankzugriff
@@ -105,7 +106,7 @@ public class GenerateTestdatenLaufbahn {
 			final String svwsconfigPath = cmdLine.getValue("cp", "../svws-server-app/");
 			final SVWSKonfiguration svwsconfig = SVWSKonfiguration.getFrom(svwsconfigPath);
 
-		    // Lese das Schema ein und erstelle den Datenbankbenutzer für den Zugriff auf das Schema
+			// Lese das Schema ein und erstelle den Datenbankbenutzer für den Zugriff auf das Schema
 			final String dbSchema = cmdLine.getValue("s", svwsconfig.getDefaultSchema());
 			if (dbSchema == null)
 				throw new IOException("Es wurde kein gültiges Datenbank-Schema zum Einlesen der Laufbahndaten angegeben.");
@@ -129,11 +130,11 @@ public class GenerateTestdatenLaufbahn {
 
 				// Prüfe die Schulform
 				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-		    	if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
-		    		throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+				if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
+					throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
-		    	final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
-		    	// Files.createDirectories(Paths.get(outPath));
+				final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
+				// Files.createDirectories(Paths.get(outPath));
 
 				final ObjectMapper mapper = new ObjectMapper()
 						.enable(SerializationFeature.INDENT_OUTPUT);
@@ -142,11 +143,12 @@ public class GenerateTestdatenLaufbahn {
 				final List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
 					try {
-				    	final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
+						final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
 						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, jahrgang.Abi_Jahrgang);
 						if (gostFaecher.isEmpty())
 							continue; // Lasse Jahrgänge ohne Fächerdaten aus
-				    	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, jahrgang.Abi_Jahrgang);
+						final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen =
+								DataGostJahrgangFachkombinationen.getFachkombinationen(conn, jahrgang.Abi_Jahrgang);
 						final String strJahrgangID = String.format("%02d", jahrgangID++);
 						mapAbiJahrgangToJahrgangID.put(jahrgang.Abi_Jahrgang, strJahrgangID);
 						mapJahrgangIDToGostJahrgangsdaten.put(strJahrgangID, gostJahrgangsdaten);
@@ -185,8 +187,10 @@ public class GenerateTestdatenLaufbahn {
 					final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));
-					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
-					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json",
+							mapper.writeValueAsString(ergebnisEF1));
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json",
+							mapper.writeValueAsString(ergebnisGesamt));
 				}
 				logger.logLn("Fertig!");
 			}
