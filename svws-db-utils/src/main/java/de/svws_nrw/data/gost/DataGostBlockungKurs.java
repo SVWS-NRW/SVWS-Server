@@ -365,8 +365,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.Schueler_ID).toList();
 		final List<DTOSchueler> listSchuelerDTOs = schuelerIDs.isEmpty() ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		final Map<Long, DTOSchueler> mapSchuelerDTOs = listSchuelerDTOs.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (int i = 0; i < schuelerListe.size(); i++) { // Prüfe die Konsistenz der Daten in der Datenbank
-			final DTOGostBlockungZwischenergebnisKursSchueler schueler = schuelerListe.get(i);
+		for (final DTOGostBlockungZwischenergebnisKursSchueler schueler : schuelerListe) { // Prüfe die Konsistenz der Daten in der Datenbank
 			final DTOSchueler schuelerDTO = mapSchuelerDTOs.get(schueler.Schueler_ID);
 			if (schuelerDTO == null)
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,

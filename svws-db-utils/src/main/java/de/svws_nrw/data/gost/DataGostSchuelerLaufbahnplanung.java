@@ -199,8 +199,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 						switch (fw) {
 							case "M" -> {
 								if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)
-									|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
-									|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22)))))
+										|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
+												|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22)))))
 									return fw;
 							}
 							case "S" -> {
@@ -569,14 +569,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				return false;
 			}
 			final boolean vglReihenfolge = ((belegung.reihenfolge == null) && (vergleich.reihenfolge == null))
-				|| ((belegung.reihenfolge != null) && (vergleich.reihenfolge != null)
-				&& (belegung.reihenfolge.intValue() == vergleich.reihenfolge.intValue()));
+					|| ((belegung.reihenfolge != null) && (vergleich.reihenfolge != null)
+							&& (belegung.reihenfolge.intValue() == vergleich.reihenfolge.intValue()));
 			final boolean vglVonJg = ((belegung.belegungVonJahrgang == null) && (vergleich.belegungVonJahrgang == null))
-				|| ((belegung.belegungVonJahrgang != null) && (vergleich.belegungVonJahrgang != null)
-				&& (belegung.belegungVonJahrgang.equals(vergleich.belegungVonJahrgang)));
+					|| ((belegung.belegungVonJahrgang != null) && (vergleich.belegungVonJahrgang != null)
+							&& (belegung.belegungVonJahrgang.equals(vergleich.belegungVonJahrgang)));
 			final boolean vglVonAbschnitt = ((belegung.belegungVonAbschnitt == null) && (vergleich.belegungVonAbschnitt == null))
-				|| ((belegung.belegungVonAbschnitt != null) && (vergleich.belegungVonAbschnitt != null)
-				&& (belegung.belegungVonAbschnitt.equals(vergleich.belegungVonAbschnitt)));
+					|| ((belegung.belegungVonAbschnitt != null) && (vergleich.belegungVonAbschnitt != null)
+							&& (belegung.belegungVonAbschnitt.equals(vergleich.belegungVonAbschnitt)));
 			if (!vglReihenfolge || !vglVonJg || !vglVonAbschnitt) {
 				logger.logLn("Fehler: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
 				return false;
@@ -590,11 +590,11 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				return false;
 			}
 			final boolean vglNiveau = ((pruefung.anspruchsniveauId == null) && (vergleich.anspruchsniveauId == null))
-				|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
-				&& (pruefung.anspruchsniveauId.intValue() == vergleich.anspruchsniveauId.intValue()));
+					|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
+							&& (pruefung.anspruchsniveauId.intValue() == vergleich.anspruchsniveauId.intValue()));
 			final boolean vglErsSprache = ((pruefung.ersetzteSprache == null) && (vergleich.ersetzteSprache == null))
-				|| ((pruefung.ersetzteSprache != null) && (vergleich.ersetzteSprache != null)
-				&& (pruefung.ersetzteSprache.equals(vergleich.ersetzteSprache)));
+					|| ((pruefung.ersetzteSprache != null) && (vergleich.ersetzteSprache != null)
+							&& (pruefung.ersetzteSprache.equals(vergleich.ersetzteSprache)));
 			if (!vglNiveau || !vglErsSprache
 					|| (pruefung.kannErstePflichtfremdspracheErsetzen != vergleich.kannErstePflichtfremdspracheErsetzen)
 					|| (pruefung.kannZweitePflichtfremdspracheErsetzen != vergleich.kannZweitePflichtfremdspracheErsetzen)
@@ -694,12 +694,12 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 							&& (dbKursart.equals(dateiKursart)) && (dbSchriftlich == datei.schriftlich[halbjahr.id])))
 						continue;
 					final String kursart = (dateiKursart == null) ? null
-						: ("AT".equals(dateiKursart) ? "AT"
-							: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-								: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
-									: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
-										: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
-											: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
+							: ("AT".equals(dateiKursart) ? "AT"
+									: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
+											: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
+													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
+															: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
+																	: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
 					switch (halbjahr) {
 						case EF1 -> fachwahl.EF1_Kursart = kursart;
 						case EF2 -> fachwahl.EF2_Kursart = kursart;
@@ -720,12 +720,12 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					final String dateiKursart = datei.kursart[halbjahr.id];
 					final String kursart = (dateiKursart == null) ? null
-						: ("AT".equals(dateiKursart) ? "AT"
-							: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-								: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
-									: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
-										: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
-											: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
+							: ("AT".equals(dateiKursart) ? "AT"
+									: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
+											: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
+													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
+															: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
+																	: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
 					switch (halbjahr) {
 						case EF1 -> fachwahl.EF1_Kursart = kursart;
 						case EF2 -> fachwahl.EF2_Kursart = kursart;
@@ -772,9 +772,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		boolean success = true;
 		final List<InputPart> l = multipart.getFormDataMap().get("data");
 		// Gehe die Dateien durch und führe jeweils dein Import durch
-		for (int i = 0; i < l.size(); i++) {
+		for (final InputPart file : l) {
 			final byte[] daten;
-			try (InputStream input = l.get(i).getBody()) {
+			try (InputStream input = file.getBody()) {
 				daten = input.readAllBytes();
 			} catch (final IOException e) {
 				logger.log("Eine lp-Datei konnte nicht eingelesen werden: " + e.getMessage());

@@ -270,7 +270,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				conn.transactionFlush();
 			}
 			if ((termin.Abi_Jahrgang != vorgabe.abiJahrgang) || (termin.Halbjahr != GostHalbjahr.fromIDorException(vorgabe.halbjahr))
-				|| (termin.Quartal != vorgabe.quartal))
+					|| (termin.Quartal != vorgabe.quartal))
 				throw new ApiOperationException(Status.CONFLICT, "Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
 			klausur.Termin_ID = termin.ID;
 			conn.transactionPersist(klausur);

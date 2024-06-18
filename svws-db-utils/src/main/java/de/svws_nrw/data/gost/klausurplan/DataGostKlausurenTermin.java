@@ -53,21 +53,21 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 							throw new ApiOperationException(Status.BAD_REQUEST);
 					}),
 					Map.entry("abijahr", (conn, dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
-					Map.entry("halbjahr", (conn, dto, value, map) ->
-							dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
-					Map.entry("quartal", (conn, dto, value, map) ->
-							dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
-					Map.entry("bemerkung", (conn, dto, value, map) ->
-							dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
-					Map.entry("bezeichnung", (conn, dto, value, map) ->
-							dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
+					Map.entry("halbjahr", (conn, dto, value, map) -> dto.Halbjahr =
+							DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+					Map.entry("quartal", (conn, dto, value, map) -> dto.Quartal =
+							DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
+					Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen =
+							JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
+					Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung =
+							JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
 					Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
 					Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
 					Map.entry("istHaupttermin", (conn, dto, value, map) -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false)),
 					Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> {
 						final boolean newValue = JSONMapper.convertToBoolean(value, false);
 						if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen.booleanValue() && !newValue
-							&& !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
+								&& !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
 							throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
 						dto.NachschreiberZugelassen = newValue;
 					}));

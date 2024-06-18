@@ -334,8 +334,8 @@ public final class DBUtilsGost {
 						|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 		belegung.bilingualeSprache = gostFach.biliSprache;
 		belegung.wochenstunden = (leistung.Wochenstunden == null)
-			? kursart.getWochenstunden(fach.istFSNeu)
-			: leistung.Wochenstunden;
+				? kursart.getWochenstunden(fach.istFSNeu)
+				: leistung.Wochenstunden;
 		belegung.fehlstundenGesamt = (leistung.FehlStd == null) ? 0 : leistung.FehlStd;
 		belegung.fehlstundenUnentschuldigt = (leistung.uFehlStd == null) ? 0 : leistung.uFehlStd;
 		fach.belegungen.add(belegung);
@@ -391,11 +391,11 @@ public final class DBUtilsGost {
 		// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
 		final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
 		final Schulgliederung schulgliederung = (aktLernabschnitt.Schulgliederung == null)
-			? Schulgliederung.getDefault(schule.Schulform)
-			: aktLernabschnitt.Schulgliederung;
+				? Schulgliederung.getDefault(schule.Schulform)
+				: aktLernabschnitt.Schulgliederung;
 		final DTOJahrgang dtoAktJahrgang = mapJahrgaenge.get(aktLernabschnitt.Jahrgang_ID);
 		final Jahrgaenge aktJahrgang =
-			((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoAktJahrgang.ASDJahrgang);
+				((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoAktJahrgang.ASDJahrgang);
 		final Integer abiturjahr = getAbiturjahr(schule.Schulform, schulgliederung, abschnittSchueler.Jahr, aktJahrgang);
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
 
@@ -490,7 +490,7 @@ public final class DBUtilsGost {
 			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
 			final DTOJahrgang dtoAktJahrgang = mapJahrgaenge.get(aktLernabschnitt.Jahrgang_ID);
 			final Jahrgaenge aktJahrgang =
-				((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoAktJahrgang.ASDJahrgang);
+					((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoAktJahrgang.ASDJahrgang);
 
 			// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 			final GostLeistungen daten = new GostLeistungen();
@@ -509,7 +509,7 @@ public final class DBUtilsGost {
 					continue;
 				final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 				final Jahrgaenge jahrgang =
-					((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
+						((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
 				if ((jahrgang == null) || !JahrgangsUtils.istGymOb(jahrgang.daten.kuerzel))
 					continue;
 				final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(jahrgang.daten.kuerzel, abschnittLeistungsdaten.Abschnitt);

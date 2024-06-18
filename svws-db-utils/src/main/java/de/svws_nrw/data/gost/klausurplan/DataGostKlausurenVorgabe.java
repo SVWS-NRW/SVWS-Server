@@ -388,8 +388,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			Map.entry("istMdlPruefung", (conn, dto, value, map) -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("istAudioNotwendig", (conn, dto, value, map) -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("istVideoNotwendig", (conn, dto, value, map) -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("bemerkungVorgabe", (conn, dto, value, map) ->
-					dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge())));
+			Map.entry("bemerkungVorgabe", (conn, dto, value, map) -> dto.Bemerkungen =
+					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge())));
 
 	/**
 	 * Erstellt eine neue Gost-Klausurvorgabe

@@ -84,7 +84,7 @@ public final class DBUtilsGostAbitur {
 
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
 				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
-					&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
+						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
 					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
 					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
 							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
@@ -249,9 +249,9 @@ public final class DBUtilsGostAbitur {
 				if (gostFach == null) {
 					final DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
 					final DTOFach dtoLeitfach1 =
-						(dtoFach.ProjektKursLeitfach1_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
+							(dtoFach.ProjektKursLeitfach1_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
 					final DTOFach dtoLeitfach2 =
-						(dtoFach.ProjektKursLeitfach2_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
+							(dtoFach.ProjektKursLeitfach2_ID == null) ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
 					abidaten.projektkursLeitfach1Kuerzel = (dtoLeitfach1 == null) ? null : dtoLeitfach1.Kuerzel;
 					abidaten.projektkursLeitfach2Kuerzel = (dtoLeitfach2 == null) ? null : dtoLeitfach2.Kuerzel;
 				} else {

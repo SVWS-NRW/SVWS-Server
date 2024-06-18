@@ -140,8 +140,8 @@ public final class DBUtilsGostLaufbahn {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Bestimme das Abiturjahr
 		final Schulgliederung schulgliederung = (aktAbschnitt.Schulgliederung == null)
-			? Schulgliederung.getDefault(schule.Schulform)
-			: aktAbschnitt.Schulgliederung;
+				? Schulgliederung.getDefault(schule.Schulform)
+				: aktAbschnitt.Schulgliederung;
 		final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
 		final Jahrgaenge jahrgang = ((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
 		final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
@@ -179,10 +179,10 @@ public final class DBUtilsGostLaufbahn {
 					continue;
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
 				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
-					&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
+						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
 					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
 					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
-						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				}
 
 				// Erzeuge die zugehörige Belegung
@@ -385,7 +385,7 @@ public final class DBUtilsGostLaufbahn {
 			default -> fachKursart.toString();
 		};
 		belegung.schriftlich = (belegungPlanungKursart == null) ? null
-			: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
+				: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
 		fach.belegungen[halbjahr.id] = belegung;
@@ -517,8 +517,8 @@ public final class DBUtilsGostLaufbahn {
 				throw new ApiOperationException(Status.NOT_FOUND);
 			// Bestimme das Abiturjahr
 			final Schulgliederung schulgliederung = (aktAbschnitt.Schulgliederung == null)
-				? Schulgliederung.getDefault(schule.Schulform)
-				: aktAbschnitt.Schulgliederung;
+					? Schulgliederung.getDefault(schule.Schulform)
+					: aktAbschnitt.Schulgliederung;
 			final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
 			final Jahrgaenge jahrgang = ((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
 			final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
@@ -556,7 +556,7 @@ public final class DBUtilsGostLaufbahn {
 							&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
 						letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
 						fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null
-							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
+								: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 					}
 
 					// Erzeuge die zugehörige Belegung

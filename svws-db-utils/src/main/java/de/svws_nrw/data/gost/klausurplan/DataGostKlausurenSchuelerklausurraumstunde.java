@@ -381,7 +381,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final GostKursklausur kk = kursklausurManager.kursklausurBySchuelerklausurTermin(sk);
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
 			final int startzeit = (sk.startzeit != null) ? sk.startzeit
-				: (((sk.folgeNr == 0) && (kk.startzeit != null)) ? kk.startzeit : kursklausurManager.terminOrExceptionBySchuelerklausurTermin(sk).startzeit);
+					: (((sk.folgeNr == 0) && (kk.startzeit != null)) ? kk.startzeit
+							: kursklausurManager.terminOrExceptionBySchuelerklausurTermin(sk).startzeit);
 			final List<StundenplanZeitraster> zeitrasterSk =
 					stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
 							startzeit, v.dauer);
