@@ -49,12 +49,13 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
 
-	addEintraege = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
+	addPausenzeiten = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const eintrag of eintraege) {
 			if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
 				throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 			delete eintrag.id;
+			delete eintrag.klassen;
 			list.add(eintrag);
 		}
 		if (list.isEmpty())

@@ -30,7 +30,7 @@
 								<span class="icon-sm i-ri-download-2-line" />
 							</svws-ui-button>
 						</s-pausenzeit-import-modal>
-						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-eintraege>
+						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten>
 							<svws-ui-button type="icon" @click="openModal()">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>

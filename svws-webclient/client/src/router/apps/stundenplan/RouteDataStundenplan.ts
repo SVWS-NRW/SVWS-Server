@@ -202,16 +202,20 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	addPausenzeit = async (pausenzeit: Partial<StundenplanPausenzeit>) => {
+	addPausenzeiten = async (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if (!pausenzeit.wochentag || !pausenzeit.beginn || !pausenzeit.ende)
-			return;
-		delete pausenzeit.id;
+		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
+		for (const p of pausenzeiten) {
+			if (p.wochentag && p.beginn && p.ende) {
+				delete p.id;
+				list.add(p);
+			}
+		}
 		api.status.start();
-		const _pausenzeit = await api.server.addStundenplanPausenzeit(pausenzeit, api.schema, id)
-		this.stundenplanManager.pausenzeitAdd(_pausenzeit);
+		const _pausenzeiten = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
+		this.stundenplanManager.pausenzeitAddAll(_pausenzeiten);
 		this.commit();
 		api.status.stop();
 	}
@@ -245,7 +249,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	importPausenzeiten = async (pausenzeiten: Partial<StundenplanPausenzeit>[]) => {
+	importPausenzeiten = async (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');

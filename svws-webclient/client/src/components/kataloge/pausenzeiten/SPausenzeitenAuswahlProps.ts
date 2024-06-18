@@ -3,7 +3,7 @@ import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface PausenzeitenAuswahlProps {
 	auswahl: StundenplanPausenzeit | undefined;
-	addEintraege: (eintrag: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
+	addPausenzeiten: (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	gotoEintrag: (eintrag: StundenplanPausenzeit) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;

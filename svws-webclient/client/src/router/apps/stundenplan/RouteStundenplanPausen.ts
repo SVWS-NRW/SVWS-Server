@@ -30,7 +30,7 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
-			addPausenzeit: routeStundenplan.data.addPausenzeit,
+			addPausenzeit: routeStundenplan.data.addPausenzeiten,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
 			importPausenzeiten: routeStundenplan.data.importPausenzeiten,
 			listPausenzeiten: () => routeStundenplan.data.listPausenzeiten,

@@ -12,7 +12,7 @@ export interface StundenplanDatenProps {
 	addJahrgang: (id: number) => Promise<void>;
 	removeJahrgang: (id: number) => Promise<void>;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
-	addPausenzeit: (pausenzeit: Partial<StundenplanPausenzeit>) => Promise<void>;
+	addPausenzeiten: (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	listPausenzeiten: () => List<StundenplanPausenzeit>;

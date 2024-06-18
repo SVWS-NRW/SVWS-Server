@@ -38,7 +38,7 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 			addJahrgang: routeStundenplan.data.addJahrgang,
 			removeJahrgang: routeStundenplan.data.removeJahrgang,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
-			addPausenzeit: routeStundenplan.data.addPausenzeit,
+			addPausenzeiten: routeStundenplan.data.addPausenzeiten,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
 			importPausenzeiten: routeStundenplan.data.importPausenzeiten,
 			listPausenzeiten: () => routeStundenplan.data.listPausenzeiten,

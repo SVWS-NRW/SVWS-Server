@@ -3,10 +3,11 @@
 	<svws-ui-modal :show="showModal" class="hidden">
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
+			<div class="flex justify-center flex-wrap items-center gap-2">
 				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
+				<svws-ui-multi-select v-if="stundenplanManager" v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
 			</div>
 		</template>
 		<template #modalActions>
@@ -18,16 +19,18 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import type { StundenplanPausenzeit} from "@core";
-	import { Wochentag, DateUtils } from "@core";
+	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
+	import { Wochentag, DateUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
-		addEintraege: (pausenzeit: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
+		addPausenzeiten: (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
+		stundenplanManager?: () => StundenplanManager;
 	}>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 	const wochentage = ref<Wochentag[]>([Wochentag.MONTAG]);
+	const klassen = ref<number[]>([]);
 
 	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });
 
@@ -37,9 +40,12 @@
 
 	async function importer() {
 		const list = [];
+		const listKlassen = new ArrayList<number>();
+		for (const klasse of klassen.value)
+			listKlassen.add(klasse);
 		for (const tag of wochentage.value)
-			list.push({wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause'})
-		await props.addEintraege(list);
+			list.push({wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause', klassen: listKlassen})
+		await props.addPausenzeiten(list);
 		showModal().value = false;
 	}
 

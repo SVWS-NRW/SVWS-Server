@@ -66,7 +66,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 			auswahl: this.data.auswahl,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			addEintraege: this.data.addEintraege,
+			addPausenzeiten: this.data.addPausenzeiten,
 			deleteEintraege: this.data.deleteEintraege,
 			returnToKataloge: routeKataloge.returnToKataloge,
 			setKatalogPausenzeitenImportJSON: this.data.setKatalogRaeumeImportJSON,
