@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items :columns selectable v-model="selected">
+				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().pausenzeitGetMengeAsList()" :columns selectable v-model="selected">
 					<template #cell(wochentag)="{ value }">
 						{{ Wochentag.fromIDorException(value).beschreibung }}
 					</template>
@@ -30,7 +30,7 @@
 								<span class="icon-sm i-ri-download-2-line" />
 							</svws-ui-button>
 						</s-pausenzeit-import-modal>
-						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten>
+						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
 							<svws-ui-button type="icon" @click="openModal()">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
@@ -47,7 +47,7 @@
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
 	import { StundenplanPausenzeit } from "@core";
 	import { Wochentag , DateUtils } from "@core";
-	import { computed, ref } from "vue";
+	import { ref } from "vue";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const selected = ref<StundenplanPausenzeit[]>([]);
@@ -58,8 +58,6 @@
 		{key: 'ende', label: 'Ende', span: 1}
 	]
 
-	const items = computed(() => <StundenplanPausenzeit[]>props.stundenplanManager().pausenzeitGetMengeAsList().toArray());
-
 	async function doDeleteEintraege() {
 		await props.deleteEintraege(selected.value);
 		selected.value = [];
@@ -67,9 +65,7 @@
 
 	function export_pausenzeiten() {
 		const arr = selected.value.map(r => StundenplanPausenzeit.transpilerToJSON(r));
-		const blob = new Blob(['['+arr.toString()+']'], {
-			type: "application/json",
-		});
+		const blob = new Blob(['['+arr.toString()+']'], { type: "application/json", });
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);
 		link.download = "ExportPausenzeiten.json";

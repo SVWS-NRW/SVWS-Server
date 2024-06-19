@@ -5,26 +5,26 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-2">
 				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" />
-				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
-				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
-				<svws-ui-multi-select v-if="stundenplanManager" v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" :valid="() => !disabled" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" :valid="() => !disabled" />
+				<svws-ui-multi-select v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
 			</div>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer" :disabled="!item.beginn || !item.ende || (item.ende - item.beginn < 1) || !wochentage.length"> Pausenzeit Hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer" :disabled="!item.beginn || !item.ende || (item.ende - item.beginn < 1) || !wochentage.length || disabled"> Pausenzeit Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { ref, computed } from "vue";
 	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
 	import { Wochentag, DateUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
 		addPausenzeiten: (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
-		stundenplanManager?: () => StundenplanManager;
+		stundenplanManager: () => StundenplanManager;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -38,6 +38,13 @@
 		showModal().value = true;
 	}
 
+	const disabled = computed<boolean>(() => {
+		for (const w of wochentage.value)
+			if (props.stundenplanManager().pausenzeitExistsByWochentagAndBeginnAndEnde(w.id, item.value.beginn ?? null, item.value.ende ?? null))
+				return true;
+		return false;
+	})
+
 	async function importer() {
 		const list = [];
 		const listKlassen = new ArrayList<number>();
@@ -45,8 +52,8 @@
 			listKlassen.add(klasse);
 		for (const tag of wochentage.value)
 			list.push({wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause', klassen: listKlassen})
-		await props.addPausenzeiten(list);
 		showModal().value = false;
+		await props.addPausenzeiten(list);
 	}
 
 	async function patchBeginn(start: string | null) {
