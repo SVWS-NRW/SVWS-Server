@@ -8,11 +8,10 @@
 				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" />
 			</div>
 			<div class="col-span-full">
-				<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" @click="add(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>
-				<svws-ui-spacing v-if="fehlendeZeitraster.length" />
+				<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" class="mb-2 w-52" @click="add(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>
 			</div>
 			<div class="col-span-full">
-				<svws-ui-button type="danger" @click="removeZeitraster(zeitraster)"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
+				<svws-ui-button type="danger" @click="removeZeitraster(zeitraster)" class="w-52"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>

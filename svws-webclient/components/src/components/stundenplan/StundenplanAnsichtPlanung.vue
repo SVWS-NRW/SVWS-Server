@@ -59,12 +59,12 @@
 	<div v-else class="svws-ui-stundenplan">Es wurden noch keine Zeitraster für diesen Stundenplan angelegt.</div>
 	<aside>
 		<div class="sticky top-8 flex flex-col gap-5">
-			<div class="flex gap-1 flex-wrap">
-				<svws-ui-button type="secondary" @click="addStunde">
+			<div class="flex gap-3 flex-wrap justify-stretch">
+				<svws-ui-button class="grow" type="secondary" @click="addStunde">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line -ml-1" />{{ manager().zeitrasterGetStundeMax() + (manager().getListZeitraster().size() === 0 ? 0:1) }}. Stunde
 				</svws-ui-button>
-				<svws-ui-button type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
+				<svws-ui-button class="grow" type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 				</svws-ui-button>
