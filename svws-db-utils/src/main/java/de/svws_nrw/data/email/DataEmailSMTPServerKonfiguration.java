@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -122,7 +123,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 	@Override
 	public Response patch(final InputStream is) throws ApiOperationException {
 		final DTOSchuleEmail dto = getOrCreate(conn);
-		applyPatchMappings(conn, dto, JSONMapper.toMap(is), patchMappings, null);
+		applyPatchMappings(conn, dto, JSONMapper.toMap(is), patchMappings, Collections.emptySet(), null);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();

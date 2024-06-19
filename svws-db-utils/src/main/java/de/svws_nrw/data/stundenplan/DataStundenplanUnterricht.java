@@ -2,6 +2,7 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -252,7 +253,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 
 	private void patchInternal(final DTOStundenplanUnterricht dto, final Map<String, Object> map) throws ApiOperationException {
-		applyPatchMappings(conn, dto, map, patchMappings, null);
+		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);

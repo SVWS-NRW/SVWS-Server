@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -190,7 +191,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		final DTOSchuelerSprachpruefungen dto = getDTO(kuerzel);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		applyPatchMappings(conn, dto, map, patchMappings, null);
+		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
 		return Response.status(Status.OK).build();
@@ -227,7 +228,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 			if ((sprache == null) || (sprache.isBlank()))
 				throw new ApiOperationException(Status.BAD_REQUEST);
 			final DTOSchuelerSprachpruefungen dto = new DTOSchuelerSprachpruefungen(newID, idSchueler, sprache);
-			applyPatchMappings(conn, dto, map, patchMappings, null);
+			applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(dto))
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);

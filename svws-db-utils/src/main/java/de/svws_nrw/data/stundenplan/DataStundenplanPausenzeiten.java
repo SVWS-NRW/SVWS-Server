@@ -169,6 +169,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "beginn", "ende");
 
+	private static final Set<String> delayedCreatePatchAttributes = Set.of("klassen");
+
 	private final ObjLongConsumer<DTOStundenplanPausenzeit> initDTO = (dto, id) -> {
 		dto.ID = id;
 		dto.Stundenplan_ID = this.stundenplanID;
@@ -186,7 +188,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
-		return super.addBasic(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+		return super.addBasicWithDelayedPatch(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes,
+				delayedCreatePatchAttributes, patchMappings);
 	}
 
 
@@ -202,7 +205,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 */
 	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
-		return super.addBasicMultiple(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+		return super.addBasicMultipleWithDelayedPatch(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes,
+				delayedCreatePatchAttributes, patchMappings);
 	}
 
 

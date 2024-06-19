@@ -1,6 +1,7 @@
 package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -130,7 +131,7 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
-		applyPatchMappings(conn, dto, map, patchMappings, null);
+		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 		if (!conn.transactionPersist(dto))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();

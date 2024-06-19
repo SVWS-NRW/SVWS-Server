@@ -478,7 +478,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		dto.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten.kuerzel;
 		dto.ASDSchulformNr = Schulgliederung.getDefault(schule.Schulform).daten.kuerzel;
 		dto.Klassenart = Klassenart.getDefault(schule.Schulform).daten.kuerzel;
-		applyPatchMappings(conn, dto, map, patchMappings, null);
+		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);

@@ -3,11 +3,13 @@ package de.svws_nrw.data;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -126,15 +128,19 @@ public abstract class DataManager<ID> {
 	 *                        Core-DTOs
 	 * @param attributeMapper eine Map mit den Mappingfunktionen zum mappen von
 	 *                        Core-DTO-Attributen auf Datenbank-DTO-Attributen
+	 * @param attributesSkip  eine Menge von Attributen, die ausgelassen wird
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map,
-			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
+			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesSkip, final Set<String> attributesForbidden)
+			throws ApiOperationException {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
+			if (attributesSkip.contains(key))
+				continue;
 			if ((attributesForbidden != null) && attributesForbidden.contains(key))
 				throw new ApiOperationException(Status.FORBIDDEN, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
@@ -169,7 +175,7 @@ public abstract class DataManager<ID> {
 		final DTO dto = conn.queryByKey(dtoClass, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		applyPatchMappings(conn, dto, map, attributeMapper, attributesForbidden);
+		applyPatchMappings(conn, dto, map, attributeMapper, Collections.emptySet(), attributesForbidden);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
 	}
@@ -292,7 +298,9 @@ public abstract class DataManager<ID> {
 	/**
 	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
 	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
-	 * Attribut-Mapper integriert werden
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssels
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt gepatched.
 	 *
 	 * @param <DTO>              der Typ des Datenbank-DTOs
 	 * @param <CoreData>         der Typ des Core-DTOs
@@ -302,8 +310,8 @@ public abstract class DataManager<ID> {
 	 * @param initDTO            ein BiConsumer zum Initialisieren des
 	 *                           Datenbank-DTOs
 	 * @param dtoMapper          die Funktion zum Erstellen
-	 * @param attributesRequired eine Menge der benötigten Attribute im
-	 *                           JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributesRequired eine Menge der benötigten Attribute im JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributesDelayed  eine Menge von Attriuten, die erst in einem zweiten Schritt gepatched werden.
 	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
 	 *
 	 * @return das Core-DTO
@@ -311,19 +319,26 @@ public abstract class DataManager<ID> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
-			final DTOMapper<DTO, CoreData> dtoMapper,
-			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
+			final DTOMapper<DTO, CoreData> dtoMapper, final Set<String> attributesRequired, final Set<String> attributesDelayed,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		for (final String attr : attributesRequired)
 			if (!map.containsKey(attr))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 		final DTO dto = newDTO(dtoClass, newID, initDTO);
-		applyPatchMappings(conn, dto, map, attributeMapper, null);
+		applyPatchMappings(conn, dto, map, attributeMapper, attributesDelayed, null);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
+		if (!attributesDelayed.isEmpty()) {
+			final var attrSkip = attributeMapper.keySet().stream().filter(a -> !attributesDelayed.contains(a)).collect(Collectors.toSet());
+			applyPatchMappings(conn, dto, map, attributeMapper, attrSkip, null);
+			if (!conn.transactionPersist(dto))
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			conn.transactionFlush();
+		}
 		return dtoMapper.apply(dto);
 	}
 
@@ -352,7 +367,39 @@ public abstract class DataManager<ID> {
 			final DTOMapper<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final long newID = conn.transactionGetNextID(dtoClass);
-		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper);
+		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, Collections.emptySet(), attributeMapper);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssels
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt gepatched.
+	 *
+	 *
+	 * @param <DTO>              der Typ des Datenbank-DTOs
+	 * @param <CoreData>         der Typ des Core-DTOs
+	 * @param is                 der Input-Stream
+	 * @param dtoClass           die Klasse des DTOs
+	 * @param initDTO            ein BiConsumer zum Initialisieren des
+	 *                           Datenbank-DTOs
+	 * @param dtoMapper          die Funktion zum Erstellen
+	 * @param attributesRequired eine Menge der benötigten Attribute im JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributesDelayed  eine Menge von Attriuten, die erst in einem zweiten Schritt gepatched werden.
+	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response mit dem Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	protected <DTO, CoreData> Response addBasicWithDelayedPatch(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
+			final DTOMapper<DTO, CoreData> dtoMapper, final Set<String> attributesRequired, final Set<String> attributesDelayed,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
+		final long newID = conn.transactionGetNextID(dtoClass);
+		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, attributesDelayed, attributeMapper);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -369,8 +416,7 @@ public abstract class DataManager<ID> {
 	 * @param initDTO            ein BiConsumer zum Initialisieren des
 	 *                           Datenbank-DTOs
 	 * @param dtoMapper          die Funktion zum Erstellen
-	 * @param attributesRequired eine Menge der benötigten Attribute im
-	 *                           JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributesRequired eine Menge der benötigten Attribute im JSON-Inputstream, um das Objekt zu initialisiesen
 	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response mit dem Core-DTO
@@ -386,11 +432,45 @@ public abstract class DataManager<ID> {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		final List<CoreData> daten = new ArrayList<>();
 		for (final Map<String, Object> map : multipleMaps)
-			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper));
+			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, Collections.emptySet(), attributeMapper));
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
+	/**
+	 * Fügt mehrere neue DTOs des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank jeweils eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssels
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt gepatched.
+	 *
+	 * @param <DTO>              der Typ des Datenbank-DTOs
+	 * @param <CoreData>         der Typ des Core-DTOs
+	 * @param is                 der Input-Stream
+	 * @param dtoClass           die Klasse des DTOs
+	 * @param initDTO            ein BiConsumer zum Initialisieren des
+	 *                           Datenbank-DTOs
+	 * @param dtoMapper          die Funktion zum Erstellen
+	 * @param attributesRequired eine Menge der benötigten Attribute im JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributesDelayed  eine Menge von Attriuten, die erst in einem zweiten Schritt gepatched werden.
+	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response mit dem Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	protected <DTO, CoreData> Response addBasicMultipleWithDelayedPatch(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO,
+			final DTOMapper<DTO, CoreData> dtoMapper, final Set<String> attributesRequired, final Set<String> attributesDelayed,
+			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
+		// Bestimme die nächste verfügbare ID für das DTO
+		long newID = conn.transactionGetNextID(dtoClass);
+		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		final List<CoreData> daten = new ArrayList<>();
+		for (final Map<String, Object> map : multipleMaps)
+			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, attributesDelayed, attributeMapper));
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 
 	/**
