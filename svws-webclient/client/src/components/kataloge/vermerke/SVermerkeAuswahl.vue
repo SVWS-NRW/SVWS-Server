@@ -40,12 +40,13 @@
 
 	import type { VermerkeAuswahlProps } from "./SVermerkeAuswahlProps";
 	import type { VermerkartEintrag } from "@core";
+	import type { DataTableColumn } from "@ui";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<VermerkeAuswahlProps>();
 	const selected = ref<VermerkartEintrag[]>([]);
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2},
 		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];

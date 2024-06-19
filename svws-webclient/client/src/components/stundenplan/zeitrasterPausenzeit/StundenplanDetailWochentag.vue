@@ -8,7 +8,6 @@
 			<svws-ui-button type="danger" @click="removeWochentag"> <span class="icon i-ri-delete-bin-line" /> Wochentag entfernen </svws-ui-button>
 			<span class="mt-1 opacity-50 inline-block text-error"> Achtung: Der Wochentag wird mit allen Stunden und Pausen entfernt.</span>
 		</div>
-		<!-- <svws-ui-button type="secondary" @click="addPausenzeit(item, s)"> {{ s }}. Stunde einfügen </svws-ui-button> -->
 	</svws-ui-content-card>
 </template>
 
@@ -22,7 +21,6 @@
 		stundenplanManager: () => StundenplanManager;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
-		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	}>();
 

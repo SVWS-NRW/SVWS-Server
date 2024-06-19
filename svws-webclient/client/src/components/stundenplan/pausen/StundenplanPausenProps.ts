@@ -4,7 +4,6 @@ import type { ApiStatus } from "~/components/ApiStatus";
 export interface StundenplanPausenProps {
 	stundenplanManager: () => StundenplanManager;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
-	addPausenzeit: (pausenzeit: Partial<StundenplanPausenzeit>) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	listPausenzeiten: () => List<StundenplanPausenzeit>;
