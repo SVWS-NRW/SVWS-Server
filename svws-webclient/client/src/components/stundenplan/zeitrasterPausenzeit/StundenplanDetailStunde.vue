@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card :title="`${item}. Stunde`">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="start = $event " />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="ende = $event" />
-			<svws-ui-button v-if="start !== null || ende !== null" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="value => start = value " />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => ende = value" />
+			<svws-ui-button v-if="!disabled" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
 			<div class="col-span-full">
 				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" />
 			</div>
@@ -11,7 +11,7 @@
 				<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" class="mb-2 w-52" @click="add(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>
 			</div>
 			<div class="col-span-full">
-				<svws-ui-button type="danger" @click="removeZeitraster(zeitraster)" class="w-52"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
+				<svws-ui-button type="danger" @click="removeZeitraster(stundenplanManager().getListZeitrasterZuStunde(props.item))" class="w-52"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -31,16 +31,16 @@
 		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
-	const zeitraster = computed(() => props.stundenplanManager().getListZeitrasterZuStunde(props.item))
-
-	const first = computed(()=>{
-		if (zeitraster.value.size() < 1)
+	const first = computed(() => {
+		if (props.stundenplanManager().getListZeitrasterZuStunde(props.item).isEmpty())
 			return new StundenplanZeitraster();
-		return zeitraster.value.get(0);
-
+		return props.stundenplanManager().getListZeitrasterZuStunde(props.item).get(0);
 	})
-	const start = ref<string|null>(null);
-	const ende = ref<string|null>(null);
+
+	const start = ref<string>(DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0));
+	const ende = ref<string>(DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0));
+
+	const disabled = computed<boolean>(() => (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0) === start.value) && (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0) === ende.value));
 
 	async function patchStunde(stunde: number | null) {
 		if (stunde === null)
@@ -54,7 +54,7 @@
 	}
 
 	async function patchZeiten() {
-		if (start.value === null || ende.value === null)
+		if ((start.value === null) || (ende.value === null))
 			return;
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const zeitraster of props.stundenplanManager().getListZeitrasterZuStunde(props.item)) {
@@ -64,8 +64,6 @@
 			zeitraster.stundenende = stundenende;
 			list.add(zeitraster);
 		}
-		start.value = null;
-		ende.value = null;
 		await props.patchZeitraster(list);
 	}
 

@@ -25,12 +25,12 @@
 
 <script setup lang="ts">
 	import type { StundenplanManager } from "@core";
-	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster } from "@core";
+	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
 		stundenplanManager: () => StundenplanManager;
-		patchZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
+		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
@@ -45,8 +45,7 @@
 		const zeitraster = new StundenplanZeitraster();
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenbeginn = stundenbeginn;
-		const list = new ArrayList<StundenplanZeitraster>();
-		list.add(zeitraster);
+		const list = ListUtils.create1(zeitraster);
 		await props.patchZeitraster(list);
 	}
 
@@ -57,8 +56,7 @@
 		const zeitraster = new StundenplanZeitraster();
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenende = stundenende;
-		const list = new ArrayList<StundenplanZeitraster>();
-		list.add(zeitraster);
+		const list = ListUtils.create1(zeitraster);
 		await props.patchZeitraster(list);
 	}
 
