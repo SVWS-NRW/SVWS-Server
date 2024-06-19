@@ -207,15 +207,22 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
+		let listKlassen: List<number> = new ArrayList();
 		for (const p of pausenzeiten) {
 			if (p.wochentag && p.beginn && p.ende) {
 				delete p.id;
+				if (p.klassen)
+					listKlassen = p.klassen;
+				delete p.klassen;
 				list.add(p);
 			}
 		}
 		api.status.start();
 		const _pausenzeiten = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
 		this.stundenplanManager.pausenzeitAddAll(_pausenzeiten);
+		if (!listKlassen.isEmpty())
+			for (const p of _pausenzeiten)
+				await this.patchPausenzeit({ klassen: listKlassen }, p.id);
 		this.commit();
 		api.status.stop();
 	}

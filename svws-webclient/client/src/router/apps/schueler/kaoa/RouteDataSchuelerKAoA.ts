@@ -58,11 +58,10 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			try {
 				const data: List<SchuelerKAoADaten> = await api.server.getKAOAdaten(api.schema, auswahl.id);
 				// TODO
-				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform,
-					data, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList());
-				this.setPatchedState({ auswahl, data, schuelerKAoAManager })
+				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform, data, new ArrayList());
+				this.setPatchedState({ auswahl, data, schuelerKAoAManager });
 			} catch(error) {
-				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?")
+				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?");
 			}
 		}
 	}

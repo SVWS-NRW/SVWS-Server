@@ -16,7 +16,11 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalenderwochen";
-		// this.isHidden = () => routeStundenplan.data.daten.wochenTypModell === 0 ? false : routeStundenplan.getRoute();
+		this.isHidden = () => {
+			if ((routeStundenplan.data.auswahl === undefined) || (routeStundenplan.data.daten.wochenTypModell === 0))
+				return routeStundenplan.getRoute();
+			return false;
+		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

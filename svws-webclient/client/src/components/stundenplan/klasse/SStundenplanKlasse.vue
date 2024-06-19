@@ -286,12 +286,12 @@
 	}
 
 	const colsKlassenunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Unterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "bezeichnung", label: "Klassenunterrichte", span: 1 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
 	const colsKursunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Unterricht", tooltip: "Kursunterricht", span: 1 },
+		{ key: "bezeichnung", label: "Kursunterrichte", span: 1 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 5, align: "center" }
 	];
 
