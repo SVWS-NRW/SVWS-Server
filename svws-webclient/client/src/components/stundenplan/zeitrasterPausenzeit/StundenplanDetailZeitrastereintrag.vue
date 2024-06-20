@@ -8,14 +8,17 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-table :items="[]" :columns="[{ key: 'idFach', label: 'Unterricht', span: 0.5 }, { key: 'bezeichnung', label: ' ' }]" :no-data="false">
+		<svws-ui-table :items="[]" :columns :no-data="false">
 			<template #body>
-				<div class="svws-ui-tr" role="row" v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :key="rowData.id" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
+				<div v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :key="rowData.id" class="svws-ui-tr" role="row" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
 					<div class="svws-ui-td" role="cell">
 						<span class="svws-ui-badge">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}</span>
 					</div>
 					<div class="svws-ui-td" role="cell">
-						<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</span>
+						<span v-for="klasse in rowData.klassen" :key="klasse" class="line-clamp-1 break-all leading-tight -my-0.5">{{ stundenplanManager().klasseGetByIdOrException(klasse).kuerzel }}</span>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<span v-for="raum in rowData.raeume" :key="raum" class="line-clamp-1 break-all leading-tight -my-0.5">{{ stundenplanManager().raumGetByIdOrException(raum).kuerzel }}</span>
 					</div>
 				</div>
 			</template>
@@ -25,7 +28,7 @@
 
 <script setup lang="ts">
 	import type { StundenplanManager } from "@core";
-	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
+	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
@@ -33,6 +36,8 @@
 		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	const columns = [{ key: 'idFach', label: 'Unterricht' }, { key: 'klassen', label: 'Klassen' }, { key: 'raeume', label: 'Räume'}];
 
 	function getBgColor(fach: string): string {
 		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
