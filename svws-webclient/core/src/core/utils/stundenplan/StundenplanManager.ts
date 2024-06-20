@@ -1882,7 +1882,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public kalenderwochenzuordnungAdd(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungAddAll(ListUtils.create1(kwz));
+		this.kalenderwochenzuordnungAddAllOhneUpdate(ListUtils.create1(kwz));
+		this.update_all();
 	}
 
 	/**
@@ -1898,15 +1899,18 @@ export class StundenplanManager extends JavaObject {
 	private kalenderwochenzuordnungAddAllOhneUpdate(list : List<StundenplanKalenderwochenzuordnung>) : void {
 		const setOfIDs : JavaSet<string> = new HashSet<string>();
 		for (const kwz of list) {
-			this.kalenderwochenzuordnungCheck(kwz, true);
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", this._kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+			this.kalenderwochenzuordnungCheckAttributes(kwz, true);
+			DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+			if (this._kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw)) {
+				const kwzMapped : StundenplanKalenderwochenzuordnung = this._kwz_by_jahr_and_kw.getOrException(kwz.jahr, kwz.kw);
+				DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", kwzMapped.id >= 0);
+			}
 		}
 		for (const kwz of list)
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
+			this._kwz_by_jahr_and_kw.put(kwz.jahr, kwz.kw, kwz);
 	}
 
-	private kalenderwochenzuordnungCheck(kwz : StundenplanKalenderwochenzuordnung, checkID : boolean) : void {
+	private kalenderwochenzuordnungCheckAttributes(kwz : StundenplanKalenderwochenzuordnung, checkID : boolean) : void {
 		if (checkID)
 			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
@@ -2020,7 +2024,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public kalenderwochenzuordnungGetNextOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
-		this.kalenderwochenzuordnungCheck(kwz, false);
+		this.kalenderwochenzuordnungCheckAttributes(kwz, false);
 		const max : number = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
 		return (kwz.kw < max) ? this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw + 1) : this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
 	}
@@ -2036,7 +2040,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public kalenderwochenzuordnungGetPrevOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
-		this.kalenderwochenzuordnungCheck(kwz, false);
+		this.kalenderwochenzuordnungCheckAttributes(kwz, false);
 		const max : number = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1) : this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
 	}
@@ -2118,7 +2122,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public kalenderwochenzuordnungPatchAttributes(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungCheck(kwz, true);
+		this.kalenderwochenzuordnungCheckAttributes(kwz, true);
 		DeveloperNotificationException.ifMapRemoveFailes(this._kwz_by_id, kwz.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._kwz_by_id, kwz.id, kwz);
 		this.update_all();

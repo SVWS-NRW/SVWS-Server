@@ -2051,7 +2051,8 @@ public class StundenplanManager {
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public void kalenderwochenzuordnungAdd(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungAddAll(ListUtils.create1(kwz));
+		kalenderwochenzuordnungAddAllOhneUpdate(ListUtils.create1(kwz));
+		update_all();
 	}
 
 	/**
@@ -2068,19 +2069,25 @@ public class StundenplanManager {
 		// check all
 		final @NotNull Set<@NotNull String> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : list) {
-			kalenderwochenzuordnungCheck(kwz, true);
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!",
-					_kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
-			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!",
-					!setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+			// Sind die Attribute okay?
+			kalenderwochenzuordnungCheckAttributes(kwz, true);
+
+			// Hat die Liste Duplikate?
+			DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+
+			// Gibt es bereits dieses Objekt (und ist es kein Dummy-Objekt)?
+			if (_kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw)) {
+				final @NotNull StundenplanKalenderwochenzuordnung kwzMapped = _kwz_by_jahr_and_kw.getOrException(kwz.jahr, kwz.kw);
+				DeveloperNotificationException.ifTrue("JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", kwzMapped.id >= 0);
+			}
 		}
 
 		// add all
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : list)
-			DeveloperNotificationException.ifMap2DPutOverwrites(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
+			_kwz_by_jahr_and_kw.put(kwz.jahr, kwz.kw, kwz);
 	}
 
-	private void kalenderwochenzuordnungCheck(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
+	private void kalenderwochenzuordnungCheckAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
 		if (checkID)
 			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)",
@@ -2206,7 +2213,7 @@ public class StundenplanManager {
 	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetNextOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz, false);
+		kalenderwochenzuordnungCheckAttributes(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
 		return (kwz.kw < max) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw + 1)
 				: _kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
@@ -2223,7 +2230,7 @@ public class StundenplanManager {
 	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetPrevOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz, false);
+		kalenderwochenzuordnungCheckAttributes(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1)
 				: _kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
@@ -2318,7 +2325,7 @@ public class StundenplanManager {
 	 */
 	public void kalenderwochenzuordnungPatchAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
 		// check
-		kalenderwochenzuordnungCheck(kwz, true);
+		kalenderwochenzuordnungCheckAttributes(kwz, true);
 
 		// replace
 		DeveloperNotificationException.ifMapRemoveFailes(_kwz_by_id, kwz.id);
