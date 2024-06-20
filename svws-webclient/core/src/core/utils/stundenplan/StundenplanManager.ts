@@ -3236,6 +3236,11 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private pausenaufsichtRemoveAllOhneUpdate(setPausenaufsichtId : JavaSet<number>) : void {
+		for (const idPausenaufsicht of setPausenaufsichtId)
+			DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsicht_by_id, idPausenaufsicht);
+	}
+
 	private pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsicht_by_id, idPausenaufsicht);
 	}
@@ -3247,7 +3252,30 @@ export class StundenplanManager extends JavaObject {
 	 * @param idPausenaufsicht  Die ID des {@link StundenplanPausenaufsicht}-Objekts.
 	 */
 	public pausenaufsichtRemoveById(idPausenaufsicht : number) : void {
-		this.pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht);
+		this.pausenaufsichtRemoveAllOhneUpdate(SetUtils.create1(idPausenaufsicht));
+		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanPausenaufsicht}-Objekte.
+	 *
+	 * @param listPausenaufsichtIDs  Die Liste der IDs der zu entfernenden {@link StundenplanPausenaufsicht}-Objekte.
+	 */
+	public pausenaufsichtRemoveAllById(listPausenaufsichtIDs : JavaSet<number>) : void {
+		this.pausenaufsichtRemoveAllOhneUpdate(listPausenaufsichtIDs);
+		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanPausenaufsicht}-Objekte.
+	 *
+	 * @param listPausenaufsicht  Die Liste der zu entfernenden {@link StundenplanPausenaufsicht}-Objekte.
+	 */
+	public pausenaufsichtRemoveAll(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
+		const idPausenaufsicht : JavaSet<number> = new HashSet<number>();
+		for (const pausenaufsicht of listPausenaufsicht)
+			idPausenaufsicht.add(pausenaufsicht.id);
+		this.pausenaufsichtRemoveAllOhneUpdate(idPausenaufsicht);
 		this.update_all();
 	}
 

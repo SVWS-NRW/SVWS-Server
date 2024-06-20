@@ -3588,6 +3588,11 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void pausenaufsichtRemoveAllOhneUpdate(@NotNull final Set<@NotNull Long> setPausenaufsichtId) {
+		for (final long idPausenaufsicht : setPausenaufsichtId)
+			DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsicht_by_id, idPausenaufsicht);
+	}
+
 	private void pausenaufsichtRemoveOhneUpdateById(final long idPausenaufsicht) {
 		DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsicht_by_id, idPausenaufsicht);
 	}
@@ -3599,15 +3604,40 @@ public class StundenplanManager {
 	 * @param idPausenaufsicht  Die ID des {@link StundenplanPausenaufsicht}-Objekts.
 	 */
 	public void pausenaufsichtRemoveById(final long idPausenaufsicht) {
-		pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht);
-
+		pausenaufsichtRemoveAllOhneUpdate(SetUtils.create1(idPausenaufsicht));
 		update_all();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanPausenaufsicht}-Objekte.
+	 *
+	 * @param listPausenaufsichtIDs  Die Liste der IDs der zu entfernenden {@link StundenplanPausenaufsicht}-Objekte.
+	 */
+	public void pausenaufsichtRemoveAllById(final @NotNull Set<@NotNull Long> listPausenaufsichtIDs) {
+		pausenaufsichtRemoveAllOhneUpdate(listPausenaufsichtIDs);
+		update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanPausenaufsicht}-Objekte.
+	 *
+	 * @param listPausenaufsicht  Die Liste der zu entfernenden {@link StundenplanPausenaufsicht}-Objekte.
+	 */
+	public void pausenaufsichtRemoveAll(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
+		// Umwandeln in IDs.
+		final @NotNull Set<@NotNull Long> idPausenaufsicht = new HashSet<>();
+		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : listPausenaufsicht)
+			idPausenaufsicht.add(pausenaufsicht.id);
+
+		// Entfernen und Update
+		pausenaufsichtRemoveAllOhneUpdate(idPausenaufsicht);
+		update_all();
+	}
 
 	// ################################################################################
 	// #################### StundenplanPausenaufsichtBereich ##########################
 	// ################################################################################
+
 
 	/**
 	 * Fügt ein {@link StundenplanPausenaufsichtBereich}-Objekt hinzu.
@@ -3766,7 +3796,6 @@ public class StundenplanManager {
 		return list;
 	}
 
-
 	private void pausenaufsichtbereichRemoveAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsichtBereich> pausenaufsichtbereiche) {
 		for (final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich : pausenaufsichtbereiche) {
 			DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsichtbereich_by_id, pausenaufsichtbereich.id);
@@ -3791,7 +3820,6 @@ public class StundenplanManager {
 		pausenaufsichtbereichRemoveAllOhneUpdate(pausenaufsichtbereiche);
 		update_all();
 	}
-
 
 	// #####################################################################
 	// #################### StundenplanPausenzeit ##########################
