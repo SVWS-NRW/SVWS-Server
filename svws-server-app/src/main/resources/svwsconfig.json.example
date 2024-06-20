@@ -17,7 +17,7 @@
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
   "ServerMode" : "stable",
-  "privilegedDatabaseUser" : "root",
+  "PrivilegedDatabaseUser" : "root",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
     "location" : "localhost",
