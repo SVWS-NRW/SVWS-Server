@@ -125,7 +125,6 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 				const ee = e.clone() as Partial<StundenplanKalenderwochenzuordnung>;
 				delete ee.id;
 				listHinzuzufuegen.add(ee);
-				// manager hinzufügen
 			} else {
 				listPatch.add(e);
 				// sollte als all-Methode verfügbar sein
@@ -134,8 +133,10 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		}
 		if (!listPatch.isEmpty())
 			await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
-		if (!listHinzuzufuegen.isEmpty())
-			await api.server.addStundenplanKalenderwochenzuordnungen(listHinzuzufuegen, api.schema, this.auswahl.id);
+		if (!listHinzuzufuegen.isEmpty()) {
+			const resHinzufuegen = await api.server.addStundenplanKalenderwochenzuordnungen(listHinzuzufuegen, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungAddAll(resHinzufuegen);
+		}
 		this.commit();
 		api.status.stop();
 	}
@@ -300,12 +301,10 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		this.stundenplanManager.pausenaufsichtbereichAddAll(res);
 		const listRemove = new ArrayList<number>();
 		for (const aufsicht of this.stundenplanManager.pausenaufsichtGetMengeAsList())
-			if (aufsicht.bereiche.isEmpty()) {
+			if (aufsicht.bereiche.isEmpty())
 				listRemove.add(aufsicht.id);
-				//removeAll verwenden!
-				this.stundenplanManager.pausenaufsichtRemoveById(aufsicht.id);
-			}
 		await api.server.deleteStundenplanPausenaufsichten(listRemove, api.schema, id);
+		this.stundenplanManager.pausenaufsichtRemoveAllById(listRemove);
 		this.setPatchedState({ stundenplanManager: this.stundenplanManager });
 		api.status.stop();
 	}
