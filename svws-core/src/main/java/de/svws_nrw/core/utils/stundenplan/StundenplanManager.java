@@ -3536,11 +3536,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichId(final long idPausenzeit,
 			final long idAufsichtsbereich) {
-		final @NotNull List<@NotNull StundenplanPausenaufsicht> list = new ArrayList<>();
-		for (final @NotNull StundenplanPausenaufsicht a : Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich,
-				idPausenzeit, idAufsichtsbereich))
-			list.add(a);
-		return list;
+		return Map2DUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich, idPausenzeit, idAufsichtsbereich);
 	}
 
 

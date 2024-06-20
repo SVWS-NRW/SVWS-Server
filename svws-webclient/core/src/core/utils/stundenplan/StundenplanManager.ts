@@ -3194,10 +3194,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Pausenzeit und einem bestimmten Aufsichtsbereich.
 	 */
 	public pausenaufsichtGetMengeByPausenzeitIdAndAufsichtsbereichId(idPausenzeit : number, idAufsichtsbereich : number) : List<StundenplanPausenaufsicht> {
-		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
-		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich, idPausenzeit, idAufsichtsbereich))
-			list.add(a);
-		return list;
+		return Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich, idPausenzeit, idAufsichtsbereich);
 	}
 
 	/**
