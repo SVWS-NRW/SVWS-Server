@@ -44,7 +44,7 @@ public final class DataLehrerPersonalabschnittsdatenAnrechungen extends DataMana
 				daten.id = dto.ID;
 				daten.idAbschnittsdaten = dto.Abschnitt_ID;
 				daten.idGrund = LehrerAnrechnungsgrund.getByKuerzel(dto.AnrechnungsgrundKrz).daten.id;
-				daten.anzahl = dto.AnrechnungStd == null ? 0.0 : dto.AnrechnungStd;
+				daten.anzahl = (dto.AnrechnungStd == null) ? 0.0 : dto.AnrechnungStd;
 				return daten;
 			};
 

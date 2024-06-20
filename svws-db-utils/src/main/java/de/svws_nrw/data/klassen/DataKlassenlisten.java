@@ -94,7 +94,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
 				conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class)
 						.setParameter(1, klassenIDs).getResultList();
 		final List<Long> schuelerIDs = listSchuelerLernabschnitte.stream().map(sla -> sla.Schueler_ID).toList();
-		final Map<Long, DTOSchueler> mapSchueler = (schuelerIDs == null) || schuelerIDs.isEmpty() ? new HashMap<>()
+		final Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || schuelerIDs.isEmpty()) ? new HashMap<>()
 				: conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		final Map<Long, List<DTOSchueler>> mapKlassenSchueler = new HashMap<>();
 		for (final DTOSchuelerLernabschnittsdaten sla : listSchuelerLernabschnitte) {
@@ -198,8 +198,8 @@ public final class DataKlassenlisten extends DataManager<Long> {
 				return -1;
 			if (!Objects.equals(jgA.Sortierung, jgB.Sortierung))
 				return jgA.Sortierung - jgB.Sortierung;
-			final String parA = ((a.ASDKlasse == null) || (a.ASDKlasse.length() < 3)) ? "" : a.ASDKlasse.substring(2, a.ASDKlasse.length());
-			final String parB = ((b.ASDKlasse == null) || (b.ASDKlasse.length() < 3)) ? "" : b.ASDKlasse.substring(2, b.ASDKlasse.length());
+			final String parA = ((a.ASDKlasse == null) || (a.ASDKlasse.length() < 3)) ? "" : a.ASDKlasse.substring(2);
+			final String parB = ((b.ASDKlasse == null) || (b.ASDKlasse.length() < 3)) ? "" : b.ASDKlasse.substring(2);
 			if (parA.length() != parB.length())
 				return parA.length() - parB.length();
 			return parA.compareToIgnoreCase(parB);

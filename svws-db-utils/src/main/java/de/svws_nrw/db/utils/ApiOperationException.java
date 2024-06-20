@@ -79,7 +79,7 @@ public class ApiOperationException extends Exception {
 	 * @param mimeType   der Mime-Type der Body-Information
 	 */
 	public ApiOperationException(@NotNull final Status status, final Throwable cause, final Object body, final String mimeType) {
-		super(body instanceof final String message ? message : null, cause);
+		super((body instanceof final String message) ? message : null, cause);
 		this.status = status;
 		this.body = body;
 		this.mimeType = mimeType;

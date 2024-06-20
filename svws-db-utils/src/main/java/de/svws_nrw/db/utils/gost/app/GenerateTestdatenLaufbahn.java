@@ -52,18 +52,18 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GenerateTestdatenLaufbahn {
 
-	private static HashMap<Integer, String> mapAbiJahrgangToJahrgangID = new HashMap<>();
+	private static final HashMap<Integer, String> mapAbiJahrgangToJahrgangID = new HashMap<>();
 
-	private static HashMap<String, @NotNull GostJahrgangsdaten> mapJahrgangIDToGostJahrgangsdaten = new HashMap<>();
+	private static final HashMap<String, @NotNull GostJahrgangsdaten> mapJahrgangIDToGostJahrgangsdaten = new HashMap<>();
 
-	private static HashMap<String, GostFaecherManager> mapJahrgangIDToGostFaecher = new HashMap<>();
+	private static final HashMap<String, GostFaecherManager> mapJahrgangIDToGostFaecher = new HashMap<>();
 
-	private static HashMap<String, @NotNull List<@NotNull GostJahrgangFachkombination>> mapJahrgangIDToGostFaecherkombinationen = new HashMap<>();
+	private static final HashMap<String, @NotNull List<@NotNull GostJahrgangFachkombination>> mapJahrgangIDToGostFaecherkombinationen = new HashMap<>();
 
-	private static HashMap<String, String> mapJahrgangIDToJsonGostFaecher = new HashMap<>();
+	private static final HashMap<String, String> mapJahrgangIDToJsonGostFaecher = new HashMap<>();
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 
 	/**

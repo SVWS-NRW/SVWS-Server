@@ -145,7 +145,7 @@ public final class ABPFaecher {
 				fach.StatistikKrz = r.getString(fieldStatistikKrz);
 				fach.Sortierung = (r.getInt(fieldSortierung) == null) ? Integer.MAX_VALUE : r.getInt(fieldSortierung);
 				fach.IstSprache = "J".equals(r.getString(fieldIstSprache));
-				fach.Unterichtssprache = r.getString(fieldUnterichtssprache) == null ? "D" : r.getString(fieldUnterichtssprache);
+				fach.Unterichtssprache = (r.getString(fieldUnterichtssprache) == null) ? "D" : r.getString(fieldUnterichtssprache);
 				fach.E1 = "J".equals(r.getString(fieldE1));
 				fach.E2 = "J".equals(r.getString(fieldE2));
 				fach.Q1 = "J".equals(r.getString(fieldQ1));
@@ -227,7 +227,7 @@ public final class ABPFaecher {
 							fach.StatistikKrz,
 							fach.Sortierung,
 							toStringJN(fach.IstSprache),
-							fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache,
+							(fach.Unterichtssprache == null) ? "D" : fach.Unterichtssprache,
 							toStringJN(fach.E1),
 							toStringJN(fach.E2),
 							toStringJN(fach.Q1),
@@ -295,7 +295,7 @@ public final class ABPFaecher {
 			lupofach.Sortierung = fach.SortierungAllg;
 			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD))
 					&& (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
-			lupofach.Unterichtssprache = fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache;
+			lupofach.Unterichtssprache = (fach.Unterichtssprache == null) ? "D" : fach.Unterichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;
 			lupofach.E2 = fach.IstMoeglichEF2;
 			lupofach.Q1 = fach.IstMoeglichQ11;
@@ -306,9 +306,9 @@ public final class ABPFaecher {
 			lupofach.LK_Moegl = fach.IstMoeglichAbiLK;
 			lupofach.AlsNeueFSInSII = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 			final DTOFach lf = faecherMap.get(fach.ProjektKursLeitfach1_ID);
-			lupofach.Leitfach = lf == null ? null : lf.StatistikFach.daten.kuerzelASD;
+			lupofach.Leitfach = (lf == null) ? null : lf.StatistikFach.daten.kuerzelASD;
 			final DTOFach lf2 = faecherMap.get(fach.ProjektKursLeitfach2_ID);
-			lupofach.Leitfach2 = lf2 == null ? null : lf2.StatistikFach.daten.kuerzelASD;
+			lupofach.Leitfach2 = (lf2 == null) ? null : lf2.StatistikFach.daten.kuerzelASD;
 			lupofach.E1_WStd = fach.WochenstundenEF1;
 			lupofach.E2_WStd = fach.WochenstundenEF2;
 			lupofach.E1_S_M = fach.MussSchriftlichEF1;

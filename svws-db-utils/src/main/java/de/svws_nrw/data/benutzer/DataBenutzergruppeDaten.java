@@ -403,7 +403,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 		if (map.size() > 0) {
 			// Bestimme die ID der neuen Benutzergruppe
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzergruppen");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 			// TODO Konstruktor-Parameter überprüfen
 			bg = new DTOBenutzergruppe(id, "temp", false);

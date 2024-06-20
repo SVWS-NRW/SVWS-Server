@@ -230,7 +230,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		// Schreibe die neuen Bereiche
 		long nextID = conn.transactionGetNextID(DTOStundenplanPausenaufsichtenBereiche.class);
 		for (final StundenplanPausenaufsichtBereich bereich : mapBereiche.values())
-			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, bereich.idPausenaufsicht == -1 ? id : bereich.idPausenaufsicht,
+			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, (bereich.idPausenaufsicht == -1) ? id : bereich.idPausenaufsicht,
 					bereich.idAufsichtsbereich, bereich.wochentyp));
 		conn.transactionFlush();
 	}

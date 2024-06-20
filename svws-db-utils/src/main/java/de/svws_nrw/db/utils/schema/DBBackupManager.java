@@ -240,7 +240,7 @@ public class DBBackupManager {
 				logger.logLn("-> Aktualisiere die Ziel-DB ggf. auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision"
 						+ ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
-				result = tgtManager.updater.update(tgtUser, maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+				result = tgtManager.updater.update(tgtUser, (maxUpdateRevision < 0) ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn("[Fehler]");
@@ -405,7 +405,7 @@ public class DBBackupManager {
 						step = 1;
 					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
 						final int first = (last - step) + 1;
-						ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
+						ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
 					}
 				}
 			}

@@ -76,7 +76,7 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
 		stundenplan.daten.bezeichnungStundenplan = dtoStundenplan.Beschreibung;
 		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
-		stundenplan.daten.gueltigBis = dtoStundenplan.Ende == null ? "" : dtoStundenplan.Ende;
+		stundenplan.daten.gueltigBis = (dtoStundenplan.Ende == null) ? "" : dtoStundenplan.Ende;
 		stundenplan.daten.wochenTypModell = dtoStundenplan.WochentypModell;
 		final StundenplanLehrer lehrer = DataStundenplanLehrer.getById(conn, idStundenplan, id);
 		stundenplan.daten.zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);

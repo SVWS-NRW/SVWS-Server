@@ -19,7 +19,7 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 public class ImportLupoMDB {
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 
 	/**

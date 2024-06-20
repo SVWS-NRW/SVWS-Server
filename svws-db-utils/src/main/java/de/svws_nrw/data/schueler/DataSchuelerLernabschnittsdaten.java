@@ -162,7 +162,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		// Hole alle Lernabschnitte der übergebenen Schüler-IDs und filtere sie auf den Schuljahresabschnitt und die Wechsel-Nr.
 		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, schueler_ids).stream()
-				.filter(a -> (mitWechseln ? a.WechselNr >= 0 : a.WechselNr == 0))
+				.filter(a -> (mitWechseln ? (a.WechselNr >= 0) : (a.WechselNr == 0)))
 				.sorted(Comparator
 						.comparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
 						.thenComparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schuljahresabschnitts_ID)
@@ -241,8 +241,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		daten.schwerpunktID = aktuell.Schwerpunkt_ID;
 		daten.organisationsform = aktuell.OrgFormKrz;
 		daten.Klassenart = aktuell.Klassenart;
-		daten.fehlstundenGesamt = aktuell.SumFehlStd == null ? 0 : aktuell.SumFehlStd;
-		daten.fehlstundenUnentschuldigt = aktuell.SumFehlStdU == null ? 0 : aktuell.SumFehlStdU;
+		daten.fehlstundenGesamt = (aktuell.SumFehlStd == null) ? 0 : aktuell.SumFehlStd;
+		daten.fehlstundenUnentschuldigt = (aktuell.SumFehlStdU == null) ? 0 : aktuell.SumFehlStdU;
 		daten.fehlstundenGrenzwert = aktuell.FehlstundenGrenzwert;
 		daten.hatSchwerbehinderungsNachweis = (aktuell.Schwerbehinderung != null) && aktuell.Schwerbehinderung;
 		daten.hatAOSF = (aktuell.AOSF != null) && aktuell.AOSF;
@@ -255,8 +255,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		daten.istFachpraktischerAnteilAusreichend = aktuell.FachPraktAnteilAusr;
 		daten.versetzungsvermerk = aktuell.VersetzungKrz;
 		daten.noteDurchschnitt = aktuell.DSNote;
-		daten.noteLernbereichGSbzwAL = aktuell.Gesamtnote_GS == null ? null : aktuell.Gesamtnote_GS.getNoteSekI();
-		daten.noteLernbereichNW = aktuell.Gesamtnote_NW == null ? null : aktuell.Gesamtnote_NW.getNoteSekI();
+		daten.noteLernbereichGSbzwAL = (aktuell.Gesamtnote_GS == null) ? null : aktuell.Gesamtnote_GS.getNoteSekI();
+		daten.noteLernbereichNW = (aktuell.Gesamtnote_NW == null) ? null : aktuell.Gesamtnote_NW.getNoteSekI();
 		daten.abschlussart = aktuell.AbschlussArt;
 		daten.istAbschlussPrognose = aktuell.AbschlIstPrognose;
 		daten.abschluss = aktuell.Abschluss;

@@ -52,7 +52,7 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	 */
 	private final Comparator<Schuljahresabschnitt> dataComparator = (a, b) -> {
 		final int tmp = Integer.compare(a.schuljahr, b.schuljahr);
-		return tmp == 0 ? Integer.compare(a.abschnitt, b.abschnitt) : tmp;
+		return (tmp == 0) ? Integer.compare(a.abschnitt, b.abschnitt) : tmp;
 	};
 
 

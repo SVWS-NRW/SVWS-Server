@@ -99,7 +99,7 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 		if (map.size() > 0) {
 			// Bestimme die ID der neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Adressart");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 			// Schülerbetrieb anlegen
 			k_addressart = new DTOKatalogAdressart(id, "");

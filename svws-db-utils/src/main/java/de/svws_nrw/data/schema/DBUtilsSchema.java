@@ -89,7 +89,7 @@ public final class DBUtilsSchema {
 	 */
 	public static LogConsumerList updateSchema(final Benutzer user, final long revision) throws ApiOperationException {
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-		final long max_revision = SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE
+		final long max_revision = (SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE)
 				? SchemaRevisionen.maxRevision.revision
 				: SchemaRevisionen.maxDeveloperRevision.revision;
 		long rev = revision;
@@ -239,8 +239,8 @@ public final class DBUtilsSchema {
 		}
 		if (schema == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein SVWS-Schema mit dem Namen %s.".formatted(schemaname));
-		final SchemaRevisionen rev =
-				SVWSKonfiguration.get().getServerMode() == ServerMode.DEV ? SchemaRevisionen.maxDeveloperRevision : SchemaRevisionen.maxRevision;
+		final SchemaRevisionen rev = (SVWSKonfiguration.get().getServerMode() == ServerMode.DEV)
+				? SchemaRevisionen.maxDeveloperRevision : SchemaRevisionen.maxRevision;
 		if (schema.revision < rev.revision)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das SVWS-Schema %s ist nicht aktuell (%d).".formatted(schemaname, schema.revision));
 		if (schema.revision > rev.revision)

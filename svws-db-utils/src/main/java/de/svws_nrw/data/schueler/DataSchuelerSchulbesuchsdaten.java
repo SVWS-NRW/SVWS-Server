@@ -67,13 +67,13 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 		daten.vorigeArtLetzteVersetzung = schueler.LSVersetzung;
 		daten.vorigeBemerkung = schueler.LSBemerkung;
 		final DTOEntlassarten tmpVorigeEntlassgrund = entlassgruende.get(schueler.LSEntlassgrund);
-		daten.vorigeEntlassgrundID = tmpVorigeEntlassgrund == null ? null : tmpVorigeEntlassgrund.ID;
+		daten.vorigeEntlassgrundID = (tmpVorigeEntlassgrund == null) ? null : tmpVorigeEntlassgrund.ID;
 		daten.vorigeAbschlussartID = schueler.LSEntlassArt;
 		// Informationen zu der Entlassung von der eigenen Schule
 		daten.entlassungDatum = schueler.Entlassdatum;
 		daten.entlassungJahrgang = schueler.Entlassjahrgang;
 		final DTOEntlassarten tmpEntlassungGrund = entlassgruende.get(schueler.Entlassgrund);
-		daten.entlassungGrundID = tmpEntlassungGrund == null ? null : tmpEntlassungGrund.ID;
+		daten.entlassungGrundID = (tmpEntlassungGrund == null) ? null : tmpEntlassungGrund.ID;
 		daten.entlassungAbschlussartID = schueler.Entlassart;
 		// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
 		daten.aufnehmdendSchulnummer = schueler.SchulwechselNr;
@@ -104,7 +104,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 			bisherigeSchule.schulnummer = dtoBisherigeSchule.AbgangsSchulNr;
 			bisherigeSchule.schulgliederung = dtoBisherigeSchule.LSSGL;
 			final DTOEntlassarten tmpBisherigeEntlassungGrund = entlassgruende.get(dtoBisherigeSchule.BemerkungIntern);
-			bisherigeSchule.entlassgrundID = tmpBisherigeEntlassungGrund == null ? null : tmpBisherigeEntlassungGrund.ID;
+			bisherigeSchule.entlassgrundID = (tmpBisherigeEntlassungGrund == null) ? null : tmpBisherigeEntlassungGrund.ID;
 			bisherigeSchule.abschlussartID = dtoBisherigeSchule.LSEntlassArt;
 			bisherigeSchule.organisationsFormID = dtoBisherigeSchule.OrganisationsformKrz;
 			bisherigeSchule.datumVon = dtoBisherigeSchule.LSBeginnDatum;

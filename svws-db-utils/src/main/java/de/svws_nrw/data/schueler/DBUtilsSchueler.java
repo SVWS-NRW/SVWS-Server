@@ -81,7 +81,7 @@ public final class DBUtilsSchueler {
 		pruefung.kannZweitePflichtfremdspracheErsetzen = dtoSprachpruefung.KannZweitePflichtfremdspracheErsetzen;
 		pruefung.kannWahlpflichtfremdspracheErsetzen = dtoSprachpruefung.KannWahlpflichtfremdspracheErsetzen;
 		pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben = dtoSprachpruefung.KannBelegungAlsFortgefuehrteSpracheErlauben;
-		pruefung.note = dtoSprachpruefung.NotePruefung == null ? null : dtoSprachpruefung.NotePruefung.getNoteSekI();
+		pruefung.note = (dtoSprachpruefung.NotePruefung == null) ? null : dtoSprachpruefung.NotePruefung.getNoteSekI();
 		if (dtoSprachpruefung.Referenzniveau != null) {
 			pruefung.referenzniveau = dtoSprachpruefung.Referenzniveau.daten.kuerzel;
 		} else {

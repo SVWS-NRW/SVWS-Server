@@ -23,7 +23,7 @@ import de.svws_nrw.db.utils.schema.DBSchemaManager;
 public class CreateSchema {
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 
 	/**

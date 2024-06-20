@@ -371,8 +371,8 @@ public final class DataUntis {
 					logger.logLn("Raum '%s' wird nicht übernommen, da er bereits vorhanden ist.".formatted(raum.kuerzel));
 					continue;
 				}
-				final DTOKatalogRaum dto = new DTOKatalogRaum(id++, raum.kuerzel, raum.bezeichnung == null ? raum.kuerzel : raum.bezeichnung,
-						raum.groesse == null ? 40 : raum.groesse);
+				final DTOKatalogRaum dto = new DTOKatalogRaum(id++, raum.kuerzel, (raum.bezeichnung == null) ? raum.kuerzel : raum.bezeichnung,
+						(raum.groesse == null) ? 40 : raum.groesse);
 				conn.transactionPersist(dto);
 				logger.logLn("Raum '%s' hinzugefügt.".formatted(raum.kuerzel));
 			}
@@ -530,7 +530,7 @@ public final class DataUntis {
 				dto.name = ((s.nachname == null) || ("".equals(s.nachname.trim())) ? "???" : s.nachname.trim().replace(" ", ""))
 						+ "_" + (((s.vorname == null) || "".equals(s.vorname.trim())) ? "???" : s.vorname.trim().replace(" ", "").substring(0, 3))
 						+ "_" + ((dto.geburtsdatum == null) ? "????????" : dto.geburtsdatum);
-				dto.langname = (s.nachname == null) || ("".equals(s.nachname.trim())) ? "???" : s.nachname.trim();
+				dto.langname = ((s.nachname == null) || ("".equals(s.nachname.trim()))) ? "???" : s.nachname.trim();
 				dto.vorname = ((s.vorname == null) || "".equals(s.vorname.trim())) ? "???" : s.vorname.trim();
 				dto.klasse = datenManager.getHalbjahr().jahrgang;
 				dto.geschlecht = switch (Geschlecht.fromValue(s.geschlecht)) {

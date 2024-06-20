@@ -122,7 +122,7 @@ public final class DBBenutzerUtils {
 				return false;
 			final String pwHash = dbBenutzer.PasswordHash;
 			user.setId(dbBenutzer.ID);
-			user.setIdLehrer(dbBenutzer.Typ == BenutzerTyp.LEHRER ? dbBenutzer.TypID : null);
+			user.setIdLehrer((dbBenutzer.Typ == BenutzerTyp.LEHRER) ? dbBenutzer.TypID : null);
 			if ((password == null) || ("".equals(password))) {
 				return (pwHash == null) || ("".equals(pwHash));
 			}

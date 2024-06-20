@@ -86,9 +86,9 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 			data.lehrerID = dto.Fachlehrer_ID;
 			data.lehrerKuerzel = lehrerKuerzel;
 			data.kursID = dto.Kurs_ID;
-			data.kurs = dtoKurs == null ? "" : dtoKurs.KurzBez;
+			data.kurs = (dtoKurs == null) ? "" : dtoKurs.KurzBez;
 			data.kursart = dto.Kursart;
-			data.kursartAllg = dtoKurs == null ? dto.KursartAllg : dtoKurs.KursartAllg;
+			data.kursartAllg = (dtoKurs == null) ? dto.KursartAllg : dtoKurs.KursartAllg;
 			data.note = dto.NotenKrz.text;
 			data.noteKuerzel = dto.NotenKrz.kuerzel;
 			data.notePunkte = dto.NotenKrz.notenpunkte;

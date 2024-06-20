@@ -44,7 +44,7 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen extends Dat
 				daten.id = dto.ID;
 				daten.idAbschnittsdaten = dto.Abschnitt_ID;
 				daten.idGrund = LehrerMinderleistungArt.getByKuerzel(dto.EntlastungsgrundKrz).daten.id;
-				daten.anzahl = dto.EntlastungStd == null ? 0.0 : dto.EntlastungStd;
+				daten.anzahl = (dto.EntlastungStd == null) ? 0.0 : dto.EntlastungStd;
 				return daten;
 			};
 

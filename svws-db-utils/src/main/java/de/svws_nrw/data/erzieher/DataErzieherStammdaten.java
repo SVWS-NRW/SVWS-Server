@@ -56,7 +56,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail;
-		eintrag.staatsangehoerigkeitID = e.Erz1StaatKrz == null ? null : e.Erz1StaatKrz.daten.iso3;
+		eintrag.staatsangehoerigkeitID = (e.Erz1StaatKrz == null) ? null : e.Erz1StaatKrz.daten.iso3;
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
@@ -80,7 +80,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail2;
-		eintrag.staatsangehoerigkeitID = e.Erz2StaatKrz == null ? null : e.Erz2StaatKrz.daten.iso3;
+		eintrag.staatsangehoerigkeitID = (e.Erz2StaatKrz == null) ? null : e.Erz2StaatKrz.daten.iso3;
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
@@ -208,8 +208,8 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 					case "hausnummerZusatz" ->
 						erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNrZusatz.datenlaenge());
 					case "wohnortID" -> setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true),
-							map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
-					case "ortsteilID" -> setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")),
+							(map.get("ortsteilID") == null) ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
+					case "ortsteilID" -> setWohnort(conn, erzieher, (map.get("wohnortID") == null) ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")),
 							JSONMapper.convertToLong(value, true));
 
 					case "staatsangehoerigkeitID" -> {

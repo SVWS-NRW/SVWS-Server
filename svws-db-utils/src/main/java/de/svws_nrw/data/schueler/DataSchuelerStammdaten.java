@@ -54,9 +54,9 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// Basisdaten
 		daten.id = schueler.ID;
 		daten.foto = "";
-		daten.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
-		daten.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
-		daten.alleVornamen = schueler.AlleVornamen == null ? "" : schueler.AlleVornamen;
+		daten.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
+		daten.vorname = (schueler.Vorname == null) ? "" : schueler.Vorname;
+		daten.alleVornamen = (schueler.AlleVornamen == null) ? "" : schueler.AlleVornamen;
 		daten.geschlecht = schueler.Geschlecht.id;
 		daten.geburtsdatum = schueler.Geburtsdatum;
 		daten.geburtsort = schueler.Geburtsort;
@@ -72,8 +72,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.emailPrivat = schueler.Email;
 		daten.emailSchule = schueler.SchulEmail;
 		// Daten zur Staatsangehörigkeit und zur Religion
-		daten.staatsangehoerigkeitID = schueler.StaatKrz == null ? null : schueler.StaatKrz.daten.iso3;
-		daten.staatsangehoerigkeit2ID = schueler.StaatKrz2 == null ? null : schueler.StaatKrz2.daten.iso3;
+		daten.staatsangehoerigkeitID = (schueler.StaatKrz == null) ? null : schueler.StaatKrz.daten.iso3;
+		daten.staatsangehoerigkeit2ID = (schueler.StaatKrz2 == null) ? null : schueler.StaatKrz2.daten.iso3;
 		daten.religionID = schueler.Religion_ID;
 		daten.druckeKonfessionAufZeugnisse = schueler.KonfDruck;
 		daten.religionabmeldung = schueler.Religionsabmeldung;
@@ -81,11 +81,11 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// Daten zum Migrationshintergrund
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
 		daten.hatMigrationshintergrund = (schueler.Migrationshintergrund != null) && schueler.Migrationshintergrund;
-		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug;
-		daten.geburtsland = schueler.GeburtslandSchueler == null ? null : schueler.GeburtslandSchueler.daten.iso3;
-		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
-		daten.geburtslandVater = schueler.GeburtslandVater == null ? null : schueler.GeburtslandVater.daten.iso3;
-		daten.geburtslandMutter = schueler.GeburtslandMutter == null ? null : schueler.GeburtslandMutter.daten.iso3;
+		daten.zuzugsjahr = (schueler.JahrZuzug == null) ? null : schueler.JahrZuzug;
+		daten.geburtsland = (schueler.GeburtslandSchueler == null) ? null : schueler.GeburtslandSchueler.daten.iso3;
+		daten.verkehrspracheFamilie = (schueler.VerkehrsspracheFamilie == null) ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
+		daten.geburtslandVater = (schueler.GeburtslandVater == null) ? null : schueler.GeburtslandVater.daten.iso3;
+		daten.geburtslandMutter = (schueler.GeburtslandMutter == null) ? null : schueler.GeburtslandMutter.daten.iso3;
 		// Statusdaten
 		daten.status = schueler.Status.id;
 		daten.istDuplikat = schueler.Duplikat;
@@ -217,8 +217,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("hausnummerZusatz", (conn, schueler, value, map) -> schueler.HausNrZusatz =
 					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge())),
 			Map.entry("wohnortID", (conn, schueler, value, map) -> setWohnort(schueler, JSONMapper.convertToLong(value, true),
-					map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
-			Map.entry("ortsteilID", (conn, schueler, value, map) -> setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID
+					(map.get("ortsteilID") == null) ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
+			Map.entry("ortsteilID", (conn, schueler, value, map) -> setWohnort(schueler, (map.get("wohnortID") == null) ? schueler.Ort_ID
 					: ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true))),
 			Map.entry("telefon", (conn, schueler, value, map) -> schueler.Telefon =
 					JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge())),

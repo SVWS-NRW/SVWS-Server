@@ -89,7 +89,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 				daten.email = schule.Email;
 				daten.webAdresse = schule.WebAdresse;
 				daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
-				daten.anzJGS_Jahr = schule.AnzJGS_Jahr == null ? 1 : schule.AnzJGS_Jahr;
+				daten.anzJGS_Jahr = (schule.AnzJGS_Jahr == null) ? 1 : schule.AnzJGS_Jahr;
 				daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
 				daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
 				daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt1);
@@ -99,7 +99,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 					daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt3);
 				if (daten.schuleAbschnitte.anzahlAbschnitte >= 4)
 					daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt4);
-				daten.dauerUnterrichtseinheit = schule.DauerUnterrichtseinheit == null ? 45 : schule.DauerUnterrichtseinheit;
+				daten.dauerUnterrichtseinheit = (schule.DauerUnterrichtseinheit == null) ? 45 : schule.DauerUnterrichtseinheit;
 				return daten;
 			};
 
@@ -342,8 +342,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final int month = date.getMonthValue();
 		final int year = date.getYear();
 		// Lege den ersten Schuljahresabschnitt an
-		final int schuljahr = month > 7 ? year : year - 1;
-		final int abschnitt = (month > 2) && (month < 8) ? 2 : 1;
+		final int schuljahr = (month > 7) ? year : (year - 1);
+		final int abschnitt = ((month > 2) && (month < 8)) ? 2 : 1;
 		final DTOSchuljahresabschnitte schuljahresabschnitt = new DTOSchuljahresabschnitte(1L, schuljahr, abschnitt);
 		conn.transactionPersist(schuljahresabschnitt);
 		conn.transactionFlush();
@@ -454,8 +454,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			dto.BezeichnungZeugnis = bezeichnung;
 			dto.BezeichnungUeberweisungsZeugnis = bezeichnung;
 			final Fachgruppe gruppe = fach.getFachgruppe();
-			final Integer gruppeSchildID = gruppe == null ? null : gruppe.daten.idSchild;
-			dto.Zeugnisdatenquelle_ID = gruppeSchildID == null ? null : gruppeSchildID.longValue();
+			final Integer gruppeSchildID = (gruppe == null) ? null : gruppe.daten.idSchild;
+			dto.Zeugnisdatenquelle_ID = (gruppeSchildID == null) ? null : gruppeSchildID.longValue();
 			dto.StatistikFach = fach;
 			dto.IstFremdsprache = fach.daten.istFremdsprache;
 			dto.SortierungAllg = i * 100;
@@ -491,7 +491,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			dto.MussSchriftlichEF2 = (eigeneSchule.Schulform == Schulform.WB);
 			dto.MussMuendlich = false;
 			// ...
-			dto.Aufgabenfeld = fach.daten.aufgabenfeld == null ? null : "" + fach.daten.aufgabenfeld;
+			dto.Aufgabenfeld = (fach.daten.aufgabenfeld == null) ? null : ("" + fach.daten.aufgabenfeld);
 			dto.AbgeschlFaecherHolen = true;
 			dto.GewichtungFHR = 1;
 			dto.MaxBemZeichen = null;

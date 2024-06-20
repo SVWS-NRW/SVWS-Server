@@ -43,7 +43,7 @@ public final class DataLehrerPersonalabschnittsdatenMehrleistungen extends DataM
 		daten.id = dto.ID;
 		daten.idAbschnittsdaten = dto.Abschnitt_ID;
 		daten.idGrund = LehrerMehrleistungArt.getByKuerzel(dto.MehrleistungsgrundKrz).daten.id;
-		daten.anzahl = dto.MehrleistungStd == null ? 0.0 : dto.MehrleistungStd;
+		daten.anzahl = (dto.MehrleistungStd == null) ? 0.0 : dto.MehrleistungStd;
 		return daten;
 	};
 

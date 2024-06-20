@@ -47,14 +47,14 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 		daten.id = lehrer.ID;
 		daten.kuerzel = lehrer.Kuerzel;
 		daten.personalTyp = lehrer.PersonTyp.kuerzel;
-		daten.anrede = lehrer.Anrede == null ? "" : lehrer.Anrede;
-		daten.titel = lehrer.Titel == null ? "" : lehrer.Titel;
-		daten.amtsbezeichnung = lehrer.Amtsbezeichnung == null ? "" : lehrer.Amtsbezeichnung;
-		daten.nachname = lehrer.Nachname == null ? "" : lehrer.Nachname;
-		daten.vorname = lehrer.Vorname == null ? "" : lehrer.Vorname;
+		daten.anrede = (lehrer.Anrede == null) ? "" : lehrer.Anrede;
+		daten.titel = (lehrer.Titel == null) ? "" : lehrer.Titel;
+		daten.amtsbezeichnung = (lehrer.Amtsbezeichnung == null) ? "" : lehrer.Amtsbezeichnung;
+		daten.nachname = (lehrer.Nachname == null) ? "" : lehrer.Nachname;
+		daten.vorname = (lehrer.Vorname == null) ? "" : lehrer.Vorname;
 		daten.geschlecht = lehrer.Geschlecht.id;
 		daten.geburtsdatum = lehrer.Geburtsdatum;
-		daten.staatsangehoerigkeitID = lehrer.staatsangehoerigkeit == null ? null : lehrer.staatsangehoerigkeit.daten.iso3;
+		daten.staatsangehoerigkeitID = (lehrer.staatsangehoerigkeit == null) ? null : lehrer.staatsangehoerigkeit.daten.iso3;
 		daten.strassenname = lehrer.Strassenname;
 		daten.hausnummer = lehrer.HausNr;
 		daten.hausnummerZusatz = lehrer.HausNrZusatz;
@@ -175,8 +175,8 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 			Map.entry("hausnummerZusatz", (conn, lehrer, value, map) -> lehrer.HausNrZusatz =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge())),
 			Map.entry("wohnortID", (conn, lehrer, value, map) -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true),
-					map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
-			Map.entry("ortsteilID", (conn, lehrer, value, map) -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID
+					(map.get("ortsteilID") == null) ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")))),
+			Map.entry("ortsteilID", (conn, lehrer, value, map) -> setWohnort(conn, lehrer, (map.get("wohnortID") == null) ? lehrer.Ort_ID
 					: ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true))),
 			Map.entry("telefon", (conn, lehrer, value, map) -> lehrer.telefon =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge())),

@@ -105,7 +105,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 					ku = new StundenplanKlassenunterricht();
 					ku.idKlasse = klassenID;
 					ku.idFach = ls.Fach_ID;
-					ku.wochenstunden = ls.Wochenstunden == null ? 1 : ls.Wochenstunden;
+					ku.wochenstunden = (ls.Wochenstunden == null) ? 1 : ls.Wochenstunden;
 					klassenunterrichte.put(ku.idKlasse, ku.idFach, ku);
 					daten.add(ku);
 					faecherIDs.add(ku.idFach);

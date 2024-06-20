@@ -24,7 +24,7 @@ import de.svws_nrw.db.DBException;
 public class ImportKurs42Blockung {
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 	/**
 	 * Importiert eine Kurs42-Blockung in ein SVWS-Schema.
@@ -65,7 +65,7 @@ public class ImportKurs42Blockung {
 			final Path path = Paths.get(filename);
 
 			// Führe den Import aus
-			try (DBEntityManager conn = user.getEntityManager();) {
+			try (DBEntityManager conn = user.getEntityManager()) {
 				DataKurs42.importKurs42(conn, logger, path);
 			}
 		} catch (final CommandLineException e) {

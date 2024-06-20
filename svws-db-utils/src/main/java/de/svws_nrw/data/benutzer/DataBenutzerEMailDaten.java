@@ -45,11 +45,11 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 	private final Function<DTOBenutzerMail, BenutzerEMailDaten> dtoMapper = (final DTOBenutzerMail b) -> {
 		final BenutzerEMailDaten daten = new BenutzerEMailDaten();
 		daten.id = b.Benutzer_ID;
-		daten.name = b.EmailName == null ? "" : b.EmailName;
-		daten.address = b.Email == null ? "" : b.Email;
-		daten.usernameSMTP = b.SMTPUsername == null ? "" : b.SMTPUsername;
-		daten.passwordSMTP = b.SMTPPassword == null ? "" : b.SMTPPassword;
-		daten.signatur = b.EMailSignature == null ? "" : b.EMailSignature;
+		daten.name = (b.EmailName == null) ? "" : b.EmailName;
+		daten.address = (b.Email == null) ? "" : b.Email;
+		daten.usernameSMTP = (b.SMTPUsername == null) ? "" : b.SMTPUsername;
+		daten.passwordSMTP = (b.SMTPPassword == null) ? "" : b.SMTPPassword;
+		daten.signatur = (b.EMailSignature == null) ? "" : b.EMailSignature;
 		return daten;
 	};
 

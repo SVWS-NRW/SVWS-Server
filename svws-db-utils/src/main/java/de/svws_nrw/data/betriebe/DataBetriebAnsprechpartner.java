@@ -161,7 +161,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 		if (map.size() > 0) {
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "AllgAdrAnsprechpartner");
-			final Long id = (lastID == null) ? 1 : lastID.MaxID + 1;
+			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 			if (betrieb == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Ein Betrieb mit der ID " + betrieb_id + " existiert in der Datenbank nicht.");

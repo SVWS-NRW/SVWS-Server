@@ -33,7 +33,7 @@ public class SQLGenerator {
 
 	private static final Logger logger = new Logger();
 
-	private static String dirOutput = "build/sql";
+	private static final String dirOutput = "build/sql";
 
 	/**
 	 * Generiert das SQL-Skript zum Erstellen eines Schema für die angebene Revision
@@ -148,7 +148,7 @@ public class SQLGenerator {
 			logger.logLn("Treiber " + driver + " -> " + dir + " : ");
 			Files.createDirectories(dir);
 
-			final String revStr = (revision == -1) ? "current." : "rev" + revision + ".";
+			final String revStr = (revision == -1) ? "current." : ("rev" + revision + ".");
 			writeTo(Paths.get(dir.toString(), "drop_schema." + revStr + driver.toString().toLowerCase() + ".sql"), getDropSchemaSkript(driver, revision));
 			writeTo(Paths.get(dir.toString(), "create_schema." + revStr + driver.toString().toLowerCase() + ".sql"), getCreateSchemaSkript(driver, revision));
 		}

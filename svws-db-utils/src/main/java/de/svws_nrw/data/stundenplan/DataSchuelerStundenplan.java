@@ -98,7 +98,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		final List<StundenplanUnterricht> alleUnterrichte = DataStundenplanUnterricht.getUnterrichte(conn, idStundenplan);
 		final Map<Long, List<StundenplanUnterricht>> mapUnterricht = alleUnterrichte.stream()
 				.filter(u -> (u.idKurs != null) || u.klassen.contains(lernabschnitt.Klassen_ID))
-				.collect(Collectors.groupingBy(u -> (u.idKurs != null ? u.idKurs : u.idFach)));
+				.collect(Collectors.groupingBy(u -> ((u.idKurs != null) ? u.idKurs : u.idFach)));
 
 		// Gehe die Leistungsdaten und trage die Unterrichte ein
 		final Set<Long> lehrerIDs = new HashSet<>();
@@ -108,7 +108,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		final Set<Long> schienenIDs = new HashSet<>();
 		final Set<Long> fachIDs = new HashSet<>();
 		for (final DTOSchuelerLeistungsdaten ld : leistungsdaten) {
-			final List<StundenplanUnterricht> unterrichte = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
+			final List<StundenplanUnterricht> unterrichte = mapUnterricht.get((ld.Kurs_ID != null) ? ld.Kurs_ID : ld.Fach_ID);
 			if (unterrichte == null)
 				continue;
 			if (ld.Kurs_ID != null)

@@ -44,7 +44,7 @@ public final class OAuth2Client {
 	private static final Map<String, OAuth2Client> OAUTH2_CLIENT_CACHE_BY_URL = new ConcurrentHashMap<>();
 
 	/** allg. Pfad auf OAuth2-Servern zum Tokenaustausch */
-	private static String OAUTH2_PATH = "/oauth/token";
+	private static final String OAUTH2_PATH = "/oauth/token";
 
 	/** Die URL auf die dieser Client verweisen soll */
 	private final String url;

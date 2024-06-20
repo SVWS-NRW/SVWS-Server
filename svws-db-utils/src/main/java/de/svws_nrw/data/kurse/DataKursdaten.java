@@ -84,12 +84,12 @@ public final class DataKursdaten extends DataManager<Long> {
 		daten.idJahrgaenge.addAll(convertJahrgaenge(kurs));
 		daten.idFach = kurs.Fach_ID;
 		daten.lehrer = kurs.Lehrer_ID;
-		daten.kursartAllg = kurs.KursartAllg == null ? "" : kurs.KursartAllg;
-		daten.sortierung = kurs.Sortierung == null ? 32000 : kurs.Sortierung;
+		daten.kursartAllg = (kurs.KursartAllg == null) ? "" : kurs.KursartAllg;
+		daten.sortierung = (kurs.Sortierung == null) ? 32000 : kurs.Sortierung;
 		daten.istSichtbar = kurs.Sichtbar;
 		daten.schienen.addAll(convertSchienenStrToList(kurs.Schienen));
-		daten.wochenstunden = kurs.WochenStd == null ? 0 : kurs.WochenStd;
-		daten.wochenstundenLehrer = kurs.WochenstdKL == null ? daten.wochenstunden : kurs.WochenstdKL;
+		daten.wochenstunden = (kurs.WochenStd == null) ? 0 : kurs.WochenStd;
+		daten.wochenstundenLehrer = (kurs.WochenstdKL == null) ? daten.wochenstunden : kurs.WochenstdKL;
 		daten.idKursFortschreibungsart = kurs.Fortschreibungsart.id;
 		daten.schulnummer = kurs.SchulNr;
 		daten.istEpochalunterricht = kurs.EpochU;
@@ -217,8 +217,10 @@ public final class DataKursdaten extends DataManager<Long> {
 				final List<Long> vorher = convertJahrgaenge(dto);
 				boolean changed = (neu.size() != vorher.size());
 				for (final long n : neu) {
-					if (!vorher.contains(n))
+					if (!vorher.contains(n)) {
 						changed = true;
+						break;
+					}
 				}
 				if (!changed)
 					return;

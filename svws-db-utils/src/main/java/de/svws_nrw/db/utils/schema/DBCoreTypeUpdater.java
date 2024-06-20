@@ -255,7 +255,7 @@ public class DBCoreTypeUpdater {
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
 			// Aktualisiere ggf. die Daten der einzelnen Core-Types
-			final long status_revision = _status.version == null ? 0 : _status.version.getRevisionOrDefault(0);
+			final long status_revision = (_status.version == null) ? 0 : _status.version.getRevisionOrDefault(0);
 			for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
 				if (!tab.hasCoreType())
 					continue;
@@ -333,7 +333,7 @@ public class DBCoreTypeUpdater {
 		final Fachgruppe[] values = Fachgruppe.values();
 		for (int i = 0; i < values.length; i++) {
 			final Fachgruppe f = values[i];
-			sql.append(i == 0 ? strValues : ", (");
+			sql.append((i == 0) ? strValues : ", (");
 			sql.append(f.daten.id).append(",");
 			sql.append(f.daten.nummer).append(",");
 			sql.append(f.daten.idSchild).append(",");
@@ -388,7 +388,7 @@ public class DBCoreTypeUpdater {
 		final KursFortschreibungsart[] values = KursFortschreibungsart.values();
 		for (int i = 0; i < values.length; i++) {
 			final KursFortschreibungsart p = values[i];
-			sql.append(i == 0 ? strValues : ", (");
+			sql.append((i == 0) ? strValues : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
 			sql.append("'").append(p.beschreibung).append("'").append(",");
@@ -472,7 +472,7 @@ public class DBCoreTypeUpdater {
 		final PersonalTyp[] values = PersonalTyp.values();
 		for (int i = 0; i < values.length; i++) {
 			final PersonalTyp p = values[i];
-			sql.append(i == 0 ? strValues : ", (");
+			sql.append((i == 0) ? strValues : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
 			sql.append("'").append(p.bezeichnung).append("'").append(",");

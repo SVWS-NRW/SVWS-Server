@@ -182,7 +182,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM.
 		// Dabei wird unter anderem auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge)
 		// bei den Daten für das ENM einzutragen sind.
-		final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = dtoLehrer == null
+		final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = (dtoLehrer == null)
 				? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, schule.Schuljahresabschnitts_ID)
 				: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
 		// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
@@ -241,8 +241,8 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
 				enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
 				enmSchueler.lernabschnitt.pruefungsordnung = schuelerabschnitt.pruefungsordnung;
-				enmSchueler.lernabschnitt.lernbereich1note = schuelerabschnitt.lernbereich1note == null ? null : schuelerabschnitt.lernbereich1note.kuerzel;
-				enmSchueler.lernabschnitt.lernbereich2note = schuelerabschnitt.lernbereich2note == null ? null : schuelerabschnitt.lernbereich2note.kuerzel;
+				enmSchueler.lernabschnitt.lernbereich1note = (schuelerabschnitt.lernbereich1note == null) ? null : schuelerabschnitt.lernbereich1note.kuerzel;
+				enmSchueler.lernabschnitt.lernbereich2note = (schuelerabschnitt.lernbereich2note == null) ? null : schuelerabschnitt.lernbereich2note.kuerzel;
 				enmSchueler.lernabschnitt.foerderschwerpunkt1 = schuelerabschnitt.foerderschwerpunkt1Kuerzel;
 				enmSchueler.lernabschnitt.foerderschwerpunkt2 = schuelerabschnitt.foerderschwerpunkt2Kuerzel;
 				enmSchueler.bemerkungen.ASV = schuelerabschnitt.ASV;
@@ -261,13 +261,13 @@ public final class DataENMDaten extends DataManager<Long> {
 			// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse ENMDaten gearbeitet wird.
 			// Es wird eine eindeutige ID benötigt, die Kurs- und Klassenübergreifend diese Lerngruppe identifiziert.
 			final String strLerngruppenID = (schuelerabschnitt.kursID == null)
-					? "Klasse:" + schuelerabschnitt.klasse + "/" + schuelerabschnitt.fachID
-					: "Kurs:" + schuelerabschnitt.kursID;
+					? ("Klasse:" + schuelerabschnitt.klasse + "/" + schuelerabschnitt.fachID)
+					: ("Kurs:" + schuelerabschnitt.kursID);
 			ENMLerngruppe lerngruppe = manager.getLerngruppe(strLerngruppenID);
 			if (lerngruppe == null) {
 				final DTOFach fach = mapFaecher.get(schuelerabschnitt.fachID);
-				final String kursartAllg = (kursart == null) ? null : (kursart.daten.kuerzelAllg == null) || "".equals(kursart.daten.kuerzelAllg)
-						? kursart.daten.kuerzel : kursart.daten.kuerzelAllg;
+				final String kursartAllg = (kursart == null) ? null : (((kursart.daten.kuerzelAllg == null) || "".equals(kursart.daten.kuerzelAllg))
+						? kursart.daten.kuerzel : kursart.daten.kuerzelAllg);
 				// Fach zu ENMDaten hinzufügen ?
 				if (manager.getFach(fach.ID) == null)
 					manager.addFach(fach.ID, fach.StatistikFach.daten.kuerzelASD, fach.Kuerzel, fach.SortierungAllg, fach.IstFremdsprache);
@@ -275,11 +275,11 @@ public final class DataENMDaten extends DataManager<Long> {
 				if (schuelerabschnitt.kursID == null) {  // es ist eine Klasse
 					manager.addLerngruppe(strLerngruppenID, dtoKlasse.ID, schuelerabschnitt.fachID, null,
 							fach.Kuerzel, kursartAllg, fach.Unterichtssprache,
-							schuelerabschnitt.wochenstunden == null ? 0 : schuelerabschnitt.wochenstunden);
+							(schuelerabschnitt.wochenstunden == null) ? 0 : schuelerabschnitt.wochenstunden);
 				} else {  // es ist ein Kurs
 					final DTOKurs kurs = mapKurse.get(schuelerabschnitt.kursID);
 					manager.addLerngruppe(strLerngruppenID, schuelerabschnitt.kursID, schuelerabschnitt.fachID,
-							kursart == null ? -1 : Integer.parseInt(kursart.daten.nummer), kurs.KurzBez, kursartAllg,
+							(kursart == null) ? -1 : Integer.parseInt(kursart.daten.nummer), kurs.KurzBez, kursartAllg,
 							fach.Unterichtssprache, kurs.WochenStd);
 				}
 				lerngruppe = manager.getLerngruppe(strLerngruppenID);
@@ -294,7 +294,7 @@ public final class DataENMDaten extends DataManager<Long> {
 				// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
 			}
 
-			final int halbjahr = (schule.AnzahlAbschnitte == 4) ? abschnitt.Abschnitt / 2 : abschnitt.Abschnitt;
+			final int halbjahr = (schule.AnzahlAbschnitte == 4) ? (abschnitt.Abschnitt / 2) : abschnitt.Abschnitt;
 			final boolean istSchriftlich = (schuelerabschnitt.kursID != null)
 					&& ((kursart == ZulaessigeKursart.LK1) || (kursart == ZulaessigeKursart.LK2)
 							|| (kursart == ZulaessigeKursart.GKS) || (kursart == ZulaessigeKursart.AB3)
@@ -331,8 +331,8 @@ public final class DataENMDaten extends DataManager<Long> {
 						if (dtoArt == null) // DB-Error -> should not happen
 							throw new NullPointerException();
 						manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
-								dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
-								dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
+								(dtoArt.Sortierung == null) ? 32000 : dtoArt.Sortierung,
+								(dtoArt.Gewichtung == null) ? 1.0 : dtoArt.Gewichtung);
 						enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
 					}
 					// Füge die Teilleistung hinzu

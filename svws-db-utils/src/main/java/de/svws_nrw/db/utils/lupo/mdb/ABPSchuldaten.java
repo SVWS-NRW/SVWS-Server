@@ -211,7 +211,7 @@ public final class ABPSchuldaten {
 				zuordnung.SMTP_Password = r.getString(fieldSMTP_Password);
 				zuordnung.SMTP_Server = r.getString(fieldSMTP_Server);
 				final Integer tmpPort = r.getInt(fieldSMTP_Port);
-				zuordnung.SMTP_Port = tmpPort == null ? null : "" + tmpPort;
+				zuordnung.SMTP_Port = (tmpPort == null) ? null : ("" + tmpPort);
 				zuordnung.SMTP_SSL = r.getString(fieldSMTP_SSL);
 				zuordnung.SMTP_StartTLS = r.getString(fieldSMTP_StartTLS);
 				liste.add(zuordnung);
@@ -293,7 +293,7 @@ public final class ABPSchuldaten {
 						zuordnung.MailText,
 						zuordnung.MailTextBoegen,
 						zuordnung.FS_NurMitSF,
-						zuordnung.Komprimieren == null ? null : toStringJN(zuordnung.Komprimieren),
+						(zuordnung.Komprimieren == null) ? null : toStringJN(zuordnung.Komprimieren),
 						zuordnung.AenderungenErlauben,
 						toStringJN(zuordnung.AutoPruefModus),
 						zuordnung.DauerUnterrichtseinheit,

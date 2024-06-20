@@ -78,7 +78,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		daten.kuerzel = klasse.Klasse;
 		daten.idJahrgang = klasse.Jahrgang_ID;
 		daten.parallelitaet = ((klasse.ASDKlasse == null) || (klasse.ASDKlasse.length() < 3))
-				? null : klasse.ASDKlasse.substring(2, klasse.ASDKlasse.length());
+				? null : klasse.ASDKlasse.substring(2);
 		daten.sortierung = klasse.Sortierung;
 		daten.istSichtbar = klasse.Sichtbar;
 		if (klassenLeitungen != null)
@@ -89,11 +89,11 @@ public final class DataKlassendaten extends DataManager<Long> {
 				daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		daten.teilstandort = (klasse.AdrMerkmal == null) ? "" : klasse.AdrMerkmal;
 		daten.beschreibung = (klasse.Bezeichnung == null) ? "" : klasse.Bezeichnung;
-		daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null
+		daten.idAllgemeinbildendOrganisationsform = (AllgemeinbildendOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null)
 				? null : AllgemeinbildendOrganisationsformen.getByKuerzel(klasse.OrgFormKrz).daten.id;
-		daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null
+		daten.idBerufsbildendOrganisationsform = (BerufskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null)
 				? null : BerufskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz).daten.id;
-		daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null
+		daten.idWeiterbildungOrganisationsform = (WeiterbildungskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null)
 				? null : WeiterbildungskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz).daten.id;
 		daten.pruefungsordnung = klasse.PruefOrdnung;
 		Schulgliederung gliederung = Schulgliederung.getBySchulformAndKuerzel(schulform, klasse.ASDSchulformNr);

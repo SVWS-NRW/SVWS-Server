@@ -491,7 +491,7 @@ public final class DBMigrationManager {
 				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision"
 						+ ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
-				final boolean result = tgtManager.updater.update(tgtManager.getUser(), maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+				final boolean result = tgtManager.updater.update(tgtManager.getUser(), (maxUpdateRevision < 0) ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn(strFehler);
@@ -657,7 +657,7 @@ public final class DBMigrationManager {
 					for (final Field f : missing_fields) {
 						final SchemaTabelleSpalte column =
 								tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
-						f.set(entity, column == null ? null : column.getDefaultWertConverted());
+						f.set(entity, (column == null) ? null : column.getDefaultWertConverted());
 					}
 					list.add(entity);
 				}
@@ -720,7 +720,7 @@ public final class DBMigrationManager {
 							step = 1;
 						for (int last = range.getValue(); last >= range.getKey(); last -= step) {
 							final int first = (last - step) + 1;
-							ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
+							ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
 						}
 					}
 				}
@@ -1230,8 +1230,8 @@ public final class DBMigrationManager {
 			}
 			// Merke alle Abschnitte, für welche ggf. ein Schuljahresabschnitt abgelegt werden muss, als Map vom Abschnitt auf den Folgeabschnitt
 			if ((daten.Folgeklasse != null) && (!"".equals(daten.Folgeklasse))) {
-				final int schuljahr = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? daten.Jahr + 1 : daten.Jahr;
-				final int abschnitt = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? 1 : daten.Abschnitt + 1;
+				final int schuljahr = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? (daten.Jahr + 1) : daten.Jahr;
+				final int abschnitt = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? 1 : (daten.Abschnitt + 1);
 				folgeAbschnitteFuerKlassen.put(daten.Jahr, daten.Abschnitt, new Pair<>(schuljahr, abschnitt));
 			}
 			// Merke die IDs für Überprüfung von Foreign-Key-Constraints in anderen Tabellen
@@ -1407,8 +1407,8 @@ public final class DBMigrationManager {
 			case "AGK" -> (schulform == Schulform.WB) ? "AGKWB" : "AGK";
 			case "WPI" -> (schulform == Schulform.GY) ? "WPIGY" : "WPI";
 			case "FU" -> (schulform == Schulform.S) ? "FUAUS" : "FU";
-			case "E" -> (schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V) ? "E_H" : "E";
-			case "G" -> (schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V) ? "G_H" : "G";
+			case "E" -> ((schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V)) ? "E_H" : "E";
+			case "G" -> ((schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V)) ? "G_H" : "G";
 			default -> kursart;
 		};
 		if (!kursart.equals(result))
@@ -1899,7 +1899,7 @@ public final class DBMigrationManager {
 					case "0", "3", "4" -> Herkunftsarten.getByKuerzel("0" + daten.LSVersetzung);
 					default -> Herkunftsarten.getByKuerzel(daten.LSVersetzung);
 				};
-				daten.LSVersetzung = (art == null) ? null : "" + art.daten.id;
+				daten.LSVersetzung = (art == null) ? null : ("" + art.daten.id);
 			}
 			schuelerIDs.add(daten.ID);
 		}

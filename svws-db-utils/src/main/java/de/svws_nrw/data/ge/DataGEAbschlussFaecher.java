@@ -133,7 +133,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 					if (fach == null)
 						return null;
 					final GELeistungsdifferenzierteKursart kursart = "E".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.E
-							: "G".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.G : GELeistungsdifferenzierteKursart.Sonstige;
+							: ("G".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.G : GELeistungsdifferenzierteKursart.Sonstige);
 					final boolean istFremdsprache = (fach.IstFremdsprache != null) && fach.IstFremdsprache;
 					final Note note = l.NotenKrz;
 					if (note == null)
@@ -156,10 +156,10 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 				.collect(Collectors.toList());
 
 		// Füge die Lernabschnittsnoten hinzu - sofern sie definiert wurden
-		final Integer noteNW = lernabschnitt.Gesamtnote_NW == null ? null : lernabschnitt.Gesamtnote_NW.getNoteSekI();
+		final Integer noteNW = (lernabschnitt.Gesamtnote_NW == null) ? null : lernabschnitt.Gesamtnote_NW.getNoteSekI();
 		if (noteNW != null)
 			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBNW", "LBNW", noteNW, GELeistungsdifferenzierteKursart.Sonstige, false));
-		final Integer noteAL = lernabschnitt.Gesamtnote_GS == null ? null : lernabschnitt.Gesamtnote_GS.getNoteSekI();
+		final Integer noteAL = (lernabschnitt.Gesamtnote_GS == null) ? null : lernabschnitt.Gesamtnote_GS.getNoteSekI();
 		if (noteAL != null)
 			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBAL", "LBAL", noteAL, GELeistungsdifferenzierteKursart.Sonstige, false));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

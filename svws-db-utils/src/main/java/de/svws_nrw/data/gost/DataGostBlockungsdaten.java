@@ -603,7 +603,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response dupliziere(final long idErgebnisOriginal) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung und das zugehörige Ergebnis
-		DTOGostBlockung blockungOriginal;
+		final DTOGostBlockung blockungOriginal;
 		final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
 		if (ergebnisOriginal == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -764,7 +764,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response hochschreiben(final long idErgebnisOriginal) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung und das zugehörige Ergebnis
-		DTOGostBlockung blockungOriginal;
+		final DTOGostBlockung blockungOriginal;
 		final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
 		if (ergebnisOriginal == null)
 			throw new ApiOperationException(Status.NOT_FOUND);

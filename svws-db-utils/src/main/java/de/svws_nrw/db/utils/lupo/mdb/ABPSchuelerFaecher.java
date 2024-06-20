@@ -478,7 +478,7 @@ public final class ABPSchuelerFaecher {
 					continue;
 				eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
 				eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
-				eintrag.AbiturFach = GostAbiturFach.fromID(fachwahl.abiturfach) == null ? null : fachwahl.abiturfach;
+				eintrag.AbiturFach = (GostAbiturFach.fromID(fachwahl.abiturfach) == null) ? null : fachwahl.abiturfach;
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					GostLeistungenFachbelegung belegung = null;
 					for (final GostLeistungenFachbelegung tmpBelegung : fachwahl.belegungen) {
@@ -490,7 +490,7 @@ public final class ABPSchuelerFaecher {
 						}
 					}
 					if (belegung != null) {
-						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? "" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte
+						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? ("" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte)
 								: Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
 						if (halbjahr == GostHalbjahr.EF1) {
 							eintrag.Kursart_E1 = getKursart(belegung);

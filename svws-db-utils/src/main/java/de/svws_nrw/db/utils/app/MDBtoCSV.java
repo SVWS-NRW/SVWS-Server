@@ -34,11 +34,11 @@ import de.svws_nrw.core.logger.Logger;
 public class MDBtoCSV {
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 	/// Die unterstützen Typen von MDBs
 	private enum MDBType {
-		UNKNOWN, STATKUE, SCHILD2_STATKUE, SCHULVER;
+		UNKNOWN, STATKUE, SCHILD2_STATKUE, SCHULVER
 	}
 
 	/// Der Typ der MDB-Datei
@@ -1023,7 +1023,7 @@ public class MDBtoCSV {
 			}
 			case BOOLEAN -> {
 				final Boolean b = r.getBoolean(colName);
-				yield (b != null) && b ? "1" : "0";
+				yield ((b != null) && b) ? "1" : "0";
 			}
 			case FLOAT -> (r.getFloat(colName) == null) ? "null" : r.getFloat(colName).toString();
 			case DOUBLE -> (r.getDouble(colName) == null) ? "null" : r.getDouble(colName).toString();

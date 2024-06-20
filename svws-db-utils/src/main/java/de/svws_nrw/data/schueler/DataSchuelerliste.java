@@ -111,9 +111,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
 		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
-		eintrag.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
-		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
-		eintrag.geschlecht = schueler.Geschlecht == null ? "" : schueler.Geschlecht.kuerzel;
+		eintrag.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
+		eintrag.vorname = (schueler.Vorname == null) ? "" : schueler.Vorname;
+		eintrag.geschlecht = (schueler.Geschlecht == null) ? "" : schueler.Geschlecht.kuerzel;
 		if (aktAbschnitt == null) {
 			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = -1L;
@@ -151,7 +151,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final Schueler schueler = new Schueler();
 		schueler.id = dto.ID;
 		schueler.nachname = dto.Nachname;
-		schueler.vorname = dto.Vorname == null ? "" : dto.Vorname;
+		schueler.vorname = (dto.Vorname == null) ? "" : dto.Vorname;
 		schueler.geschlecht = dto.Geschlecht.id;
 		schueler.status = dto.Status.id;
 		return schueler;
@@ -203,7 +203,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	private static void getSchuelerKurse(final DBEntityManager conn, final List<SchuelerListeEintrag> schuelerListe, final Long schuljahresabschnittsID) {
 		if (!schuelerListe.isEmpty()) {
 			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
-			Map<Long, List<DTOKursSchueler>> kursSchueler;
+			final Map<Long, List<DTOKursSchueler>> kursSchueler;
 			if (schuljahresabschnittsID == null) {
 				final String jpql =
 						"SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";

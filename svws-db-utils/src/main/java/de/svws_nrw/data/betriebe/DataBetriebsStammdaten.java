@@ -105,7 +105,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 		DTOKatalogAllgemeineAdresse betrieb = null;
 		// Bestimme die ID des neuen Betriebs
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_AllgAdresse");
-		final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+		final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 		// Betrieb anlegen
 		betrieb = new DTOKatalogAllgemeineAdresse(id);
@@ -219,9 +219,9 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 					case "hausnrzusatz" -> betrieb.hausnrzusatz =
 							JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrHausNrZusatz.datenlaenge());
 					case "ort_id" -> setOrt(betrieb, JSONMapper.convertToLong(value, true),
-							map.get("ortsteil_id") == null ? betrieb.ortsteil_id : ((Long) map.get("ortsteil_id")));
+							(map.get("ortsteil_id") == null) ? betrieb.ortsteil_id : ((Long) map.get("ortsteil_id")));
 					case "ortsteil_id" ->
-						setOrt(betrieb, map.get("ort_id") == null ? betrieb.ort_id : ((Long) map.get("ort_id")), JSONMapper.convertToLong(value, true));
+						setOrt(betrieb, (map.get("ort_id") == null) ? betrieb.ort_id : ((Long) map.get("ort_id")), JSONMapper.convertToLong(value, true));
 					case "ansprechpartner" -> System.out.println("TODO");  // TODO Ansprechpartner
 					case "telefon1" -> betrieb.telefon1 =
 							JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon1.datenlaenge());

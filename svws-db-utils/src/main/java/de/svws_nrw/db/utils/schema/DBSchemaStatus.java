@@ -138,13 +138,13 @@ public final class DBSchemaStatus {
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
 		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase(Schema.tab_Schema_Status.name())).findFirst().orElse(null) == null)
 			return null;
-		DTOSchemaStatus dto;
+		final DTOSchemaStatus dto;
 		final DBDriver dbms = conn.getDBDriver();
 		if ((!dbms.hasMultiSchemaSupport()) || (schemaName == null) || schemaName.equals(conn.getDBSchema())) {
 			dto = conn.querySingle(DTOSchemaStatus.class);
 		} else {
 			// Hole die Versions-Informationen aus einem fremden Schema. Hier wird natives SQL benötigt
-			String sql;
+			final String sql;
 			if ((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) {
 				sql = "SELECT * FROM `" + schemaName + "`." + Schema.tab_Schema_Status.name();
 			} else if (dbms == DBDriver.MSSQL) {

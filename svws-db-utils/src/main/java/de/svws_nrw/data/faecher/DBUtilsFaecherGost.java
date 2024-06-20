@@ -57,11 +57,11 @@ public final class DBUtilsFaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
-		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)) ? 2
-				: defaultWochenstundenQ_GK;
+		final int defaultWochenstundenQ_GK = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb()) ? 4 : 3;
+		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX))
+				? 2 : defaultWochenstundenQ_GK;
 		eintrag.wochenstundenQualifikationsphase =
-				fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
+				(fach.WochenstundenQualifikationsphase == null) ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		if (fach.ProjektKursLeitfach1_ID == null) {
 			eintrag.projektKursLeitfach1Kuerzel = null;
@@ -118,21 +118,21 @@ public final class DBUtilsFaecherGost {
 			eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 			eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
 		}
-		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
-		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)) ? 2
-				: defaultWochenstundenQ_GK;
+		final int defaultWochenstundenQ_GK = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb()) ? 4 : 3;
+		final int defaultWochenstundenQ = ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX) || (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX))
+				? 2 : defaultWochenstundenQ_GK;
 		if ((jf == null) || (jf.WochenstundenQPhase == null)) {
-			eintrag.wochenstundenQualifikationsphase =
-					fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
+			eintrag.wochenstundenQualifikationsphase = (fach.WochenstundenQualifikationsphase == null)
+					? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
 		} else {
 			eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase;
 		}
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
-		eintrag.projektKursLeitfach1Kuerzel =
-				fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
+		eintrag.projektKursLeitfach1Kuerzel = (fach.ProjektKursLeitfach1_ID == null)
+				? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
 		eintrag.projektKursLeitfach2ID = fach.ProjektKursLeitfach2_ID;
-		eintrag.projektKursLeitfach2Kuerzel =
-				fach.ProjektKursLeitfach2_ID == null ? null : faecher.get(fach.ProjektKursLeitfach2_ID).StatistikFach.daten.kuerzelASD;
+		eintrag.projektKursLeitfach2Kuerzel = (fach.ProjektKursLeitfach2_ID == null)
+				? null : faecher.get(fach.ProjektKursLeitfach2_ID).StatistikFach.daten.kuerzelASD;
 		return eintrag;
 	}
 

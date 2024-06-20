@@ -251,11 +251,11 @@ public final class ABPSchueler {
 				schueler.Zeitstempel = r.getLocalDateTime(fieldZeitstempel);
 				schueler.Gliederung = r.getString(fieldGliederung);
 				schueler.Konfession = r.getString(fieldKonfession);
-				schueler.Einsprachler_S1 = r.getString(fieldEinsprachler_S1) == null ? null : "J".equals(r.getString(fieldEinsprachler_S1));
+				schueler.Einsprachler_S1 = (r.getString(fieldEinsprachler_S1) == null) ? null : "J".equals(r.getString(fieldEinsprachler_S1));
 				schueler.BLL_Art = r.getString(fieldBLL_Art);
-				schueler.Zulassung = r.getString(fieldZulassung) == null ? null : "J".equals(r.getString(fieldZulassung));
+				schueler.Zulassung = (r.getString(fieldZulassung) == null) ? null : "J".equals(r.getString(fieldZulassung));
 				schueler.BLL_Punkte = r.getInt(fieldBLL_Punkte);
-				schueler.FS2_SekI_manuell = r.getString(fieldFS2_SekI_manuell) == null ? null : "J".equals(r.getString(fieldFS2_SekI_manuell));
+				schueler.FS2_SekI_manuell = (r.getString(fieldFS2_SekI_manuell) == null) ? null : "J".equals(r.getString(fieldFS2_SekI_manuell));
 				liste.add(schueler);
 			}
 			return liste;
@@ -360,11 +360,11 @@ public final class ABPSchueler {
 						schueler.Zeitstempel,
 						schueler.Gliederung,
 						schueler.Konfession,
-						schueler.Einsprachler_S1 == null ? null : toStringJN(schueler.Einsprachler_S1),
+						(schueler.Einsprachler_S1 == null) ? null : toStringJN(schueler.Einsprachler_S1),
 						schueler.BLL_Art,
-						schueler.Zulassung == null ? null : toStringJN(schueler.Zulassung),
+						(schueler.Zulassung == null) ? null : toStringJN(schueler.Zulassung),
 						schueler.BLL_Punkte,
-						schueler.FS2_SekI_manuell == null ? null : toStringJN(schueler.FS2_SekI_manuell));
+						(schueler.FS2_SekI_manuell == null) ? null : toStringJN(schueler.FS2_SekI_manuell));
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -423,10 +423,10 @@ public final class ABPSchueler {
 				eintrag.DatumBeratung = (lupoSchueler.DatumBeratung == null) ? null : LocalDateTime.parse(lupoSchueler.DatumBeratung);
 				eintrag.DatumRuecklauf = (lupoSchueler.DatumRuecklauf == null) ? null : LocalDateTime.parse(lupoSchueler.DatumRuecklauf);
 				eintrag.SPP = false; // TODO Bestimme über: SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()), Problem SprachDatenManager nuss zuvor geladen werden...
-				eintrag.Sportattest = lupoSchueler.HatSportattest == null ? null : toStringJN(lupoSchueler.HatSportattest);
+				eintrag.Sportattest = (lupoSchueler.HatSportattest == null) ? null : toStringJN(lupoSchueler.HatSportattest);
 				eintrag.Kommentar = lupoSchueler.Kommentar;
 				final DTOLehrer beratungslehrer = mapLehrer.get(lupoSchueler.Beratungslehrer_ID);
-				eintrag.Beratungslehrer = beratungslehrer == null ? null : (beratungslehrer.Nachname + ", " + beratungslehrer.Vorname);
+				eintrag.Beratungslehrer = (beratungslehrer == null) ? null : (beratungslehrer.Nachname + ", " + beratungslehrer.Vorname);
 				eintrag.PruefPhase = lupoSchueler.PruefPhase;
 				eintrag.BLL_Art = lupoSchueler.BesondereLernleistung_Art;
 				eintrag.BLL_Punkte = lupoSchueler.BesondereLernleistung_Punkte;

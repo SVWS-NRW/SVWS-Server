@@ -193,9 +193,9 @@ public final class DataKurs42 {
 
 
 	/** Funktion zum Bestimmen der nächsten freien ID bei einer Tabelle mit Autoinkrement */
-	private static BiFunction<DBEntityManager, SchemaTabelle, Long> getNextID = (final DBEntityManager conn, final SchemaTabelle tab) -> {
+	private static final BiFunction<DBEntityManager, SchemaTabelle, Long> getNextID = (final DBEntityManager conn, final SchemaTabelle tab) -> {
 		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, tab.name());
-		return dbID == null ? 1 : dbID.MaxID + 1;
+		return (dbID == null) ? 1 : (dbID.MaxID + 1);
 	};
 
 

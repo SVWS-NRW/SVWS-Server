@@ -241,7 +241,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Schueler_AllgAdr");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 			// Schülerbetrieb anlegen
 			s_betrieb = new DTOSchuelerAllgemeineAdresse(id, schueler_id, betrieb_id);

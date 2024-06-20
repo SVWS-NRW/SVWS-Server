@@ -227,7 +227,7 @@ public class LupoMDB {
 			final List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream().sorted((f1, f2) -> {
 				if (f1.SortierungAllg == null)
 					return -1;
-				return f2.SortierungAllg == null ? 1 : f2.SortierungAllg - f1.SortierungAllg;
+				return (f2.SortierungAllg == null) ? 1 : (f2.SortierungAllg - f1.SortierungAllg);
 			}).toList();
 			final Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
@@ -370,7 +370,7 @@ public class LupoMDB {
 		if (!nichtMoeglicheKombinationen.isEmpty()) {
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
-			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
+			long idNMK = (dbNmkID == null) ? 1 : (dbNmkID.MaxID + 1);
 			for (final ABPNichtMoeglAbiFachKombi nmk : nichtMoeglicheKombinationen) {
 				logger.log("- Fachkombination " + nmk.Fach1_Krz + " (" + nmk.Kursart1 + ") <-> " + nmk.Fach2_Krz + " (" + nmk.Kursart2 + "): ");
 				final DTOFach dtoFach1 = dtoFaecher.get(nmk.Fach1_Krz);
@@ -439,8 +439,8 @@ public class LupoMDB {
 		} else {
 			lupoSchueler.HatSportattest = (abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest));
 		}
-		lupoSchueler.DatumBeratung = abpSchueler.DatumBeratung == null ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
-		lupoSchueler.DatumRuecklauf = abpSchueler.DatumRuecklauf == null ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
+		lupoSchueler.DatumBeratung = (abpSchueler.DatumBeratung == null) ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
+		lupoSchueler.DatumRuecklauf = (abpSchueler.DatumRuecklauf == null) ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
 		lupoSchueler.Beratungslehrer_ID = null;  // TODO LehrerID aus abpSchueler.Beratungslehrer herausfinden?
 		lupoSchueler.Kommentar = abpSchueler.Kommentar;
 		lupoSchueler.PruefPhase = abpSchueler.PruefPhase;
@@ -483,7 +483,7 @@ public class LupoMDB {
 				lupoSFach.Markiert_Q3 = (abpSFach.Markiert_Q3 != null) && "J".equals(abpSFach.Markiert_Q3);
 				lupoSFach.Markiert_Q4 = (abpSFach.Markiert_Q4 != null) && "J".equals(abpSFach.Markiert_Q4);
 				lupoSFach.ergebnisAbiturpruefung = abpSFach.AbiPruefErgebnis;
-				lupoSFach.hatMuendlichePflichtpruefung = abpSFach.MdlPflichtPruefung == null ? null : "J".equals(abpSFach.MdlPflichtPruefung);
+				lupoSFach.hatMuendlichePflichtpruefung = (abpSFach.MdlPflichtPruefung == null) ? null : "J".equals(abpSFach.MdlPflichtPruefung);
 				lupoSFach.ergebnisMuendlichePruefung = abpSFach.MdlPruefErgebnis;
 				conn.transactionPersist(lupoSFach);
 				conn.transactionFlush();
@@ -561,7 +561,7 @@ public class LupoMDB {
 				for (final ABPSchueler abpSchueler : schueler) {
 					logger.logLn("- Lese LuPO-Schüler " + abpSchueler.ID + " mit der DB-ID " + abpSchueler.Schild_ID + " ein...");
 					logger.modifyIndent(2);
-					final DTOSchueler dtoSchueler = dtoSchuelerMap.get(abpSchueler.Schild_ID == null ? null : (long) abpSchueler.Schild_ID);
+					final DTOSchueler dtoSchueler = dtoSchuelerMap.get((abpSchueler.Schild_ID == null) ? null : (long) abpSchueler.Schild_ID);
 					if (dtoSchueler == null) {
 						logger.logLn("- FEHLER: Der Schüler konnte nicht in der DB gefunden werden. Überspringe Schüler!");
 						logger.modifyIndent(-2);
@@ -597,7 +597,7 @@ public class LupoMDB {
 						lupoAbijahrgang = abiJahrgang;
 						logger.modifyIndent(2);
 						final DTOKlassen klasse = mapKlassen.get(dtoAktAbschnitt.Klassen_ID);
-						setLUPOJahrgang(conn, schuleAbschnitt, abiJahrgang, klasse == null ? null : klasse.Klasse, mapFaecher, replaceJahrgang);
+						setLUPOJahrgang(conn, schuleAbschnitt, abiJahrgang, (klasse == null) ? null : klasse.Klasse, mapFaecher, replaceJahrgang);
 						logger.modifyIndent(-2);
 					} else if (Integer.compare(lupoAbijahrgang, abiJahrgang) == 0) {
 						logger.logLn(0, "Ja");
@@ -869,7 +869,7 @@ public class LupoMDB {
 					sprachbelegung.belegungVonJahrgang = "0" + sprachbelegung.belegungVonJahrgang;
 				if ("10".equals(sprachbelegung.belegungVonJahrgang))
 					sprachbelegung.belegungVonJahrgang = "EF";
-				sprachbelegung.belegungVonAbschnitt = lupoSchuelerSprachenfolge.AbschnittVon == null ? 1 : ((int) lupoSchuelerSprachenfolge.AbschnittVon);
+				sprachbelegung.belegungVonAbschnitt = (lupoSchuelerSprachenfolge.AbschnittVon == null) ? 1 : ((int) lupoSchuelerSprachenfolge.AbschnittVon);
 				abidaten.sprachendaten.belegungen.add(sprachbelegung);
 			}
 		}
@@ -914,12 +914,12 @@ public class LupoMDB {
 			belegung.kursartKuerzel = "LK";
 		else if ("ZK".equals(belegungPlanungKursart))
 			belegung.kursartKuerzel = "ZK";
-		belegung.schriftlich = belegungPlanungKursart == null ? null
-				: "LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
+		belegung.schriftlich = (belegungPlanungKursart == null) ? null
+				: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		if ("LK".equals(belegungPlanungKursart))
 			belegung.wochenstunden = 5;
 		else if (wochenstunden == null)
-			belegung.wochenstunden = (fachKursart == GostKursart.VTF ? 2 : 3);
+			belegung.wochenstunden = ((fachKursart == GostKursart.VTF) ? 2 : 3);
 		else
 			belegung.wochenstunden = wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;

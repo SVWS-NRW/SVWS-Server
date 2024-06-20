@@ -62,31 +62,31 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.lernabschnittID = dto.Abschnitt_ID;
 		daten.fachID = dto.Fach_ID;
 		daten.kursID = dto.Kurs_ID;
-		daten.kursart = dto.Kursart == null ? ZulaessigeKursart.PUK.daten.kuerzel : dto.Kursart;
+		daten.kursart = (dto.Kursart == null) ? ZulaessigeKursart.PUK.daten.kuerzel : dto.Kursart;
 		try {
-			daten.abifach = dto.AbiFach == null ? null : Integer.parseInt(dto.AbiFach);
+			daten.abifach = (dto.AbiFach == null) ? null : Integer.parseInt(dto.AbiFach);
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			daten.abifach = null;
 		}
 		daten.istZP10oderZK10 = (dto.Prf10Fach != null) && dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
 		daten.lehrerID = dto.Fachlehrer_ID;
-		daten.wochenstunden = dto.Wochenstunden == null ? 0 : dto.Wochenstunden;
+		daten.wochenstunden = (dto.Wochenstunden == null) ? 0 : dto.Wochenstunden;
 		daten.zusatzkraftID = dto.Zusatzkraft_ID;
-		daten.zusatzkraftWochenstunden = dto.WochenstdZusatzkraft == null ? 0 : dto.WochenstdZusatzkraft;
+		daten.zusatzkraftWochenstunden = (dto.WochenstdZusatzkraft == null) ? 0 : dto.WochenstdZusatzkraft;
 		daten.aufZeugnis = (dto.AufZeugnis == null) || dto.AufZeugnis;
-		daten.note = dto.NotenKrz == null ? Note.KEINE.kuerzel : dto.NotenKrz.kuerzel;
-		daten.noteQuartal = dto.NotenKrzQuartal == null ? Note.KEINE.kuerzel : dto.NotenKrzQuartal.kuerzel;
+		daten.note = (dto.NotenKrz == null) ? Note.KEINE.kuerzel : dto.NotenKrz.kuerzel;
+		daten.noteQuartal = (dto.NotenKrzQuartal == null) ? Note.KEINE.kuerzel : dto.NotenKrzQuartal.kuerzel;
 		daten.istGemahnt = (dto.Warnung != null) && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
 		daten.mahndatum = dto.Warndatum;
 		daten.istEpochal = (dto.VorherAbgeschl != null) && dto.VorherAbgeschl;
 		daten.geholtJahrgangAbgeschlossen = dto.AbschlussJahrgang;
-		daten.gewichtungAllgemeinbildend = dto.Gewichtung == null ? 1 : dto.Gewichtung;
+		daten.gewichtungAllgemeinbildend = (dto.Gewichtung == null) ? 1 : dto.Gewichtung;
 		daten.noteBerufsabschluss = dto.NoteAbschlussBA;
-		daten.textFachbezogeneLernentwicklung = dto.Lernentw == null ? "" : dto.Lernentw;
-		daten.umfangLernstandsbericht = dto.Umfang == null ? "" : dto.Umfang;
-		daten.fehlstundenGesamt = dto.FehlStd == null ? 0 : dto.FehlStd;
-		daten.fehlstundenUnentschuldigt = dto.uFehlStd == null ? 0 : dto.uFehlStd;
+		daten.textFachbezogeneLernentwicklung = (dto.Lernentw == null) ? "" : dto.Lernentw;
+		daten.umfangLernstandsbericht = (dto.Umfang == null) ? "" : dto.Umfang;
+		daten.fehlstundenGesamt = (dto.FehlStd == null) ? 0 : dto.FehlStd;
+		daten.fehlstundenUnentschuldigt = (dto.uFehlStd == null) ? 0 : dto.uFehlStd;
 		return daten;
 	};
 
@@ -201,7 +201,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);
 				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
 					throw new ApiOperationException(Status.CONFLICT);
-				dto.AbiFach = (abiFach == null) ? null : "" + abiFach;
+				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);
 			}),
 			Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("koopSchule", (conn, dto, value, map) -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000)),
@@ -242,7 +242,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 				final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
 				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
 					throw new ApiOperationException(Status.CONFLICT);
-				dto.Umfang = (strUmfang == null) || strUmfang.isBlank() ? null : strUmfang;
+				dto.Umfang = ((strUmfang == null) || strUmfang.isBlank()) ? null : strUmfang;
 			}),
 			Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
 			Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)));

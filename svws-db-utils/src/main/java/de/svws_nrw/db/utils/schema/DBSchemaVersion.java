@@ -23,7 +23,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 *                    werden sollte (z.B. aufgrund von Entwicklerversionen des SVWS-Servers)
 	 */
 	public DBSchemaVersion(final Long revision, final boolean isTainted) {
-		this._revision = (revision == null) || (revision < 0) ? null : revision;
+		this._revision = ((revision == null) || (revision < 0)) ? null : revision;
 		this._tainted = isTainted;
 	}
 
@@ -128,7 +128,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 
 	@Override
 	public String toString() {
-		return (this._revision == null) ? "unknown" : "" + _revision;
+		return (this._revision == null) ? "unknown" : ("" + _revision);
 	}
 
 

@@ -42,7 +42,7 @@ import jakarta.validation.constraints.NotNull;
 public class GenerateTestdatenLaufbahnFromLupoMDB {
 
 	/// Der Logger
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 
 	/**

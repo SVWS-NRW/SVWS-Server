@@ -68,12 +68,12 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 	@Override
 	public String toString() {
-		return user == null ? "Benutzer nicht angemeldet" : user.getUsername();
+		return (user == null) ? "Benutzer nicht angemeldet" : user.getUsername();
 	}
 
 	@Override
 	public String getName() {
-		return user == null ? null : user.getUsername();
+		return (user == null) ? null : user.getUsername();
 	}
 
 

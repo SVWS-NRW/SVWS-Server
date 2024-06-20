@@ -98,7 +98,7 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 		DTOBeschaeftigungsart dtoObjekt = null;
 		// Bestimme die ID der neuen Beschäftigungsart
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_BeschaeftigungsArt");
-		final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+		final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 		// Beschätigungsart anlegen
 		dtoObjekt = new DTOBeschaeftigungsart(id, "");

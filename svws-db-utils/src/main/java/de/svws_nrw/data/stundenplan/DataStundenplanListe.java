@@ -138,7 +138,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 						"Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTOSchemaAutoInkremente dbStundenplanID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Stundenplan");
-			final long idStundenplan = dbStundenplanID == null ? 1 : dbStundenplanID.MaxID + 1;
+			final long idStundenplan = (dbStundenplanID == null) ? 1 : (dbStundenplanID.MaxID + 1);
 			// Ermittle, ob bereits Stundenpläne für den Schuljahresabschnitt existieren und bestimme das Start bzw. das Enddatum aus dem Abschnitt
 			final List<StundenplanListeEintrag> stundenplaene = DataStundenplanListe.getStundenplaene(conn, idSchuljahresabschnitt);
 			String beginn = (abschnitt.Abschnitt == 1) ? "%d-08-01".formatted(abschnitt.Jahr) : "%d-02-01".formatted(abschnitt.Jahr + 1);
