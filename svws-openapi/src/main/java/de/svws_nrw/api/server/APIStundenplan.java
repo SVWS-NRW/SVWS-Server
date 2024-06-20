@@ -909,7 +909,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Keine Pausenzeit eines Stundenplans gefunden")
 	public Response getStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).getAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -942,7 +942,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -973,7 +973,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1004,7 +1004,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1032,7 +1032,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1064,7 +1064,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
