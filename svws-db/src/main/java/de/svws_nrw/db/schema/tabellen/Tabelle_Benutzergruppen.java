@@ -13,20 +13,20 @@ public class Tabelle_Benutzergruppen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die ID der Benutzergruppe");
+			.setNotNull()
+			.setJavaComment("Die ID der Benutzergruppe");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Die Bezeichnung der Benutzergruppe");
+			.setNotNull()
+			.setJavaComment("Die Bezeichnung der Benutzergruppe");
 
 	/** Die Definition der Tabellenspalte IstAdmin */
 	public SchemaTabelleSpalte col_IstAdmin = add("IstAdmin", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob die Benutzergruppe Administrator-Rechte hat (1) oder nicht (0)");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob die Benutzergruppe Administrator-Rechte hat (1) oder nicht (0)");
 
 
 	/**

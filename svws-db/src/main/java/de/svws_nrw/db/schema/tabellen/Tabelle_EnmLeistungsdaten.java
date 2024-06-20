@@ -18,44 +18,44 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Leistungsdaten");
+			.setNotNull()
+			.setJavaComment("ID der Leistungsdaten");
 
 	/** Die Definition der Tabellenspalte tsNotenKrz */
 	public SchemaTabelleSpalte col_tsNotenKrz = add("tsNotenKrz", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
 
 	/** Die Definition der Tabellenspalte tsNotenKrzQuartal */
 	public SchemaTabelleSpalte col_tsNotenKrzQuartal = add("tsNotenKrzQuartal", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
 
 	/** Die Definition der Tabellenspalte tsFehlStd */
 	public SchemaTabelleSpalte col_tsFehlStd = add("tsFehlStd", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an den Fehlstunden.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an den Fehlstunden.");
 
 	/** Die Definition der Tabellenspalte tsuFehlStd */
 	public SchemaTabelleSpalte col_tsuFehlStd = add("tsuFehlStd", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden.");
 
 	/** Die Definition der Tabellenspalte tsuFehlStd */
 	public SchemaTabelleSpalte col_tsLernentw = add("tsLernentw", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen.");
 
 	/** Die Definition der Tabellenspalte tsWarnung */
 	public SchemaTabelleSpalte col_tsWarnung = add("tsWarnung", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung, ob gemahnt wird.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung, ob gemahnt wird.");
 
 
 	/** Die Definition des Fremdschlüssels EnmLeistungsdaten_FK */
@@ -63,12 +63,11 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 			"EnmLeistungsdaten_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
-		);
+			new Pair<>(col_ID, Schema.tab_SchuelerLeistungsdaten.col_ID));
 
 
-    /** Trigger t_INSERT_EnmLeistungsdaten */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLeistungsdaten = addTrigger(
+	/** Trigger t_INSERT_EnmLeistungsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLeistungsdaten = addTrigger(
 			"t_INSERT_EnmLeistungsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -76,8 +75,8 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 			INSERT INTO EnmLeistungsdaten(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
 			""", Schema.tab_SchuelerLeistungsdaten, Schema.tab_EnmLeistungsdaten);
 
-    /** Trigger t_UPDATE_EnmLeistungsdaten */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmLeistungsdaten = addTrigger(
+	/** Trigger t_UPDATE_EnmLeistungsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmLeistungsdaten = addTrigger(
 			"t_UPDATE_EnmLeistungsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -118,7 +117,7 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 		setJavaSubPackage("svws.enm");
 		setJavaClassName("DTOEnmLeistungsdaten");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
-		        + "der Datenbanktabelle für Leistungsdaten Änderungen vorgenommen wurden.");
+				+ "der Datenbanktabelle für Leistungsdaten Änderungen vorgenommen wurden.");
 	}
 
 }

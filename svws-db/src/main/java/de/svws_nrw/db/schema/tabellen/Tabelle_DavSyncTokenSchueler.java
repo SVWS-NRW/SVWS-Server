@@ -18,14 +18,14 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Schülers");
+			.setNotNull()
+			.setJavaComment("ID des Schülers");
 
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Schülerdaten.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Schülerdaten.");
 
 
 	/** Die Definition des Fremdschlüssels DavSyncTokenSchueler_FK */
@@ -33,14 +33,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			"DavSyncTokenSchueler_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_ID, Schema.tab_Schueler.col_ID)
-		);
+			new Pair<>(col_ID, Schema.tab_Schueler.col_ID));
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_Schueler",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_Schueler",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON Schueler FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -65,13 +64,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON Kurs_Schueler FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -91,13 +90,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_Kurs_Schueler */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_Kurs_Schueler",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurs_Schueler */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_Kurs_Schueler",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON Kurs_Schueler FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -109,13 +108,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_Kurs_Schueler */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_Kurs_Schueler",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurs_Schueler */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_Kurs_Schueler",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON Kurs_Schueler FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -127,14 +126,14 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON SchuelerErzAdr FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -169,14 +168,14 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON SchuelerErzAdr FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -188,13 +187,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON SchuelerErzAdr FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -206,13 +205,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON SchuelerTelefone FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -232,13 +231,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerTelefone */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_SchuelerTelefone",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerTelefone */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_SchuelerTelefone",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON SchuelerTelefone FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -250,13 +249,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerTelefone */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_SchuelerTelefone",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerTelefone */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_SchuelerTelefone",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON SchuelerTelefone FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -268,13 +267,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_K_Ort */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_K_Ort = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_K_Ort",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_K_Ort */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_K_Ort = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_K_Ort",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON K_Ort FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -294,13 +293,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_K_Ort */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_K_Ort = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_K_Ort",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_K_Ort */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_K_Ort = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_K_Ort",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON K_Ort FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -320,13 +319,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_K_Ort */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_K_Ort = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_K_Ort",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_K_Ort */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_K_Ort = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_K_Ort",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON K_Ort FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -346,13 +345,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_Kurse */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurse = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_Kurse",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurse */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurse = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_Kurse",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON Kurse FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -374,13 +373,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_Kurse */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurse = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_Kurse",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurse */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurse = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_Kurse",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON Kurse FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -394,13 +393,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_Kurse */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurse = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_Kurse",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurse */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurse = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_Kurse",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON Kurse FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -414,13 +413,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_Klassen */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Klassen = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_Klassen",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_Klassen */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Klassen = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_Klassen",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON Klassen FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -442,13 +441,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_Klassen */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Klassen = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_Klassen",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_Klassen */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Klassen = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_Klassen",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON Klassen FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -462,13 +461,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_Klassen */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Klassen = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_Klassen",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_Klassen */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Klassen = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_Klassen",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON Klassen FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -482,13 +481,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON SchuelerLernabschnittsdaten FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -507,13 +506,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON SchuelerLernabschnittsdaten FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -525,13 +524,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON SchuelerLernabschnittsdaten FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -543,13 +542,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
-            "t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
+			"t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
+			DBDriver.MARIA_DB,
+			"""
             AFTER UPDATE ON EigeneSchule_Jahrgaenge FOR EACH ROW
             BEGIN
                 DECLARE changed BOOLEAN;
@@ -576,14 +575,14 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END IF;
             END
             """,
-            Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
-            "t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
+			"t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
+			DBDriver.MARIA_DB,
+			"""
             AFTER INSERT ON EigeneSchule_Jahrgaenge FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -603,14 +602,14 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    /** Trigger t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
-            "t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
-            DBDriver.MARIA_DB,
-            """
+	/** Trigger t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
+	public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
+			"t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
+			DBDriver.MARIA_DB,
+			"""
             AFTER DELETE ON EigeneSchule_Jahrgaenge FOR EACH ROW
             BEGIN
                 DECLARE token DATETIME;
@@ -628,13 +627,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 END FOR;
             END
             """,
-            Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
-            Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
+			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
 
-    // TODO weitere Trigger für MariaDB
+	// TODO weitere Trigger für MariaDB
 
-    // TODO Trigger für SQLite
+	// TODO Trigger für SQLite
 
 
 	/**
@@ -648,8 +647,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 		setJavaSubPackage("svws.dav");
 		setJavaClassName("DTODavSyncTokenSchueler");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für Card-DAV relevanten Datenbanktabellen "
-		        + "für einen Schüler Änderungen vorgenommen wurden. "
-		        + "Diese Zeitstempel dienen als Sync-Token für das Protokoll.");
+				+ "für einen Schüler Änderungen vorgenommen wurden. "
+				+ "Diese Zeitstempel dienen als Sync-Token für das Protokoll.");
 	}
 
 }

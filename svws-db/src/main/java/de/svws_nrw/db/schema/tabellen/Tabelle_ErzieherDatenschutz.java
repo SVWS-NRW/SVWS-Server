@@ -17,20 +17,20 @@ public class Tabelle_ErzieherDatenschutz extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ErzieherID */
 	public SchemaTabelleSpalte col_ErzieherID = add("ErzieherID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ErzieherID des Datenschutzeintrags");
+			.setNotNull()
+			.setJavaComment("ErzieherID des Datenschutzeintrags");
 
 	/** Die Definition der Tabellenspalte DatenschutzID */
 	public SchemaTabelleSpalte col_DatenschutzID = add("DatenschutzID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("DatenschutzID des Eintrags");
+			.setNotNull()
+			.setJavaComment("DatenschutzID des Eintrags");
 
 	/** Die Definition der Tabellenspalte Status */
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
 
 
 	/** Die Definition des Fremdschlüssels ErzieherDatenschutz_Erzieher_FK */
@@ -38,16 +38,14 @@ public class Tabelle_ErzieherDatenschutz extends SchemaTabelle {
 			"ErzieherDatenschutz_Erzieher_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_ErzieherID, Schema.tab_SchuelerErzAdr.col_ID)
-		);
+			new Pair<>(col_ErzieherID, Schema.tab_SchuelerErzAdr.col_ID));
 
 	/** Die Definition des Fremdschlüssels ErzieherDatenschutz_Datenschutz_FK */
 	public SchemaTabelleFremdschluessel fk_ErzieherDatenschutz_Datenschutz_FK = addForeignKey(
 			"ErzieherDatenschutz_Datenschutz_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_DatenschutzID, Schema.tab_K_Datenschutz.col_ID)
-		);
+			new Pair<>(col_DatenschutzID, Schema.tab_K_Datenschutz.col_ID));
 
 
 	/**

@@ -17,49 +17,49 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Dav Ressource");
+			.setNotNull()
+			.setJavaComment("ID der Dav Ressource");
 
 	/** Die Definition der Tabellenspalte DavRessourceCollection_ID */
 	public SchemaTabelleSpalte col_DavRessourceCollection_ID = add("DavRessourceCollection_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Id der Ressourcensammlung, deren Teil diese Ressource ist");
+			.setNotNull()
+			.setJavaComment("Id der Ressourcensammlung, deren Teil diese Ressource ist");
 
 	/** Die Definition der Tabellenspalte UID */
 	public SchemaTabelleSpalte col_UID = add("UID", SchemaDatentypen.VARCHAR, false).setDatenlaenge(120)
-		.setNotNull()
-		.setJavaComment("Die UID der Ressource");
+			.setNotNull()
+			.setJavaComment("Die UID der Ressource");
 
 	/** Die Definition der Tabellenspalte lastModified */
 	public SchemaTabelleSpalte col_lastModified = add("lastModified", SchemaDatentypen.DATETIME, false)
-		.setNotNull()
-		.setDatenlaenge(3)
-		.setConverter(DatumUhrzeitConverter.class)
-		.setJavaComment("Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar");
+			.setNotNull()
+			.setDatenlaenge(3)
+			.setConverter(DatumUhrzeitConverter.class)
+			.setJavaComment("Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar");
 
 	/** Die Definition der Tabellenspalte KalenderTyp */
 	public SchemaTabelleSpalte col_KalenderTyp = add("KalenderTyp", SchemaDatentypen.VARCHAR, false).setDatenlaenge(120)
-		.setNotNull()
-		.setJavaComment("Die Art der Kalenderressource, wenn es eine Kalenderressource ist");
+			.setNotNull()
+			.setJavaComment("Die Art der Kalenderressource, wenn es eine Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte KalenderStart */
 	public SchemaTabelleSpalte col_KalenderStart = add("KalenderStart", SchemaDatentypen.DATETIME, false)
-		.setNotNull()
-		.setDatenlaenge(3)
-		.setConverter(DatumUhrzeitConverter.class)
-		.setJavaComment("Der Start der Kalenderressource, wenn es eine Kalenderressource ist");
+			.setNotNull()
+			.setDatenlaenge(3)
+			.setConverter(DatumUhrzeitConverter.class)
+			.setJavaComment("Der Start der Kalenderressource, wenn es eine Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte KalenderEnde */
 	public SchemaTabelleSpalte col_KalenderEnde = add("KalenderEnde", SchemaDatentypen.DATETIME, false)
-		.setNotNull()
-		.setDatenlaenge(3)
-		.setConverter(DatumUhrzeitConverter.class)
-		.setJavaComment("Das Ende der Kalenderressource, wenn es eines Kalenderressource ist");
+			.setNotNull()
+			.setDatenlaenge(3)
+			.setConverter(DatumUhrzeitConverter.class)
+			.setJavaComment("Das Ende der Kalenderressource, wenn es eines Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte ressource */
 	public SchemaTabelleSpalte col_ressource = add("ressource", SchemaDatentypen.LONGBLOB, false)
-		.setNotNull()
-		.setJavaComment("Die Daten der Ressource");
+			.setNotNull()
+			.setJavaComment("Die Daten der Ressource");
 
 	/** Die Definition der Tabellenspalte geloeschtam */
 	public SchemaTabelleSpalte col_geloeschtam = add("geloeschtam", SchemaDatentypen.DATETIME, false)
@@ -72,8 +72,7 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 			"DavRessources_Collection_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_DavRessourceCollection_ID, Schema.tab_DavRessourceCollections.col_ID)
-		);
+			new Pair<>(col_DavRessourceCollection_ID, Schema.tab_DavRessourceCollections.col_ID));
 
 
 	/**

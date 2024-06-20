@@ -17,18 +17,18 @@ public class Tabelle_Berufskolleg_Fachklassen_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte FachklassenIndex */
 	public SchemaTabelleSpalte col_FachklassenIndex = add("FachklassenIndex", SchemaDatentypen.INT, true)
-		.setNotNull()
-		.setJavaComment("Der Index, welcher der Fachklasse für die Zuordnung zum Bildungsgang zugeordnet ist");
+			.setNotNull()
+			.setJavaComment("Der Index, welcher der Fachklasse für die Zuordnung zum Bildungsgang zugeordnet ist");
 
 	/** Die Definition der Tabellenspalte Schluessel */
 	public SchemaTabelleSpalte col_Schluessel = add("Schluessel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der erste Teil des Fachklassenschlüssels (FKS, dreistellig) ");
+			.setNotNull()
+			.setJavaComment("Der erste Teil des Fachklassenschlüssels (FKS, dreistellig) ");
 
 	/** Die Definition der Tabellenspalte Schluessel2 */
 	public SchemaTabelleSpalte col_Schluessel2 = add("Schluessel2", SchemaDatentypen.VARCHAR, true).setDatenlaenge(2)
-		.setNotNull()
-		.setJavaComment("Der zweite Teil des Fachklassenschlüssels (AP, zweistellig)");
+			.setNotNull()
+			.setJavaComment("Der zweite Teil des Fachklassenschlüssels (AP, zweistellig)");
 
 
 	/**
@@ -41,12 +41,12 @@ public class Tabelle_Berufskolleg_Fachklassen_Keys extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegFachklassenKeys");
 		setJavaComment("Die Schlüssel von Fachklassen des Berufskollegs - auch von mittlerweile ausgelaufenen Fachklassen");
-        setCoreType(new SchemaTabelleCoreType(this, BerufskollegFachklassenManager.class, JsonDaten.fachklassenManager.getVersion(), rev ->
-            JsonDaten.fachklassenManager.getKatalog().indizes.stream()
-            .map(i -> i.fachklassen.stream()
-                .map(f -> i.index + ",'" + f.schluessel + "','" + f.schluessel2 + "'")
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, BerufskollegFachklassenManager.class, JsonDaten.fachklassenManager.getVersion(),
+				rev -> JsonDaten.fachklassenManager.getKatalog().indizes.stream()
+						.map(i -> i.fachklassen.stream()
+								.map(f -> i.index + ",'" + f.schluessel + "','" + f.schluessel2 + "'")
+								.toList())
+						.flatMap(Collection::stream).toList()));
 	}
 
 }

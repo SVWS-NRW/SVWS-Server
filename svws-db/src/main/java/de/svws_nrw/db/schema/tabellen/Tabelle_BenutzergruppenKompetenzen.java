@@ -16,13 +16,13 @@ public class Tabelle_BenutzergruppenKompetenzen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Gruppe_ID */
 	public SchemaTabelleSpalte col_Gruppe_ID = add("Gruppe_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die ID der Benutzergruppe");
+			.setNotNull()
+			.setJavaComment("Die ID der Benutzergruppe");
 
 	/** Die Definition der Tabellenspalte Kompetenz_ID */
 	public SchemaTabelleSpalte col_Kompetenz_ID = add("Kompetenz_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die ID der zugeordneten Kompetenz");
+			.setNotNull()
+			.setJavaComment("Die ID der zugeordneten Kompetenz");
 
 
 	/** Die Definition des Fremdschlüssels BenutzergruppenKompetenzen_Benutzergruppen_FK */
@@ -30,18 +30,16 @@ public class Tabelle_BenutzergruppenKompetenzen extends SchemaTabelle {
 			"BenutzergruppenKompetenzen_Benutzergruppen_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Gruppe_ID, Schema.tab_Benutzergruppen.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+			new Pair<>(col_Gruppe_ID, Schema.tab_Benutzergruppen.col_ID))
+			.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels BenutzergruppenKompetenzen_Kompetenzen_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzergruppenKompetenzen_Kompetenzen_FK = addForeignKey(
 			"BenutzergruppenKompetenzen_Kompetenzen_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Kompetenz_ID, Schema.tab_Kompetenzen.col_KO_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+			new Pair<>(col_Kompetenz_ID, Schema.tab_Kompetenzen.col_KO_ID))
+			.setRevision(SchemaRevisionen.REV_2);
 
 
 	/**

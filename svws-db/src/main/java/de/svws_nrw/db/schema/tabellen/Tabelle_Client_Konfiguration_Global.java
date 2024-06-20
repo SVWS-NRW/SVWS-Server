@@ -12,18 +12,18 @@ public class Tabelle_Client_Konfiguration_Global extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte AppName */
 	public SchemaTabelleSpalte col_AppName = add("AppName", SchemaDatentypen.VARCHAR, true).setDatenlaenge(100)
-		.setNotNull()
-		.setJavaComment("Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist");
+			.setNotNull()
+			.setJavaComment("Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist");
 
 	/** Die Definition der Tabellenspalte Schluessel */
 	public SchemaTabelleSpalte col_Schluessel = add("Schluessel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Der Schlüsselname des Konfigurationsdatensatzes");
+			.setNotNull()
+			.setJavaComment("Der Schlüsselname des Konfigurationsdatensatzes");
 
 	/** Die Definition der Tabellenspalte Wert */
 	public SchemaTabelleSpalte col_Wert = add("Wert", SchemaDatentypen.TEXT, false)
-		.setNotNull()
-		.setJavaComment("Der Wert des Konfigurationsdatensatzes");
+			.setNotNull()
+			.setJavaComment("Der Wert des Konfigurationsdatensatzes");
 
 
 	/**
@@ -35,7 +35,8 @@ public class Tabelle_Client_Konfiguration_Global extends SchemaTabelle {
 		setImportExport(true);
 		setJavaSubPackage("client");
 		setJavaClassName("DTOClientKonfigurationGlobal");
-		setJavaComment("Tabelle für das Speichern von Client-Konfigurationen als Key-Value-Paare. Dabei werden über das Feld App unterschiedliche Client-Anwendungen unterstützt. Die Konfigurationen in dieser Tabelle gelten global für den Client.");
+		setJavaComment("Tabelle für das Speichern von Client-Konfigurationen als Key-Value-Paare. Dabei werden über das Feld App unterschiedliche"
+				+ " Client-Anwendungen unterstützt. Die Konfigurationen in dieser Tabelle gelten global für den Client.");
 	}
 
 }

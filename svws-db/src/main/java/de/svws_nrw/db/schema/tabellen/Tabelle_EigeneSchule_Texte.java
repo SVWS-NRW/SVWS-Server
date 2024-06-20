@@ -13,32 +13,33 @@ public class Tabelle_EigeneSchule_Texte extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Textes unter Schulverwaltung Eigene Schule bearbeiten");
+			.setNotNull()
+			.setJavaComment("ID des Textes unter Schulverwaltung Eigene Schule bearbeiten");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment(
+					"Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Kuerzel */
 	public SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
-		.setJavaComment("Kürzel des Schultextes");
+			.setJavaComment("Kürzel des Schultextes");
 
 	/** Die Definition der Tabellenspalte Inhalt */
 	public SchemaTabelleSpalte col_Inhalt = add("Inhalt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Inhalt des Schultextes");
+			.setJavaComment("Inhalt des Schultextes");
 
 	/** Die Definition der Tabellenspalte Beschreibung */
 	public SchemaTabelleSpalte col_Beschreibung = add("Beschreibung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
-		.setJavaComment("Beschreibung des Schultextes");
+			.setJavaComment("Beschreibung des Schultextes");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("+")
-		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("Gibt an ob der Text änderbar ist");
+			.setDefault("+")
+			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+			.setJavaComment("Gibt an ob der Text änderbar ist");
 
 
 	/**

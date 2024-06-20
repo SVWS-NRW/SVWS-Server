@@ -18,51 +18,50 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Teilleistungen");
+			.setNotNull()
+			.setJavaComment("ID der Teilleistungen");
 
 	/** Die Definition der Tabellenspalte tsDatum */
 	public SchemaTabelleSpalte col_tsDatum = add("tsDatum", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde.");
 
 	/** Die Definition der Tabellenspalte tsLehrer_ID */
 	public SchemaTabelleSpalte col_tsLehrer_ID = add("tsLehrer_ID", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an der Lehrer-ID.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Lehrer-ID.");
 
 	/** Die Definition der Tabellenspalte tsArt_ID */
 	public SchemaTabelleSpalte col_tsArt_ID = add("tsArt_ID", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung der Teilleistungsart.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung der Teilleistungsart.");
 
 	/** Die Definition der Tabellenspalte tsBemerkung */
 	public SchemaTabelleSpalte col_tsBemerkung = add("tsBemerkung", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an der Bemerkung.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Bemerkung.");
 
 	/** Die Definition der Tabellenspalte tsNotenKrz */
 	public SchemaTabelleSpalte col_tsNotenKrz = add("tsNotenKrz", SchemaDatentypen.DATETIME, false)
-	    .setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
 
 
 	/** Die Definition des Fremdschlüssels EnmTeilleistungen_FK */
 	public SchemaTabelleFremdschluessel fk_EnmTeilleistungen_FK = addForeignKey(
-		"EnmTeilleistungen_FK",
-		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-		new Pair<>(col_ID, Schema.tab_SchuelerEinzelleistungen.col_ID)
-	);
+			"EnmTeilleistungen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_ID, Schema.tab_SchuelerEinzelleistungen.col_ID));
 
 
-    /** Trigger t_INSERT_EnmTeilleistungen */
-    public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmTeilleistungen = addTrigger(
+	/** Trigger t_INSERT_EnmTeilleistungen */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmTeilleistungen = addTrigger(
 			"t_INSERT_EnmTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
@@ -70,8 +69,8 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 			INSERT INTO EnmTeilleistungen(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
 			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_EnmTeilleistungen);
 
-    /** Trigger t_UPDATE_EnmTeilleistungen */
-    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmTeilleistungen = addTrigger(
+	/** Trigger t_UPDATE_EnmTeilleistungen */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmTeilleistungen = addTrigger(
 			"t_UPDATE_EnmTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
@@ -109,7 +108,7 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 		setJavaSubPackage("svws.enm");
 		setJavaClassName("DTOEnmTeilleistungen");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
-		        + "der Datenbanktabelle für Teilleistungen Änderungen vorgenommen wurden.");
+				+ "der Datenbanktabelle für Teilleistungen Änderungen vorgenommen wurden.");
 	}
 
 }

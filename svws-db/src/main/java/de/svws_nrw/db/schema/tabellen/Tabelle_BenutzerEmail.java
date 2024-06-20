@@ -16,38 +16,38 @@ public class Tabelle_BenutzerEmail extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Benutzer_ID */
 	public SchemaTabelleSpalte col_Benutzer_ID = add("Benutzer_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die ID des Benutzers, zu dem der Datensatz gehört ");
+			.setNotNull()
+			.setJavaComment("Die ID des Benutzers, zu dem der Datensatz gehört ");
 
 	/** Die Definition der Tabellenspalte Email */
 	public SchemaTabelleSpalte col_Email = add("Email", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Die EMail-Adresse des Benutzers, zu dem der Datensatz gehört ");
+			.setNotNull()
+			.setJavaComment("Die EMail-Adresse des Benutzers, zu dem der Datensatz gehört ");
 
 	/** Die Definition der Tabellenspalte EmailName */
 	public SchemaTabelleSpalte col_EmailName = add("EmailName", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("??? ");
+			.setNotNull()
+			.setJavaComment("??? ");
 
 	/** Die Definition der Tabellenspalte SMTPUsername */
 	public SchemaTabelleSpalte col_SMTPUsername = add("SMTPUsername", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("??? ");
+			.setJavaComment("??? ");
 
 	/** Die Definition der Tabellenspalte SMTPPassword */
 	public SchemaTabelleSpalte col_SMTPPassword = add("SMTPPassword", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("??? ");
+			.setJavaComment("??? ");
 
 	/** Die Definition der Tabellenspalte EMailSignature */
 	public SchemaTabelleSpalte col_EMailSignature = add("EMailSignature", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2047)
-		.setJavaComment("??? ");
+			.setJavaComment("??? ");
 
 	/** Die Definition der Tabellenspalte HeartbeatDate */
 	public SchemaTabelleSpalte col_HeartbeatDate = add("HeartbeatDate", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("??? ");
+			.setJavaComment("??? ");
 
 	/** Die Definition der Tabellenspalte ComputerName */
 	public SchemaTabelleSpalte col_ComputerName = add("ComputerName", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("??? ");
+			.setJavaComment("??? ");
 
 
 	/** Die Definition des Fremdschlüssels BenutzerEmail_Benutzer_FK */
@@ -55,9 +55,8 @@ public class Tabelle_BenutzerEmail extends SchemaTabelle {
 			"BenutzerEmail_Benutzer_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID))
+			.setRevision(SchemaRevisionen.REV_2);
 
 
 	/**

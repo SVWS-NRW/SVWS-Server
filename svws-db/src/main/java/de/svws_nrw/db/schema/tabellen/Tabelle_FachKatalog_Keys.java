@@ -12,8 +12,8 @@ public class Tabelle_FachKatalog_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Kuerzel */
 	public SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
-		.setNotNull()
-		.setJavaComment("Das ASD-Kürzel des Faches");
+			.setNotNull()
+			.setJavaComment("Das ASD-Kürzel des Faches");
 
 
 	/**

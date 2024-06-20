@@ -16,50 +16,51 @@ public class Tabelle_AllgAdrAnsprechpartner extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Ansprechpartners der Tabelle AllgAdresse (Betriebe)");
+			.setNotNull()
+			.setJavaComment("ID des Ansprechpartners der Tabelle AllgAdresse (Betriebe)");
 
 	/** Die Definition der Tabellenspalte Adresse_ID */
 	public SchemaTabelleSpalte col_Adresse_ID = add("Adresse_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID des Betriebs (der Adresse) aus der Tabelle AllgAdresse");
+			.setNotNull()
+			.setJavaComment("ID des Betriebs (der Adresse) aus der Tabelle AllgAdresse");
 
 	/** Die Definition der Tabellenspalte Name */
 	public SchemaTabelleSpalte col_Name = add("Name", SchemaDatentypen.VARCHAR, false).setDatenlaenge(120)
-		.setJavaComment("Name des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2");
+			.setJavaComment("Name des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2");
 
 	/** Die Definition der Tabellenspalte Vorname */
 	public SchemaTabelleSpalte col_Vorname = add("Vorname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
+			.setJavaComment("Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte Anrede */
 	public SchemaTabelleSpalte col_Anrede = add("Anrede", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setJavaComment("Anrede des Ansprechpartners im Betrieb");
+			.setJavaComment("Anrede des Ansprechpartners im Betrieb");
 
 	/** Die Definition der Tabellenspalte Telefon */
 	public SchemaTabelleSpalte col_Telefon = add("Telefon", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
-		.setJavaComment("Telefonnummer des Ansprechpartners im Betrieb");
+			.setJavaComment("Telefonnummer des Ansprechpartners im Betrieb");
 
 	/** Die Definition der Tabellenspalte Email */
 	public SchemaTabelleSpalte col_Email = add("Email", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
-		.setJavaComment("Email-Adresse des Ansprechpartners im Betrieb");
+			.setJavaComment("Email-Adresse des Ansprechpartners im Betrieb");
 
 	/** Die Definition der Tabellenspalte Abteilung */
 	public SchemaTabelleSpalte col_Abteilung = add("Abteilung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
-		.setJavaComment("ggf Abteilung des Ansprechpartners im Betrieb");
+			.setJavaComment("ggf Abteilung des Ansprechpartners im Betrieb");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment(
+					"Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Titel */
 	public SchemaTabelleSpalte col_Titel = add("Titel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(15)
-		.setJavaComment("Titel des Ansprechpartners im Betrieb");
+			.setJavaComment("Titel des Ansprechpartners im Betrieb");
 
 	/** Die Definition der Tabellenspalte GU_ID */
 	public SchemaTabelleSpalte col_GU_ID = add("GU_ID", SchemaDatentypen.VARCHAR, false).setDatenlaenge(40)
-		.setJavaComment("GU_ID des Ansprechpartners im Betrieb");
+			.setJavaComment("GU_ID des Ansprechpartners im Betrieb");
 
 
 	/** Die Definition des Fremdschlüssels AllgAdrAnsprechpartner_Adr_FK */
@@ -67,8 +68,7 @@ public class Tabelle_AllgAdrAnsprechpartner extends SchemaTabelle {
 			"AllgAdrAnsprechpartner_Adr_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Adresse_ID, Schema.tab_K_AllgAdresse.col_ID)
-		);
+			new Pair<>(col_Adresse_ID, Schema.tab_K_AllgAdresse.col_ID));
 
 
 	/**
