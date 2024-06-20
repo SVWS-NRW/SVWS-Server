@@ -96,14 +96,18 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Gibt die ID des Datenbank-DTOs zurück.
 	 *
+	 * @param dto   das Datenbank-DTO
+	 *
 	 * @return die ID des Datenbank-DTOs
 	 */
-	protected abstract ID getIDFromDatabaseDTO(final DatabaseDTO dto);
+	protected abstract ID getIDFromDatabaseDTO(DatabaseDTO dto);
 
 
 	/**
 	 * Bestimmt die nächste ID für ein Datenbank-DTO. Ist der Typ der ID nicht Long, so muss diese Methode überschrieben
 	 * werden, damit das Hinzufügen funktionieren kann.
+	 *
+	 * @param last   die letzte ID
 	 *
 	 * @return die neue ID
 	 */
@@ -161,7 +165,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @return das neu erstellte Core-DTO
 	 */
-	public abstract CoreDTO map(final DatabaseDTO dto);
+	public abstract CoreDTO map(DatabaseDTO dto);
 
 
 	/**

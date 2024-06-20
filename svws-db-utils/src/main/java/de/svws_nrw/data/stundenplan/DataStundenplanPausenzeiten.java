@@ -60,7 +60,7 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 
 
 	@Override
-	public final StundenplanPausenzeit map(final DTOStundenplanPausenzeit p) {
+	public StundenplanPausenzeit map(final DTOStundenplanPausenzeit p) {
 		final StundenplanPausenzeit daten = new StundenplanPausenzeit();
 		daten.id = p.ID;
 		daten.wochentag = p.Tag;
