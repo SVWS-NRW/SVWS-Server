@@ -213,6 +213,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
+	private _kwzmenge_sortiert_invers : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+
 	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D<number, number, StundenplanKalenderwochenzuordnung>();
 
 	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap<number, StundenplanKlasse>();
@@ -1187,6 +1189,9 @@ export class StundenplanManager extends JavaObject {
 				}
 		}
 		this._kwzmenge_sortiert.sort(StundenplanManager._compKWZ);
+		this._kwzmenge_sortiert_invers = new ArrayList();
+		for (const kwz of this._kwzmenge_sortiert)
+			this._kwzmenge_sortiert_invers.addFirst(kwz);
 	}
 
 	private update_klassenmenge() : void {
@@ -1983,7 +1988,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * Liefert sortierte eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -1991,6 +1996,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public kalenderwochenzuordnungGetMengeAsList() : List<StundenplanKalenderwochenzuordnung> {
 		return this._kwzmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
+	 */
+	public kalenderwochenzuordnungGetMengeInversAsList() : List<StundenplanKalenderwochenzuordnung> {
+		return this._kwzmenge_sortiert_invers;
 	}
 
 	/**

@@ -226,6 +226,7 @@ public class StundenplanManager {
 	// StundenplanKalenderwochenzuordnung
 	private @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _kwz_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_invers = new ArrayList<>();
 	private @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _kwz_by_jahr_and_kw = new HashMap2D<>();
 
 	// StundenplanKlasse
@@ -1257,6 +1258,11 @@ public class StundenplanManager {
 		}
 
 		_kwzmenge_sortiert.sort(_compKWZ);
+
+		// Inverse Liste aufbauen
+		_kwzmenge_sortiert_invers = new ArrayList<>();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
+			_kwzmenge_sortiert_invers.addFirst(kwz);
 	}
 
 	private void update_klassenmenge() {
@@ -2168,7 +2174,7 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * Liefert sortierte eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -2176,6 +2182,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeAsList() {
 		return _kwzmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
+	 */
+	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeInversAsList() {
+		return _kwzmenge_sortiert_invers;
 	}
 
 	/**
