@@ -70,8 +70,10 @@ public final class DTOInformationUser {
 	}
 
 	private static final Set<String> setSystemUserMariaDB = Stream.of("root").collect(Collectors.toCollection(HashSet::new));
-	private static final Set<String> setSystemUserMySQL = Stream.of("root", "mysql.infoschema", "mysql.session", "mysql.sys").collect(Collectors.toCollection(HashSet::new));
-	private static final Set<String> setSystemUserMSSQL = Stream.of("sa", "##MS_PolicyTsqlExecutionLogin##", "##MS_PolicyEventProcessingLogin##").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemUserMySQL =
+			Stream.of("root", "mysql.infoschema", "mysql.session", "mysql.sys").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemUserMSSQL =
+			Stream.of("sa", "##MS_PolicyTsqlExecutionLogin##", "##MS_PolicyEventProcessingLogin##").collect(Collectors.toCollection(HashSet::new));
 
 	/**
 	 * Stellt eine Anfrage nach den Namen aller Benutzer der Datenbank. Hierbei werden alle Benutzer ignoriert, die vom DBMS
@@ -83,9 +85,12 @@ public final class DTOInformationUser {
 	 */
 	public static List<String> queryNames(final DBEntityManager conn) {
 		return switch (conn.getDBDriver()) {
-			case MARIA_DB -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMariaDB.contains(n)).toList();
-			case MYSQL -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMySQL.contains(n)).toList();
-			case MSSQL -> conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter(n -> !setSystemUserMSSQL.contains(n)).toList();
+			case MARIA_DB ->
+				conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMariaDB.contains(n)).toList();
+			case MYSQL ->
+				conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMySQL.contains(n)).toList();
+			case MSSQL ->
+				conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter(n -> !setSystemUserMSSQL.contains(n)).toList();
 			case MDB, SQLITE -> Collections.emptyList();
 			default -> Collections.emptyList();
 		};

@@ -329,7 +329,7 @@ public final class DBEntityManager implements AutoCloseable {
 	public int transactionExecuteUpdate(final String query) {
 		try {
 			return em.createQuery(query).executeUpdate();
-		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException | IllegalStateException e) {
 			return Integer.MIN_VALUE;
 		}
 	}
@@ -360,7 +360,7 @@ public final class DBEntityManager implements AutoCloseable {
 	public int transactionNativeUpdate(final String sqlQuery) {
 		try {
 			return em.createNativeQuery(sqlQuery).executeUpdate();
-		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException | IllegalStateException e) {
 			return Integer.MIN_VALUE;
 		}
 	}
@@ -380,7 +380,7 @@ public final class DBEntityManager implements AutoCloseable {
 			final int result = em.createNativeQuery(sqlQuery).executeUpdate();
 			em.flush();
 			return result;
-		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException | IllegalStateException e) {
 			return Integer.MIN_VALUE;
 		}
 	}
@@ -845,7 +845,8 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
 	 */
 	@SuppressWarnings("resource")
-	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst, final int indexLast) {
+	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
+			final int indexLast) {
 		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
@@ -857,9 +858,9 @@ public final class DBEntityManager implements AutoCloseable {
 			final StringBuilder sb = new StringBuilder();
 			final String prepCols = colnames.stream().map(col -> "?").collect(Collectors.joining(", ", "(", ")"));
 			sb.append("INSERT INTO ").append(tablename).append("(")
-				.append(colnames.stream().collect(Collectors.joining(", ")))
-				.append(") VALUES ")
-				.append(IntStream.rangeClosed(first, last).mapToObj(e -> prepCols).collect(Collectors.joining(", ")));
+					.append(colnames.stream().collect(Collectors.joining(", ")))
+					.append(") VALUES ")
+					.append(IntStream.rangeClosed(first, last).mapToObj(e -> prepCols).collect(Collectors.joining(", ")));
 			final String sql = sb.toString();
 			try (PreparedStatement prepared = conn.prepareStatement(sql)) {
 				int pos = 1;
@@ -924,7 +925,8 @@ public final class DBEntityManager implements AutoCloseable {
 				this.transactionRollback();
 				return Integer.MIN_VALUE;
 			}
-		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException | SQLException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException
+				| SQLException e) {
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} finally {
@@ -957,8 +959,8 @@ public final class DBEntityManager implements AutoCloseable {
 		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
 		final StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO ").append(tablename).append("(")
-			.append(colnames.stream().collect(Collectors.joining(", ")))
-			.append(") VALUES ");
+				.append(colnames.stream().collect(Collectors.joining(", ")))
+				.append(") VALUES ");
 		for (int i = first; i <= last; i++) {
 			sb.append("(");
 			final Object[] data = entities.get(i);
@@ -1104,14 +1106,15 @@ public final class DBEntityManager implements AutoCloseable {
 			throw new NoSuchFieldException("Das angeforderte Attribut für die Query ist nicht vom Typ String.");
 		} catch (final Exception e) {
 			e.printStackTrace();
-			throw new DeveloperNotificationException("Der Datenbankzugriff ist fehlgeschlagen, da das Query-Attribut " + queryAttribute + " bei der Klasse " + cl.getCanonicalName() + " nicht vorhanden ist.");
+			throw new DeveloperNotificationException("Der Datenbankzugriff ist fehlgeschlagen, da das Query-Attribut " + queryAttribute + " bei der Klasse "
+					+ cl.getCanonicalName() + " nicht vorhanden ist.");
 		}
 	}
 
 
 	/**
 	 * Stellt eine Datenbank-Anfrage für alle Datensätze vom angegebenen DTO-Typ
-     * und gibt eine Liste dieser Daten zurück.
+	 * und gibt eine Liste dieser Daten zurück.
 	 *
 	 * @param <T>     die DTO-Klasse
 	 * @param cl      das Klassen-Objekt für die DTO-Klasse
@@ -1125,7 +1128,7 @@ public final class DBEntityManager implements AutoCloseable {
 
 	/**
 	 * Stellt eine Datenbank-Anfrage für alle Datensätze vom angegebenen DTO-Typ
-     * und gibt eine Liste dieser Daten zurück.
+	 * und gibt eine Liste dieser Daten zurück.
 	 *
 	 * @param <T>     die DTO-Klasse
 	 * @param cl      das Klassen-Objekt für die DTO-Klasse
@@ -1252,7 +1255,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 *
 	 * @return Rückgabetyp
 	 */
-	public  <T> boolean persistNewWithAutoInkrement(final Class<T> t, final LongFunction<T> idApplicator) {
+	public <T> boolean persistNewWithAutoInkrement(final Class<T> t, final LongFunction<T> idApplicator) {
 		this.transactionBegin();
 		final long nextID = transactionGetNextID(t);
 		final T daten = idApplicator.apply(nextID);

@@ -15,27 +15,27 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public final class SprachreferenzniveauConverter extends DBAttributeConverter<Sprachreferenzniveau, String> {
 
-    /** Die Instanz des Konverters */
-    public static final SprachreferenzniveauConverter instance = new SprachreferenzniveauConverter();
+	/** Die Instanz des Konverters */
+	public static final SprachreferenzniveauConverter instance = new SprachreferenzniveauConverter();
 
-    @Override
-    public String convertToDatabaseColumn(final Sprachreferenzniveau attribute) {
-        return attribute == null ? null : attribute.daten.kuerzel;
-    }
+	@Override
+	public String convertToDatabaseColumn(final Sprachreferenzniveau attribute) {
+		return attribute == null ? null : attribute.daten.kuerzel;
+	}
 
-    @Override
-    public Sprachreferenzniveau convertToEntityAttribute(final String dbData) {
-        return Sprachreferenzniveau.getByKuerzel(dbData);
-    }
+	@Override
+	public Sprachreferenzniveau convertToEntityAttribute(final String dbData) {
+		return Sprachreferenzniveau.getByKuerzel(dbData);
+	}
 
-    @Override
-    public Class<Sprachreferenzniveau> getResultType() {
-        return Sprachreferenzniveau.class;
-    }
+	@Override
+	public Class<Sprachreferenzniveau> getResultType() {
+		return Sprachreferenzniveau.class;
+	}
 
-    @Override
-    public Class<String> getDBType() {
-        return String.class;
-    }
+	@Override
+	public Class<String> getDBType() {
+		return String.class;
+	}
 
 }

@@ -22,9 +22,9 @@ public class DBException extends Exception {
 	 *
 	 * @param cause   der Grund für diese Exception
 	 */
-    public DBException(final Throwable cause) {
-    	super(cause);
-    }
+	public DBException(final Throwable cause) {
+		super(cause);
+	}
 
 	/**
 	 * Erzeugt eine {@link DBException} mit der angegebenen textuellen Beschreibung

@@ -218,23 +218,23 @@ public enum SchemaRevisionen {
 	 * @return das Objekt für die Updates zu dieser Revision
 	 */
 	public final SchemaRevisionUpdateSQL getUpdater() {
-	    if (updater == null) {
-	        updater = switch (this) {
-	            case REV_1 -> new Revision1Updates();
-	            case REV_2 -> new Revision2Updates();
-	            case REV_3 -> new Revision3Updates();
-	            case REV_4 -> new Revision4Updates();
-	            case REV_6 -> new Revision6Updates();
-	            case REV_11 -> new Revision11Updates();
-	            case REV_13 -> new Revision13Updates();
-	            case REV_14 -> new Revision14Updates();
-	            case REV_15 -> new Revision15Updates();
-	            case REV_17 -> new Revision17Updates();
-	            case REV_18 -> new Revision18Updates();
-	            default -> new RevisionNoUpdates(this);
-	        };
-	    }
-	    return updater;
+		if (updater == null) {
+			updater = switch (this) {
+				case REV_1 -> new Revision1Updates();
+				case REV_2 -> new Revision2Updates();
+				case REV_3 -> new Revision3Updates();
+				case REV_4 -> new Revision4Updates();
+				case REV_6 -> new Revision6Updates();
+				case REV_11 -> new Revision11Updates();
+				case REV_13 -> new Revision13Updates();
+				case REV_14 -> new Revision14Updates();
+				case REV_15 -> new Revision15Updates();
+				case REV_17 -> new Revision17Updates();
+				case REV_18 -> new Revision18Updates();
+				default -> new RevisionNoUpdates(this);
+			};
+		}
+		return updater;
 	}
 
 }

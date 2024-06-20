@@ -58,121 +58,121 @@ public enum SchemaDatentypen {
 	 *
 	 * @return der Name des Datentyps.
 	 */
-    public String getName() {
-    	return this.name().toLowerCase();
-    }
+	public String getName() {
+		return this.name().toLowerCase();
+	}
 
-    /**
-     * Gibt an, ob dies ein Datentyp für Ganzzahlen ist oder nicht.
-     *
-     * @return true, falls es sich um einen Datentyp für Ganzzahlen handelt und ansonsten false
-     */
-    public boolean isIntType() {
-    	return switch (this) {
+	/**
+	 * Gibt an, ob dies ein Datentyp für Ganzzahlen ist oder nicht.
+	 *
+	 * @return true, falls es sich um einen Datentyp für Ganzzahlen handelt und ansonsten false
+	 */
+	public boolean isIntType() {
+		return switch (this) {
 			case CHAR, VARCHAR, TEXT -> false;
 			case DATE, TIME, DATETIME -> false;
-    		case BOOLEAN, FLOAT, LONGBLOB -> false;
-    		case SMALLINT, INT, BIGINT -> true;
-    		default -> throw new IllegalArgumentException("Unexpected value: " + this);
-    	};
-    }
+			case BOOLEAN, FLOAT, LONGBLOB -> false;
+			case SMALLINT, INT, BIGINT -> true;
+			default -> throw new IllegalArgumentException("Unexpected value: " + this);
+		};
+	}
 
 	/**
 	 * Gibt an, ob Anführungszeichen im SQL-Code verwendet werden sollen, da es sich in SQL um Strings handelt
 	 *
 	 * @return true, falls es sich in SQL um einen String handelt.
 	 */
-    public boolean isQuoted() {
-    	return switch (this) {
+	public boolean isQuoted() {
+		return switch (this) {
 			case CHAR, VARCHAR, TEXT -> true;
 			case DATE, TIME, DATETIME -> true;
-    		case BOOLEAN, SMALLINT, INT, BIGINT, FLOAT, LONGBLOB -> false;
-    		default -> throw new IllegalArgumentException("Unexpected value: " + this);
-    	};
-    }
+			case BOOLEAN, SMALLINT, INT, BIGINT, FLOAT, LONGBLOB -> false;
+			default -> throw new IllegalArgumentException("Unexpected value: " + this);
+		};
+	}
 
 	/**
 	 * Gibt an, ob es sich um einen Typ für Zeichenketten handelt.
 	 *
 	 * @return true, falls es sich um einen Typ für Zeichenketten handelt und ansonsten false
 	 */
-    public boolean isCharString() {
-    	return switch (this) {
+	public boolean isCharString() {
+		return switch (this) {
 			case CHAR, VARCHAR, TEXT -> true;
 			case DATE, TIME, DATETIME -> false;
-    		case BOOLEAN, SMALLINT, INT, BIGINT, FLOAT, LONGBLOB -> false;
-    		default -> throw new IllegalArgumentException("Unexpected value: " + this);
-    	};
-    }
+			case BOOLEAN, SMALLINT, INT, BIGINT, FLOAT, LONGBLOB -> false;
+			default -> throw new IllegalArgumentException("Unexpected value: " + this);
+		};
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung im SQL-Code für das DBMS MariaDB.
 	 *
 	 * @return der Name des Datentyps für das DBMS MariaDB
 	 */
-    public String mariadb() {
-    	return switch (this) {
+	public String mariadb() {
+		return switch (this) {
 			case TEXT -> "longtext";
 			case BOOLEAN -> "int";
-    		default -> this.name().toLowerCase();
-    	};
-    }
+			default -> this.name().toLowerCase();
+		};
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung im SQL-Code für das DBMS MySQL.
 	 *
 	 * @return der Name des Datentyps für das DBMS MySQL
 	 */
-    public String mysql() {
-    	return switch (this) {
+	public String mysql() {
+		return switch (this) {
 			case TEXT -> "longtext";
 			case BOOLEAN -> "int";
-    		default -> this.name().toLowerCase();
-    	};
-    }
+			default -> this.name().toLowerCase();
+		};
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung im SQL-Code für das DBMS Microsoft SQL Server.
 	 *
 	 * @return der Name des Datentyps für das DBMS Microsoft SQL Server
 	 */
-    public String mssql() {
-    	return switch (this) {
-    		case CHAR -> "nchar";
-    		case DATETIME -> "datetime2";
+	public String mssql() {
+		return switch (this) {
+			case CHAR -> "nchar";
+			case DATETIME -> "datetime2";
 			case LONGBLOB -> "varbinary(max)";
 			case TEXT -> "nvarchar(max)";
 			case VARCHAR -> "nvarchar";
 			case BOOLEAN -> "int";
-    		default -> this.name().toLowerCase();
-    	};
-    }
+			default -> this.name().toLowerCase();
+		};
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung im SQL-Code für das DBMS Microsoft SQLite.
 	 *
 	 * @return der Name des Datentyps für das DBMS SQLite
 	 */
-    public String sqlite() {
-    	return switch (this) {
+	public String sqlite() {
+		return switch (this) {
 			case BOOLEAN -> "int";
-    		default -> this.name().toLowerCase();
-    	};
-    }
+			default -> this.name().toLowerCase();
+		};
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung im SQL-Code für das alte Microsoft Access Format mdb.
 	 *
 	 * @return der Name des Datentyps für das alte Microsoft Access Format mdb
 	 */
-    public String mdb() {
-    	return switch (this) {
+	public String mdb() {
+		return switch (this) {
 			case LONGBLOB -> "varbinary(16777216)";
 			case BOOLEAN -> "int";
 			case TIME -> "timestamp";
 			default -> this.name().toLowerCase();
 		};
-    }
+	}
 
 	/**
 	 * Der Name des Datentyps für die Verwendung in Java als elementaren Datentyp (ohne Einsatz von JPA-Konvertern)
@@ -182,8 +182,8 @@ public enum SchemaDatentypen {
 	 *
 	 * @return der Name des unter Java zu verwendenden Datentyps (ohne Einsatz von JPA-Konvertern)
 	 */
-    public String java(final boolean isNotNull) {
-    	return switch (this) {
+	public String java(final boolean isNotNull) {
+		return switch (this) {
 			case BIGINT -> isNotNull ? "long" : "Long";
 			case CHAR -> "String";
 			case DATE -> "String";
@@ -197,21 +197,21 @@ public enum SchemaDatentypen {
 			case BOOLEAN -> isNotNull ? "boolean" : "Boolean";
 			case TIME -> "String";
 		};
-    }
+	}
 
 
-    /**
-     * Gibt zurück, ob der Datentype ein primitiver Datentyp in Java
-     * ist oder nicht.
-     *
-     * @param isNotNull   gibt an, ob der Datentyp als NotNull gekennzeichnet ist
-     *
-     * @return true, wenn der Datentype primitiv ist und ansonsten false
-     */
-    public boolean isJavaPrimitiveType(final boolean isNotNull) {
-    	if (!isNotNull)
-    		return false;
-    	return switch (this) {
+	/**
+	 * Gibt zurück, ob der Datentype ein primitiver Datentyp in Java
+	 * ist oder nicht.
+	 *
+	 * @param isNotNull   gibt an, ob der Datentyp als NotNull gekennzeichnet ist
+	 *
+	 * @return true, wenn der Datentype primitiv ist und ansonsten false
+	 */
+	public boolean isJavaPrimitiveType(final boolean isNotNull) {
+		if (!isNotNull)
+			return false;
+		return switch (this) {
 			case BIGINT -> true;
 			case CHAR -> false;
 			case DATE -> false;
@@ -225,7 +225,7 @@ public enum SchemaDatentypen {
 			case BOOLEAN -> true;
 			case TIME -> false;
 		};
-    }
+	}
 
 
 
@@ -236,7 +236,7 @@ public enum SchemaDatentypen {
 	 *
 	 * @return der spezielle SQL-Datentyp des angegebenen DBMS
 	 */
-    public String getDBType(final DBDriver dbms) {
+	public String getDBType(final DBDriver dbms) {
 		switch (dbms) {
 			case MARIA_DB:
 				return this.mariadb();
@@ -251,19 +251,19 @@ public enum SchemaDatentypen {
 			default:
 				return null;
 		}
-    }
+	}
 
-    /**
-     * Liefert den Datentyp anhand des übergebenen Namens zurück.
-     *
-     * @param name   der Name des Datentyps
-     *
-     * @return der Datentyp
-     */
-    public static SchemaDatentypen getByName(final String name) {
-    	if (_typen == null)
-    		_typen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(t -> t.getName(), t -> t));
-    	return _typen.get(name);
-    }
+	/**
+	 * Liefert den Datentyp anhand des übergebenen Namens zurück.
+	 *
+	 * @param name   der Name des Datentyps
+	 *
+	 * @return der Datentyp
+	 */
+	public static SchemaDatentypen getByName(final String name) {
+		if (_typen == null)
+			_typen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(t -> t.getName(), t -> t));
+		return _typen.get(name);
+	}
 
 }

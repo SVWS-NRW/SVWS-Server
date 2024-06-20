@@ -10,34 +10,34 @@ import org.slf4j.spi.LoggerFactoryBinder;
 public final class StaticLoggerBinder implements LoggerFactoryBinder {
 
 	/** Die Instanz dieser Binding-Klasse */
-    private static final StaticLoggerBinder _instance = new StaticLoggerBinder();
+	private static final StaticLoggerBinder _instance = new StaticLoggerBinder();
 
-    /** Die API-Version von SLF4J für welche diese Klasse implementiert wurde */
-    public static String REQUESTED_API_VERSION = "1.7";
+	/** Die API-Version von SLF4J für welche diese Klasse implementiert wurde */
+	public static String REQUESTED_API_VERSION = "1.7";
 
-    /** Die Factory-Instanz für das Logging */
-    private final SVWSLoggerFactory _factory = new SVWSLoggerFactory();
-
-
-    /**
-     * Gibt die Singleton-Instanz dieser Binding-Klasse zurück.
-     *
-     * @return die Instanz
-     */
-    public static StaticLoggerBinder getSingleton() {
-        return _instance;
-    }
+	/** Die Factory-Instanz für das Logging */
+	private final SVWSLoggerFactory _factory = new SVWSLoggerFactory();
 
 
-    @Override
+	/**
+	 * Gibt die Singleton-Instanz dieser Binding-Klasse zurück.
+	 *
+	 * @return die Instanz
+	 */
+	public static StaticLoggerBinder getSingleton() {
+		return _instance;
+	}
+
+
+	@Override
 	public ILoggerFactory getLoggerFactory() {
-        return _factory;
-    }
+		return _factory;
+	}
 
 
-    @Override
+	@Override
 	public String getLoggerFactoryClassStr() {
-        return SVWSLoggerFactory.class.getName();
-    }
+		return SVWSLoggerFactory.class.getName();
+	}
 
 }

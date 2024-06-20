@@ -468,10 +468,10 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	@Override
 	public String toString() {
-		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", notenKrzQuartal=" + noteQuartal + ", kursart="
-				+ kursart + ", AbiturFach=" + AbiturFach + ", fehlstundenGesamt=" + fehlstundenGesamt
+		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", notenKrzQuartal=" + noteQuartal
+				+ ", kursart=" + kursart + ", AbiturFach=" + AbiturFach + ", fehlstundenGesamt=" + fehlstundenGesamt
 				+ ", fehlstundenUnentschuldigt=" + fehlstundenUnentschuldigt + ", fachbezogeneBemerkungen="
-				+ fachbezogeneBemerkungen + ", abschnittID=" + abschnittID + ", klasse=" + klasse +  ", pruefungsordnung=" + pruefungsordnung
+				+ fachbezogeneBemerkungen + ", abschnittID=" + abschnittID + ", klasse=" + klasse + ", pruefungsordnung=" + pruefungsordnung
 				+ ", lernbereich1note=" + lernbereich1note + ", lernbereich2note=" + lernbereich2note
 				+ ", foerderschwerpunkt1Kuerzel=" + foerderschwerpunkt1Kuerzel + ", foerderschwerpunkt2Kuerzel="
 				+ foerderschwerpunkt2Kuerzel + "]";

@@ -25,16 +25,16 @@ import de.svws_nrw.ext.jbcrypt.BCrypt;
 public final class Benutzer {
 
 	/** Der Benutzername des angemeldeten Benutzers. */
-    private String _username;
+	private String _username;
 
-    /** Das Kennwort des angemeldeten Benutzers */
-    private String _password;
+	/** Das Kennwort des angemeldeten Benutzers */
+	private String _password;
 
-    /** Das AES-Objekt, passend zum angemeldeten Benutzer. */
-    private AES _aes;
+	/** Das AES-Objekt, passend zum angemeldeten Benutzer. */
+	private AES _aes;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen SVWS-Benutzers. */
-    private Long _id = null;
+	private Long _id = null;
 
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final DBConfig _config;
@@ -46,43 +46,43 @@ public final class Benutzer {
 	private Long _idLehrer = null;
 
 
-    /**
-     * Enthält die Information welche Kompetenzen der Benutzer in Bezug auf den Datenbankzugriff hat.
-     * Die Kompetenzen erlauben die Zuordnung von OpenAPI-Methode zu einzelnen Kompetenzbereichen, welche
-     * dann einem Datenbankbenutzer administrativ zugewiesen werden. Diese Zuordnung ist in der SVWS-Datenbank
-     * gespeichert.
-     */
-    private List<BenutzerKompetenz> _kompetenzen = new ArrayList<>();
+	/**
+	 * Enthält die Information welche Kompetenzen der Benutzer in Bezug auf den Datenbankzugriff hat.
+	 * Die Kompetenzen erlauben die Zuordnung von OpenAPI-Methode zu einzelnen Kompetenzbereichen, welche
+	 * dann einem Datenbankbenutzer administrativ zugewiesen werden. Diese Zuordnung ist in der SVWS-Datenbank
+	 * gespeichert.
+	 */
+	private List<BenutzerKompetenz> _kompetenzen = new ArrayList<>();
 
-    /**
-     * Enthält die IDs zu den Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
-     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer oder
-     * auch durch die Tätigkeit als Abteilungsleiter erfolgen.
-     */
-    private final Set<Long> _idsKlassen = new HashSet<>();
+	/**
+	 * Enthält die IDs zu den Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
+	 * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer oder
+	 * auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+	 */
+	private final Set<Long> _idsKlassen = new HashSet<>();
 
-    /**
-     * Enthält die aktuellen Leitungsfunktionen des Benutzers, falls es sich um einen Lehrer
-     * handelt. Diese sind normalerweise in Bezug auf das aktuelle Datum des Servers gesetzt.
-     */
-    private final Set<LehrerLeitungsfunktion> _leitungsfunktionen = new HashSet<>();
+	/**
+	 * Enthält die aktuellen Leitungsfunktionen des Benutzers, falls es sich um einen Lehrer
+	 * handelt. Diese sind normalerweise in Bezug auf das aktuelle Datum des Servers gesetzt.
+	 */
+	private final Set<LehrerLeitungsfunktion> _leitungsfunktionen = new HashSet<>();
 
 
-    /**
-     * Erzeugt einen neuen Datenbank-Benutzer, wobei die für den Datenbankzugriff zu
-     * verwendende {@link DBConfig} angegeben wird.
-     *
+	/**
+	 * Erzeugt einen neuen Datenbank-Benutzer, wobei die für den Datenbankzugriff zu
+	 * verwendende {@link DBConfig} angegeben wird.
+	 *
 	 * @param config   die Datenbank-Konfiguration
 	 *
-     * @throws DBException wenn die Authentifizierung fehlschlägt
-     */
-    private Benutzer(final DBConfig config) throws DBException {
-    	this._username = "niemand";
-    	this._password = "keines";
-    	this._aes = null;
-    	this._config = config;
-    	this.connectionManager = ConnectionManager.get(config);
-    }
+	 * @throws DBException wenn die Authentifizierung fehlschlägt
+	 */
+	private Benutzer(final DBConfig config) throws DBException {
+		this._username = "niemand";
+		this._password = "keines";
+		this._aes = null;
+		this._config = config;
+		this.connectionManager = ConnectionManager.get(config);
+	}
 
 
 	/**
@@ -95,9 +95,9 @@ public final class Benutzer {
 	 *
 	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-    public static Benutzer create(final DBConfig config) throws DBException {
-    	return new Benutzer(config);
-    }
+	public static Benutzer create(final DBConfig config) throws DBException {
+		return new Benutzer(config);
+	}
 
 
 	/**
@@ -116,14 +116,14 @@ public final class Benutzer {
 	}
 
 
-    /**
-     * Erstellt zu dem angegeben Kennwort einen Passwort-Hash mit dem
-     * BCrypt-Algorithmus. Dabei wird ein zufälliger Wert für den Salt verwendet.
-     *
-     * @param password   das Kennwort im Klartext.
-     *
-     * @return der Hash des Kennwortes
-     */
+	/**
+	 * Erstellt zu dem angegeben Kennwort einen Passwort-Hash mit dem
+	 * BCrypt-Algorithmus. Dabei wird ein zufälliger Wert für den Salt verwendet.
+	 *
+	 * @param password   das Kennwort im Klartext.
+	 *
+	 * @return der Hash des Kennwortes
+	 */
 	public static String erstellePasswortHash(final String password) {
 		if ((password == null) || ("".equals(password)))
 			return null;
@@ -141,31 +141,31 @@ public final class Benutzer {
 	 *         oder wenn der Benutzer einer der übergebenen Kompetenzen besitzt. Anonsten
 	 *         wird false zurückgegeben.
 	 */
-    private boolean hatKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
-    	if (kompetenzen == null)
-    		return false;
-    	if (kompetenzen.contains(BenutzerKompetenz.KEINE))
-    		return true;
-    	for (final BenutzerKompetenz kompetenz : kompetenzen)
-    		if (this._kompetenzen.contains(kompetenz))
-    			return true;
-        return false;
-    }
+	private boolean hatKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
+		if (kompetenzen == null)
+			return false;
+		if (kompetenzen.contains(BenutzerKompetenz.KEINE))
+			return true;
+		for (final BenutzerKompetenz kompetenz : kompetenzen)
+			if (this._kompetenzen.contains(kompetenz))
+				return true;
+		return false;
+	}
 
 
-    /**
-     * Prüft, ob es sich bei dem Benutzer um einen Admin-Benutzer mit
-     * allen Kompetenzen handelt.
-     *
-     * @return true, falls es sich um einen Admin-Benutzer mit allen Kompetenzen
-     *         handelt und ansonsten false
-     */
-    public boolean istAdmin() {
-        return (_kompetenzen != null) && _kompetenzen.contains(BenutzerKompetenz.ADMIN);
-    }
+	/**
+	 * Prüft, ob es sich bei dem Benutzer um einen Admin-Benutzer mit
+	 * allen Kompetenzen handelt.
+	 *
+	 * @return true, falls es sich um einen Admin-Benutzer mit allen Kompetenzen
+	 *         handelt und ansonsten false
+	 */
+	public boolean istAdmin() {
+		return (_kompetenzen != null) && _kompetenzen.contains(BenutzerKompetenz.ADMIN);
+	}
 
 
-    /**
+	/**
 	 * Prüft, ob der Benutzer eine der übergeben Kompetenz eingeräumt wurde oder nicht.
 	 * Hierbei findet zunächst eine Prüfung auf einen Admin-Benutzer mit vollen Rechten
 	 * statt. Ist dies ein Admin-Benutzer, so hat er die Kompetenz ohne dass weiter
@@ -176,14 +176,14 @@ public final class Benutzer {
 	 * @return true, im Falle von BenutzerKompetenz.KEINE als zu prüfende Kompetenz
 	 *         oder wenn der Benutzer die übergebene Kompetenz besitzt. Anonsten
 	 *         wird false zurückgegeben.
-     */
-    public boolean pruefeKompetenz(final BenutzerKompetenz... kompetenzen) {
-    	final Set<BenutzerKompetenz> tmp = new HashSet<>(Arrays.asList(kompetenzen));
-    	return istAdmin() || hatKompetenz(tmp);
-    }
+	 */
+	public boolean pruefeKompetenz(final BenutzerKompetenz... kompetenzen) {
+		final Set<BenutzerKompetenz> tmp = new HashSet<>(Arrays.asList(kompetenzen));
+		return istAdmin() || hatKompetenz(tmp);
+	}
 
 
-    /**
+	/**
 	 * Prüft, ob der Benutzer eine der übergeben Kompetenz eingeräumt wurde oder nicht.
 	 * Hierbei findet zunächst eine Prüfung auf einen Admin-Benutzer mit vollen Rechten
 	 * statt. Ist dies ein Admin-Benutzer, so hat er die Kompetenz ohne dass weiter
@@ -194,10 +194,10 @@ public final class Benutzer {
 	 * @return true, im Falle von BenutzerKompetenz.KEINE als zu prüfende Kompetenz
 	 *         oder wenn der Benutzer die übergebene Kompetenz besitzt. Anonsten
 	 *         wird false zurückgegeben.
-     */
-    public boolean pruefeKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
-    	return istAdmin() || hatKompetenz(kompetenzen);
-    }
+	 */
+	public boolean pruefeKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
+		return istAdmin() || hatKompetenz(kompetenzen);
+	}
 
 
 	/**
@@ -360,8 +360,8 @@ public final class Benutzer {
 
 	/**
 	 * Setzt die IDs der Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
-     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
-     * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+	 * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
+	 * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
 	 *
 	 * @param idsKlassen   die IDs der Klassen
 	 */
@@ -373,9 +373,9 @@ public final class Benutzer {
 
 	/**
 	 * Gibt die IDs der Klasse zurück, bei welchen der Benutzer einen vollständigen Zugriff bei
-     * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
-     * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
-     *
+	 * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
+	 * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
+	 *
 	 * @return die IDs der Klassen
 	 */
 	public Set<Long> getKlassenIDs() {

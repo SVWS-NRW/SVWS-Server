@@ -97,7 +97,7 @@ public class SchemaTabelle {
 		if ((this._revision.revision > SchemaRevisionen.maxRevision.revision)
 				|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)))
 			return true;
-		for (final SchemaTabelleSpalte spalte: this._spalten)
+		for (final SchemaTabelleSpalte spalte : this._spalten)
 			if (spalte.brauchtDeveloperDTO())
 				return true;
 		return false;
@@ -110,7 +110,8 @@ public class SchemaTabelle {
 	 */
 	public void setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
-			throw new RuntimeException("Die Revision, ab wann eine Tabelle veraltet ist kann nicht auf undefiniert gesetzt werden. Dies ist bereits der Default-Wert.");
+			throw new RuntimeException("Die Revision, ab wann eine Tabelle veraltet ist kann nicht auf undefiniert gesetzt werden. Dies ist bereits der"
+					+ " Default-Wert.");
 		this._veraltet = veraltet;
 	}
 
@@ -286,9 +287,9 @@ public class SchemaTabelle {
 	 * @return die Liste der Indizes
 	 */
 	public List<SchemaTabelleIndex> indizes(final long rev) {
-    	return _indizes.stream().filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
-        				|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
-    			.toList();
+		return _indizes.stream().filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
+				|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
+				.toList();
 	}
 
 
@@ -367,7 +368,8 @@ public class SchemaTabelle {
 			if (tabReferenziert == null)
 				tabReferenziert = ref.b.tabelle();
 			if (ref.b.tabelle() == this)
-				throw new RuntimeException("Die Tabelle der zweiten Spalte darf nicht dieser Tabelle entsprechen. Die Tabelle kann nicht auf sich selbst verweisen");
+				throw new RuntimeException(
+						"Die Tabelle der zweiten Spalte darf nicht dieser Tabelle entsprechen. Die Tabelle kann nicht auf sich selbst verweisen");
 			if (ref.b.tabelle() != tabReferenziert)
 				throw new RuntimeException("Die zweiten Spalten müssen immer zu der gleichen Tabelle gehören.");
 			spalten.add(ref.a);
@@ -430,9 +432,9 @@ public class SchemaTabelle {
 	 * @param coreType    die Klasse mit den Informationen zur des Core-Types
 	 */
 	public void setCoreType(final SchemaTabelleCoreType coreType) {
-	    if (_coreType != null)
-	        throw new RuntimeException("Der Tabelle wurde bereits zuvor ein Core-Type zugeordnet. Zwei Zuordnungen sind nicht zulässig.");
-	    _coreType = coreType;
+		if (_coreType != null)
+			throw new RuntimeException("Der Tabelle wurde bereits zuvor ein Core-Type zugeordnet. Zwei Zuordnungen sind nicht zulässig.");
+		_coreType = coreType;
 	}
 
 
@@ -442,98 +444,98 @@ public class SchemaTabelle {
 	 * @return true, falls ein Core-Type zugeordet ist und ansonsten false
 	 */
 	public boolean hasCoreType() {
-	    return (_coreType != null);
+		return (_coreType != null);
 	}
 
 
-    /**
-     * Gibt die Core-Type-Zuordnung dieser Tabelle zurück, falls
-     * einer zugeordnet ist. Ansonsten wird null zurückgegeben.
-     *
-     * @return die Core-Type-Zuordnung oder null
-     */
-    public SchemaTabelleCoreType getCoreType() {
-        return _coreType;
-    }
+	/**
+	 * Gibt die Core-Type-Zuordnung dieser Tabelle zurück, falls
+	 * einer zugeordnet ist. Ansonsten wird null zurückgegeben.
+	 *
+	 * @return die Core-Type-Zuordnung oder null
+	 */
+	public SchemaTabelleCoreType getCoreType() {
+		return _coreType;
+	}
 
 
-    /**
-     * Prüft, ob die Tabelle in der angegebenen Revision definiert ist oder nicht.
-     *
-     * @param rev   die zu prüfende Revision
-     *
-     * @return true, falls die Tabelle in der Revision definiert ist und ansonsten false
-     */
-    public boolean isDefined(final long rev) {
-    	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-    	return (revision >= _revision.revision) && ((_veraltet.revision < 0) || (revision < _veraltet.revision));
-    }
+	/**
+	 * Prüft, ob die Tabelle in der angegebenen Revision definiert ist oder nicht.
+	 *
+	 * @param rev   die zu prüfende Revision
+	 *
+	 * @return true, falls die Tabelle in der Revision definiert ist und ansonsten false
+	 */
+	public boolean isDefined(final long rev) {
+		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
+		return (revision >= _revision.revision) && ((_veraltet.revision < 0) || (revision < _veraltet.revision));
+	}
 
 
-    /**
-     * Liefert die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
-     *
-     * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
-     */
-    public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
-    }
+	/**
+	 * Liefert die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
+	 *
+	 * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
+	 */
+	public List<SchemaTabelleSpalte> getSpalten() {
+		return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
+	}
 
 
-    /**
-     * Liefert die Tabellenspalten, die in der angegeben Revision definiert sind in der durch das
-     * Feld Sortierung definierten Reihenfolge.
-     *
-     * @param rev   die Revision, in der die Tabellenspalte definiert sein muss
-     *
-     * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
-     */
-    public List<SchemaTabelleSpalte> getSpalten(final long rev) {
-    	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-    	return _spalten.stream()
-    			.filter(sp -> (revision >= sp.revision().revision) && ((sp.veraltet().revision < 0) || (revision < sp.veraltet().revision)))
-    			.sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
-    }
+	/**
+	 * Liefert die Tabellenspalten, die in der angegeben Revision definiert sind in der durch das
+	 * Feld Sortierung definierten Reihenfolge.
+	 *
+	 * @param rev   die Revision, in der die Tabellenspalte definiert sein muss
+	 *
+	 * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
+	 */
+	public List<SchemaTabelleSpalte> getSpalten(final long rev) {
+		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
+		return _spalten.stream()
+				.filter(sp -> (revision >= sp.revision().revision) && ((sp.veraltet().revision < 0) || (revision < sp.veraltet().revision)))
+				.sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
+	}
 
 
-    /**
-     * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
-     *
-     * @param rev   die Revision
-     *
-     * @return der Name der Java-Klasse
-     */
-    public String getJavaKlasse(final long rev) {
-    	if (rev > 0)
-    		return "Dev" + _javaClassName;
-    	if (rev == 0)
-    		return "Migration" + _javaClassName;
+	/**
+	 * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
+	 *
+	 * @param rev   die Revision
+	 *
+	 * @return der Name der Java-Klasse
+	 */
+	public String getJavaKlasse(final long rev) {
+		if (rev > 0)
+			return "Dev" + _javaClassName;
+		if (rev == 0)
+			return "Migration" + _javaClassName;
 		return _javaClassName;
 	}
 
 
 	/**
-     * Liefert die Spalte mit dem angegebenen Spaltennamen
-     *
-     * @param name   der Spaltenname
-     *
-     * @return die Tabellenspalte
-     */
-    public SchemaTabelleSpalte getSpalte(final String name) {
-    	return _mapSpalten.get(name);
-    }
+	 * Liefert die Spalte mit dem angegebenen Spaltennamen
+	 *
+	 * @param name   der Spaltenname
+	 *
+	 * @return die Tabellenspalte
+	 */
+	public SchemaTabelleSpalte getSpalte(final String name) {
+		return _mapSpalten.get(name);
+	}
 
 
-    /**
-     * Liefert den CREATE TABLE-Befehl in der entsprechenden Version zu dieser Tabelle. Dabei
-     * wird der Dialekt des angegebenen DBMS genutzt.
-     *
-     * @param dbms     das DBMS in dessen Dialekt der CREATE TABLE Befehl formuliert ist
-     * @param rev      die Revision des Schemas, für welche der SQL-Befehl erzeugt wird
-     *
-     * @return der entsprechende SQL-Befehl
-     */
-    public String getSQL(final DBDriver dbms, final long rev) {
+	/**
+	 * Liefert den CREATE TABLE-Befehl in der entsprechenden Version zu dieser Tabelle. Dabei
+	 * wird der Dialekt des angegebenen DBMS genutzt.
+	 *
+	 * @param dbms     das DBMS in dessen Dialekt der CREATE TABLE Befehl formuliert ist
+	 * @param rev      die Revision des Schemas, für welche der SQL-Befehl erzeugt wird
+	 *
+	 * @return der entsprechende SQL-Befehl
+	 */
+	public String getSQL(final DBDriver dbms, final long rev) {
 		final String newline = System.lineSeparator();
 		final String pk = this.getPrimaerschluesselSQL();
 		return "CREATE TABLE " + this._name + " (" + newline
@@ -541,8 +543,9 @@ public class SchemaTabelle {
 				+ (((pk == null) || ("".equals(pk))) ? "" : "," + newline + "  " + pk)
 				+ this.getSQLFremdschluessel(rev)
 				+ this.getSQLUniqueContraints(rev)
-				+ newline + ")" + (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "") + ";";
-    }
+				+ newline + ")" + (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "")
+				+ ";";
+	}
 
 
 	/**
@@ -557,145 +560,145 @@ public class SchemaTabelle {
 	}
 
 
-    /**
-     * Liefert alle in der angegebenen Revision gültigen Fremdschlüssel
-     *
-     * @param rev   die Revision
-     *
-     * @return die in der angegebenen Revision gültigen Fremdschlüssel
-     */
-    public List<SchemaTabelleFremdschluessel> getFremdschluessel(final long rev) {
-    	return _fremdschluessel.stream()
-			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
-				|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
-			.toList();
-    }
+	/**
+	 * Liefert alle in der angegebenen Revision gültigen Fremdschlüssel
+	 *
+	 * @param rev   die Revision
+	 *
+	 * @return die in der angegebenen Revision gültigen Fremdschlüssel
+	 */
+	public List<SchemaTabelleFremdschluessel> getFremdschluessel(final long rev) {
+		return _fremdschluessel.stream()
+				.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
+				.toList();
+	}
 
 
-    /**
-     * Generiert den SQL-Code für die Fremdschlüssel-Constraints der Tabelle
-     *
-     * @param rev   die Revision, für welche die Fremdschlüssel-Constraints der Tabelle erzeugt werden sollen
-     *
-     * @return der SQL-Code für die Fremdschlüssel-Constraints der Tabelle
-     */
-    private String getSQLFremdschluessel(final long rev) {
-    	final String result = _fremdschluessel.stream()
-			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
-				|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
-			.map(fk -> fk.getSQL())
-			.collect(Collectors.joining("," + System.lineSeparator() + "  "));
-    	if ((result == null) || ("".equals(result)))
-    		return "";
-    	return "," + System.lineSeparator() + "  " + result;
-    }
+	/**
+	 * Generiert den SQL-Code für die Fremdschlüssel-Constraints der Tabelle
+	 *
+	 * @param rev   die Revision, für welche die Fremdschlüssel-Constraints der Tabelle erzeugt werden sollen
+	 *
+	 * @return der SQL-Code für die Fremdschlüssel-Constraints der Tabelle
+	 */
+	private String getSQLFremdschluessel(final long rev) {
+		final String result = _fremdschluessel.stream()
+				.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
+				.map(fk -> fk.getSQL())
+				.collect(Collectors.joining("," + System.lineSeparator() + "  "));
+		if ((result == null) || ("".equals(result)))
+			return "";
+		return "," + System.lineSeparator() + "  " + result;
+	}
 
 
-    /**
-     * Erzeugt den SQL-Code für die Spalten der Tabelle.
-     *
-     * @param dbms     das DBMS in dessen SQL-Dialekt formuliert wird
-     * @param rev      die Revision des Schemas, für welche der Spalten-SQL-Code erzeugt wird
-     *
-     * @return der SQL-Code
-     */
-    private String getSQLSpalten(final DBDriver dbms, final long rev) {
-    	return getSpalten().stream()
-			.filter(col -> ((rev == -1) && (col.veraltet().revision == -1))
-					|| ((rev != -1) && (rev >= col.revision().revision) && ((col.veraltet().revision == -1) || (rev < col.veraltet().revision))))
-			.map(col -> col.getSQL(dbms))
-			.collect(Collectors.joining(", " + System.lineSeparator() + "  "));
-    }
+	/**
+	 * Erzeugt den SQL-Code für die Spalten der Tabelle.
+	 *
+	 * @param dbms     das DBMS in dessen SQL-Dialekt formuliert wird
+	 * @param rev      die Revision des Schemas, für welche der Spalten-SQL-Code erzeugt wird
+	 *
+	 * @return der SQL-Code
+	 */
+	private String getSQLSpalten(final DBDriver dbms, final long rev) {
+		return getSpalten().stream()
+				.filter(col -> ((rev == -1) && (col.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= col.revision().revision) && ((col.veraltet().revision == -1) || (rev < col.veraltet().revision))))
+				.map(col -> col.getSQL(dbms))
+				.collect(Collectors.joining(", " + System.lineSeparator() + "  "));
+	}
 
 
-    /**
-     * Generiert den SQL-Code für die Unique-Constraints der Tabelle
-     *
-     * @param rev   die Revision, für welche die Unique-Constraints der Tabelle erzeugt werden sollen
-     *
-     * @return der SQL-Code für die Unique-Constraints der Tabelle
-     */
-    private String getSQLUniqueContraints(final long rev) {
-    	final String result = _unique.stream()
-    		.filter(uc -> ((rev == -1) && (uc.veraltet().revision == -1))
-    				|| ((rev != -1) && (rev >= uc.revision().revision) && ((uc.veraltet().revision == -1) || (rev < uc.veraltet().revision))))
-    		.map(uc -> uc.getSQL())
-    		.collect(Collectors.joining("," + System.lineSeparator() + "  "));
-    	if ((result == null) || ("".equals(result)))
-    		return "";
-    	return "," + System.lineSeparator() + "  " + result;
-    }
+	/**
+	 * Generiert den SQL-Code für die Unique-Constraints der Tabelle
+	 *
+	 * @param rev   die Revision, für welche die Unique-Constraints der Tabelle erzeugt werden sollen
+	 *
+	 * @return der SQL-Code für die Unique-Constraints der Tabelle
+	 */
+	private String getSQLUniqueContraints(final long rev) {
+		final String result = _unique.stream()
+				.filter(uc -> ((rev == -1) && (uc.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= uc.revision().revision) && ((uc.veraltet().revision == -1) || (rev < uc.veraltet().revision))))
+				.map(uc -> uc.getSQL())
+				.collect(Collectors.joining("," + System.lineSeparator() + "  "));
+		if ((result == null) || ("".equals(result)))
+			return "";
+		return "," + System.lineSeparator() + "  " + result;
+	}
 
 
-    /**
-     * Generiert den SQL-Code für das Erstellen der Indizes der Tabelle
-     *
-     * @param rev   die Revision, für welche die Indizes der Tabelle erzeugt werden sollen
-     *
-     * @return der SQL-Code für die Indizes der Tabelle
-     */
-    public String getSQLIndizes(final long rev) {
-    	return _indizes.stream()
-        		.filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
-        				|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
-        		.map(idx -> idx.getSQL())
-        		.collect(Collectors.joining(System.lineSeparator()));
-    }
+	/**
+	 * Generiert den SQL-Code für das Erstellen der Indizes der Tabelle
+	 *
+	 * @param rev   die Revision, für welche die Indizes der Tabelle erzeugt werden sollen
+	 *
+	 * @return der SQL-Code für die Indizes der Tabelle
+	 */
+	public String getSQLIndizes(final long rev) {
+		return _indizes.stream()
+				.filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
+				.map(idx -> idx.getSQL())
+				.collect(Collectors.joining(System.lineSeparator()));
+	}
 
 
-    /**
-     * Generiert den SQL-Code für das Erstellen oder Entfernen der Trigger der Tabelle
-     *
-     * @param dbms     das DBMS, für welches der Trigger-SQL-Code generiert wird
-     * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
-     * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird.
-     *
-     * @return der SQL-Code für die Trigger der Tabelle
-     */
-    public String getSQLTrigger(final DBDriver dbms, final long rev, final boolean create) {
-    	// Lese die einzelnen Trigger aus
-    	final ArrayList<String> sqlTrigger = new ArrayList<>();
-    	for (final SchemaTabelleTrigger t : this._trigger) {
-    		if (!dbms.equals(t.dbms()))
-    			continue;
-    		// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
-    		if (create) {
-        		if (((rev == -1) && (t.veraltet().revision == -1))
-    					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
-        			sqlTrigger.add(t.getSQL(dbms, true));
-    		} else {
-    			if ((t.veraltet().revision >= 0) && (rev >= t.veraltet().revision))
-    				sqlTrigger.add(t.getSQL(dbms, false));
-    		}
-    	}
-    	sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
-    	// Füge die einzelnen SQL-Code-Abschnitte zu einem Skript zusammen
-    	final var newline = System.lineSeparator();
-    	if (create) {
-	    	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-	    		return sqlTrigger.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
-	    				.collect(Collectors.joining(newline + newline));
-	    	} else if (DBDriver.MSSQL.equals(dbms)) {
-	    		return sqlTrigger.stream().map(sql -> sql + newline + "GO" + newline)
-	    				.collect(Collectors.joining(newline + newline));
-	    	}
-	    	// DBDriver.SQLITE.equals(dbms))
+	/**
+	 * Generiert den SQL-Code für das Erstellen oder Entfernen der Trigger der Tabelle
+	 *
+	 * @param dbms     das DBMS, für welches der Trigger-SQL-Code generiert wird
+	 * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
+	 * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird.
+	 *
+	 * @return der SQL-Code für die Trigger der Tabelle
+	 */
+	public String getSQLTrigger(final DBDriver dbms, final long rev, final boolean create) {
+		// Lese die einzelnen Trigger aus
+		final ArrayList<String> sqlTrigger = new ArrayList<>();
+		for (final SchemaTabelleTrigger t : this._trigger) {
+			if (!dbms.equals(t.dbms()))
+				continue;
+			// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
+			if (create) {
+				if (((rev == -1) && (t.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+					sqlTrigger.add(t.getSQL(dbms, true));
+			} else {
+				if ((t.veraltet().revision >= 0) && (rev >= t.veraltet().revision))
+					sqlTrigger.add(t.getSQL(dbms, false));
+			}
+		}
+		sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
+		// Füge die einzelnen SQL-Code-Abschnitte zu einem Skript zusammen
+		final var newline = System.lineSeparator();
+		if (create) {
+			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
+				return sqlTrigger.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
+						.collect(Collectors.joining(newline + newline));
+			} else if (DBDriver.MSSQL.equals(dbms)) {
+				return sqlTrigger.stream().map(sql -> sql + newline + "GO" + newline)
+						.collect(Collectors.joining(newline + newline));
+			}
+			// DBDriver.SQLITE.equals(dbms))
 			return sqlTrigger.stream().collect(Collectors.joining(newline + newline));
-    	}
-    	return sqlTrigger.stream().collect(Collectors.joining(newline));
-    }
+		}
+		return sqlTrigger.stream().collect(Collectors.joining(newline));
+	}
 
 
-    /**
-     * Prüft, ob die angegebene Spalte eine Spalte des Primärschlüssels ist.
-     *
-     * @param col   die zu prüfende Spalte
-     *
-     * @return true, falls die Spalte Teil des Primärschlüssels ist.
-     */
-    public boolean istPrimaerschlusselAttribut(final SchemaTabelleSpalte col) {
-    	return this._pkSpalten.contains(col);
-    }
+	/**
+	 * Prüft, ob die angegebene Spalte eine Spalte des Primärschlüssels ist.
+	 *
+	 * @param col   die zu prüfende Spalte
+	 *
+	 * @return true, falls die Spalte Teil des Primärschlüssels ist.
+	 */
+	public boolean istPrimaerschlusselAttribut(final SchemaTabelleSpalte col) {
+		return this._pkSpalten.contains(col);
+	}
 
 
 	/**
@@ -715,24 +718,24 @@ public class SchemaTabelle {
 	 * Erstellt die SQL-Skripte zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 *
 	 * @param dbms     das DBMS für welches das Skript angefragt wird
-     * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
+	 * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
 	 * @param create   gibt an, ob das CREATE-Skript oder das Drop-Skript angefragt wird.
 	 *
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
 	public String getPrimaerschluesselTriggerSQL(final DBDriver dbms, final int rev, final boolean create) {
-    	final var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
-    	if (triggerList.isEmpty())
-    		return "";
-    	final var newline = System.lineSeparator();
-    	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-    		return triggerList.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
-    				.collect(Collectors.joining(newline + newline));
-    	} else if (DBDriver.MSSQL.equals(dbms)) {
-    		return triggerList.stream().map(sql -> sql + newline + "GO" + newline)
-    				.collect(Collectors.joining(newline + newline));
-    	}
-    	// DBDriver.SQLITE.equals(dbms))
+		final var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
+		if (triggerList.isEmpty())
+			return "";
+		final var newline = System.lineSeparator();
+		if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
+			return triggerList.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
+					.collect(Collectors.joining(newline + newline));
+		} else if (DBDriver.MSSQL.equals(dbms)) {
+			return triggerList.stream().map(sql -> sql + newline + "GO" + newline)
+					.collect(Collectors.joining(newline + newline));
+		}
+		// DBDriver.SQLITE.equals(dbms))
 		return triggerList.stream().collect(Collectors.joining(newline + newline));
 	}
 
@@ -742,7 +745,7 @@ public class SchemaTabelle {
 	 * Erstellt die SQL-Skripte zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 *
 	 * @param dbms     das DBMS für welches das Skript angefragt wird
-     * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
+	 * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
 	 * @param create   gibt an, ob das CREATE-Skript oder das Drop-Skript angefragt wird.
 	 *
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
@@ -779,8 +782,7 @@ public class SchemaTabelle {
 						+ "  IF NEW." + spalte + " > tmpID THEN" + newline
 						+ "    UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline
 						+ "  END IF;" + newline
-						+ "END" + newline
-				);
+						+ "END" + newline);
 				result.add("CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + newline
 						+ "BEFORE UPDATE" + newline
 						+ "  ON " + tab + " FOR EACH ROW" + newline
@@ -802,8 +804,7 @@ public class SchemaTabelle {
 						+ "      UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline
 						+ "    END IF;" + newline
 						+ "  END IF;" + newline
-						+ "END" + newline
-				);
+						+ "END" + newline);
 			} else if (DBDriver.MSSQL.equals(dbms)) {
 				result.add("exec('" + newline
 						+ "CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + " ON " + tab + " INSTEAD OF INSERT AS" + newline
@@ -845,8 +846,7 @@ public class SchemaTabelle {
 						+ "  UPDATE Schema_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
 						+ "  SET NOCOUNT OFF" + newline
 						+ "END;" + newline
-						+ "')" + newline
-				);
+						+ "')" + newline);
 				result.add("exec('" + newline
 						+ "CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + " ON " + tab + " AFTER UPDATE AS" + newline
 						+ "BEGIN" + newline
@@ -873,99 +873,96 @@ public class SchemaTabelle {
 						+ "      UPDATE Schema_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
 						+ "    END" + newline
 						+ "END;" + newline
-						+ "')" + newline
-				);
+						+ "')" + newline);
 			} else if (DBDriver.SQLITE.equals(dbms)) {
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_1 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
-					+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
-					+ "BEGIN" + newline
-					+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_1 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+								+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+								+ "BEGIN" + newline
+								+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_2 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-					+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
-					+ "BEGIN" + newline
-					+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
-					+ "  UPDATE Schema_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_2 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+								+ "BEGIN" + newline
+								+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab
+								+ "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
+								+ "  UPDATE Schema_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_3 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-					+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
-					+ "BEGIN" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_3 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "BEGIN" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM "
+								+ tab + "), 0));" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_4 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-					+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
-					+ "BEGIN" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_4 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "BEGIN" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_5 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-					+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
-					+ "BEGIN" + newline
-					+ "  UPDATE " + tab + " SET " + spalte + " = coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1);" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_5 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+								+ "BEGIN" + newline
+								+ "  UPDATE " + tab + " SET " + spalte + " = coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1 WHERE " + spalte
+								+ " = NEW." + spalte + ";" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM "
+								+ tab + "), 0) + 1);" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_1 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
-					+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
-					+ "BEGIN" + newline
-					+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_1 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+								+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+								+ "BEGIN" + newline
+								+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_2 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-					+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
-					+ "BEGIN" + newline
-					+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
-					+ "  UPDATE Schema_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_2 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+								+ "BEGIN" + newline
+								+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab
+								+ "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
+								+ "  UPDATE Schema_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_3 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-					+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
-					+ "BEGIN" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_3 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "BEGIN" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM "
+								+ tab + "), 0));" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_4 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-					+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-					+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
-					+ "BEGIN" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_4 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "BEGIN" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
+								+ "END;\r\n");
 				result.add(
-					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_5 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-					+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
-					+ "BEGIN" + newline
-					+ "  -- Update der " + spalte + " in der Tabelle " + tab + " erfolgt durch den Autoinkrement-Trigger 2, daher hier auch kein +1, sondern nur den Max-Wert schreiben" + newline
-					+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
-					+ "END;\r\n"
-				);
+						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_5 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+								+ "BEGIN" + newline
+								+ "  -- Update der " + spalte + " in der Tabelle " + tab
+								+ " erfolgt durch den Autoinkrement-Trigger 2, daher hier auch kein +1, sondern nur den Max-Wert schreiben" + newline
+								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM "
+								+ tab + "), 0));" + newline
+								+ "END;\r\n");
 			}
 		} else {
 			if ((this.veraltet().revision < 0) || (rev < this.veraltet().revision))

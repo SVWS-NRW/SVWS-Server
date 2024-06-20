@@ -25,7 +25,7 @@ public final class UhrzeitConverterString extends DBAttributeConverter<String, T
 	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))
 				? null
-			    : Timestamp.valueOf(LocalTime.parse(attribute).atDate(LocalDate.of(1970, 1, 1)));
+				: Timestamp.valueOf(LocalTime.parse(attribute).atDate(LocalDate.of(1970, 1, 1)));
 	}
 
 	@Override

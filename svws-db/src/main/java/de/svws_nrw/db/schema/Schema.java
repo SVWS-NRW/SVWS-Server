@@ -371,7 +371,8 @@ public final class Schema {
 	public static final Tabelle_Gost_Blockung_Regelparameter tab_Gost_Blockung_Regelparameter = add(new Tabelle_Gost_Blockung_Regelparameter());
 
 	/** Tabelle Gost_Blockung_Zwischenergebnisse_Kurs_Schienen */
-	public static final Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen tab_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen = add(new Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen());
+	public static final Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen tab_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen =
+			add(new Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen());
 
 	/** Tabelle Herkunft */
 	public static final Tabelle_Herkunft tab_Herkunft = add(new Tabelle_Herkunft());
@@ -665,7 +666,8 @@ public final class Schema {
 	public static final Tabelle_EigeneSchule_Abt_Kl tab_EigeneSchule_Abt_Kl = add(new Tabelle_EigeneSchule_Abt_Kl());
 
 	/** Tabelle Gost_Blockung_Zwischenergebnisse_Kurs_Schueler */
-	public static final Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler tab_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler = add(new Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler());
+	public static final Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler tab_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler =
+			add(new Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler());
 
 	/** Tabelle Gost_Schueler */
 	public static final Tabelle_Gost_Schueler tab_Gost_Schueler = add(new Tabelle_Gost_Schueler());
@@ -827,7 +829,8 @@ public final class Schema {
 	public static final Tabelle_Stundenplan_Pausenaufsichten tab_Stundenplan_Pausenaufsichten = add(new Tabelle_Stundenplan_Pausenaufsichten());
 
 	/** Tabelle Stundenplan_PausenaufsichtenBereich */
-	public static final Tabelle_Stundenplan_PausenaufsichtenBereich tab_Stundenplan_PausenaufsichtenBereich = add(new Tabelle_Stundenplan_PausenaufsichtenBereich());
+	public static final Tabelle_Stundenplan_PausenaufsichtenBereich tab_Stundenplan_PausenaufsichtenBereich =
+			add(new Tabelle_Stundenplan_PausenaufsichtenBereich());
 
 	/** Tabelle Stundenplan_Raeume */
 	public static final Tabelle_Stundenplan_Raeume tab_Stundenplan_Raeume = add(new Tabelle_Stundenplan_Raeume());
@@ -854,10 +857,12 @@ public final class Schema {
 	public static final Tabelle_Stundenplan_UnterrichtSchiene tab_Stundenplan_UnterrichtSchiene = add(new Tabelle_Stundenplan_UnterrichtSchiene());
 
 	/** Tabelle_Stundenplan_Kalenderwochen_Zuordnung */
-	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung = add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());
+	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung =
+			add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());
 
-    /** Tabelle Stundenplan_Pausenzeit */
-    public static final Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung tab_Stundenplan_Pausenzeit_Klassenzuordnung = add(new Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung());
+	/** Tabelle Stundenplan_Pausenzeit */
+	public static final Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung tab_Stundenplan_Pausenzeit_Klassenzuordnung =
+			add(new Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung());
 
 	/** Tabelle Stundentafel */
 	public static final Tabelle_Stundentafel tab_Stundentafel = add(new Tabelle_Stundentafel());
@@ -892,110 +897,114 @@ public final class Schema {
 	/** Tabelle DavSyncTokenSchueler */
 	public static final Tabelle_DavSyncTokenSchueler tab_DavSyncTokenSchueler = add(new Tabelle_DavSyncTokenSchueler());
 
-    /** Tabelle DavSyncTokenLehrer */
-    public static final Tabelle_DavSyncTokenLehrer tab_DavSyncTokenLehrer = add(new Tabelle_DavSyncTokenLehrer());
+	/** Tabelle DavSyncTokenLehrer */
+	public static final Tabelle_DavSyncTokenLehrer tab_DavSyncTokenLehrer = add(new Tabelle_DavSyncTokenLehrer());
 
-    /** Tabelle EnmLeistungsdaten */
-    public static final Tabelle_EnmLeistungsdaten tab_EnmLeistungsdaten = add(new Tabelle_EnmLeistungsdaten());
+	/** Tabelle EnmLeistungsdaten */
+	public static final Tabelle_EnmLeistungsdaten tab_EnmLeistungsdaten = add(new Tabelle_EnmLeistungsdaten());
 
-    /** Tabelle EnmLernabschnittsdaten */
-    public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
+	/** Tabelle EnmLernabschnittsdaten */
+	public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
 
-    /** Tabelle EnmTeilleistungen */
-    public static final Tabelle_EnmTeilleistungen tab_EnmTeilleistungen = add(new Tabelle_EnmTeilleistungen());
+	/** Tabelle EnmTeilleistungen */
+	public static final Tabelle_EnmTeilleistungen tab_EnmTeilleistungen = add(new Tabelle_EnmTeilleistungen());
 
-    /** Tabelle_Schulbewerbung_Importe */
-    public static final Tabelle_Schulbewerbung_Importe tab_Schulbewerbung_Importe = add(new Tabelle_Schulbewerbung_Importe());
+	/** Tabelle_Schulbewerbung_Importe */
+	public static final Tabelle_Schulbewerbung_Importe tab_Schulbewerbung_Importe = add(new Tabelle_Schulbewerbung_Importe());
 
-    /** Tabelle Gost_Klausuren_Vorgaben */
-    public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
+	/** Tabelle Gost_Klausuren_Vorgaben */
+	public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
 
-    /** Tabelle Gost_Klausuren_Termine */
-    public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
+	/** Tabelle Gost_Klausuren_Termine */
+	public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
 
-    /** Tabelle Gost_Klausuren_Termine_Jahrgaenge */
-    public static final Tabelle_Gost_Klausuren_Termine_Jahrgaenge tab_Gost_Klausuren_Termine_Jahrgaenge = add(new Tabelle_Gost_Klausuren_Termine_Jahrgaenge());
+	/** Tabelle Gost_Klausuren_Termine_Jahrgaenge */
+	public static final Tabelle_Gost_Klausuren_Termine_Jahrgaenge tab_Gost_Klausuren_Termine_Jahrgaenge = add(new Tabelle_Gost_Klausuren_Termine_Jahrgaenge());
 
-    /** Tabelle Gost_Klausuren_Kursklausuren */
-    public static final Tabelle_Gost_Klausuren_Kursklausuren tab_Gost_Klausuren_Kursklausuren = add(new Tabelle_Gost_Klausuren_Kursklausuren());
+	/** Tabelle Gost_Klausuren_Kursklausuren */
+	public static final Tabelle_Gost_Klausuren_Kursklausuren tab_Gost_Klausuren_Kursklausuren = add(new Tabelle_Gost_Klausuren_Kursklausuren());
 
-    /** Tabelle Gost_Klausuren_Schuelerklausuren */
-    public static final Tabelle_Gost_Klausuren_Schuelerklausuren tab_Gost_Klausuren_Schuelerklausuren = add(new Tabelle_Gost_Klausuren_Schuelerklausuren());
+	/** Tabelle Gost_Klausuren_Schuelerklausuren */
+	public static final Tabelle_Gost_Klausuren_Schuelerklausuren tab_Gost_Klausuren_Schuelerklausuren = add(new Tabelle_Gost_Klausuren_Schuelerklausuren());
 
-    /** Tabelle Gost_Klausuren_Schuelerklausuren_Termine */
-    public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Termine tab_Gost_Klausuren_Schuelerklausuren_Termine = add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Termine());
+	/** Tabelle Gost_Klausuren_Schuelerklausuren_Termine */
+	public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Termine tab_Gost_Klausuren_Schuelerklausuren_Termine =
+			add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Termine());
 
-    /** Tabelle Gost_Klausuren_NtaZeiten */
-    public static final Tabelle_Gost_Klausuren_NtaZeiten tab_Tabelle_Gost_Klausuren_NtaZeiten = add(new Tabelle_Gost_Klausuren_NtaZeiten());
+	/** Tabelle Gost_Klausuren_NtaZeiten */
+	public static final Tabelle_Gost_Klausuren_NtaZeiten tab_Tabelle_Gost_Klausuren_NtaZeiten = add(new Tabelle_Gost_Klausuren_NtaZeiten());
 
-    /** Tabelle Gost_Klausuren_Raeume */
-    public static final Tabelle_Gost_Klausuren_Raeume tab_Gost_Klausuren_Raeume = add(new Tabelle_Gost_Klausuren_Raeume());
+	/** Tabelle Gost_Klausuren_Raeume */
+	public static final Tabelle_Gost_Klausuren_Raeume tab_Gost_Klausuren_Raeume = add(new Tabelle_Gost_Klausuren_Raeume());
 
-    /** Tabelle Gost_Klausuren_Raeume_Stunden */
-    public static final Tabelle_Gost_Klausuren_Raumstunden tab_Gost_Klausuren_Raumstunden = add(new Tabelle_Gost_Klausuren_Raumstunden());
+	/** Tabelle Gost_Klausuren_Raeume_Stunden */
+	public static final Tabelle_Gost_Klausuren_Raumstunden tab_Gost_Klausuren_Raumstunden = add(new Tabelle_Gost_Klausuren_Raumstunden());
 
-    /** Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden */
-    public static final Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden tab_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden = add(new Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden());
+	/** Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden */
+	public static final Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden tab_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden =
+			add(new Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden());
 
-    /** Tabelle Gost_Klausuren_Aufsichten */
-    public static final Tabelle_Gost_Klausuren_Raumstunden_Aufsichten tab_Gost_Klausuren_Raumstunden_Aufsichten = add(new Tabelle_Gost_Klausuren_Raumstunden_Aufsichten());
+	/** Tabelle Gost_Klausuren_Aufsichten */
+	public static final Tabelle_Gost_Klausuren_Raumstunden_Aufsichten tab_Gost_Klausuren_Raumstunden_Aufsichten =
+			add(new Tabelle_Gost_Klausuren_Raumstunden_Aufsichten());
 
-    /** Tabelle Gost_Klausuren_Kalenderinformationen */
-    public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen = add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
+	/** Tabelle Gost_Klausuren_Kalenderinformationen */
+	public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen =
+			add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
 
-    /** Tabelle EigeneSchule_Email */
-    public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
+	/** Tabelle EigeneSchule_Email */
+	public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
 
 
-    /**
-     * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
-     * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.
-     *
-     * @param rev    die Revision
-     *
-     * @return eine Liste mit den SQL-Befehlen
-     */
-    public static List<String> getCreateBenutzerSQL(final long rev) {
-    	final ArrayList<String> result = new ArrayList<>();
-    	if (rev == 0) {
-    		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
-    			 	 + "(1,'Administrator','Admin','1;2;3','$');");
-    		result.add("INSERT INTO Usergroups(UG_ID, UG_Bezeichnung, UG_Kompetenzen, UG_Nr) VALUES "
-    				 + "(1, 'Administrator', '$', 1),"
-    				 + "(2, 'Lehrer', '11;21;22;81;31;61', 3),"
-    				 + "(3, 'Sekretariat', '11;12;13;14;21;81;82;83;31;32;33;34;91;92;93;94;95;61;62;71', 4);");
-    		return result;
-    	}
-    	result.add("INSERT INTO Credentials(ID, Benutzername, BenutzernamePseudonym, Initialkennwort, PasswordHash, RSAPublicKey, RSAPrivateKey, AES) VALUES "
-    			 + "(1, 'Admin', NULL, NULL, NULL, NULL, NULL, NULL);");
+	/**
+	 * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
+	 * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.
+	 *
+	 * @param rev    die Revision
+	 *
+	 * @return eine Liste mit den SQL-Befehlen
+	 */
+	public static List<String> getCreateBenutzerSQL(final long rev) {
+		final ArrayList<String> result = new ArrayList<>();
+		if (rev == 0) {
+			result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
+					+ "(1,'Administrator','Admin','1;2;3','$');");
+			result.add("INSERT INTO Usergroups(UG_ID, UG_Bezeichnung, UG_Kompetenzen, UG_Nr) VALUES "
+					+ "(1, 'Administrator', '$', 1),"
+					+ "(2, 'Lehrer', '11;21;22;81;31;61', 3),"
+					+ "(3, 'Sekretariat', '11;12;13;14;21;81;82;83;31;32;33;34;91;92;93;94;95;61;62;71', 4);");
+			return result;
+		}
+		result.add("INSERT INTO Credentials(ID, Benutzername, BenutzernamePseudonym, Initialkennwort, PasswordHash, RSAPublicKey, RSAPrivateKey, AES) VALUES "
+				+ "(1, 'Admin', NULL, NULL, NULL, NULL, NULL, NULL);");
 		result.add("INSERT INTO BenutzerAllgemein(ID,AnzeigeName,CredentialID) VALUES "
-				 + "(1,'Administrator',1);");
+				+ "(1,'Administrator',1);");
 		result.add("INSERT INTO Benutzer(ID, Typ, Allgemein_ID, Lehrer_ID, Schueler_ID, Erzieher_ID, IstAdmin) VALUES "
-				 + "(1, 0, 1, NULL, NULL, NULL, 1);");
+				+ "(1, 0, 1, NULL, NULL, NULL, 1);");
 		result.add("INSERT INTO Benutzergruppen(ID, Bezeichnung, IstAdmin) VALUES "
-				 + "(1, 'Administrator', 1),"
-				 + "(2, 'Lehrer', 0),"
-				 + "(3, 'Sekretariat', 0);");
+				+ "(1, 'Administrator', 1),"
+				+ "(2, 'Lehrer', 0),"
+				+ "(3, 'Sekretariat', 0);");
 		result.add("INSERT INTO BenutzergruppenMitglieder(Gruppe_ID, Benutzer_ID) VALUES (1, 1);");
 		result.add("INSERT INTO BenutzergruppenKompetenzen(Gruppe_ID, Kompetenz_ID) VALUES "
-				 + "(2, 11), (2, 21), (2, 22), (2, 31), (2, 61), (2, 81),"
-				 + "(3, 11),(3, 12),(3, 13),(3, 14),(3, 21),(3, 31),(3, 32),(3, 33),(3, 34),(3, 61),(3, 62),(3, 71),(3, 81),(3, 82),(3, 83),(3, 91),(3, 92),(3, 93),(3, 94),(3, 95);");
-    	return result;
-    }
+				+ "(2, 11), (2, 21), (2, 22), (2, 31), (2, 61), (2, 81),"
+				+ "(3, 11),(3, 12),(3, 13),(3, 14),(3, 21),(3, 31),(3, 32),(3, 33),(3, 34),(3, 61),(3, 62),(3, 71),(3, 81),(3, 82),(3, 83),(3, 91),(3, 92),(3, 93),(3, 94),(3, 95);");
+		return result;
+	}
 
 
-    /**
-     * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind.
-     *
-     * @param rev   die SVWS-DB-Revision
-     *
-     * @return eine Liste mit den definierten Tabellen
-     */
-    public static List<SchemaTabelle> getTabellen(final long rev) {
-    	return tabellen.values().stream()
-    			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
-    					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
-    			.toList();
-    }
+	/**
+	 * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind.
+	 *
+	 * @param rev   die SVWS-DB-Revision
+	 *
+	 * @return eine Liste mit den definierten Tabellen
+	 */
+	public static List<SchemaTabelle> getTabellen(final long rev) {
+		return tabellen.values().stream()
+				.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
+						|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+				.toList();
+	}
 
 }

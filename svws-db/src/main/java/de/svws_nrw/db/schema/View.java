@@ -14,46 +14,46 @@ import jakarta.validation.constraints.NotNull;
 public class View {
 
 	/** Der Name der View */
-    public final @NotNull String name;
+	public final @NotNull String name;
 
-    /** Gibt den Namen des Java-Sub-Packages an, in dem der zugehörige Java-DTO generiert werden soll. */
-    public final @NotNull String packageName;
+	/** Gibt den Namen des Java-Sub-Packages an, in dem der zugehörige Java-DTO generiert werden soll. */
+	public final @NotNull String packageName;
 
-    /** Gibt den Namen der zugehörigen Java-DTO-Klasse an. */
-    public final @NotNull String dtoName;
+	/** Gibt den Namen der zugehörigen Java-DTO-Klasse an. */
+	public final @NotNull String dtoName;
 
-    /** Eine Beschreibung, welchen Zweck die View erfüllt. */
-    public final @NotNull String beschreibung;
+	/** Eine Beschreibung, welchen Zweck die View erfüllt. */
+	public final @NotNull String beschreibung;
 
 	/** Die Revision, in welcher die View eingeführt wurde */
-    final int revision;
+	final int revision;
 
 	/** Die Revision, in welcher die View als veraltet definiert wurde - null, wenn sie noch nicht veraltet ist */
-    final Integer veraltet;
+	final Integer veraltet;
 
 	/** Der SQL-Code für den FROM-Teil des SELECT der View */
-    final @NotNull String sql;
+	final @NotNull String sql;
 
-    /** Eine Liste der Spalten der View*/
-    public final @NotNull List<@NotNull ViewSpalte> spalten = new ArrayList<>();
+	/** Eine Liste der Spalten der View*/
+	public final @NotNull List<@NotNull ViewSpalte> spalten = new ArrayList<>();
 
-    /** Eine Liste der Spalten, welcher als Primärschlüssel der View geeignet ist */
-    public final @NotNull List<@NotNull ViewSpalte> pkSpalten = new ArrayList<>();
+	/** Eine Liste der Spalten, welcher als Primärschlüssel der View geeignet ist */
+	public final @NotNull List<@NotNull ViewSpalte> pkSpalten = new ArrayList<>();
 
 
-    /**
-     * Erstellt eine neue Schema-Definition einer Datenbank-View
-     *
-     * @param name           der Name der View
-     * @param packageName    der Name des Java-Sub-Packages, in dem der zugehörige Java-DTO generiert werden soll
-     * @param dtoName        der Name der zugehörigen Java-DTO-Klasse
-     * @param beschreibung   eine Beschreibung, welchen Zweck die View erfüllt
-     * @param revision       die Revision, in welcher die View eingeführt wurde
-     * @param veraltet       die Revision, in welcher die View als veraltet definiert wurde - null, wenn sie noch nicht veraltet ist
-     * @param sql            der SQL-Code für den FROM-Teil des SELECT der View
-     */
+	/**
+	 * Erstellt eine neue Schema-Definition einer Datenbank-View
+	 *
+	 * @param name           der Name der View
+	 * @param packageName    der Name des Java-Sub-Packages, in dem der zugehörige Java-DTO generiert werden soll
+	 * @param dtoName        der Name der zugehörigen Java-DTO-Klasse
+	 * @param beschreibung   eine Beschreibung, welchen Zweck die View erfüllt
+	 * @param revision       die Revision, in welcher die View eingeführt wurde
+	 * @param veraltet       die Revision, in welcher die View als veraltet definiert wurde - null, wenn sie noch nicht veraltet ist
+	 * @param sql            der SQL-Code für den FROM-Teil des SELECT der View
+	 */
 	public View(final @NotNull String name, final @NotNull String packageName, @NotNull final String dtoName, final @NotNull String beschreibung,
-				final Integer revision, final Integer veraltet, final @NotNull String sql) {
+			final Integer revision, final Integer veraltet, final @NotNull String sql) {
 		this.name = name;
 		this.packageName = packageName;
 		this.dtoName = dtoName;
@@ -72,7 +72,7 @@ public class View {
 	 */
 	public boolean brauchtDeveloperDTO() {
 		return (this.revision > SchemaRevisionen.maxRevision.revision)
-			|| ((this.veraltet != null) && (this.veraltet > SchemaRevisionen.maxRevision.revision));
+				|| ((this.veraltet != null) && (this.veraltet > SchemaRevisionen.maxRevision.revision));
 	}
 
 	/**
@@ -87,7 +87,8 @@ public class View {
 	 *
 	 * @return diese View-Definition
 	 */
-	public View add(@NotNull final String name, @NotNull final String beschreibung, @NotNull final String datentyp, @NotNull final String sql, final Class<? extends DBAttributeConverter<?, ?>> converter, final boolean istPrimaryKey) {
+	public View add(@NotNull final String name, @NotNull final String beschreibung, @NotNull final String datentyp, @NotNull final String sql,
+			final Class<? extends DBAttributeConverter<?, ?>> converter, final boolean istPrimaryKey) {
 		final ViewSpalte spalte = new ViewSpalte(name, beschreibung, datentyp, sql, converter);
 		spalten.add(spalte);
 		if (istPrimaryKey)

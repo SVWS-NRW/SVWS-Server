@@ -72,8 +72,8 @@ public final class DBConfig {
 	 *                          Millisekunden sein soll
 	 *
 	 */
-	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username, final String password,
-			final boolean useDBLogging, final boolean createDBFile, final int connectionRetries, final long retryTimeout) {
+	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username,
+			final String password, final boolean useDBLogging, final boolean createDBFile, final int connectionRetries, final long retryTimeout) {
 		this.db_driver = (dbDriver == null) ? DEFAULT_DB_DRIVER : dbDriver;
 		this.db_location = ((dbLocation == null) || "".equals(dbLocation.trim())) ? DEFAULT_DB_LOCATION : dbLocation;
 		switch (this.db_driver) {
@@ -202,7 +202,8 @@ public final class DBConfig {
 	 * @return  eine Kopie der Konfiguration mit den neuen Benutzerinformationen
 	 */
 	public DBConfig switchUser(final String username, final String password) {
-		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries, retryTimeout);
+		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries,
+				retryTimeout);
 	}
 
 
@@ -215,13 +216,15 @@ public final class DBConfig {
 	 * @return die Kopie der Konfiguration mit dem neu ausgewählten Schema-Namen.
 	 */
 	public DBConfig switchSchema(final String dbSchema) {
-		return new DBConfig(db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries, retryTimeout);
+		return new DBConfig(db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries,
+				retryTimeout);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username, connectionRetries, retryTimeout);
+		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username, connectionRetries,
+				retryTimeout);
 	}
 
 	@Override

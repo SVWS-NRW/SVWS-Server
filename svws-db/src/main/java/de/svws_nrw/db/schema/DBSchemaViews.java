@@ -120,28 +120,28 @@ public final class DBSchemaViews {
 
 	private void add_V_Benutzer() {
 		final View view = new View(
-			"V_Benutzer", "views.benutzer", "DTOViewBenutzer",
-			"Eine Benutzerliste mit Benutzernamen und Password-Hash von allen Benutzern, die eine Berechtigung zum Zugang zum SVWS-Server haben",
-			6, null,
-			"""
-			(
-			  SELECT Benutzer.ID, BenutzerAllgemein.AnzeigeName AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN BenutzerAllgemein ON Benutzer.Allgemein_ID = BenutzerAllgemein.ID JOIN Credentials ON BenutzerAllgemein.CredentialID = Credentials.ID
-			  UNION
-			  SELECT Benutzer.ID, Concat(K_Lehrer.Vorname, ' ', K_Lehrer.Nachname) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN K_Lehrer ON Benutzer.Lehrer_ID = K_Lehrer.ID JOIN Credentials ON K_Lehrer.CredentialID = Credentials.ID
-			  UNION
-			  SELECT Benutzer.ID, Concat(Schueler.Vorname, ' ', Schueler.Name) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN Schueler ON Benutzer.Schueler_ID = Schueler.ID JOIN Credentials ON Schueler.CredentialID = Credentials.ID
-			  UNION
-			  SELECT Benutzer.ID, Concat(SchuelerErzAdr.Vorname1, ' ', SchuelerErzAdr.Name1) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN SchuelerErzAdr ON Benutzer.Erzieher_ID = SchuelerErzAdr.ID JOIN Credentials ON SchuelerErzAdr.CredentialID = Credentials.ID
-			) creds JOIN (
-			  SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin FROM Benutzer LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
-			  GROUP BY Benutzer.ID
-			) admins ON creds.ID = admins.ID
-			"""
-		).add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
-		 .add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
-		 .add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
-		 .add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
-		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", Boolean01Converter.class, false);
+				"V_Benutzer", "views.benutzer", "DTOViewBenutzer",
+				"Eine Benutzerliste mit Benutzernamen und Password-Hash von allen Benutzern, die eine Berechtigung zum Zugang zum SVWS-Server haben",
+				6, null,
+				"""
+				(
+				  SELECT Benutzer.ID, BenutzerAllgemein.AnzeigeName AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN BenutzerAllgemein ON Benutzer.Allgemein_ID = BenutzerAllgemein.ID JOIN Credentials ON BenutzerAllgemein.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Concat(K_Lehrer.Vorname, ' ', K_Lehrer.Nachname) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN K_Lehrer ON Benutzer.Lehrer_ID = K_Lehrer.ID JOIN Credentials ON K_Lehrer.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Concat(Schueler.Vorname, ' ', Schueler.Name) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN Schueler ON Benutzer.Schueler_ID = Schueler.ID JOIN Credentials ON Schueler.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Concat(SchuelerErzAdr.Vorname1, ' ', SchuelerErzAdr.Name1) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN SchuelerErzAdr ON Benutzer.Erzieher_ID = SchuelerErzAdr.ID JOIN Credentials ON SchuelerErzAdr.CredentialID = Credentials.ID
+				) creds JOIN (
+				  SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin FROM Benutzer LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
+				  GROUP BY Benutzer.ID
+				) admins ON creds.ID = admins.ID
+				""").add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
+				.add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
+				.add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
+				.add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
+				.add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin",
+						Boolean01Converter.class, false);
 		addView(view);
 	}
 
@@ -150,17 +150,16 @@ public final class DBSchemaViews {
 				"V_Benutzerkompetenzen", "views.benutzer", "DTOViewBenutzerKompetenz",
 				"Eine Liste von den effektiven Kompetenzen, die den Benutzern entweder direkt oder über Benutzergruppen zugewiesen wurden",
 				6, null,
-                """
-                (
-                  SELECT Benutzer.ID AS Benutzer_ID, Kompetenz_ID FROM Benutzer JOIN BenutzerKompetenzen ON Benutzer.ID = BenutzerKompetenzen.Benutzer_ID
-                  UNION
-                  SELECT Benutzer.ID AS Benutzer_ID, Kompetenz_ID FROM Benutzer
-                  JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
-                  JOIN BenutzergruppenKompetenzen ON BenutzergruppenMitglieder.Gruppe_ID = BenutzergruppenKompetenzen.Gruppe_ID
-                ) effkomp
-                """
-		).add("Benutzer_ID", "Die ID des Benutzers", "Long", "Benutzer_ID", null, true)
-		 .add("Kompetenz_ID", "Die ID der Benutzer-Kompetenz", "Long", "Kompetenz_ID", null, true);
+				"""
+				(
+				  SELECT Benutzer.ID AS Benutzer_ID, Kompetenz_ID FROM Benutzer JOIN BenutzerKompetenzen ON Benutzer.ID = BenutzerKompetenzen.Benutzer_ID
+				  UNION
+				  SELECT Benutzer.ID AS Benutzer_ID, Kompetenz_ID FROM Benutzer
+				  JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
+				  JOIN BenutzergruppenKompetenzen ON BenutzergruppenMitglieder.Gruppe_ID = BenutzergruppenKompetenzen.Gruppe_ID
+				) effkomp
+				""").add("Benutzer_ID", "Die ID des Benutzers", "Long", "Benutzer_ID", null, true)
+				.add("Kompetenz_ID", "Die ID der Benutzer-Kompetenz", "Long", "Kompetenz_ID", null, true);
 		addView(view);
 	}
 
@@ -169,31 +168,31 @@ public final class DBSchemaViews {
 				"V_BenutzerDetails", "views.benutzer", "DTOViewBenutzerdetails",
 				"Eine Benutzerliste von allen Benutzern, die eine Berechtigung zum Zugang zum SVWS-Server haben, auch mit der CredentialID, dem Typ des Benutzers und der zugehörigen ID",
 				6, null,
-                """
-                (
-                  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Allgemein_ID AS TypID, BenutzerAllgemein.AnzeigeName AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN BenutzerAllgemein ON Benutzer.Allgemein_ID = BenutzerAllgemein.ID JOIN Credentials ON BenutzerAllgemein.CredentialID = Credentials.ID
-                  UNION
-                  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Lehrer_ID AS TypID, Concat(K_Lehrer.Vorname, ' ', K_Lehrer.Nachname) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN K_Lehrer ON Benutzer.Lehrer_ID = K_Lehrer.ID JOIN Credentials ON K_Lehrer.CredentialID = Credentials.ID
-                  UNION
-                  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Schueler_ID AS TypID, Concat(Schueler.Vorname, ' ', Schueler.Name) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN Schueler ON Benutzer.Schueler_ID = Schueler.ID JOIN Credentials ON Schueler.CredentialID = Credentials.ID
-                  UNION
-                  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Erzieher_ID AS TypID, Concat(SchuelerErzAdr.Vorname1, ' ', SchuelerErzAdr.Name1) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN SchuelerErzAdr ON Benutzer.Erzieher_ID = SchuelerErzAdr.ID JOIN Credentials ON SchuelerErzAdr.CredentialID = Credentials.ID
-                ) creds JOIN (
-                  SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin
-                  FROM Benutzer
-                    LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
-                    LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
-                  GROUP BY Benutzer.ID
-                ) admins ON creds.ID = admins.ID
-                """
-		).add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
-		 .add("credentialID", "Die ID der Benutzer-Credentials", "Long", "creds.credentialID", null, false)
-		 .add("Typ", "Der Typ des Benutzers", "BenutzerTyp", "creds.Typ", BenutzerTypConverter.class, false)
-		 .add("TypID", "Die ID des Benutzers in der Benutzer-Typ-spezifischen Tabelle (z.B. eine Schüler-ID)", "Long", "creds.TypID", null, false)
-		 .add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
-		 .add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
-		 .add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
-		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", Boolean01Converter.class, false);
+				"""
+				(
+				  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Allgemein_ID AS TypID, BenutzerAllgemein.AnzeigeName AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN BenutzerAllgemein ON Benutzer.Allgemein_ID = BenutzerAllgemein.ID JOIN Credentials ON BenutzerAllgemein.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Lehrer_ID AS TypID, Concat(K_Lehrer.Vorname, ' ', K_Lehrer.Nachname) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN K_Lehrer ON Benutzer.Lehrer_ID = K_Lehrer.ID JOIN Credentials ON K_Lehrer.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Schueler_ID AS TypID, Concat(Schueler.Vorname, ' ', Schueler.Name) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN Schueler ON Benutzer.Schueler_ID = Schueler.ID JOIN Credentials ON Schueler.CredentialID = Credentials.ID
+				  UNION
+				  SELECT Benutzer.ID, Credentials.ID AS credentialID, Benutzer.Typ, Benutzer.Erzieher_ID AS TypID, Concat(SchuelerErzAdr.Vorname1, ' ', SchuelerErzAdr.Name1) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN SchuelerErzAdr ON Benutzer.Erzieher_ID = SchuelerErzAdr.ID JOIN Credentials ON SchuelerErzAdr.CredentialID = Credentials.ID
+				) creds JOIN (
+				  SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin
+				  FROM Benutzer
+				    LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
+				    LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
+				  GROUP BY Benutzer.ID
+				) admins ON creds.ID = admins.ID
+				""").add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
+				.add("credentialID", "Die ID der Benutzer-Credentials", "Long", "creds.credentialID", null, false)
+				.add("Typ", "Der Typ des Benutzers", "BenutzerTyp", "creds.Typ", BenutzerTypConverter.class, false)
+				.add("TypID", "Die ID des Benutzers in der Benutzer-Typ-spezifischen Tabelle (z.B. eine Schüler-ID)", "Long", "creds.TypID", null, false)
+				.add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
+				.add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
+				.add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
+				.add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin",
+						Boolean01Converter.class, false);
 		addView(view);
 	}
 

@@ -14,27 +14,27 @@ import java.io.IOException;
  */
 public final class SprachreferenzniveauConverterDeserializer extends StdDeserializer<Sprachreferenzniveau> {
 
-    private static final long serialVersionUID = 2214600102039874189L;
+	private static final long serialVersionUID = 2214600102039874189L;
 
-    /**
-     * Erzeugt einen neuen Deserialisierer
-     */
-    public SprachreferenzniveauConverterDeserializer() {
-        super(Sprachreferenzniveau.class);
-    }
+	/**
+	 * Erzeugt einen neuen Deserialisierer
+	 */
+	public SprachreferenzniveauConverterDeserializer() {
+		super(Sprachreferenzniveau.class);
+	}
 
-    /**
-     * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-     *
-     * @param t   das Klassen-Objekt
-     */
-    protected SprachreferenzniveauConverterDeserializer(final Class<Sprachreferenzniveau> t) {
-        super(t);
-    }
+	/**
+	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
+	 *
+	 * @param t   das Klassen-Objekt
+	 */
+	protected SprachreferenzniveauConverterDeserializer(final Class<Sprachreferenzniveau> t) {
+		super(t);
+	}
 
-    @Override
-    public Sprachreferenzniveau deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-        return Sprachreferenzniveau.getByKuerzel(p.getText());
-    }
+	@Override
+	public Sprachreferenzniveau deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+		return Sprachreferenzniveau.getByKuerzel(p.getText());
+	}
 
 }

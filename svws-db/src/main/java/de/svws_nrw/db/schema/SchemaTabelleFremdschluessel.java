@@ -75,7 +75,8 @@ public class SchemaTabelleFremdschluessel {
 		if (revision == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nicht auf undefiniert gesetzt werden.");
 		if (revision.revision <= this._revision.revision)
-			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nur Überschrieben werden, wenn die Revision größer ist als die, welche bei der Tabelle gesetzt ist.");
+			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nur Überschrieben werden, wenn die Revision größer ist als die,"
+					+ " welche bei der Tabelle gesetzt ist.");
 		this._revision = revision;
 		return this;
 	}
@@ -90,9 +91,11 @@ public class SchemaTabelleFremdschluessel {
 	 */
 	public SchemaTabelleFremdschluessel setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
-			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
+			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall"
+					+ " das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
 		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
-			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf eine Revision größer oder gleich der Revision gesetzt werden, wo die zugehörige Tabelle veraltet.");
+			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf eine Revision größer oder gleich der Revision"
+					+ " gesetzt werden, wo die zugehörige Tabelle veraltet.");
 		this._veraltet = veraltet;
 		return this;
 	}
@@ -181,14 +184,14 @@ public class SchemaTabelleFremdschluessel {
 	}
 
 
-    /**
-     * Liefert die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
-     *
-     * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
-     */
-    public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
-    }
+	/**
+	 * Liefert die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
+	 *
+	 * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
+	 */
+	public List<SchemaTabelleSpalte> getSpalten() {
+		return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
+	}
 
 
 	/**

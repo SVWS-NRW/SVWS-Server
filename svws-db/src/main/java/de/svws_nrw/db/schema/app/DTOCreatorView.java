@@ -44,23 +44,23 @@ public class DTOCreatorView {
 		if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
 		return Schema.javaPackage + "."
-			+ Schema.javaDTOPackage
-			+ ((rev < 0) ? ".current." : ".dev.")
-			+ view.packageName;
+				+ Schema.javaDTOPackage
+				+ ((rev < 0) ? ".current." : ".dev.")
+				+ view.packageName;
 	}
 
 
-    /**
-     * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
-     *
-     * @param rev   die Revision
-     *
-     * @return der Name der Java-Klasse
-     */
-    @JsonIgnore
-    public String getJavaKlasse(final long rev) {
-    	if (rev == 0)
-    		throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
+	/**
+	 * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
+	 *
+	 * @param rev   die Revision
+	 *
+	 * @return der Name der Java-Klasse
+	 */
+	@JsonIgnore
+	public String getJavaKlasse(final long rev) {
+		if (rev == 0)
+			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
 		return (rev > 0) ? "Dev" + view.dtoName : view.dtoName;
 	}
 
@@ -88,10 +88,10 @@ public class DTOCreatorView {
 				.map(col -> col.name)
 				.filter(Objects::nonNull)
 				.map(colname -> "\t\tif (" + colname + " == null) {" + System.lineSeparator()
-					+ "\t\t\tif (other." + colname + " != null)" + System.lineSeparator()
-					+ "\t\t\t\treturn false;" + System.lineSeparator()
-					+ "\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator()
-					+ "\t\t\treturn false;" + System.lineSeparator())
+						+ "\t\t\tif (other." + colname + " != null)" + System.lineSeparator()
+						+ "\t\t\t\treturn false;" + System.lineSeparator()
+						+ "\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator()
+						+ "\t\t\treturn false;" + System.lineSeparator())
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append("\t\treturn true;" + System.lineSeparator());
@@ -139,18 +139,18 @@ public class DTOCreatorView {
 		if (acs.isEmpty())
 			return "";
 		String result = "import "
-			+ acs.stream().map(ac -> ac.getClass().getName()).filter(Objects::nonNull).sorted().distinct()
-				.collect(Collectors.joining(";" + System.lineSeparator() + "import "))
-		    + ";" + System.lineSeparator()
-            + System.lineSeparator();
+				+ acs.stream().map(ac -> ac.getClass().getName()).filter(Objects::nonNull).sorted().distinct()
+						.collect(Collectors.joining(";" + System.lineSeparator() + "import "))
+				+ ";" + System.lineSeparator()
+				+ System.lineSeparator();
 		final String resultTypeImports = acs.stream().map(ac -> ac.getResultType().getName())
 				.filter(Objects::nonNull).filter(cntt -> !cntt.startsWith("java.lang")).sorted().distinct()
 				.collect(Collectors.joining(";" + System.lineSeparator() + "import "));
 		if (!"".equals(resultTypeImports))
 			result += "import "
-				+ resultTypeImports
-				+ ";" + System.lineSeparator()
-				+ System.lineSeparator();
+					+ resultTypeImports
+					+ ";" + System.lineSeparator()
+					+ System.lineSeparator();
 		return result;
 	}
 
@@ -208,7 +208,8 @@ public class DTOCreatorView {
 			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " = ?1";
 			sb.append(getQueryAttribute("BY_" + spalte.name.toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand des Attributes " + spalte.name));
 			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " IN ?1";
-			sb.append(getQueryAttribute("LIST_BY_" + spalte.name.toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes " + spalte.name));
+			sb.append(getQueryAttribute("LIST_BY_" + spalte.name.toUpperCase(), query,
+					"Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes " + spalte.name));
 		}
 		return sb.toString();
 	}
@@ -330,8 +331,8 @@ public class DTOCreatorView {
 		sb.append("\tpublic String toString() {" + System.lineSeparator());
 		sb.append("\t\treturn \"" + className + "("
 				+ view.spalten.stream()
-					.map(spalte -> "" + spalte.name + "=\" + this." + spalte.name + " + \"")
-					.collect(Collectors.joining(", "))
+						.map(spalte -> "" + spalte.name + "=\" + this." + spalte.name + " + \"")
+						.collect(Collectors.joining(", "))
 				+ ")\";" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -386,21 +387,20 @@ public class DTOCreatorView {
 		sb.append(System.lineSeparator());
 		sb.append("\t/**" + System.lineSeparator());
 		sb.append("\t * Erstellt ein neues Objekt der Klasse " + className + "PK." + System.lineSeparator());
-		view.pkSpalten.stream().forEach(spalte -> sb.append("\t * @param " + spalte.name + "   der Wert für das Attribut " + spalte.name + "" + System.lineSeparator()));
+		view.pkSpalten.stream()
+				.forEach(spalte -> sb.append("\t * @param " + spalte.name + "   der Wert für das Attribut " + spalte.name + "" + System.lineSeparator()));
 		sb.append("\t */" + System.lineSeparator());
 		sb.append("\tpublic " + className + "PK(");
 		sb.append(view.pkSpalten.stream()
-			.map(spalte -> "final " + spalte.datentyp + " " + spalte.name)
-			.collect(Collectors.joining(", "))
-		);
+				.map(spalte -> "final " + spalte.datentyp + " " + spalte.name)
+				.collect(Collectors.joining(", ")));
 		sb.append(") {" + System.lineSeparator());
 		sb.append(view.pkSpalten.stream()
-			.map(spalte -> "\t\tif (" + spalte.name + " == null) {" + System.lineSeparator()
-				+ "\t\t\tthrow new NullPointerException(\"" + spalte.name + " must not be null\");" + System.lineSeparator()
-				+ "\t\t}" + System.lineSeparator()
-				+ "\t\tthis." + spalte.name + " = " + spalte.name + ";" + System.lineSeparator())
-			.collect(Collectors.joining())
-		);
+				.map(spalte -> "\t\tif (" + spalte.name + " == null) {" + System.lineSeparator()
+						+ "\t\t\tthrow new NullPointerException(\"" + spalte.name + " must not be null\");" + System.lineSeparator()
+						+ "\t\t}" + System.lineSeparator()
+						+ "\t\tthis." + spalte.name + " = " + spalte.name + ";" + System.lineSeparator())
+				.collect(Collectors.joining()));
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());

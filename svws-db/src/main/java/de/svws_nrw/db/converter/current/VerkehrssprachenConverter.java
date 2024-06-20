@@ -16,27 +16,27 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public final class VerkehrssprachenConverter extends DBAttributeConverter<Verkehrssprache, String> {
 
-    /** Die Instanz des Konverters */
-    public static final VerkehrssprachenConverter instance = new VerkehrssprachenConverter();
+	/** Die Instanz des Konverters */
+	public static final VerkehrssprachenConverter instance = new VerkehrssprachenConverter();
 
-    @Override
-    public String convertToDatabaseColumn(final Verkehrssprache attribute) {
-        return attribute == null ? null : attribute.daten.kuerzel;
-    }
+	@Override
+	public String convertToDatabaseColumn(final Verkehrssprache attribute) {
+		return attribute == null ? null : attribute.daten.kuerzel;
+	}
 
-    @Override
-    public Verkehrssprache convertToEntityAttribute(final String dbData) {
-    	return Verkehrssprache.getByKuerzelAuto(dbData);
-    }
+	@Override
+	public Verkehrssprache convertToEntityAttribute(final String dbData) {
+		return Verkehrssprache.getByKuerzelAuto(dbData);
+	}
 
-    @Override
-    public Class<Verkehrssprache> getResultType() {
-        return Verkehrssprache.class;
-    }
+	@Override
+	public Class<Verkehrssprache> getResultType() {
+		return Verkehrssprache.class;
+	}
 
-    @Override
-    public Class<String> getDBType() {
-        return String.class;
-    }
+	@Override
+	public Class<String> getDBType() {
+		return String.class;
+	}
 
 }

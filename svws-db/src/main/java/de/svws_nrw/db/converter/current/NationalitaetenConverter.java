@@ -16,27 +16,27 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public final class NationalitaetenConverter extends DBAttributeConverter<Nationalitaeten, String> {
 
-    /** Die Instanz des Konverters */
-    public static final NationalitaetenConverter instance = new NationalitaetenConverter();
+	/** Die Instanz des Konverters */
+	public static final NationalitaetenConverter instance = new NationalitaetenConverter();
 
-    @Override
-    public String convertToDatabaseColumn(final Nationalitaeten attribute) {
-        return attribute == null ? null : attribute.daten.codeDEStatis;
-    }
+	@Override
+	public String convertToDatabaseColumn(final Nationalitaeten attribute) {
+		return attribute == null ? null : attribute.daten.codeDEStatis;
+	}
 
-    @Override
-    public Nationalitaeten convertToEntityAttribute(final String dbData) {
-        return Nationalitaeten.getByDESTATIS(dbData);
-    }
+	@Override
+	public Nationalitaeten convertToEntityAttribute(final String dbData) {
+		return Nationalitaeten.getByDESTATIS(dbData);
+	}
 
-    @Override
-    public Class<Nationalitaeten> getResultType() {
-        return Nationalitaeten.class;
-    }
+	@Override
+	public Class<Nationalitaeten> getResultType() {
+		return Nationalitaeten.class;
+	}
 
-    @Override
-    public Class<String> getDBType() {
-        return String.class;
-    }
+	@Override
+	public Class<String> getDBType() {
+		return String.class;
+	}
 
 }

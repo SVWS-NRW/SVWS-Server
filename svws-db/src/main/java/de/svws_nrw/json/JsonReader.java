@@ -80,11 +80,11 @@ public final class JsonReader {
 	 */
 	private static Path getPath(final String location) throws IOException {
 		try {
-	        final ClassLoader classLoader = JsonReader.class.getClassLoader();
-	        final var url = classLoader.getResource(location);
-	        if (url == null)
-	        	return null;
-	        final var uri = url.toURI();
+			final ClassLoader classLoader = JsonReader.class.getClassLoader();
+			final var url = classLoader.getResource(location);
+			if (url == null)
+				return null;
+			final var uri = url.toURI();
 			if (uri.toString().contains("jar:file:")) {
 				final String[] jar_path_elements = uri.toString().split("!");
 				return getJarPath(jar_path_elements[0], jar_path_elements[1]);
@@ -143,7 +143,9 @@ public final class JsonReader {
 	 * @throws IOException im Fehlerfall
 	 */
 	public static <T> List<T> fromString(final String json) throws IOException {
-		return mapper.readValue(json, new TypeReference<List<T>>() { /* nothing special */ });
+		return mapper.readValue(json, new TypeReference<List<T>>() {
+			/* nothing special */
+		});
 	}
 
 
@@ -159,7 +161,9 @@ public final class JsonReader {
 	 * @throws IOException im Fehlerfall
 	 */
 	public static <T> List<T> fromByteArray(final byte[] json) throws IOException {
-		return mapper.readValue(json, new TypeReference<List<T>>() { /* nothing special */ });
+		return mapper.readValue(json, new TypeReference<List<T>>() {
+			/* nothing special */
+		});
 	}
 
 }

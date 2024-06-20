@@ -38,19 +38,19 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	private SchemaRevisionen _veraltet;
 
 	/** Gibt den Namen an, welchen das zugehörige Java-Attribut erhält, sofern dieser sich vom Spaltennamen unterscheiden sollte */
-    private String _javaAttributName;
+	private String _javaAttributName;
 
 	/** Gibt an, ob (null) und welcher Java-Converter-Klasse genutzt werden soll, um dass Attribut in einen zuhörigen Java-Datentyp umzuwandeln */
-    private Class<? extends DBAttributeConverter<?, ?>> _javaConverter;
+	private Class<? extends DBAttributeConverter<?, ?>> _javaConverter;
 
-    /** Gibt an, ab welcher Revision der Attribut-Converter eingesetzt werden soll.*/
-    private SchemaRevisionen _javaConverterRevision;
+	/** Gibt an, ab welcher Revision der Attribut-Converter eingesetzt werden soll.*/
+	private SchemaRevisionen _javaConverterRevision;
 
-    /** Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und bis zu welcher er nur eingesetzt werden soll. */
-    private SchemaRevisionen _javaConverterVeraltet;
+	/** Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und bis zu welcher er nur eingesetzt werden soll. */
+	private SchemaRevisionen _javaConverterVeraltet;
 
 	/** Gibt den Javadoc-Kommentar für das Attribut innerhalt der Java-DTO-Klasse an */
-    private String _javaComment;
+	private String _javaComment;
 
 	/**
 	 * Erstellt eine neue Spalte mit dem übergebenen Namen und dem übergebenen
@@ -78,9 +78,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 */
 	public boolean brauchtDeveloperDTO() {
 		return (this._revision.revision > SchemaRevisionen.maxRevision.revision)
-			|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision))
-			|| ((this._javaConverterRevision != null) && (this._javaConverterRevision.revision > SchemaRevisionen.maxRevision.revision))
-			|| ((this._javaConverterVeraltet != null) && (this._javaConverterVeraltet.revision > SchemaRevisionen.maxRevision.revision));
+				|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision))
+				|| ((this._javaConverterRevision != null) && (this._javaConverterRevision.revision > SchemaRevisionen.maxRevision.revision))
+				|| ((this._javaConverterVeraltet != null) && (this._javaConverterVeraltet.revision > SchemaRevisionen.maxRevision.revision));
 	}
 
 	/**
@@ -129,7 +129,8 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 		if (revision == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision einer Spalte kann nicht auf undefiniert gesetzt werden.");
 		if (revision.revision <= this._revision.revision)
-			throw new RuntimeException("Die Revision einer Spalte kann nur Überschrieben werden, wenn die Revision größer ist als die, welche bei der Tabelle gesetzt ist.");
+			throw new RuntimeException("Die Revision einer Spalte kann nur Überschrieben werden, wenn die Revision größer ist als die,"
+					+ " welche bei der Tabelle gesetzt ist.");
 		this._revision = revision;
 		return this;
 	}
@@ -144,9 +145,11 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 */
 	public SchemaTabelleSpalte setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
-			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
+			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall"
+					+ " das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
 		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
-			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf eine Revision größer oder gleich der Revision gesetzt werden, wo die zugehörige Tabelle veraltet.");
+			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf eine Revision größer oder gleich der Revision gesetzt werden,"
+					+ " wo die zugehörige Tabelle veraltet.");
 		this._veraltet = veraltet;
 		return this;
 	}
@@ -300,10 +303,10 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der Name des Java-Attributs
 	 */
 	public String javaAttributName() {
-    	if (this._javaAttributName == null)
-    		return this._name;
-    	return _javaAttributName;
-    }
+		if (this._javaAttributName == null)
+			return this._name;
+		return _javaAttributName;
+	}
 
 	/**
 	 * Gibt die Java-Attribut-Converter-Klasse zurück, welche genutzt wird um dass Attribut
@@ -327,29 +330,29 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 		if (rev <= SchemaRevisionen.maxRevision.revision)
 			return DBAttributeConverter.getByClass(_javaConverter);
 		return DBAttributeConverter.getByClassName("Dev" + _javaConverter.getSimpleName());
-    }
+	}
 
-    /**
-     * Gibt die Revision zurück, ab welcher der Attribut-Converter eingesetzt werden soll.
-     *
-     * @return die Revision
-     */
+	/**
+	 * Gibt die Revision zurück, ab welcher der Attribut-Converter eingesetzt werden soll.
+	 *
+	 * @return die Revision
+	 */
 	public SchemaRevisionen javaConverterRevision() {
-    	if (this._javaConverterRevision == null)
-    		return this._revision;
-    	return this._javaConverterRevision;
-    }
+		if (this._javaConverterRevision == null)
+			return this._revision;
+		return this._javaConverterRevision;
+	}
 
-    /**
-     * Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und
-     * bis zu welcher er nur eingesetzt werden soll.
-     *
-     * @return die Revision
-     */
+	/**
+	 * Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und
+	 * bis zu welcher er nur eingesetzt werden soll.
+	 *
+	 * @return die Revision
+	 */
 	public SchemaRevisionen javaConverterVeraltet() {
-    	if (this._javaConverterVeraltet == null)
-    		return this._veraltet;
-    	return this._javaConverterVeraltet;
+		if (this._javaConverterVeraltet == null)
+			return this._veraltet;
+		return this._javaConverterVeraltet;
 	}
 
 	/**
@@ -393,35 +396,35 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der Default-Wert der Spalte
 	 */
 	public Object getDefaultWertConverted() {
-    	if (_default == null)
-    		return null;
+		if (_default == null)
+			return null;
 		Object result = null;
 		switch (_datentyp) {
-		    case BIGINT:
-		    	if ("".equals(_default.trim()))
-		    		return null;
-		    	result = NumberUtils.toLong(_default);
-		    	break;
-		    case FLOAT:
-		    	if ("".equals(_default.trim()))
-		    		return null;
-		    	result = NumberUtils.toDouble(_default);
-		    	break;
-		    case LONGBLOB:
-		    	return null;
-		    case SMALLINT, INT:
-		    	if ("".equals(_default.trim()))
-		    		return null;
-		    	result = NumberUtils.toInt(_default);
-		    	break;
-		    case BOOLEAN:
-		    	if ("".equals(_default.trim()))
-		    		return null;
-			    result = _default.equalsIgnoreCase("true");
-		    	break;
-		    case CHAR, DATE, DATETIME, TEXT, VARCHAR:
-			    result = _default;
-			    break;
+			case BIGINT:
+				if ("".equals(_default.trim()))
+					return null;
+				result = NumberUtils.toLong(_default);
+				break;
+			case FLOAT:
+				if ("".equals(_default.trim()))
+					return null;
+				result = NumberUtils.toDouble(_default);
+				break;
+			case LONGBLOB:
+				return null;
+			case SMALLINT, INT:
+				if ("".equals(_default.trim()))
+					return null;
+				result = NumberUtils.toInt(_default);
+				break;
+			case BOOLEAN:
+				if ("".equals(_default.trim()))
+					return null;
+				result = _default.equalsIgnoreCase("true");
+				break;
+			case CHAR, DATE, DATETIME, TEXT, VARCHAR:
+				result = _default;
+				break;
 			default: // unbekannter Typ
 				return null;
 		}
@@ -439,13 +442,13 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der SQL-Code zur Verwendung beim Erzeugen der Tabellenspalte
 	 */
 	public String getSQL(final DBDriver dbms) {
-	    final boolean skipDatenlaenge = ((_datentyp == SchemaDatentypen.DATETIME) && ((dbms != DBDriver.MARIA_DB) && (dbms != DBDriver.MYSQL)));
+		final boolean skipDatenlaenge = ((_datentyp == SchemaDatentypen.DATETIME) && ((dbms != DBDriver.MARIA_DB) && (dbms != DBDriver.MYSQL)));
 		return this._name + " " + _datentyp.getDBType(dbms)
-	         + (((this._datenlaenge == null) || (this._datenlaenge <= 0) || skipDatenlaenge) ? "" : "(" + this._datenlaenge + ")")
-	         + this.getSQLAutoinkrement(dbms)
-	         + this.getSQLDefault(dbms, _datentyp)
-	         + (this._notNull ? " NOT NULL" : "")
-	         + (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
+				+ (((this._datenlaenge == null) || (this._datenlaenge <= 0) || skipDatenlaenge) ? "" : "(" + this._datenlaenge + ")")
+				+ this.getSQLAutoinkrement(dbms)
+				+ this.getSQLDefault(dbms, _datentyp)
+				+ (this._notNull ? " NOT NULL" : "")
+				+ (((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
 	}
 
 
@@ -471,7 +474,7 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	public String getSQLDrop(final DBDriver dbms) {
 		return switch (dbms) {
 			case SQLITE -> null; // SQLite - Currently not supported
-			case MARIA_DB, MYSQL, MDB, MSSQL -> "ALTER TABLE "  + this._tabelle.name() + " DROP COLUMN " + this.name() + ";";
+			case MARIA_DB, MYSQL, MDB, MSSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP COLUMN " + this.name() + ";";
 			default -> null;
 		};
 	}
@@ -488,8 +491,8 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 */
 	private String getSQLAutoinkrement(final DBDriver dbms) {
 		if ((!this._tabelle.istPrimaerschlusselAttribut(this))
-			|| (!this._tabelle.pkAutoIncrement())
-			|| (!this._datentyp.isIntType()))
+				|| (!this._tabelle.pkAutoIncrement())
+				|| (!this._datentyp.isIntType()))
 			return "";
 		return switch (dbms) {
 			case MARIA_DB, MSSQL, MYSQL, SQLITE -> " DEFAULT -1";

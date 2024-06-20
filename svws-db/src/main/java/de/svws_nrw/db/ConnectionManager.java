@@ -147,10 +147,10 @@ public final class ConnectionManager {
 				url += ";newdatabaseversion=V2000";
 		}
 		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
-	        .filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
-	        .limit(40)
-	        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	        .toString();
+				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
+				.limit(40)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString();
 		propertyMap.put("jakarta.persistence.jdbc.url", url);
 		propertyMap.put("jakarta.persistence.jdbc.user", username);
 		propertyMap.put("jakarta.persistence.jdbc.password", password);
@@ -237,8 +237,7 @@ public final class ConnectionManager {
 				try (EntityManager em = man.getNewJPAEntityManager()) {
 					try {
 						em.getTransaction().begin();
-						@SuppressWarnings("resource")
-						final Connection conn = em.unwrap(Connection.class);
+						@SuppressWarnings("resource") final Connection conn = em.unwrap(Connection.class);
 						try (Statement stmt = conn.createStatement()) {
 							try (ResultSet rs = stmt.executeQuery("SELECT 1")) {
 								rs.next();

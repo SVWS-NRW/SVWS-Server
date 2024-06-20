@@ -50,16 +50,17 @@ public final class JsonDaten {
 	private static BerufskollegFachklassenKatalog getFachklassen() {
 		final BerufskollegFachklassenKatalog katalog = new BerufskollegFachklassenKatalog();
 		final int[] indizes = {
-			10, 20, 30, 40, 50, 55, 56, 57, 58,
-			60, 61, 62, 63, 70, 80, 90, 91, 92, 93, 94,
-			100, 110, 120, 130, 140, 141, 145, 146,
-			150, 160, 170, 180, 190,
-			200, 210, 220, 230, 240, 250, 260, 270, 280, 290,
-			300, 310, 320, 330, 340, 350, 370,
-			940, 960, 970, 980
+				10, 20, 30, 40, 50, 55, 56, 57, 58,
+				60, 61, 62, 63, 70, 80, 90, 91, 92, 93, 94,
+				100, 110, 120, 130, 140, 141, 145, 146,
+				150, 160, 170, 180, 190,
+				200, 210, 220, 230, 240, 250, 260, 270, 280, 290,
+				300, 310, 320, 330, 340, 350, 370,
+				940, 960, 970, 980
 		};
 		for (final int index : indizes) {
-			final BerufskollegFachklassenKatalogIndex katIndex = JsonReader.fromResource("daten/json/fachklassen/Index" + index + ".json", BerufskollegFachklassenKatalogIndex.class);
+			final BerufskollegFachklassenKatalogIndex katIndex =
+					JsonReader.fromResource("daten/json/fachklassen/Index" + index + ".json", BerufskollegFachklassenKatalogIndex.class);
 			katalog.version += katIndex.version;
 			katalog.indizes.add(katIndex);
 		}
@@ -75,12 +76,12 @@ public final class JsonDaten {
 	 *
 	 * @return der Katalog der berufsbezogenen Lehrpläne
 	 */
-    /* Einlesen der BK-JSONs in folgendem Ablauf
-     * - Die Daten sind nach Gliederungsindizes in Unterverzeichnissen gruppiert
-     * - in jedem dieser Unterverzeichnisse ist eine fachklassen_<id>.json Datei enthalten, die die Fachklassen des Gliederungsindex enthält
-     * - es sind eine Reihe von Lehrplänen enthalten, die die Namensgebung Bildungsplan_<index>_<fachklasse>.json haben, die
-     *   mittels sweep durch das Verzeichnis automatisch eingelesen werden sollen.
-     */
+	/* Einlesen der BK-JSONs in folgendem Ablauf
+	 * - Die Daten sind nach Gliederungsindizes in Unterverzeichnissen gruppiert
+	 * - in jedem dieser Unterverzeichnisse ist eine fachklassen_<id>.json Datei enthalten, die die Fachklassen des Gliederungsindex enthält
+	 * - es sind eine Reihe von Lehrplänen enthalten, die die Namensgebung Bildungsplan_<index>_<fachklasse>.json haben, die
+	 *   mittels sweep durch das Verzeichnis automatisch eingelesen werden sollen.
+	 */
 
 	private static BKBildungsplanKatalog getLehrplaene() {
 		final BKBildungsplanKatalog katalog = new BKBildungsplanKatalog();
@@ -98,9 +99,9 @@ public final class JsonDaten {
 			}
 		}
 		//for (final int index : indizes) {
-			//final BerufskollegFachklassenKatalogIndex katIndex = JsonReader.fromResource("daten/json/fachklassen/Index" + index + ".json", BerufskollegFachklassenKatalogIndex.class);
-			//katalog.version += katIndex.version;
-			//katalog.indizes.add(katIndex);
+		//final BerufskollegFachklassenKatalogIndex katIndex = JsonReader.fromResource("daten/json/fachklassen/Index" + index + ".json", BerufskollegFachklassenKatalogIndex.class);
+		//katalog.version += katIndex.version;
+		//katalog.indizes.add(katIndex);
 		//}
 		return katalog;
 	}

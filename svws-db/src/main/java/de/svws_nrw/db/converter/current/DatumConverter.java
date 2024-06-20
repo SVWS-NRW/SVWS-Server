@@ -24,7 +24,7 @@ public final class DatumConverter extends DBAttributeConverter<String, Timestamp
 	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))
 				? null
-			    : Timestamp.valueOf(LocalDate.parse(attribute).atStartOfDay());
+				: Timestamp.valueOf(LocalDate.parse(attribute).atStartOfDay());
 	}
 
 	@Override

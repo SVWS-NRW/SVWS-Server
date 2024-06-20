@@ -33,7 +33,8 @@ public class ViewSpalte {
 	 * @param sql             der SQL-Code für die Spaltendefinition
 	 * @param converter       der Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null
 	 */
-	public ViewSpalte(@NotNull final String name, @NotNull final String beschreibung, @NotNull final String datentyp, @NotNull final String sql, final Class<? extends DBAttributeConverter<?, ?>> converter) {
+	public ViewSpalte(@NotNull final String name, @NotNull final String beschreibung, @NotNull final String datentyp, @NotNull final String sql,
+			final Class<? extends DBAttributeConverter<?, ?>> converter) {
 		this.name = name;
 		this.beschreibung = beschreibung;
 		this.datentyp = datentyp;

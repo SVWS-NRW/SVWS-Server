@@ -18,12 +18,12 @@ public final class SVWSLoggerFactory implements ILoggerFactory {
 	public Logger getLogger(final String name) {
 		synchronized (logger) {
 			SVWSLoggerAdapter adapter = logger.get(name);
-            if (adapter == null) {
-            	adapter = new SVWSLoggerAdapter(name);
-            	logger.put(name, adapter);
-            }
-            return logger.get(name);
-        }
-    }
+			if (adapter == null) {
+				adapter = new SVWSLoggerAdapter(name);
+				logger.put(name, adapter);
+			}
+			return logger.get(name);
+		}
+	}
 
 }

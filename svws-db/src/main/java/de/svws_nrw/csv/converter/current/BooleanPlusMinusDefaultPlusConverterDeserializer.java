@@ -13,7 +13,7 @@ import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
  * als String,  - (false) oder + (true) sein kann, in einen Java-String-Wert.
  * Dabei wird der Defult auf + (true) gesetzt.
  */
-public final  class BooleanPlusMinusDefaultPlusConverterDeserializer extends StdDeserializer<Boolean> {
+public final class BooleanPlusMinusDefaultPlusConverterDeserializer extends StdDeserializer<Boolean> {
 
 	private static final long serialVersionUID = -1327227762966985248L;
 

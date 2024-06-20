@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 /** Eine Klasse für die Arten von DavRessourceCollections */
 public enum DavRessourceCollectionTyp {
+
 	/** Eine Ressourcensammlung für Adressdaten */
 	ADRESSBUCH(0),
 	/** Eine Ressourcensammlung für Kalenderdaten */
@@ -33,16 +34,17 @@ public enum DavRessourceCollectionTyp {
 	 */
 	public static @NotNull DavRessourceCollectionTyp getByID(final int id) {
 		switch (id) {
-		case 0:
-			return ADRESSBUCH;
-		case 1:
-			return KALENDER;
-		case 2:
-			return EIGENER_KALENDER;
-		case 3:
-			return EIGENES_ADRESSBUCH;
-		default:
-			throw new IllegalArgumentException("Die angegebene ID '" + id + "' ist ungültig.");
+			case 0:
+				return ADRESSBUCH;
+			case 1:
+				return KALENDER;
+			case 2:
+				return EIGENER_KALENDER;
+			case 3:
+				return EIGENES_ADRESSBUCH;
+			default:
+				throw new IllegalArgumentException("Die angegebene ID '" + id + "' ist ungültig.");
 		}
 	}
+
 }
