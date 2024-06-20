@@ -44,7 +44,7 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 	@Override
 	public void berechne(final long pEndzeit) {
 		final long current = System.currentTimeMillis();
-		final long halbzeit = current + (pEndzeit - current) / 2;
+		final long halbzeit = current + ((pEndzeit - current) / 2);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
@@ -62,13 +62,13 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 		// Optimiere die Kurse. Bricht ab, wenn die Zeit vorbei ist, oder mehrfach keine Verbesserung erfolgt.
 		int countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurseMitMatching() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileKurseMitMatching() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
 				&& (System.currentTimeMillis() < halbzeit));
 
 		countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurseMitMatchingW() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileKurseMitMatchingW() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
 				&& (System.currentTimeMillis() < pEndzeit));
 

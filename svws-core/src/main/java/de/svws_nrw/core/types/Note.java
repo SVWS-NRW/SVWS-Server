@@ -150,7 +150,7 @@ public enum Note {
 	}
 
 	/** Noten ohne Tendenz als Liste mit 1,2,3,4,5,6 */
-	private static @NotNull List<@NotNull Note> listNotenOhneTendenz = new ArrayList<>();
+	private static final @NotNull List<@NotNull Note> listNotenOhneTendenz = new ArrayList<>();
 
 	/**
 	 * Gibt zurück, ob es sich um eine echte Note oder nur um eine "Pseudonote" handelt
@@ -385,7 +385,7 @@ public enum Note {
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public boolean hatTendenz() {
-		return (notenpunkte != null) && (notenpunkte != 0) && (notenpunkte % 3 != 2);
+		return (notenpunkte != null) && (notenpunkte != 0) && ((notenpunkte % 3) != 2);
 	}
 
 
@@ -458,7 +458,7 @@ public enum Note {
 		if (notenpunkte == null)
 			return "";
 		else
-			return (notenpunkte.toString().length() == 1) ? "0" + notenpunkte.toString() : notenpunkte.toString();
+			return (notenpunkte.toString().length() == 1) ? ("0" + notenpunkte.toString()) : notenpunkte.toString();
 	}
 
 	/**

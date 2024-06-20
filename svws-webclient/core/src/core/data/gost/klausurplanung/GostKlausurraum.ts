@@ -35,7 +35,7 @@ export class GostKlausurraum extends JavaObject {
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum'))) && this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(another)).id;
+		return (another !== null) && (((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(another)).id);
 	}
 
 	/**

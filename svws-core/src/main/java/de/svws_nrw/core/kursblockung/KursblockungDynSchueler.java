@@ -343,8 +343,10 @@ public class KursblockungDynSchueler {
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
 				for (final int nr : kurs.gibSchienenLage())
-					if (schieneBelegt[nr])
+					if (schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {
@@ -387,8 +389,10 @@ public class KursblockungDynSchueler {
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
 				for (final int nr : kurs.gibSchienenLage())
-					if (schieneBelegt[nr])
+					if (schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {
@@ -603,8 +607,10 @@ public class KursblockungDynSchueler {
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
 				for (final int nr : kurs.gibSchienenLage())
-					if (schieneBelegt[nr])
+					if (schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {

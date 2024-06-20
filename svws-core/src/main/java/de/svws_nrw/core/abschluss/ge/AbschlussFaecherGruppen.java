@@ -38,7 +38,7 @@ public class AbschlussFaecherGruppen {
 	 * @return true, falls eine der beiden Fächergruppen leer ist.
 	 */
 	public boolean isEmpty() {
-		return fg1 == null || fg2 == null || fg1.isEmpty() || fg2.isEmpty();
+		return (fg1 == null) || (fg2 == null) || fg1.isEmpty() || fg2.isEmpty();
 	}
 
 

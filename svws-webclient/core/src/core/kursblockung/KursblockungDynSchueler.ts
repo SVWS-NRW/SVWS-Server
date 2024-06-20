@@ -335,8 +335,10 @@ export class KursblockungDynSchueler extends JavaObject {
 					continue;
 				let waehlbar : boolean = true;
 				for (const nr of kurs.gibSchienenLage())
-					if (this.schieneBelegt[nr])
+					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 				if (waehlbar) {
 					this.aktionKursHinzufuegen(iFachart, kurs);
 					break;
@@ -366,8 +368,10 @@ export class KursblockungDynSchueler extends JavaObject {
 					continue;
 				let waehlbar : boolean = true;
 				for (const nr of kurs.gibSchienenLage())
-					if (this.schieneBelegt[nr])
+					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 				if (waehlbar) {
 					this.aktionKursHinzufuegen(iFachart, kurs);
 					break;
@@ -509,8 +513,10 @@ export class KursblockungDynSchueler extends JavaObject {
 					continue;
 				let waehlbar : boolean = true;
 				for (const nr of kurs.gibSchienenLage())
-					if (this.schieneBelegt[nr])
+					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
+						break;
+					}
 				if (waehlbar) {
 					this.aktionKursHinzufuegen(iFachart, kurs);
 					break;

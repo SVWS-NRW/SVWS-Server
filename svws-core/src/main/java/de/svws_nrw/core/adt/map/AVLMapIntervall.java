@@ -57,8 +57,8 @@ public final class AVLMapIntervall<@NotNull K> {
 
 	@Override
 	public @NotNull String toString() {
-		final @NotNull String sFrom = (from == _INFINITY_MINUS) ? "-INF" : "" + from; // from.toString() Transpiler-Problem
-		final @NotNull String sTo = (to == _INFINITY_PLUS) ? "+INF" : "" + to; // to.toString() Transpiler-Problem
+		final @NotNull String sFrom = (from == _INFINITY_MINUS) ? "-INF" : ("" + from); // from.toString() Transpiler-Problem
+		final @NotNull String sTo = (to == _INFINITY_PLUS) ? "+INF" : ("" + to); // to.toString() Transpiler-Problem
 		return "[" + sFrom + ", " + fromInc + ", " + sTo + ", " + toInc + "]";
 	}
 

@@ -79,7 +79,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Veränderung bei der Anzahl der Leerzeichen
 	 */
 	public modifyIndent(indent : number) : void {
-		this.indent = (this.indent + indent < 0) ? 0 : this.indent + indent;
+		this.indent = ((this.indent + indent) < 0) ? 0 : (this.indent + indent);
 	}
 
 	/**

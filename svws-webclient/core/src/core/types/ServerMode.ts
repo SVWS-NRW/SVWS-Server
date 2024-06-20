@@ -60,7 +60,7 @@ export class ServerMode extends JavaEnum<ServerMode> {
 	 * @return true, falls die Nutzung erlaubt ist, ansonsten false
 	 */
 	public checkServerMode(serverMode : ServerMode | null) : boolean {
-		return (serverMode as unknown === ServerMode.STABLE as unknown) && (this as unknown === ServerMode.STABLE as unknown) || (serverMode as unknown === ServerMode.BETA as unknown) && (this as unknown !== ServerMode.DEV as unknown) && (this as unknown !== ServerMode.ALPHA as unknown) || (serverMode as unknown === ServerMode.ALPHA as unknown) && (this as unknown !== ServerMode.DEV as unknown) || (serverMode as unknown === ServerMode.DEV as unknown);
+		return ((serverMode as unknown === ServerMode.STABLE as unknown) && (this as unknown === ServerMode.STABLE as unknown)) || ((serverMode as unknown === ServerMode.BETA as unknown) && (this as unknown !== ServerMode.DEV as unknown) && (this as unknown !== ServerMode.ALPHA as unknown)) || ((serverMode as unknown === ServerMode.ALPHA as unknown) && (this as unknown !== ServerMode.DEV as unknown)) || (serverMode as unknown === ServerMode.DEV as unknown);
 	}
 
 	/**

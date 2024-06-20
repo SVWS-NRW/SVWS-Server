@@ -225,7 +225,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 		if (entry === null)
 			this.numEntries++;
 		this.entries[index] = new ArrayMapEntry(key, value);
-		return entry === null ? null : entry.getValue();
+		return (entry === null) ? null : entry.getValue();
 	}
 
 	public remove(key : unknown | null) : V | null {
@@ -239,7 +239,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 			this.entries[index] = null;
 			this.numEntries--;
 		}
-		return entry === null ? null : entry.getValue();
+		return (entry === null) ? null : entry.getValue();
 	}
 
 	public putAll(map : JavaMap<K, V> | null) : void {

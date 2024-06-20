@@ -20,7 +20,7 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 		for (let i : number = 0; i < arrayOfKeys.length; i++) {
 			const value : number = arrayOfKeys[i];
 			this._keys[i] = value;
-			hashCode = 31 * hashCode + (value ^ (value >>> 32)) as number;
+			hashCode = (31 * hashCode) + (value ^ (value >>> 32)) as number;
 		}
 		this._hashcode = hashCode;
 	}

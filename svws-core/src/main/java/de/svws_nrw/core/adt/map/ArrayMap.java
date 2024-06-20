@@ -222,7 +222,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 		if (entry == null)
 			this.numEntries++;
 		this.entries[index] = new ArrayMapEntry<>(key, value);
-		return entry == null ? null : entry.getValue();
+		return (entry == null) ? null : entry.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -238,7 +238,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 			this.entries[index] = null;
 			this.numEntries--;
 		}
-		return entry == null ? null : entry.getValue();
+		return (entry == null) ? null : entry.getValue();
 	}
 
 	@Override

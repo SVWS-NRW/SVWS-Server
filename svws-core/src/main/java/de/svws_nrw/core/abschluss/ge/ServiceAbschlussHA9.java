@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 
 	/** Filter für alle nicht ausgeglichenen Defizite */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> f.note > 4 && (!f.ausgeglichen);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> (f.note > 4) && (!f.ausgeglichen);
 
 	/** Filter für alle mangelhaften Fächer */
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;

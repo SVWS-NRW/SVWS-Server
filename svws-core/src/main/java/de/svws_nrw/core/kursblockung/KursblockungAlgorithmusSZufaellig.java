@@ -58,7 +58,7 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 		// Optimiere die SuS. Brich ab, wenn die Zeit vorbei ist, oder mehrfach keine Verbesserung erfolgt.
 		int countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileSchuelerAlle() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileSchuelerAlle() ? 0 : (countKeineVerbesserung + 1);
 		} while (countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG);
 
 	}

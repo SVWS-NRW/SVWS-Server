@@ -45,7 +45,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 	@Override
 	public void berechne(final long pEndzeit) {
 		final long current = System.currentTimeMillis();
-		final long halbzeit = current + (pEndzeit - current) / 2;
+		final long halbzeit = current + ((pEndzeit - current) / 2);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
@@ -64,13 +64,13 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 
 		int countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurseMitSchuelerwunsch() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileKurseMitSchuelerwunsch() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
 				&& (System.currentTimeMillis() < halbzeit));
 
 		countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurseZufaelligEinWenig() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileKurseZufaelligEinWenig() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
 				&& (System.currentTimeMillis() < pEndzeit));
 

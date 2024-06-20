@@ -88,7 +88,7 @@ export class Wochentag extends JavaEnum<Wochentag> {
 	 * @throws DeveloperNotificationException falls die ID ungültig ist
 	 */
 	public static fromIDorException(id : number) : Wochentag {
-		DeveloperNotificationException.ifTrue("Der Wochentag(" + id + ") muss zwischen 1 (Montag) und 7 (Sonntag) liegen!", id < 1 || id > 7);
+		DeveloperNotificationException.ifTrue("Der Wochentag(" + id + ") muss zwischen 1 (Montag) und 7 (Sonntag) liegen!", (id < 1) || (id > 7));
 		const wochentage : Array<Wochentag> = this.values();
 		return wochentage[id - 1];
 	}

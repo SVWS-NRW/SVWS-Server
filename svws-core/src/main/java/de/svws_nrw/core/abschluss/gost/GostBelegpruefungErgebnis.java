@@ -23,7 +23,8 @@ public class GostBelegpruefungErgebnis {
 	public boolean erfolgreich;
 
 	/** eine Liste der Belegungsfehler und Hinweise zur Belegung */
-	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class, description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
+	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class,
+			description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
 	public @NotNull List<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
 
 	/** Ein Log, der den Ablauf der Belegprüfung verdeutlicht */

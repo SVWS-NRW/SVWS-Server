@@ -38,7 +38,7 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 	}
 
 	private getNextIndex(from : number | null) : number | null {
-		const start : number = (from === null) ? 0 : from! + 1;
+		const start : number = (from === null) ? 0 : (from! + 1);
 		for (let i : number = start; i < this._map.getNumberOfKeys(); i++) {
 			if (this._map.getEntryByIndex(i) !== null)
 				return i;

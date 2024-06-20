@@ -35,7 +35,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	 */
 	public berechne(pEndzeit : number) : void {
 		const current : number = System.currentTimeMillis();
-		const halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
+		const halbzeit : number = current + (Math.trunc((pEndzeit - current) / 2));
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -43,11 +43,11 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		this.dynDaten.aktionZustandSpeichernK();
 		let countKeineVerbesserung : number = 0;
 		do {
-			countKeineVerbesserung = this.verteileKurseMitSchuelerwunsch() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = this.verteileKurseMitSchuelerwunsch() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < KursblockungAlgorithmusKSchuelervorschlag.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < halbzeit));
 		countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = this.verteileKurseZufaelligEinWenig() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = this.verteileKurseZufaelligEinWenig() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < KursblockungAlgorithmusKSchuelervorschlag.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < pEndzeit));
 	}
 

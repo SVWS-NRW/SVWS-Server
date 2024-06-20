@@ -18,7 +18,7 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	/**
 	 * Filter für alle nicht ausgeglichenen Defizite
 	 */
-	private static readonly filterDefizit : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => f.note > 4 && (!f.ausgeglichen) };
+	private static readonly filterDefizit : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) && (!f.ausgeglichen) };
 
 	/**
 	 * Filter für alle mangelhaften Fächer

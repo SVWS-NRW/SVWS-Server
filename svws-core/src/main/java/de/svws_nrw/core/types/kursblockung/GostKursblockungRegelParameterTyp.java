@@ -27,6 +27,6 @@ public enum GostKursblockungRegelParameterTyp {
 	GANZZAHL,
 
 	/** Der Parameter Typ Fach-ID. */
-	FACH_ID;
+	FACH_ID
 
 }

@@ -84,7 +84,7 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> {
 	/**
 	 * Die Schulformen, bei welchen die bilingualen Sprache vorkommt
 	 */
-	private schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine bilingualen Sprache in der Aufzählung.

@@ -124,7 +124,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 	/**
 	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt
 	 */
-	private schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt einen neuen Förderschwerpunkt in der Aufzählung.

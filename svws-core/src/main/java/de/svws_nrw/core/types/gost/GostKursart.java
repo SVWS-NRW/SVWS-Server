@@ -253,7 +253,7 @@ public enum GostKursart {
 	 * @return die Kursart oder null, falls das Kürzel ungültig ist
 	 */
 	public static @NotNull GostKursart fromKuerzelOrException(final String kuerzel) {
-		GostKursart gk = getMapByKuerzel().get(kuerzel);
+		final GostKursart gk = getMapByKuerzel().get(kuerzel);
 		if (gk == null)
 			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel);
 		return gk;
@@ -281,7 +281,7 @@ public enum GostKursart {
 	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
 	 */
 	public static long getFachartID(final long pFachID, final int pKursartID) {
-		return pFachID * FACHART_ID_FAKTOR + pKursartID;
+		return (pFachID * FACHART_ID_FAKTOR) + pKursartID;
 	}
 
 	/**

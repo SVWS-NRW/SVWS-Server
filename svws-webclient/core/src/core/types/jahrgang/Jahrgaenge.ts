@@ -768,48 +768,48 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 * @return true, falls eine Lernbereichsnote vorhanden ist.
 	 */
 	public hatLernbereichsnote1(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : boolean {
-		let _sevar_1515493925 : any;
-		const _seexpr_1515493925 = (schulform);
-		if (_seexpr_1515493925 === Schulform.R) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.SR) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.H) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.S) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.FW) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.WF) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.GY) {
-			_sevar_1515493925 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.SG) {
-			_sevar_1515493925 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.GM) {
-			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_1515493925 === Schulform.GE) {
-			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_1515493925 === Schulform.PS) {
-			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_1515493925 === Schulform.SK) {
-			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_1515493925 === Schulform.HI) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.KS) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.V) {
-			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1515493925 === Schulform.BK) {
-			_sevar_1515493925 = false;
-		} else if (_seexpr_1515493925 === Schulform.SB) {
-			_sevar_1515493925 = false;
-		} else if (_seexpr_1515493925 === Schulform.WB) {
-			_sevar_1515493925 = false;
-		} else if (_seexpr_1515493925 === Schulform.G) {
-			_sevar_1515493925 = false;
+		let _sevar_1803323672 : any;
+		const _seexpr_1803323672 = (schulform);
+		if (_seexpr_1803323672 === Schulform.R) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.SR) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.H) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.S) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.FW) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.WF) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.GY) {
+			_sevar_1803323672 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.SG) {
+			_sevar_1803323672 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.GM) {
+			_sevar_1803323672 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1803323672 === Schulform.GE) {
+			_sevar_1803323672 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1803323672 === Schulform.PS) {
+			_sevar_1803323672 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1803323672 === Schulform.SK) {
+			_sevar_1803323672 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1803323672 === Schulform.HI) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.KS) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.V) {
+			_sevar_1803323672 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1803323672 === Schulform.BK) {
+			_sevar_1803323672 = false;
+		} else if (_seexpr_1803323672 === Schulform.SB) {
+			_sevar_1803323672 = false;
+		} else if (_seexpr_1803323672 === Schulform.WB) {
+			_sevar_1803323672 = false;
+		} else if (_seexpr_1803323672 === Schulform.G) {
+			_sevar_1803323672 = false;
 		}
-		return _sevar_1515493925;
+		return _sevar_1803323672;
 	}
 
 	/**
@@ -854,48 +854,48 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 * @return true, falls eine Lernbereichsnote vorhanden ist.
 	 */
 	public hatLernbereichsnote2(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : boolean {
-		let _sevar_1174212382 : any;
-		const _seexpr_1174212382 = (schulform);
-		if (_seexpr_1174212382 === Schulform.R) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.SR) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.H) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.S) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.FW) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.WF) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.GY) {
-			_sevar_1174212382 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.SG) {
-			_sevar_1174212382 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.GM) {
-			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
-		} else if (_seexpr_1174212382 === Schulform.GE) {
-			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
-		} else if (_seexpr_1174212382 === Schulform.PS) {
-			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
-		} else if (_seexpr_1174212382 === Schulform.SK) {
-			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
-		} else if (_seexpr_1174212382 === Schulform.HI) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.KS) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.V) {
-			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
-		} else if (_seexpr_1174212382 === Schulform.BK) {
-			_sevar_1174212382 = false;
-		} else if (_seexpr_1174212382 === Schulform.SB) {
-			_sevar_1174212382 = false;
-		} else if (_seexpr_1174212382 === Schulform.WB) {
-			_sevar_1174212382 = false;
-		} else if (_seexpr_1174212382 === Schulform.G) {
-			_sevar_1174212382 = false;
+		let _sevar_1077918863 : any;
+		const _seexpr_1077918863 = (schulform);
+		if (_seexpr_1077918863 === Schulform.R) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.SR) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.H) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.S) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.FW) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.WF) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.GY) {
+			_sevar_1077918863 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.SG) {
+			_sevar_1077918863 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.GM) {
+			_sevar_1077918863 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1077918863 === Schulform.GE) {
+			_sevar_1077918863 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1077918863 === Schulform.PS) {
+			_sevar_1077918863 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1077918863 === Schulform.SK) {
+			_sevar_1077918863 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1077918863 === Schulform.HI) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.KS) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.V) {
+			_sevar_1077918863 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1077918863 === Schulform.BK) {
+			_sevar_1077918863 = false;
+		} else if (_seexpr_1077918863 === Schulform.SB) {
+			_sevar_1077918863 = false;
+		} else if (_seexpr_1077918863 === Schulform.WB) {
+			_sevar_1077918863 = false;
+		} else if (_seexpr_1077918863 === Schulform.G) {
+			_sevar_1077918863 = false;
 		}
-		return _sevar_1174212382;
+		return _sevar_1077918863;
 	}
 
 	/**

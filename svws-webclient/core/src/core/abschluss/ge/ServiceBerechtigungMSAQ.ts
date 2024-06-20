@@ -25,7 +25,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 
 	private static readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private static readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private static readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || (((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel)) };
 
 	private static readonly filterFG1NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
 

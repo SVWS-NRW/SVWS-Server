@@ -60,7 +60,7 @@ export class GostKlausurraumRich extends JavaObject {
 	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich'))) && this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraumRich(another)).id;
+		return (another !== null) && (((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraumRich(another)).id);
 	}
 
 	/**

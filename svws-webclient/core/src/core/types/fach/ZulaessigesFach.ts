@@ -1479,7 +1479,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist
 	 */
-	private zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
 
 	/**
 	 * Erzeugt eine zulässiges Fach in der Aufzählung.
@@ -1499,7 +1499,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf === null)
 					continue;
-				const sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				const sgl : Schulgliederung | null = (kuerzelSfSgl.gliederung === null) ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
 			}
 		}
@@ -1645,7 +1645,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	 */
 	public getFarbe() : RGBFarbe {
 		const gruppe : Fachgruppe | null = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
-		return gruppe === null ? new RGBFarbe() : gruppe.daten.farbe;
+		return (gruppe === null) ? new RGBFarbe() : gruppe.daten.farbe;
 	}
 
 	/**

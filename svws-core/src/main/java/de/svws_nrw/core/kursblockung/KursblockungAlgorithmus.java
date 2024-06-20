@@ -73,7 +73,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
-				if (System.currentTimeMillis() + zeitProK > zeitEndeGesamt)
+				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt)
 					break;
 
 			}

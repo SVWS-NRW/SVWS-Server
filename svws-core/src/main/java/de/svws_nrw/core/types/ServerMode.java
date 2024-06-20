@@ -48,9 +48,9 @@ public enum ServerMode {
 	 * @return true, falls die Nutzung erlaubt ist, ansonsten false
 	 */
 	public boolean checkServerMode(final ServerMode serverMode) {
-		return (serverMode == ServerMode.STABLE) && (this == ServerMode.STABLE)
-				|| (serverMode == ServerMode.BETA) && (this != ServerMode.DEV) && (this != ServerMode.ALPHA)
-				|| (serverMode == ServerMode.ALPHA) && (this != ServerMode.DEV)
+		return ((serverMode == ServerMode.STABLE) && (this == ServerMode.STABLE))
+				|| ((serverMode == ServerMode.BETA) && (this != ServerMode.DEV) && (this != ServerMode.ALPHA))
+				|| ((serverMode == ServerMode.ALPHA) && (this != ServerMode.DEV))
 				|| (serverMode == ServerMode.DEV);
 	}
 

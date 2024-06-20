@@ -969,10 +969,10 @@ public enum Herkunftsarten {
 	private static final @NotNull HashMap<@NotNull Long, Herkunftsarten> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull ArrayList<Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull ArrayList<@NotNull String> @NotNull [] bezeichnungen;
+	private final @NotNull ArrayList<@NotNull String> @NotNull [] bezeichnungen;
 
 
 	/**

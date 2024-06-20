@@ -688,7 +688,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		const n2 : AVLMapNode<K, V> | null = this._nodeLastOrNull(iv);
 		if (n2 === null)
 			return 0;
-		return this._nodeIndexOf(n2._key) - this._nodeIndexOf(n1._key) + 1;
+		return (this._nodeIndexOf(n2._key) - this._nodeIndexOf(n1._key)) + 1;
 	}
 
 	/**
@@ -939,7 +939,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	private _valEquals(v1 : V | null, v2 : V | null) : boolean {
-		return (v1 === null) ? v2 === null : JavaObject.equalsTranspiler(v1, (v2));
+		return (v1 === null) ? (v2 === null) : JavaObject.equalsTranspiler(v1, (v2));
 	}
 
 	private _keyOrExeption(node : AVLMapNode<K, V> | null) : K {
@@ -958,10 +958,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _isOutOfRange(key : K, iv : AVLMapIntervall<K>) : boolean {
 		const cmpKeyFrom : number = this._compare(key, iv.from);
-		if ((cmpKeyFrom < 0) || (cmpKeyFrom === 0) && (!iv.fromInc))
+		if ((cmpKeyFrom < 0) || ((cmpKeyFrom === 0) && (!iv.fromInc)))
 			return true;
 		const cmpKeyTo : number = this._compare(key, iv.to);
-		return ((cmpKeyTo > 0) || (cmpKeyTo === 0) && (!iv.toInc));
+		return ((cmpKeyTo > 0) || ((cmpKeyTo === 0) && (!iv.toInc)));
 	}
 
 	private _nodeFirstOrNull(iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -977,7 +977,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		if (node === null)
 			return null;
 		const cmpNodeKey : number = this._compare(node._key, key);
-		return cmpNodeKey >= 0 ? node : this._nodeNextOrNull(node, iv);
+		return (cmpNodeKey >= 0) ? node : this._nodeNextOrNull(node, iv);
 	}
 
 	private _nodeHigherOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -985,7 +985,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		if (node === null)
 			return null;
 		const cmpNodeKey : number = this._compare(node._key, key);
-		return cmpNodeKey > 0 ? node : this._nodeNextOrNull(node, iv);
+		return (cmpNodeKey > 0) ? node : this._nodeNextOrNull(node, iv);
 	}
 
 	private _nodeFloorOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -993,7 +993,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		if (node === null)
 			return null;
 		const cmpNodeKey : number = this._compare(node._key, key);
-		return cmpNodeKey <= 0 ? node : this._nodePrevOrNull(node, iv);
+		return (cmpNodeKey <= 0) ? node : this._nodePrevOrNull(node, iv);
 	}
 
 	private _nodeLowerOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -1001,7 +1001,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		if (node === null)
 			return null;
 		const cmpNodeKey : number = this._compare(node._key, key);
-		return cmpNodeKey < 0 ? node : this._nodePrevOrNull(node, iv);
+		return (cmpNodeKey < 0) ? node : this._nodePrevOrNull(node, iv);
 	}
 
 	private _nodeNextOrNull(node : AVLMapNode<K, V>, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -1022,7 +1022,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		const node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
 		if (node === null)
 			return null;
-		return this._compare(key, node._key) === 0 ? node : null;
+		return (this._compare(key, node._key) === 0) ? node : null;
 	}
 
 	private _nodeIndexOf(key : K) : number {
@@ -1052,12 +1052,12 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		let last : AVLMapNode<K, V> | null = null;
 		while (current !== null) {
 			const cmpToKey : number = this._compare(iv.to, current._key);
-			if ((cmpToKey < 0) || (cmpToKey === 0) && (!iv.toInc)) {
+			if ((cmpToKey < 0) || ((cmpToKey === 0) && (!iv.toInc))) {
 				current = current._childL;
 				continue;
 			}
 			const cmpFromKey : number = this._compare(iv.from, current._key);
-			if ((cmpFromKey > 0) || (cmpFromKey === 0) && (!iv.fromInc)) {
+			if ((cmpFromKey > 0) || ((cmpFromKey === 0) && (!iv.fromInc))) {
 				current = current._childR;
 				continue;
 			}

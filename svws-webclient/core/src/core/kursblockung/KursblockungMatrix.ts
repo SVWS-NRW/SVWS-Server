@@ -199,9 +199,9 @@ export class KursblockungMatrix extends JavaObject {
 		this.initialisierPermRundPermC(nichtdeterministisch);
 		if (this.rows <= this.cols) {
 			for (let r : number = 0; r < this.rows; r++) {
-				let min : number = this.matrix[r][0] + this.potentialR[r] - this.potentialC[0];
+				let min : number = (this.matrix[r][0] + this.potentialR[r]) - this.potentialC[0];
 				for (let c : number = 0; c < this.cols; c++) {
-					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
 					min = Math.min(min, kante);
 				}
 				this.potentialR[r] -= min;
@@ -209,9 +209,9 @@ export class KursblockungMatrix extends JavaObject {
 		}
 		if (this.cols <= this.rows) {
 			for (let c : number = 0; c < this.cols; c++) {
-				let min : number = this.matrix[0][c] + this.potentialR[0] - this.potentialC[c];
+				let min : number = (this.matrix[0][c] + this.potentialR[0]) - this.potentialC[c];
 				for (let r : number = 0; r < this.rows; r++) {
-					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
 					min = Math.min(min, kante);
 				}
 				this.potentialC[c] += min;
@@ -224,7 +224,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let ic : number = 0; ic < this.cols; ic++) {
 				const c : number = this.permC[ic];
 				if (!this.abgearbeitetC[c]) {
-					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
 					if (kante === 0) {
 						this.r2c[r] = c;
 						this.c2r[c] = r;
@@ -244,7 +244,7 @@ export class KursblockungMatrix extends JavaObject {
 				for (let ir : number = 0; ir < this.rows; ir++) {
 					const r : number = this.permR[ir];
 					if (this.r2c[r] < 0) {
-						const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+						const kante : number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
 						if (kante < this.distanzC[c]) {
 							this.distanzC[c] = kante;
 							this.vorgaengerCzuR[c] = r;
@@ -265,7 +265,7 @@ export class KursblockungMatrix extends JavaObject {
 				if (overR >= 0) {
 					for (let ic : number = 0; ic < this.cols; ic++) {
 						const toC : number = this.permC[ic];
-						const kante : number = this.matrix[overR][toC] + this.potentialR[overR] - this.potentialC[toC];
+						const kante : number = (this.matrix[overR][toC] + this.potentialR[overR]) - this.potentialC[toC];
 						const distance : number = this.distanzC[fromC] + kante;
 						if (distance < this.distanzC[toC]) {
 							this.distanzC[toC] = distance;
@@ -289,7 +289,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let r : number = 0; r < this.rows; r++) {
 				const c : number = this.r2c[r];
 				if (c >= 0) {
-					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
 					this.potentialR[r] += this.distanzC[c] - kante;
 					this.potentialC[c] += this.distanzC[c];
 				}
@@ -366,12 +366,12 @@ export class KursblockungMatrix extends JavaObject {
 		const sb : StringBuilder = new StringBuilder(kommentar! + System.lineSeparator()!);
 		for (let r : number = 0; r < this.rows; r++) {
 			for (let c : number = 0; c < this.cols; c++) {
-				const wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
-				let sWert1 : StringBuilder = new StringBuilder();
-				let sWert2 : StringBuilder = new StringBuilder("" + wert);
-				while (sWert1.length() + sWert2.length() < zellenbreite)
+				const wert : number = mitKnotenPotential ? ((this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c]) : this.matrix[r][c];
+				const sWert1 : StringBuilder = new StringBuilder();
+				const sWert2 : StringBuilder = new StringBuilder("" + wert);
+				while ((sWert1.length() + sWert2.length()) < zellenbreite)
 					sWert1.append(" ");
-				const sZusatz : string = this.r2c[r] === c ? "*" : " ";
+				const sZusatz : string = (this.r2c[r] === c) ? "*" : " ";
 				sb.append(sWert1);
 				sb.append(sWert2);
 				sb.append(sZusatz);
@@ -392,7 +392,7 @@ export class KursblockungMatrix extends JavaObject {
 	public fuelleMitZufallszahlenVonBis(von : number, bis : number) : void {
 		for (let r : number = 0; r < this.rows; r++) {
 			for (let c : number = 0; c < this.cols; c++) {
-				this.matrix[r][c] = this._random.nextLong(bis - von + 1) + von;
+				this.matrix[r][c] = this._random.nextLong((bis - von) + 1) + von;
 			}
 		}
 	}

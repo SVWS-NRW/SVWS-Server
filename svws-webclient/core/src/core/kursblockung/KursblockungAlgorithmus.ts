@@ -45,7 +45,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 				do {
 					KursblockungAlgorithmus.verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
-				if (System.currentTimeMillis() + zeitProK > zeitEndeGesamt)
+				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt)
 					break;
 			}
 			zeitProK *= 2;

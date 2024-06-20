@@ -33,7 +33,7 @@ public class GostKlausurraumstunde {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return another != null && another instanceof GostKlausurraumstunde && this.id == ((GostKlausurraumstunde) another).id;
+		return (another != null) && (another instanceof GostKlausurraumstunde) && (this.id == ((GostKlausurraumstunde) another).id);
 	}
 
 	/**

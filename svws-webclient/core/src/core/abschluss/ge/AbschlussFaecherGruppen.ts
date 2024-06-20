@@ -37,7 +37,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * @return true, falls eine der beiden Fächergruppen leer ist.
 	 */
 	public isEmpty() : boolean {
-		return this.fg1 === null || this.fg2 === null || this.fg1.isEmpty() || this.fg2.isEmpty();
+		return (this.fg1 === null) || (this.fg2 === null) || this.fg1.isEmpty() || this.fg2.isEmpty();
 	}
 
 	/**

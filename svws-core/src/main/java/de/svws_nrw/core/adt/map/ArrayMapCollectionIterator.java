@@ -38,7 +38,7 @@ class ArrayMapCollectionIterator<@NotNull K, @NotNull V> implements Iterator<@No
 	}
 
 	private Integer getNextIndex(final Integer from) {
-		final int start = (from == null) ? 0 : from + 1;
+		final int start = (from == null) ? 0 : (from + 1);
 		for (int i = start; i < _map.getNumberOfKeys(); i++) {
 			if (_map.getEntryByIndex(i) != null)
 				return i;

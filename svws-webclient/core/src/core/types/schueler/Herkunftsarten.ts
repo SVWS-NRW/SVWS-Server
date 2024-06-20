@@ -209,12 +209,12 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	/**
 	 * Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private schulformen : Array<ArrayList<Schulform | null>>;
+	private readonly schulformen : Array<ArrayList<Schulform | null>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private bezeichnungen : Array<ArrayList<string>>;
+	private readonly bezeichnungen : Array<ArrayList<string>>;
 
 	/**
 	 * Erzeugt eine neue Herkunftsart in der Aufzählung.

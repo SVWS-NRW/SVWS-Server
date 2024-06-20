@@ -32,7 +32,7 @@ export class AbschlussManager extends JavaObject {
 	 */
 	public static getErgebnis(abschluss : SchulabschlussAllgemeinbildend | null, erworben : boolean) : AbschlussErgebnis {
 		const ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
-		ergebnis.abschluss = abschluss === null ? null : abschluss.toString();
+		ergebnis.abschluss = (abschluss === null) ? null : abschluss.toString();
 		ergebnis.erworben = erworben;
 		ergebnis.npFaecher = null;
 		ergebnis.log = null;
@@ -51,7 +51,7 @@ export class AbschlussManager extends JavaObject {
 	 */
 	public static getErgebnisNachpruefung(abschluss : SchulabschlussAllgemeinbildend | null, npFaecher : List<string> | null) : AbschlussErgebnis {
 		const ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
-		ergebnis.abschluss = abschluss === null ? null : abschluss.toString();
+		ergebnis.abschluss = (abschluss === null) ? null : abschluss.toString();
 		ergebnis.erworben = false;
 		if ((npFaecher === null) || (npFaecher.isEmpty()))
 			ergebnis.npFaecher = null;
@@ -118,7 +118,7 @@ export class AbschlussManager extends JavaObject {
 	 * @return der Abschluss
 	 */
 	public static getAbschluss(ergebnis : AbschlussErgebnis) : string {
-		return ergebnis.abschluss === null ? SchulabschlussAllgemeinbildend.OA.toString() : ergebnis.abschluss;
+		return (ergebnis.abschluss === null) ? SchulabschlussAllgemeinbildend.OA.toString() : ergebnis.abschluss;
 	}
 
 	/**
@@ -135,7 +135,7 @@ export class AbschlussManager extends JavaObject {
 	public static erstelleAbschlussFach(kuerzel : string, bezeichnung : string | null, note : number, kursart : GELeistungsdifferenzierteKursart, istFremdsprache : boolean | null) : GEAbschlussFach {
 		const fach : GEAbschlussFach = new GEAbschlussFach();
 		fach.kuerzel = kuerzel;
-		fach.bezeichnung = (bezeichnung === null || JavaObject.equalsTranspiler("", (bezeichnung))) ? "---" : bezeichnung;
+		fach.bezeichnung = ((bezeichnung === null) || JavaObject.equalsTranspiler("", (bezeichnung))) ? "---" : bezeichnung;
 		fach.note = note;
 		fach.kursart = kursart.kuerzel;
 		fach.istFremdsprache = (istFremdsprache !== null) && istFremdsprache;
@@ -153,7 +153,7 @@ export class AbschlussManager extends JavaObject {
 		const result : ArrayList<string> = new ArrayList<string>();
 		for (let i : number = 0; i < faecher.size(); i++) {
 			const fach : GEAbschlussFach = faecher.get(i);
-			if (fach.kuerzel === null || result.contains(fach.kuerzel))
+			if ((fach.kuerzel === null) || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);
 		}

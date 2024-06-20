@@ -135,7 +135,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 
 	@Override
 	public T peek() {
-		return _nodes.length == 0 ? null : _nodes[0];
+		return (_nodes.length == 0) ? null : _nodes[0];
 	}
 
 	@Override
@@ -351,7 +351,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < _size; i++) {
 			sb.append(_nodes[i]);
-			if (i != _size - 1)
+			if (i != (_size - 1))
 				sb.append(", ");
 		}
 		return sb.toString();
@@ -395,7 +395,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return den Index des Elternteils
 	 */
 	private static int getParentIndex(final int i) {
-		return (i <= 0) ? -1 : (i - 1) / 2;
+		return (i <= 0) ? -1 : ((i - 1) / 2);
 	}
 
 	/**
@@ -406,7 +406,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return den Index des linken Kindes
 	 */
 	private static int getLeftChildIndex(final int i) {
-		return 2 * i + 1;
+		return (2 * i) + 1;
 	}
 
 	/**
@@ -417,7 +417,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return den Index des rechten Kindes
 	 */
 	private static int getRightChildIndex(final int i) {
-		return 2 * i + 2;
+		return (2 * i) + 2;
 	}
 
 	/**
@@ -505,7 +505,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @return die Kopie des _nodes-Array.
 	 */
 	private @NotNull T @NotNull [] copyNodes() {
-		final @NotNull T @NotNull [] result = newArray(_size <= 0 ? null : _nodes[0], _size);
+		final @NotNull T @NotNull [] result = newArray((_size <= 0) ? null : _nodes[0], _size);
 		System.arraycopy(_nodes, 0, result, 0, _size);
 		return result;
 	}
@@ -522,7 +522,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	private void grow() throws IllegalStateException {
 		if (_nodes.length == Integer.MAX_VALUE)
 			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + Integer.MAX_VALUE + " Elemente beinhalten.");
-		int newLength = _nodes.length * 2 + 1;
+		int newLength = (_nodes.length * 2) + 1;
 		if (newLength < 0)
 			newLength = Integer.MAX_VALUE;
 		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], newLength);

@@ -47,7 +47,7 @@ public final class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Ku
 	@Override
 	public void next(final long zeitEnde) {
 		final long current = System.currentTimeMillis();
-		final long halbzeit = current + (zeitEnde - current) / 2;
+		final long halbzeit = current + ((zeitEnde - current) / 2);
 
 		do {
 			verteileKurseMitSchuelerwunsch();

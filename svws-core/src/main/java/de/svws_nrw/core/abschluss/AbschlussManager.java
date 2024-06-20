@@ -36,7 +36,7 @@ public final class AbschlussManager {
 	 */
 	public static @NotNull AbschlussErgebnis getErgebnis(final SchulabschlussAllgemeinbildend abschluss, final boolean erworben) {
 		final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
-		ergebnis.abschluss = abschluss == null ? null : abschluss.toString();
+		ergebnis.abschluss = (abschluss == null) ? null : abschluss.toString();
 		ergebnis.erworben = erworben;
 		ergebnis.npFaecher = null;
 		ergebnis.log = null;
@@ -56,7 +56,7 @@ public final class AbschlussManager {
 	 */
 	public static @NotNull AbschlussErgebnis getErgebnisNachpruefung(final SchulabschlussAllgemeinbildend abschluss, final List<@NotNull String> npFaecher) {
 		final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
-		ergebnis.abschluss = abschluss == null ? null : abschluss.toString();
+		ergebnis.abschluss = (abschluss == null) ? null : abschluss.toString();
 		ergebnis.erworben = false;
 		if ((npFaecher == null) || (npFaecher.isEmpty()))
 			ergebnis.npFaecher = null;
@@ -127,7 +127,7 @@ public final class AbschlussManager {
 	 * @return der Abschluss
 	 */
 	public static @NotNull String getAbschluss(final @NotNull AbschlussErgebnis ergebnis) {
-		return ergebnis.abschluss == null ? SchulabschlussAllgemeinbildend.OA.toString() : ergebnis.abschluss;
+		return (ergebnis.abschluss == null) ? SchulabschlussAllgemeinbildend.OA.toString() : ergebnis.abschluss;
 	}
 
 
@@ -148,7 +148,7 @@ public final class AbschlussManager {
 			final @NotNull GELeistungsdifferenzierteKursart kursart, final Boolean istFremdsprache) {
 		final @NotNull GEAbschlussFach fach = new GEAbschlussFach();
 		fach.kuerzel = kuerzel;
-		fach.bezeichnung = (bezeichnung == null || "".equals(bezeichnung)) ? "---" : bezeichnung;
+		fach.bezeichnung = ((bezeichnung == null) || "".equals(bezeichnung)) ? "---" : bezeichnung;
 		fach.note = note;
 		fach.kursart = kursart.kuerzel;
 		fach.istFremdsprache = (istFremdsprache != null) && istFremdsprache;
@@ -169,7 +169,7 @@ public final class AbschlussManager {
 		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if (fach.kuerzel == null || result.contains(fach.kuerzel))
+			if ((fach.kuerzel == null) || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);
 		}

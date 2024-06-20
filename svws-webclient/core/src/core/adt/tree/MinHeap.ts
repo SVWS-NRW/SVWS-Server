@@ -118,7 +118,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public peek() : T | null {
-		return this._nodes.length === 0 ? null : this._nodes[0];
+		return (this._nodes.length === 0) ? null : this._nodes[0];
 	}
 
 	public poll() : T | null {
@@ -331,7 +331,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		const sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this._size; i++) {
 			sb.append(this._nodes[i]);
-			if (i !== this._size - 1)
+			if (i !== (this._size - 1))
 				sb.append(", ");
 		}
 		return sb.toString();
@@ -373,7 +373,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return den Index des Elternteils
 	 */
 	private static getParentIndex(i : number) : number {
-		return (i <= 0) ? -1 : Math.trunc((i - 1) / 2);
+		return (i <= 0) ? -1 : (Math.trunc((i - 1) / 2));
 	}
 
 	/**
@@ -384,7 +384,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return den Index des linken Kindes
 	 */
 	private static getLeftChildIndex(i : number) : number {
-		return 2 * i + 1;
+		return (2 * i) + 1;
 	}
 
 	/**
@@ -395,7 +395,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return den Index des rechten Kindes
 	 */
 	private static getRightChildIndex(i : number) : number {
-		return 2 * i + 2;
+		return (2 * i) + 2;
 	}
 
 	/**
@@ -478,7 +478,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return die Kopie des _nodes-Array.
 	 */
 	private copyNodes() : Array<T> {
-		const result : Array<T> = this.newArray(this._size <= 0 ? null : this._nodes[0], this._size);
+		const result : Array<T> = this.newArray((this._size <= 0) ? null : this._nodes[0], this._size);
 		System.arraycopy(this._nodes, 0, result, 0, this._size);
 		return result;
 	}
@@ -495,7 +495,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	private grow() : void {
 		if (this._nodes.length === JavaInteger.MAX_VALUE)
 			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + JavaInteger.MAX_VALUE + " Elemente beinhalten.")
-		let newLength : number = this._nodes.length * 2 + 1;
+		let newLength : number = (this._nodes.length * 2) + 1;
 		if (newLength < 0)
 			newLength = JavaInteger.MAX_VALUE;
 		const tmp : Array<T> = this.newArray(this._nodes[0], newLength);

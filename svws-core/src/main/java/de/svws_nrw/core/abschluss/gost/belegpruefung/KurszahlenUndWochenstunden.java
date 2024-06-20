@@ -189,7 +189,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					if (kurszahlenHalbjahr == null)
 						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 					final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
-					kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
+					kurszahlenHalbjahr.put(kursart, (kurszahlAlt == null) ? 1 : (kurszahlAlt + 1));
 				}
 
 				// Für die Grundkurse
@@ -197,9 +197,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						&& ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
 								|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
-					kurszahlenAnrechenbar.put(halbjahr, kurszahlAnrechenbar == null ? 1 : kurszahlAnrechenbar + 1);
+					kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar == null) ? 1 : (kurszahlAnrechenbar + 1));
 					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
-					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
+					kurszahlenGrundkurse.put(halbjahr, (kurszahlGK == null) ? 1 : (kurszahlGK + 1));
 					if (istAnrechenbar) {
 						if (halbjahr.istQualifikationsphase()) {
 							blockIAnzahlGrundkurse++;
@@ -212,9 +212,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				if (halbjahr.istQualifikationsphase() && !istNullPunkteBelegungInQPhase && (kursart == GostKursart.LK)) {
 					istLKFach = true;
 					final Integer kurszahlLK = kurszahlenLeistungskurse.get(halbjahr);
-					kurszahlenLeistungskurse.put(halbjahr, kurszahlLK == null ? 1 : kurszahlLK + 1);
+					kurszahlenLeistungskurse.put(halbjahr, (kurszahlLK == null) ? 1 : (kurszahlLK + 1));
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
-					kurszahlenAnrechenbar.put(halbjahr, kurszahlAnrechenbar == null ? 1 : kurszahlAnrechenbar + 1);
+					kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar == null) ? 1 : (kurszahlAnrechenbar + 1));
 					blockIAnzahlLeistungskurse++;
 					blockIAnzahlAnrechenbar++;
 				}
@@ -248,13 +248,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				if (halbjahr.istEinfuehrungsphase()) {
 					if (istAnrechenbar) {
 						final Integer kurszahlEF = kurszahlenEinfuehrungsphase.get(kursart);
-						kurszahlenEinfuehrungsphase.put(kursart, kurszahlEF == null ? 1 : kurszahlEF + 1);
+						kurszahlenEinfuehrungsphase.put(kursart, (kurszahlEF == null) ? 1 : (kurszahlEF + 1));
 					}
 					wochenstundenEinfuehrungsphase += stunden;
 				} else {
 					if (istAnrechenbar && !istNullPunkteBelegungInQPhase) {
 						final Integer kurszahlQ = kurszahlenQualifikationsphase.get(kursart);
-						kurszahlenQualifikationsphase.put(kursart, kurszahlQ == null ? 1 : kurszahlQ + 1);
+						kurszahlenQualifikationsphase.put(kursart, (kurszahlQ == null) ? 1 : (kurszahlQ + 1));
 					}
 					wochenstundenQualifikationsphase += stunden;
 				}
@@ -427,11 +427,11 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * größer oder gleich 34 ist.
 	 */
 	private void pruefeKursstundenSummen() {
-		if (wochenstundenEinfuehrungsphase / 2.0 < 34.0)
+		if ((wochenstundenEinfuehrungsphase / 2.0) < 34.0)
 			addFehler(GostBelegungsfehler.WST_20);
-		if (wochenstundenQualifikationsphase / 4.0 < 34.0)
+		if ((wochenstundenQualifikationsphase / 4.0) < 34.0)
 			addFehler(GostBelegungsfehler.WST_21);
-		final double summeKursstundenDurchschnitte = (wochenstundenEinfuehrungsphase / 2.0) + (wochenstundenQualifikationsphase / 4.0) * 2.0;
+		final double summeKursstundenDurchschnitte = (wochenstundenEinfuehrungsphase / 2.0) + ((wochenstundenQualifikationsphase / 4.0) * 2.0);
 		if (summeKursstundenDurchschnitte < 102) {
 			if (summeKursstundenDurchschnitte < 100) {
 				addFehler(GostBelegungsfehler.STD_10);

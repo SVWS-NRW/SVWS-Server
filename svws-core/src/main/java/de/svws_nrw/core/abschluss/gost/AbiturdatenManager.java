@@ -986,7 +986,7 @@ public class AbiturdatenManager {
 			return false;
 		for (final AbiturFachbelegungHalbjahr belegunghalbjahr : fachbelegung.belegungen) {
 			if ((belegunghalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegunghalbjahr))
-					&& GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) == kursart)
+					&& (GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) == kursart))
 				return true;
 		}
 		return false;
@@ -1161,7 +1161,7 @@ public class AbiturdatenManager {
 				continue;
 			String kuerzel = GostFachUtils.getFremdsprache(fach);
 			if (kuerzel == null)
-				kuerzel = fach.kuerzel == null ? "" : fach.kuerzel;
+				kuerzel = (fach.kuerzel == null) ? "" : fach.kuerzel;
 			if (!set.add(kuerzel) && (!"VX".equals(kuerzel)))
 				return true;
 		}
@@ -1653,9 +1653,9 @@ public class AbiturdatenManager {
 		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = GostFachbereich.RELIGION.hat(fach)
 				? getFachbelegungen(GostFachbereich.RELIGION)
 				: getFachbelegungByFachkuerzel(fach.kuerzel);
-		return pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
+		return (pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)
-				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)
+				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))
 						? kursart : null;
 	}
 

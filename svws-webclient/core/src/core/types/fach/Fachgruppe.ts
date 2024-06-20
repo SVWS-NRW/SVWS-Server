@@ -194,7 +194,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 	/**
 	 * Die Schulformen, bei welchen die Fachgruppe vorkommt
 	 */
-	private schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine neue Fachgruppe in der Aufzählung.

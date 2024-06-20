@@ -448,7 +448,7 @@ export class SatInput extends JavaObject {
 
 	private _bitonic_sort_spiral(list : LinkedCollection<number>, size : number) : void {
 		for (let i : number = 0; i < list.size(); i += size)
-			for (let i1 : number = i, i2 : number = i + size - 1; i1 < i2; i1++, i2--)
+			for (let i1 : number = i, i2 : number = (i + size) - 1; i1 < i2; i1++, i2--)
 				this._bitonic_comparator(list, i1, i2);
 	}
 
@@ -474,7 +474,7 @@ export class SatInput extends JavaObject {
 	 * @return TRUE, falls die Lösung alle Klauseln des Inputs erfüllt.
 	 */
 	public isValidSolution(solution : Array<number>) : boolean {
-		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + this._nVars + "!", solution.length !== this._nVars + 1);
+		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + this._nVars + "!", solution.length !== (this._nVars + 1));
 		for (const clause of this._clauses) {
 			let countTRUE : number = 0;
 			for (const literal of clause) {

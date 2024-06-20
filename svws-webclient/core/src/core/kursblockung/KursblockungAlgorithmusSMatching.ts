@@ -45,7 +45,7 @@ export class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		let countKeineVerbesserung : number = 0;
 		do {
-			countKeineVerbesserung = this.verteileAlleSchueler() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = this.verteileAlleSchueler() ? 0 : (countKeineVerbesserung + 1);
 		} while (countKeineVerbesserung < KursblockungAlgorithmusSMatching.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG);
 	}
 

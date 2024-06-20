@@ -633,7 +633,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	/**
 	 * Die Schulformen, bei welchen die Schulgliederung vorkommt
 	 */
-	private schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine neue Schulgliederung in der Aufzählung.

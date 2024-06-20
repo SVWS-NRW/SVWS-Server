@@ -1009,7 +1009,7 @@ public enum ZulaessigeKursart {
 				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
 					continue;
-				final Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				final Schulgliederung sgl = (kuerzelSfSgl.gliederung == null) ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair<>(sf, sgl));
 			}
 		}

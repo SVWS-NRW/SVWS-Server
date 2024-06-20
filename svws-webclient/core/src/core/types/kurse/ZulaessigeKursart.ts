@@ -441,7 +441,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf === null)
 					continue;
-				const sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				const sgl : Schulgliederung | null = (kuerzelSfSgl.gliederung === null) ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
 			}
 		}

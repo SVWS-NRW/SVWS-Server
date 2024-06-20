@@ -672,8 +672,8 @@ public class KursblockungDynDaten {
 					bewertungMatrixFachart[nr1][nr2] = 0;
 					continue;
 				}
-				final int nenner = (kursAnz1 + kursAnz2 - 2);
-				final int faktor = nenner == 0 ? 1000000 : (100 / nenner);
+				final int nenner = ((kursAnz1 + kursAnz2) - 2);
+				final int faktor = (nenner == 0) ? 1000000 : (100 / nenner);
 				bewertungMatrixFachart[nr1][nr2] *= faktor;
 			}
 			// Gleiche Kurs-Arten in einer Schiene --> großer Malus

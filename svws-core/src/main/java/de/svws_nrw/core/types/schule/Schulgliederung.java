@@ -1524,7 +1524,7 @@ public enum Schulgliederung {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Schulgliederung vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**

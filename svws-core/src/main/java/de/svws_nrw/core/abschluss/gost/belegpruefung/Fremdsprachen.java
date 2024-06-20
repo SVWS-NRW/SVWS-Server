@@ -119,7 +119,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			gefundenFremdsprachenbelegung = true;
 
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
-			if (gostFach != null && !gostFach.kuerzel.equals("")) {
+			if ((gostFach != null) && !gostFach.kuerzel.equals("")) {
 				// Prüfe, ob das gewählte Fremdsprachenfach vom Schüler als fortgeführte Fremdsprache belegt werden kann.
 				if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					anzahlFortgefuehrteFremdsprachen += 1;
@@ -455,7 +455,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			}
 
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
-			if (gostFach != null && !gostFach.kuerzel.equals("")) {
+			if ((gostFach != null) && !gostFach.kuerzel.equals("")) {
 				// Prüfe, ob das gewählte Fremdsprachenfach vom Schüler als fortgeführte Fremdsprache belegt werden kann.
 				if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 
@@ -514,7 +514,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				continue;
 
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
-			if (gostFach != null && !gostFach.kuerzel.equals("")) {
+			if ((gostFach != null) && !gostFach.kuerzel.equals("")) {
 				// Prüfe, ob dieses Fach vorher nicht bereits als Sprache vom Schüler belegt wurde
 				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					// Prüfe, ob diese Sprache durchgängig belegt wurde.

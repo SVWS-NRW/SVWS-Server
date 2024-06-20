@@ -99,7 +99,7 @@ public enum BilingualeSprache {
 	private static final @NotNull HashMap<@NotNull String, @NotNull BilingualeSprache> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die bilingualen Sprache vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**

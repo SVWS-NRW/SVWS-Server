@@ -4997,7 +4997,7 @@ public enum ZulaessigesFach {
 	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapFremdsprachenKuerzelAtomar = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist */
-	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
+	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -5017,7 +5017,7 @@ public enum ZulaessigesFach {
 				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
 					continue;
-				final Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				final Schulgliederung sgl = (kuerzelSfSgl.gliederung == null) ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair<>(sf, sgl));
 			}
 		}
@@ -5173,7 +5173,7 @@ public enum ZulaessigesFach {
 	 */
 	public @NotNull RGBFarbe getFarbe() {
 		final Fachgruppe gruppe = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
-		return gruppe == null ? new RGBFarbe() : gruppe.daten.farbe;
+		return (gruppe == null) ? new RGBFarbe() : gruppe.daten.farbe;
 	}
 
 

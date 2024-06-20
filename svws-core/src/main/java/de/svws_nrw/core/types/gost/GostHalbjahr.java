@@ -191,7 +191,7 @@ public enum GostHalbjahr {
 	 * @return ein Array mit allen Halbjahren des Schuljahres, in dem das Halbjahr-Objekt liegt der gymnasialen Oberstufe
 	 */
 	public @NotNull GostHalbjahr @NotNull [] getSchuljahr() {
-		if (id % 2 == 0) {
+		if ((id % 2) == 0) {
 			final @NotNull GostHalbjahr @NotNull [] hjs = { this, nextOrException() };
 			return hjs;
 		}
@@ -351,7 +351,7 @@ public enum GostHalbjahr {
 	 */
 	public static GostHalbjahr fromAbiturjahrSchuljahrUndHalbjahr(final int abiturjahr, final int schuljahr, final int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
-		final int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
+		final int id = ((((schuljahr + 3) - abiturjahr) * 2) + halbjahr) - 1;
 		return GostHalbjahr.fromID(id);
 	}
 
@@ -370,7 +370,7 @@ public enum GostHalbjahr {
 	 */
 	public static GostHalbjahr getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(final int abiturjahr, final int schuljahr, final int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
-		int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr;
+		int id = (((schuljahr + 3) - abiturjahr) * 2) + halbjahr;
 		if (id < 0)
 			id = 0;
 		return GostHalbjahr.fromID(id);
@@ -386,7 +386,7 @@ public enum GostHalbjahr {
 	 * @return das Abiturjahr
 	 */
 	public int getAbiturjahrFromSchuljahr(final int schuljahr) {
-		return schuljahr + 3 - (id / 2);
+		return (schuljahr + 3) - (id / 2);
 	}
 
 
@@ -399,7 +399,7 @@ public enum GostHalbjahr {
 	 * @return das Schuljahr
 	 */
 	public int getSchuljahrFromAbiturjahr(final int abiturjahr) {
-		return abiturjahr - 3 + (id / 2);
+		return (abiturjahr - 3) + (id / 2);
 	}
 
 

@@ -919,7 +919,7 @@ export class AbiturdatenManager extends JavaObject {
 		if (fachbelegung === null)
 			return false;
 		for (const belegunghalbjahr of fachbelegung.belegungen) {
-			if ((belegunghalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegunghalbjahr)) && GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) as unknown === kursart as unknown)
+			if ((belegunghalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegunghalbjahr)) && (GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) as unknown === kursart as unknown))
 				return true;
 		}
 		return false;
@@ -1085,7 +1085,7 @@ export class AbiturdatenManager extends JavaObject {
 				continue;
 			let kuerzel : string | null = GostFachUtils.getFremdsprache(fach);
 			if (kuerzel === null)
-				kuerzel = fach.kuerzel === null ? "" : fach.kuerzel;
+				kuerzel = (fach.kuerzel === null) ? "" : fach.kuerzel;
 			if (!set.add(kuerzel) && (!JavaObject.equalsTranspiler("VX", (kuerzel))))
 				return true;
 		}
@@ -1532,7 +1532,7 @@ export class AbiturdatenManager extends JavaObject {
 		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
 			return null;
 		const fachbelegungen : List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
-		return this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21) ? kursart : null;
+		return (this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)) ? kursart : null;
 	}
 
 	/**

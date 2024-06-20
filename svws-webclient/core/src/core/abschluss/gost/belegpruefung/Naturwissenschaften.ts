@@ -43,9 +43,9 @@ export class Naturwissenschaften extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.NW_11);
 		let fachbelegungen : List<AbiturFachbelegung> | null = this.manager.filterDurchgehendBelegbar(this._naturwissenschaften);
 		fachbelegungen = this.manager.filterBelegungen(fachbelegungen, GostHalbjahr.EF1);
-		this._anzahlDurchgehend = fachbelegungen === null ? 0 : fachbelegungen.size();
+		this._anzahlDurchgehend = (fachbelegungen === null) ? 0 : fachbelegungen.size();
 		fachbelegungen = this.manager.filterBelegungenMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
-		this._anzahlDurchgehendSchriftlich = fachbelegungen === null ? 0 : fachbelegungen.size();
+		this._anzahlDurchgehendSchriftlich = (fachbelegungen === null) ? 0 : fachbelegungen.size();
 	}
 
 	protected pruefeGesamt() : void {

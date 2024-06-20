@@ -278,7 +278,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public hashCode() : number {
 		let hashCode : number = 1;
 		for (const e of this)
-			hashCode = 31 * hashCode + (e === null ? 0 : JavaObject.getTranspilerHashCode(e));
+			hashCode = (31 * hashCode) + ((e === null) ? 0 : JavaObject.getTranspilerHashCode(e));
 		return hashCode;
 	}
 
@@ -323,15 +323,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	 * @return die kombinierte sortierte Liste
 	 */
 	private merge(comparator : Comparator<E>, left : LinkedCollectionElement<E>, right : LinkedCollectionElement<E>) : LinkedCollectionElement<E> {
-		let headTo : LinkedCollectionElement<E> | null;
-		let headFrom : LinkedCollectionElement<E> | null;
-		if (comparator.compare(left.getValue(), right.getValue()) > 0) {
-			headFrom = left;
-			headTo = right;
-		} else {
-			headFrom = right;
-			headTo = left;
-		}
+		const l2r : boolean = (comparator.compare(left.getValue(), right.getValue()) > 0);
+		const headTo : LinkedCollectionElement<E> | null = l2r ? right : left;
+		let headFrom : LinkedCollectionElement<E> | null = l2r ? left : right;
 		let target : LinkedCollectionElement<E> = headTo;
 		while (headFrom !== null) {
 			const current : LinkedCollectionElement<E> = headFrom;

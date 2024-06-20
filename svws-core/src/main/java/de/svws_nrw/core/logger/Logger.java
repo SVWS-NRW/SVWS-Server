@@ -91,7 +91,7 @@ public class Logger {
 	 * @param indent   die Veränderung bei der Anzahl der Leerzeichen
 	 */
 	public void modifyIndent(final int indent) {
-		this.indent = (this.indent + indent < 0) ? 0 : this.indent + indent;
+		this.indent = ((this.indent + indent) < 0) ? 0 : (this.indent + indent);
 	}
 
 

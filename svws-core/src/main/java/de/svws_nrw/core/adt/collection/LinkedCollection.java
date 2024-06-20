@@ -295,7 +295,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	public int hashCode() {
 		int hashCode = 1;
 		for (final @NotNull E e : this)
-			hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
+			hashCode = (31 * hashCode) + ((e == null) ? 0 : e.hashCode());
 		return hashCode;
 	}
 
@@ -345,15 +345,9 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator,
 			final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
 		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element
-		LinkedCollectionElement<@NotNull E> headTo;
-		LinkedCollectionElement<@NotNull E> headFrom;
-		if (comparator.compare(left.getValue(), right.getValue()) > 0) {
-			headFrom = left;
-			headTo = right;
-		} else {
-			headFrom = right;
-			headTo = left;
-		}
+		final boolean l2r = (comparator.compare(left.getValue(), right.getValue()) > 0);
+		final LinkedCollectionElement<@NotNull E> headTo = l2r ? right : left;
+		LinkedCollectionElement<@NotNull E> headFrom = l2r ? left : right;
 		// Iteriere durch die Zielliste (target-Zeiger)
 		@NotNull LinkedCollectionElement<@NotNull E> target = headTo;
 		while (headFrom != null) {

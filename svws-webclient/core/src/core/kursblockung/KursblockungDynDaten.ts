@@ -565,8 +565,8 @@ export class KursblockungDynDaten extends JavaObject {
 					bewertungMatrixFachart[nr1][nr2] = 0;
 					continue;
 				}
-				const nenner : number = (kursAnz1 + kursAnz2 - 2);
-				const faktor : number = nenner === 0 ? 1000000 : (Math.trunc(100 / nenner));
+				const nenner : number = ((kursAnz1 + kursAnz2) - 2);
+				const faktor : number = (nenner === 0) ? 1000000 : (Math.trunc(100 / nenner));
 				bewertungMatrixFachart[nr1][nr2] *= faktor;
 			}
 			bewertungMatrixFachart[nr1][nr1] += 10000000;

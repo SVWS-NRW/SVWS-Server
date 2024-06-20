@@ -41,8 +41,8 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP =
 			(final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) && "WP".equalsIgnoreCase(f.kuerzel);
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP =
-			(final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4)
-					|| ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel);
+			(final @NotNull GEAbschlussFach f) -> (!f.ausgeglichen && (f.note > 4))
+					|| (((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel));
 
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterBenoetigte3er =
 			(final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
@@ -131,7 +131,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 			final GEAbschlussFach eKursFG2 = faecher.fg2.getFach(filterEKurse);
 			if (eKursFG2 != null) {
 				final int note = eKursFG2.note;
-				final int note_neu = (note == 1) ? 1 : note - 1;
+				final int note_neu = (note == 1) ? 1 : (note - 1);
 				logger.logLn(LogLevel.DEBUG, "   " + eKursFG2.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 				eKursFG2.note = note_neu;
 				eKursFG2.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;
@@ -141,7 +141,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 				final GEAbschlussFach eKursFG1 = faecher.fg1.getFach(filterEKurse);
 				if (eKursFG1 != null) {
 					final int note = eKursFG1.note;
-					final int note_neu = (note == 1) ? 1 : note - 1;
+					final int note_neu = (note == 1) ? 1 : (note - 1);
 					logger.logLn(LogLevel.DEBUG, "   " + eKursFG1.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 					eKursFG1.note = note_neu;
 					eKursFG1.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;

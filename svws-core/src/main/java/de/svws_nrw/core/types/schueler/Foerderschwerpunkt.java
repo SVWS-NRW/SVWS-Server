@@ -279,7 +279,7 @@ public enum Foerderschwerpunkt {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Foerderschwerpunkt> _foerderschwerpunkteID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Förderschwerpunkt vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**

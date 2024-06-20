@@ -310,7 +310,7 @@ public class KursblockungDynKurs {
 			return true;
 
 		// Ist noch Platz für nicht fixierte SuS?
-		return (schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy > 0);
+		return ((schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy) > 0);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand S,

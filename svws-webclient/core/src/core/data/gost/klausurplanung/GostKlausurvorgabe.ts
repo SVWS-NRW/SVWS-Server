@@ -75,7 +75,7 @@ export class GostKlausurvorgabe extends JavaObject {
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe'))) && this.idVorgabe === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurvorgabe(another)).idVorgabe;
+		return (another !== null) && (((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe')))) && (this.idVorgabe === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurvorgabe(another)).idVorgabe);
 	}
 
 	/**

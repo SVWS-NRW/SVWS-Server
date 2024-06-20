@@ -47,7 +47,7 @@ export class SatWrapper1 extends JavaObject implements JavaFunction<SatInput, Sa
 		const solution1 : Array<number> = Array(solution2.length).fill(0);
 		for (let lit1 : number = 1; lit1 < solution2.length; lit1++) {
 			const lit2 : number = map1to2[lit1];
-			solution1[lit1] = solution2[lit2] >= 0 ? lit1 : -lit1;
+			solution1[lit1] = (solution2[lit2] >= 0) ? lit1 : -lit1;
 		}
 		return SatOutput.createCopy(out2, solution1);
 	}

@@ -30,7 +30,7 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 
 	public next(zeitEnde : number) : void {
 		const current : number = System.currentTimeMillis();
-		const halbzeit : number = current + Math.trunc((zeitEnde - current) / 2);
+		const halbzeit : number = current + (Math.trunc((zeitEnde - current) / 2));
 		do {
 			this.verteileKurseMitSchuelerwunsch();
 		} while (System.currentTimeMillis() < halbzeit);

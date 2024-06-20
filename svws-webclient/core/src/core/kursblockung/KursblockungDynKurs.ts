@@ -330,7 +330,7 @@ export class KursblockungDynKurs extends JavaObject {
 			return false;
 		if (this.schuelerFixiert[s.internalSchuelerID])
 			return true;
-		return (this.schuelerAnzahlMaximal - this.schuelerAnzahl - this.schuelerAnzahlDummy > 0);
+		return ((this.schuelerAnzahlMaximal - this.schuelerAnzahl - this.schuelerAnzahlDummy) > 0);
 	}
 
 	/**

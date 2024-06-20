@@ -57,7 +57,7 @@ public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAl
 		// Optimiere die Kurse. Bricht ab, wenn die Zeit vorbei ist, oder mehrfach keine Verbesserung erfolgt.
 		int countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurse() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = verteileKurse() ? 0 : (countKeineVerbesserung + 1);
 		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < pEndzeit));
 	}
 

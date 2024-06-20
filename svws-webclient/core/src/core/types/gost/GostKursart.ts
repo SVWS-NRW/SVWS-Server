@@ -280,7 +280,7 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	 * @return die Kursart oder null, falls das Kürzel ungültig ist
 	 */
 	public static fromKuerzelOrException(kuerzel : string | null) : GostKursart {
-		let gk : GostKursart | null = GostKursart.getMapByKuerzel().get(kuerzel);
+		const gk : GostKursart | null = GostKursart.getMapByKuerzel().get(kuerzel);
 		if (gk === null)
 			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel!)
 		return gk;
@@ -306,7 +306,7 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
 	 */
 	public static getFachartID(pFachID : number, pKursartID : number) : number {
-		return pFachID * GostKursart.FACHART_ID_FAKTOR + pKursartID;
+		return (pFachID * GostKursart.FACHART_ID_FAKTOR) + pKursartID;
 	}
 
 	/**

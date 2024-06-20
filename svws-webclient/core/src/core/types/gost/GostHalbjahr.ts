@@ -207,7 +207,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 * @return ein Array mit allen Halbjahren des Schuljahres, in dem das Halbjahr-Objekt liegt der gymnasialen Oberstufe
 	 */
 	public getSchuljahr() : Array<GostHalbjahr> {
-		if (this.id % 2 === 0) {
+		if ((this.id % 2) === 0) {
 			const hjs : Array<GostHalbjahr> = [this, this.nextOrException()];
 			return hjs;
 		}
@@ -373,7 +373,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 * @return das Halbjahr der gymnasialen Oberstufe oder null
 	 */
 	public static fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
-		const id : number = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
+		const id : number = ((((schuljahr + 3) - abiturjahr) * 2) + halbjahr) - 1;
 		return GostHalbjahr.fromID(id);
 	}
 
@@ -390,7 +390,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 *         Jahrgang in der Q2.2 ist oder das Abitur bereits abgeschlossen ist.
 	 */
 	public static getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
-		let id : number = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr;
+		let id : number = (((schuljahr + 3) - abiturjahr) * 2) + halbjahr;
 		if (id < 0)
 			id = 0;
 		return GostHalbjahr.fromID(id);
@@ -405,7 +405,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 * @return das Abiturjahr
 	 */
 	public getAbiturjahrFromSchuljahr(schuljahr : number) : number {
-		return schuljahr + 3 - (Math.trunc(this.id / 2));
+		return (schuljahr + 3) - (Math.trunc(this.id / 2));
 	}
 
 	/**
@@ -417,7 +417,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 * @return das Schuljahr
 	 */
 	public getSchuljahrFromAbiturjahr(abiturjahr : number) : number {
-		return abiturjahr - 3 + (Math.trunc(this.id / 2));
+		return (abiturjahr - 3) + (Math.trunc(this.id / 2));
 	}
 
 	/**

@@ -197,9 +197,9 @@ public class KursblockungMatrix {
 		if (rows <= cols) {
 			// Subtrahiere das Zeilen-Minimum von allen Zeilen
 			for (int r = 0; r < rows; r++) {
-				long min = matrix[r][0] + potentialR[r] - potentialC[0];
+				long min = (matrix[r][0] + potentialR[r]) - potentialC[0];
 				for (int c = 0; c < cols; c++) {
-					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
 					min = Math.min(min, kante);
 				}
 				potentialR[r] -= min;
@@ -210,9 +210,9 @@ public class KursblockungMatrix {
 		if (cols <= rows) {
 			// Subtrahiere das Spalten-Minimum von allen Spalten
 			for (int c = 0; c < cols; c++) {
-				long min = matrix[0][c] + potentialR[0] - potentialC[c];
+				long min = (matrix[0][c] + potentialR[0]) - potentialC[c];
 				for (int r = 0; r < rows; r++) {
-					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
 					min = Math.min(min, kante);
 				}
 				potentialC[c] += min;
@@ -232,7 +232,7 @@ public class KursblockungMatrix {
 			for (int ic = 0; ic < cols; ic++) {
 				final int c = permC[ic]; // zufällige C-Reihenfolge
 				if (!abgearbeitetC[c]) {
-					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
 					if (kante == 0) {
 						r2c[r] = c;
 						c2r[c] = r;
@@ -270,7 +270,7 @@ public class KursblockungMatrix {
 				for (int ir = 0; ir < rows; ir++) {
 					final int r = permR[ir]; // zufällige R-Reihenfolge
 					if (r2c[r] < 0) { // Nur freie r-Knoten beachten
-						final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+						final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
 						if (kante < distanzC[c]) {
 							distanzC[c] = kante;
 							vorgaengerCzuR[c] = r;
@@ -304,7 +304,7 @@ public class KursblockungMatrix {
 						// Man muss hier nicht auf Vorwärts-Kante testen, da nur "fromC" falsch herum
 						// ist und das Gewicht ist >= 0,
 						// so wird der Pfad nie kürzer.
-						final long kante = matrix[overR][toC] + potentialR[overR] - potentialC[toC];
+						final long kante = (matrix[overR][toC] + potentialR[overR]) - potentialC[toC];
 						final long distance = distanzC[fromC] + kante;
 						if (distance < distanzC[toC]) {
 							distanzC[toC] = distance;
@@ -338,7 +338,7 @@ public class KursblockungMatrix {
 			for (int r = 0; r < rows; r++) {
 				final int c = r2c[r];
 				if (c >= 0) {
-					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
 					potentialR[r] += distanzC[c] - kante;
 					potentialC[c] += distanzC[c];
 				}
@@ -408,12 +408,12 @@ public class KursblockungMatrix {
 		final @NotNull StringBuilder sb = new StringBuilder(kommentar + System.lineSeparator());
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				final long wert = mitKnotenPotential ? matrix[r][c] + potentialR[r] - potentialC[c] : matrix[r][c];
-				@NotNull StringBuilder sWert1 = new StringBuilder();          // leading spaces
-				@NotNull StringBuilder sWert2 = new StringBuilder("" + wert); // value
-				while (sWert1.length() + sWert2.length() < zellenbreite)
+				final long wert = mitKnotenPotential ? ((matrix[r][c] + potentialR[r]) - potentialC[c]) : matrix[r][c];
+				final @NotNull StringBuilder sWert1 = new StringBuilder();          // leading spaces
+				final @NotNull StringBuilder sWert2 = new StringBuilder("" + wert); // value
+				while ((sWert1.length() + sWert2.length()) < zellenbreite)
 					sWert1.append(" ");
-				final @NotNull String sZusatz = r2c[r] == c ? "*" : " ";
+				final @NotNull String sZusatz = (r2c[r] == c) ? "*" : " ";
 				sb.append(sWert1);
 				sb.append(sWert2);
 				sb.append(sZusatz);
@@ -434,7 +434,7 @@ public class KursblockungMatrix {
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				matrix[r][c] = _random.nextLong(bis - von + 1L) + von;
+				matrix[r][c] = _random.nextLong((bis - von) + 1L) + von;
 			}
 		}
 	}

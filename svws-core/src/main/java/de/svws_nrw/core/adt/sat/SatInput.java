@@ -479,7 +479,7 @@ public final class SatInput {
 
 	private void _bitonic_sort_spiral(final @NotNull LinkedCollection<@NotNull Integer> list, final int size) {
 		for (int i = 0; i < list.size(); i += size)
-			for (int i1 = i, i2 = i + size - 1; i1 < i2; i1++, i2--)
+			for (int i1 = i, i2 = (i + size) - 1; i1 < i2; i1++, i2--)
 				_bitonic_comparator(list, i1, i2);
 	}
 
@@ -509,7 +509,7 @@ public final class SatInput {
 	 */
 	public boolean isValidSolution(final @NotNull int @NotNull [] solution) {
 		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + _nVars + "!",
-				solution.length != _nVars + 1);
+				solution.length != (_nVars + 1));
 
 		for (final @NotNull Integer @NotNull [] clause : _clauses) {
 			int countTRUE = 0;

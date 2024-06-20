@@ -31,7 +31,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 
 	private static readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private static readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private static readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (!f.ausgeglichen && (f.note > 4)) || (((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel)) };
 
 	private static readonly filterBenoetigte3er : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart)) };
 
@@ -108,7 +108,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 				const eKursFG2 : GEAbschlussFach | null = faecher.fg2.getFach(ServiceAbschlussMSA.filterEKurse);
 				if (eKursFG2 !== null) {
 					const note : number = eKursFG2.note;
-					const note_neu : number = (note === 1) ? 1 : note - 1;
+					const note_neu : number = (note === 1) ? 1 : (note - 1);
 					this.logger.logLn(LogLevel.DEBUG, "   " + eKursFG2.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 					eKursFG2.note = note_neu;
 					eKursFG2.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;
@@ -118,7 +118,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 					const eKursFG1 : GEAbschlussFach | null = faecher.fg1.getFach(ServiceAbschlussMSA.filterEKurse);
 					if (eKursFG1 !== null) {
 						const note : number = eKursFG1.note;
-						const note_neu : number = (note === 1) ? 1 : note - 1;
+						const note_neu : number = (note === 1) ? 1 : (note - 1);
 						this.logger.logLn(LogLevel.DEBUG, "   " + eKursFG1.kuerzel + ":(E)" + note + "->(G)" + note_neu);
 						eKursFG1.note = note_neu;
 						eKursFG1.kursart = GELeistungsdifferenzierteKursart.G.kuerzel;

@@ -79,7 +79,7 @@ public final class KursblockungAlgorithmusPermanent {
 
 		// Jeder Algorithmus optimiert innerhalb seiner Zeit sein eigenes "KursblockungDynDaten"-Objekt.
 		for (int iK = 0; (iK < algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
-			algorithmenK[iK].next(zeitStart + (zeitFuerBerechnung * (iK + 1)) / algorithmenK.length); // Übermittle die individuelle Endzeit.
+			algorithmenK[iK].next(zeitStart + ((zeitFuerBerechnung * (iK + 1)) / algorithmenK.length)); // Übermittle die individuelle Endzeit.
 
 		// Die verwendete Zeit abziehen.
 		_zeitRest -= (System.currentTimeMillis() - zeitStart);
@@ -111,7 +111,7 @@ public final class KursblockungAlgorithmusPermanent {
 		algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, _gibBestOrNull());
 
 		// Die Berechnungszeit steigt exponentiell. Mehrere Tests ergaben, dass dies besser ist als linear.
-		_zeitMax = _zeitMax + _zeitMax / 2;
+		_zeitMax = _zeitMax + (_zeitMax / 2);
 		_zeitRest = _zeitMax;
 
 		return verbesserung > 0;

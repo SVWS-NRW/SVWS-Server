@@ -30,7 +30,7 @@ export class KursblockungAlgorithmusPermanentKMatching extends KursblockungAlgor
 
 	public next(zeitEnde : number) : void {
 		const current : number = System.currentTimeMillis();
-		const halbzeit : number = current + Math.trunc((zeitEnde - current) / 2);
+		const halbzeit : number = current + (Math.trunc((zeitEnde - current) / 2));
 		do {
 			this.verteileKurseMitMatching();
 		} while (System.currentTimeMillis() < halbzeit);

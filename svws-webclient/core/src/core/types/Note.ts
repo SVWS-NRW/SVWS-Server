@@ -194,7 +194,7 @@ export class Note extends JavaEnum<Note> {
 	/**
 	 * Noten ohne Tendenz als Liste mit 1,2,3,4,5,6
 	 */
-	private static listNotenOhneTendenz : List<Note> = new ArrayList<Note>();
+	private static readonly listNotenOhneTendenz : List<Note> = new ArrayList<Note>();
 
 	/**
 	 * Erzeugt ein neues Element der Aufzählung
@@ -514,7 +514,7 @@ export class Note extends JavaEnum<Note> {
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public hatTendenz() : boolean {
-		return (this.notenpunkte !== null) && (this.notenpunkte !== 0) && (this.notenpunkte! % 3 !== 2);
+		return (this.notenpunkte !== null) && (this.notenpunkte !== 0) && ((this.notenpunkte! % 3) !== 2);
 	}
 
 	/**
@@ -614,7 +614,7 @@ export class Note extends JavaEnum<Note> {
 		if (this.notenpunkte === null)
 			return "";
 		else
-			return (this.notenpunkte.toString().length === 1) ? "0" + this.notenpunkte.toString()! : this.notenpunkte.toString();
+			return (this.notenpunkte.toString().length === 1) ? ("0" + this.notenpunkte.toString()!) : this.notenpunkte.toString();
 	}
 
 	/**

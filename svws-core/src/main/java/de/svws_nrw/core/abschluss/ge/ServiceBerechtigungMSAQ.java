@@ -36,7 +36,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP =
 			(final @NotNull GEAbschlussFach f) -> (f.note > 3) && "WP".equalsIgnoreCase(f.kuerzel);
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> (f.note > 3)
-			|| ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !"WP".equalsIgnoreCase(f.kuerzel);
+			|| (((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !"WP".equalsIgnoreCase(f.kuerzel));
 
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1NichtAusgleichbar =
 			(final @NotNull GEAbschlussFach f) -> (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3));

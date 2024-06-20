@@ -707,7 +707,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		final AVLMapNode<@NotNull K, @NotNull V> n2 = _nodeLastOrNull(iv);
 		if (n2 == null)
 			return 0; // Transpiler-Hilfe
-		return _nodeIndexOf(n2._key) - _nodeIndexOf(n1._key) + 1;
+		return (_nodeIndexOf(n2._key) - _nodeIndexOf(n1._key)) + 1;
 	}
 
 	/**
@@ -977,7 +977,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	private boolean _valEquals(final V v1, final V v2) {
-		return (v1 == null) ? v2 == null : v1.equals(v2);
+		return (v1 == null) ? (v2 == null) : v1.equals(v2);
 	}
 
 	private @NotNull K _keyOrExeption(final AVLMapNode<@NotNull K, @NotNull V> node) {
@@ -996,10 +996,10 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 
 	private boolean _isOutOfRange(final @NotNull K key, final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		final int cmpKeyFrom = _compare(key, iv.from);
-		if ((cmpKeyFrom < 0) || (cmpKeyFrom == 0) && (!iv.fromInc))
+		if ((cmpKeyFrom < 0) || ((cmpKeyFrom == 0) && (!iv.fromInc)))
 			return true;
 		final int cmpKeyTo = _compare(key, iv.to);
-		return ((cmpKeyTo > 0) || (cmpKeyTo == 0) && (!iv.toInc));
+		return ((cmpKeyTo > 0) || ((cmpKeyTo == 0) && (!iv.toInc)));
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeFirstOrNull(final @NotNull AVLMapIntervall<@NotNull K> iv) {
@@ -1016,7 +1016,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if (node == null)
 			return null;
 		final int cmpNodeKey = _compare(node._key, key);
-		return cmpNodeKey >= 0 ? node : _nodeNextOrNull(node, iv);
+		return (cmpNodeKey >= 0) ? node : _nodeNextOrNull(node, iv);
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeHigherOrNull(final @NotNull K key,
@@ -1025,7 +1025,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if (node == null)
 			return null;
 		final int cmpNodeKey = _compare(node._key, key);
-		return cmpNodeKey > 0 ? node : _nodeNextOrNull(node, iv);
+		return (cmpNodeKey > 0) ? node : _nodeNextOrNull(node, iv);
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeFloorOrNull(final @NotNull K key,
@@ -1034,7 +1034,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if (node == null)
 			return null;
 		final int cmpNodeKey = _compare(node._key, key);
-		return cmpNodeKey <= 0 ? node : _nodePrevOrNull(node, iv);
+		return (cmpNodeKey <= 0) ? node : _nodePrevOrNull(node, iv);
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeLowerOrNull(final @NotNull K key,
@@ -1043,7 +1043,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if (node == null)
 			return null;
 		final int cmpNodeKey = _compare(node._key, key);
-		return cmpNodeKey < 0 ? node : _nodePrevOrNull(node, iv);
+		return (cmpNodeKey < 0) ? node : _nodePrevOrNull(node, iv);
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeNextOrNull(final @NotNull AVLMapNode<@NotNull K, @NotNull V> node,
@@ -1066,7 +1066,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		final AVLMapNode<@NotNull K, @NotNull V> node = _nodeDeepestOrNull(key, iv);
 		if (node == null)
 			return null;
-		return _compare(key, node._key) == 0 ? node : null;
+		return (_compare(key, node._key) == 0) ? node : null;
 	}
 
 	// Der KEY muss im Baum existieren!
@@ -1101,14 +1101,14 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		while (current != null) {
 			// Fall: Gültiger Bereich liegt links
 			final int cmpToKey = _compare(iv.to, current._key);
-			if ((cmpToKey < 0) || (cmpToKey == 0) && (!iv.toInc)) {
+			if ((cmpToKey < 0) || ((cmpToKey == 0) && (!iv.toInc))) {
 				current = current._childL;
 				continue;
 			}
 
 			// Fall: Gültiger Bereich liegt rechts
 			final int cmpFromKey = _compare(iv.from, current._key);
-			if ((cmpFromKey > 0) || (cmpFromKey == 0) && (!iv.fromInc)) {
+			if ((cmpFromKey > 0) || ((cmpFromKey == 0) && (!iv.fromInc))) {
 				current = current._childR;
 				continue;
 			}

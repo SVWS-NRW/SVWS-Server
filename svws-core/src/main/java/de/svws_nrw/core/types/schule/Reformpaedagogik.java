@@ -122,7 +122,7 @@ public enum Reformpaedagogik {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**

@@ -46,7 +46,7 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 		this.dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		let countKeineVerbesserung : number = 0;
 		do {
-			countKeineVerbesserung = this.verteileSchuelerAlle() ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = this.verteileSchuelerAlle() ? 0 : (countKeineVerbesserung + 1);
 		} while (countKeineVerbesserung < KursblockungAlgorithmusSZufaellig.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG);
 	}
 

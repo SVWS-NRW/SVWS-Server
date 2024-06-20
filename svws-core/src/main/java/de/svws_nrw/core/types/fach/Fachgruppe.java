@@ -440,7 +440,7 @@ public enum Fachgruppe {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Fachgruppe vorkommt */
-	private @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
 
 
 	/**

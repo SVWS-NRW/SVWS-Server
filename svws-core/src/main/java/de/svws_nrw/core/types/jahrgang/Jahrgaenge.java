@@ -966,7 +966,7 @@ public enum Jahrgaenge {
 	public boolean hatLernbereichsnote1(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
 		return switch (schulform) {
 			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
-			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
+			case GY, SG -> ((schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT))
 					? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
 			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) && (schuljahr <= 2024))
 					|| ((this == Jahrgaenge.JG_09) && (schuljahr <= 2023))
@@ -1012,7 +1012,7 @@ public enum Jahrgaenge {
 	public boolean hatLernbereichsnote2(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
 		return switch (schulform) {
 			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
-			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
+			case GY, SG -> ((schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT))
 					? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
 			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) || (this == Jahrgaenge.JG_09) || (this == Jahrgaenge.JG_08));
 			case HI -> (this == Jahrgaenge.JG_10);

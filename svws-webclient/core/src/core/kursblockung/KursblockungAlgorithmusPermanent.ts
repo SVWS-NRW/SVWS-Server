@@ -83,7 +83,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		const zeitFuerBerechnung : number = Math.min(zeitProAufruf, this._zeitRest);
 		const zeitEnde : number = zeitStart + zeitFuerBerechnung;
 		for (let iK : number = 0; (iK < this.algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
-			this.algorithmenK[iK].next(zeitStart + Math.trunc((zeitFuerBerechnung * (iK + 1)) / this.algorithmenK.length));
+			this.algorithmenK[iK].next(zeitStart + (Math.trunc((zeitFuerBerechnung * (iK + 1)) / this.algorithmenK.length)));
 		this._zeitRest -= (System.currentTimeMillis() - zeitStart);
 		return (this._zeitRest <= 100) ? this._neustart() : false;
 	}
@@ -105,7 +105,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
 		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
 		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, this._gibBestOrNull());
-		this._zeitMax = this._zeitMax + Math.trunc(this._zeitMax / 2);
+		this._zeitMax = this._zeitMax + (Math.trunc(this._zeitMax / 2));
 		this._zeitRest = this._zeitMax;
 		return verbesserung > 0;
 	}

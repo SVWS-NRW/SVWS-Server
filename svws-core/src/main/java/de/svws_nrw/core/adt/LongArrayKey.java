@@ -30,7 +30,7 @@ public final class LongArrayKey implements Comparable<@NotNull LongArrayKey> {
 		for (int i = 0; i < arrayOfKeys.length; i++) {
 			final long value = arrayOfKeys[i];
 			_keys[i] = value;
-			hashCode = 31 * hashCode + (int) (value ^ (value >>> 32));
+			hashCode = (31 * hashCode) + (int) (value ^ (value >>> 32));
 		}
 
 		_hashcode = hashCode;

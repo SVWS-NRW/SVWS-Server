@@ -73,7 +73,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	/**
 	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt
 	 */
-	private schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine Reformpädagogik in der Aufzählung.
