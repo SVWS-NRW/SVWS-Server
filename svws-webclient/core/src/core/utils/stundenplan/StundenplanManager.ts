@@ -1907,7 +1907,7 @@ export class StundenplanManager extends JavaObject {
 			}
 		}
 		for (const kwz of list)
-			this._kwz_by_jahr_and_kw.put(kwz.jahr, kwz.kw, kwz);
+			this._kwz_by_id.put(kwz.id, kwz);
 	}
 
 	private kalenderwochenzuordnungCheckAttributes(kwz : StundenplanKalenderwochenzuordnung, checkID : boolean) : void {

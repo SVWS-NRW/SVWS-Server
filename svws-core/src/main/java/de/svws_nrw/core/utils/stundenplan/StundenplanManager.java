@@ -2084,7 +2084,7 @@ public class StundenplanManager {
 
 		// add all
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : list)
-			_kwz_by_jahr_and_kw.put(kwz.jahr, kwz.kw, kwz);
+			_kwz_by_id.put(kwz.id, kwz);
 	}
 
 	private void kalenderwochenzuordnungCheckAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
