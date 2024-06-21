@@ -1,9 +1,11 @@
 package de.svws_nrw.api.privileged;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.BenutzerKennwort;
@@ -334,6 +336,12 @@ public class APISchemaPrivileged {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled())
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
 
 			final long max_revision = SchemaRevisionen.maxRevision.revision;
 			long rev = revision;
@@ -546,6 +554,12 @@ public class APISchemaPrivileged {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled())
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
 
 			try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, multipart.database, true)) {
 				logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
@@ -600,6 +614,12 @@ public class APISchemaPrivileged {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled())
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
 
 			// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
 			try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, multipart.database, true)) {
@@ -614,6 +634,7 @@ public class APISchemaPrivileged {
 						multipart.schemaUserPassword, true, true, 0, 0);
 
 				try {
+					logger.log(2, "-> Verbinde zur Quell-Datenbank...");
 					final Benutzer srcUser = Benutzer.create(srcConfig);
 					try (DBEntityManager srcConn = srcUser.getEntityManager()) {
 						if (srcConn == null) {
@@ -840,6 +861,12 @@ public class APISchemaPrivileged {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled())
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
 
 			// Prüfe das angegebene Datenbanksystem für die Quelldatenbank
 			switch (srcDbDriver) {
@@ -1211,6 +1238,12 @@ public class APISchemaPrivileged {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled())
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
 
 			final long max_revision = SchemaRevisionen.maxRevision.revision;
 			long rev = revision;

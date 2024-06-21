@@ -194,16 +194,14 @@ public class DBBackupManager {
 						+ System.lineSeparator());
 				throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
 			}
-			logger.logLn(0, " [OK]");
-			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema()
-					+ "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 			if (tgtManager == null) {
 				logger.logLn(0, " [Fehler]");
 				throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
 			}
 			logger.logLn(0, " [OK]");
+			logger.logLn("  Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema()
+					+ "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
 
 			tgtManager.createSVWSSchema(tgtUser, version.Revision, false, false);
 
@@ -289,16 +287,14 @@ public class DBBackupManager {
 								+ tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
 						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 					}
-					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='"
-							+ tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-
 					tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 					if (tgtManager == null) {
 						logger.logLn(0, " [Fehler]");
 						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 					}
 					logger.logLn(0, " [OK]");
+					logger.logLn("  Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='"
+							+ tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
 
 					logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
 					logger.modifyIndent(2);

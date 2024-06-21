@@ -382,13 +382,13 @@ public final class DBMigrationManager {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn == null) {
 				logger.logLn(0, " " + strFehler);
-				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='"
-						+ cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
+				logger.logLn(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='"
+						+ cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')");
 				throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
 			}
 			logger.logLn(0, " " + strOK);
-			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation()
-					+ "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
+			logger.logLn(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation()
+					+ "', user='" + cfg.getUsername() + "')");
 		}
 		return DBSchemaManager.create(user, true, logger);
 	}

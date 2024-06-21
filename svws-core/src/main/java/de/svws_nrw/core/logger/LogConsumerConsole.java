@@ -18,6 +18,9 @@ public class LogConsumerConsole implements Consumer<@NotNull LogData> {
 	/** Gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht. */
 	public final boolean printLevel;
 
+	/** Gibt an, ob mit den letzten Log-Daten eine neue Zeile angefangen wurde. */
+	private boolean lastLogDataHadNewLine = true;
+
 
 	/**
 	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen,
@@ -51,14 +54,15 @@ public class LogConsumerConsole implements Consumer<@NotNull LogData> {
 	public void accept(final @NotNull LogData t) {
 		if (t == null)
 			return;
-		final String s = (printTime ? t.getTime() + " " : "")
-				+ (printLevel ? t.getLevel() + " " : "")
+		final String s = ((lastLogDataHadNewLine && printTime) ? t.getTime() + " " : "")
+				+ ((lastLogDataHadNewLine && printLevel) ? t.getLevel() + " " : "")
 				+ t.getText();
 		if (t.isNewLine())
 			System.out.println(s);
 		else
 			System.out.print(s);
 		System.out.flush();
+		lastLogDataHadNewLine = t.isNewLine();
 	}
 
 }

@@ -14,6 +14,11 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	 */
 	public readonly printLevel : boolean;
 
+	/**
+	 * Gibt an, ob mit den letzten Log-Daten eine neue Zeile angefangen wurde.
+	 */
+	private lastLogDataHadNewLine : boolean = true;
+
 
 	/**
 	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen,
@@ -54,11 +59,12 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	public accept(t : LogData) : void {
 		if (t === null)
 			return;
-		const s : string | null = (this.printTime ? t.getTime() + " " : "") + (this.printLevel ? t.getLevel() + " " : "") + t.getText()!;
+		const s : string | null = ((this.lastLogDataHadNewLine && this.printTime) ? t.getTime() + " " : "") + ((this.lastLogDataHadNewLine && this.printLevel) ? t.getLevel() + " " : "") + t.getText()!;
 		if (t.isNewLine())
 			console.log(JSON.stringify(s));
 		else
 			console.log(JSON.stringify(s));
+		this.lastLogDataHadNewLine = t.isNewLine();
 	}
 
 	transpilerCanonicalName(): string {

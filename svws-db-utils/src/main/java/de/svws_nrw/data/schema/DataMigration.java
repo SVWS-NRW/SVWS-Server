@@ -1,5 +1,8 @@
 package de.svws_nrw.data.schema;
 
+import java.io.IOException;
+
+import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -60,6 +63,12 @@ public final class DataMigration {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled())
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
 
 		// Erstelle temporär eine MDB-Datei aus dem übergebenen Byte-Array
 		try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, srcDB, true)) {
@@ -111,13 +120,21 @@ public final class DataMigration {
 	 *                           der Schulnummer erfolgen soll
 	 *
 	 * @return die HTTP-Response mit dem LOG der Migration
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static Response migrateDBMS(final DBEntityManager conn, final DBDriver srcDBDriver, final DatenbankVerbindungsdaten verbindungsdaten,
-			final Integer schulnummer) {
+			final Integer schulnummer) throws ApiOperationException {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled())
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
 
 		if ((srcDBDriver == null) || (srcDBDriver == DBDriver.MDB) || (srcDBDriver == DBDriver.SQLITE)) {
 			logger.logLn("Eine Migration aus dem angegebenen Datenbankformat '" + srcDBDriver + "' wird über diese Schnittstelle nicht unterstützt.");

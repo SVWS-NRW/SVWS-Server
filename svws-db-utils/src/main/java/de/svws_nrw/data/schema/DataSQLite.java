@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schema;
 
 import de.svws_nrw.base.FileUtils;
+import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.StreamingOutput;
 
+import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -54,7 +56,7 @@ public final class DataSQLite {
 	 * administrative Rechte.
 	 *
 	 * @param conn         die Datenbank-Verbindung zu dem aktuellen Schema
-	 * @param schemaname   Name des Schemas, in das hinein migriert werden soll
+	 * @param schemaname   Name des Schemas, welches exportiert werden soll
 	 *
 	 * @return Die SQLite-Datenbank
 	 *
@@ -65,6 +67,12 @@ public final class DataSQLite {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled())
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
 
 		// Bestimme den Dateinamen für eine temporäre SQLite-Datei
 		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
@@ -117,6 +125,12 @@ public final class DataSQLite {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled())
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
 
 		// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
 		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, true)) {

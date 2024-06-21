@@ -1,10 +1,12 @@
 package de.svws_nrw.data.schema;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
@@ -87,6 +89,7 @@ public final class DBUtilsSchema {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
+	@SuppressWarnings("resource")
 	public static LogConsumerList updateSchema(final Benutzer user, final long revision) throws ApiOperationException {
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
 		final long max_revision = (SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE)
@@ -102,6 +105,12 @@ public final class DBUtilsSchema {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled())
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + user.getEntityManager().getDBSchema() + ".log", true, true));
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
 
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
 		final DBSchemaManager manager = DBSchemaManager.create(user, true, logger);
