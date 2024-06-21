@@ -19,7 +19,7 @@
 								@dragstart="onDrag(lehrer)" @dragend="dragEnd" draggable="true">
 								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 								<span class="truncate grow p-1"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
-								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ mapLehrerPausenaufsichten.get(lehrer.id)?.size() }}</span>
+								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ summeAufsichtszeit(lehrer.id).value }}/{{ mapLehrerPausenaufsichten.get(lehrer.id)?.size() }}</span>
 							</div>
 						</div>
 					</div>
@@ -256,6 +256,19 @@
 		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList())
 			map.get(aufsicht.idLehrer)?.add(aufsicht);
 		return map;
+	})
+
+	const summeAufsichtszeit = (idLehrer: number) => computed(() => {
+		const aufsichten = mapLehrerPausenaufsichten.value.get(idLehrer);
+		if (aufsichten === undefined)
+			return 0;
+		let summe = 0;
+		for (const a of aufsichten) {
+			const beginn = props.stundenplanManager().pausenzeitGetByIdOrException(a.idPausenzeit).beginn || 0;
+			const ende = props.stundenplanManager().pausenzeitGetByIdOrException(a.idPausenzeit).ende || 0;
+			summe += (ende - beginn);
+		}
+		return summe;
 	})
 
 </script>
