@@ -150,7 +150,6 @@
 		const typ0 = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, 0);
 		if (typ0)
 			return true;
-		console.log(((dragFromPausenzeit.value !== undefined) && (dragFromPausenzeit.value.aufsichtsbereichID === bereichID) && (dragFromPausenzeit.value.pauseID === pauseID)))
 		return ((isDraggingOver(pauseID, bereichID, 0).value) && (mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID)))
 	})
 
