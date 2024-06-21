@@ -155,6 +155,10 @@
 			emit("change", data.value);
 	}
 
+	function reset() {
+		data.value = props.modelValue;
+	}
+
 	const labelId = genId();
 
 	const content = computed<number | null>(() => data.value);
@@ -162,10 +166,8 @@
 	defineExpose<{
 		content: ComputedRef<number | null>,
 		input: Ref<HTMLInputElement | null>,
-	}>({
-		content,
-		input
-	});
+		reset: () => void;
+	}>({ content, input, reset, });
 
 </script>
 

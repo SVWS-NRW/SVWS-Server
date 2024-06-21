@@ -5,7 +5,7 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => ende = value" />
 			<svws-ui-button v-if="!disabled" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
 			<div class="col-span-full">
-				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" />
+				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" ref="numberInput" />
 			</div>
 			<div class="col-span-full">
 				<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" class="mb-2 w-52" @click="add(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>
@@ -18,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref, type Ref } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+	import { SvwsUiInputNumber } from "@ui";
 	import type { StundenplanManager, Wochentag } from "@core";
-	import { StundenplanZeitraster } from "@core";
-	import { ArrayList, DateUtils } from "@core";
-	import { computed, ref } from "vue";
+	import { ArrayList, DateUtils, StundenplanZeitraster } from "@core";
 
 	const props = defineProps<{
 		item: number;
@@ -30,6 +31,8 @@
 		removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	const numberInput: Ref<InstanceType<typeof SvwsUiInputNumber> | null> = ref(null);
 
 	const first = computed(() => {
 		if (props.stundenplanManager().getListZeitrasterZuStunde(props.item).isEmpty())
@@ -47,10 +50,15 @@
 			return;
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const zeitraster of props.stundenplanManager().getListZeitrasterZuStunde(props.item)) {
-			zeitraster.unterrichtstunde = stunde;
-			list.add(zeitraster);
+			if (!props.stundenplanManager().zeitrasterExistsByWochentagAndStunde(zeitraster.wochentag, stunde)) {
+				zeitraster.unterrichtstunde = stunde;
+				list.add(zeitraster);
+			}
 		}
-		await props.patchZeitraster(list);
+		if (list.isEmpty())
+			numberInput.value?.reset();
+		else
+			await props.patchZeitraster(list);
 	}
 
 	async function patchZeiten() {

@@ -42,14 +42,14 @@
 								<div class="mt-16 text-sm font-medium">
 									<div class="flex gap-2 items-center opacity-50">
 										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
-										<div class="text-left">
-											<span class="flex-none">Powered by SVWS-NRW</span>
-											<div class="flex gap-2">
+										<div class="text-left flex flex-col">
+											<span class="pb-0.5">Powered by SVWS-NRW</span>
+											<div class="flex gap-2 place-items-center">
 												<div><span class="font-bold">v{{ version }}</span> <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
-												<div @click="copyToClipboard" class="-my-0.5 cursor-pointer">
-													<span class="icon i-ri-file-copy-line inline-block" v-if="copied === null" />
-													<span class="icon i-ri-error-warning-fill inline-block" v-else-if="copied === false" />
-													<span class="icon i-ri-check-line icon-primary inline-block" v-else />
+												<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">
+													<span class="icon-sm i-ri-file-copy-line inline-block" v-if="copied === null" />
+													<span class="icon-sm i-ri-error-warning-fill inline-block" v-else-if="copied === false" />
+													<span class="icon-sm i-ri-check-line icon-primary inline-block" v-else />
 												</div>
 											</div>
 											<nav class="flex items-center gap-2">

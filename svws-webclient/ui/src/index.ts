@@ -21,6 +21,7 @@ export { default as SvwsUiRadioOption } from "./components/SvwsUiRadioOption.vue
 export { default as SvwsUiTextareaInput } from "./components/SvwsUiTextareaInput.vue";
 export { default as SvwsUiTextInput } from "./components/SvwsUiTextInput.vue";
 export { default as SvwsUiToggle } from "./components/SvwsUiToggle.vue";
+export { default as SvwsUiInputNumber } from "./components/SvwsUiInputNumber.vue";
 // App
 export { default as SvwsUiNotifications } from "./components/App/SvwsUiNotifications.vue";
 export { default as SvwsUiNotification } from "./components/App/SvwsUiNotification.vue";
