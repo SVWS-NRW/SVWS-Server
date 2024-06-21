@@ -32,7 +32,7 @@
 		currentAction.value = currentAction.value === 'delete' ? '' : 'delete';
 	}
 
-	const checkDeletable = computed<Array<boolean, boolean, List<string>>>(() => {
+	const checkDeletable = computed<[boolean, List<string>]>(() => {
 		let log : List<string> = new ArrayList();
 		let result : boolean = true;
 		if (currentAction.value === 'delete') {
