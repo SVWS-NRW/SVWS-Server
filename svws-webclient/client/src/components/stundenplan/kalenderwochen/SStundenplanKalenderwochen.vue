@@ -3,7 +3,7 @@
 		<div class="page--content-flex-column">
 			Zum Ändern der Kalenderwochenzuordnungen bitte auf eine Kalenderwoche klicken. Diese und alle weiteren Zuordnungen werden dann eine Woche verschoben. Änderungen dementsprechend bitte von links nach rechts einpflegen.
 			<div class="flex gap-1">
-				<div v-for="kw of stundenplanManager().kalenderwochenzuordnungGetMengeAsList()" :key="kw.id" class="border flex flex-row p-2 cursor-pointer" @click="nextWochentyp(kw)">
+				<div v-for="kw, i of stundenplanManager().kalenderwochenzuordnungGetMengeAsList()" :key="i" class="border flex flex-row p-2 cursor-pointer" @click="nextWochentyp(kw)">
 					<div>{{ stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw) }}</div>
 					<div class="font-bold size-6">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(kw.wochentyp) }}</div>
 				</div>

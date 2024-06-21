@@ -129,10 +129,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 				listPatch.add(e);
 				// sollte als all-Methode verfügbar sein
 				this.stundenplanManager.kalenderwochenzuordnungPatchAttributes(e);
+				await api.server.patchStundenplanKalenderwochenzuordnung(e, api.schema, e.id);
 			}
 		}
 		if (!listPatch.isEmpty())
-			await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
+			undefined//await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
 		if (!listHinzuzufuegen.isEmpty()) {
 			const resHinzufuegen = await api.server.addStundenplanKalenderwochenzuordnungen(listHinzuzufuegen, api.schema, this.auswahl.id);
 			this.stundenplanManager.kalenderwochenzuordnungAddAll(resHinzufuegen);
