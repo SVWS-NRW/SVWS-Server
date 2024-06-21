@@ -1219,8 +1219,7 @@ public final class DBMigrationManager {
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
 				logger.logLn(LogLevel.ERROR,
 						"Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID %d. Diese wird auf null gesetzt."
-								.formatted(daten.Fachklasse_ID)
-								.formatted(daten.ID));
+								.formatted(daten.ID, daten.Fachklasse_ID));
 				daten.Fachklasse_ID = null;
 			}
 			// Prüfe die Schulgliederung im Lernabschnitt und setze diese ggf. auf NULL
