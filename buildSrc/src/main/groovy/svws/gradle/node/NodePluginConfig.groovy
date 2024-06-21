@@ -1,7 +1,7 @@
 package svws.gradle.node;
 
-import org.gradle.api.Plugin 
-import org.gradle.api.Project 
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.AbstractExecTask;
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
@@ -9,10 +9,10 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 /**
  * Die Konfigurationserweiterung des Node-Plugins.
  * Aufrufbar über npmconfig.<config> mit folgenden Optionen:
- * 
- *   url         - die URL, von wo die NodeJS-Version herunterladbar ist 
- *   version     - die Version von Node-JS 
- *   npmVersion  - die Version von NPM 
+ *
+ *   url         - die URL, von wo die NodeJS-Version herunterladbar ist
+ *   version     - die Version von Node-JS
+ *   npmVersion  - die Version von NPM
  */
 abstract class NodePluginConfig {
 
@@ -31,22 +31,22 @@ abstract class NodePluginConfig {
     	this.project = p;
     	this.rootProject = p.rootProject;
     	url.convention('https://nodejs.org/dist/v');
-    	version.convention('20.14.0'); // https://nodejs.org/en/download/prebuilt-installer
+    	version.convention('20.15.0'); // https://nodejs.org/en/download/prebuilt-installer
     	npmVersion.convention('10.7.0');
-    	tsVersion.convention('5.4.5'); // https://github.com/microsoft/TypeScript/releases
-    	tsNodeTypesVersion.convention('20.14.4'); // https://www.npmjs.com/package/@types/node
+    	tsVersion.convention('5.5.2'); // https://github.com/microsoft/TypeScript/releases
+    	tsNodeTypesVersion.convention('20.14.7'); // https://www.npmjs.com/package/@types/node
     }
-    
+
     boolean isLinux() {
-    	return os.isLinux(); 
+    	return os.isLinux();
     }
 
     boolean isWindows() {
-    	return os.isWindows(); 
+    	return os.isWindows();
     }
-    
+
     boolean isMacOsX() {
-    	return os.isMacOsX(); 
+    	return os.isMacOsX();
     }
 
 	String getOSString() {
@@ -58,8 +58,8 @@ abstract class NodePluginConfig {
 			return "darwin";
 		throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 	}
-	
-	String getArchString() { 
+
+	String getArchString() {
     	if (["x86_64", "amd64", "x64", "x86-64"].contains(arch))
 			return "x64";
     	if (["arm64", "arm-v8", "aarch64"].contains(arch))
@@ -68,7 +68,7 @@ abstract class NodePluginConfig {
 		    return "ppc64le";
 		throw new Exception("Unsupported operating system architecture ${os.getName()} ${arch} for the node plugin!")
 	}
-	
+
 	String getCompressedFileType() {
 		if (os.isMacOsX() || this.os.isLinux())
 			return "tar.gz";
@@ -76,15 +76,15 @@ abstract class NodePluginConfig {
 			return "zip";
 		throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 	}
-	
+
 	String getCompressedFilename() {
 		return "node-v" + this.version.get() + "-" + this.getOSString() + "-" + this.getArchString();
 	}
-	
+
 	String getCompressedFilenameExt() {
         return "node-v" + this.version.get() + "-" + this.getOSString() + "-" + this.getArchString() + "." + this.getCompressedFileType();
 	}
-	
+
 	URL getDownloadURL() {
 		if (project.hasProperty('node_download_url'))
 			return new URL(project.node_download_url + this.version.get() + "/" + this.getCompressedFilenameExt());
@@ -93,14 +93,14 @@ abstract class NodePluginConfig {
 			return new URL(downloadUrl + this.version.get() + "/" + this.getCompressedFilenameExt());
 		return new URL(this.url.get() + this.version.get() + "/" + this.getCompressedFilenameExt());
 	}
-	
+
 	String getDownloadUser() {
 		if (project.hasProperty('node_download_user'))
 			return project.node_download_user;
 		def downloadUser = System.getenv("NODE_DOWNLOAD_USER")
 		if (downloadUser != null)
 			return downloadUser;
-		return null;		
+		return null;
 	}
 
 	String getDownloadPasswd() {
@@ -109,18 +109,18 @@ abstract class NodePluginConfig {
 		def downloadPasswd = System.getenv("NODE_DOWNLOAD_PASSWD")
 		if (downloadPasswd != null)
 			return downloadPasswd;
-		return "";		
+		return "";
 	}
 
 	String getDownloadDirectory() {
 		return "${project.rootProject.projectDir}/download";
 	}
-	
+
 	String getNodeDirectory() {
 		return "${project.rootProject.projectDir}/node";
 	}
- 
-	
+
+
 	String getNpmExectuable() {
 		if (os.isWindows()) {
 	   		return "${project.rootProject.projectDir}/node/npm.cmd";
