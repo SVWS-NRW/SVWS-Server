@@ -2183,6 +2183,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Aktualisiert das vorhandene {@link StundenplanKalenderwochenzuordnung}-Objekt durch das neue Objekt.
+	 * <br>
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanKalenderwochenzuordnung#id}
 	 * <br>
@@ -2194,9 +2195,29 @@ export class StundenplanManager extends JavaObject {
 	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public kalenderwochenzuordnungPatchAttributes(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungCheckAttributes(kwz, true);
-		DeveloperNotificationException.ifMapRemoveFailes(this._kwz_by_id, kwz.id);
-		DeveloperNotificationException.ifMapPutOverwrites(this._kwz_by_id, kwz.id, kwz);
+		this.kalenderwochenzuordnungPatchAll(ListUtils.create1(kwz));
+	}
+
+	/**
+	 * Aktualisiert alle vorhandenen {@link StundenplanKalenderwochenzuordnung}-Objekte der Liste.
+	 * <br>
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#jahr}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#kw}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#wochentyp}
+	 *
+	 * @param kwzList  Die Liste der zu aktualisierenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public kalenderwochenzuordnungPatchAll(kwzList : List<StundenplanKalenderwochenzuordnung>) : void {
+		for (const kwz of kwzList)
+			this.kalenderwochenzuordnungCheckAttributes(kwz, true);
+		for (const kwz of kwzList) {
+			DeveloperNotificationException.ifMapRemoveFailes(this._kwz_by_id, kwz.id);
+			DeveloperNotificationException.ifMapPutOverwrites(this._kwz_by_id, kwz.id, kwz);
+		}
 		this.update_all();
 	}
 

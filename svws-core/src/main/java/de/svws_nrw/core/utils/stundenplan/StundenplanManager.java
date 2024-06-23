@@ -2407,6 +2407,7 @@ public class StundenplanManager {
 
 	/**
 	 * Aktualisiert das vorhandene {@link StundenplanKalenderwochenzuordnung}-Objekt durch das neue Objekt.
+	 * <br>
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanKalenderwochenzuordnung#id}
 	 * <br>
@@ -2418,14 +2419,34 @@ public class StundenplanManager {
 	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void kalenderwochenzuordnungPatchAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		// check
-		kalenderwochenzuordnungCheckAttributes(kwz, true);
+		kalenderwochenzuordnungPatchAll(ListUtils.create1(kwz));
+	}
 
-		// replace
-		DeveloperNotificationException.ifMapRemoveFailes(_kwz_by_id, kwz.id);
-		DeveloperNotificationException.ifMapPutOverwrites(_kwz_by_id, kwz.id, kwz);
+	/**
+	 * Aktualisiert alle vorhandenen {@link StundenplanKalenderwochenzuordnung}-Objekte der Liste.
+	 * <br>
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#jahr}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#kw}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#wochentyp}
+	 *
+	 * @param kwzList  Die Liste der zu aktualisierenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public void kalenderwochenzuordnungPatchAll(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kwzList) {
+		// Überprüfen
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : kwzList)
+			kalenderwochenzuordnungCheckAttributes(kwz, true);
 
-		// update
+		// Ersetzen
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : kwzList) {
+			DeveloperNotificationException.ifMapRemoveFailes(_kwz_by_id, kwz.id);
+			DeveloperNotificationException.ifMapPutOverwrites(_kwz_by_id, kwz.id, kwz);
+		}
+
+		// Updaten
 		update_all();
 	}
 
