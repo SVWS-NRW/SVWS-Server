@@ -122,6 +122,8 @@ export class StundenplanManager extends JavaObject {
 
 	private static readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht> = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => JavaLong.compare(a.id, b.id) };
 
+	private static readonly _compPausenaufsichtBereich : Comparator<StundenplanPausenaufsichtBereich> = { compare : (a: StundenplanPausenaufsichtBereich, b: StundenplanPausenaufsichtBereich) => JavaLong.compare(a.id, b.id) };
+
 	private static readonly _compPausenzeit : Comparator<StundenplanPausenzeit> = { compare : (a: StundenplanPausenzeit, b: StundenplanPausenzeit) => {
 		if (a.wochentag < b.wochentag)
 			return -1;
@@ -297,6 +299,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _pausenaufsichtbereich_by_id : HashMap<number, StundenplanPausenaufsichtBereich> = new HashMap<number, StundenplanPausenaufsichtBereich>();
 
+	private _pausenaufsichtbereichmenge : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
+
 	private _pausenaufsichtbereichmenge_by_idPausenaufsicht : HashMap<number, List<StundenplanPausenaufsichtBereich>> = new HashMap<number, List<StundenplanPausenaufsichtBereich>>();
 
 	private _pausenaufsichtbereichmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsichtBereich>> = new HashMap<number, List<StundenplanPausenaufsichtBereich>>();
@@ -459,6 +463,10 @@ export class StundenplanManager extends JavaObject {
 
 	private _wertWochenminuten_by_idKlasse_und_idFach : HashMap2D<number, number, number> = new HashMap2D<number, number, number>();
 
+	private _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp : HashMap2D<number, number, number> = new HashMap2D<number, number, number>();
+
+	private _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp : HashMap2D<number, number, number> = new HashMap2D<number, number, number>();
+
 	private readonly _stundenplanID : number;
 
 	private _stundenplanWochenTypModell : number = 0;
@@ -575,6 +583,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_kursmenge();
 		this.update_lehrermenge();
 		this.update_pausenaufsichtmenge();
+		this.update_pausenaufsichtbereichmenge();
 		this.update_raummenge();
 		this.update_schienenmenge();
 		this.update_schuelermenge();
@@ -629,6 +638,8 @@ export class StundenplanManager extends JavaObject {
 		this.update_zeitraster_by_wochentag_and_stunde();
 		this.update_zeitrastermenge_by_wochentag();
 		this.update_zeitrastermenge_by_stunde();
+		this.update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp();
+		this.update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp();
 		this.update_kursmenge_by_idKlasse();
 		this.update_klassenmenge_by_idKurs();
 		this.update_pausenzeitmenge_by_idLehrer_and_wochentag();
@@ -900,6 +911,11 @@ export class StundenplanManager extends JavaObject {
 	private update_pausenaufsichtmenge() : void {
 		this._pausenaufsichtmenge = new ArrayList(this._pausenaufsicht_by_id.values());
 		this._pausenaufsichtmenge.sort(StundenplanManager._compPausenaufsicht);
+	}
+
+	private update_pausenaufsichtbereichmenge() : void {
+		this._pausenaufsichtbereichmenge = new ArrayList(this._pausenaufsichtbereich_by_id.values());
+		this._pausenaufsichtbereichmenge.sort(StundenplanManager._compPausenaufsichtBereich);
 	}
 
 	private update_pausenaufsichtmenge_by_wochentag() : void {
@@ -1535,6 +1551,62 @@ export class StundenplanManager extends JavaObject {
 		this._zeitrastermenge_by_stunde = new HashMap();
 		for (const zeit of this._zeitrastermenge)
 			MapUtils.addToList(this._zeitrastermenge_by_stunde, zeit.unterrichtstunde, zeit);
+	}
+
+	private update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp() : void {
+		this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp = new HashMap2D();
+		for (const lehrer of this._lehrermenge_sortiert)
+			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+				this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
+		for (const pab of this._pausenaufsichtbereichmenge) {
+			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			const pz : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pa.idPausenzeit);
+			if (pz.beginn === null)
+				continue;
+			if (pz.ende === null)
+				continue;
+			let wert : number = this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp).valueOf();
+			wert += pz.ende - pz.beginn;
+			this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
+		}
+		for (const lehrer of this._lehrermenge_sortiert) {
+			let avg : number = this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, 0).valueOf();
+			if (this._stundenplanWochenTypModell >= 2) {
+				let anteil : number = 0.0;
+				for (let wochentyp : number = 1; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+					anteil += this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, wochentyp);
+				avg += anteil / this._stundenplanWochenTypModell;
+			}
+			this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(lehrer.id, -1, avg);
+		}
+	}
+
+	private update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp() : void {
+		this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp = new HashMap2D();
+		for (const lehrer of this._lehrermenge_sortiert)
+			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+				this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
+		for (const pab of this._pausenaufsichtbereichmenge) {
+			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			const pz : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pa.idPausenzeit);
+			if (pz.beginn === null)
+				continue;
+			if (pz.ende === null)
+				continue;
+			let wert : number = this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp).valueOf();
+			wert++;
+			this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
+		}
+		for (const lehrer of this._lehrermenge_sortiert) {
+			let avg : number = this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, 0).valueOf();
+			if (this._stundenplanWochenTypModell >= 2) {
+				let anteil : number = 0.0;
+				for (let wochentyp : number = 1; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
+					anteil += this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, wochentyp);
+				avg += anteil / this._stundenplanWochenTypModell;
+			}
+			this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(lehrer.id, -1, avg);
+		}
 	}
 
 	private update_klassenmenge_by_idUnterricht() : void {
@@ -2971,6 +3043,36 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Minuten aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 * <br>Hinweis: Der Wochentyp -1 liefert den Durchschnitt aller Wochentypen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 * @param wochentyp  Der Wochentyp.
+	 *
+	 * @return die Minuten aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 */
+	public lehrerGetPausenaufsichtMinuten(idLehrer : number, wochentyp : number) : number {
+		const wochenminuten : number = this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(idLehrer, wochentyp).valueOf();
+		return StundenplanManager.gerundetAufZweiNachkommastellen(wochenminuten);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 * <br>Hinweis: Der Wochentyp -1 liefert den Durchschnitt aller Wochentypen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 * @param wochentyp  Der Wochentyp.
+	 *
+	 * @return die Anzahl aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 */
+	public lehrerGetPausenaufsichtAnzahl(idLehrer : number, wochentyp : number) : number {
+		const wochenminuten : number = this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(idLehrer, wochentyp).valueOf();
+		return StundenplanManager.gerundetAufZweiNachkommastellen(wochenminuten);
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanLehrer}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanLehrer#id}
@@ -3134,7 +3236,7 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idKlasse      Die Datenbank-ID der Klasse.
 	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
-	 * @param wochentyp     Der Wochentyp
+	 * @param wochentyp     Der Wochentyp.
 	 * @param inklWoche0    falls TRUE, wird eine Pausenaufsicht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.

@@ -133,6 +133,9 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht =
 			(final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
 
+	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsichtBereich> _compPausenaufsichtBereich =
+			(final @NotNull StundenplanPausenaufsichtBereich a, final @NotNull StundenplanPausenaufsichtBereich b) -> Long.compare(a.id, b.id);
+
 	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit =
 			(final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
 				if (a.wochentag < b.wochentag)
@@ -289,6 +292,7 @@ public class StundenplanManager {
 
 	// StundenplanPausenaufsichtBereich
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsichtBereich> _pausenaufsichtbereich_by_id = new HashMap<>();
+	private @NotNull List<@NotNull StundenplanPausenaufsichtBereich> _pausenaufsichtbereichmenge = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idPausenaufsicht =
 			new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsichtBereich>> _pausenaufsichtbereichmenge_by_idAufsichtsbereich =
@@ -405,6 +409,8 @@ public class StundenplanManager {
 	// wert ... by
 	private @NotNull HashMap<@NotNull Long, @NotNull Double> _wertWochenminuten_by_idKurs = new HashMap<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Double> _wertWochenminuten_by_idKlasse_und_idFach = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull Double> _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp = new HashMap2D<>();
+	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull Double> _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp = new HashMap2D<>();
 
 	// Stundenplan
 	private final long _stundenplanID;
@@ -566,6 +572,7 @@ public class StundenplanManager {
 		update_kursmenge();                                          // ---
 		update_lehrermenge();                                        // ---
 		update_pausenaufsichtmenge();                                // ---
+		update_pausenaufsichtbereichmenge();                         // ---
 		update_raummenge();                                          // ---
 		update_schienenmenge();                                      // ---
 		update_schuelermenge();                                      // ---
@@ -623,6 +630,8 @@ public class StundenplanManager {
 		update_zeitraster_by_wochentag_and_stunde();                                      // _zeitrastermenge
 		update_zeitrastermenge_by_wochentag();                                            // _zeitrastermenge
 		update_zeitrastermenge_by_stunde();                                               // _zeitrastermenge
+		update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp();                  // _pausenaufsichtbereichmenge, _lehrermenge
+		update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp();                   // _pausenaufsichtbereichmenge, _lehrermenge
 
 		// 2. Ordnung
 
@@ -658,7 +667,6 @@ public class StundenplanManager {
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
 		update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();   // _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
 	}
-
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
 		_pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
@@ -950,6 +958,11 @@ public class StundenplanManager {
 	private void update_pausenaufsichtmenge() {
 		_pausenaufsichtmenge = new ArrayList<>(_pausenaufsicht_by_id.values());
 		_pausenaufsichtmenge.sort(_compPausenaufsicht);
+	}
+
+	private void update_pausenaufsichtbereichmenge() {
+		_pausenaufsichtbereichmenge = new ArrayList<>(_pausenaufsichtbereich_by_id.values());
+		_pausenaufsichtbereichmenge.sort(_compPausenaufsichtBereich);
 	}
 
 	private void update_pausenaufsichtmenge_by_wochentag() {
@@ -1625,6 +1638,7 @@ public class StundenplanManager {
 			_zeitrasterStundenRangeOhneLeere[i] = _zeitrasterStundeMinOhneLeere + i;
 	}
 
+
 	private void update_zeitrastermenge_by_wochentag() {
 		_zeitrastermenge_by_wochentag = new HashMap<>();
 		for (final @NotNull StundenplanZeitraster zeit : _zeitrastermenge)
@@ -1635,6 +1649,86 @@ public class StundenplanManager {
 		_zeitrastermenge_by_stunde = new HashMap<>();
 		for (final @NotNull StundenplanZeitraster zeit : _zeitrastermenge)
 			MapUtils.addToList(_zeitrastermenge_by_stunde, zeit.unterrichtstunde, zeit);
+	}
+
+
+
+	private void update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp() {
+		_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp = new HashMap2D<>();
+
+		// Fülle zunächst mit 0.
+		for (final @NotNull StundenplanLehrer lehrer : _lehrermenge_sortiert)
+			for (int wochentyp = 0; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+				_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
+
+		// Summe erhöhen um die jeweiligen Zeitdifferenzen.
+		for (final @NotNull StundenplanPausenaufsichtBereich pab : _pausenaufsichtbereichmenge) {
+			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			final @NotNull StundenplanPausenzeit pz = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, pa.idPausenzeit);
+
+			if (pz.beginn == null)
+				continue;
+			if (pz.ende == null)
+				continue;
+
+			double wert = _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp);
+			wert += pz.ende - pz.beginn;
+			_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
+		}
+
+		// Sonderfall Wochentyp -1: Berechne den Durchschnitt über alle Wochentypen gemittelt.
+		for (final @NotNull StundenplanLehrer lehrer : _lehrermenge_sortiert) {
+			double avg = _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, 0);
+
+			if (_stundenplanWochenTypModell >= 2) {
+				double anteil = 0.0;
+				for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+					anteil += _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, wochentyp);
+				avg += anteil / _stundenplanWochenTypModell;
+			}
+
+			_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(lehrer.id, -1, avg);
+		}
+
+	}
+
+	private void update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp() {
+		_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp = new HashMap2D<>();
+
+		// Fülle zunächst mit 0.
+		for (final @NotNull StundenplanLehrer lehrer : _lehrermenge_sortiert)
+			for (int wochentyp = 0; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+				_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
+
+		// Summe erhöhen um die jeweiligen Zeitdifferenzen.
+		for (final @NotNull StundenplanPausenaufsichtBereich pab : _pausenaufsichtbereichmenge) {
+			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			final @NotNull StundenplanPausenzeit pz = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, pa.idPausenzeit);
+
+			if (pz.beginn == null)
+				continue;
+			if (pz.ende == null)
+				continue;
+
+			double wert = _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp);
+			wert++;
+			_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
+		}
+
+		// Sonderfall Wochentyp -1: Berechne den Durchschnitt über alle Wochentypen gemittelt.
+		for (final @NotNull StundenplanLehrer lehrer : _lehrermenge_sortiert) {
+			double avg = _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, 0);
+
+			if (_stundenplanWochenTypModell >= 2) {
+				double anteil = 0.0;
+				for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+					anteil += _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(lehrer.id, wochentyp);
+				avg += anteil / _stundenplanWochenTypModell;
+			}
+
+			_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(lehrer.id, -1, avg);
+		}
+
 	}
 
 	private void update_klassenmenge_by_idUnterricht() {
@@ -3269,6 +3363,36 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert die Minuten aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 * <br>Hinweis: Der Wochentyp -1 liefert den Durchschnitt aller Wochentypen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 * @param wochentyp  Der Wochentyp.
+	 *
+	 * @return die Minuten aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 */
+	public double lehrerGetPausenaufsichtMinuten(final long idLehrer, final int wochentyp) {
+		final double wochenminuten = _wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.getOrException(idLehrer, wochentyp);
+		return gerundetAufZweiNachkommastellen(wochenminuten);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 * <br>Hinweis: Der Wochentyp -1 liefert den Durchschnitt aller Wochentypen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 * @param wochentyp  Der Wochentyp.
+	 *
+	 * @return die Anzahl aller Pausenaufsichten einer Lehrkraft bezogen auf einen Wochentyp (auf 2 Nachkommastellen gerundet).
+	 */
+	public double lehrerGetPausenaufsichtAnzahl(final long idLehrer, final int wochentyp) {
+		final double wochenminuten = _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(idLehrer, wochentyp);
+		return gerundetAufZweiNachkommastellen(wochenminuten);
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanLehrer}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanLehrer#id}
@@ -3462,7 +3586,7 @@ public class StundenplanManager {
 	 *
 	 * @param idKlasse      Die Datenbank-ID der Klasse.
 	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
-	 * @param wochentyp     Der Wochentyp
+	 * @param wochentyp     Der Wochentyp.
 	 * @param inklWoche0    falls TRUE, wird eine Pausenaufsicht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
