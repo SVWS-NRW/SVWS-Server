@@ -5258,7 +5258,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostKlausurenSchuelerraumstundenSktids für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden
+	 * Implementierung der POST-Methode getGostKlausurenSchuelerraumstundenSktids für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden
 	 *
 	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
@@ -5279,7 +5279,7 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/gost/klausuren/raumstunden"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.getJSON(path);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
 	}

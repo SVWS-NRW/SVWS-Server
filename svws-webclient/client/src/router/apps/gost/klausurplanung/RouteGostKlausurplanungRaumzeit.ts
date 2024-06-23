@@ -40,7 +40,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
 		const idTermin = !to_params.idtermin ? null : parseInt(to_params.idtermin);
-		const terminList = routeGostKlausurplanung.data.kursklausurmanager.terminMitDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value, true);
+		const terminList = routeGostKlausurplanung.data.kursklausurmanager.terminMitDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
 		if (idTermin === null && !terminList.isEmpty()) {
 			const termin = routeGostKlausurplanung.data.raummanager !== undefined ? routeGostKlausurplanung.data.raummanager.getHauptTermin() : terminList.getFirst();
 			return this.getRoute(abiturjahr, halbjahr.id,  termin.id);

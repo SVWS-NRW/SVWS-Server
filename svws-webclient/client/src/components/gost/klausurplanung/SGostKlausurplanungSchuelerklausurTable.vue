@@ -15,13 +15,16 @@
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row"
-				:class="[props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(schuelertermin, undefined)]">
+				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, undefined)]">
 				<div class="svws-ui-td" role="cell">
 					<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
-					{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
+					{{ kMan().getSchuelerMap().get(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
-				<div class="svws-ui-td" role="cell">{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
+				<div class="svws-ui-td" role="cell">{{ kMan().getSchuelerMap().get(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
+				<div class="svws-ui-td" role="cell">
+					{{ GostHalbjahr.fromIDorException(kMan().vorgabeBySchuelerklausurTermin(schuelertermin).halbjahr).jahrgang }}
+				</div>
 				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
 				<div class="svws-ui-td svws-align-left" role="cell">
 					{{ kMan().datumSchuelerklausurVorgaenger(schuelertermin) !== null ? DateUtils.gibDatumGermanFormat(kMan().datumSchuelerklausurVorgaenger(schuelertermin)!) : "N.N." }}
@@ -46,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-	import { DateUtils } from "@core";
+	import { DateUtils, GostHalbjahr } from "@core";
 	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
@@ -74,7 +77,8 @@
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
 			{ key: "nachname", label: "Nachame", minWidth: 15 },
-			{ key: "vorname", label: "Vorname", minWidth: 10 },
+			{ key: "vorname", label: "Vorname", minWidth: 8 },
+			{ key: "stufe", label: "Jg.", fixedWidth: 2 },
 			{ key: "kurs", label: "Kurs", fixedWidth: 6 },
 			{ key: "datum", label: "Datum", fixedWidth: 8 },
 			{ key: "kuerzel", label: "Lehrkraft", fixedWidth: 4},

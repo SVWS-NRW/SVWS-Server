@@ -36,7 +36,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {
@@ -51,6 +51,8 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 			blockenNachschreibklausuren: routeGostKlausurplanung.data.blockenNachschreiber,
 			updateKlausurblockung: routeGostKlausurplanung.data.updateKlausurblockung,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
+			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 		}
 	}
 

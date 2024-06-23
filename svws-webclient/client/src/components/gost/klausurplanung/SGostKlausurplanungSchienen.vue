@@ -139,7 +139,7 @@
 			</div>
 			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-5">
 				<div class="text-headline-md leading-tight mb-3">
-					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler:innen</div>
+					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler</div>
 					<div class="opacity-50">Drei oder mehr Klausuren in einer KW</div>
 				</div>
 				<ul class="flex flex-col gap-4">
@@ -255,7 +255,7 @@
 		"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
-	const termine = computed(() => props.kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
+	const termine = computed(() => props.kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);

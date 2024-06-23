@@ -4,8 +4,8 @@
 	</Teleport>
 	<div class="page--content relative flex-col">
 		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
-			<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false).size() > 0" class="flex flex-col gap-20 mt-8">
-				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false)"
+			<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() > 0" class="flex flex-col gap-20 mt-8">
+				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 					:key="termin.id"
 					:termin="termin"
 					:k-man="kMan"

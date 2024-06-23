@@ -1029,6 +1029,29 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den zu einem Schülerklausurtermin zugehörigen Klausurraum zurück.
+	 *
+	 * @param skt der Schülerklausurtermin, zu dem der Klausurraum gesucht wird.
+	 *
+	 * @return den Klausurraum, falls einer zugewiesen ist, sonst null
+	 */
+	public klausurraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : GostKlausurraum | null {
+		return this._klausurraum_by_idSchuelerklausurtermin.get(skt.id);
+	}
+
+	/**
+	 * Liefert den zu einem Schülerklausurtermin zugehörigen Stundenplanraum zurück.
+	 *
+	 * @param skt der Schülerklausurtermin, zu dem der Klausurraum gesucht wird.
+	 *
+	 * @return den Stundenplanraum, falls einer zugewiesen ist, sonst null
+	 */
+	public stundenplanraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : StundenplanRaum | null {
+		const raum : GostKlausurraum | null = this.klausurraumGetBySchuelerklausurtermin(skt);
+		return raum === null || raum.idStundenplanRaum === null ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+	}
+
+	/**
 	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
 	 *
 	 * @return die Anzahl

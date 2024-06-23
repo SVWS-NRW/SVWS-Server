@@ -21,7 +21,7 @@
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler:innen<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
+							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -35,7 +35,12 @@
 									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, undefined, termin.id ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
-							<span v-else class="opacity-50">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
+							<template v-else>
+								<span class="opacity-50 inline-flex items-center gap-1">
+									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
+									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+								</span>
+							</template>
 						</slot>
 					</div>
 					<div v-if="$slots.actions" class="flex gap-0.5 items-center -mr-2 -my-1">
@@ -133,6 +138,7 @@
 	import {DateUtils } from "@core";
 	import { RouteManager } from '~/router/RouteManager';
 	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
+	import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 
 
 	const props = withDefaults(defineProps<{

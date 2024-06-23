@@ -32,6 +32,7 @@ import { Map2DUtils } from '../../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../../java/lang/JavaInteger';
 import { GostKlausurvorgabenManager, cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKlausurvorgabenManager } from '../../../../core/utils/gost/klausurplanung/GostKlausurvorgabenManager';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { PairNN } from '../../../../core/adt/PairNN';
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { Wochentag } from '../../../../core/types/Wochentag';
@@ -111,6 +112,14 @@ export class GostKursklausurManager extends JavaObject {
 		if (a.idSchuelerklausur === b.idSchuelerklausur) {
 			return JavaInteger.compare(a.folgeNr, b.folgeNr);
 		}
+		const kA : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(a);
+		const kB : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(b);
+		if (this._schuelerMap !== null && kA.idSchueler !== kB.idSchueler) {
+			const sA : SchuelerListeEintrag | null = this.getSchuelerMap().get(kA.idSchueler);
+			const sB : SchuelerListeEintrag | null = this.getSchuelerMap().get(kB.idSchueler);
+			if (sA !== null && sB !== null)
+				return JavaString.compareTo((sA.nachname + sA.vorname), sB.nachname + sB.vorname);
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -168,11 +177,15 @@ export class GostKursklausurManager extends JavaObject {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
-	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren   die Liste der GostKursklausuren eines Abiturjahrgangs
-	 * @param listTermine     die Liste der GostKlausurtermine eines Abiturjahrgangs
-	 * @param listSchuelerklausuren   die Liste der GostSchuelerklausuren eines Abiturjahrgangs
-	 * @param listSchuelerklausurtermine   die Liste der GostSchuelerklausurTermine eines Abiturjahrgangs
+	 * @param vorgabenManager            der Klausurvorgaben-Manager
+	 * @param listKlausuren              die Liste der GostKursklausuren eines
+	 *                                   Abiturjahrgangs
+	 * @param listTermine                die Liste der GostKlausurtermine eines
+	 *                                   Abiturjahrgangs
+	 * @param listSchuelerklausuren      die Liste der GostSchuelerklausuren eines
+	 *                                   Abiturjahrgangs
+	 * @param listSchuelerklausurtermine die Liste der GostSchuelerklausurTermine
+	 *                                   eines Abiturjahrgangs
 	 */
 	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null, listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null);
 
@@ -215,7 +228,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den KursManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 * Liefert den KursManager, falls dieser gesetzt ist, sonst wird eine
+	 * DeveloperNotificationException geworfen.
 	 *
 	 * @return den KursManager
 	 */
@@ -226,7 +240,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine
+	 * DeveloperNotificationException geworfen.
 	 *
 	 * @return den GostFaecherManager
 	 */
@@ -244,7 +259,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die LehrerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 * Liefert die LehrerMap, falls diese gesetzt ist, sonst wird eine
+	 * DeveloperNotificationException geworfen.
 	 *
 	 * @return die LehrerMap
 	 */
@@ -255,7 +271,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die SchuelerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 * Liefert die SchuelerMap, falls diese gesetzt ist, sonst wird eine
+	 * DeveloperNotificationException geworfen.
 	 *
 	 * @return die SchuelerMap
 	 */
@@ -593,7 +610,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null. <br>
+	 * Liefert das zur ID zugehörige {@link GostKlausurtermin}-Objekt oder null.
+	 * <br>
 	 * Laufzeit: O(1)
 	 *
 	 * @param idTermin Die ID des angefragten-Objektes.
@@ -670,8 +688,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Fügt ein {@link GostSchuelerklausur}-Objekt hinzu.
 	 *
-	 * @param kursklausur Das {@link GostSchuelerklausur}-Objekt, welches hinzugefügt
-	 *                    werden soll.
+	 * @param kursklausur Das {@link GostSchuelerklausur}-Objekt, welches
+	 *                    hinzugefügt werden soll.
 	 */
 	public schuelerklausurAdd(kursklausur : GostSchuelerklausur) : void {
 		this.schuelerklausurAddAll(ListUtils.create1(kursklausur));
@@ -768,13 +786,14 @@ export class GostKursklausurManager extends JavaObject {
 	private update_schuelerklausurterminmenge() : void {
 		this._schuelerklausurterminmenge.clear();
 		this._schuelerklausurterminmenge.addAll(this._schuelerklausurtermin_by_id.values());
+		this._schuelerklausurterminmenge.sort(this._compSchuelerklausurTermin);
 	}
 
 	/**
 	 * Fügt ein {@link GostSchuelerklausurTermin}-Objekt hinzu.
 	 *
-	 * @param schuelerklausurtermin Das {@link GostSchuelerklausurTermin}-Objekt, welches hinzugefügt
-	 *                    werden soll.
+	 * @param schuelerklausurtermin Das {@link GostSchuelerklausurTermin}-Objekt,
+	 *                              welches hinzugefügt werden soll.
 	 */
 	public schuelerklausurterminAdd(schuelerklausurtermin : GostSchuelerklausurTermin) : void {
 		this.schuelerklausurterminAddAll(ListUtils.create1(schuelerklausurtermin));
@@ -795,8 +814,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.
 	 *
-	 * @param listSchuelerklausurtermine Die Menge der {@link GostSchuelerklausurTermin}-Objekte,
-	 *                          welche hinzugefügt werden soll.
+	 * @param listSchuelerklausurtermine Die Menge der
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte,
+	 *                                   welche hinzugefügt werden soll.
 	 */
 	public schuelerklausurterminAddAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		this.schuelerklausurterminAddAllOhneUpdate(listSchuelerklausurtermine);
@@ -830,10 +850,11 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Aktualisiert das vorhandene {@link GostSchuelerklausurTermin}-Objekt durch das neue
-	 * Objekt.
+	 * Aktualisiert das vorhandene {@link GostSchuelerklausurTermin}-Objekt durch
+	 * das neue Objekt.
 	 *
-	 * @param schuelerklausurtermin Das neue {@link GostSchuelerklausurTermin}-Objekt.
+	 * @param schuelerklausurtermin Das neue
+	 *                              {@link GostSchuelerklausurTermin}-Objekt.
 	 */
 	public schuelerklausurterminPatchAttributes(schuelerklausurtermin : GostSchuelerklausurTermin) : void {
 		GostKursklausurManager.schuelerklausurterminCheck(schuelerklausurtermin);
@@ -849,7 +870,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Entfernt ein existierendes {@link GostSchuelerklausurTermin}-Objekt.
 	 *
-	 * @param idSchuelerklausurtermin Die ID des {@link GostSchuelerklausurTermin}-Objekts.
+	 * @param idSchuelerklausurtermin Die ID des
+	 *                                {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurterminRemoveById(idSchuelerklausurtermin : number) : void {
 		this.schuelerklausurterminRemoveOhneUpdateById(idSchuelerklausurtermin);
@@ -860,7 +882,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
 	 *
 	 * @param listSchuelerklausurtermine Die Liste der zu entfernenden
-	 *                          {@link GostSchuelerklausurTermin}-Objekte.
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
 	 */
 	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausurtermin of listSchuelerklausurtermine)
@@ -915,7 +937,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param datum       das Datum der Klausurtermine im Format YYYY-MM-DD
 	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
@@ -960,7 +982,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param datum       das Datum der Klausurtermine im Format YYYY-MM-DD
 	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
@@ -973,7 +995,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param datum       das Datum der Klausurtermine im Format YYYY-MM-DD
 	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
@@ -992,10 +1014,10 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum   das Datum der Klausurtermine
+	 * @param datum       das Datum der Klausurtermine
 	 * @param abiJahrgang der Abiturjahrgang
-	 * @param zr      Zeitraster
-	 * @param manager der StundenplanManager
+	 * @param zr          Zeitraster
+	 * @param manager     der StundenplanManager
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
@@ -1025,10 +1047,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin auf Wunsch mit Kursklausuren der Nachschreiber
+	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin auf
+	 * Wunsch mit Kursklausuren der Nachschreiber
 	 *
-	 * @param idTermin die ID des Klausurtermins
-	 * @param mitNachschreibern wenn true werden die Kursklausuren einzelner Nachschreiber mit inkludiert
+	 * @param idTermin          die ID des Klausurtermins
+	 * @param mitNachschreibern wenn true werden die Kursklausuren einzelner
+	 *                          Nachschreiber mit inkludiert
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
@@ -1045,8 +1069,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal  die Nummer des Quartals
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
@@ -1069,8 +1093,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
@@ -1087,22 +1111,68 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
+	 * Liefert eine Liste von allen Paralleljahrgängen in der Oberstufe.
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
-	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
-	 *                            Termine geliefert werden sollen, sonst false
+	 * @param halbjahr    die ID des Gost-Halbjahres
+	 * @param includeSelf falls true, wir das übergebene Halbjahr in die Rückgabe
+	 *                    inkludiert
+	 *
+	 * @return die Liste von Paaren, die das Abiturjahr und GostHalbjahr beinhalten.
+	 */
+	public static getParallelHalbjahre(abiJahrgang : number, halbjahr : number, includeSelf : boolean) : List<PairNN<number, GostHalbjahr>> {
+		let hjAktuell : GostHalbjahr | null = GostHalbjahr.fromIDorException(halbjahr);
+		if (hjAktuell === null)
+			throw new DeveloperNotificationException("Kein gültiges Gost-Halbjahr")
+		let ergebnis : List<PairNN<number, GostHalbjahr>> = new ArrayList<PairNN<number, GostHalbjahr>>();
+		if (includeSelf)
+			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang, hjAktuell));
+		if (halbjahr >= 2)
+			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang + 1, GostHalbjahr.fromIDorException(halbjahr - 2)));
+		if (halbjahr >= 4)
+			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang + 2, GostHalbjahr.fromIDorException(halbjahr - 4)));
+		if (halbjahr <= 3)
+			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang - 1, GostHalbjahr.fromIDorException(halbjahr + 2)));
+		if (halbjahr <= 1)
+			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang - 2, GostHalbjahr.fromIDorException(halbjahr + 4)));
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
+	 *
+	 * @param abiJahrgang   der Abitur-Jahrgang
+	 * @param halbjahr      das Gost-Halbjahr
+	 * @param quartal       die Nummer des Quartals, 0 für alle Quartale
+	 * @param multijahrgang wenn true, werden die Klausurtermin-Objekte der
+	 *                      Parallel-Jahrgänge eingeschlossen
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, multijahrgang : boolean) : List<GostKlausurtermin> {
+		if (!multijahrgang)
+			return this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal);
+		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
+		for (let jgHj of GostKursklausurManager.getParallelHalbjahre(abiJahrgang, halbjahr.id, true))
+			termine.addAll(this.terminGetMengeByHalbjahrAndQuartal(jgHj.a, jgHj.b, quartal));
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
+	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
+	 * @param halbjahr    das Gost-Halbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public terminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		if (quartal > 0) {
 			if (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal) !== null)
 				termine.addAll(this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal));
-			if (includeMultiquartal && (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, 0) !== null))
+			if (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, 0) !== null)
 				termine.addAll(this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, 0));
 			return termine;
 		}
@@ -1114,19 +1184,20 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten, die für Nachschreiber zugelassen sind zum übergebenen Quartal
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die für Nachschreiber
+	 * zugelassen sind zum übergebenen Quartal
 	 *
-	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
-	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
-	 *                            Termine geliefert werden sollen, sonst false
+	 * @param abiJahrgang   der Abitur-Jahrgang
+	 * @param halbjahr      das Gost-Halbjahr
+	 * @param quartal       die Nummer des Quartals, 0 für alle Quartale
+	 * @param multijahrgang wenn true, werden die Klausurtermin-Objekte der
+	 *                      Parallel-Jahrgänge eingeschlossen
 	 *
 	 * @return die Liste von NT-GostKlausurtermin-Objekten
 	 */
-	public terminGetNTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, multijahrgang : boolean) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
-		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
+		for (const t of this.terminGetMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr, quartal, multijahrgang))
 			if (!t.istHaupttermin || t.nachschreiberZugelassen)
 				termine.add(t);
 		termine.sort(GostKursklausurManager._compTermin);
@@ -1134,19 +1205,38 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten, die als Haupttermin angelegt wurden zum übergebenen Quartal
+	 * Prüft, ob in einem Nachschreibtermin Schülerklausurtermine anderer
+	 * Jahrgangsstufen enthalten sind
+	 *
+	 * @param abiJahrgang   der Abitur-Jahrgang
+	 * @param halbjahr      das Gost-Halbjahr
+	 * @param quartal       die Nummer des Quartals, 0 für alle Quartale
+	 * @param multijahrgang wenn true, werden die Klausurtermin-Objekte der
+	 *                      Parallel-Jahrgänge eingeschlossen
+	 *
+	 * @return true, falls andere Jgst. enthalten sind, sonst false
+	 */
+	public terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, multijahrgang : boolean) : boolean {
+		const termine : List<GostKlausurtermin> | null = this.terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr, quartal, multijahrgang);
+		for (const t of this.terminGetMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr, quartal, multijahrgang))
+			if (this.terminMitAnderenJgst(t))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die als Haupttermin
+	 * angelegt wurden zum übergebenen Quartal
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
-	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
-	 *                            Termine geliefert werden sollen, sonst false
+	 * @param halbjahr    das Gost-Halbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
-	public terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
-		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
+		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))
 			if (t.istHaupttermin)
 				termine.add(t);
 		termine.sort(GostKursklausurManager._compTermin);
@@ -1173,16 +1263,14 @@ export class GostKursklausurManager extends JavaObject {
 	 * Datum gesetzt ist
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal             die Nummer des Quartals
-	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
-	 *                            Termine geliefert werden sollen, sonst false
+	 * @param halbjahr    das Gost-Halbjahr
+	 * @param quartal     die Nummer des Quartals
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminMitDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminMitDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurtermin> {
 		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
-		for (const termin of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
+		for (const termin of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(GostKursklausurManager._compTermin);
@@ -1190,20 +1278,18 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von HT-GostKlausurtermin-Objekten des Quartals, bei denen ein
-	 * Datum gesetzt ist
+	 * Liefert eine Liste von HT-GostKlausurtermin-Objekten des Quartals, bei denen
+	 * ein Datum gesetzt ist
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal             die Nummer des Quartals
-	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
-	 *                            Termine geliefert werden sollen, sonst false
+	 * @param halbjahr    das Gost-Halbjahr
+	 * @param quartal     die Nummer des Quartals
 	 *
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
-	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurtermin> {
 		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
-		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
+		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(GostKursklausurManager._compTermin);
@@ -1365,7 +1451,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt bewertet.
+	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die
+	 * Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus
+	 * menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt
+	 * bewertet.
 	 *
 	 * @param menge1 f
 	 * @param menge2 f
@@ -1381,7 +1470,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt bewertet.
+	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die
+	 * Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus
+	 * menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt
+	 * bewertet.
 	 *
 	 * @param menge1 f
 	 * @param menge2 f
@@ -1402,11 +1494,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob ein Schülerklausurtermin konfliktfrei zu einem bestehenden Klausurtermin
-	 * hinzugefügt werden kann. Falls der Schülerklausurtermin bereits dem Termin zugewiesen war, wird dies nicht als Konflikt bewertet.
+	 * Prüft, ob ein Schülerklausurtermin konfliktfrei zu einem bestehenden
+	 * Klausurtermin hinzugefügt werden kann. Falls der Schülerklausurtermin bereits
+	 * dem Termin zugewiesen war, wird dies nicht als Konflikt bewertet.
 	 *
-	 * @param termin  der zu prüfende Klausurtermin
-	 * @param skt der zu prüfende Schülerklausurtermin
+	 * @param termin der zu prüfende Klausurtermin
+	 * @param skt    der zu prüfende Schülerklausurtermin
 	 *
 	 * @return die Anzahl der Konflikte
 	 */
@@ -1415,10 +1508,11 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob der zu einer Schülerklausur gehörige Schüler in einer Kursklausur enthalten ist.
+	 * Prüft, ob der zu einer Schülerklausur gehörige Schüler in einer Kursklausur
+	 * enthalten ist.
 	 *
 	 * @param schuelerklausur die zu prüfende Schülerklausur
-	 * @param kursklausur  die zu prüfende Kursklausur
+	 * @param kursklausur     die zu prüfende Kursklausur
 	 *
 	 * @return die Anzahl der Konflikte
 	 */
@@ -1584,9 +1678,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für eine Liste von GostSchuelerklausur-Objekten die zugehörigen Schüler-IDs als Liste.
+	 * Liefert für eine Liste von GostSchuelerklausur-Objekten die zugehörigen
+	 * Schüler-IDs als Liste.
 	 *
-	 * @param sks        Die Liste von GostSchuelerklausur-Objekten
+	 * @param sks Die Liste von GostSchuelerklausur-Objekten
 	 *
 	 * @return die Liste der Schüler-IDs
 	 */
@@ -1601,7 +1696,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert für ein GostKursklausur-Objekt die zugehörigen Schüler-IDs als Liste.
 	 *
-	 * @param kk        die Kursklausur, zu der die Schüler-IDs gesucht werden.
+	 * @param kk die Kursklausur, zu der die Schüler-IDs gesucht werden.
 	 *
 	 * @return die Liste der Schüler-IDs
 	 */
@@ -1785,7 +1880,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert die GostKursklausur zu einem Schuelerklausurtermin.
 	 *
-	 * @param termin der Schuelerklausurtermin, zu der die GostKursklausur gesucht wird.
+	 * @param termin der Schuelerklausurtermin, zu der die GostKursklausur gesucht
+	 *               wird.
 	 *
 	 * @return die GostKursklausur
 	 */
@@ -1809,10 +1905,10 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert das GostKursklausur-Objekt zu den übergebenen Parametern.
 	 *
-	 * @param idKurs  die ID des Kurses
+	 * @param idKurs      die ID des Kurses
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal das Quartal der Klausur
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     das Quartal der Klausur
 	 *
 	 * @return die Kursklausur
 	 */
@@ -1847,8 +1943,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
-	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle
+	 * gesetzt ist, wird die des Termins zurückgegeben. Sollte kein Termin gesetzt
+	 * sein oder der Termin keine Startzeit definiert haben, wird null
+	 * zurückgegeben.
 	 *
 	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
 	 *
@@ -1862,8 +1960,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
-	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird eine Exception zurückgegeben.
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle
+	 * gesetzt ist, wird die des Termins zurückgegeben. Sollte kein Termin gesetzt
+	 * sein oder der Termin keine Startzeit definiert haben, wird eine Exception
+	 * zurückgegeben.
 	 *
 	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
 	 *
@@ -1874,8 +1974,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
-	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle
+	 * gesetzt ist, wird die des Termins zurückgegeben. Sollte kein Termin gesetzt
+	 * sein oder der Termin keine Startzeit definiert haben, wird null
+	 * zurückgegeben.
 	 *
 	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
 	 *
@@ -1910,9 +2012,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin und einer Kursklausur zurück.
+	 * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin und einer
+	 * Kursklausur zurück.
 	 *
-	 * @param idTermin die ID des Klausurtermins
+	 * @param idTermin      die ID des Klausurtermins
 	 * @param idKursklausur die ID der Kursklausur
 	 *
 	 * @return die Liste von Schülerklausur-Terminen
@@ -1940,7 +2043,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Liste von Folge-Schülerklausur-Terminen (Nachschreibtermine) zu einem Klausurtermin zurück.
+	 * Gibt die Liste von Folge-Schülerklausur-Terminen (Nachschreibtermine) zu
+	 * einem Klausurtermin zurück.
 	 *
 	 * @param idTermin die ID des Klausurtermins
 	 *
@@ -1955,7 +2059,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob der übergebene Schülerklausurtermin der aktuellste Termin der Schülerklausur ist.
+	 * Prüft, ob der übergebene Schülerklausurtermin der aktuellste Termin der
+	 * Schülerklausur ist.
 	 *
 	 * @param skt der Schülerklausurtermin, der geprüft werden soll
 	 *
@@ -1966,9 +2071,11 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den aktuellen Schülerklausurtermin zu einer übergebenen Schülerklausur
+	 * Liefert den aktuellen Schülerklausurtermin zu einer übergebenen
+	 * Schülerklausur
 	 *
-	 * @param idSchuelerklausur die ID der Schülerklausur, deren aktueller Schülerklausurtermin gesucht wird
+	 * @param idSchuelerklausur die ID der Schülerklausur, deren aktueller
+	 *                          Schülerklausurtermin gesucht wird
 	 *
 	 * @return den aktuellen Schülerklausurtermin
 	 */
@@ -1978,12 +2085,13 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * Liefert eine Liste von aktuellen
+	 * Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die ein Termin gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
@@ -2007,12 +2115,42 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * Liefert eine Liste von allen aktuellen
+	 * Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal
+	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		if (quartal > 0) {
+			const map4 : JavaMap<number, List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap4OrNull(abiJahrgang, halbjahr.id, quartal);
+			if (map4 === null)
+				return ergebnis;
+			for (const terminList of map4.values())
+				ergebnis.addAll(terminList);
+		} else {
+			const map3 : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap3OrNull(abiJahrgang, halbjahr.id);
+			if (map3 === null)
+				return ergebnis;
+			for (const map4 of map3.values())
+				for (const terminList of map4.values())
+					ergebnis.addAll(terminList);
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen
+	 * Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die ein Termin gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
@@ -2027,12 +2165,13 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * Liefert eine Liste von aktuellen
+	 * Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr das Gosthalbjahr
-	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 * @param halbjahr    das Gosthalbjahr
+	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
@@ -2049,11 +2188,13 @@ export class GostKursklausurManager extends JavaObject {
 				if (listTermine !== null)
 					skts.addAll(listTermine);
 			}
+		skts.sort(this._compSchuelerklausurTermin);
 		return skts;
 	}
 
 	/**
-	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Klausurtermin
+	 * Liefert eine Liste von Nachschreib-GostSchuelerklausurTermin-Objekten zum
+	 * übergebenen Klausurtermin
 	 *
 	 * @param termin der Gost-Klausurtermin
 	 *
@@ -2064,7 +2205,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zur übergebenen Klausurtermin-ID
+	 * Liefert eine Liste von Nachschreib-GostSchuelerklausurTermin-Objekten zur
+	 * übergebenen Klausurtermin-ID
 	 *
 	 * @param idTermin die ID des Gost-Klausurtermins
 	 *
@@ -2081,10 +2223,11 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den GostSchuelerklausurTermin, sofern vorhanden, zu einer Klausurtermin-ID und einer Schüler-ID
+	 * Liefert den GostSchuelerklausurTermin, sofern vorhanden, zu einer
+	 * Klausurtermin-ID und einer Schüler-ID
 	 *
-	 * @param idTermin die ID des Klausurtermins
-	 * @param idSchueler  die ID des Schülers
+	 * @param idTermin   die ID des Klausurtermins
+	 * @param idSchueler die ID des Schülers
 	 *
 	 * @return das GostSchuelerklausurTermin-Objekt, sofern vorhanden
 	 */
@@ -2139,7 +2282,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das GostFach aus dem GostFaecherManager zu einer übergebenen Kursklausur.
+	 * Liefert das GostFach aus dem GostFaecherManager zu einer übergebenen
+	 * Kursklausur.
 	 *
 	 * @param k die Kursklausur
 	 *
@@ -2197,7 +2341,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl der Klausurscheiber im Kurs zu einer übergebenen Kursklausur.
+	 * Liefert die Anzahl der Klausurscheiber im Kurs zu einer übergebenen
+	 * Kursklausur.
 	 *
 	 * @param k die Kursklausur
 	 *
@@ -2245,7 +2390,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Vorgänger-Schülerklausurtermin zu einer Schülerklausur, also den versäumte Schülerklausurtermin
+	 * Liefert den Vorgänger-Schülerklausurtermin zu einer Schülerklausur, also den
+	 * versäumte Schülerklausurtermin
 	 *
 	 * @param skt der Schülerklausurtermin, dessen Vorgänger gesucht wird
 	 *
@@ -2276,7 +2422,25 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt das Datum des Vorgängertermins zum Übergebenen Schülerklausurtermin zurück.
+	 * Prüft, ob ein Klausurtermin Schülerklausurtermine anderer Jahrgangsstufen
+	 * enthält
+	 *
+	 * @param t der zu prüfende Klausurtermin
+	 *
+	 * @return true, falls Schülerklausurtermine anderer Jgst. enthalten sind
+	 */
+	public terminMitAnderenJgst(t : GostKlausurtermin) : boolean {
+		const listSkts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(t.id);
+		if (listSkts !== null)
+			for (const skt of listSkts)
+				if (this.vorgabeBySchuelerklausurTermin(skt).abiJahrgang !== t.abijahr)
+					return true;
+		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Vorgängertermins zum Übergebenen Schülerklausurtermin
+	 * zurück.
 	 *
 	 * @param skt der Schülerklausurtermin
 	 *
@@ -2291,11 +2455,14 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Erstellt ein GostKlausurenUpdate-Objekt für den API-Call, das beim übergebenen Gost-Klausurtermin die Nachschreiberzulassung entfernt und ggf. schon zugewiesene Schülerklausurtermine aus diesem entfernt.
+	 * Erstellt ein GostKlausurenUpdate-Objekt für den API-Call, das beim
+	 * übergebenen Gost-Klausurtermin die Nachschreiberzulassung entfernt und ggf.
+	 * schon zugewiesene Schülerklausurtermine aus diesem entfernt.
 	 *
 	 * @param termin der Schülerklausurtermin
 	 *
-	 * @return das GostKlausurenUpdate-Objekt mit den zu patchenden GostSchuelerklausurTermin-Objekten und dem Gost-Klausurtermin
+	 * @return das GostKlausurenUpdate-Objekt mit den zu patchenden
+	 *         GostSchuelerklausurTermin-Objekten und dem Gost-Klausurtermin
 	 */
 	public patchKlausurterminNachschreiberZuglassenFalse(termin : GostKlausurtermin) : GostKlausurenUpdate {
 		const update : GostKlausurenUpdate | null = new GostKlausurenUpdate();
@@ -2306,7 +2473,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Führt alle Attribut-Patches aller Objekte im übergeben Update-Objekt im Manager durch.
+	 * Führt alle Attribut-Patches aller Objekte im übergeben Update-Objekt im
+	 * Manager durch.
 	 *
 	 * @param update das GostKlausurenUpdate-Objekt mit den zu patchenden
 	 */

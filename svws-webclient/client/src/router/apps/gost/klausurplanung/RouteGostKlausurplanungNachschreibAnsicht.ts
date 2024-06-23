@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode } from "@core";
+import type { GostSchuelerklausurTermin, List} from "@core";
+import { ArrayList, BenutzerKompetenz, GostKlausurraumManager, GostKursklausurManager, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -17,6 +18,8 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 		super.text = "Nachschreibplan";
 	}
 
+	raummanager : GostKlausurraumManager = new GostKlausurraumManager();
+
 	public checkHidden(params?: RouteParams) {
 		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
 		return (abiturjahr === undefined) || (abiturjahr === -1);
@@ -26,17 +29,32 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering) {
+			this.raummanager = await routeGostKlausurplanung.data.erzeugeKlausurraummanager(this.mapIDs(routeGostKlausurplanung.data.kursklausurmanager.schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value)));
+		}
+	}
+
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreibAnsichtProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
-			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			raummanager: this.raummanager,
 		}
 	}
 
+	private mapIDs(skts: List<GostSchuelerklausurTermin>) {
+		const numList = new ArrayList<number>();
+		for (const skt of skts)
+			numList.add(skt.id);
+		return numList;
+	}
+
 }
+
+
 
 export const routeGostKlausurplanungNachschreibAnsicht = new RouteGostKlausurplanungNachschreibAnsicht();
 

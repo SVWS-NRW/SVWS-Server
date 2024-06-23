@@ -80,7 +80,7 @@
 					<div v-if="anzahlProKwKonflikte2(4, false).length > 0">
 						<div class="text-headline-sm leading-tight mb-6 -mt-2">
 							<div class="inline-flex gap-2 justify-between w-full">
-								<span>{{ anzahlProKwKonflikte2(4, false).length }} Schüler:innen</span>
+								<span>{{ anzahlProKwKonflikte2(4, false).length }} Schüler</span>
 								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreKonflikte">Alle anzeigen</svws-ui-checkbox>
 							</div>
 							<div class="opacity-50">Mehr als drei Klausuren in dieser Woche</div>
@@ -112,7 +112,7 @@
 					<div v-if="anzahlProKwKonflikte2(3, true).length > 0" class="mt-5">
 						<div class="text-headline-sm leading-tight mb-6 -mt-2">
 							<div class="inline-flex gap-2 justify-between w-full">
-								<span>{{ anzahlProKwKonflikte2(3, true).length }} Schüler:innen</span>
+								<span>{{ anzahlProKwKonflikte2(3, true).length }} Schüler</span>
 								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreWarnungen">Alle anzeigen</svws-ui-checkbox>
 							</div>
 							<div class="opacity-50">Drei Klausuren in dieser Woche</div>
@@ -249,7 +249,7 @@
 
 	const termineOhne = computed(() => {
 		const a = [];
-		for (const termin of props.kMan().terminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true))
+		for (const termin of props.kMan().terminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value))
 			if (termin.datum === null)
 				a.push(termin);
 		return a;

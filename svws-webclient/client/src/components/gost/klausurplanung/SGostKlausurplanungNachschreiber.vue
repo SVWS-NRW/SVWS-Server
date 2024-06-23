@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 	</Teleport>
 
 	<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="big">
@@ -19,7 +19,7 @@
 				</template>
 
 				<template #body>
-					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true)"
+					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 						:key="termin.id"
 						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
 						<div class="svws-ui-td" role="cell">
@@ -78,7 +78,22 @@
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
-			<div class="flex justify-between items-start mb-5">
+			<svws-ui-content-card v-if="multijahrgang()" :has-background="true" :title="'Jahrgangsübergreifende Planung' + (!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true) ? ' aktiviert, da jahrgangsgemischte Termine existieren.' : '')">
+				<ul>
+					<li class="flex font-bold">
+						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
+						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
+						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+					</li>
+					<li class="flex" v-for="pair in GostKursklausurManager.getParallelHalbjahre(jahrgangsdaten.abiturjahr, halbjahr.id, false)" :key="pair.a">
+						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
+						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
+						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+						<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(pair.a, pair.b.id ))" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+					</li>
+				</ul>
+			</svws-ui-content-card>
+			<div class="flex justify-between items-start mt-5 mb-5">
 				<div class="flex flex-wrap items-center gap-2 w-full">
 					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
 					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
@@ -117,10 +132,12 @@
 <script setup lang="ts">
 
 	import type { JavaSet} from "@core";
-	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
+	import { GostKursklausurManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
+	import { RouteManager } from '~/router/RouteManager';
+	import { routeGostKlausurplanungNachschreiber } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber';
 	import type { DataTableColumn } from "@ui";
 
 	const _showModalTerminGrund = ref<boolean>(false);
@@ -129,6 +146,8 @@
 	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
 	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
 	const gleiche_fachart_auf_selbe_termine = ref(false);
+
+	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true);
 
 	const selectedNachschreiber = ref<JavaSet<GostSchuelerklausurTermin>>(new HashSet<GostSchuelerklausurTermin>());
 
@@ -175,7 +194,7 @@
 		}
 	};
 
-	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
+	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
 
 	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		if (dragData.value === undefined)
@@ -197,7 +216,7 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "id", label: "", minWidth: 2 },
+			{ key: "id", label: " ", fixedWidth: 2 },
 			{ key: "datum", label: "Datum", fixedWidth: 8 },
 			{ key: "size", label: "#SuS", fixedWidth: 4 },
 			{ key: "faecher", label: "Kurse" },

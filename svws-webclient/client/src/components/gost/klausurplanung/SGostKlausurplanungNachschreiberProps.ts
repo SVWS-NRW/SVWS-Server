@@ -9,6 +9,7 @@ import type {
 	List,
 	GostKlausurenUpdate,
 	GostJahrgangsdaten,
+	Schuljahresabschnitt,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
@@ -23,4 +24,6 @@ export interface GostKlausurplanungNachschreiberProps {
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	blockenNachschreibklausuren: (config: GostNachschreibterminblockungKonfiguration) => Promise<void>;
 	updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
+	zeigeAlleJahrgaenge: () => boolean;
+	setZeigeAlleJahrgaenge: (value: boolean) => void;
 }

@@ -12,7 +12,7 @@ const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender/:kw(\\d+)?/:idTermin(\\d+)?", SGostKlausurplanungKalender);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender/:kw(\\d+)?/:idtermin(\\d+)?", SGostKlausurplanungKalender);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
@@ -27,17 +27,17 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 		return false;
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: number, kw: number | undefined, idTermin: number | undefined ) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, kw, idTermin }};
+	public getRoute(abiturjahr: number, halbjahr: number, kw: number | undefined, idtermin: number | undefined ) : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, kw, idtermin }};
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
-		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.kw instanceof Array || to_params.idTermin instanceof Array)
+		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.kw instanceof Array || to_params.idtermin instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const termin = !to_params.idTermin ? undefined : routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrNull(parseInt(to_params.idTermin)) || undefined;
+		const termin = !to_params.idtermin ? undefined : routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrNull(parseInt(to_params.idtermin)) || undefined;
 		routeGostKlausurplanung.data.terminSelected.value = termin;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");

@@ -79,7 +79,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 			const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 			const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-			const idTermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
+			const idtermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
 			const kw = !to_params.kw ? undefined : parseInt(to_params.kw);
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
@@ -99,10 +99,10 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 			if (changedHalbjahr || (to.name === this.name)) {
-				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idTermin)
-					return this.data.view.getRoute(abiturjahr, halbjahr.id, idTermin);
-				if (this.data.view.name === "gost.klausurplanung.kalender" && kw)
-					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw);
+				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idtermin)
+					return this.data.view.getRoute(abiturjahr, halbjahr.id, idtermin);
+				if (this.data.view.name === "gost.klausurplanung.kalender")
+					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw, idtermin);
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 			}
 		} catch(e: unknown) {

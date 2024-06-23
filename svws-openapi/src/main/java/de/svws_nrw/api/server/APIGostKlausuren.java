@@ -933,7 +933,7 @@ public class APIGostKlausuren {
 	 *
 	 * @return die Collection mit benötigten Daten
 	 */
-	@GET
+	@POST
 	@Path("/raumstunden")
 	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.",
 			description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
@@ -948,7 +948,7 @@ public class APIGostKlausuren {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> terminIds,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
-				.entity(new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenBySchuelerklausurterminids(terminIds)).build(),
+				.entity(new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenBySchuelerklausurterminids(terminIds, true)).build(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);

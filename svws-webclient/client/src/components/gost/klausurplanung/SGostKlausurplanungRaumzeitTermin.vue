@@ -50,7 +50,7 @@
 		</template>
 		<svws-ui-content-card v-if="multijahrgang()" :has-background="true" :title="'Jahrgangsübergreifende Planung' + (!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen() ? ' aktiviert, da jahrgangsgemischte Räume existieren.' : '')">
 			<ul>
-				<li class="flex">
+				<li class="flex font-bold">
 					<span>{{ raummanager().anzahlBenoetigtePlaetzeAlleKlausuren(false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
 					<span v-if="raummanager().isTerminAlleSchuelerklausurenVerplant(raummanager().getHauptTermin())" class="text-green-500">alle zugewiesen.</span>
 					<span v-else class="text-red-500">nicht alle zugewiesen.</span>

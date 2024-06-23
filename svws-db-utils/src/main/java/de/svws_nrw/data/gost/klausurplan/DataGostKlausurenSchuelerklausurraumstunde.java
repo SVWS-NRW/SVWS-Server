@@ -444,16 +444,23 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Gost-Halbjahr zurück.
 	 *
 	 * @param idSkts die ID des Klausurtermins
+	 * @param includeSelbesDatum wenn true, werden Termine anderer Jahrgangsstufen am selben Datum eingeschlossen
 	 *
 	 * @return die Liste der Klausurraumstunden
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts) throws ApiOperationException {
+	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts, final boolean includeSelbesDatum) throws ApiOperationException {
 		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idSkts);
 		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
 		retCollection.idsSchuelerklausurtermine = idSkts;
-		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
+		if (includeSelbesDatum) {
+        		final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
+        		final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);
+        		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, termineSelbesDatum.stream().map(t -> t.id).toList());
+		} else {
+		    retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
+		}
 		if (retCollection.raeume.isEmpty())
 			return retCollection;
 		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);

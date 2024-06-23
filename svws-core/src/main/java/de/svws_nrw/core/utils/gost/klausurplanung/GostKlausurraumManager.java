@@ -1108,6 +1108,29 @@ public class GostKlausurraumManager {
 	}
 
 	/**
+	 * Liefert den zu einem Schülerklausurtermin zugehörigen Klausurraum zurück.
+	 *
+	 * @param skt der Schülerklausurtermin, zu dem der Klausurraum gesucht wird.
+	 *
+	 * @return den Klausurraum, falls einer zugewiesen ist, sonst null
+	 */
+	public GostKlausurraum klausurraumGetBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
+	    return _klausurraum_by_idSchuelerklausurtermin.get(skt.id);
+	}
+
+	/**
+	 * Liefert den zu einem Schülerklausurtermin zugehörigen Stundenplanraum zurück.
+	 *
+	 * @param skt der Schülerklausurtermin, zu dem der Klausurraum gesucht wird.
+	 *
+	 * @return den Stundenplanraum, falls einer zugewiesen ist, sonst null
+	 */
+	public StundenplanRaum stundenplanraumGetBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
+	    final GostKlausurraum raum = klausurraumGetBySchuelerklausurtermin(skt);
+	    return raum == null || raum.idStundenplanRaum == null ? null : getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+	}
+
+	/**
 	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
 	 *
 	 * @return die Anzahl
