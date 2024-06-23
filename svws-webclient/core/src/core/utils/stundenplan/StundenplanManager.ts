@@ -5674,21 +5674,39 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 *
-	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
 	 *
 	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 */
-	public zeitrasterGetSchneidenSich(beginn1 : number, ende1 : number, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
-		const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", iBeginn2).valueOf();
-		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2).valueOf();
+	public zeitrasterGetSchneidenSich(iBeginn1 : number | null, iEnde1 : number | null, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
+		const beginn1 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn1 ist NULL!", iBeginn1).valueOf();
+		const ende1 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende1 ist NULL!", iEnde1).valueOf();
+		const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn2 ist NULL!", iBeginn2).valueOf();
+		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende2 ist NULL!", iEnde2).valueOf();
 		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
 		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
 		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
 		return !((ende1 < beginn2) || (ende2 < beginn1));
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
+	 * <br> Hinweis: Die Objekte der Liste dürfen noch nicht im Manager existieren, da sonst eine Überschneidung garantiert ist.
+	 *
+	 * @param zeitrasterListe  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 *
+	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
+	 */
+	public zeitrasterGetSchneidenSichListe(zeitrasterListe : List<StundenplanZeitraster>) : boolean {
+		for (const z1 of zeitrasterListe)
+			for (const z2 of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z1.wochentag))
+				if (this.zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
+					return true;
+		return false;
 	}
 
 	/**

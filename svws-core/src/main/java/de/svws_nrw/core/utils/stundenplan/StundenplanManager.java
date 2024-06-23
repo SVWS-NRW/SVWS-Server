@@ -6111,7 +6111,9 @@ public class StundenplanManager {
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final int beginn,
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(
+			final @NotNull Wochentag wochentag,
+			final int beginn,
 			final int minutenVerstrichen) {
 		final int ende = beginn + minutenVerstrichen;
 		return CollectionUtils.toFilteredArrayList(_zeitrastermenge, (final @NotNull StundenplanZeitraster z) -> (wochentag.id == z.wochentag)
@@ -6322,21 +6324,40 @@ public class StundenplanManager {
 	/**
 	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 *
-	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
 	 *
 	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 */
-	public boolean zeitrasterGetSchneidenSich(final int beginn1, final int ende1, final Integer iBeginn2, final Integer iEnde2) {
-		final int beginn2 = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", iBeginn2);
-		final int ende2 = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2);
+	public boolean zeitrasterGetSchneidenSich(final Integer iBeginn1, final Integer iEnde1, final Integer iBeginn2, final Integer iEnde2) {
+		final int beginn1 = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn1 ist NULL!", iBeginn1);
+		final int ende1 = DeveloperNotificationException.ifNull("zeitraster.stundenende1 ist NULL!", iEnde1);
+		final int beginn2 = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn2 ist NULL!", iBeginn2);
+		final int ende2 = DeveloperNotificationException.ifNull("zeitraster.stundenende2 ist NULL!", iEnde2);
 		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
 		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
 		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
 		return !((ende1 < beginn2) || (ende2 < beginn1));
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
+	 * <br> Hinweis: Die Objekte der Liste dürfen noch nicht im Manager existieren, da sonst eine Überschneidung garantiert ist.
+	 *
+	 * @param zeitrasterListe  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 *
+	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
+	 */
+	public boolean zeitrasterGetSchneidenSichListe(final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterListe) {
+		for (final @NotNull StundenplanZeitraster z1 : zeitrasterListe)
+			for (final @NotNull StundenplanZeitraster z2 : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, z1.wochentag))
+				if (zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
+					return true;
+
+		return false;
 	}
 
 	/**
