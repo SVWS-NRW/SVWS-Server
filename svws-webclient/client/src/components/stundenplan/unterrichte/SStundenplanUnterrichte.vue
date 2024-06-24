@@ -36,7 +36,28 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Unterrichtsliste" class="page--content-flex-column">
-			<svws-ui-table :items :no-data="false" has-background>
+			<svws-ui-table :items :columns :no-data="false" has-background>
+				<template #cell(idZeitraster)="{ value }">
+					{{ wochentage[stundenplanManager().zeitrasterGetByIdOrException(value).wochentag] }} {{ stundenplanManager().zeitrasterGetByIdOrException(value).unterrichtstunde }}.
+				</template>
+				<template #cell(wochentyp)="{ value }">
+					{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}
+				</template>
+				<template #cell(idKurs)="{ rowData }">
+					{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}
+				</template>
+				<template #cell(lehrer)="{ value }">
+					<svws-ui-multi-select :model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+				</template>
+				<template #cell(klassen)="{ value }">
+					<svws-ui-multi-select :model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+				</template>
+				<template #cell(raeume)="{ value }">
+					<svws-ui-multi-select :model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+				</template>
+				<template #cell(schienen)="{ value }">
+					<svws-ui-multi-select :model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
+				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
 	</div>
@@ -45,15 +66,55 @@
 <script setup lang="ts">
 
 	import { ref, effect, toRaw, computed } from "vue";
-	import type { List, StundenplanUnterricht} from "@core";
+	import type { List, StundenplanKlasse, StundenplanLehrer, StundenplanRaum, StundenplanSchiene, StundenplanUnterricht} from "@core";
 	import { ArrayList, Wochentag } from "@core";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 
 	const props = defineProps<StundenplanUnterrichteProps>();
 
 	const selected = ref<number | Wochentag>();
+	const wochentage = [null, 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+	const columns = [{key: 'idZeitraster', label: 'Stunde'}, {key: 'idKurs', label: 'Kurs oder Fach'}, {key: 'lehrer', label: 'Lehrer'}, {key: 'klassen', label: 'Klassen'}, {key: 'raeume', label: 'Räume'}, {key: 'schienen', label: 'Schienen'}];
 
 	effect(() => console.log(selected.value))
+
+	function modelValueLehrer(list: List<number>) {
+		const res: StundenplanLehrer[] = [];
+		for (const l of list)
+			res.push(props.stundenplanManager().lehrerGetByIdOrException(l));
+		return res;
+	}
+
+	function modelValueKlassen(list: List<number>) {
+		const res: StundenplanKlasse[] = [];
+		for (const k of list)
+			res.push(props.stundenplanManager().klasseGetByIdOrException(k));
+		return res;
+	}
+
+	function modelValueRaeume(list: List<number>) {
+		const res: StundenplanRaum[] = [];
+		for (const r of list)
+			res.push(props.stundenplanManager().raumGetByIdOrException(r));
+		return res;
+	}
+
+	function modelValueSchienen(list: List<number>) {
+		const res: StundenplanSchiene[] = [];
+		// for (const s of list)
+		// 	res.push(props.stundenplanManager().schieneGetByIdOrException(s));
+		return res;
+	}
+
+	const find = (items: Iterable<StundenplanLehrer | StundenplanKlasse | StundenplanRaum>, search: string) => {
+		const list = [];
+		for (const i of items)
+			if ((i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+				// || (i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())) || (i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+				list.push(i);
+		return list;
+	}
 
 	const wochentyprange = computed(() => {
 		const range = [];
