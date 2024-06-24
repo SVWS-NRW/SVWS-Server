@@ -48,10 +48,10 @@
 		</template>
 		<template #modalContent>
 			<svws-ui-checkbox type="toggle" :disabled="gleiche_fachart_auf_selbe_termine" v-model="nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
-				Gleicher Termin falls gleicher Kurs
+				Nachschreiber aus gleichem Kurs zusammenfassen
 			</svws-ui-checkbox>
 			<svws-ui-checkbox type="toggle" v-model="gleiche_fachart_auf_selbe_termine" @update:model-value="value => nachschreiber_der_selben_klausur_auf_selbe_termine = value ? false : nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
-				Gleicher Termin falls gleiches Fach und gleiche Kursart
+				Nachschreiber mit gleichem Fach und gleicher Kursart zusammenfassen
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>

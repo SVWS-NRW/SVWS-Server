@@ -1465,7 +1465,7 @@ export class GostKursklausurManager extends JavaObject {
 		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap<number, GostSchuelerklausurTermin>();
 		if (menge1 !== null)
 			for (const termin1 of menge1)
-				DeveloperNotificationException.ifMapPutOverwrites(map1, this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+				map1.put(this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 		return this.berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
 	}
 
@@ -2178,6 +2178,8 @@ export class GostKursklausurManager extends JavaObject {
 	public schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		if (quartal > 0) {
 			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getOrNull(abiJahrgang, halbjahr.id, quartal, -1);
+			if (skts !== null)
+				skts.sort(this._compSchuelerklausurTermin);
 			return (skts !== null) ? skts : new ArrayList();
 		}
 		const skts : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();

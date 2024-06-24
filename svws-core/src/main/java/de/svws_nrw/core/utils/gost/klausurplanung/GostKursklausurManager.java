@@ -1628,8 +1628,9 @@ public class GostKursklausurManager {
 	if (menge1 != null)
 	    for (@NotNull
 	    final GostSchuelerklausurTermin termin1 : menge1)
-		DeveloperNotificationException.ifMapPutOverwrites(map1,
-			schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+//		DeveloperNotificationException.ifMapPutOverwrites(map1,
+//			schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+		map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 	return berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
     }
 
@@ -2420,6 +2421,8 @@ public class GostKursklausurManager {
 	if (quartal > 0) {
 	    final List<@NotNull GostSchuelerklausurTermin> skts = _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin
 		    .getOrNull(abiJahrgang, halbjahr.id, quartal, -1L);
+	    if (skts != null)
+		skts.sort(_compSchuelerklausurTermin);
 	    return (skts != null) ? skts : new ArrayList<>();
 	}
 	final @NotNull List<@NotNull GostSchuelerklausurTermin> skts = new ArrayList<>();
