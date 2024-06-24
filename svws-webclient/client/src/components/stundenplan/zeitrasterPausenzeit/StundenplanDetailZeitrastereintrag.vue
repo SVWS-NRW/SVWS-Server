@@ -27,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref } from "vue";
 	import type { StundenplanManager } from "@core";
-	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
+	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
@@ -36,6 +37,8 @@
 		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	const ueberschneidung = ref<boolean>(false);
 
 	const columns = [{ key: 'idFach', label: 'Unterricht' }, { key: 'klassen', label: 'Klassen' }, { key: 'raeume', label: 'Räume'}];
 
@@ -46,23 +49,31 @@
 	async function patchBeginn(start: string | null) {
 		if (start === null)
 			return;
+		ueberschneidung.value = false;
 		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
 		const zeitraster = new StundenplanZeitraster();
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenbeginn = stundenbeginn;
 		const list = ListUtils.create1(zeitraster);
-		await props.patchZeitraster(list);
+		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListe(list))
+			await props.patchZeitraster(list);
+		else
+			ueberschneidung.value = true;
 	}
 
 	async function patchEnde(ende: string | null) {
 		if (ende === null)
 			return;
+		ueberschneidung.value = false;
 		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
 		const zeitraster = new StundenplanZeitraster();
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenende = stundenende;
 		const list = ListUtils.create1(zeitraster);
-		await props.patchZeitraster(list);
+		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListe(list))
+			await props.patchZeitraster(list);
+		else
+			ueberschneidung.value = true;
 	}
 
 
