@@ -62,7 +62,7 @@ public interface IProperty {
 	 * @param value    der Value gegen den das Property geprüft werden soll
 	 * @return ob key und value in dem property enthalten sind
 	 */
-	static boolean isProperty(@NotNull final IProperty property, @NotNull final String key, @NotNull final String value) {
+	static boolean isProperty(final @NotNull IProperty property, final @NotNull String key, final @NotNull String value) {
 		return key.equals(property.getKey()) && value.equals(property.getValue());
 	}
 

@@ -86,7 +86,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 */
 	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
 		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
-		if (ressourceId == null || ressourceId.isBlank()) {
+		if ((ressourceId == null) || ressourceId.isBlank()) {
 			// ohne Ressource ID wird die Liste der Adressbuecher zurückgegeben
 			return dispatchCollection(propfind);
 		}

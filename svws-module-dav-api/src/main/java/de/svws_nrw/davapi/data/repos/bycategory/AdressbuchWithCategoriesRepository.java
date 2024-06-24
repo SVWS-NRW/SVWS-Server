@@ -126,9 +126,9 @@ public final class AdressbuchWithCategoriesRepository implements IAdressbuchRepo
 		OEFFENTLICH("Öffentlich", "Das öffentliche Adressbuch der Schule");
 
 		/** der Anzeigename des Adressbuchs */
-		private String anzeigeName;
+		private final String anzeigeName;
 		/** die Beschreibung des Adressbuchs */
-		private String beschreibung;
+		private final String beschreibung;
 
 		/**
 		 * erstellt eine neue Adressbuchkonstakte mit Anzeigename und Beschreibung

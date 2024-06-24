@@ -1,4 +1,5 @@
 package de.svws_nrw.davapi.data;
+
 /**
  * Diese Klasse abstrahiert verschiedene Parameter für die Suche nach Adressbuechern aus einem Repository
  *

@@ -78,13 +78,14 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 				final AddressbookMultiget multiget = XmlUnmarshallingUtil.unmarshal(inputStreamClone1,
 						AddressbookMultiget.class);
 				return this.handleAdressbookMultigetRequest(adressbuch.get(), multiget);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 					final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
 							SyncCollection.class);
 					return this.handleSyncCollectionRequest(adressbuch.get(), syncCollection);
 				} catch (final IOException e2) {
-					throw new UnsupportedOperationException("Error beim Unmarshalling des Inputstreams (Weder Multiget noch Sync-Collection bei REPORT Addressbook): " + e2.getMessage(), e2);
+					throw new UnsupportedOperationException(
+							"Error beim Unmarshalling des Inputstreams (Weder Multiget noch Sync-Collection bei REPORT Addressbook): " + e2.getMessage(), e2);
 				}
 			}
 		}
@@ -147,7 +148,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                     Adressbuch.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<AdressbuchEintrag> getEintraegeByHrefs(@NotNull final Adressbuch adressbuch, final List<String> eintragHrefs) {
+	private List<AdressbuchEintrag> getEintraegeByHrefs(final @NotNull Adressbuch adressbuch, final List<String> eintragHrefs) {
 		uriParameter.setResourceCollectionId(adressbuch.id);
 		adressbuch.adressbuchEintraege.forEach(this::modifyEintragUri);
 		return adressbuch.adressbuchEintraege.stream().filter(k -> eintragHrefs.contains(k.uri)).toList();

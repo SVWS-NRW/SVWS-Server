@@ -84,24 +84,25 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 			//Versuche Multiget
 			final CalendarMultiget multiget = XmlUnmarshallingUtil.unmarshal(inputStreamClone1,
 					CalendarMultiget.class);
-				inputStreamAsByteArray.close();
-				return this.handleCalendarMultigetRequest(kalender.get(), multiget);
-		} catch (IOException e1) {
+			inputStreamAsByteArray.close();
+			return this.handleCalendarMultigetRequest(kalender.get(), multiget);
+		} catch (final IOException e1) {
 			// Kein Multiget, versuche Sync-Collection
 			try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 				final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
 						SyncCollection.class);
-					inputStreamAsByteArray.close();
-					return this.handleSyncCollectionRequest(kalender.get(), syncCollection);
-			} catch (Exception e2) {
+				inputStreamAsByteArray.close();
+				return this.handleSyncCollectionRequest(kalender.get(), syncCollection);
+			} catch (final Exception e2) {
 				// Kein Sync-Collection, Versuche CalendarQuery
 				try (InputStream inputStreamClone3 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
 					final CalendarQuery calendarQuery = XmlUnmarshallingUtil.unmarshal(inputStreamClone3,
 							CalendarQuery.class);
-						inputStreamAsByteArray.close();
-						return this.handleCalendarQueryRequest(kalender.get(), calendarQuery);
-				} catch (Exception e3) {
-					throw new UnsupportedOperationException("Weder Multiget noch Sync-Collection noch CalendarQuery bei REPORT Calendar: " + e3.getMessage(), e3);
+					inputStreamAsByteArray.close();
+					return this.handleCalendarQueryRequest(kalender.get(), calendarQuery);
+				} catch (final Exception e3) {
+					throw new UnsupportedOperationException("Weder Multiget noch Sync-Collection noch CalendarQuery bei REPORT Calendar: " + e3.getMessage(),
+							e3);
 				}
 			}
 		}
@@ -193,7 +194,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                     Kalender.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<KalenderEintrag> getEintraegeByHrefs(@NotNull final Kalender kalender, final List<String> eintragHrefs) {
+	private List<KalenderEintrag> getEintraegeByHrefs(final @NotNull Kalender kalender, final List<String> eintragHrefs) {
 		uriParameter.setResourceCollectionId(kalender.id);
 		return kalender.kalenderEintraege.stream().filter(k -> {
 			uriParameter.setResourceId(k.uid);
@@ -257,15 +258,15 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 		Predicate<KalenderEintrag> ressourceTypePredicate = e -> true;
 		Predicate<KalenderEintrag> componentTypePredicate = e -> true;
 		Predicate<KalenderEintrag> timeRangePredicate = e -> true;
-		if (calendarQuery != null && calendarQuery.getFilter() != null
-				&& calendarQuery.getFilter().getCompFilter() != null) {
+		if ((calendarQuery != null) && (calendarQuery.getFilter() != null)
+				&& (calendarQuery.getFilter().getCompFilter() != null)) {
 
 			CompFilter filter = calendarQuery.getFilter().getCompFilter();
 			// Filter für die Art der Ressource, bspw. VCALENDAR (andere
 			// Einträge haben wir nicht)
 			final String ressourceTypeFilter = filter.getName();
 			if (ressourceTypeFilter != null) {
-				ressourceTypePredicate = e -> e.data != null && e.data.startsWith("BEGIN:" + ressourceTypeFilter);
+				ressourceTypePredicate = e -> (e.data != null) && e.data.startsWith("BEGIN:" + ressourceTypeFilter);
 			}
 
 			if (filter.getCompFilter() != null) {
@@ -273,10 +274,10 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 				final String componentTypeFilter = filter.getName();
 				if (componentTypeFilter != null) {
 					// component type, bspw VEVENT, VTODO, VFREEBUSY oder VTIMEZONE
-					componentTypePredicate = e -> e.data != null && e.data.contains("BEGIN:" + componentTypeFilter);
+					componentTypePredicate = e -> (e.data != null) && e.data.contains("BEGIN:" + componentTypeFilter);
 				}
-				if (filter.getTimeRange() != null && filter.getTimeRange().getStart() != null
-						&& filter.getTimeRange().getEnd() != null) {
+				if ((filter.getTimeRange() != null) && (filter.getTimeRange().getStart() != null)
+						&& (filter.getTimeRange().getEnd() != null)) {
 					final TimeRange timeRange = filter.getTimeRange();
 					final Instant timeRangeMin = DateTimeUtil.parseCalDav(timeRange.getStart());
 					final Instant timeRangeMax = DateTimeUtil.parseCalDav(timeRange.getEnd());

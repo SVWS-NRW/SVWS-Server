@@ -60,7 +60,7 @@ abstract class DavDispatcher {
 	 * @param propResponded Gefundene/Ermittelte Properties zu einer Ressource
 	 * @return Response-Objekt
 	 */
-	protected static final Response createResponse(@NotNull final Prop propRequested, @NotNull final Prop propResponded) {
+	protected static final Response createResponse(final @NotNull Prop propRequested, final @NotNull Prop propResponded) {
 		final Response response = new Response();
 		final Propstat propStat200 = new Propstat();
 		propStat200.setStatus(Propstat.PROP_STATUS_200_OK);

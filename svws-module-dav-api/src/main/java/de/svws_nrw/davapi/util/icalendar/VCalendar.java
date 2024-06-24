@@ -156,7 +156,7 @@ public class VCalendar {
 	 * @return ein VCalendarobjekt, welches den gegebenen String geparst
 	 *         repräsentiert
 	 */
-	public static VCalendar parse(@NotNull final String vCalendarString) {
+	public static VCalendar parse(final @NotNull String vCalendarString) {
 		final VCalendar result = new VCalendar(vCalendarString);
 		result.parse();
 		return result;
@@ -197,10 +197,10 @@ public class VCalendar {
 	 *              Endzeitpunkt enthält
 	 */
 	private void updateMinStartAndMaxEnd(final VEvent event) {
-		if (this.maxEnd == null || event.getDTEnd().compareTo(this.maxEnd) > 0) {
+		if ((this.maxEnd == null) || (event.getDTEnd().compareTo(this.maxEnd) > 0)) {
 			this.maxEnd = event.getDTEnd();
 		}
-		if (this.minStart == null || event.getDTStart().compareTo(this.minStart) < 0) {
+		if ((this.minStart == null) || (event.getDTStart().compareTo(this.minStart) < 0)) {
 			this.minStart = event.getDTStart();
 		}
 	}
@@ -214,7 +214,7 @@ public class VCalendar {
 	 * @return den VCalendarpayload in dem alle Zeilenumbrüche für Folding entfernt
 	 *         wurden
 	 */
-	private static @NotNull String unfold(@NotNull final String vCalendarString) {
+	private static @NotNull String unfold(final @NotNull String vCalendarString) {
 		return vCalendarString.replace(FOLDING_SEPERATOR_SPACE, "").replace(FOLDING_SEPERATOR_HTAB, "");
 	}
 

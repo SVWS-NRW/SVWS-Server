@@ -41,7 +41,7 @@ public final class CategoriesProperty implements VCardProperty {
 	 *
 	 * @param category die Kategorie
 	 */
-	public CategoriesProperty(@NotNull final String category) {
+	public CategoriesProperty(final @NotNull String category) {
 		this.categories.add(category);
 	}
 

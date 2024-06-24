@@ -119,7 +119,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(@NotNull final String adressbuchId, final CollectionRessourceQueryParameters params) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(final @NotNull String adressbuchId, final CollectionRessourceQueryParameters params) {
 		final AdressbuchContactTypes adressbuchEnum = AdressbuchContactTypes.valueOf(adressbuchId.toUpperCase());
 		final List<AdressbuchEintrag> result = switch (adressbuchEnum) {
 			case SCHUELER -> {

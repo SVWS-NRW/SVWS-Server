@@ -191,7 +191,7 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 		davRessource.kalenderEnde = kalenderEintrag.kalenderEnde;
 		davRessource.kalenderTyp = kalenderEintrag.kalenderTyp;
 		davRessource.uid = kalenderEintrag.uid;
-		if (kalenderEintrag.version != null && !kalenderEintrag.version.isBlank()) {
+		if ((kalenderEintrag.version != null) && !kalenderEintrag.version.isBlank()) {
 			davRessource.syncToken = Long.parseLong(kalenderEintrag.version);
 		}
 		final Optional<DavRessource> upsertDavRessource = davRepository.upsertDavRessource(davRessource);

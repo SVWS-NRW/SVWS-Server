@@ -133,7 +133,7 @@ public final class XmlUnmarshallingUtil {
 		final ObjectMapper mapper = new XmlMapper(module);
 		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-		DeserializationConfig deserializationConfig = mapper.getDeserializationConfig();
+		final DeserializationConfig deserializationConfig = mapper.getDeserializationConfig();
 		deserializationConfig.with(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
 		mapper.setConfig(deserializationConfig);
 		return mapper;

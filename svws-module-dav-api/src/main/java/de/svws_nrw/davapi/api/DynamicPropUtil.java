@@ -27,7 +27,7 @@ class DynamicPropUtil {
 	 *
 	 * @param propRequested Prop-Objekt aus dem Request.
 	 */
-	DynamicPropUtil(@NotNull final Prop propRequested) {
+	DynamicPropUtil(final @NotNull Prop propRequested) {
 		this.propRequested = propRequested;
 		this.fieldsRequested = this.getPropsFieldsNotNull(propRequested);
 	}
@@ -39,7 +39,7 @@ class DynamicPropUtil {
 	 * @return true, falls die Property zur gegebenen Typklasse im Prop-Objekt
 	 *         enthalten ist.
 	 */
-	protected final boolean getIsFieldRequested(@NotNull final Class<?> fieldType) {
+	protected final boolean getIsFieldRequested(final @NotNull Class<?> fieldType) {
 		for (final Field field : fieldsRequested) {
 			if (field.getType() == fieldType) {
 				return true;
@@ -55,7 +55,7 @@ class DynamicPropUtil {
 	 * @return Liste der angefragten Properties als Field-Objekte (Relection)
 	 */
 	@SuppressWarnings("static-method")
-	private List<Field> getPropsFieldsNotNull(@NotNull final Prop propRequested) {
+	private List<Field> getPropsFieldsNotNull(final @NotNull Prop propRequested) {
 		final Field[] fields = propRequested.getClass().getDeclaredFields();
 		final List<Field> requestedFields = new ArrayList<>();
 		for (final Field field : fields) {
@@ -80,7 +80,7 @@ class DynamicPropUtil {
 	 * @return Prop-Objekt mit allen nicht-unterstützten Properties, bzw. null,
 	 *         falls keine nicht-unterstützten Properties gefunden wurden.
 	 */
-	public Prop getUnsupportedProps(@NotNull final Prop propResponded) {
+	public Prop getUnsupportedProps(final @NotNull Prop propResponded) {
 		final List<Field> requestedFields = getPropsFieldsNotNull(propRequested);
 		final List<Field> respondedFields = getPropsFieldsNotNull(propResponded);
 		final List<Field> fds = requestedFields.stream().filter(f -> !respondedFields.contains(f)).toList();

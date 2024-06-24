@@ -104,16 +104,16 @@ public class DavUriParameter {
 	public Map<String, String> toMap() {
 		final Map<String, String> parameters = new HashMap<>();
 
-		if (this.schema != null && !this.schema.isBlank()) {
+		if ((this.schema != null) && !this.schema.isBlank()) {
 			parameters.put("schema", this.schema);
 		}
-		if (this.benutzerId != null && !this.benutzerId.isBlank()) {
+		if ((this.benutzerId != null) && !this.benutzerId.isBlank()) {
 			parameters.put("benutzerId", this.benutzerId);
 		}
-		if (this.resourceCollectionId != null && !this.resourceCollectionId.isBlank()) {
+		if ((this.resourceCollectionId != null) && !this.resourceCollectionId.isBlank()) {
 			parameters.put("resourceCollectionId", this.resourceCollectionId);
 		}
-		if (this.resourceId != null && !this.resourceId.isBlank()) {
+		if ((this.resourceId != null) && !this.resourceId.isBlank()) {
 			parameters.put("resourceId", this.resourceId);
 		}
 		return parameters;

@@ -163,7 +163,8 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 				aktuellerSchuljahresabschnitt.ID);
 		final Map<Long, DTOKurs> kursNameById = dtoKursResult.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final List<DTOKursSchueler> dtoKursSchuelerQueryResult = kursNameById.isEmpty() ? new ArrayList<>()
-				: conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursNameById.keySet());
+				: conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class,
+						kursNameById.keySet());
 		for (final DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
 			final Set<String> listForSchuelerId = result.computeIfAbsent(dtoKursSchueler.Schueler_ID, s -> new HashSet<>());
 			if (kursNameById.containsKey(dtoKursSchueler.Kurs_ID)) {

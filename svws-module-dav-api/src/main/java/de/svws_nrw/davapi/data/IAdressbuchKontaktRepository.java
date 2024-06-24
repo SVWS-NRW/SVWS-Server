@@ -28,8 +28,8 @@ public interface IAdressbuchKontaktRepository {
 	/**
 	 * Filter für SchuelerDTOs
 	 */
-	Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && (s.Status == SchuelerStatus.AKTIV
-			|| s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME);
+	Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && ((s.Status == SchuelerStatus.AKTIV)
+			|| (s.Status == SchuelerStatus.EXTERN) || (s.Status == SchuelerStatus.NEUAUFNAHME));
 
 	/**
 	 * Ermittelt eine Liste aller Kontakte aus einem Adressbuch mir der angegebenen
@@ -55,7 +55,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @return einen AdressbuchEintrag für den Schueler
 	 */
 	static AdressbuchEintrag mapDTOSchuelerToKontakt(final DTOSchueler dtoSchueler, final List<Telefonnummer> telefonnummern,
-			final DTOOrt ort, @NotNull final Set<String> categories, final String schulName) {
+			final DTOOrt ort, final @NotNull Set<String> categories, final String schulName) {
 		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.id = createSchuelerId(dtoSchueler.ID);
 		k.email = dtoSchueler.Email;
@@ -70,7 +70,7 @@ public interface IAdressbuchKontaktRepository {
 
 		applyOrtToKontakt(k, ort);
 		if (categories != null)
-		    k.kategorien.addAll(categories);
+			k.kategorien.addAll(categories);
 		k.strassenname = dtoSchueler.Strassenname;
 		k.vorname = dtoSchueler.Vorname;
 		k.rolle = "Schüler";
@@ -89,7 +89,7 @@ public interface IAdressbuchKontaktRepository {
 	static void addStandardTelefonnummer(final String standardTelefonnummer, final List<Telefonnummer> telefonnummern,
 			final String type) {
 		// kommentiert als Fax oder Mobilnummer, laut Hr Bachran i.d.R. Mobilnummer
-		if (standardTelefonnummer == null || type == null)
+		if ((standardTelefonnummer == null) || (type == null))
 			return;
 		final boolean duplicateNumber = telefonnummern.stream()
 				.anyMatch(t -> t.number.replace("\\D+", "").equals(standardTelefonnummer.replace("\\D+", "")));

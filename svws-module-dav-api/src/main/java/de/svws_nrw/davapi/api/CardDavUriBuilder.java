@@ -43,16 +43,16 @@ public final class CardDavUriBuilder {
 
 	}
 
-    /**
-     * Generiert die URI zur CardDAV Root-Ressource
-     * @param parameter Parameter für den Aufbau der URI
-     * @return URI zur Ressource als String.
-     */
-    static String getCardDavRootUri(@NotNull final CardDavUriParameter parameter) {
-        final UriBuilder uriBuilder = UriBuilder.fromPath(CARD_DAV_BASE_URI_PATTERN);
-        final URI uri = uriBuilder.buildFromMap(parameter.toMap());
-        return uri.toASCIIString();
-    }
+	/**
+	 * Generiert die URI zur CardDAV Root-Ressource
+	 * @param parameter Parameter für den Aufbau der URI
+	 * @return URI zur Ressource als String.
+	 */
+	static String getCardDavRootUri(final @NotNull CardDavUriParameter parameter) {
+		final UriBuilder uriBuilder = UriBuilder.fromPath(CARD_DAV_BASE_URI_PATTERN);
+		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
+		return uri.toASCIIString();
+	}
 
 	/**
 	 * Generiert die URI zu einer Adressbuch-Ressource
@@ -60,7 +60,7 @@ public final class CardDavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAddressbookUri(@NotNull final CardDavUriParameter parameter) {
+	static String getAddressbookUri(final @NotNull CardDavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(CARD_DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -73,7 +73,7 @@ public final class CardDavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAddressbookCollectionUri(@NotNull final CardDavUriParameter parameter) {
+	static String getAddressbookCollectionUri(final @NotNull CardDavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(CARD_DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK_COLLECTION));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -86,7 +86,7 @@ public final class CardDavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAdressEntryUri(@NotNull final CardDavUriParameter parameter) {
+	static String getAdressEntryUri(final @NotNull CardDavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(CARD_DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADRESS_ENTRY));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -99,7 +99,7 @@ public final class CardDavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getPrincipalUri(@NotNull final CardDavUriParameter parameter) {
+	static String getPrincipalUri(final @NotNull CardDavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(CARD_DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_PRINCIPAL));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());

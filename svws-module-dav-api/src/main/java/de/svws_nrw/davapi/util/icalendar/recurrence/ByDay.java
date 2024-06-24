@@ -125,7 +125,7 @@ public final class ByDay implements Comparable<ByDay> {
 		if (getClass() != obj.getClass())
 			return false;
 		final ByDay other = (ByDay) obj;
-		return ordinal == other.ordinal && weekDay == other.weekDay;
+		return (ordinal == other.ordinal) && (weekDay == other.weekDay);
 	}
 
 	/**

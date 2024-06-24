@@ -53,7 +53,7 @@ public final class DateTimeUtil {
 	 * @param zone  die Zeitzone in die der String geparst werden soll
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull final String input, @NotNull final String zone) {
+	public static Instant parseCalDav(final @NotNull String input, final @NotNull String zone) {
 		ZoneId zoneId = null;
 		if (ZoneId.getAvailableZoneIds().contains(zone)) {
 			zoneId = ZoneId.of(zone);
@@ -76,7 +76,7 @@ public final class DateTimeUtil {
 	 * @param input der Input-String aus einem .ics File
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull final String input) {
+	public static Instant parseCalDav(final @NotNull String input) {
 		try {
 			return ZonedDateTime.parse(input, DAV_ISO_FORMATTER_WITHZONE).toInstant();
 		} catch (final DateTimeParseException dtpe) {
@@ -93,7 +93,7 @@ public final class DateTimeUtil {
 	 * @param property das Property aus dem der Zeitpunkt genutzt werden soll
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull final IProperty property) {
+	public static Instant parseCalDav(final @NotNull IProperty property) {
 		final String[] split = property.getKey().split(";");
 		String zone = null;
 		boolean isDate = false;
@@ -120,7 +120,7 @@ public final class DateTimeUtil {
 	 * @param instant das Instant
 	 * @return der String, der den Zeitpunkt repräsentiert
 	 */
-	public static String toSQLTimeStamp(@NotNull final Instant instant) {
+	public static String toSQLTimeStamp(final @NotNull Instant instant) {
 		return DatumUhrzeitConverter.instance.convertToEntityAttribute(Timestamp.from(instant));
 	}
 
@@ -132,7 +132,7 @@ public final class DateTimeUtil {
 	 * @param sql der String für den SQL-Timestamp
 	 * @return den Zeitpunkt aus dem SQLTimestamp
 	 */
-	public static Instant fromSqlTimeStamp(@NotNull final String sql) {
+	public static Instant fromSqlTimeStamp(final @NotNull String sql) {
 		return DatumUhrzeitConverter.instance.convertToDatabaseColumn(sql).toInstant();
 	}
 
@@ -188,7 +188,7 @@ public final class DateTimeUtil {
 			rangeStart = rangeEnd;
 			rangeEnd = buf;
 		}
-		return instant.compareTo(pRangeStart) >= 0 && instant.compareTo(pRangeEnd) <= 0;
+		return (instant.compareTo(pRangeStart) >= 0) && (instant.compareTo(pRangeEnd) <= 0);
 	}
 
 	/**

@@ -620,7 +620,7 @@ public final class RRule implements IProperty {
 	 * @return das maximale Datum entsprechend der hier definierten Regeln.
 	 */
 	public Instant getMaxInstant(final Instant dtStart) {
-		if (this.limit == null || this.limit.getUntil() != null) {
+		if ((this.limit == null) || (this.limit.getUntil() != null)) {
 			return Instant.MAX; // cutoff, Recurrence Rules auswerten nicht funktional.
 		}
 		return this.limit.getUntil();

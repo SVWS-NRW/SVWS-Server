@@ -104,16 +104,16 @@ public class CardDavUriParameter {
 	public Map<String, String> toMap() {
 		final Map<String, String> parameters = new HashMap<>();
 
-		if (this.schema != null && !this.schema.isBlank()) {
+		if ((this.schema != null) && !this.schema.isBlank()) {
 			parameters.put("schema", this.schema);
 		}
-		if (this.benutzerId != null && !this.benutzerId.isBlank()) {
+		if ((this.benutzerId != null) && !this.benutzerId.isBlank()) {
 			parameters.put("benutzerId", this.benutzerId);
 		}
-		if (this.adressbuchId != null && !this.adressbuchId.isBlank()) {
+		if ((this.adressbuchId != null) && !this.adressbuchId.isBlank()) {
 			parameters.put("adressbuchId", this.adressbuchId);
 		}
-		if (this.adressbuchEintragId != null && !this.adressbuchEintragId.isBlank()) {
+		if ((this.adressbuchEintragId != null) && !this.adressbuchEintragId.isBlank()) {
 			parameters.put("adressbuchEintragId", this.adressbuchEintragId);
 		}
 		return parameters;

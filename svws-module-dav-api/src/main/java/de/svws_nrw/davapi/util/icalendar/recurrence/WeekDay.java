@@ -58,22 +58,22 @@ public enum WeekDay {
 	 */
 	public static WeekDay fromStringRep(final String string) {
 		switch (string) {
-		case "SU":
-			return SUNDAY;
-		case "MO":
-			return MONDAY;
-		case "TU":
-			return TUESDAY;
-		case "WE":
-			return WEDNESDAY;
-		case "TH":
-			return THURSDAY;
-		case "FR":
-			return FRIDAY;
-		case "SA":
-			return SATURDAY;
-		default:
-			return valueOf(string);
+			case "SU":
+				return SUNDAY;
+			case "MO":
+				return MONDAY;
+			case "TU":
+				return TUESDAY;
+			case "WE":
+				return WEDNESDAY;
+			case "TH":
+				return THURSDAY;
+			case "FR":
+				return FRIDAY;
+			case "SA":
+				return SATURDAY;
+			default:
+				return valueOf(string);
 		}
 	}
 }

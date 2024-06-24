@@ -31,7 +31,8 @@ public interface IKalenderRepository {
 	 * @param params QueryParameter zum Filtern des Inhalts der Adressbuecher
 	 * @return Liste verfügbarer Adressbücher.
 	 */
-	@NotNull List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params);
+	@NotNull
+	List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params);
 
 	/**
 	 * Sucht die gelöschten Ressourcen-UIDs einer Ressourcensammlung seit einem

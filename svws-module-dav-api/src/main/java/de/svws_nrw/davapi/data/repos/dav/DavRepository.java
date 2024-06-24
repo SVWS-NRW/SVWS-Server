@@ -72,7 +72,7 @@ public final class DavRepository implements IDavRepository {
 			return new ArrayList<>();
 		}
 		return conn.queryList(DTODavRessource.QUERY_LIST_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class,
-						readableCollectionACLPermissionsByCollectionId.keySet())
+				readableCollectionACLPermissionsByCollectionId.keySet())
 				.stream().filter(dto -> dto.geloeschtam == null).map(dto -> mapDTODavRessource(dto, parameters,
 						readableCollectionACLPermissionsByCollectionId.get(dto.DavRessourceCollection_ID)))
 				.toList();
@@ -86,7 +86,7 @@ public final class DavRepository implements IDavRepository {
 			// ändern, wenn sie die Benutzerkompetenz haben
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
-		DTODavRessourceCollection dtoCollection;
+		final DTODavRessourceCollection dtoCollection;
 		final String currentSynctoken = getNewSyncTokenTimestampAsString();
 		conn.transactionBegin();
 		boolean aclEntryNeeded = false;
@@ -113,7 +113,7 @@ public final class DavRepository implements IDavRepository {
 			dtoCollection.Beschreibung = davRessourceCollection.beschreibung;
 			dtoCollection.SyncToken = currentSynctoken;
 			dtoCollection.Typ = davRessourceCollection.typ;
-			if (user.istAdmin() && davRessourceCollection.besitzer != null) {
+			if (user.istAdmin() && (davRessourceCollection.besitzer != null)) {
 				// Benutzer id darf nur vom Admin geändert werden.
 				dtoCollection.Benutzer_ID = davRessourceCollection.besitzer;
 			}
@@ -149,7 +149,7 @@ public final class DavRepository implements IDavRepository {
 	 */
 	private Long getNextId(final String tableName) {
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, tableName);
-		return lastID == null ? 1 : lastID.MaxID + 1;
+		return (lastID == null) ? 1 : (lastID.MaxID + 1);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public final class DavRepository implements IDavRepository {
 	 */
 	private boolean allowUpsertCollection(final DavRessourceCollection davRessourceCollection) {
 		return !user.istAdmin() && !(user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)
-				&& user.getId().equals(davRessourceCollection.besitzer) && davRessourceCollection.id != null);
+				&& user.getId().equals(davRessourceCollection.besitzer) && (davRessourceCollection.id != null));
 	}
 
 	/**
@@ -185,11 +185,11 @@ public final class DavRepository implements IDavRepository {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		final String currentSynctoken = getNewSyncTokenTimestampAsString();
-		DTODavRessource dtoDavRessource;
+		final DTODavRessource dtoDavRessource;
 		conn.transactionBegin();
 		final List<DTODavRessource> davRessourcesWithSameUID = conn
 				.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class, davRessource.ressourceCollectionId)
-				.stream().filter(r -> r.geloeschtam == null && r.UID.equals(davRessource.uid)).toList();
+				.stream().filter(r -> (r.geloeschtam == null) && r.UID.equals(davRessource.uid)).toList();
 		if (davRessourcesWithSameUID.size() == 1) {
 			davRessource.id = davRessourcesWithSameUID.get(0).ID;
 		}
@@ -231,21 +231,21 @@ public final class DavRepository implements IDavRepository {
 		conn.transactionBegin();
 		final DTODavRessourceCollection dtoDavRessourceCollection = conn.queryByKey(DTODavRessourceCollection.class,
 				davRessourceCollectionACLPermissions.getRessourceCollectionId());
-		if (!user.istAdmin() && dtoDavRessourceCollection.Benutzer_ID != user.getId()) {
+		if (!user.istAdmin() && (dtoDavRessourceCollection.Benutzer_ID != user.getId())) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		final List<DTODavRessourceCollectionsACL> dtoACLs = conn
 				.queryList(DTODavRessourceCollectionsACL.QUERY_BY_RESSOURCECOLLECTION_ID, DTODavRessourceCollectionsACL.class, dtoDavRessourceCollection.ID)
 				.stream().filter(dto -> dto.Benutzer_ID == conn.getUser().getId()).toList();
-		DTODavRessourceCollectionsACL dtoACL;
+		final DTODavRessourceCollectionsACL dtoACL;
 		if (dtoACLs.size() == 1) {
 			dtoACL = dtoACLs.get(0);
 			dtoACL.berechtigungen = davRessourceCollectionACLPermissions.toPermissionString();
 		} else {
 
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollectionsACL");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
 
 			dtoACL = new DTODavRessourceCollectionsACL(id, davRessourceCollectionACLPermissions.getBenutzerId(),
 					davRessourceCollectionACLPermissions.getRessourceCollectionId(),
@@ -296,7 +296,7 @@ public final class DavRepository implements IDavRepository {
 		conn.transactionBegin();
 		final List<DTODavRessource> listDavRessourcesSameUID = conn.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID,
 				DTODavRessource.class, collectionId).stream().filter(r -> r.UID.equals(ressourceUID)).toList();
-		if (listDavRessourcesSameUID.size() != 1 || listDavRessourcesSameUID.get(0).geloeschtam != null) {
+		if ((listDavRessourcesSameUID.size() != 1) || (listDavRessourcesSameUID.get(0).geloeschtam != null)) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
 		}
@@ -365,7 +365,7 @@ public final class DavRepository implements IDavRepository {
 
 		final DTOSchemaAutoInkremente lastCollectionsID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollections");
 		final DTODavRessourceCollection eigenerKalender = new DTODavRessourceCollection(user.getId(),
-				lastCollectionsID == null ? 1 : lastCollectionsID.MaxID + 1, typ, "Eigener Kalender",
+				(lastCollectionsID == null) ? 1 : (lastCollectionsID.MaxID + 1), typ, "Eigener Kalender",
 				getNewSyncTokenTimestampAsString());
 		eigenerKalender.Beschreibung = "Ein eigener Kalender mit Lese- und Schreibrechten für Sie.";
 		if (!conn.transactionPersist(eigenerKalender)) {
@@ -374,7 +374,7 @@ public final class DavRepository implements IDavRepository {
 		}
 
 		final DTOSchemaAutoInkremente lastACLID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollectionsACL");
-		final Long newAclID = lastACLID == null ? 1 : lastACLID.MaxID + 1;
+		final Long newAclID = (lastACLID == null) ? 1 : (lastACLID.MaxID + 1);
 
 		final DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,
 				eigenerKalender.ID, user.getId());
@@ -415,7 +415,7 @@ public final class DavRepository implements IDavRepository {
 		r.uid = dto.UID;
 		r.permissions = permissions;
 		r.syncToken = DateTimeUtil.getTimeInMillis(dto.lastModified);
-		if (parameters != null && parameters.includeEintragPayload) {
+		if ((parameters != null) && parameters.includeEintragPayload) {
 			r.kalenderEnde = dto.KalenderEnde;
 			r.kalenderStart = dto.KalenderStart;
 			r.kalenderTyp = dto.KalenderTyp;
@@ -496,7 +496,7 @@ public final class DavRepository implements IDavRepository {
 	 */
 	private Optional<DavRessourceCollectionACLPermissions> isWritableCollection(final Long ressourceCollectionId) {
 		final DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, ressourceCollectionId);
-		if (queryByKey != null && queryByKey.geloeschtam != null
+		if ((queryByKey != null) && (queryByKey.geloeschtam != null)
 				&& (user.getId().equals(queryByKey.Benutzer_ID) || user.istAdmin())) {
 			// besitzer und admin dürfen schreiben
 			return Optional.of(new DavRessourceCollectionACLPermissions(true, true, ressourceCollectionId,

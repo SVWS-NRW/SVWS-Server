@@ -12,5 +12,5 @@ public enum VCalendarTyp {
 	/** Typ VJOURNAL */
 	VJOURNAL,
 	/** Typ VFREEBUSY */
-	VFREEBUSY;
+	VFREEBUSY
 }

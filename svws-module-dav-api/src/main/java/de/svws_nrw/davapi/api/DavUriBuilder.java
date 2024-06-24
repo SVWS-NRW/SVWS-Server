@@ -56,16 +56,16 @@ public final class DavUriBuilder {
 		throw new IllegalStateException("Utility class");
 	}
 
-    /**
-     * Generiert die URI zur CardDAV Root-Ressource
-     * @param parameter Parameter für den Aufbau der URI
-     * @return URI zur Ressource als String.
-     */
-    static String getCardDavRootUri(@NotNull final DavUriParameter parameter) {
-        final UriBuilder uriBuilder = UriBuilder.fromPath(DAV_BASE_URI_PATTERN);
-        final URI uri = uriBuilder.buildFromMap(parameter.toMap());
-        return uri.toASCIIString();
-    }
+	/**
+	 * Generiert die URI zur CardDAV Root-Ressource
+	 * @param parameter Parameter für den Aufbau der URI
+	 * @return URI zur Ressource als String.
+	 */
+	static String getCardDavRootUri(final @NotNull DavUriParameter parameter) {
+		final UriBuilder uriBuilder = UriBuilder.fromPath(DAV_BASE_URI_PATTERN);
+		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
+		return uri.toASCIIString();
+	}
 
 	/**
 	 * Generiert die URI zu einer Adressbuch-Ressource
@@ -73,7 +73,7 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAddressbookUri(@NotNull final DavUriParameter parameter) {
+	static String getAddressbookUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -86,7 +86,7 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAddressbookCollectionUri(@NotNull final DavUriParameter parameter) {
+	static String getAddressbookCollectionUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK_COLLECTION));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -99,7 +99,7 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getAddressEntryUri(@NotNull final DavUriParameter parameter) {
+	static String getAddressEntryUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_ADDRESS_ENTRY));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -112,7 +112,7 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getPrincipalUri(@NotNull final DavUriParameter parameter) {
+	static String getPrincipalUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
 				.fromPath(DAV_BASE_URI_PATTERN.concat(DAV_REL_URI_PATTERN_PRINCIPAL));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
@@ -125,9 +125,9 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getCalendarCollectionUri(@NotNull final DavUriParameter parameter) {
+	static String getCalendarCollectionUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
-			.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR_COLLECTION));
+				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR_COLLECTION));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
 		return uri.toASCIIString();
 	}
@@ -138,9 +138,9 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getCalendarUri(@NotNull final DavUriParameter parameter) {
+	static String getCalendarUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
-			.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR));
+				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
 		return uri.toASCIIString();
 	}
@@ -151,9 +151,9 @@ public final class DavUriBuilder {
 	 * @param parameter Parameter für den Aufbau der URI
 	 * @return URI zur Ressource als String.
 	 */
-	static String getCalendarEntryUri(@NotNull final DavUriParameter parameter) {
+	static String getCalendarEntryUri(final @NotNull DavUriParameter parameter) {
 		final UriBuilder uriBuilder = UriBuilder
-			.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY));
+				.fromPath(DAV_BASE_URI_PATTERN.concat(CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY));
 		final URI uri = uriBuilder.buildFromMap(parameter.toMap());
 		return uri.toASCIIString();
 	}

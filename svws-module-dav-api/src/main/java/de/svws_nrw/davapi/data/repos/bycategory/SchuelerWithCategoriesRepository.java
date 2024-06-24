@@ -130,7 +130,7 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 
 		for (final DTOSchuelerTelefon dto : dtoSchuelerTelefonQueryResult) {
 			final DTOTelefonArt dtoTelefonArt = telefonArtById.get(dto.TelefonArt_ID);
-			if (dto.Gesperrt.booleanValue() || dto.Telefonnummer == null || !dtoTelefonArt.Sichtbar.booleanValue()) {
+			if (dto.Gesperrt.booleanValue() || (dto.Telefonnummer == null) || !dtoTelefonArt.Sichtbar.booleanValue()) {
 				continue;
 			}
 			List<Telefonnummer> telefonnummern = telefonnummerBySchuelerId.get(dto.Schueler_ID);
@@ -193,7 +193,8 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 		// 'Kurs' + [Jahrgang bei eindeutigkeit] + 'Kursbezeichnung' + [(Jahrgänge bei
 		// nicht-Eindeutigkeit)]
 		final List<DTOKursSchueler> dtoKursSchuelerQueryResult =
-				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursNameById.keySet());
+				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class,
+						kursNameById.keySet());
 		for (final DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
 			final Set<String> listForSchuelerId = result.computeIfAbsent(dtoKursSchueler.Schueler_ID, s -> new HashSet<>());
 			if (kursNameById.containsKey(dtoKursSchueler.Kurs_ID)) {

@@ -129,7 +129,7 @@ public class VCard {
 
 		addSimplePropertyIfNotNull("EMAIL", kontakt.email);
 		addSimplePropertyIfNotNull("URL", kontakt.webAdresse);
-		VCardProperty categoriesProperty;
+		final VCardProperty categoriesProperty;
 		if (kontakt.kategorien.isEmpty())
 			categoriesProperty = new CategoriesProperty(kontakt.adressbuchId);
 		else {
@@ -251,7 +251,7 @@ public class VCard {
 	 *
 	 * @param k die Art der VCard
 	 */
-	public void setKind(@NotNull final Kind k) {
+	public void setKind(final @NotNull Kind k) {
 		this.kind = k;
 	}
 
@@ -280,7 +280,7 @@ public class VCard {
 	 *
 	 * @param version die Version
 	 */
-	public void setVersion(@NotNull final Version version) {
+	public void setVersion(final @NotNull Version version) {
 		this.version = version;
 	}
 
@@ -294,7 +294,7 @@ public class VCard {
 	 * @param sb
 	 */
 	private void serializeProperty(final VCardProperty property, final StringBuilder sb) {
-		if (property instanceof RelatedProperty && this.version != Version.V4) {
+		if ((property instanceof RelatedProperty) && (this.version != Version.V4)) {
 			return;
 		}
 		property.serializeType(sb);
@@ -352,7 +352,7 @@ public class VCard {
 		/**
 		 * das KIND Property für die Art der VCard
 		 */
-		private VCardProperty property;
+		private final VCardProperty property;
 		/**
 		 * Konstante für den Type String
 		 */
@@ -376,7 +376,7 @@ public class VCard {
 	 * @return die VCard, die diesen Adressbucheintrag repräsentiert.
 	 */
 	public static VCard createVCard(final AdressbuchEintrag eintrag) {
-		VCard result;
+		final VCard result;
 		if (eintrag instanceof final AdressbuchKontakt k) {
 			result = new VCard(k);
 		} else if (eintrag instanceof final AdressbuchKontaktListe kl) {
