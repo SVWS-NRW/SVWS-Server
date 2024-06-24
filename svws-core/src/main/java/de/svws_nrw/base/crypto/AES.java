@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class AES {
 
 	/** Ein Zufallszahlen-Generator für kryptographisch starke Zufallszahlen (RNG). */
-	private static SecureRandom random = new SecureRandom();
+	private static final SecureRandom random = new SecureRandom();
 
 
 	/** Das zu verwendende AES-Verfahren */

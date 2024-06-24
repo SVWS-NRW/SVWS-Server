@@ -162,7 +162,7 @@ public final class ResourceUtils {
 	@SuppressWarnings("resource")
 	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension)
 			throws IOException {
-		URI uri;
+		final URI uri;
 		try {
 			uri = url.toURI();
 		} catch (@SuppressWarnings("unused") final URISyntaxException e) {
@@ -199,7 +199,7 @@ public final class ResourceUtils {
 	 */
 	public static List<Path> getFilesInPackage(final String packageName, final String fileextension) {
 		final List<Path> result = new ArrayList<>();
-		Enumeration<URL> res;
+		final Enumeration<URL> res;
 		try {
 			final String packagePath = packageName.replace(".", "/");
 			res = ResourceUtils.class.getClassLoader().getResources(packagePath);

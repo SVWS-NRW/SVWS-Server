@@ -42,7 +42,7 @@ public final class CsvReader {
 	 * @throws IOException   wenn die Zip-Datei nicht geöffnet werden konnte
 	 * @throws IllegalArgumentException   wenn der Pfad nicht dem RFC 2396 entspricht
 	 */
-	private static @NotNull FileSystem getZipFileSystem(@NotNull final String zipLocation) throws IOException, IllegalArgumentException {
+	private static @NotNull FileSystem getZipFileSystem(final @NotNull String zipLocation) throws IOException, IllegalArgumentException {
 		final URI uri = URI.create(zipLocation);
 		try {
 			return FileSystems.getFileSystem(uri);
