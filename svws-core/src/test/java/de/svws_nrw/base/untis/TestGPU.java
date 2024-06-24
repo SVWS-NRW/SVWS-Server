@@ -44,7 +44,8 @@ class TestGPU {
 			final String strGPU002 = Files.readString(path);
 			final List<UntisGPU002> unterrichte = UntisGPU002.readCSV(strGPU002);
 			for (final UntisGPU002 unterricht : unterrichte)
-				System.out.println(unterricht.idUnterricht + " -> " + unterricht.wochenTyp + " " + unterricht.klasseKuerzel + " " + unterricht.fachKuerzel + " " + unterricht.lehrerKuerzel);
+				System.out.println(unterricht.idUnterricht + " -> " + unterricht.wochenTyp + " " + unterricht.klasseKuerzel + " " + unterricht.fachKuerzel + " "
+						+ unterricht.lehrerKuerzel);
 		} catch (final Exception e) {
 			fail(e);
 		}

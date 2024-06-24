@@ -1329,7 +1329,8 @@ class TestAVLMapRandom {
 					fail("map2.equals(map2) == false");
 
 			}
-			default -> { /**/ }
+			default -> {
+				/**/ }
 		} // ... end of switch
 	}
 
@@ -1337,7 +1338,7 @@ class TestAVLMapRandom {
 		try {
 			set.last();
 			return false;
-		} catch (@SuppressWarnings("unused")  Exception ex) {
+		} catch (@SuppressWarnings("unused") Exception ex) {
 			return true;
 		}
 	}
@@ -1346,7 +1347,7 @@ class TestAVLMapRandom {
 		try {
 			set.first();
 			return false;
-		} catch (@SuppressWarnings("unused")  Exception ex) {
+		} catch (@SuppressWarnings("unused") Exception ex) {
 			return true;
 		}
 	}
@@ -1355,7 +1356,7 @@ class TestAVLMapRandom {
 		try {
 			i.remove();
 			return false;
-		} catch (@SuppressWarnings("unused")  Exception ex) {
+		} catch (@SuppressWarnings("unused") Exception ex) {
 			return true;
 		}
 	}
@@ -1364,7 +1365,7 @@ class TestAVLMapRandom {
 		try {
 			i.remove();
 			return false;
-		} catch (@SuppressWarnings("unused")  Exception ex) {
+		} catch (@SuppressWarnings("unused") Exception ex) {
 			return true;
 		}
 	}

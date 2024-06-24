@@ -23,140 +23,140 @@ import de.svws_nrw.db.utils.ApiOperationException;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class DataSchuelerKAoADatenTest {
 
-    private SchuelerKAoADaten daten;
+	private SchuelerKAoADaten daten;
 
-    /**
-     * Initialisiert eine Instanz von "SchuelerKAoADaten" und setzt Werte für verschiedene Attribute, um sie später in anderen Methoden verwenden zu können.
-     */
-    @BeforeEach
-    void setup() {
-        final SchuelerKAoADaten daten = new SchuelerKAoADaten();
-        daten.id = 135L;
-        daten.jahrgang = "09";
-        daten.kategorie = 14L;
-        daten.merkmal = 69L;
-        daten.zusatzmerkmal = 117L;
-        daten.anschlussoption = 22L;
-        daten.berufsfeld = 12L;
-        daten.ebene4 = 4L;
-        daten.bemerkung = "test text 123";
-        this.daten = daten;
-    }
+	/**
+	 * Initialisiert eine Instanz von "SchuelerKAoADaten" und setzt Werte für verschiedene Attribute, um sie später in anderen Methoden verwenden zu können.
+	 */
+	@BeforeEach
+	void setup() {
+		final SchuelerKAoADaten daten = new SchuelerKAoADaten();
+		daten.id = 135L;
+		daten.jahrgang = "09";
+		daten.kategorie = 14L;
+		daten.merkmal = 69L;
+		daten.zusatzmerkmal = 117L;
+		daten.anschlussoption = 22L;
+		daten.berufsfeld = 12L;
+		daten.ebene4 = 4L;
+		daten.bemerkung = "test text 123";
+		this.daten = daten;
+	}
 
-    /**
-     * Testet den einen fehlerfreien Fall
-     * @throws ApiOperationException
-     */
-    @Test
-    void testValidateOK() throws ApiOperationException {
-        DataSchuelerKAoADaten.validate(daten);
-    }
+	/**
+	 * Testet den einen fehlerfreien Fall
+	 * @throws ApiOperationException
+	 */
+	@Test
+	void testValidateOK() throws ApiOperationException {
+		DataSchuelerKAoADaten.validate(daten);
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn keine Kategorie gefunden wird
-     */
-    @Test
-    void testValidateKategorieNotFound() {
-        daten.kategorie = -1L;
-        final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn keine Kategorie gefunden wird
+	 */
+	@Test
+	void testValidateKategorieNotFound() {
+		daten.kategorie = -1L;
+		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Kategorie leer ist
-     */
-    @Test
-    void testValidateKategorieNull() {
-        daten.kategorie = -1L;
-        final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Kategorie leer ist
+	 */
+	@Test
+	void testValidateKategorieNull() {
+		daten.kategorie = -1L;
+		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn keine Kategorie gefunden wird
-     */
-    @Test
-    void testValidateMerkmalWrong() {
-        daten.merkmal = 35L;
-        final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn keine Kategorie gefunden wird
+	 */
+	@Test
+	void testValidateMerkmalWrong() {
+		daten.merkmal = 35L;
+		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
+		final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Kategorie leer ist
-     */
-    @Test
-    void testValidateMerkmalNotFound() {
-        daten.merkmal = -1L;
-        final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Kategorie leer ist
+	 */
+	@Test
+	void testValidateMerkmalNotFound() {
+		daten.merkmal = -1L;
+		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
+		final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn kein Zusatzmerkmal gefunden wird
-     */
-    @Test
-    void testValidateZusatzmerkmalWrong() {
-        daten.zusatzmerkmal = 13L;
-        final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn kein Zusatzmerkmal gefunden wird
+	 */
+	@Test
+	void testValidateZusatzmerkmalWrong() {
+		daten.zusatzmerkmal = 13L;
+		final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
+		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Zusatzmerkmal leer ist
-     */
-    @Test
-    void testValidateZusatzmerkmalNotFound() {
-        daten.zusatzmerkmal = -1L;
-        final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Zusatzmerkmal leer ist
+	 */
+	@Test
+	void testValidateZusatzmerkmalNotFound() {
+		daten.zusatzmerkmal = -1L;
+		final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
+		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn keine Anschlussoptionen gefunden wird
-     */
-    @Test
-    void testValidateAnschlussoptionNotFound() {
-        daten.anschlussoption = -1L;
-        final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn keine Anschlussoptionen gefunden wird
+	 */
+	@Test
+	void testValidateAnschlussoptionNotFound() {
+		daten.anschlussoption = -1L;
+		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
+		final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Anschlussoptionen nicht zum Zusatzmerkmal passt
-     */
-    @Test
-    void testValidateAnschlussoptionWrong() {
-        daten.anschlussoption = 26L;
-        final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Anschlussoptionen nicht zum Zusatzmerkmal passt
+	 */
+	@Test
+	void testValidateAnschlussoptionWrong() {
+		daten.anschlussoption = 26L;
+		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
+		final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Anschlussoptionen nicht zum Zusatzmerkmal passt
-     */
-    @Test
-    void testValidateBerufsfeldNotFound() {
-        daten.berufsfeld = -1L;
-        daten.zusatzmerkmal = 44L;
-        final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        final KAOABerufsfeld berufsfeld = KAOABerufsfeld.getByID(daten.berufsfeld);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateBerufsfeld(daten, zusatzmerkmal, berufsfeld));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Anschlussoptionen nicht zum Zusatzmerkmal passt
+	 */
+	@Test
+	void testValidateBerufsfeldNotFound() {
+		daten.berufsfeld = -1L;
+		daten.zusatzmerkmal = 44L;
+		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
+		final KAOABerufsfeld berufsfeld = KAOABerufsfeld.getByID(daten.berufsfeld);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateBerufsfeld(daten, zusatzmerkmal, berufsfeld));
+	}
 
-    /**
-     * Testet ob eine Fehler kommt wenn Jahrgang nicht zur Kategorie passt
-     */
-    @Test
-    void testValidateJahrgang() {
-        daten.jahrgang = "xxx";
-        final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateJahrgang(daten, kategorie));
-    }
+	/**
+	 * Testet ob eine Fehler kommt wenn Jahrgang nicht zur Kategorie passt
+	 */
+	@Test
+	void testValidateJahrgang() {
+		daten.jahrgang = "xxx";
+		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
+		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateJahrgang(daten, kategorie));
+	}
 }

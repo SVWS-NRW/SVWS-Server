@@ -197,28 +197,29 @@ class GostBlockungsergebnisManagerTest {
 	}
 
 	private static void setSchuelerKurs(final GostBlockungsergebnisManager manager, final long schuelerID, final long kursID, final boolean hinzufuegen) {
-	 	final Set<GostBlockungsergebnisKursSchuelerZuordnung> z = new HashSet<>();
-     	z.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursID, schuelerID));
+		final Set<GostBlockungsergebnisKursSchuelerZuordnung> z = new HashSet<>();
+		z.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursID, schuelerID));
 
-     	final GostBlockungsergebnisKursSchuelerZuordnungUpdate update = hinzufuegen
-     			? manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(z)
-     		    : manager.kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(z);
+		final GostBlockungsergebnisKursSchuelerZuordnungUpdate update = hinzufuegen
+				? manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(z)
+				: manager.kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(z);
 
-        manager.kursSchuelerUpdateExecute(update);
+		manager.kursSchuelerUpdateExecute(update);
 	}
 
 	private static void setKursSchiene(final GostBlockungsergebnisManager manager, final long kursID, final long schieneID, final boolean hinzufuegen) {
-	 	final Set<GostBlockungsergebnisKursSchienenZuordnung> z = new HashSet<>();
-     	z.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(kursID, schieneID));
+		final Set<GostBlockungsergebnisKursSchienenZuordnung> z = new HashSet<>();
+		z.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(kursID, schieneID));
 
-     	final GostBlockungsergebnisKursSchienenZuordnungUpdate update = hinzufuegen
-     			? manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(z)
-     		    : manager.kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(z);
+		final GostBlockungsergebnisKursSchienenZuordnungUpdate update = hinzufuegen
+				? manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(z)
+				: manager.kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(z);
 
-        manager.kursSchienenUpdateExecute(update);
+		manager.kursSchienenUpdateExecute(update);
 	}
 
-	private static void check_conistency(final HashMap<Long, HashSet<Long>> mapFaKu, final HashMap<Long, HashMap<Long, Long>> mapScFaKu, final GostBlockungsergebnisManager out) {
+	private static void check_conistency(final HashMap<Long, HashSet<Long>> mapFaKu, final HashMap<Long, HashMap<Long, Long>> mapScFaKu,
+			final GostBlockungsergebnisManager out) {
 		// 1a) ergebnis.bewertung.anzahlKurseNichtZugeordnet;
 		int sum1a = 0;
 		for (final long fachartID : mapFaKu.keySet())

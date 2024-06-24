@@ -52,11 +52,11 @@ class StundenplanManagerTest {
 	private static void test_klassenunterricht_getter(final StundenplanManager m) {
 		assertEquals(234, m.klassenunterrichtGetMengeAsList().size());
 
-		 final StundenplanKlasse kl10d =  m.klasseGetByIdOrException(21);
-		 assertEquals("10d", kl10d.kuerzel);
+		final StundenplanKlasse kl10d = m.klasseGetByIdOrException(21);
+		assertEquals("10d", kl10d.kuerzel);
 
-		 final StundenplanLehrer le25 =  m.lehrerGetByIdOrException(25);
-		 assertEquals(5, m.klassenunterrichtGetMengeByLehrerIdAsList(le25.id).size());
+		final StundenplanLehrer le25 = m.lehrerGetByIdOrException(25);
+		assertEquals(5, m.klassenunterrichtGetMengeByLehrerIdAsList(le25.id).size());
 
 
 //		 m.klassenunterrichtGetMengeByLehrerIdAsList(0)

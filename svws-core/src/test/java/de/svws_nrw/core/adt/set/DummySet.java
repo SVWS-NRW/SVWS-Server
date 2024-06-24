@@ -195,7 +195,8 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull Integer bcGetFirstKeyOrException(@NotNull final DummySetIntervall iv) {
+	@NotNull
+	Integer bcGetFirstKeyOrException(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isSet[i])
 				return i;
@@ -211,7 +212,8 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull Integer bcGetLastKeyOrException(@NotNull final DummySetIntervall iv) {
+	@NotNull
+	Integer bcGetLastKeyOrException(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isSet[i])
 				return i;

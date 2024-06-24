@@ -13,30 +13,39 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class EsserFormatKData {
 
 	/** Die ID des Datensatzes. **/
-	@JsonProperty public int id;
+	@JsonProperty
+	public int id;
 
 	/** Der Name des Faches. */
-	@JsonProperty public String fach;
+	@JsonProperty
+	public String fach;
 
 	/** Der Name der Kursart. */
-	@JsonProperty public String kursart;
+	@JsonProperty
+	public String kursart;
 
 	/** Der Name der Stufe. */
-	@JsonProperty public String stufe;
+	@JsonProperty
+	public String stufe;
 
 	/** Das Halbjahr in dem die Klausur geschrieben wird. **/
-	@JsonProperty public int halbjahr;
+	@JsonProperty
+	public int halbjahr;
 
 	/** Die Nummer der Klausur im Halbjahr. **/
-	@JsonProperty public int klausnr;
+	@JsonProperty
+	public int klausnr;
 
 	/** Zusatzzeit Zeit für die Klausur. **/
-	@JsonProperty public int zeitdiff;
+	@JsonProperty
+	public int zeitdiff;
 
 	/** Die Dauer der Klausur in Minuten. **/
-	@JsonProperty public int dauer;
+	@JsonProperty
+	public int dauer;
 
 	/** Weitere Bemerkungen. Kann auch den Wert "NULL" enthalten. **/
-	@JsonProperty public String bemerkung;
+	@JsonProperty
+	public String bemerkung;
 
 }

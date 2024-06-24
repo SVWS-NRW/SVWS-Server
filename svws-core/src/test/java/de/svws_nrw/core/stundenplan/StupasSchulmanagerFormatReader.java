@@ -175,7 +175,8 @@ public class StupasSchulmanagerFormatReader {
 		// Überschreiben, falls Kurs-Unterricht.
 		Long idKurs = null;
 
-		if ((klassen.size() == 1) && !getIstOberstufe(klassen.get(0).kuerzel) && !getIstAuffangklasse(klassen.get(0).kuerzel) && !getIstAG(klassen.get(0).kuerzel) && !getIstMIA(klassen.get(0).kuerzel)) {
+		if ((klassen.size() == 1) && !getIstOberstufe(klassen.get(0).kuerzel) && !getIstAuffangklasse(klassen.get(0).kuerzel)
+				&& !getIstAG(klassen.get(0).kuerzel) && !getIstMIA(klassen.get(0).kuerzel)) {
 			// Klassenunterricht (genau eine Klasse und keine spezielle Stufe)
 			final StundenplanKlassenunterricht klassenunterricht = new StundenplanKlassenunterricht();
 			klassenunterricht.idKlasse = klassen.get(0).id;
@@ -279,10 +280,13 @@ public class StupasSchulmanagerFormatReader {
 			zeitraster.wochentag = line.Wochentag;
 			zeitraster.unterrichtstunde = line.Stunde;
 			zeitraster.stundenbeginn = 8 * 60 + (line.Stunde - 1) * 45;
-			if (line.Stunde >= 3) zeitraster.stundenbeginn += 25;
-			if (line.Stunde >= 5) zeitraster.stundenbeginn += 25;
-			if (line.Stunde >= 7) zeitraster.stundenbeginn += 20;
-			zeitraster.stundenende   = zeitraster.stundenbeginn + 45;
+			if (line.Stunde >= 3)
+				zeitraster.stundenbeginn += 25;
+			if (line.Stunde >= 5)
+				zeitraster.stundenbeginn += 25;
+			if (line.Stunde >= 7)
+				zeitraster.stundenbeginn += 20;
+			zeitraster.stundenende = zeitraster.stundenbeginn + 45;
 			zeiraster_by_wochentag_and_stunde.put(line.Wochentag, line.Stunde, zeitraster);
 			m.zeitrasterAdd(zeitraster);
 		}
@@ -435,10 +439,10 @@ public class StupasSchulmanagerFormatReader {
 
 	private static String lineToString(final StupasSchulmanagerFormatLine line) {
 		return convertNull(line.Id) + ";" + convertNull(line.KursId) + ";" + convertNull(line.Art) + ";"
-	          + convertNull(line.Lehrerkuerzel) + ";" + convertNull(line.Fach) + ";" + convertNull(line.Kurs) + ";"
-			  + convertNull(line.Raum) + ";" + convertNull(line.Wochentag) + ";" + convertNull(line.Stunde) + ";"
-	          + convertNull(line.Bezeichnung) + ";" + convertNull(line.Woche) + ";" + convertNull(line.Klassen) + ";"
-			  + convertNull(line.Kopplung);
+				+ convertNull(line.Lehrerkuerzel) + ";" + convertNull(line.Fach) + ";" + convertNull(line.Kurs) + ";"
+				+ convertNull(line.Raum) + ";" + convertNull(line.Wochentag) + ";" + convertNull(line.Stunde) + ";"
+				+ convertNull(line.Bezeichnung) + ";" + convertNull(line.Woche) + ";" + convertNull(line.Klassen) + ";"
+				+ convertNull(line.Kopplung);
 	}
 
 	private static String linesToString(final List<StupasSchulmanagerFormatLine> list) {

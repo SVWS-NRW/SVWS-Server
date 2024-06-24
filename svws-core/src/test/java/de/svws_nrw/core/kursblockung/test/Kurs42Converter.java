@@ -128,7 +128,8 @@ public class Kurs42Converter {
 			// Schüler hat doppelte Fachwahl?
 			final String sFachwahl = sSchueler + ";" + sFachKuerzel + ";" + sKursartKuerzel;
 			if (mapFachwahlen.containsKey(sFachwahl))
-				throw new DeveloperNotificationException("Kurs42-Fachwahlen: Schüler (" + sSchueler + ") hat die Fachwahl (" + sFachKuerzel + ";" + sKursartKuerzel + ") doppelt!");
+				throw new DeveloperNotificationException(
+						"Kurs42-Fachwahlen: Schüler (" + sSchueler + ") hat die Fachwahl (" + sFachKuerzel + ";" + sKursartKuerzel + ") doppelt!");
 
 			// Fachwahl erzeugen
 			final GostFachwahl gFachwahl = new GostFachwahl();

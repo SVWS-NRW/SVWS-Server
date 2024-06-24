@@ -55,7 +55,7 @@ class TestSatSolver {
 	@Test
 	void testCaseSAT() {
 
-		final SatSolver solver1 =  new SatSolverSimple1();
+		final SatSolver solver1 = new SatSolverSimple1();
 		solver1.setMaxTimeMillis(20000);
 
 		final Function<@NotNull SatInput, @NotNull SatOutput> solver = new SatWrapper1(solver1);
@@ -70,7 +70,7 @@ class TestSatSolver {
 				in.add_clause_exactly_in_row(matrix, i, 1);
 
 			// create "out"
-			final SatOutput out =  solver.apply(in);
+			final SatOutput out = solver.apply(in);
 			assertTrue(out.isSatisfiable());
 			assertFalse(out.isUnknown());
 			assertFalse(out.isUnsatisfiable());

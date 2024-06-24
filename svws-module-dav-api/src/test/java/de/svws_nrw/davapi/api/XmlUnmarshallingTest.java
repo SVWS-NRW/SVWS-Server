@@ -56,7 +56,7 @@ public class XmlUnmarshallingTest {
 			</card:addressbook-multiget>
 			        """;
 	private static final Collection<String> HREF_VALUES = Arrays
-			.asList(new String[]{"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1107.vcf",
+			.asList(new String[] { "/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1107.vcf",
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1192.vcf",
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1202.vcf",
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1206.vcf",
@@ -65,7 +65,7 @@ public class XmlUnmarshallingTest {
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1223.vcf",
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1226.vcf",
 					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1233.vcf",
-					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1256.vcf"});
+					"/db/gymabi/carddav/adressbuecher/Kurs-L-GK1-2018-2/Schueler_1256.vcf" });
 
 	/**
 	 * Test a bug: Beim Unmarshalling des gegebenen XML-Strings wurde nur das

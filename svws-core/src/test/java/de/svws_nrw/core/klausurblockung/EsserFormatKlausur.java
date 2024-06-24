@@ -11,15 +11,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class EsserFormatKlausur {
 
 	/** Die ID des Datensatzes. **/
-	@JsonProperty public int id;
+	@JsonProperty
+	public int id;
 
 	/** Fremdschlüssel: Referenz zur Kurs-Tabelle. **/
-	@JsonProperty public int kurs;
+	@JsonProperty
+	public int kurs;
 
 	/** Fremdschlüssel: Referenz zur KData-Tabelle. **/
-	@JsonProperty public int kdata;
+	@JsonProperty
+	public int kdata;
 
 	/** Fremdschlüssel: Referenz zur Termin-Tabelle (nicht vorhanden). **/
-	@JsonProperty public int termin;
+	@JsonProperty
+	public int termin;
 
 }

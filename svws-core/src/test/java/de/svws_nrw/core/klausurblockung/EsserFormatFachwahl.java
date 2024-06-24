@@ -13,13 +13,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class EsserFormatFachwahl {
 
 	/** Fremdschlüssel: Die ID des Kurses. **/
-	@JsonProperty public int kurs;
+	@JsonProperty
+	public int kurs;
 
 	/** Fremdschlüssel: Die ID des Schülers. **/
-	@JsonProperty public int schueler;
+	@JsonProperty
+	public int schueler;
 
 	/** Die Art der Fachwahl. Werte größer 1 entsprechend einer schriftlichen Wahl: <br>
 	 * 1 = mündlich, 2 = schriftlich (GK), 3 = Abifach 3, 4 = Abifach 4, 5 = Leistungskurs **/
-	@JsonProperty public int schriftlich;
+	@JsonProperty
+	public int schriftlich;
 
 }

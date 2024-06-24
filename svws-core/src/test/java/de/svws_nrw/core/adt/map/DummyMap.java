@@ -412,8 +412,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcContainsEntry(@NotNull final DummyMapIntervall iv, final Object o) {
 		if (!(o instanceof Entry<?, ?>))
 			return false;
-		@NotNull
-		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		@NotNull final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		final int key = (Integer) e.getKey();
 		if (!iv.contains(key))
 			return false;
@@ -485,8 +484,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcRemoveEntryReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Object o) {
 		if (!bcContainsEntry(iv, o))
 			return false;
-		@NotNull
-		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		@NotNull final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		return removeKeyReturnBool(iv, e.getKey());
 	}
 
@@ -838,7 +836,8 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull Integer bcGetFirstKeyOrException(@NotNull final DummyMapIntervall iv) {
+	@NotNull
+	Integer bcGetFirstKeyOrException(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return i;
@@ -869,7 +868,8 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull Integer bcGetLastKeyOrException(@NotNull final DummyMapIntervall iv) {
+	@NotNull
+	Integer bcGetLastKeyOrException(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return i;

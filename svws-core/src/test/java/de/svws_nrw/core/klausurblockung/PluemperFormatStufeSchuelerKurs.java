@@ -13,12 +13,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class PluemperFormatStufeSchuelerKurs {
 
 	/** Die Klassenstufe (EF, Q1, Q2) des Kurses. **/
-	@JsonProperty public String stufe;
+	@JsonProperty
+	public String stufe;
 
 	/** Die ID des Schülers. **/
-	@JsonProperty public long schuelerid;
+	@JsonProperty
+	public long schuelerid;
 
 	/** Die ID des Kurses. **/
-	@JsonProperty public long kursid;
+	@JsonProperty
+	public long kursid;
 
 }

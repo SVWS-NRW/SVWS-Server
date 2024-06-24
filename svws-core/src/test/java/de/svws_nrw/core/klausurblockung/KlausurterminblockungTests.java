@@ -121,7 +121,8 @@ class KlausurterminblockungTests {
 
 		// Einlesen der Kurs-Datensätze
 		final TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
-		for (final PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_002 + "StufeSchuelerKurs.txt", PluemperFormatStufeSchuelerKurs.class)) {
+		for (final PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_002 + "StufeSchuelerKurs.txt",
+				PluemperFormatStufeSchuelerKurs.class)) {
 			if (map.get(daten.stufe) == null)
 				map.put(daten.stufe, new HashMap<>());
 			if (map.get(daten.stufe).get(daten.schuelerid) == null)
@@ -132,8 +133,7 @@ class KlausurterminblockungTests {
 		// Blocken pro Stufe
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
-			@NotNull
-			final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+			@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 
 			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
@@ -176,8 +176,7 @@ class KlausurterminblockungTests {
 		// Blocken pro Stufe
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
-			@NotNull
-			final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+			@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
 			for (final long schuelerID : map.get(stufe).keySet()) {
@@ -216,13 +215,11 @@ class KlausurterminblockungTests {
 			mapSchriftlich = mapKursSuSschriftlich2;
 
 		// Input-Erzeugen
-		@NotNull
-		final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+		@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 		// Für alle Klausuren ...
 		for (final EsserFormatKlausur klausur : klausuren) {
-			@NotNull
-			final GostKursklausurRich gostKlausur = new GostKursklausurRich();
+			@NotNull final GostKursklausurRich gostKlausur = new GostKursklausurRich();
 			gostKlausur.id = klausur.id;
 
 			// Für alle schriftlichen Schüler ...

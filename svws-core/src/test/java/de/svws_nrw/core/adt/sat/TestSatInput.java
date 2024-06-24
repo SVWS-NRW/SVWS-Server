@@ -48,8 +48,8 @@ class TestSatInput {
 		final SatInput in = new SatInput();
 		final int x1 = in.create_var();
 		in.add_clause_1(x1);
-		assertEquals(true, in.isValidSolution(new int[] {0, x1}));
-		assertEquals(false, in.isValidSolution(new int[] {0, -x1}));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, -x1 }));
 	}
 
 	/**
@@ -61,10 +61,10 @@ class TestSatInput {
 		final int x1 = in.create_var();
 		final int x2 = in.create_var();
 		in.add_clause_2(x1, x2);
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
-		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2}));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, -x2 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, -x1, -x2 }));
 	}
 
 	/**
@@ -77,14 +77,14 @@ class TestSatInput {
 		final int x2 = in.create_var();
 		final int x3 = in.create_var();
 		in.add_clause_3(x1, x2, x3);
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2, x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2, -x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2, x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2, -x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2, x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2, -x3}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2, x3}));
-		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2, -x3}));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, x2, x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, x2, -x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, -x2, x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, -x2, -x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, x2, x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, x2, -x3 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, -x2, x3 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, -x1, -x2, -x3 }));
 	}
 
 	/**
@@ -96,10 +96,10 @@ class TestSatInput {
 		final int x1 = in.create_var();
 		final int x2 = in.create_var();
 		in.add_clause_not_both(x1, x2);
-		assertEquals(false, in.isValidSolution(new int[] {0, x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2}));
+		assertEquals(false, in.isValidSolution(new int[] { 0, x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, -x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, -x2 }));
 	}
 
 	/**
@@ -111,10 +111,10 @@ class TestSatInput {
 		final int x1 = in.create_var();
 		final int x2 = in.create_var();
 		in.add_clause_equal(x1, x2);
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2}));
-		assertEquals(false, in.isValidSolution(new int[] {0, -x1, x2}));
-		assertEquals(false, in.isValidSolution(new int[] {0, x1, -x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2}));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, x2 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, -x1, x2 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, x1, -x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, -x2 }));
 	}
 
 	/**
@@ -126,10 +126,10 @@ class TestSatInput {
 		final int x1 = in.create_var();
 		final int x2 = in.create_var();
 		in.add_clause_unequal(x1, x2);
-		assertEquals(false, in.isValidSolution(new int[] {0, x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
-		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
-		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2}));
+		assertEquals(false, in.isValidSolution(new int[] { 0, x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, -x1, x2 }));
+		assertEquals(true, in.isValidSolution(new int[] { 0, x1, -x2 }));
+		assertEquals(false, in.isValidSolution(new int[] { 0, -x1, -x2 }));
 	}
 
 }

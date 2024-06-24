@@ -181,10 +181,14 @@ class TestLinkedCollection {
 		assertTrue(iter.hasNext());
 		assertEquals(1, iter.next());
 		assertFalse(iter.hasNext());
-		assertThrows(NoSuchElementException.class, () -> { iter.next(); });
+		assertThrows(NoSuchElementException.class, () -> {
+			iter.next();
+		});
 		final Iterator<Integer> iter2 = coll.iterator();
 		coll.add(11);
-		assertThrows(ConcurrentModificationException.class, () -> { iter2.next(); });
+		assertThrows(ConcurrentModificationException.class, () -> {
+			iter2.next();
+		});
 	}
 
 	/**

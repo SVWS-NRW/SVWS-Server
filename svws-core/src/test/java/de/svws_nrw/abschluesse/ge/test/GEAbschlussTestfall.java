@@ -49,13 +49,13 @@ public class GEAbschlussTestfall {
 	 * @return true, falls die beiden Listen übereinstimmen
 	 */
 	@JsonIgnore
-    public static boolean vergleicheNachpruefungsfaecher(final List<String> faecherListe1, final List<String> faecherListe2) {
-        if ((faecherListe1 == null) || faecherListe1.isEmpty()) {
-            return (faecherListe2 == null) || faecherListe2.isEmpty();
-        } else if ((faecherListe2 == null) || faecherListe2.isEmpty())
-            return faecherListe1.isEmpty();
-        return faecherListe1.containsAll(faecherListe2) && faecherListe2.containsAll(faecherListe1);
-    }
+	public static boolean vergleicheNachpruefungsfaecher(final List<String> faecherListe1, final List<String> faecherListe2) {
+		if ((faecherListe1 == null) || faecherListe1.isEmpty()) {
+			return (faecherListe2 == null) || faecherListe2.isEmpty();
+		} else if ((faecherListe2 == null) || faecherListe2.isEmpty())
+			return faecherListe1.isEmpty();
+		return faecherListe1.containsAll(faecherListe2) && faecherListe2.containsAll(faecherListe1);
+	}
 
 }
 

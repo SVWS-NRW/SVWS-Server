@@ -13,24 +13,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class EsserFormatKurs {
 
 	/** Die ID des Datensatzes. **/
-	@JsonProperty public int id;
+	@JsonProperty
+	public int id;
 
 	/** Die Klassenstufe (EF, Q1, Q2) des Kurses. **/
-	@JsonProperty public String stufe;
+	@JsonProperty
+	public String stufe;
 
 	/** Die Kursart (LK, GK, ...) des Kurses. **/
-	@JsonProperty public String kursart;
+	@JsonProperty
+	public String kursart;
 
 	/** Das Fach (D, E, M, ...) des Kurses. **/
-	@JsonProperty public String fach;
+	@JsonProperty
+	public String fach;
 
 	/** Die Kursnummer des Kurses. Das ist der Suffix von D-GK1, D-GK2, ... . **/
-	@JsonProperty public int kursnr;
+	@JsonProperty
+	public int kursnr;
 
 	/** Das Kürzel der Lehrkraft des Kurses. **/
-	@JsonProperty public String lehrer;
+	@JsonProperty
+	public String lehrer;
 
 	/** Das Halbjahr zu dem der Kurs gehört. **/
-	@JsonProperty public int halbjahr;
+	@JsonProperty
+	public int halbjahr;
 
 }

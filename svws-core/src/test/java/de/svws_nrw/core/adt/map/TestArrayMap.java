@@ -24,16 +24,26 @@ class TestArrayMap {
 	 * Ein simpler Enum zum Testen
 	 */
 	enum TestEnum {
-		/** Eintrag 0 */ A,
-		/** Eintrag 1 */ B,
-		/** Eintrag 2 */ C,
-		/** Eintrag 3 */ D,
-		/** Eintrag 4 */ E,
-		/** Eintrag 5 */ F,
-		/** Eintrag 6 */ G,
-		/** Eintrag 7 */ H,
-		/** Eintrag 8 */ I,
-		/** Eintrag 9 */ J;
+		/** Eintrag 0 */
+		A,
+		/** Eintrag 1 */
+		B,
+		/** Eintrag 2 */
+		C,
+		/** Eintrag 3 */
+		D,
+		/** Eintrag 4 */
+		E,
+		/** Eintrag 5 */
+		F,
+		/** Eintrag 6 */
+		G,
+		/** Eintrag 7 */
+		H,
+		/** Eintrag 8 */
+		I,
+		/** Eintrag 9 */
+		J;
 	}
 
 	/**

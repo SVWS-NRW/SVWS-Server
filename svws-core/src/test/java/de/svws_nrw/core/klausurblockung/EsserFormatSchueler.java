@@ -11,18 +11,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class EsserFormatSchueler {
 
 	/** Die ID des Datensatzes. **/
-	@JsonProperty public int id;
+	@JsonProperty
+	public int id;
 
 	/** Die ID bei einem externen Programm. **/
-	@JsonProperty public int kursid;
+	@JsonProperty
+	public int kursid;
 
 	/** Die Stufe in der die Person gerade ist. **/
-	@JsonProperty public String stufe;
+	@JsonProperty
+	public String stufe;
 
 	/** Der Vorname der Person. **/
-	@JsonProperty public String vorname;
+	@JsonProperty
+	public String vorname;
 
 	/** Der Nachname. **/
-	@JsonProperty public String nachname;
+	@JsonProperty
+	public String nachname;
 
 }
