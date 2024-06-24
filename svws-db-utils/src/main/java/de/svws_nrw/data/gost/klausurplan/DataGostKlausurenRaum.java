@@ -87,6 +87,8 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurraum> getKlausurraeumeZuTerminen(final DBEntityManager conn, final List<Long> terminIds) throws ApiOperationException {
+		if (terminIds.isEmpty())
+			return new ArrayList<>();
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenRaeume.class, terminIds);
 		final List<GostKlausurraum> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeume r : raeume)

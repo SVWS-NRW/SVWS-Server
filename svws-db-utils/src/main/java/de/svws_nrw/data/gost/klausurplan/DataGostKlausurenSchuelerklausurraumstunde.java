@@ -451,8 +451,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts, final boolean includeSelbesDatum) throws ApiOperationException {
+	    final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
+	    if (idSkts.isEmpty())
+		return retCollection;
+
 		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idSkts);
-		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
 		retCollection.idsSchuelerklausurtermine = idSkts;
 		if (includeSelbesDatum) {
         		final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());

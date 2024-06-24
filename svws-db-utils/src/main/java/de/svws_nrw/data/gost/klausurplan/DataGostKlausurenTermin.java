@@ -210,6 +210,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 */
 	public static List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuTerminMenge(final DBEntityManager conn, final List<GostKlausurtermin> termine)
 			throws ApiOperationException {
+		if (termine.isEmpty())
+			return new ArrayList<>();
 //		if (termin.datum == null)
 //			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
 
