@@ -36,9 +36,9 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 	 * @throws ApiOperationException   falls die Stundenplan-ID ungültig ist
 	 */
 	public DataStundenplanPausenzeiten(final DBEntityManager conn, final Long stundenplanID) throws ApiOperationException {
-		super(conn, DTOStundenplanPausenzeit.class);
+		super(conn);
 		setAttributesRequiredOnCreation("wochentag", "beginn", "ende");
-		setAttributesDelayedWhileAdding("klassen");
+		setAttributesDelayedOnCreation("klassen");
 		this.stundenplanID = stundenplanID;
 		// Prüfe ggf. ob der Stundenplan existiert
 		if (stundenplanID != null)

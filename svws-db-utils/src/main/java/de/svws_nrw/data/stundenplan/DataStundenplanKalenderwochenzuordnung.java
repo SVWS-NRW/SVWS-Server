@@ -31,7 +31,7 @@ public final class DataStundenplanKalenderwochenzuordnung
 	 * @throws ApiOperationException   falls die Stundenplan-ID ungültig ist
 	 */
 	public DataStundenplanKalenderwochenzuordnung(final DBEntityManager conn, final Long stundenplanID) throws ApiOperationException {
-		super(conn, DTOStundenplanKalenderwochenZuordnung.class);
+		super(conn);
 		setAttributesRequiredOnCreation("jahr", "kw", "wochentyp");
 		this.stundenplanID = stundenplanID;
 		// Prüfe ggf. ob der Stundenplan existiert

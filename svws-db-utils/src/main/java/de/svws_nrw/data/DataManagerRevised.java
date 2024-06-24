@@ -2,6 +2,7 @@ package de.svws_nrw.data;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +43,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/** Eine Menge von Attributen, wo das Mapping beim Hinzufügen in einem Zweiten Schritt passiert, nachdem das Datenbank-DTO ein erstes
 	 * mal persistiert wurde. */
-	private final Set<String> attributesDelayedWhileAdding = new HashSet<>();
+	private final Set<String> attributesDelayedOnCreation = new HashSet<>();
 
 
 
@@ -50,11 +51,17 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
 	 * @param conn               die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
-	 * @param classDatabaseDTO   die Klasse des zugrundeliegenden Datenbank-DTOs
 	 */
-	protected DataManagerRevised(final DBEntityManager conn, final Class<DatabaseDTO> classDatabaseDTO) {
+	protected DataManagerRevised(final DBEntityManager conn) {
 		this.conn = conn;
-		this.classDatabaseDTO = classDatabaseDTO;
+		this.classDatabaseDTO = getClassDatabaseDTO();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private Class<DatabaseDTO> getClassDatabaseDTO() {
+		final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+		return ((Class<DatabaseDTO>) type.getActualTypeArguments()[1]);
 	}
 
 
@@ -87,9 +94,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @param attrs   die Attribute
 	 */
-	protected void setAttributesDelayedWhileAdding(final String... attrs) {
-		attributesDelayedWhileAdding.clear();
-		attributesDelayedWhileAdding.addAll(Arrays.asList(attrs));
+	protected void setAttributesDelayedOnCreation(final String... attrs) {
+		attributesDelayedOnCreation.clear();
+		attributesDelayedOnCreation.addAll(Arrays.asList(attrs));
 	}
 
 
@@ -115,7 +122,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	protected ID getNextID(final ID last) {
 		final Long id = (last == null)
 				? conn.transactionGetNextID(classDatabaseDTO)
-				: (((Long) last).longValue() + 1);
+				: (((Long) last) + 1L);
 		return (ID) id;
 	}
 
@@ -317,12 +324,13 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 		if (map.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
 		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
 		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Daten für die angegebene ID wurden in der Datenbank nicht gefunden.");
 		applyPatchMappings(conn, dto, map, null, Collections.emptySet());
-		conn.transactionPersist(dto);
+		if (!conn.transactionPersist(dto))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
 		conn.transactionFlush();
 	}
 
@@ -341,6 +349,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public Response patchAsResponse(final ID id, final InputStream is) throws ApiOperationException {
 		patch(id, JSONMapper.toMap(is));
+		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -362,6 +371,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps)
 			patch((ID) map.get(idAttr), map);
+		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -373,29 +383,29 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
 	 * dem Persistieren des Objektes in einem zweiten Schritt gepatched.
 	 *
-	 * @param newID              die neue ID für das DTO
-	 * @param map                die Map für den Zugriff auf die Attribute
+	 * @param newID           die neue ID für das DTO
+	 * @param mapAttributes   die Map für den Zugriff auf die Attribute
 	 *
 	 * @return das Core-DTO
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private CoreDTO addBasic(final ID newID, final Map<String, Object> map) throws ApiOperationException {
+	private CoreDTO addBasic(final ID newID, final Map<String, Object> mapAttributes) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		for (final String attr : attributesRequiredOnCreation)
-			if (!map.containsKey(attr))
+			if (!mapAttributes.containsKey(attr))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 		final DatabaseDTO dto = newDTO(newID);
-		applyPatchMappings(conn, dto, map, null, attributesDelayedWhileAdding);
+		applyPatchMappings(conn, dto, mapAttributes, null, attributesDelayedOnCreation);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
 		conn.transactionFlush();
-		if (!attributesDelayedWhileAdding.isEmpty()) {
-			applyPatchMappings(conn, dto, map, attributesDelayedWhileAdding, Collections.emptySet());
+		if (!attributesDelayedOnCreation.isEmpty()) {
+			applyPatchMappings(conn, dto, mapAttributes, attributesDelayedOnCreation, Collections.emptySet());
 			if (!conn.transactionPersist(dto))
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
 			conn.transactionFlush();
 		}
 		return get(newID);
@@ -475,7 +485,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
 		final CoreDTO daten = get(id);
 		// Entferne das DTO
-		conn.transactionRemove(dto);
+		if (!conn.transactionRemove(dto))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Daten.");
 		conn.transactionFlush();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -507,7 +518,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		for (final DatabaseDTO dto : dtos) {
 			final ID id = getIDFromDatabaseDTO(dto);
 			daten.add(get(id));
-			conn.transactionRemove(dto);
+			if (!conn.transactionRemove(dto))
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Daten.");
 			conn.transactionFlush();
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
