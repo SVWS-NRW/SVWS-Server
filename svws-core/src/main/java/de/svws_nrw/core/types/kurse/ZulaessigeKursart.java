@@ -1140,7 +1140,7 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
-	public static @NotNull List<@NotNull ZulaessigeKursart> getByAllgemeinerKursart(@NotNull final String allgKursart) {
+	public static @NotNull List<@NotNull ZulaessigeKursart> getByAllgemeinerKursart(final @NotNull String allgKursart) {
 		if (ZulaessigeKursart.E.daten.kuerzel.equals(allgKursart)) {
 			final @NotNull List<@NotNull ZulaessigeKursart> result = new ArrayList<>();
 			result.add(ZulaessigeKursart.E);

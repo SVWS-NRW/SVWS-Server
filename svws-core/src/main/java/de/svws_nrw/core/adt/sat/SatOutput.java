@@ -37,7 +37,7 @@ public final class SatOutput {
 	 * @param pSolution Das Array der Variablen.
 	 * @param pType     Einer der drei möglichen Typen.
 	 */
-	private SatOutput(@NotNull final int[] pSolution, final int pType) {
+	private SatOutput(final @NotNull int[] pSolution, final int pType) {
 		solution = pSolution;
 		type = pType;
 	}
@@ -102,7 +102,7 @@ public final class SatOutput {
 	 * @param pSolution Die Lösung der Variablenbelegungen.
 	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_SATISFIABLE.
 	 */
-	public static @NotNull SatOutput createSATISFIABLE(@NotNull final int[] pSolution) {
+	public static @NotNull SatOutput createSATISFIABLE(final @NotNull int[] pSolution) {
 		return new SatOutput(pSolution, TYPE_SATISFIABLE);
 	}
 
@@ -113,7 +113,7 @@ public final class SatOutput {
 	 * @param pSolution Die Lösung der Variablenbelegungen.
 	 * @return eine Kopie, welche aber potentiell eine andere Lösung besitzt.
 	 */
-	public static @NotNull SatOutput createCopy(@NotNull final SatOutput pOutput, @NotNull final int[] pSolution) {
+	public static @NotNull SatOutput createCopy(final @NotNull SatOutput pOutput, final @NotNull int[] pSolution) {
 		return new SatOutput(pSolution, pOutput.type);
 	}
 

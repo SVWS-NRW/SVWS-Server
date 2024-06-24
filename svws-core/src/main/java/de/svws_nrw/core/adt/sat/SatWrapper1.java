@@ -21,13 +21,13 @@ public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull S
 	 *
 	 * @param next Der nächste Preprocessor oder SatSolver
 	 */
-	public SatWrapper1(@NotNull final Function<@NotNull SatInput, @NotNull SatOutput> next) {
+	public SatWrapper1(final @NotNull Function<@NotNull SatInput, @NotNull SatOutput> next) {
 		super();
 		this.next = next;
 	}
 
 	@Override
-	public @NotNull SatOutput apply(@NotNull final SatInput in1) {
+	public @NotNull SatOutput apply(final @NotNull SatInput in1) {
 		// create "map1to2"
 		final int nVars = in1.getVarCount();
 		final @NotNull int[] map1to2 = new int[nVars + 1];
@@ -45,7 +45,7 @@ public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull S
 		final @NotNull SatInput in2 = new SatInput();
 		for (final @NotNull Integer @NotNull [] clause : in1.getClauses()) {
 			// map clause-indices
-			@NotNull final Integer @NotNull [] clause2 = new Integer[clause.length];
+			final @NotNull Integer @NotNull [] clause2 = new Integer[clause.length];
 			for (int i = 0; i < clause.length; i++) {
 				final int lit = clause[i];
 				clause2[i] = (lit >= 0) ? map1to2[lit] : -map1to2[-lit];

@@ -97,7 +97,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void getErgebnisListe(final @NotNull DBEntityManager conn, @NotNull final GostBlockungsdatenManager datenManager)
+	public static void getErgebnisListe(final @NotNull DBEntityManager conn, final @NotNull GostBlockungsdatenManager datenManager)
 			throws ApiOperationException {
 		// Bestimme die Liste der Ergebnisse aus der Datenbank
 		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID,
@@ -162,8 +162,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	public static GostBlockungsergebnisManager getErgebnismanager(final @NotNull DBEntityManager conn, @NotNull final DTOGostBlockungZwischenergebnis ergebnis,
-			@NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
+	public static GostBlockungsergebnisManager getErgebnismanager(final @NotNull DBEntityManager conn, final @NotNull DTOGostBlockungZwischenergebnis ergebnis,
+			final @NotNull GostBlockungsdatenManager datenManager) throws ApiOperationException {
 		final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
 
 		// Bestimme alle Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
@@ -206,8 +206,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	public static GostBlockungsergebnis getErgebnis(final @NotNull DBEntityManager conn, @NotNull final DTOGostBlockungZwischenergebnis ergebnis,
-			@NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
+	public static GostBlockungsergebnis getErgebnis(final @NotNull DBEntityManager conn, final @NotNull DTOGostBlockungZwischenergebnis ergebnis,
+			final @NotNull GostBlockungsdatenManager datenManager) throws ApiOperationException {
 		// Erzeuge das Ergebnis.
 		final GostBlockungsergebnisManager manager = getErgebnismanager(conn, ergebnis, datenManager);
 		final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();

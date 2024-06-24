@@ -374,7 +374,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp5(@NotNull final Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
 			final @NotNull HashSet<@NotNull Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!", length != 2);
@@ -386,7 +386,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp6(@NotNull final Long @NotNull [] daten, final @NotNull HashSet<@NotNull Integer> setKursarten,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Integer> setKursarten,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length != 3);
@@ -400,7 +400,7 @@ public class KursblockungDynDaten {
 				!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp7(@NotNull final Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -414,7 +414,7 @@ public class KursblockungDynDaten {
 				kursID1 == kursID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp8(@NotNull final Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -440,7 +440,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 99);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp10(@NotNull final Long @NotNull [] daten) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp10(final @NotNull Long @NotNull [] daten) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length != 0);
 	}

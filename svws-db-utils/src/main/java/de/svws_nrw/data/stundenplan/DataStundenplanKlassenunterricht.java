@@ -128,7 +128,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			for (final StundenplanKlassenunterricht ku : daten) {
 				final DTOFach fach = mapFaecher.get(ku.idFach);
 				final DTOKlassen kl = mapKlassen.get(ku.idKlasse);
-				ku.bezeichnung = "%s (%s)".formatted(fach == null ? "???" : fach.Kuerzel, kl == null ? "???" : kl.Klasse);
+				ku.bezeichnung = "%s (%s)".formatted((fach == null) ? "???" : fach.Kuerzel, (kl == null) ? "???" : kl.Klasse);
 			}
 		}
 		return daten;
@@ -201,7 +201,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 				daten = new StundenplanKlassenunterricht();
 				daten.idKlasse = idKlasse;
 				daten.idFach = ls.Fach_ID;
-				daten.wochenstunden = ls.Wochenstunden == null ? 1 : ls.Wochenstunden;
+				daten.wochenstunden = (ls.Wochenstunden == null) ? 1 : ls.Wochenstunden;
 			} else {
 				if ((ls.Wochenstunden != null) && (daten.wochenstunden < ls.Wochenstunden))
 					daten.wochenstunden = ls.Wochenstunden;

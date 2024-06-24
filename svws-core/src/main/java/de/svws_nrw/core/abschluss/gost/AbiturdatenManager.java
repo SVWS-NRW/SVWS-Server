@@ -243,7 +243,7 @@ public class AbiturdatenManager {
 	 *
 	 * @return true, fall es sich um einen Null-Punkte-Kurs in der Qualifikationsphase handelt.
 	 */
-	public static boolean istNullPunkteBelegungInQPhase(@NotNull final AbiturFachbelegungHalbjahr halbjahresbelegung) {
+	public static boolean istNullPunkteBelegungInQPhase(final @NotNull AbiturFachbelegungHalbjahr halbjahresbelegung) {
 		final GostHalbjahr hj = GostHalbjahr.fromKuerzel(halbjahresbelegung.halbjahrKuerzel);
 		if ((hj == null) || (hj.istEinfuehrungsphase()))
 			return false;

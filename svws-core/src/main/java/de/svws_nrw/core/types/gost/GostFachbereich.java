@@ -244,7 +244,7 @@ public enum GostFachbereich {
 	 * @return der Integer-Wert für die Sortierreihenfolge des Faches und Integer-MAX_VALUE, falls
 	 *   das übergeben Fach kein Fach der Gymnasialen Oberstufe ist.
 	 */
-	public static int getSortierung(@NotNull final ZulaessigesFach fach) {
+	public static int getSortierung(final @NotNull ZulaessigesFach fach) {
 		final Integer sortierung = getAlleFaecher().get(fach);
 		if (sortierung == null)
 			return Integer.MAX_VALUE;

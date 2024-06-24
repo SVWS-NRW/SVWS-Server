@@ -29,7 +29,7 @@ public class ApiOperationException extends Exception {
 	 *
 	 * @param status   der Status-Code
 	 */
-	public ApiOperationException(@NotNull final Status status) {
+	public ApiOperationException(final @NotNull Status status) {
 		this(status, null, null, null);
 	}
 
@@ -40,7 +40,7 @@ public class ApiOperationException extends Exception {
 	 * @param status   der Status-Code
 	 * @param body     der zu serialisierende Body der Exception (z.B. log-Informationen zum Fehler)
 	 */
-	public ApiOperationException(@NotNull final Status status, final Object body) {
+	public ApiOperationException(final @NotNull Status status, final Object body) {
 		this(status, null, body, null);
 	}
 
@@ -51,7 +51,7 @@ public class ApiOperationException extends Exception {
 	 * @param status   der Status-Code
 	 * @param cause    der Grund für diese Exception
 	 */
-	public ApiOperationException(@NotNull final Status status, final Throwable cause) {
+	public ApiOperationException(final @NotNull Status status, final Throwable cause) {
 		this(status, cause, null, null);
 	}
 
@@ -64,7 +64,7 @@ public class ApiOperationException extends Exception {
 	 * @param cause    der Grund für diese Exception
 	 * @param body     der zu serialisierende Body der Exception (z.B. log-Informationen zum Fehler)
 	 */
-	public ApiOperationException(@NotNull final Status status, final Throwable cause, final Object body) {
+	public ApiOperationException(final @NotNull Status status, final Throwable cause, final Object body) {
 		this(status, cause, body, null);
 	}
 
@@ -78,7 +78,7 @@ public class ApiOperationException extends Exception {
 	 * @param body       der zu serialisierende Body der Exception (z.B. log-Informationen zum Fehler)
 	 * @param mimeType   der Mime-Type der Body-Information
 	 */
-	public ApiOperationException(@NotNull final Status status, final Throwable cause, final Object body, final String mimeType) {
+	public ApiOperationException(final @NotNull Status status, final Throwable cause, final Object body, final String mimeType) {
 		super((body instanceof final String message) ? message : null, cause);
 		this.status = status;
 		this.body = body;
@@ -91,7 +91,7 @@ public class ApiOperationException extends Exception {
 	 *
 	 * @param status   der Status der HTTP-Response
 	 */
-	public void updateStatus(@NotNull final Status status) {
+	public void updateStatus(final @NotNull Status status) {
 		this.status = status;
 	}
 

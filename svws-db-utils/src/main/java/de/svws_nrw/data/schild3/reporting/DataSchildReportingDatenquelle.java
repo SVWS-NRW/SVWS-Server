@@ -81,8 +81,8 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	 * @param mastertyp        der Datentyp des identifzierenden Master-Attributes
 	 * @param masterclass      die Java-Klasse für den Datentyp des zu identifzierenden Master-Attributes
 	 */
-	void setMaster(@NotNull final String linkattribut, @NotNull final String master, @NotNull final String masterattribut,
-			@NotNull final SchildReportingAttributTyp mastertyp, @NotNull final Class<JMT> masterclass) {
+	void setMaster(final @NotNull String linkattribut, final @NotNull String master, final @NotNull String masterattribut,
+			final @NotNull SchildReportingAttributTyp mastertyp, final @NotNull Class<JMT> masterclass) {
 		this.mastertyp = mastertyp;
 		this.masterclass = masterclass;
 		this.datenquelle.linkattribut = linkattribut;
@@ -99,7 +99,7 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	 * @param typ            der Datentyp des Attributes
 	 * @param beschreibung   eine erläuternde Erklärung zu dem Attribut
 	 */
-	private void addAttribut(@NotNull final String name, @NotNull final SchildReportingAttributTyp typ, @NotNull final String beschreibung) {
+	private void addAttribut(final @NotNull String name, final @NotNull SchildReportingAttributTyp typ, final @NotNull String beschreibung) {
 		final SchildReportingDatenquelleAttribut attr = new SchildReportingDatenquelleAttribut();
 		attr.name = name;
 		attr.typ = typ.toString();

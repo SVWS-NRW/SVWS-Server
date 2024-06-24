@@ -29,7 +29,7 @@ public final class SchulUtils {
 	 *
 	 * @throws ApiOperationException mit dem Response Code 404 NOT_FOUND falls kein Schul-Eintrag in der DB vorhanden ist
 	 */
-	public static @NotNull DTOEigeneSchule getDTOSchule(@NotNull final DBEntityManager conn) throws ApiOperationException {
+	public static @NotNull DTOEigeneSchule getDTOSchule(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");

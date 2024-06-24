@@ -546,7 +546,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// Kurse <--> Schienen
 			final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
 			for (final Map.Entry<Long, Set<GostBlockungsergebnisSchiene>> entry : map_KursID_SchienenIDs.entrySet())
-				for (@NotNull final GostBlockungsergebnisSchiene schiene : entry.getValue())
+				for (final @NotNull GostBlockungsergebnisSchiene schiene : entry.getValue())
 					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, entry.getKey(), schiene.id));
 
 			// Ergänze die ID bei der Liste der berechneten Ergebnisse

@@ -100,7 +100,7 @@ public class MDBtoCSV {
 	}
 
 
-	private static Comparator<Row> compSortKurztext = (a, b) -> {
+	private static final Comparator<Row> compSortKurztext = (a, b) -> {
 		final int cmp = cmpInt(a.getInt("Sort"), b.getInt("Sort"));
 		if (cmp != 0)
 			return cmp;

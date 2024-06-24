@@ -214,7 +214,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	}
 
 	@Override
-	public V put(@NotNull final K key, @NotNull final V value) {
+	public V put(final @NotNull K key, final @NotNull V value) {
 		final int index = keyIndexFunction.apply(key);
 		if (!isValidIndex(index))
 			throw new IllegalArgumentException("Der Schlüsselwert ist ungültig und kann keinem Index zugeordnet werden.");

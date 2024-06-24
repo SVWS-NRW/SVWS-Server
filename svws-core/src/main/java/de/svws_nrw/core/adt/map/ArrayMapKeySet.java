@@ -73,7 +73,7 @@ final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
 	}
 
 	@Override
-	public boolean add(@NotNull final K e) {
+	public boolean add(final @NotNull K e) {
 		throw new UnsupportedOperationException("add: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).");
 	}
 

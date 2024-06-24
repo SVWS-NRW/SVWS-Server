@@ -163,7 +163,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel in der Map bereits existiert.
 	 */
-	public static <@NotNull K, @NotNull V> void ifMapContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap,
+	public static <@NotNull K, @NotNull V> void ifMapContains(final @NotNull String pMapName, final @NotNull Map<@NotNull K, @NotNull V> pMap,
 			final @NotNull K pKey) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
 			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY " + pKey + "");
@@ -181,7 +181,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel nicht in der Map bereits existiert.
 	 */
-	public static <@NotNull K, @NotNull V> void ifMapNotContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap,
+	public static <@NotNull K, @NotNull V> void ifMapNotContains(final @NotNull String pMapName, final @NotNull Map<@NotNull K, @NotNull V> pMap,
 			final @NotNull K pKey) throws DeveloperNotificationException {
 		if (!pMap.containsKey(pKey))
 			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY " + pKey + "");
@@ -244,7 +244,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel K nichts oder NULL zugeordnet ist.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull V ifMapGetIsNull(@NotNull final Map<@NotNull K, @NotNull V> map, final @NotNull K key)
+	public static <@NotNull K, @NotNull V> @NotNull V ifMapGetIsNull(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key)
 			throws DeveloperNotificationException {
 		if (!map.containsKey(key))
 			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da kein Mapping existiert!");
@@ -267,7 +267,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht in der Map existiert.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull V ifMapRemoveFailes(@NotNull final Map<@NotNull K, @NotNull V> map, final @NotNull K key)
+	public static <@NotNull K, @NotNull V> @NotNull V ifMapRemoveFailes(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key)
 			throws DeveloperNotificationException {
 		final V value = map.remove(key);
 		if (value == null)
@@ -359,7 +359,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
-	public static <@NotNull E> void ifListNotContains(final @NotNull String listName, @NotNull final List<@NotNull E> list, final @NotNull E value)
+	public static <@NotNull E> void ifListNotContains(final @NotNull String listName, final @NotNull List<@NotNull E> list, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (!list.contains(value))
 			throw new DeveloperNotificationException(listName + " hat kein Element " + value + "!");
@@ -376,7 +376,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
-	public static <@NotNull E> void ifListAddsDuplicate(final @NotNull String listName, @NotNull final List<@NotNull E> list, final @NotNull E value)
+	public static <@NotNull E> void ifListAddsDuplicate(final @NotNull String listName, final @NotNull List<@NotNull E> list, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (list.contains(value))
 			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!");
@@ -394,7 +394,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht in der Liste existiert.
 	 */
-	public static <@NotNull E> void ifListRemoveFailes(final @NotNull String listName, @NotNull final List<@NotNull E> list, final @NotNull E value)
+	public static <@NotNull E> void ifListRemoveFailes(final @NotNull String listName, final @NotNull List<@NotNull E> list, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (!list.remove(value))
 			throw new DeveloperNotificationException(listName + " konnte Element " + value + " nicht entfernen!");
@@ -412,7 +412,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls kein erstes NICHT-NULL Element existiert.
 	 */
-	public static <@NotNull E> @NotNull E ifListGetFirstFailes(final @NotNull String listName, @NotNull final List<@NotNull E> list)
+	public static <@NotNull E> @NotNull E ifListGetFirstFailes(final @NotNull String listName, final @NotNull List<@NotNull E> list)
 			throws DeveloperNotificationException {
 		if (list.isEmpty())
 			throw new DeveloperNotificationException(listName + " hat kein erstes Element!");
@@ -434,7 +434,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls kein letztes NICHT-NULL Element existiert.
 	 */
-	public static <@NotNull E> @NotNull E ifListGetLastFailes(final @NotNull String listName, @NotNull final List<@NotNull E> list)
+	public static <@NotNull E> @NotNull E ifListGetLastFailes(final @NotNull String listName, final @NotNull List<@NotNull E> list)
 			throws DeveloperNotificationException {
 		if (list.isEmpty())
 			throw new DeveloperNotificationException(listName + " hat kein letztes Element!");
@@ -471,7 +471,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
 	 */
-	public static <@NotNull E> void ifSetAddsDuplicate(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value)
+	public static <@NotNull E> void ifSetAddsDuplicate(final @NotNull String setName, final @NotNull Set<@NotNull E> set, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (!set.add(value))
 			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!");
@@ -488,7 +488,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
 	 */
-	public static <@NotNull E> void ifSetRemoveFailes(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value)
+	public static <@NotNull E> void ifSetRemoveFailes(final @NotNull String setName, final @NotNull Set<@NotNull E> set, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (!set.remove(value))
 			throw new DeveloperNotificationException(setName + " konnte Element " + value + " nicht entfernen!");
@@ -505,7 +505,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
 	 */
-	public static <@NotNull E> void ifSetContains(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value)
+	public static <@NotNull E> void ifSetContains(final @NotNull String setName, final @NotNull Set<@NotNull E> set, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (set.contains(value))
 			throw new DeveloperNotificationException(setName + " hat darf " + value + " nicht enthalten!");
@@ -522,7 +522,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
 	 */
-	public static <@NotNull E> void ifSetNotContains(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value)
+	public static <@NotNull E> void ifSetNotContains(final @NotNull String setName, final @NotNull Set<@NotNull E> set, final @NotNull E value)
 			throws DeveloperNotificationException {
 		if (!set.contains(value))
 			throw new DeveloperNotificationException(setName + " muss " + value + " enthalten!");

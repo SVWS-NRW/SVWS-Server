@@ -319,11 +319,11 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
-		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
 
-		for (@NotNull final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 : _map1.values())
-			for (@NotNull final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
-				for (@NotNull final Map<@NotNull K4, @NotNull V> map4 : map3.values())
+		for (final @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 : _map1.values())
+			for (final @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
+				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 
@@ -338,11 +338,11 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public @NotNull List<@NotNull V> getNonNullValuesOfMap2AsList(final @NotNull K1 key1) {
-		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
 		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
-			for (@NotNull final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
-				for (@NotNull final Map<@NotNull K4, @NotNull V> map4 : map3.values())
+			for (final @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
+				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 		}
@@ -359,12 +359,12 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public @NotNull List<@NotNull V> getNonNullValuesOfMap3AsList(final @NotNull K1 key1, final @NotNull K2 key2) {
-		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
 		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
 			final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
 			if (map3 != null)
-				for (@NotNull final Map<@NotNull K4, @NotNull V> map4 : map3.values())
+				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 		}
@@ -382,7 +382,7 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public @NotNull List<@NotNull V> getNonNullValuesOfMap4AsList(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
 		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
 			final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);

@@ -242,7 +242,7 @@ public final class DataVermerkarten extends DataManager<Long> {
 	 *
 	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
 	 */
-	private SimpleOperationResponse checkDeletePreConditions(@NotNull final DTOVermerkArt dtoVermerkArt) {
+	private SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOVermerkArt dtoVermerkArt) {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
 		operationResponse.id = dtoVermerkArt.ID;
 

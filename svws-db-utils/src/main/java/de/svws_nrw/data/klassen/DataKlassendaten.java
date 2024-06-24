@@ -536,7 +536,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 	 *
 	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
 	 */
-	private SimpleOperationResponse checkDeletePreConditions(@NotNull final DTOKlassen dtoKlasse) {
+	private SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOKlassen dtoKlasse) {
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
 		operationResponse.id = dtoKlasse.ID;
 
