@@ -78,7 +78,7 @@ export class GostKlausurenCollectionSkSkt extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkSkt>) : string {
 		let result = '{';
-		if (typeof obj.schuelerklausuren !== "undefined") {
+		if (obj.schuelerklausuren !== undefined) {
 			if (!obj.schuelerklausuren) {
 				result += '"schuelerklausuren" : []';
 			} else {
@@ -92,7 +92,7 @@ export class GostKlausurenCollectionSkSkt extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schuelerklausurtermine !== "undefined") {
+		if (obj.schuelerklausurtermine !== undefined) {
 			if (!obj.schuelerklausurtermine) {
 				result += '"schuelerklausurtermine" : []';
 			} else {

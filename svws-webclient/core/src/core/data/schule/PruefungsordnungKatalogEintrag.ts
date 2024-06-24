@@ -79,9 +79,9 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : null | string, __param3? : string, __param4? : null | number, __param5? : string, __param6? : string, __param7? : string, __param8? : null | number, __param9? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined) && (__param9 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && (typeof __param7 === "string")) && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string") || (__param2 === null)) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && (typeof __param4 === "number") || (__param4 === null)) && ((__param5 !== undefined) && (typeof __param5 === "string")) && ((__param6 !== undefined) && (typeof __param6 === "string")) && ((__param7 !== undefined) && (typeof __param7 === "string")) && ((__param8 !== undefined) && (typeof __param8 === "number") || (__param8 === null)) && ((__param9 !== undefined) && (typeof __param9 === "number") || (__param9 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const kuerzelSchild : string | null = __param2;
@@ -116,28 +116,28 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): PruefungsordnungKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new PruefungsordnungKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.kuerzelSchild = typeof obj.kuerzelSchild === "undefined" ? null : obj.kuerzelSchild === null ? null : obj.kuerzelSchild;
-		if (typeof obj.bezeichnung === "undefined")
+		result.kuerzelSchild = (obj.kuerzelSchild === undefined) ? null : obj.kuerzelSchild === null ? null : obj.kuerzelSchild;
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.gvJahr = typeof obj.gvJahr === "undefined" ? null : obj.gvJahr === null ? null : obj.gvJahr;
-		if (typeof obj.gvNr === "undefined")
+		result.gvJahr = (obj.gvJahr === undefined) ? null : obj.gvJahr === null ? null : obj.gvJahr;
+		if (obj.gvNr === undefined)
 			 throw new Error('invalid json format, missing attribute gvNr');
 		result.gvNr = obj.gvNr;
-		if (typeof obj.gvSeiten === "undefined")
+		if (obj.gvSeiten === undefined)
 			 throw new Error('invalid json format, missing attribute gvSeiten');
 		result.gvSeiten = obj.gvSeiten;
-		if (typeof obj.link === "undefined")
+		if (obj.link === undefined)
 			 throw new Error('invalid json format, missing attribute link');
 		result.link = obj.link;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -160,34 +160,34 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<PruefungsordnungKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.kuerzelSchild !== "undefined") {
+		if (obj.kuerzelSchild !== undefined) {
 			result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.gvJahr !== "undefined") {
+		if (obj.gvJahr !== undefined) {
 			result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr) + ',';
 		}
-		if (typeof obj.gvNr !== "undefined") {
+		if (obj.gvNr !== undefined) {
 			result += '"gvNr" : ' + JSON.stringify(obj.gvNr!) + ',';
 		}
-		if (typeof obj.gvSeiten !== "undefined") {
+		if (obj.gvSeiten !== undefined) {
 			result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten!) + ',';
 		}
-		if (typeof obj.link !== "undefined") {
+		if (obj.link !== undefined) {
 			result += '"link" : ' + JSON.stringify(obj.link!) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

@@ -44,10 +44,10 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsdaten();
-		if (typeof obj.abiturdaten === "undefined")
+		if (obj.abiturdaten === undefined)
 			 throw new Error('invalid json format, missing attribute abiturdaten');
 		result.abiturdaten = Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
-		if (typeof obj.gostJahrgang === "undefined")
+		if (obj.gostJahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute gostJahrgang');
 		result.gostJahrgang = GostJahrgangsdaten.transpilerFromJSON(JSON.stringify(obj.gostJahrgang));
 		if ((obj.gostFaecher !== undefined) && (obj.gostFaecher !== null)) {
@@ -98,13 +98,13 @@ export class GostBelegpruefungsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungsdaten>) : string {
 		let result = '{';
-		if (typeof obj.abiturdaten !== "undefined") {
+		if (obj.abiturdaten !== undefined) {
 			result += '"abiturdaten" : ' + Abiturdaten.transpilerToJSON(obj.abiturdaten) + ',';
 		}
-		if (typeof obj.gostJahrgang !== "undefined") {
+		if (obj.gostJahrgang !== undefined) {
 			result += '"gostJahrgang" : ' + GostJahrgangsdaten.transpilerToJSON(obj.gostJahrgang) + ',';
 		}
-		if (typeof obj.gostFaecher !== "undefined") {
+		if (obj.gostFaecher !== undefined) {
 			if (!obj.gostFaecher) {
 				result += '"gostFaecher" : []';
 			} else {
@@ -118,7 +118,7 @@ export class GostBelegpruefungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gostFaecherKombinationen !== "undefined") {
+		if (obj.gostFaecherKombinationen !== undefined) {
 			if (!obj.gostFaecherKombinationen) {
 				result += '"gostFaecherKombinationen" : []';
 			} else {

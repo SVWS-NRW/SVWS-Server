@@ -58,13 +58,13 @@ export class BKBildungsplan extends JavaObject {
 	public static transpilerFromJSON(json : string): BKBildungsplan {
 		const obj = JSON.parse(json);
 		const result = new BKBildungsplan();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.fachklasse === "undefined")
+		if (obj.fachklasse === undefined)
 			 throw new Error('invalid json format, missing attribute fachklasse');
 		result.fachklasse = BKFachklassenSchluessel.transpilerFromJSON(JSON.stringify(obj.fachklasse));
-		if (typeof obj.dauer === "undefined")
+		if (obj.dauer === undefined)
 			 throw new Error('invalid json format, missing attribute dauer');
 		result.dauer = obj.dauer;
 		if ((obj.fbFaecher !== undefined) && (obj.fbFaecher !== null)) {
@@ -77,8 +77,8 @@ export class BKBildungsplan extends JavaObject {
 				result.lernfelder?.add(BKLernfeld.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -120,16 +120,16 @@ export class BKBildungsplan extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKBildungsplan>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fachklasse !== "undefined") {
+		if (obj.fachklasse !== undefined) {
 			result += '"fachklasse" : ' + BKFachklassenSchluessel.transpilerToJSON(obj.fachklasse) + ',';
 		}
-		if (typeof obj.dauer !== "undefined") {
+		if (obj.dauer !== undefined) {
 			result += '"dauer" : ' + obj.dauer + ',';
 		}
-		if (typeof obj.fbFaecher !== "undefined") {
+		if (obj.fbFaecher !== undefined) {
 			if (!obj.fbFaecher) {
 				result += '"fbFaecher" : []';
 			} else {
@@ -143,7 +143,7 @@ export class BKBildungsplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lernfelder !== "undefined") {
+		if (obj.lernfelder !== undefined) {
 			if (!obj.lernfelder) {
 				result += '"lernfelder" : []';
 			} else {
@@ -157,10 +157,10 @@ export class BKBildungsplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

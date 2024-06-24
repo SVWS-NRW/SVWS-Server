@@ -38,12 +38,12 @@ export class ENMTeilleistungsart extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMTeilleistungsart {
 		const obj = JSON.parse(json);
 		const result = new ENMTeilleistungsart();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : obj.sortierung;
-		result.gewichtung = typeof obj.gewichtung === "undefined" ? null : obj.gewichtung === null ? null : obj.gewichtung;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
+		result.gewichtung = (obj.gewichtung === undefined) ? null : obj.gewichtung === null ? null : obj.gewichtung;
 		return result;
 	}
 
@@ -60,16 +60,16 @@ export class ENMTeilleistungsart extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMTeilleistungsart>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
 		}
-		if (typeof obj.gewichtung !== "undefined") {
+		if (obj.gewichtung !== undefined) {
 			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung) + ',';
 		}
 		result = result.slice(0, -1);

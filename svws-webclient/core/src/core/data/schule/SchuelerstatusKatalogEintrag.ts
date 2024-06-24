@@ -33,9 +33,9 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerstatusKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchuelerstatusKatalogEintrag();
-		result.StatusNr = typeof obj.StatusNr === "undefined" ? null : obj.StatusNr === null ? null : obj.StatusNr;
-		result.Bezeichnung = typeof obj.Bezeichnung === "undefined" ? null : obj.Bezeichnung === null ? null : obj.Bezeichnung;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.StatusNr = (obj.StatusNr === undefined) ? null : obj.StatusNr === null ? null : obj.StatusNr;
+		result.Bezeichnung = (obj.Bezeichnung === undefined) ? null : obj.Bezeichnung === null ? null : obj.Bezeichnung;
+		result.Sortierung = (obj.Sortierung === undefined) ? null : obj.Sortierung === null ? null : obj.Sortierung;
 		return result;
 	}
 
@@ -51,13 +51,13 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerstatusKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.StatusNr !== "undefined") {
+		if (obj.StatusNr !== undefined) {
 			result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr) + ',';
 		}
-		if (typeof obj.Bezeichnung !== "undefined") {
+		if (obj.Bezeichnung !== undefined) {
 			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		}
-		if (typeof obj.Sortierung !== "undefined") {
+		if (obj.Sortierung !== undefined) {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
 		result = result.slice(0, -1);

@@ -48,10 +48,10 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerklausurterminraumstunde {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerklausurterminraumstunde();
-		if (typeof obj.idSchuelerklausurtermin === "undefined")
+		if (obj.idSchuelerklausurtermin === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuelerklausurtermin');
 		result.idSchuelerklausurtermin = obj.idSchuelerklausurtermin;
-		if (typeof obj.idRaumstunde === "undefined")
+		if (obj.idRaumstunde === undefined)
 			 throw new Error('invalid json format, missing attribute idRaumstunde');
 		result.idRaumstunde = obj.idRaumstunde;
 		return result;
@@ -68,10 +68,10 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausurterminraumstunde>) : string {
 		let result = '{';
-		if (typeof obj.idSchuelerklausurtermin !== "undefined") {
+		if (obj.idSchuelerklausurtermin !== undefined) {
 			result += '"idSchuelerklausurtermin" : ' + obj.idSchuelerklausurtermin + ',';
 		}
-		if (typeof obj.idRaumstunde !== "undefined") {
+		if (obj.idRaumstunde !== undefined) {
 			result += '"idRaumstunde" : ' + obj.idRaumstunde + ',';
 		}
 		result = result.slice(0, -1);

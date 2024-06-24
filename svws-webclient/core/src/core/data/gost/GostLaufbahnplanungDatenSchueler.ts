@@ -67,22 +67,22 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenSchueler {
 		const obj = JSON.parse(json);
 		const result = new GostLaufbahnplanungDatenSchueler();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idEnc === "undefined")
+		if (obj.idEnc === undefined)
 			 throw new Error('invalid json format, missing attribute idEnc');
 		result.idEnc = obj.idEnc;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (typeof obj.nachname === "undefined")
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.geschlecht === "undefined")
+		if (obj.geschlecht === undefined)
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
@@ -91,7 +91,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 				result.fachbelegungen?.add(GostLaufbahnplanungDatenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.sprachendaten === "undefined")
+		if (obj.sprachendaten === undefined)
 			 throw new Error('invalid json format, missing attribute sprachendaten');
 		result.sprachendaten = Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
 		return result;
@@ -137,25 +137,25 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungDatenSchueler>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idEnc !== "undefined") {
+		if (obj.idEnc !== undefined) {
 			result += '"idEnc" : ' + JSON.stringify(obj.idEnc!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.geschlecht !== "undefined") {
+		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht!) + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.bewertetesHalbjahr !== "undefined") {
+		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;
 			if (!a) {
 				result += '"bewertetesHalbjahr" : []';
@@ -170,7 +170,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachbelegungen !== "undefined") {
+		if (obj.fachbelegungen !== undefined) {
 			if (!obj.fachbelegungen) {
 				result += '"fachbelegungen" : []';
 			} else {
@@ -184,7 +184,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.sprachendaten !== "undefined") {
+		if (obj.sprachendaten !== undefined) {
 			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		}
 		result = result.slice(0, -1);

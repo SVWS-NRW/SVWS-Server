@@ -82,20 +82,20 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdaten {
 		const obj = JSON.parse(json);
 		const result = new LehrerPersonalabschnittsdaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idLehrer === "undefined")
+		if (obj.idLehrer === undefined)
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		result.pflichtstundensoll = typeof obj.pflichtstundensoll === "undefined" ? null : obj.pflichtstundensoll === null ? null : obj.pflichtstundensoll;
-		result.rechtsverhaeltnis = typeof obj.rechtsverhaeltnis === "undefined" ? null : obj.rechtsverhaeltnis === null ? null : obj.rechtsverhaeltnis;
-		result.beschaeftigungsart = typeof obj.beschaeftigungsart === "undefined" ? null : obj.beschaeftigungsart === null ? null : obj.beschaeftigungsart;
-		result.einsatzstatus = typeof obj.einsatzstatus === "undefined" ? null : obj.einsatzstatus === null ? null : obj.einsatzstatus;
-		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
+		result.pflichtstundensoll = (obj.pflichtstundensoll === undefined) ? null : obj.pflichtstundensoll === null ? null : obj.pflichtstundensoll;
+		result.rechtsverhaeltnis = (obj.rechtsverhaeltnis === undefined) ? null : obj.rechtsverhaeltnis === null ? null : obj.rechtsverhaeltnis;
+		result.beschaeftigungsart = (obj.beschaeftigungsart === undefined) ? null : obj.beschaeftigungsart === null ? null : obj.beschaeftigungsart;
+		result.einsatzstatus = (obj.einsatzstatus === undefined) ? null : obj.einsatzstatus === null ? null : obj.einsatzstatus;
+		result.stammschulnummer = (obj.stammschulnummer === undefined) ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
 		if ((obj.anrechnungen !== undefined) && (obj.anrechnungen !== null)) {
 			for (const elem of obj.anrechnungen) {
 				result.anrechnungen?.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
@@ -184,31 +184,31 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idLehrer !== "undefined") {
+		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer + ',';
 		}
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.pflichtstundensoll !== "undefined") {
+		if (obj.pflichtstundensoll !== undefined) {
 			result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll) + ',';
 		}
-		if (typeof obj.rechtsverhaeltnis !== "undefined") {
+		if (obj.rechtsverhaeltnis !== undefined) {
 			result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
 		}
-		if (typeof obj.beschaeftigungsart !== "undefined") {
+		if (obj.beschaeftigungsart !== undefined) {
 			result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
 		}
-		if (typeof obj.einsatzstatus !== "undefined") {
+		if (obj.einsatzstatus !== undefined) {
 			result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
 		}
-		if (typeof obj.stammschulnummer !== "undefined") {
+		if (obj.stammschulnummer !== undefined) {
 			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
-		if (typeof obj.anrechnungen !== "undefined") {
+		if (obj.anrechnungen !== undefined) {
 			if (!obj.anrechnungen) {
 				result += '"anrechnungen" : []';
 			} else {
@@ -222,7 +222,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.mehrleistung !== "undefined") {
+		if (obj.mehrleistung !== undefined) {
 			if (!obj.mehrleistung) {
 				result += '"mehrleistung" : []';
 			} else {
@@ -236,7 +236,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.minderleistung !== "undefined") {
+		if (obj.minderleistung !== undefined) {
 			if (!obj.minderleistung) {
 				result += '"minderleistung" : []';
 			} else {
@@ -250,7 +250,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.funktionen !== "undefined") {
+		if (obj.funktionen !== undefined) {
 			if (!obj.funktionen) {
 				result += '"funktionen" : []';
 			} else {

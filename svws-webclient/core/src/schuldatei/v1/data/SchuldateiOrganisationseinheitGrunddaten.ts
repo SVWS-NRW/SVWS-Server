@@ -104,46 +104,46 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitGrunddaten {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheitGrunddaten();
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		if (typeof obj.schulnummer === "undefined")
+		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		if (typeof obj.kurzbezeichnung === "undefined")
+		if (obj.kurzbezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute kurzbezeichnung');
 		result.kurzbezeichnung = obj.kurzbezeichnung;
-		if (typeof obj.rechtsstatus === "undefined")
+		if (obj.rechtsstatus === undefined)
 			 throw new Error('invalid json format, missing attribute rechtsstatus');
 		result.rechtsstatus = obj.rechtsstatus;
-		if (typeof obj.schultraegernummer === "undefined")
+		if (obj.schultraegernummer === undefined)
 			 throw new Error('invalid json format, missing attribute schultraegernummer');
 		result.schultraegernummer = obj.schultraegernummer;
-		if (typeof obj.artdertraegerschaft === "undefined")
+		if (obj.artdertraegerschaft === undefined)
 			 throw new Error('invalid json format, missing attribute artdertraegerschaft');
 		result.artdertraegerschaft = obj.artdertraegerschaft;
-		if (typeof obj.schulbetriebsschluessel === "undefined")
+		if (obj.schulbetriebsschluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schulbetriebsschluessel');
 		result.schulbetriebsschluessel = obj.schulbetriebsschluessel;
-		if (typeof obj.kapitel === "undefined")
+		if (obj.kapitel === undefined)
 			 throw new Error('invalid json format, missing attribute kapitel');
 		result.kapitel = obj.kapitel;
-		if (typeof obj.obereschulaufsicht === "undefined")
+		if (obj.obereschulaufsicht === undefined)
 			 throw new Error('invalid json format, missing attribute obereschulaufsicht');
 		result.obereschulaufsicht = obj.obereschulaufsicht;
-		if (typeof obj.untereschulaufsicht === "undefined")
+		if (obj.untereschulaufsicht === undefined)
 			 throw new Error('invalid json format, missing attribute untereschulaufsicht');
 		result.untereschulaufsicht = obj.untereschulaufsicht;
-		if (typeof obj.zfsl === "undefined")
+		if (obj.zfsl === undefined)
 			 throw new Error('invalid json format, missing attribute zfsl');
 		result.zfsl = obj.zfsl;
-		if (typeof obj.dienststellenschluessel === "undefined")
+		if (obj.dienststellenschluessel === undefined)
 			 throw new Error('invalid json format, missing attribute dienststellenschluessel');
 		result.dienststellenschluessel = obj.dienststellenschluessel;
-		result.ptb = typeof obj.ptb === "undefined" ? null : obj.ptb === null ? null : obj.ptb;
-		result.internatsbetrieb = typeof obj.internatsbetrieb === "undefined" ? null : obj.internatsbetrieb === null ? null : obj.internatsbetrieb;
-		result.internatsplaetze = typeof obj.internatsplaetze === "undefined" ? null : obj.internatsplaetze === null ? null : obj.internatsplaetze;
+		result.ptb = (obj.ptb === undefined) ? null : obj.ptb === null ? null : obj.ptb;
+		result.internatsbetrieb = (obj.internatsbetrieb === undefined) ? null : obj.internatsbetrieb === null ? null : obj.internatsbetrieb;
+		result.internatsplaetze = (obj.internatsplaetze === undefined) ? null : obj.internatsplaetze === null ? null : obj.internatsplaetze;
 		if ((obj.schulform !== undefined) && (obj.schulform !== null)) {
 			for (const elem of obj.schulform) {
 				result.schulform?.add(SchuldateiOrganisationseinheitSchulform.transpilerFromJSON(JSON.stringify(elem)));
@@ -191,61 +191,61 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitGrunddaten>) : string {
 		let result = '{';
-		if (typeof obj.gueltigab !== "undefined") {
+		if (obj.gueltigab !== undefined) {
 			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
-		if (typeof obj.gueltigbis !== "undefined") {
+		if (obj.gueltigbis !== undefined) {
 			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
-		if (typeof obj.geaendertam !== "undefined") {
+		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.kurzbezeichnung !== "undefined") {
+		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + JSON.stringify(obj.kurzbezeichnung!) + ',';
 		}
-		if (typeof obj.rechtsstatus !== "undefined") {
+		if (obj.rechtsstatus !== undefined) {
 			result += '"rechtsstatus" : ' + obj.rechtsstatus + ',';
 		}
-		if (typeof obj.schultraegernummer !== "undefined") {
+		if (obj.schultraegernummer !== undefined) {
 			result += '"schultraegernummer" : ' + obj.schultraegernummer + ',';
 		}
-		if (typeof obj.artdertraegerschaft !== "undefined") {
+		if (obj.artdertraegerschaft !== undefined) {
 			result += '"artdertraegerschaft" : ' + obj.artdertraegerschaft + ',';
 		}
-		if (typeof obj.schulbetriebsschluessel !== "undefined") {
+		if (obj.schulbetriebsschluessel !== undefined) {
 			result += '"schulbetriebsschluessel" : ' + obj.schulbetriebsschluessel + ',';
 		}
-		if (typeof obj.kapitel !== "undefined") {
+		if (obj.kapitel !== undefined) {
 			result += '"kapitel" : ' + obj.kapitel + ',';
 		}
-		if (typeof obj.obereschulaufsicht !== "undefined") {
+		if (obj.obereschulaufsicht !== undefined) {
 			result += '"obereschulaufsicht" : ' + obj.obereschulaufsicht + ',';
 		}
-		if (typeof obj.untereschulaufsicht !== "undefined") {
+		if (obj.untereschulaufsicht !== undefined) {
 			result += '"untereschulaufsicht" : ' + obj.untereschulaufsicht + ',';
 		}
-		if (typeof obj.zfsl !== "undefined") {
+		if (obj.zfsl !== undefined) {
 			result += '"zfsl" : ' + obj.zfsl + ',';
 		}
-		if (typeof obj.dienststellenschluessel !== "undefined") {
+		if (obj.dienststellenschluessel !== undefined) {
 			result += '"dienststellenschluessel" : ' + obj.dienststellenschluessel + ',';
 		}
-		if (typeof obj.ptb !== "undefined") {
+		if (obj.ptb !== undefined) {
 			result += '"ptb" : ' + ((!obj.ptb) ? 'null' : JSON.stringify(obj.ptb)) + ',';
 		}
-		if (typeof obj.internatsbetrieb !== "undefined") {
+		if (obj.internatsbetrieb !== undefined) {
 			result += '"internatsbetrieb" : ' + ((!obj.internatsbetrieb) ? 'null' : JSON.stringify(obj.internatsbetrieb)) + ',';
 		}
-		if (typeof obj.internatsplaetze !== "undefined") {
+		if (obj.internatsplaetze !== undefined) {
 			result += '"internatsplaetze" : ' + ((!obj.internatsplaetze) ? 'null' : obj.internatsplaetze) + ',';
 		}
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			if (!obj.schulform) {
 				result += '"schulform" : []';
 			} else {

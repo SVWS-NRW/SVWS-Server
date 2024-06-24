@@ -39,10 +39,10 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenFachbelegung {
 		const obj = JSON.parse(json);
 		const result = new GostLaufbahnplanungDatenFachbelegung();
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : obj.abiturFach;
+		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
 		for (let i = 0; i < obj.kursart.length; i++) {
 			result.kursart[i] = obj.kursart[i] === null ? null : obj.kursart[i];
 		}
@@ -87,13 +87,13 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungDatenFachbelegung>) : string {
 		let result = '{';
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.abiturFach !== "undefined") {
+		if (obj.abiturFach !== undefined) {
 			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			const a = obj.kursart;
 			if (!a) {
 				result += '"kursart" : []';
@@ -108,7 +108,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schriftlich !== "undefined") {
+		if (obj.schriftlich !== undefined) {
 			const a = obj.schriftlich;
 			if (!a) {
 				result += '"schriftlich" : []';

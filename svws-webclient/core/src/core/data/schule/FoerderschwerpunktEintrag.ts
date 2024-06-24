@@ -43,19 +43,19 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): FoerderschwerpunktEintrag {
 		const obj = JSON.parse(json);
 		const result = new FoerderschwerpunktEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.text === "undefined")
+		if (obj.text === undefined)
 			 throw new Error('invalid json format, missing attribute text');
 		result.text = obj.text;
-		if (typeof obj.kuerzelStatistik === "undefined")
+		if (obj.kuerzelStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
 		result.kuerzelStatistik = obj.kuerzelStatistik;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		return result;
@@ -75,19 +75,19 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<FoerderschwerpunktEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.text !== "undefined") {
+		if (obj.text !== undefined) {
 			result += '"text" : ' + JSON.stringify(obj.text!) + ',';
 		}
-		if (typeof obj.kuerzelStatistik !== "undefined") {
+		if (obj.kuerzelStatistik !== undefined) {
 			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
 		result = result.slice(0, -1);

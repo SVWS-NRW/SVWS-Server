@@ -61,19 +61,19 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public static transpilerFromJSON(json : string): SchildReportingDatenquelle {
 		const obj = JSON.parse(json);
 		const result = new SchildReportingDatenquelle();
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (typeof obj.datenart === "undefined")
+		if (obj.datenart === undefined)
 			 throw new Error('invalid json format, missing attribute datenart');
 		result.datenart = obj.datenart;
-		result.master = typeof obj.master === "undefined" ? null : obj.master === null ? null : obj.master;
-		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : obj.masterattribut;
-		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : obj.mastertyp;
-		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut === null ? null : obj.linkattribut;
+		result.master = (obj.master === undefined) ? null : obj.master === null ? null : obj.master;
+		result.masterattribut = (obj.masterattribut === undefined) ? null : obj.masterattribut === null ? null : obj.masterattribut;
+		result.mastertyp = (obj.mastertyp === undefined) ? null : obj.mastertyp === null ? null : obj.mastertyp;
+		result.linkattribut = (obj.linkattribut === undefined) ? null : obj.linkattribut === null ? null : obj.linkattribut;
 		if ((obj.attribute !== undefined) && (obj.attribute !== null)) {
 			for (const elem of obj.attribute) {
 				result.attribute?.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));
@@ -110,28 +110,28 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelle>) : string {
 		let result = '{';
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
-		if (typeof obj.datenart !== "undefined") {
+		if (obj.datenart !== undefined) {
 			result += '"datenart" : ' + JSON.stringify(obj.datenart!) + ',';
 		}
-		if (typeof obj.master !== "undefined") {
+		if (obj.master !== undefined) {
 			result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
 		}
-		if (typeof obj.masterattribut !== "undefined") {
+		if (obj.masterattribut !== undefined) {
 			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
 		}
-		if (typeof obj.mastertyp !== "undefined") {
+		if (obj.mastertyp !== undefined) {
 			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
 		}
-		if (typeof obj.linkattribut !== "undefined") {
+		if (obj.linkattribut !== undefined) {
 			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		}
-		if (typeof obj.attribute !== "undefined") {
+		if (obj.attribute !== undefined) {
 			if (!obj.attribute) {
 				result += '"attribute" : []';
 			} else {

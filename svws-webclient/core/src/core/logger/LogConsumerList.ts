@@ -43,10 +43,10 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 */
 	public constructor(__param0? : boolean, __param1? : boolean) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			this.printTime = false;
 			this.printLevel = false;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "boolean") && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const printTime : boolean = __param0 as boolean;
 			const printLevel : boolean = __param1 as boolean;
 			this.printTime = printTime;
@@ -107,9 +107,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 * Implementation for method overloads of 'getStrings'
 	 */
 	public getStrings(__param0? : string) : List<string> | null {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			return this.getStrings("");
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string"))) {
 			const indent : string = __param0;
 			const result : ArrayList<string> | null = new ArrayList<string>();
 			let temp : string = indent;
@@ -173,12 +173,12 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 * Implementation for method overloads of 'getText'
 	 */
 	public getText(__param0? : LogLevel, __param1? : string) : string {
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			return this.getText(LogLevel.INFO, "");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && (__param1 === undefined)) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			return this.getText(level, "");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((__param1 !== undefined) && (typeof __param1 === "string"))) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : string = __param1;
 			const sb : StringBuilder | null = new StringBuilder();

@@ -48,22 +48,22 @@ export class BenutzerEMailDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerEMailDaten {
 		const obj = JSON.parse(json);
 		const result = new BenutzerEMailDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.address === "undefined")
+		if (obj.address === undefined)
 			 throw new Error('invalid json format, missing attribute address');
 		result.address = obj.address;
-		if (typeof obj.usernameSMTP === "undefined")
+		if (obj.usernameSMTP === undefined)
 			 throw new Error('invalid json format, missing attribute usernameSMTP');
 		result.usernameSMTP = obj.usernameSMTP;
-		if (typeof obj.passwordSMTP === "undefined")
+		if (obj.passwordSMTP === undefined)
 			 throw new Error('invalid json format, missing attribute passwordSMTP');
 		result.passwordSMTP = obj.passwordSMTP;
-		if (typeof obj.signatur === "undefined")
+		if (obj.signatur === undefined)
 			 throw new Error('invalid json format, missing attribute signatur');
 		result.signatur = obj.signatur;
 		return result;
@@ -84,22 +84,22 @@ export class BenutzerEMailDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerEMailDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.address !== "undefined") {
+		if (obj.address !== undefined) {
 			result += '"address" : ' + JSON.stringify(obj.address!) + ',';
 		}
-		if (typeof obj.usernameSMTP !== "undefined") {
+		if (obj.usernameSMTP !== undefined) {
 			result += '"usernameSMTP" : ' + JSON.stringify(obj.usernameSMTP!) + ',';
 		}
-		if (typeof obj.passwordSMTP !== "undefined") {
+		if (obj.passwordSMTP !== undefined) {
 			result += '"passwordSMTP" : ' + JSON.stringify(obj.passwordSMTP!) + ',';
 		}
-		if (typeof obj.signatur !== "undefined") {
+		if (obj.signatur !== undefined) {
 			result += '"signatur" : ' + JSON.stringify(obj.signatur!) + ',';
 		}
 		result = result.slice(0, -1);

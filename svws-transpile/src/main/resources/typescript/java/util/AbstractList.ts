@@ -47,9 +47,9 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 	public add(param1 : number | E | null, element? : E | null) : boolean | void {
 		if ((param1 === null) || (element === null))
 			throw new NullPointerException();
-		if ((typeof param1 === "number") && (typeof element !== "undefined")) {
+		if ((typeof param1 === "number") && (element !== undefined)) {
 			throw new UnsupportedOperationException();
-		} else if ((typeof param1 !== "number") && (typeof element === "undefined")) {
+		} else if ((typeof param1 !== "number") && (element === undefined)) {
 			this.add(this.size(), param1);
 			return true;
 		} else throw new Error("Invalid method overload.");
@@ -98,8 +98,8 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 	public addAll(c : Collection<E>) : boolean;
 	public addAll(index : number, c : Collection<E>) : boolean;
 	public addAll(param1 : number | Collection<E>, param2? : Collection<E>) : boolean {
-		if (((typeof param1 === "number") && (typeof param2 === "undefined")) ||
-			((typeof param1 !== "number") && (typeof param2 !== "undefined")))
+		if (((typeof param1 === "number") && (param2 === undefined)) ||
+			((typeof param1 !== "number") && (param2 !== undefined)))
 			throw new Error("invalid method overload");
 		let index : number = (typeof param1 === "number") ? param1 : 0;
 		const c : Collection<E> | undefined = (typeof param1 === "number") ? param2 : param1;
@@ -118,7 +118,7 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 
 
 	public listIterator(param? : number) : ListIterator<E> {
-		const index = (typeof param === "undefined") ? 0 : param;
+		const index = (param === undefined) ? 0 : param;
 		if (index < 0 || index > this.size())
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + this.size());
 		return new AbstractListListIterator(this, index);

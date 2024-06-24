@@ -59,9 +59,9 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	 * Implementation for method overloads of 'toArray'
 	 */
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			return this.getValueList().toArray();
-		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
+		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
 			const a : Array<T> = __param0;
 			return this.getValueList().toArray(a);
 		} else throw new Error('invalid method overload');

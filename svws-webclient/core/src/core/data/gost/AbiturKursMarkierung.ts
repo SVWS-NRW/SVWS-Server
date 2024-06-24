@@ -39,14 +39,14 @@ export class AbiturKursMarkierung extends JavaObject {
 	 */
 	public constructor(__param0? : boolean, __param1? : boolean) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			this.fuerBerechnung = false;
 			this.aufAbiturZeugnis = true;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "boolean") && (__param1 === undefined)) {
 			const fuerBerechnung : boolean = __param0 as boolean;
 			this.fuerBerechnung = fuerBerechnung;
 			this.aufAbiturZeugnis = true;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "boolean") && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const fuerBerechnung : boolean = __param0 as boolean;
 			const aufAbiturZeugnis : boolean = __param1 as boolean;
 			this.fuerBerechnung = fuerBerechnung;
@@ -65,10 +65,10 @@ export class AbiturKursMarkierung extends JavaObject {
 	public static transpilerFromJSON(json : string): AbiturKursMarkierung {
 		const obj = JSON.parse(json);
 		const result = new AbiturKursMarkierung();
-		if (typeof obj.fuerBerechnung === "undefined")
+		if (obj.fuerBerechnung === undefined)
 			 throw new Error('invalid json format, missing attribute fuerBerechnung');
 		result.fuerBerechnung = obj.fuerBerechnung;
-		if (typeof obj.aufAbiturZeugnis === "undefined")
+		if (obj.aufAbiturZeugnis === undefined)
 			 throw new Error('invalid json format, missing attribute aufAbiturZeugnis');
 		result.aufAbiturZeugnis = obj.aufAbiturZeugnis;
 		return result;
@@ -85,10 +85,10 @@ export class AbiturKursMarkierung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbiturKursMarkierung>) : string {
 		let result = '{';
-		if (typeof obj.fuerBerechnung !== "undefined") {
+		if (obj.fuerBerechnung !== undefined) {
 			result += '"fuerBerechnung" : ' + obj.fuerBerechnung + ',';
 		}
-		if (typeof obj.aufAbiturZeugnis !== "undefined") {
+		if (obj.aufAbiturZeugnis !== undefined) {
 			result += '"aufAbiturZeugnis" : ' + obj.aufAbiturZeugnis + ',';
 		}
 		result = result.slice(0, -1);

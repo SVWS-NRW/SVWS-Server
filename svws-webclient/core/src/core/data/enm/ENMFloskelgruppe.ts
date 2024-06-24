@@ -41,9 +41,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
 		const obj = JSON.parse(json);
 		const result = new ENMFloskelgruppe();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.hauptgruppe = (obj.hauptgruppe === undefined) ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
 		if ((obj.floskeln !== undefined) && (obj.floskeln !== null)) {
 			for (const elem of obj.floskeln) {
 				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
@@ -76,16 +76,16 @@ export class ENMFloskelgruppe extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMFloskelgruppe>) : string {
 		let result = '{';
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.hauptgruppe !== "undefined") {
+		if (obj.hauptgruppe !== undefined) {
 			result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
 		}
-		if (typeof obj.floskeln !== "undefined") {
+		if (obj.floskeln !== undefined) {
 			if (!obj.floskeln) {
 				result += '"floskeln" : []';
 			} else {

@@ -43,19 +43,19 @@ export class GostFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): GostFachwahl {
 		const obj = JSON.parse(json);
 		const result = new GostFachwahl();
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		if (typeof obj.schuelerID === "undefined")
+		if (obj.schuelerID === undefined)
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (typeof obj.kursartID === "undefined")
+		if (obj.kursartID === undefined)
 			 throw new Error('invalid json format, missing attribute kursartID');
 		result.kursartID = obj.kursartID;
-		if (typeof obj.istSchriftlich === "undefined")
+		if (obj.istSchriftlich === undefined)
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
+		result.abiturfach = (obj.abiturfach === undefined) ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		return result;
 	}
 
@@ -73,19 +73,19 @@ export class GostFachwahl extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostFachwahl>) : string {
 		let result = '{';
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.schuelerID !== "undefined") {
+		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
-		if (typeof obj.kursartID !== "undefined") {
+		if (obj.kursartID !== undefined) {
 			result += '"kursartID" : ' + obj.kursartID + ',';
 		}
-		if (typeof obj.istSchriftlich !== "undefined") {
+		if (obj.istSchriftlich !== undefined) {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
 		}
-		if (typeof obj.abiturfach !== "undefined") {
+		if (obj.abiturfach !== undefined) {
 			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		}
 		result = result.slice(0, -1);

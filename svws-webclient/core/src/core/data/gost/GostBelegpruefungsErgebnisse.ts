@@ -30,10 +30,10 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungsErgebnisse {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsErgebnisse();
-		if (typeof obj.schueler === "undefined")
+		if (obj.schueler === undefined)
 			 throw new Error('invalid json format, missing attribute schueler');
 		result.schueler = Schueler.transpilerFromJSON(JSON.stringify(obj.schueler));
-		if (typeof obj.ergebnis === "undefined")
+		if (obj.ergebnis === undefined)
 			 throw new Error('invalid json format, missing attribute ergebnis');
 		result.ergebnis = GostBelegpruefungErgebnis.transpilerFromJSON(JSON.stringify(obj.ergebnis));
 		return result;
@@ -50,10 +50,10 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungsErgebnisse>) : string {
 		let result = '{';
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			result += '"schueler" : ' + Schueler.transpilerToJSON(obj.schueler) + ',';
 		}
-		if (typeof obj.ergebnis !== "undefined") {
+		if (obj.ergebnis !== undefined) {
 			result += '"ergebnis" : ' + GostBelegpruefungErgebnis.transpilerToJSON(obj.ergebnis) + ',';
 		}
 		result = result.slice(0, -1);

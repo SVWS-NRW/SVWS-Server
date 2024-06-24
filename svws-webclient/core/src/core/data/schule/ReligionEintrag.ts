@@ -48,16 +48,16 @@ export class ReligionEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): ReligionEintrag {
 		const obj = JSON.parse(json);
 		const result = new ReligionEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
-		result.textZeugnis = typeof obj.textZeugnis === "undefined" ? null : obj.textZeugnis === null ? null : obj.textZeugnis;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		if (typeof obj.sortierung === "undefined")
+		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
+		result.textZeugnis = (obj.textZeugnis === undefined) ? null : obj.textZeugnis === null ? null : obj.textZeugnis;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		return result;
@@ -78,22 +78,22 @@ export class ReligionEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ReligionEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.text !== "undefined") {
+		if (obj.text !== undefined) {
 			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
-		if (typeof obj.textZeugnis !== "undefined") {
+		if (obj.textZeugnis !== undefined) {
 			result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
 		result = result.slice(0, -1);

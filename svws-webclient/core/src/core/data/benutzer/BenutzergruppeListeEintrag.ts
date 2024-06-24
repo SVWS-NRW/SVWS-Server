@@ -33,13 +33,13 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzergruppeListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new BenutzergruppeListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.istAdmin === "undefined")
+		if (obj.istAdmin === undefined)
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
 		return result;
@@ -57,13 +57,13 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzergruppeListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.istAdmin !== "undefined") {
+		if (obj.istAdmin !== undefined) {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';
 		}
 		result = result.slice(0, -1);

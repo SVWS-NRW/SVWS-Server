@@ -67,9 +67,9 @@ export class NotenKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : number, __param2? : null | number, __param3? : string, __param4? : string, __param5? : string, __param6? : null | number, __param7? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && (typeof __param2 === "number") || (__param2 === null)) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && (typeof __param4 === "string")) && ((__param5 !== undefined) && (typeof __param5 === "string")) && ((__param6 !== undefined) && (typeof __param6 === "number") || (__param6 === null)) && ((__param7 !== undefined) && (typeof __param7 === "number") || (__param7 === null))) {
 			const id : number = __param0 as number;
 			const sortierung : number = __param1 as number;
 			const notenpunkte : number | null = __param2;
@@ -100,24 +100,24 @@ export class NotenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): NotenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new NotenKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
-		if (typeof obj.kuerzel === "undefined")
+		result.notenpunkte = (obj.notenpunkte === undefined) ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.text === "undefined")
+		if (obj.text === undefined)
 			 throw new Error('invalid json format, missing attribute text');
 		result.text = obj.text;
-		if (typeof obj.textZeugnis === "undefined")
+		if (obj.textZeugnis === undefined)
 			 throw new Error('invalid json format, missing attribute textZeugnis');
 		result.textZeugnis = obj.textZeugnis;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -138,28 +138,28 @@ export class NotenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<NotenKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.notenpunkte !== "undefined") {
+		if (obj.notenpunkte !== undefined) {
 			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.text !== "undefined") {
+		if (obj.text !== undefined) {
 			result += '"text" : ' + JSON.stringify(obj.text!) + ',';
 		}
-		if (typeof obj.textZeugnis !== "undefined") {
+		if (obj.textZeugnis !== undefined) {
 			result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis!) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

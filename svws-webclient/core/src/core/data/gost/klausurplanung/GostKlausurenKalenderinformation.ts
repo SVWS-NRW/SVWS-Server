@@ -58,18 +58,18 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurenKalenderinformation {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurenKalenderinformation();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.startdatum = typeof obj.startdatum === "undefined" ? null : obj.startdatum === null ? null : obj.startdatum;
-		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
-		result.enddatum = typeof obj.enddatum === "undefined" ? null : obj.enddatum === null ? null : obj.enddatum;
-		result.endzeit = typeof obj.endzeit === "undefined" ? null : obj.endzeit === null ? null : obj.endzeit;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		if (typeof obj.istSperrtermin === "undefined")
+		result.startdatum = (obj.startdatum === undefined) ? null : obj.startdatum === null ? null : obj.startdatum;
+		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
+		result.enddatum = (obj.enddatum === undefined) ? null : obj.enddatum === null ? null : obj.enddatum;
+		result.endzeit = (obj.endzeit === undefined) ? null : obj.endzeit === null ? null : obj.endzeit;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		if (obj.istSperrtermin === undefined)
 			 throw new Error('invalid json format, missing attribute istSperrtermin');
 		result.istSperrtermin = obj.istSperrtermin;
 		return result;
@@ -92,28 +92,28 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenKalenderinformation>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.startdatum !== "undefined") {
+		if (obj.startdatum !== undefined) {
 			result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
 		}
-		if (typeof obj.startzeit !== "undefined") {
+		if (obj.startzeit !== undefined) {
 			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
-		if (typeof obj.enddatum !== "undefined") {
+		if (obj.enddatum !== undefined) {
 			result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
 		}
-		if (typeof obj.endzeit !== "undefined") {
+		if (obj.endzeit !== undefined) {
 			result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.istSperrtermin !== "undefined") {
+		if (obj.istSperrtermin !== undefined) {
 			result += '"istSperrtermin" : ' + obj.istSperrtermin + ',';
 		}
 		result = result.slice(0, -1);

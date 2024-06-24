@@ -68,16 +68,16 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragSchuelerImportExport {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragSchuelerImportExport();
-		result.Tabelle = typeof obj.Tabelle === "undefined" ? null : obj.Tabelle === null ? null : obj.Tabelle;
-		result.TabellenAnzeige = typeof obj.TabellenAnzeige === "undefined" ? null : obj.TabellenAnzeige === null ? null : obj.TabellenAnzeige;
-		result.MasterTable = typeof obj.MasterTable === "undefined" ? null : obj.MasterTable === null ? null : obj.MasterTable;
-		result.ExpCmd = typeof obj.ExpCmd === "undefined" ? null : obj.ExpCmd === null ? null : obj.ExpCmd;
-		result.SrcGetFieldsSQL = typeof obj.SrcGetFieldsSQL === "undefined" ? null : obj.SrcGetFieldsSQL === null ? null : obj.SrcGetFieldsSQL;
-		result.DeleteSQL = typeof obj.DeleteSQL === "undefined" ? null : obj.DeleteSQL === null ? null : obj.DeleteSQL;
-		result.DstGetIDSQL = typeof obj.DstGetIDSQL === "undefined" ? null : obj.DstGetIDSQL === null ? null : obj.DstGetIDSQL;
-		result.HauptFeld = typeof obj.HauptFeld === "undefined" ? null : obj.HauptFeld === null ? null : obj.HauptFeld;
-		result.DetailFeld = typeof obj.DetailFeld === "undefined" ? null : obj.DetailFeld === null ? null : obj.DetailFeld;
-		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : obj.Reihenfolge;
+		result.Tabelle = (obj.Tabelle === undefined) ? null : obj.Tabelle === null ? null : obj.Tabelle;
+		result.TabellenAnzeige = (obj.TabellenAnzeige === undefined) ? null : obj.TabellenAnzeige === null ? null : obj.TabellenAnzeige;
+		result.MasterTable = (obj.MasterTable === undefined) ? null : obj.MasterTable === null ? null : obj.MasterTable;
+		result.ExpCmd = (obj.ExpCmd === undefined) ? null : obj.ExpCmd === null ? null : obj.ExpCmd;
+		result.SrcGetFieldsSQL = (obj.SrcGetFieldsSQL === undefined) ? null : obj.SrcGetFieldsSQL === null ? null : obj.SrcGetFieldsSQL;
+		result.DeleteSQL = (obj.DeleteSQL === undefined) ? null : obj.DeleteSQL === null ? null : obj.DeleteSQL;
+		result.DstGetIDSQL = (obj.DstGetIDSQL === undefined) ? null : obj.DstGetIDSQL === null ? null : obj.DstGetIDSQL;
+		result.HauptFeld = (obj.HauptFeld === undefined) ? null : obj.HauptFeld === null ? null : obj.HauptFeld;
+		result.DetailFeld = (obj.DetailFeld === undefined) ? null : obj.DetailFeld === null ? null : obj.DetailFeld;
+		result.Reihenfolge = (obj.Reihenfolge === undefined) ? null : obj.Reihenfolge === null ? null : obj.Reihenfolge;
 		return result;
 	}
 
@@ -100,34 +100,34 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragSchuelerImportExport>) : string {
 		let result = '{';
-		if (typeof obj.Tabelle !== "undefined") {
+		if (obj.Tabelle !== undefined) {
 			result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
 		}
-		if (typeof obj.TabellenAnzeige !== "undefined") {
+		if (obj.TabellenAnzeige !== undefined) {
 			result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
 		}
-		if (typeof obj.MasterTable !== "undefined") {
+		if (obj.MasterTable !== undefined) {
 			result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
 		}
-		if (typeof obj.ExpCmd !== "undefined") {
+		if (obj.ExpCmd !== undefined) {
 			result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
 		}
-		if (typeof obj.SrcGetFieldsSQL !== "undefined") {
+		if (obj.SrcGetFieldsSQL !== undefined) {
 			result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
 		}
-		if (typeof obj.DeleteSQL !== "undefined") {
+		if (obj.DeleteSQL !== undefined) {
 			result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
 		}
-		if (typeof obj.DstGetIDSQL !== "undefined") {
+		if (obj.DstGetIDSQL !== undefined) {
 			result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
 		}
-		if (typeof obj.HauptFeld !== "undefined") {
+		if (obj.HauptFeld !== undefined) {
 			result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
 		}
-		if (typeof obj.DetailFeld !== "undefined") {
+		if (obj.DetailFeld !== undefined) {
 			result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
 		}
-		if (typeof obj.Reihenfolge !== "undefined") {
+		if (obj.Reihenfolge !== undefined) {
 			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
 		}
 		result = result.slice(0, -1);

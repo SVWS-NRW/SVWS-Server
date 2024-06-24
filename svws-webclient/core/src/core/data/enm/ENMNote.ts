@@ -38,12 +38,12 @@ export class ENMNote extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMNote {
 		const obj = JSON.parse(json);
 		const result = new ENMNote();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.notenpunkte = (obj.notenpunkte === undefined) ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
+		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
 		return result;
 	}
 
@@ -60,16 +60,16 @@ export class ENMNote extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMNote>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.notenpunkte !== "undefined") {
+		if (obj.notenpunkte !== undefined) {
 			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
-		if (typeof obj.text !== "undefined") {
+		if (obj.text !== undefined) {
 			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		result = result.slice(0, -1);

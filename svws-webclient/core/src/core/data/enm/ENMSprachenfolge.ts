@@ -68,24 +68,24 @@ export class ENMSprachenfolge extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMSprachenfolge {
 		const obj = JSON.parse(json);
 		const result = new ENMSprachenfolge();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : obj.sprache;
-		if (typeof obj.fachID === "undefined")
+		result.sprache = (obj.sprache === undefined) ? null : obj.sprache === null ? null : obj.sprache;
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.fachKuerzel = typeof obj.fachKuerzel === "undefined" ? null : obj.fachKuerzel === null ? null : obj.fachKuerzel;
-		if (typeof obj.reihenfolge === "undefined")
+		result.fachKuerzel = (obj.fachKuerzel === undefined) ? null : obj.fachKuerzel === null ? null : obj.fachKuerzel;
+		if (obj.reihenfolge === undefined)
 			 throw new Error('invalid json format, missing attribute reihenfolge');
 		result.reihenfolge = obj.reihenfolge;
-		if (typeof obj.belegungVonJahrgang === "undefined")
+		if (obj.belegungVonJahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute belegungVonJahrgang');
 		result.belegungVonJahrgang = obj.belegungVonJahrgang;
-		if (typeof obj.belegungVonAbschnitt === "undefined")
+		if (obj.belegungVonAbschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute belegungVonAbschnitt');
 		result.belegungVonAbschnitt = obj.belegungVonAbschnitt;
-		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
-		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
-		result.belegungSekI = typeof obj.belegungSekI === "undefined" ? null : obj.belegungSekI === null ? null : obj.belegungSekI;
+		result.belegungBisJahrgang = (obj.belegungBisJahrgang === undefined) ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
+		result.belegungBisAbschnitt = (obj.belegungBisAbschnitt === undefined) ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
+		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
+		result.belegungSekI = (obj.belegungSekI === undefined) ? null : obj.belegungSekI === null ? null : obj.belegungSekI;
 		return result;
 	}
 
@@ -108,34 +108,34 @@ export class ENMSprachenfolge extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMSprachenfolge>) : string {
 		let result = '{';
-		if (typeof obj.sprache !== "undefined") {
+		if (obj.sprache !== undefined) {
 			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		}
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.fachKuerzel !== "undefined") {
+		if (obj.fachKuerzel !== undefined) {
 			result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
 		}
-		if (typeof obj.reihenfolge !== "undefined") {
+		if (obj.reihenfolge !== undefined) {
 			result += '"reihenfolge" : ' + obj.reihenfolge + ',';
 		}
-		if (typeof obj.belegungVonJahrgang !== "undefined") {
+		if (obj.belegungVonJahrgang !== undefined) {
 			result += '"belegungVonJahrgang" : ' + obj.belegungVonJahrgang + ',';
 		}
-		if (typeof obj.belegungVonAbschnitt !== "undefined") {
+		if (obj.belegungVonAbschnitt !== undefined) {
 			result += '"belegungVonAbschnitt" : ' + obj.belegungVonAbschnitt + ',';
 		}
-		if (typeof obj.belegungBisJahrgang !== "undefined") {
+		if (obj.belegungBisJahrgang !== undefined) {
 			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : obj.belegungBisJahrgang) + ',';
 		}
-		if (typeof obj.belegungBisAbschnitt !== "undefined") {
+		if (obj.belegungBisAbschnitt !== undefined) {
 			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
 		}
-		if (typeof obj.referenzniveau !== "undefined") {
+		if (obj.referenzniveau !== undefined) {
 			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
-		if (typeof obj.belegungSekI !== "undefined") {
+		if (obj.belegungSekI !== undefined) {
 			result += '"belegungSekI" : ' + ((!obj.belegungSekI) ? 'null' : obj.belegungSekI) + ',';
 		}
 		result = result.slice(0, -1);

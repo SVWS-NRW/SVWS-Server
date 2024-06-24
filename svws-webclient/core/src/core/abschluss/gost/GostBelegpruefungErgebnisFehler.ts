@@ -41,13 +41,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	 */
 	public constructor(__param0? : GostBelegungsfehler, __param1? : GostBelegpruefungsArt) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt'))))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt'))))) {
 			const f : GostBelegungsfehler = cast_de_svws_nrw_core_abschluss_gost_GostBelegungsfehler(__param0);
 			const pruefArt : GostBelegpruefungsArt = cast_de_svws_nrw_core_abschluss_gost_GostBelegpruefungsArt(__param1);
 			this.code = f.toString();
 			this.art = f.getArt().kuerzel;
 			this.beschreibung = f.getText(pruefArt);
-		} else if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		} else if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
 		} else throw new Error('invalid method overload');
 	}
@@ -63,13 +63,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungErgebnisFehler {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungErgebnisFehler();
-		if (typeof obj.code === "undefined")
+		if (obj.code === undefined)
 			 throw new Error('invalid json format, missing attribute code');
 		result.code = obj.code;
-		if (typeof obj.art === "undefined")
+		if (obj.art === undefined)
 			 throw new Error('invalid json format, missing attribute art');
 		result.art = obj.art;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		return result;
@@ -87,13 +87,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungErgebnisFehler>) : string {
 		let result = '{';
-		if (typeof obj.code !== "undefined") {
+		if (obj.code !== undefined) {
 			result += '"code" : ' + JSON.stringify(obj.code!) + ',';
 		}
-		if (typeof obj.art !== "undefined") {
+		if (obj.art !== undefined) {
 			result += '"art" : ' + JSON.stringify(obj.art!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		result = result.slice(0, -1);

@@ -44,14 +44,14 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	public static transpilerFromJSON(json : string): AbschlussErgebnisBerufsbildend {
 		const obj = JSON.parse(json);
 		const result = new AbschlussErgebnisBerufsbildend();
-		if (typeof obj.hatBSA === "undefined")
+		if (obj.hatBSA === undefined)
 			 throw new Error('invalid json format, missing attribute hatBSA');
 		result.hatBSA = obj.hatBSA;
-		if (typeof obj.note === "undefined")
+		if (obj.note === undefined)
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
-		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : obj.hatBA;
-		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
+		result.hatBA = (obj.hatBA === undefined) ? null : obj.hatBA === null ? null : obj.hatBA;
+		result.abschlussAllgemeinbildend = (obj.abschlussAllgemeinbildend === undefined) ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
 		if ((obj.log !== undefined) && (obj.log !== null)) {
 			for (const elem of obj.log) {
 				result.log?.add(elem);
@@ -85,19 +85,19 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbschlussErgebnisBerufsbildend>) : string {
 		let result = '{';
-		if (typeof obj.hatBSA !== "undefined") {
+		if (obj.hatBSA !== undefined) {
 			result += '"hatBSA" : ' + obj.hatBSA + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + obj.note + ',';
 		}
-		if (typeof obj.hatBA !== "undefined") {
+		if (obj.hatBA !== undefined) {
 			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
 		}
-		if (typeof obj.abschlussAllgemeinbildend !== "undefined") {
+		if (obj.abschlussAllgemeinbildend !== undefined) {
 			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		}
-		if (typeof obj.log !== "undefined") {
+		if (obj.log !== undefined) {
 			if (!obj.log) {
 				result += '"log" : []';
 			} else {

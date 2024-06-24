@@ -457,11 +457,11 @@ public final class MethodNode {
 	 */
 	private String getTypeCheck(final int i) {
 		if (i >= parameters.size())
-			return "(typeof __param" + i + " === \"undefined\")";
+			return "(__param" + i + " === undefined)";
 		final VariableNode vNode = getParameter(i);
 		if (vNode == null)
 			throw new TranspilerException("Null value not expected here");
-		return "((typeof __param" + i + " !== \"undefined\") && " + vNode.getTypeCheck("__param" + i) + ")";
+		return "((__param" + i + " !== undefined) && " + vNode.getTypeCheck("__param" + i) + ")";
 	}
 
 
@@ -573,7 +573,7 @@ public final class MethodNode {
 			for (int i = 0; i < maxParams; i++) {
 				final VariableNode param = method.getParameter(i);
 				if (param == null)
-					sb.append("(typeof __param" + i + " === \"undefined\")");
+					sb.append("(__param" + i + " === undefined)");
 				else
 					sb.append(method.getTypeCheck(i));
 				if (i < maxParams - 1)

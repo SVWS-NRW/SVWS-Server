@@ -76,7 +76,7 @@ export class GostKlausurenUpdate extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenUpdate>) : string {
 		let result = '{';
-		if (typeof obj.listSchuelerklausurTermineRemoveIdTermin !== "undefined") {
+		if (obj.listSchuelerklausurTermineRemoveIdTermin !== undefined) {
 			if (!obj.listSchuelerklausurTermineRemoveIdTermin) {
 				result += '"listSchuelerklausurTermineRemoveIdTermin" : []';
 			} else {
@@ -90,7 +90,7 @@ export class GostKlausurenUpdate extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.listKlausurtermineNachschreiberZugelassenFalse !== "undefined") {
+		if (obj.listKlausurtermineNachschreiberZugelassenFalse !== undefined) {
 			if (!obj.listKlausurtermineNachschreiberZugelassenFalse) {
 				result += '"listKlausurtermineNachschreiberZugelassenFalse" : []';
 			} else {

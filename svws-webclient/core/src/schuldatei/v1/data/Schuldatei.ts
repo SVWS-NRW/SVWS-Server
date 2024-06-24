@@ -58,7 +58,7 @@ export class Schuldatei extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schuldatei>) : string {
 		let result = '{';
-		if (typeof obj.organisationseinheit !== "undefined") {
+		if (obj.organisationseinheit !== undefined) {
 			if (!obj.organisationseinheit) {
 				result += '"organisationseinheit" : []';
 			} else {

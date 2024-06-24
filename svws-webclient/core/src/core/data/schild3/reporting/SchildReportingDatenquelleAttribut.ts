@@ -33,13 +33,13 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	public static transpilerFromJSON(json : string): SchildReportingDatenquelleAttribut {
 		const obj = JSON.parse(json);
 		const result = new SchildReportingDatenquelleAttribut();
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.typ === "undefined")
+		if (obj.typ === undefined)
 			 throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		return result;
@@ -57,13 +57,13 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelleAttribut>) : string {
 		let result = '{';
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.typ !== "undefined") {
+		if (obj.typ !== undefined) {
 			result += '"typ" : ' + JSON.stringify(obj.typ!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		result = result.slice(0, -1);

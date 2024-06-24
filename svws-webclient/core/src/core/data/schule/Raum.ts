@@ -38,16 +38,16 @@ export class Raum extends JavaObject {
 	public static transpilerFromJSON(json : string): Raum {
 		const obj = JSON.parse(json);
 		const result = new Raum();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (typeof obj.groesse === "undefined")
+		if (obj.groesse === undefined)
 			 throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
 		return result;
@@ -66,16 +66,16 @@ export class Raum extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Raum>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
-		if (typeof obj.groesse !== "undefined") {
+		if (obj.groesse !== undefined) {
 			result += '"groesse" : ' + obj.groesse + ',';
 		}
 		result = result.slice(0, -1);

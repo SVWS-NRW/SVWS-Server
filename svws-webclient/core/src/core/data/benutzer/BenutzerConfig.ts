@@ -77,7 +77,7 @@ export class BenutzerConfig extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerConfig>) : string {
 		let result = '{';
-		if (typeof obj.user !== "undefined") {
+		if (obj.user !== undefined) {
 			if (!obj.user) {
 				result += '"user" : []';
 			} else {
@@ -91,7 +91,7 @@ export class BenutzerConfig extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.global !== "undefined") {
+		if (obj.global !== undefined) {
 			if (!obj.global) {
 				result += '"global" : []';
 			} else {

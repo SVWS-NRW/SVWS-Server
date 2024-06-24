@@ -33,9 +33,9 @@ export class SchulformSchulgliederung extends JavaObject {
 	 */
 	public constructor(__param0? : Schulform, __param1? : Schulgliederung | null) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
 			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param1);
 			this.schulform = schulform.daten.kuerzel;
@@ -54,10 +54,10 @@ export class SchulformSchulgliederung extends JavaObject {
 	public static transpilerFromJSON(json : string): SchulformSchulgliederung {
 		const obj = JSON.parse(json);
 		const result = new SchulformSchulgliederung();
-		if (typeof obj.schulform === "undefined")
+		if (obj.schulform === undefined)
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
+		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
 		return result;
 	}
 
@@ -72,10 +72,10 @@ export class SchulformSchulgliederung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulformSchulgliederung>) : string {
 		let result = '{';
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
-		if (typeof obj.gliederung !== "undefined") {
+		if (obj.gliederung !== undefined) {
 			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		result = result.slice(0, -1);

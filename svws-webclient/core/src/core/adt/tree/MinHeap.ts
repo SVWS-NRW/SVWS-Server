@@ -71,7 +71,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	public constructor(__param0 : Comparator<T> | MinHeap<T>, __param1? : number) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+		if (((__param0 !== undefined) && ((__param0 !== undefined) && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const comparator : Comparator<T> = cast_java_util_Comparator(__param0);
 			const initialCapacity : number = __param1 as number;
 			if (initialCapacity <= 0)
@@ -79,12 +79,12 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			this._comparator = comparator;
 			this._initialCapacity = initialCapacity;
 			this._modCount = 0;
-		} else if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && ((__param0 !== undefined) && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null)) && (__param1 === undefined)) {
 			const comparator : Comparator<T> = cast_java_util_Comparator(__param0);
 			this._comparator = comparator;
 			this._initialCapacity = 63;
 			this._modCount = 0;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap'))) || (__param0 === null)) && (__param1 === undefined)) {
 			const original : MinHeap<T> = cast_de_svws_nrw_core_adt_tree_MinHeap(__param0);
 			this._comparator = original._comparator;
 			this._initialCapacity = original._initialCapacity;
@@ -140,12 +140,12 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * Implementation for method overloads of 'remove'
 	 */
 	public remove(__param0? : null | unknown) : T | boolean {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			const result : T | null = this.poll();
 			if (result === null)
 				throw new NoSuchElementException()
 			return result;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
 			const o : unknown | null = (__param0 instanceof JavaObject) ? cast_java_lang_Object(__param0) : __param0;
 			if (o === null)
 				return false;
@@ -271,9 +271,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * Implementation for method overloads of 'toArray'
 	 */
 	public toArray<U>(__param0? : Array<U>) : Array<U> | Array<unknown> {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			return this.copyNodes();
-		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
+		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
 			const a : Array<U> = __param0;
 			if (a.length < this._size)
 				return this.copyNodes();

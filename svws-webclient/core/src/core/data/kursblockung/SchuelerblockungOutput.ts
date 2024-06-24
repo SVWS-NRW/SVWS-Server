@@ -55,7 +55,7 @@ export class SchuelerblockungOutput extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungOutput>) : string {
 		let result = '{';
-		if (typeof obj.fachwahlenZuKurs !== "undefined") {
+		if (obj.fachwahlenZuKurs !== undefined) {
 			if (!obj.fachwahlenZuKurs) {
 				result += '"fachwahlenZuKurs" : []';
 			} else {

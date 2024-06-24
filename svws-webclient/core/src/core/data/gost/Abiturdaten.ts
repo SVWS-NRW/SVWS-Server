@@ -203,13 +203,13 @@ export class Abiturdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): Abiturdaten {
 		const obj = JSON.parse(json);
 		const result = new Abiturdaten();
-		if (typeof obj.schuelerID === "undefined")
+		if (obj.schuelerID === undefined)
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (typeof obj.abiturjahr === "undefined")
+		if (obj.abiturjahr === undefined)
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		if (typeof obj.schuljahrAbitur === "undefined")
+		if (obj.schuljahrAbitur === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahrAbitur');
 		result.schuljahrAbitur = obj.schuljahrAbitur;
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
@@ -220,53 +220,53 @@ export class Abiturdaten extends JavaObject {
 				result.fachbelegungen?.add(AbiturFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.sprachendaten === "undefined")
+		if (obj.sprachendaten === undefined)
 			 throw new Error('invalid json format, missing attribute sprachendaten');
 		result.sprachendaten = Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (typeof obj.latinum === "undefined")
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		if (obj.latinum === undefined)
 			 throw new Error('invalid json format, missing attribute latinum');
 		result.latinum = obj.latinum;
-		if (typeof obj.kleinesLatinum === "undefined")
+		if (obj.kleinesLatinum === undefined)
 			 throw new Error('invalid json format, missing attribute kleinesLatinum');
 		result.kleinesLatinum = obj.kleinesLatinum;
-		if (typeof obj.graecum === "undefined")
+		if (obj.graecum === undefined)
 			 throw new Error('invalid json format, missing attribute graecum');
 		result.graecum = obj.graecum;
-		if (typeof obj.hebraicum === "undefined")
+		if (obj.hebraicum === undefined)
 			 throw new Error('invalid json format, missing attribute hebraicum');
 		result.hebraicum = obj.hebraicum;
-		if (typeof obj.block1FehlstundenGesamt === "undefined")
+		if (obj.block1FehlstundenGesamt === undefined)
 			 throw new Error('invalid json format, missing attribute block1FehlstundenGesamt');
 		result.block1FehlstundenGesamt = obj.block1FehlstundenGesamt;
-		if (typeof obj.block1FehlstundenUnentschuldigt === "undefined")
+		if (obj.block1FehlstundenUnentschuldigt === undefined)
 			 throw new Error('invalid json format, missing attribute block1FehlstundenUnentschuldigt');
 		result.block1FehlstundenUnentschuldigt = obj.block1FehlstundenUnentschuldigt;
-		result.projektKursThema = typeof obj.projektKursThema === "undefined" ? null : obj.projektKursThema === null ? null : obj.projektKursThema;
-		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
-		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
-		result.besondereLernleistung = typeof obj.besondereLernleistung === "undefined" ? null : obj.besondereLernleistung === null ? null : obj.besondereLernleistung;
-		result.besondereLernleistungNotenKuerzel = typeof obj.besondereLernleistungNotenKuerzel === "undefined" ? null : obj.besondereLernleistungNotenKuerzel === null ? null : obj.besondereLernleistungNotenKuerzel;
-		result.besondereLernleistungThema = typeof obj.besondereLernleistungThema === "undefined" ? null : obj.besondereLernleistungThema === null ? null : obj.besondereLernleistungThema;
-		result.block1AnzahlKurse = typeof obj.block1AnzahlKurse === "undefined" ? null : obj.block1AnzahlKurse === null ? null : obj.block1AnzahlKurse;
-		result.block1DefiziteGesamt = typeof obj.block1DefiziteGesamt === "undefined" ? null : obj.block1DefiziteGesamt === null ? null : obj.block1DefiziteGesamt;
-		result.block1DefiziteLK = typeof obj.block1DefiziteLK === "undefined" ? null : obj.block1DefiziteLK === null ? null : obj.block1DefiziteLK;
-		result.block1PunktSummeGK = typeof obj.block1PunktSummeGK === "undefined" ? null : obj.block1PunktSummeGK === null ? null : obj.block1PunktSummeGK;
-		result.block1PunktSummeLK = typeof obj.block1PunktSummeLK === "undefined" ? null : obj.block1PunktSummeLK === null ? null : obj.block1PunktSummeLK;
-		result.block1PunktSummeNormiert = typeof obj.block1PunktSummeNormiert === "undefined" ? null : obj.block1PunktSummeNormiert === null ? null : obj.block1PunktSummeNormiert;
-		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
-		result.block1Zulassung = typeof obj.block1Zulassung === "undefined" ? null : obj.block1Zulassung === null ? null : obj.block1Zulassung;
-		if (typeof obj.freiwilligerRuecktritt === "undefined")
+		result.projektKursThema = (obj.projektKursThema === undefined) ? null : obj.projektKursThema === null ? null : obj.projektKursThema;
+		result.projektkursLeitfach1Kuerzel = (obj.projektkursLeitfach1Kuerzel === undefined) ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
+		result.projektkursLeitfach2Kuerzel = (obj.projektkursLeitfach2Kuerzel === undefined) ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
+		result.besondereLernleistung = (obj.besondereLernleistung === undefined) ? null : obj.besondereLernleistung === null ? null : obj.besondereLernleistung;
+		result.besondereLernleistungNotenKuerzel = (obj.besondereLernleistungNotenKuerzel === undefined) ? null : obj.besondereLernleistungNotenKuerzel === null ? null : obj.besondereLernleistungNotenKuerzel;
+		result.besondereLernleistungThema = (obj.besondereLernleistungThema === undefined) ? null : obj.besondereLernleistungThema === null ? null : obj.besondereLernleistungThema;
+		result.block1AnzahlKurse = (obj.block1AnzahlKurse === undefined) ? null : obj.block1AnzahlKurse === null ? null : obj.block1AnzahlKurse;
+		result.block1DefiziteGesamt = (obj.block1DefiziteGesamt === undefined) ? null : obj.block1DefiziteGesamt === null ? null : obj.block1DefiziteGesamt;
+		result.block1DefiziteLK = (obj.block1DefiziteLK === undefined) ? null : obj.block1DefiziteLK === null ? null : obj.block1DefiziteLK;
+		result.block1PunktSummeGK = (obj.block1PunktSummeGK === undefined) ? null : obj.block1PunktSummeGK === null ? null : obj.block1PunktSummeGK;
+		result.block1PunktSummeLK = (obj.block1PunktSummeLK === undefined) ? null : obj.block1PunktSummeLK === null ? null : obj.block1PunktSummeLK;
+		result.block1PunktSummeNormiert = (obj.block1PunktSummeNormiert === undefined) ? null : obj.block1PunktSummeNormiert === null ? null : obj.block1PunktSummeNormiert;
+		result.block1NotenpunkteDurchschnitt = (obj.block1NotenpunkteDurchschnitt === undefined) ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
+		result.block1Zulassung = (obj.block1Zulassung === undefined) ? null : obj.block1Zulassung === null ? null : obj.block1Zulassung;
+		if (obj.freiwilligerRuecktritt === undefined)
 			 throw new Error('invalid json format, missing attribute freiwilligerRuecktritt');
 		result.freiwilligerRuecktritt = obj.freiwilligerRuecktritt;
-		result.block2DefiziteGesamt = typeof obj.block2DefiziteGesamt === "undefined" ? null : obj.block2DefiziteGesamt === null ? null : obj.block2DefiziteGesamt;
-		result.block2DefiziteLK = typeof obj.block2DefiziteLK === "undefined" ? null : obj.block2DefiziteLK === null ? null : obj.block2DefiziteLK;
-		result.block2PunktSumme = typeof obj.block2PunktSumme === "undefined" ? null : obj.block2PunktSumme === null ? null : obj.block2PunktSumme;
-		result.gesamtPunkte = typeof obj.gesamtPunkte === "undefined" ? null : obj.gesamtPunkte === null ? null : obj.gesamtPunkte;
-		result.gesamtPunkteVerbesserung = typeof obj.gesamtPunkteVerbesserung === "undefined" ? null : obj.gesamtPunkteVerbesserung === null ? null : obj.gesamtPunkteVerbesserung;
-		result.gesamtPunkteVerschlechterung = typeof obj.gesamtPunkteVerschlechterung === "undefined" ? null : obj.gesamtPunkteVerschlechterung === null ? null : obj.gesamtPunkteVerschlechterung;
-		result.pruefungBestanden = typeof obj.pruefungBestanden === "undefined" ? null : obj.pruefungBestanden === null ? null : obj.pruefungBestanden;
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
+		result.block2DefiziteGesamt = (obj.block2DefiziteGesamt === undefined) ? null : obj.block2DefiziteGesamt === null ? null : obj.block2DefiziteGesamt;
+		result.block2DefiziteLK = (obj.block2DefiziteLK === undefined) ? null : obj.block2DefiziteLK === null ? null : obj.block2DefiziteLK;
+		result.block2PunktSumme = (obj.block2PunktSumme === undefined) ? null : obj.block2PunktSumme === null ? null : obj.block2PunktSumme;
+		result.gesamtPunkte = (obj.gesamtPunkte === undefined) ? null : obj.gesamtPunkte === null ? null : obj.gesamtPunkte;
+		result.gesamtPunkteVerbesserung = (obj.gesamtPunkteVerbesserung === undefined) ? null : obj.gesamtPunkteVerbesserung === null ? null : obj.gesamtPunkteVerbesserung;
+		result.gesamtPunkteVerschlechterung = (obj.gesamtPunkteVerschlechterung === undefined) ? null : obj.gesamtPunkteVerschlechterung === null ? null : obj.gesamtPunkteVerschlechterung;
+		result.pruefungBestanden = (obj.pruefungBestanden === undefined) ? null : obj.pruefungBestanden === null ? null : obj.pruefungBestanden;
+		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
 		return result;
 	}
 
@@ -337,16 +337,16 @@ export class Abiturdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Abiturdaten>) : string {
 		let result = '{';
-		if (typeof obj.schuelerID !== "undefined") {
+		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
-		if (typeof obj.abiturjahr !== "undefined") {
+		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.schuljahrAbitur !== "undefined") {
+		if (obj.schuljahrAbitur !== undefined) {
 			result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur + ',';
 		}
-		if (typeof obj.bewertetesHalbjahr !== "undefined") {
+		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;
 			if (!a) {
 				result += '"bewertetesHalbjahr" : []';
@@ -361,7 +361,7 @@ export class Abiturdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachbelegungen !== "undefined") {
+		if (obj.fachbelegungen !== undefined) {
 			if (!obj.fachbelegungen) {
 				result += '"fachbelegungen" : []';
 			} else {
@@ -375,97 +375,97 @@ export class Abiturdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.sprachendaten !== "undefined") {
+		if (obj.sprachendaten !== undefined) {
 			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.latinum !== "undefined") {
+		if (obj.latinum !== undefined) {
 			result += '"latinum" : ' + obj.latinum + ',';
 		}
-		if (typeof obj.kleinesLatinum !== "undefined") {
+		if (obj.kleinesLatinum !== undefined) {
 			result += '"kleinesLatinum" : ' + obj.kleinesLatinum + ',';
 		}
-		if (typeof obj.graecum !== "undefined") {
+		if (obj.graecum !== undefined) {
 			result += '"graecum" : ' + obj.graecum + ',';
 		}
-		if (typeof obj.hebraicum !== "undefined") {
+		if (obj.hebraicum !== undefined) {
 			result += '"hebraicum" : ' + obj.hebraicum + ',';
 		}
-		if (typeof obj.block1FehlstundenGesamt !== "undefined") {
+		if (obj.block1FehlstundenGesamt !== undefined) {
 			result += '"block1FehlstundenGesamt" : ' + obj.block1FehlstundenGesamt + ',';
 		}
-		if (typeof obj.block1FehlstundenUnentschuldigt !== "undefined") {
+		if (obj.block1FehlstundenUnentschuldigt !== undefined) {
 			result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt + ',';
 		}
-		if (typeof obj.projektKursThema !== "undefined") {
+		if (obj.projektKursThema !== undefined) {
 			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
 		}
-		if (typeof obj.projektkursLeitfach1Kuerzel !== "undefined") {
+		if (obj.projektkursLeitfach1Kuerzel !== undefined) {
 			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		}
-		if (typeof obj.projektkursLeitfach2Kuerzel !== "undefined") {
+		if (obj.projektkursLeitfach2Kuerzel !== undefined) {
 			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		}
-		if (typeof obj.besondereLernleistung !== "undefined") {
+		if (obj.besondereLernleistung !== undefined) {
 			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
 		}
-		if (typeof obj.besondereLernleistungNotenKuerzel !== "undefined") {
+		if (obj.besondereLernleistungNotenKuerzel !== undefined) {
 			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
 		}
-		if (typeof obj.besondereLernleistungThema !== "undefined") {
+		if (obj.besondereLernleistungThema !== undefined) {
 			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
 		}
-		if (typeof obj.block1AnzahlKurse !== "undefined") {
+		if (obj.block1AnzahlKurse !== undefined) {
 			result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse) + ',';
 		}
-		if (typeof obj.block1DefiziteGesamt !== "undefined") {
+		if (obj.block1DefiziteGesamt !== undefined) {
 			result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt) + ',';
 		}
-		if (typeof obj.block1DefiziteLK !== "undefined") {
+		if (obj.block1DefiziteLK !== undefined) {
 			result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK) + ',';
 		}
-		if (typeof obj.block1PunktSummeGK !== "undefined") {
+		if (obj.block1PunktSummeGK !== undefined) {
 			result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK) + ',';
 		}
-		if (typeof obj.block1PunktSummeLK !== "undefined") {
+		if (obj.block1PunktSummeLK !== undefined) {
 			result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK) + ',';
 		}
-		if (typeof obj.block1PunktSummeNormiert !== "undefined") {
+		if (obj.block1PunktSummeNormiert !== undefined) {
 			result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert) + ',';
 		}
-		if (typeof obj.block1NotenpunkteDurchschnitt !== "undefined") {
+		if (obj.block1NotenpunkteDurchschnitt !== undefined) {
 			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
 		}
-		if (typeof obj.block1Zulassung !== "undefined") {
+		if (obj.block1Zulassung !== undefined) {
 			result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung) + ',';
 		}
-		if (typeof obj.freiwilligerRuecktritt !== "undefined") {
+		if (obj.freiwilligerRuecktritt !== undefined) {
 			result += '"freiwilligerRuecktritt" : ' + obj.freiwilligerRuecktritt + ',';
 		}
-		if (typeof obj.block2DefiziteGesamt !== "undefined") {
+		if (obj.block2DefiziteGesamt !== undefined) {
 			result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt) + ',';
 		}
-		if (typeof obj.block2DefiziteLK !== "undefined") {
+		if (obj.block2DefiziteLK !== undefined) {
 			result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK) + ',';
 		}
-		if (typeof obj.block2PunktSumme !== "undefined") {
+		if (obj.block2PunktSumme !== undefined) {
 			result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme) + ',';
 		}
-		if (typeof obj.gesamtPunkte !== "undefined") {
+		if (obj.gesamtPunkte !== undefined) {
 			result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte) + ',';
 		}
-		if (typeof obj.gesamtPunkteVerbesserung !== "undefined") {
+		if (obj.gesamtPunkteVerbesserung !== undefined) {
 			result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung) + ',';
 		}
-		if (typeof obj.gesamtPunkteVerschlechterung !== "undefined") {
+		if (obj.gesamtPunkteVerschlechterung !== undefined) {
 			result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung) + ',';
 		}
-		if (typeof obj.pruefungBestanden !== "undefined") {
+		if (obj.pruefungBestanden !== undefined) {
 			result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden) + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		result = result.slice(0, -1);

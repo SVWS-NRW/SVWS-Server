@@ -65,25 +65,25 @@ export class ENMLerngruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMLerngruppe {
 		const obj = JSON.parse(json);
 		const result = new ENMLerngruppe();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kID === "undefined")
+		if (obj.kID === undefined)
 			 throw new Error('invalid json format, missing attribute kID');
 		result.kID = obj.kID;
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.kursartID = typeof obj.kursartID === "undefined" ? null : obj.kursartID === null ? null : obj.kursartID;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		result.kursartID = (obj.kursartID === undefined) ? null : obj.kursartID === null ? null : obj.kursartID;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.kursartKuerzel = (obj.kursartKuerzel === undefined) ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if ((obj.lehrerID !== undefined) && (obj.lehrerID !== null)) {
 			for (const elem of obj.lehrerID) {
 				result.lehrerID?.add(elem);
 			}
 		}
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		return result;
@@ -118,28 +118,28 @@ export class ENMLerngruppe extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMLerngruppe>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kID !== "undefined") {
+		if (obj.kID !== undefined) {
 			result += '"kID" : ' + obj.kID + ',';
 		}
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.kursartID !== "undefined") {
+		if (obj.kursartID !== undefined) {
 			result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.kursartKuerzel !== "undefined") {
+		if (obj.kursartKuerzel !== undefined) {
 			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.lehrerID !== "undefined") {
+		if (obj.lehrerID !== undefined) {
 			if (!obj.lehrerID) {
 				result += '"lehrerID" : []';
 			} else {
@@ -153,7 +153,7 @@ export class ENMLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		result = result.slice(0, -1);

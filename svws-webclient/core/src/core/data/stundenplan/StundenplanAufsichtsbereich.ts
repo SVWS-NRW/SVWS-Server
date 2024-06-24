@@ -33,13 +33,13 @@ export class StundenplanAufsichtsbereich extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanAufsichtsbereich {
 		const obj = JSON.parse(json);
 		const result = new StundenplanAufsichtsbereich();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		return result;
@@ -57,13 +57,13 @@ export class StundenplanAufsichtsbereich extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanAufsichtsbereich>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		result = result.slice(0, -1);

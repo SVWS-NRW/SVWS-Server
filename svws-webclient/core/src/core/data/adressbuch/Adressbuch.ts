@@ -51,15 +51,15 @@ export class Adressbuch extends JavaObject {
 	public static transpilerFromJSON(json : string): Adressbuch {
 		const obj = JSON.parse(json);
 		const result = new Adressbuch();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.displayname = typeof obj.displayname === "undefined" ? null : obj.displayname === null ? null : obj.displayname;
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		if (typeof obj.synctoken === "undefined")
+		result.displayname = (obj.displayname === undefined) ? null : obj.displayname === null ? null : obj.displayname;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		if (obj.synctoken === undefined)
 			 throw new Error('invalid json format, missing attribute synctoken');
 		result.synctoken = obj.synctoken;
-		if (typeof obj.adressbuchTyp === "undefined")
+		if (obj.adressbuchTyp === undefined)
 			 throw new Error('invalid json format, missing attribute adressbuchTyp');
 		result.adressbuchTyp = obj.adressbuchTyp;
 		if ((obj.adressbuchEintraege !== undefined) && (obj.adressbuchEintraege !== null)) {
@@ -96,22 +96,22 @@ export class Adressbuch extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Adressbuch>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
-		if (typeof obj.displayname !== "undefined") {
+		if (obj.displayname !== undefined) {
 			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
-		if (typeof obj.synctoken !== "undefined") {
+		if (obj.synctoken !== undefined) {
 			result += '"synctoken" : ' + obj.synctoken + ',';
 		}
-		if (typeof obj.adressbuchTyp !== "undefined") {
+		if (obj.adressbuchTyp !== undefined) {
 			result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp!) + ',';
 		}
-		if (typeof obj.adressbuchEintraege !== "undefined") {
+		if (obj.adressbuchEintraege !== undefined) {
 			if (!obj.adressbuchEintraege) {
 				result += '"adressbuchEintraege" : []';
 			} else {

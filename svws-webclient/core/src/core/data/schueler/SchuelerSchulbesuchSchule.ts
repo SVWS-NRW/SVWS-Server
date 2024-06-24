@@ -63,17 +63,17 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchSchule {
 		const obj = JSON.parse(json);
 		const result = new SchuelerSchulbesuchSchule();
-		if (typeof obj.schulnummer === "undefined")
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
-		result.entlassgrundID = typeof obj.entlassgrundID === "undefined" ? null : obj.entlassgrundID === null ? null : obj.entlassgrundID;
-		result.abschlussartID = typeof obj.abschlussartID === "undefined" ? null : obj.abschlussartID === null ? null : obj.abschlussartID;
-		result.organisationsFormID = typeof obj.organisationsFormID === "undefined" ? null : obj.organisationsFormID === null ? null : obj.organisationsFormID;
-		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : obj.datumVon;
-		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : obj.datumBis;
-		result.jahrgangVon = typeof obj.jahrgangVon === "undefined" ? null : obj.jahrgangVon === null ? null : obj.jahrgangVon;
-		result.jahrgangBis = typeof obj.jahrgangBis === "undefined" ? null : obj.jahrgangBis === null ? null : obj.jahrgangBis;
+		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
+		result.entlassgrundID = (obj.entlassgrundID === undefined) ? null : obj.entlassgrundID === null ? null : obj.entlassgrundID;
+		result.abschlussartID = (obj.abschlussartID === undefined) ? null : obj.abschlussartID === null ? null : obj.abschlussartID;
+		result.organisationsFormID = (obj.organisationsFormID === undefined) ? null : obj.organisationsFormID === null ? null : obj.organisationsFormID;
+		result.datumVon = (obj.datumVon === undefined) ? null : obj.datumVon === null ? null : obj.datumVon;
+		result.datumBis = (obj.datumBis === undefined) ? null : obj.datumBis === null ? null : obj.datumBis;
+		result.jahrgangVon = (obj.jahrgangVon === undefined) ? null : obj.jahrgangVon === null ? null : obj.jahrgangVon;
+		result.jahrgangBis = (obj.jahrgangBis === undefined) ? null : obj.jahrgangBis === null ? null : obj.jahrgangBis;
 		return result;
 	}
 
@@ -95,31 +95,31 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerSchulbesuchSchule>) : string {
 		let result = '{';
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer!) + ',';
 		}
-		if (typeof obj.schulgliederung !== "undefined") {
+		if (obj.schulgliederung !== undefined) {
 			result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		}
-		if (typeof obj.entlassgrundID !== "undefined") {
+		if (obj.entlassgrundID !== undefined) {
 			result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID) + ',';
 		}
-		if (typeof obj.abschlussartID !== "undefined") {
+		if (obj.abschlussartID !== undefined) {
 			result += '"abschlussartID" : ' + ((!obj.abschlussartID) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
 		}
-		if (typeof obj.organisationsFormID !== "undefined") {
+		if (obj.organisationsFormID !== undefined) {
 			result += '"organisationsFormID" : ' + ((!obj.organisationsFormID) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
 		}
-		if (typeof obj.datumVon !== "undefined") {
+		if (obj.datumVon !== undefined) {
 			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		}
-		if (typeof obj.datumBis !== "undefined") {
+		if (obj.datumBis !== undefined) {
 			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		}
-		if (typeof obj.jahrgangVon !== "undefined") {
+		if (obj.jahrgangVon !== undefined) {
 			result += '"jahrgangVon" : ' + ((!obj.jahrgangVon) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
 		}
-		if (typeof obj.jahrgangBis !== "undefined") {
+		if (obj.jahrgangBis !== undefined) {
 			result += '"jahrgangBis" : ' + ((!obj.jahrgangBis) ? 'null' : JSON.stringify(obj.jahrgangBis)) + ',';
 		}
 		result = result.slice(0, -1);

@@ -58,20 +58,20 @@ export class OrtKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): OrtKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new OrtKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
-		result.ortsname = typeof obj.ortsname === "undefined" ? null : obj.ortsname === null ? null : obj.ortsname;
-		result.kreis = typeof obj.kreis === "undefined" ? null : obj.kreis === null ? null : obj.kreis;
-		result.kuerzelBundesland = typeof obj.kuerzelBundesland === "undefined" ? null : obj.kuerzelBundesland === null ? null : obj.kuerzelBundesland;
-		if (typeof obj.sortierung === "undefined")
+		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
+		result.ortsname = (obj.ortsname === undefined) ? null : obj.ortsname === null ? null : obj.ortsname;
+		result.kreis = (obj.kreis === undefined) ? null : obj.kreis === null ? null : obj.kreis;
+		result.kuerzelBundesland = (obj.kuerzelBundesland === undefined) ? null : obj.kuerzelBundesland === null ? null : obj.kuerzelBundesland;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
+		if (obj.istAenderbar === undefined)
 			 throw new Error('invalid json format, missing attribute istAenderbar');
 		result.istAenderbar = obj.istAenderbar;
 		return result;
@@ -94,28 +94,28 @@ export class OrtKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<OrtKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.plz !== "undefined") {
+		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
-		if (typeof obj.ortsname !== "undefined") {
+		if (obj.ortsname !== undefined) {
 			result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
 		}
-		if (typeof obj.kreis !== "undefined") {
+		if (obj.kreis !== undefined) {
 			result += '"kreis" : ' + ((!obj.kreis) ? 'null' : JSON.stringify(obj.kreis)) + ',';
 		}
-		if (typeof obj.kuerzelBundesland !== "undefined") {
+		if (obj.kuerzelBundesland !== undefined) {
 			result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.istAenderbar !== "undefined") {
+		if (obj.istAenderbar !== undefined) {
 			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		result = result.slice(0, -1);

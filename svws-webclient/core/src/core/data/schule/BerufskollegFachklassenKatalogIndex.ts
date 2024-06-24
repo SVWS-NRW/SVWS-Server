@@ -36,10 +36,10 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogIndex {
 		const obj = JSON.parse(json);
 		const result = new BerufskollegFachklassenKatalogIndex();
-		if (typeof obj.index === "undefined")
+		if (obj.index === undefined)
 			 throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.fachklassen !== undefined) && (obj.fachklassen !== null)) {
@@ -73,13 +73,13 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogIndex>) : string {
 		let result = '{';
-		if (typeof obj.index !== "undefined") {
+		if (obj.index !== undefined) {
 			result += '"index" : ' + obj.index + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.fachklassen !== "undefined") {
+		if (obj.fachklassen !== undefined) {
 			if (!obj.fachklassen) {
 				result += '"fachklassen" : []';
 			} else {

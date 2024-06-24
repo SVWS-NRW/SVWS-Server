@@ -77,7 +77,7 @@ export abstract class JavaObject implements TranspiledObject {
 	public static getTranspilerHashCode(obj : any) : number {
 		if (obj === null)
 			return 0;
-		if (typeof obj === "undefined")
+		if (obj === undefined)
 			return Number.NaN;   // unspecified in Java
 		if (typeof obj === "string")
 			return (JavaObject._hashCode(obj));

@@ -33,11 +33,11 @@ export class CoreTypeData extends JavaObject {
 	public static transpilerFromJSON(json : string): CoreTypeData {
 		const obj = JSON.parse(json);
 		const result = new CoreTypeData();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -53,13 +53,13 @@ export class CoreTypeData extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<CoreTypeData>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

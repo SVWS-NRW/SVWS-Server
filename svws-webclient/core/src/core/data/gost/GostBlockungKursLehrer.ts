@@ -53,25 +53,25 @@ export class GostBlockungKursLehrer extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungKursLehrer {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungKursLehrer();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (typeof obj.nachname === "undefined")
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.reihenfolge === "undefined")
+		if (obj.reihenfolge === undefined)
 			 throw new Error('invalid json format, missing attribute reihenfolge');
 		result.reihenfolge = obj.reihenfolge;
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		if (typeof obj.istExtern === "undefined")
+		if (obj.istExtern === undefined)
 			 throw new Error('invalid json format, missing attribute istExtern');
 		result.istExtern = obj.istExtern;
 		return result;
@@ -93,25 +93,25 @@ export class GostBlockungKursLehrer extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungKursLehrer>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.reihenfolge !== "undefined") {
+		if (obj.reihenfolge !== undefined) {
 			result += '"reihenfolge" : ' + obj.reihenfolge + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.istExtern !== "undefined") {
+		if (obj.istExtern !== undefined) {
 			result += '"istExtern" : ' + obj.istExtern + ',';
 		}
 		result = result.slice(0, -1);

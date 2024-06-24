@@ -38,16 +38,16 @@ export class StundenplanSchueler extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanSchueler {
 		const obj = JSON.parse(json);
 		const result = new StundenplanSchueler();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.nachname === "undefined")
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (typeof obj.idKlasse === "undefined")
+		if (obj.idKlasse === undefined)
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		return result;
@@ -66,16 +66,16 @@ export class StundenplanSchueler extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanSchueler>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.idKlasse !== "undefined") {
+		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
 		}
 		result = result.slice(0, -1);

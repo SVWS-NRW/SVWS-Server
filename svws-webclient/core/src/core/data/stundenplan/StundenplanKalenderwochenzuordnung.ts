@@ -38,16 +38,16 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanKalenderwochenzuordnung {
 		const obj = JSON.parse(json);
 		const result = new StundenplanKalenderwochenzuordnung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.jahr === "undefined")
+		if (obj.jahr === undefined)
 			 throw new Error('invalid json format, missing attribute jahr');
 		result.jahr = obj.jahr;
-		if (typeof obj.kw === "undefined")
+		if (obj.kw === undefined)
 			 throw new Error('invalid json format, missing attribute kw');
 		result.kw = obj.kw;
-		if (typeof obj.wochentyp === "undefined")
+		if (obj.wochentyp === undefined)
 			 throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
 		return result;
@@ -66,16 +66,16 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKalenderwochenzuordnung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.jahr !== "undefined") {
+		if (obj.jahr !== undefined) {
 			result += '"jahr" : ' + obj.jahr + ',';
 		}
-		if (typeof obj.kw !== "undefined") {
+		if (obj.kw !== undefined) {
 			result += '"kw" : ' + obj.kw + ',';
 		}
-		if (typeof obj.wochentyp !== "undefined") {
+		if (obj.wochentyp !== undefined) {
 			result += '"wochentyp" : ' + obj.wochentyp + ',';
 		}
 		result = result.slice(0, -1);

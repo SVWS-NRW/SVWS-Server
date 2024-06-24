@@ -28,8 +28,8 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): DBSchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new DBSchemaListeEintrag();
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
-		if (typeof obj.isDefault === "undefined")
+		result.name = (obj.name === undefined) ? null : obj.name === null ? null : obj.name;
+		if (obj.isDefault === undefined)
 			 throw new Error('invalid json format, missing attribute isDefault');
 		result.isDefault = obj.isDefault;
 		return result;
@@ -46,10 +46,10 @@ export class DBSchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<DBSchemaListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
-		if (typeof obj.isDefault !== "undefined") {
+		if (obj.isDefault !== undefined) {
 			result += '"isDefault" : ' + obj.isDefault + ',';
 		}
 		result = result.slice(0, -1);

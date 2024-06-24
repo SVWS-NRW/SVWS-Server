@@ -33,11 +33,11 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchMerkmal {
 		const obj = JSON.parse(json);
 		const result = new SchuelerSchulbesuchMerkmal();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : obj.datumVon;
-		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : obj.datumBis;
+		result.datumVon = (obj.datumVon === undefined) ? null : obj.datumVon === null ? null : obj.datumVon;
+		result.datumBis = (obj.datumBis === undefined) ? null : obj.datumBis === null ? null : obj.datumBis;
 		return result;
 	}
 
@@ -53,13 +53,13 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerSchulbesuchMerkmal>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.datumVon !== "undefined") {
+		if (obj.datumVon !== undefined) {
 			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		}
-		if (typeof obj.datumBis !== "undefined") {
+		if (obj.datumBis !== undefined) {
 			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		}
 		result = result.slice(0, -1);

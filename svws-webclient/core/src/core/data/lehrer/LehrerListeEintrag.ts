@@ -63,29 +63,29 @@ export class LehrerListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new LehrerListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : obj.titel;
-		if (typeof obj.nachname === "undefined")
+		result.titel = (obj.titel === undefined) ? null : obj.titel === null ? null : obj.titel;
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (typeof obj.personTyp === "undefined")
+		if (obj.personTyp === undefined)
 			 throw new Error('invalid json format, missing attribute personTyp');
 		result.personTyp = obj.personTyp;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istRelevantFuerStatistik === "undefined")
+		if (obj.istRelevantFuerStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
 		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
 		return result;
@@ -109,31 +109,31 @@ export class LehrerListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.titel !== "undefined") {
+		if (obj.titel !== undefined) {
 			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.personTyp !== "undefined") {
+		if (obj.personTyp !== undefined) {
 			result += '"personTyp" : ' + JSON.stringify(obj.personTyp!) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.istRelevantFuerStatistik !== "undefined") {
+		if (obj.istRelevantFuerStatistik !== undefined) {
 			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
 		}
 		result = result.slice(0, -1);

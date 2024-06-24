@@ -94,18 +94,18 @@ export class LehrerPersonaldaten extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerPersonaldaten {
 		const obj = JSON.parse(json);
 		const result = new LehrerPersonaldaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.identNrTeil1 = typeof obj.identNrTeil1 === "undefined" ? null : obj.identNrTeil1 === null ? null : obj.identNrTeil1;
-		result.identNrTeil2SerNr = typeof obj.identNrTeil2SerNr === "undefined" ? null : obj.identNrTeil2SerNr === null ? null : obj.identNrTeil2SerNr;
-		result.personalaktennummer = typeof obj.personalaktennummer === "undefined" ? null : obj.personalaktennummer === null ? null : obj.personalaktennummer;
-		result.lbvPersonalnummer = typeof obj.lbvPersonalnummer === "undefined" ? null : obj.lbvPersonalnummer === null ? null : obj.lbvPersonalnummer;
-		result.lbvVerguetungsschluessel = typeof obj.lbvVerguetungsschluessel === "undefined" ? null : obj.lbvVerguetungsschluessel === null ? null : obj.lbvVerguetungsschluessel;
-		result.zugangsdatum = typeof obj.zugangsdatum === "undefined" ? null : obj.zugangsdatum === null ? null : obj.zugangsdatum;
-		result.zugangsgrund = typeof obj.zugangsgrund === "undefined" ? null : obj.zugangsgrund === null ? null : obj.zugangsgrund;
-		result.abgangsdatum = typeof obj.abgangsdatum === "undefined" ? null : obj.abgangsdatum === null ? null : obj.abgangsdatum;
-		result.abgangsgrund = typeof obj.abgangsgrund === "undefined" ? null : obj.abgangsgrund === null ? null : obj.abgangsgrund;
+		result.identNrTeil1 = (obj.identNrTeil1 === undefined) ? null : obj.identNrTeil1 === null ? null : obj.identNrTeil1;
+		result.identNrTeil2SerNr = (obj.identNrTeil2SerNr === undefined) ? null : obj.identNrTeil2SerNr === null ? null : obj.identNrTeil2SerNr;
+		result.personalaktennummer = (obj.personalaktennummer === undefined) ? null : obj.personalaktennummer === null ? null : obj.personalaktennummer;
+		result.lbvPersonalnummer = (obj.lbvPersonalnummer === undefined) ? null : obj.lbvPersonalnummer === null ? null : obj.lbvPersonalnummer;
+		result.lbvVerguetungsschluessel = (obj.lbvVerguetungsschluessel === undefined) ? null : obj.lbvVerguetungsschluessel === null ? null : obj.lbvVerguetungsschluessel;
+		result.zugangsdatum = (obj.zugangsdatum === undefined) ? null : obj.zugangsdatum === null ? null : obj.zugangsdatum;
+		result.zugangsgrund = (obj.zugangsgrund === undefined) ? null : obj.zugangsgrund === null ? null : obj.zugangsgrund;
+		result.abgangsdatum = (obj.abgangsdatum === undefined) ? null : obj.abgangsdatum === null ? null : obj.abgangsdatum;
+		result.abgangsgrund = (obj.abgangsgrund === undefined) ? null : obj.abgangsgrund === null ? null : obj.abgangsgrund;
 		if ((obj.abschnittsdaten !== undefined) && (obj.abschnittsdaten !== null)) {
 			for (const elem of obj.abschnittsdaten) {
 				result.abschnittsdaten?.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -196,37 +196,37 @@ export class LehrerPersonaldaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonaldaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.identNrTeil1 !== "undefined") {
+		if (obj.identNrTeil1 !== undefined) {
 			result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
 		}
-		if (typeof obj.identNrTeil2SerNr !== "undefined") {
+		if (obj.identNrTeil2SerNr !== undefined) {
 			result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
 		}
-		if (typeof obj.personalaktennummer !== "undefined") {
+		if (obj.personalaktennummer !== undefined) {
 			result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
 		}
-		if (typeof obj.lbvPersonalnummer !== "undefined") {
+		if (obj.lbvPersonalnummer !== undefined) {
 			result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
 		}
-		if (typeof obj.lbvVerguetungsschluessel !== "undefined") {
+		if (obj.lbvVerguetungsschluessel !== undefined) {
 			result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
 		}
-		if (typeof obj.zugangsdatum !== "undefined") {
+		if (obj.zugangsdatum !== undefined) {
 			result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
 		}
-		if (typeof obj.zugangsgrund !== "undefined") {
+		if (obj.zugangsgrund !== undefined) {
 			result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
 		}
-		if (typeof obj.abgangsdatum !== "undefined") {
+		if (obj.abgangsdatum !== undefined) {
 			result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
 		}
-		if (typeof obj.abgangsgrund !== "undefined") {
+		if (obj.abgangsgrund !== undefined) {
 			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		}
-		if (typeof obj.abschnittsdaten !== "undefined") {
+		if (obj.abschnittsdaten !== undefined) {
 			if (!obj.abschnittsdaten) {
 				result += '"abschnittsdaten" : []';
 			} else {
@@ -240,7 +240,7 @@ export class LehrerPersonaldaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehraemter !== "undefined") {
+		if (obj.lehraemter !== undefined) {
 			if (!obj.lehraemter) {
 				result += '"lehraemter" : []';
 			} else {
@@ -254,7 +254,7 @@ export class LehrerPersonaldaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachrichtungen !== "undefined") {
+		if (obj.fachrichtungen !== undefined) {
 			if (!obj.fachrichtungen) {
 				result += '"fachrichtungen" : []';
 			} else {
@@ -268,7 +268,7 @@ export class LehrerPersonaldaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrbefaehigungen !== "undefined") {
+		if (obj.lehrbefaehigungen !== undefined) {
 			if (!obj.lehrbefaehigungen) {
 				result += '"lehrbefaehigungen" : []';
 			} else {

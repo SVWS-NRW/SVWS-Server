@@ -88,26 +88,26 @@ export class GostKlausurtermin extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurtermin {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurtermin();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.abijahr === "undefined")
+		if (obj.abijahr === undefined)
 			 throw new Error('invalid json format, missing attribute abijahr');
 		result.abijahr = obj.abijahr;
-		if (typeof obj.halbjahr === "undefined")
+		if (obj.halbjahr === undefined)
 			 throw new Error('invalid json format, missing attribute halbjahr');
 		result.halbjahr = obj.halbjahr;
-		if (typeof obj.quartal === "undefined")
+		if (obj.quartal === undefined)
 			 throw new Error('invalid json format, missing attribute quartal');
 		result.quartal = obj.quartal;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
-		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		if (typeof obj.istHaupttermin === "undefined")
+		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
+		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		if (obj.istHaupttermin === undefined)
 			 throw new Error('invalid json format, missing attribute istHaupttermin');
 		result.istHaupttermin = obj.istHaupttermin;
-		if (typeof obj.nachschreiberZugelassen === "undefined")
+		if (obj.nachschreiberZugelassen === undefined)
 			 throw new Error('invalid json format, missing attribute nachschreiberZugelassen');
 		result.nachschreiberZugelassen = obj.nachschreiberZugelassen;
 		return result;
@@ -132,34 +132,34 @@ export class GostKlausurtermin extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurtermin>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.abijahr !== "undefined") {
+		if (obj.abijahr !== undefined) {
 			result += '"abijahr" : ' + obj.abijahr + ',';
 		}
-		if (typeof obj.halbjahr !== "undefined") {
+		if (obj.halbjahr !== undefined) {
 			result += '"halbjahr" : ' + obj.halbjahr + ',';
 		}
-		if (typeof obj.quartal !== "undefined") {
+		if (obj.quartal !== undefined) {
 			result += '"quartal" : ' + obj.quartal + ',';
 		}
-		if (typeof obj.datum !== "undefined") {
+		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
-		if (typeof obj.startzeit !== "undefined") {
+		if (obj.startzeit !== undefined) {
 			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.istHaupttermin !== "undefined") {
+		if (obj.istHaupttermin !== undefined) {
 			result += '"istHaupttermin" : ' + obj.istHaupttermin + ',';
 		}
-		if (typeof obj.nachschreiberZugelassen !== "undefined") {
+		if (obj.nachschreiberZugelassen !== undefined) {
 			result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen + ',';
 		}
 		result = result.slice(0, -1);

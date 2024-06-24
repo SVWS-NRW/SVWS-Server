@@ -57,19 +57,19 @@ export class GostBlockungsergebnis extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnis {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnis();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.blockungID === "undefined")
+		if (obj.blockungID === undefined)
 			 throw new Error('invalid json format, missing attribute blockungID');
 		result.blockungID = obj.blockungID;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.gostHalbjahr === "undefined")
+		if (obj.gostHalbjahr === undefined)
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.istAktiv === "undefined")
+		if (obj.istAktiv === undefined)
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
@@ -77,7 +77,7 @@ export class GostBlockungsergebnis extends JavaObject {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.bewertung === "undefined")
+		if (obj.bewertung === undefined)
 			 throw new Error('invalid json format, missing attribute bewertung');
 		result.bewertung = GostBlockungsergebnisBewertung.transpilerFromJSON(JSON.stringify(obj.bewertung));
 		return result;
@@ -110,22 +110,22 @@ export class GostBlockungsergebnis extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnis>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.blockungID !== "undefined") {
+		if (obj.blockungID !== undefined) {
 			result += '"blockungID" : ' + obj.blockungID + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.gostHalbjahr !== "undefined") {
+		if (obj.gostHalbjahr !== undefined) {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		}
-		if (typeof obj.istAktiv !== "undefined") {
+		if (obj.istAktiv !== undefined) {
 			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -139,7 +139,7 @@ export class GostBlockungsergebnis extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.bewertung !== "undefined") {
+		if (obj.bewertung !== undefined) {
 			result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';
 		}
 		result = result.slice(0, -1);

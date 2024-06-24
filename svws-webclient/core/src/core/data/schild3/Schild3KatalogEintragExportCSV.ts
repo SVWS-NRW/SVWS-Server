@@ -63,15 +63,15 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragExportCSV {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragExportCSV();
-		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
-		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname === null ? null : obj.Feldname;
-		result.AnzeigeText = typeof obj.AnzeigeText === "undefined" ? null : obj.AnzeigeText === null ? null : obj.AnzeigeText;
-		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp === null ? null : obj.Feldtyp;
-		result.Feldwerte = typeof obj.Feldwerte === "undefined" ? null : obj.Feldwerte === null ? null : obj.Feldwerte;
-		result.ErgebnisWerte = typeof obj.ErgebnisWerte === "undefined" ? null : obj.ErgebnisWerte === null ? null : obj.ErgebnisWerte;
-		result.LookupFeldname = typeof obj.LookupFeldname === "undefined" ? null : obj.LookupFeldname === null ? null : obj.LookupFeldname;
-		result.LookupSQLText = typeof obj.LookupSQLText === "undefined" ? null : obj.LookupSQLText === null ? null : obj.LookupSQLText;
-		result.DBFormat = typeof obj.DBFormat === "undefined" ? null : obj.DBFormat === null ? null : obj.DBFormat;
+		result.DatenartKrz = (obj.DatenartKrz === undefined) ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
+		result.Feldname = (obj.Feldname === undefined) ? null : obj.Feldname === null ? null : obj.Feldname;
+		result.AnzeigeText = (obj.AnzeigeText === undefined) ? null : obj.AnzeigeText === null ? null : obj.AnzeigeText;
+		result.Feldtyp = (obj.Feldtyp === undefined) ? null : obj.Feldtyp === null ? null : obj.Feldtyp;
+		result.Feldwerte = (obj.Feldwerte === undefined) ? null : obj.Feldwerte === null ? null : obj.Feldwerte;
+		result.ErgebnisWerte = (obj.ErgebnisWerte === undefined) ? null : obj.ErgebnisWerte === null ? null : obj.ErgebnisWerte;
+		result.LookupFeldname = (obj.LookupFeldname === undefined) ? null : obj.LookupFeldname === null ? null : obj.LookupFeldname;
+		result.LookupSQLText = (obj.LookupSQLText === undefined) ? null : obj.LookupSQLText === null ? null : obj.LookupSQLText;
+		result.DBFormat = (obj.DBFormat === undefined) ? null : obj.DBFormat === null ? null : obj.DBFormat;
 		return result;
 	}
 
@@ -93,31 +93,31 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragExportCSV>) : string {
 		let result = '{';
-		if (typeof obj.DatenartKrz !== "undefined") {
+		if (obj.DatenartKrz !== undefined) {
 			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		}
-		if (typeof obj.Feldname !== "undefined") {
+		if (obj.Feldname !== undefined) {
 			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
 		}
-		if (typeof obj.AnzeigeText !== "undefined") {
+		if (obj.AnzeigeText !== undefined) {
 			result += '"AnzeigeText" : ' + ((!obj.AnzeigeText) ? 'null' : JSON.stringify(obj.AnzeigeText)) + ',';
 		}
-		if (typeof obj.Feldtyp !== "undefined") {
+		if (obj.Feldtyp !== undefined) {
 			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
 		}
-		if (typeof obj.Feldwerte !== "undefined") {
+		if (obj.Feldwerte !== undefined) {
 			result += '"Feldwerte" : ' + ((!obj.Feldwerte) ? 'null' : JSON.stringify(obj.Feldwerte)) + ',';
 		}
-		if (typeof obj.ErgebnisWerte !== "undefined") {
+		if (obj.ErgebnisWerte !== undefined) {
 			result += '"ErgebnisWerte" : ' + ((!obj.ErgebnisWerte) ? 'null' : JSON.stringify(obj.ErgebnisWerte)) + ',';
 		}
-		if (typeof obj.LookupFeldname !== "undefined") {
+		if (obj.LookupFeldname !== undefined) {
 			result += '"LookupFeldname" : ' + ((!obj.LookupFeldname) ? 'null' : JSON.stringify(obj.LookupFeldname)) + ',';
 		}
-		if (typeof obj.LookupSQLText !== "undefined") {
+		if (obj.LookupSQLText !== undefined) {
 			result += '"LookupSQLText" : ' + ((!obj.LookupSQLText) ? 'null' : JSON.stringify(obj.LookupSQLText)) + ',';
 		}
-		if (typeof obj.DBFormat !== "undefined") {
+		if (obj.DBFormat !== undefined) {
 			result += '"DBFormat" : ' + ((!obj.DBFormat) ? 'null' : JSON.stringify(obj.DBFormat)) + ',';
 		}
 		result = result.slice(0, -1);

@@ -48,14 +48,14 @@ export class ENMLehrer extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMLehrer {
 		const obj = JSON.parse(json);
 		const result = new ENMLehrer();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : obj.nachname;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
-		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht === null ? null : obj.geschlecht;
-		result.eMailDienstlich = typeof obj.eMailDienstlich === "undefined" ? null : obj.eMailDienstlich === null ? null : obj.eMailDienstlich;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
+		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
+		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
+		result.eMailDienstlich = (obj.eMailDienstlich === undefined) ? null : obj.eMailDienstlich === null ? null : obj.eMailDienstlich;
 		return result;
 	}
 
@@ -74,22 +74,22 @@ export class ENMLehrer extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMLehrer>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
-		if (typeof obj.geschlecht !== "undefined") {
+		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		}
-		if (typeof obj.eMailDienstlich !== "undefined") {
+		if (obj.eMailDienstlich !== undefined) {
 			result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		}
 		result = result.slice(0, -1);

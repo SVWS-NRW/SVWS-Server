@@ -33,13 +33,13 @@ export class StundenplanJahrgang extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanJahrgang {
 		const obj = JSON.parse(json);
 		const result = new StundenplanJahrgang();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
@@ -57,13 +57,13 @@ export class StundenplanJahrgang extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanJahrgang>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);

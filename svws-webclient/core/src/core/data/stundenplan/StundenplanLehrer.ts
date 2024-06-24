@@ -45,16 +45,16 @@ export class StundenplanLehrer extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanLehrer {
 		const obj = JSON.parse(json);
 		const result = new StundenplanLehrer();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.nachname === "undefined")
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
@@ -90,19 +90,19 @@ export class StundenplanLehrer extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanLehrer>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {

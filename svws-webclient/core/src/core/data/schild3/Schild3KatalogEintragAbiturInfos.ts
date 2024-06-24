@@ -58,14 +58,14 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragAbiturInfos {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragAbiturInfos();
-		result.PrfOrdnung = typeof obj.PrfOrdnung === "undefined" ? null : obj.PrfOrdnung === null ? null : obj.PrfOrdnung;
-		result.AbiFach = typeof obj.AbiFach === "undefined" ? null : obj.AbiFach === null ? null : obj.AbiFach;
-		result.Bedingung = typeof obj.Bedingung === "undefined" ? null : obj.Bedingung === null ? null : obj.Bedingung;
-		result.AbiInfoKrz = typeof obj.AbiInfoKrz === "undefined" ? null : obj.AbiInfoKrz === null ? null : obj.AbiInfoKrz;
-		result.AbiInfoBeschreibung = typeof obj.AbiInfoBeschreibung === "undefined" ? null : obj.AbiInfoBeschreibung === null ? null : obj.AbiInfoBeschreibung;
-		result.AbiInfoText = typeof obj.AbiInfoText === "undefined" ? null : obj.AbiInfoText === null ? null : obj.AbiInfoText;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.PrfOrdnung = (obj.PrfOrdnung === undefined) ? null : obj.PrfOrdnung === null ? null : obj.PrfOrdnung;
+		result.AbiFach = (obj.AbiFach === undefined) ? null : obj.AbiFach === null ? null : obj.AbiFach;
+		result.Bedingung = (obj.Bedingung === undefined) ? null : obj.Bedingung === null ? null : obj.Bedingung;
+		result.AbiInfoKrz = (obj.AbiInfoKrz === undefined) ? null : obj.AbiInfoKrz === null ? null : obj.AbiInfoKrz;
+		result.AbiInfoBeschreibung = (obj.AbiInfoBeschreibung === undefined) ? null : obj.AbiInfoBeschreibung === null ? null : obj.AbiInfoBeschreibung;
+		result.AbiInfoText = (obj.AbiInfoText === undefined) ? null : obj.AbiInfoText === null ? null : obj.AbiInfoText;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -86,28 +86,28 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragAbiturInfos>) : string {
 		let result = '{';
-		if (typeof obj.PrfOrdnung !== "undefined") {
+		if (obj.PrfOrdnung !== undefined) {
 			result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : JSON.stringify(obj.PrfOrdnung)) + ',';
 		}
-		if (typeof obj.AbiFach !== "undefined") {
+		if (obj.AbiFach !== undefined) {
 			result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : JSON.stringify(obj.AbiFach)) + ',';
 		}
-		if (typeof obj.Bedingung !== "undefined") {
+		if (obj.Bedingung !== undefined) {
 			result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : JSON.stringify(obj.Bedingung)) + ',';
 		}
-		if (typeof obj.AbiInfoKrz !== "undefined") {
+		if (obj.AbiInfoKrz !== undefined) {
 			result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
 		}
-		if (typeof obj.AbiInfoBeschreibung !== "undefined") {
+		if (obj.AbiInfoBeschreibung !== undefined) {
 			result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
 		}
-		if (typeof obj.AbiInfoText !== "undefined") {
+		if (obj.AbiInfoText !== undefined) {
 			result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

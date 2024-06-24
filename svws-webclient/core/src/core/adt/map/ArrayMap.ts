@@ -82,7 +82,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	 */
 	public constructor(__param0 : Array<K>, __param1? : JavaFunction<K, number>) {
 		super();
-		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && (typeof __param1 === "undefined")) {
+		if (((__param0 !== undefined) && Array.isArray(__param0)) && (__param1 === undefined)) {
 			const keyArray : Array<K> = __param0;
 			if (keyArray.length <= 0)
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
@@ -95,7 +95,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 			this._keySet = new ArrayMapKeySet(this);
 			this._collection = new ArrayMapCollection(this);
 			this._entrySet = new ArrayMapEntrySet(this);
-		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && ((typeof __param1 !== 'undefined') && (__param1 instanceof Object) && (__param1 !== null) && ('apply' in __param1) && (typeof __param1.apply === 'function')) || (__param1 === null))) {
+		} else if (((__param0 !== undefined) && Array.isArray(__param0)) && ((__param1 !== undefined) && ((__param1 !== undefined) && (__param1 instanceof Object) && (__param1 !== null) && ('apply' in __param1) && (typeof __param1.apply === 'function')) || (__param1 === null))) {
 			const keyArray : Array<K> = __param0;
 			const keyIndexFunction : JavaFunction<K, number> = cast_java_util_function_Function(__param1);
 			if (keyArray.length <= 0)

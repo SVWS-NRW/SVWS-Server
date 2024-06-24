@@ -48,12 +48,12 @@ export class MigrateBody extends JavaObject {
 	public static transpilerFromJSON(json : string): MigrateBody {
 		const obj = JSON.parse(json);
 		const result = new MigrateBody();
-		result.srcUsername = typeof obj.srcUsername === "undefined" ? null : obj.srcUsername === null ? null : obj.srcUsername;
-		result.srcPassword = typeof obj.srcPassword === "undefined" ? null : obj.srcPassword === null ? null : obj.srcPassword;
-		result.srcLocation = typeof obj.srcLocation === "undefined" ? null : obj.srcLocation === null ? null : obj.srcLocation;
-		result.srcSchema = typeof obj.srcSchema === "undefined" ? null : obj.srcSchema === null ? null : obj.srcSchema;
-		result.schemaUsername = typeof obj.schemaUsername === "undefined" ? null : obj.schemaUsername === null ? null : obj.schemaUsername;
-		result.schemaUserPassword = typeof obj.schemaUserPassword === "undefined" ? null : obj.schemaUserPassword === null ? null : obj.schemaUserPassword;
+		result.srcUsername = (obj.srcUsername === undefined) ? null : obj.srcUsername === null ? null : obj.srcUsername;
+		result.srcPassword = (obj.srcPassword === undefined) ? null : obj.srcPassword === null ? null : obj.srcPassword;
+		result.srcLocation = (obj.srcLocation === undefined) ? null : obj.srcLocation === null ? null : obj.srcLocation;
+		result.srcSchema = (obj.srcSchema === undefined) ? null : obj.srcSchema === null ? null : obj.srcSchema;
+		result.schemaUsername = (obj.schemaUsername === undefined) ? null : obj.schemaUsername === null ? null : obj.schemaUsername;
+		result.schemaUserPassword = (obj.schemaUserPassword === undefined) ? null : obj.schemaUserPassword === null ? null : obj.schemaUserPassword;
 		return result;
 	}
 
@@ -72,22 +72,22 @@ export class MigrateBody extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<MigrateBody>) : string {
 		let result = '{';
-		if (typeof obj.srcUsername !== "undefined") {
+		if (obj.srcUsername !== undefined) {
 			result += '"srcUsername" : ' + ((!obj.srcUsername) ? 'null' : JSON.stringify(obj.srcUsername)) + ',';
 		}
-		if (typeof obj.srcPassword !== "undefined") {
+		if (obj.srcPassword !== undefined) {
 			result += '"srcPassword" : ' + ((!obj.srcPassword) ? 'null' : JSON.stringify(obj.srcPassword)) + ',';
 		}
-		if (typeof obj.srcLocation !== "undefined") {
+		if (obj.srcLocation !== undefined) {
 			result += '"srcLocation" : ' + ((!obj.srcLocation) ? 'null' : JSON.stringify(obj.srcLocation)) + ',';
 		}
-		if (typeof obj.srcSchema !== "undefined") {
+		if (obj.srcSchema !== undefined) {
 			result += '"srcSchema" : ' + ((!obj.srcSchema) ? 'null' : JSON.stringify(obj.srcSchema)) + ',';
 		}
-		if (typeof obj.schemaUsername !== "undefined") {
+		if (obj.schemaUsername !== undefined) {
 			result += '"schemaUsername" : ' + ((!obj.schemaUsername) ? 'null' : JSON.stringify(obj.schemaUsername)) + ',';
 		}
-		if (typeof obj.schemaUserPassword !== "undefined") {
+		if (obj.schemaUserPassword !== undefined) {
 			result += '"schemaUserPassword" : ' + ((!obj.schemaUserPassword) ? 'null' : JSON.stringify(obj.schemaUserPassword)) + ',';
 		}
 		result = result.slice(0, -1);

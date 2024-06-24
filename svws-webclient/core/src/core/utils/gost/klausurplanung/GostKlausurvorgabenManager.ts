@@ -86,13 +86,13 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public constructor(__param0? : GostFaecherManager | List<GostKlausurvorgabe>, __param1? : List<GostKlausurvorgabe>) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			this._faecherManager = null;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined)) {
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
 			this._faecherManager = null;
 			this.initAll(listVorgaben);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
 			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
 			this._faecherManager = faecherManager;

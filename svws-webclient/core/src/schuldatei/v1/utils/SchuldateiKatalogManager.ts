@@ -114,12 +114,12 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * Implementation for method overloads of 'hatEintrag'
 	 */
 	public hatEintrag(__param0 : null | number | string) : boolean {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
+		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
 			const wert : string | null = __param0;
 			if (wert === null)
 				return false;
 			return this._mapEintragByWert.containsKey(wert);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const wert : number = __param0 as number;
 			return this._mapEintragByIntegerWert.containsKey(wert);
 		} else throw new Error('invalid method overload');
@@ -147,10 +147,10 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * Implementation for method overloads of 'getEintrag'
 	 */
 	public getEintrag(__param0 : null | number | string) : SchuldateiKatalogeintrag | null {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
+		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
 			const wert : string | null = __param0;
 			return this._mapEintragByWert.get(wert);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const wert : number = __param0 as number;
 			return this._mapEintragByIntegerWert.get(wert);
 		} else throw new Error('invalid method overload');

@@ -230,13 +230,13 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'subMap'
 	 */
 	public subMap(__param0 : K, __param1 : K | boolean, __param2? : K, __param3? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean") && ((typeof __param2 !== "undefined") && (typeof __param2 !== "undefined")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean") && ((__param2 !== undefined) && (__param2 !== undefined)) && ((__param3 !== undefined) && typeof __param3 === "boolean")) {
 			const fromKey : K = __param0 as unknown as K;
 			const fromInclusive : boolean = __param1 as boolean;
 			const toKey : K = __param2 as unknown as K;
 			const toInclusive : boolean = __param3 as boolean;
 			return this._createMap(fromKey, fromInclusive, toKey, toInclusive, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && (typeof __param1 !== "undefined")) && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && (__param1 !== undefined)) && (__param2 === undefined) && (__param3 === undefined)) {
 			const fromKey : K = __param0 as unknown as K;
 			const toKey : K = __param1 as unknown as K;
 			return this._createMap(fromKey, true, toKey, false, this._asc);
@@ -251,11 +251,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'headMap'
 	 */
 	public headMap(__param0 : K, __param1? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const toKey : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._createMap(this._iv.from, this._iv.fromInc, toKey, inclusive, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const toKey : K = __param0 as unknown as K;
 			return this._createMap(this._iv.from, this._iv.fromInc, toKey, false, this._asc);
 		} else throw new Error('invalid method overload');
@@ -269,11 +269,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'tailMap'
 	 */
 	public tailMap(__param0 : K, __param1? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const fromKey : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._createMap(fromKey, inclusive, this._iv.to, this._iv.toInc, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const fromKey : K = __param0 as unknown as K;
 			return this._createMap(fromKey, true, this._iv.to, this._iv.toInc, this._asc);
 		} else throw new Error('invalid method overload');
@@ -695,13 +695,13 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'bcGetSubKeySet'
 	 */
 	public bcGetSubKeySet(__param0 : K, __param1 : K | boolean, __param2? : K, __param3? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean") && ((typeof __param2 !== "undefined") && (typeof __param2 !== "undefined")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean") && ((__param2 !== undefined) && (__param2 !== undefined)) && ((__param3 !== undefined) && typeof __param3 === "boolean")) {
 			const fromElement : K = __param0 as unknown as K;
 			const fromInclusive : boolean = __param1 as boolean;
 			const toElement : K = __param2 as unknown as K;
 			const toInclusive : boolean = __param3 as boolean;
 			return this._createSet(fromElement, fromInclusive, toElement, toInclusive, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && (typeof __param1 !== "undefined")) && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && (__param1 !== undefined)) && (__param2 === undefined) && (__param3 === undefined)) {
 			const fromElement : K = __param0 as unknown as K;
 			const toElement : K = __param1 as unknown as K;
 			return this._createSet(fromElement, true, toElement, false, this._asc);
@@ -735,11 +735,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'bcGetSubKeyHeadSet'
 	 */
 	public bcGetSubKeyHeadSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const toElement : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._createSet(this._iv.from, this._iv.fromInc, toElement, inclusive, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const toElement : K = __param0 as unknown as K;
 			return this._createSet(this._iv.from, this._iv.fromInc, toElement, false, this._asc);
 		} else throw new Error('invalid method overload');
@@ -772,11 +772,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * Implementation for method overloads of 'bcGetSubKeyTailSet'
 	 */
 	public bcGetSubKeyTailSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const fromElement : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._createSet(fromElement, inclusive, this._iv.to, this._iv.toInc, this._asc);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const fromElement : K = __param0 as unknown as K;
 			return this._createSet(fromElement, true, this._iv.to, this._iv.toInc, this._asc);
 		} else throw new Error('invalid method overload');

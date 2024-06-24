@@ -31,7 +31,7 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisSchiene {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisSchiene();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
@@ -64,10 +64,10 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisSchiene>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kurse !== "undefined") {
+		if (obj.kurse !== undefined) {
 			if (!obj.kurse) {
 				result += '"kurse" : []';
 			} else {

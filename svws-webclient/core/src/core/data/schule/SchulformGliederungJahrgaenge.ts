@@ -35,10 +35,10 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public static transpilerFromJSON(json : string): SchulformGliederungJahrgaenge {
 		const obj = JSON.parse(json);
 		const result = new SchulformGliederungJahrgaenge();
-		if (typeof obj.schulform === "undefined")
+		if (obj.schulform === undefined)
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
+		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
 		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
 			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(elem);
@@ -70,13 +70,13 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulformGliederungJahrgaenge>) : string {
 		let result = '{';
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
-		if (typeof obj.gliederung !== "undefined") {
+		if (obj.gliederung !== undefined) {
 			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
-		if (typeof obj.jahrgaenge !== "undefined") {
+		if (obj.jahrgaenge !== undefined) {
 			if (!obj.jahrgaenge) {
 				result += '"jahrgaenge" : []';
 			} else {

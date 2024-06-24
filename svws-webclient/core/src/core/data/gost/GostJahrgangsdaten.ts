@@ -97,27 +97,27 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostJahrgangsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostJahrgangsdaten();
-		if (typeof obj.abiturjahr === "undefined")
+		if (obj.abiturjahr === undefined)
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		if (typeof obj.halbjahr === "undefined")
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		if (obj.halbjahr === undefined)
 			 throw new Error('invalid json format, missing attribute halbjahr');
 		result.halbjahr = obj.halbjahr;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		if (typeof obj.istAbgeschlossen === "undefined")
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.istAbgeschlossen === undefined)
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;
-		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : obj.textBeratungsbogen;
-		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand === null ? null : obj.textMailversand;
-		if (typeof obj.hatZusatzkursGE === "undefined")
+		result.textBeratungsbogen = (obj.textBeratungsbogen === undefined) ? null : obj.textBeratungsbogen === null ? null : obj.textBeratungsbogen;
+		result.textMailversand = (obj.textMailversand === undefined) ? null : obj.textMailversand === null ? null : obj.textMailversand;
+		if (obj.hatZusatzkursGE === undefined)
 			 throw new Error('invalid json format, missing attribute hatZusatzkursGE');
 		result.hatZusatzkursGE = obj.hatZusatzkursGE;
-		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : obj.beginnZusatzkursGE;
-		if (typeof obj.hatZusatzkursSW === "undefined")
+		result.beginnZusatzkursGE = (obj.beginnZusatzkursGE === undefined) ? null : obj.beginnZusatzkursGE === null ? null : obj.beginnZusatzkursGE;
+		if (obj.hatZusatzkursSW === undefined)
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
-		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
+		result.beginnZusatzkursSW = (obj.beginnZusatzkursSW === undefined) ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
 		for (let i = 0; i < obj.anzahlKursblockungen.length; i++) {
 			result.anzahlKursblockungen[i] = obj.anzahlKursblockungen[i];
 		}
@@ -203,40 +203,40 @@ export class GostJahrgangsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangsdaten>) : string {
 		let result = '{';
-		if (typeof obj.abiturjahr !== "undefined") {
+		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
-		if (typeof obj.halbjahr !== "undefined") {
+		if (obj.halbjahr !== undefined) {
 			result += '"halbjahr" : ' + obj.halbjahr + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.istAbgeschlossen !== "undefined") {
+		if (obj.istAbgeschlossen !== undefined) {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		}
-		if (typeof obj.textBeratungsbogen !== "undefined") {
+		if (obj.textBeratungsbogen !== undefined) {
 			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		}
-		if (typeof obj.textMailversand !== "undefined") {
+		if (obj.textMailversand !== undefined) {
 			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
 		}
-		if (typeof obj.hatZusatzkursGE !== "undefined") {
+		if (obj.hatZusatzkursGE !== undefined) {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
 		}
-		if (typeof obj.beginnZusatzkursGE !== "undefined") {
+		if (obj.beginnZusatzkursGE !== undefined) {
 			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		}
-		if (typeof obj.hatZusatzkursSW !== "undefined") {
+		if (obj.hatZusatzkursSW !== undefined) {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		}
-		if (typeof obj.beginnZusatzkursSW !== "undefined") {
+		if (obj.beginnZusatzkursSW !== undefined) {
 			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		}
-		if (typeof obj.anzahlKursblockungen !== "undefined") {
+		if (obj.anzahlKursblockungen !== undefined) {
 			const a = obj.anzahlKursblockungen;
 			if (!a) {
 				result += '"anzahlKursblockungen" : []';
@@ -251,7 +251,7 @@ export class GostJahrgangsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.istBlockungFestgelegt !== "undefined") {
+		if (obj.istBlockungFestgelegt !== undefined) {
 			const a = obj.istBlockungFestgelegt;
 			if (!a) {
 				result += '"istBlockungFestgelegt" : []';
@@ -266,7 +266,7 @@ export class GostJahrgangsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.existierenNotenInLeistungsdaten !== "undefined") {
+		if (obj.existierenNotenInLeistungsdaten !== undefined) {
 			const a = obj.existierenNotenInLeistungsdaten;
 			if (!a) {
 				result += '"existierenNotenInLeistungsdaten" : []';
@@ -281,7 +281,7 @@ export class GostJahrgangsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.beratungslehrer !== "undefined") {
+		if (obj.beratungslehrer !== undefined) {
 			if (!obj.beratungslehrer) {
 				result += '"beratungslehrer" : []';
 			} else {

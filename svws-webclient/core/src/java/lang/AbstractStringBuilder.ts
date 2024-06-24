@@ -125,7 +125,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 	public append(param : string[], offset : number, len : number) : AbstractStringBuilder;
 	public append(param : any, start? : number, end? : number) : AbstractStringBuilder {
 		if ((typeof param === "object") && Array.isArray(param) && (param.length > 0) && (typeof param[0] === "string")) {
-			if ((typeof start !== "undefined") && (typeof end !== "undefined")) {
+			if ((start !== undefined) && (end !== undefined)) {
 				for (let i : number = start; i < start + end; i++)
 					this.value += param[i];
 			} else {
@@ -133,7 +133,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 					this.value += param[i];
 			}
 		} else if ((typeof param === "object") && (param instanceof AbstractStringBuilder)) { // TODO CharSequence ... use type guards ?
-			if ((typeof start !== "undefined") && (typeof end !== "undefined")) {
+			if ((start !== undefined) && (end !== undefined)) {
 				this.value += param.toString()?.substring(start, end) || "";
 			} else {
 				this.value += (param.toString() || "");

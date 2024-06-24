@@ -78,28 +78,28 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogDaten {
 		const obj = JSON.parse(json);
 		const result = new BerufskollegFachklassenKatalogDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.istAusgelaufen === "undefined")
+		if (obj.istAusgelaufen === undefined)
 			 throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
-		result.berufsfeldGruppe = typeof obj.berufsfeldGruppe === "undefined" ? null : obj.berufsfeldGruppe === null ? null : obj.berufsfeldGruppe;
-		result.berufsfeld = typeof obj.berufsfeld === "undefined" ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
-		result.ebene1 = typeof obj.ebene1 === "undefined" ? null : obj.ebene1 === null ? null : obj.ebene1;
-		result.ebene2 = typeof obj.ebene2 === "undefined" ? null : obj.ebene2 === null ? null : obj.ebene2;
-		result.ebene3 = typeof obj.ebene3 === "undefined" ? null : obj.ebene3 === null ? null : obj.ebene3;
-		if (typeof obj.bezeichnung === "undefined")
+		result.berufsfeldGruppe = (obj.berufsfeldGruppe === undefined) ? null : obj.berufsfeldGruppe === null ? null : obj.berufsfeldGruppe;
+		result.berufsfeld = (obj.berufsfeld === undefined) ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
+		result.ebene1 = (obj.ebene1 === undefined) ? null : obj.ebene1 === null ? null : obj.ebene1;
+		result.ebene2 = (obj.ebene2 === undefined) ? null : obj.ebene2 === null ? null : obj.ebene2;
+		result.ebene3 = (obj.ebene3 === undefined) ? null : obj.ebene3 === null ? null : obj.ebene3;
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.bezeichnungM === "undefined")
+		if (obj.bezeichnungM === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnungM');
 		result.bezeichnungM = obj.bezeichnungM;
-		if (typeof obj.bezeichnungW === "undefined")
+		if (obj.bezeichnungW === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnungW');
 		result.bezeichnungW = obj.bezeichnungW;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -124,40 +124,40 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.istAusgelaufen !== "undefined") {
+		if (obj.istAusgelaufen !== undefined) {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
 		}
-		if (typeof obj.berufsfeldGruppe !== "undefined") {
+		if (obj.berufsfeldGruppe !== undefined) {
 			result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		}
-		if (typeof obj.berufsfeld !== "undefined") {
+		if (obj.berufsfeld !== undefined) {
 			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
 		}
-		if (typeof obj.ebene1 !== "undefined") {
+		if (obj.ebene1 !== undefined) {
 			result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
 		}
-		if (typeof obj.ebene2 !== "undefined") {
+		if (obj.ebene2 !== undefined) {
 			result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
 		}
-		if (typeof obj.ebene3 !== "undefined") {
+		if (obj.ebene3 !== undefined) {
 			result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.bezeichnungM !== "undefined") {
+		if (obj.bezeichnungM !== undefined) {
 			result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM!) + ',';
 		}
-		if (typeof obj.bezeichnungW !== "undefined") {
+		if (obj.bezeichnungW !== undefined) {
 			result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW!) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

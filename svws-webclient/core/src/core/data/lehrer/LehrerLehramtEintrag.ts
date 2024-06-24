@@ -33,13 +33,13 @@ export class LehrerLehramtEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerLehramtEintrag {
 		const obj = JSON.parse(json);
 		const result = new LehrerLehramtEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idLehramt === "undefined")
+		if (obj.idLehramt === undefined)
 			 throw new Error('invalid json format, missing attribute idLehramt');
 		result.idLehramt = obj.idLehramt;
-		result.idAnerkennungsgrund = typeof obj.idAnerkennungsgrund === "undefined" ? null : obj.idAnerkennungsgrund === null ? null : obj.idAnerkennungsgrund;
+		result.idAnerkennungsgrund = (obj.idAnerkennungsgrund === undefined) ? null : obj.idAnerkennungsgrund === null ? null : obj.idAnerkennungsgrund;
 		return result;
 	}
 
@@ -55,13 +55,13 @@ export class LehrerLehramtEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerLehramtEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idLehramt !== "undefined") {
+		if (obj.idLehramt !== undefined) {
 			result += '"idLehramt" : ' + obj.idLehramt + ',';
 		}
-		if (typeof obj.idAnerkennungsgrund !== "undefined") {
+		if (obj.idAnerkennungsgrund !== undefined) {
 			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund) + ',';
 		}
 		result = result.slice(0, -1);

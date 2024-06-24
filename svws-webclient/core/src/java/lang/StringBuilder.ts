@@ -5,7 +5,7 @@ import { AbstractStringBuilder } from './AbstractStringBuilder';
 export class StringBuilder extends AbstractStringBuilder implements Comparable<StringBuilder>, CharSequence {
 
 	constructor(param? : string | number) {
-		if (typeof param === "undefined") {
+		if (param === undefined) {
 			super();
 		} else {
 			super(param);

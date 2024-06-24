@@ -137,9 +137,9 @@ export class FachKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : null | number, __param5? : Fachgruppe | null, __param6? : Jahrgaenge | null, __param7? : boolean, __param8? : boolean, __param9? : boolean, __param10? : boolean, __param11? : boolean, __param12? : boolean, __param13? : boolean, __param14? : List<Pair<Schulform, Schulgliederung | null>>, __param15? : null | number, __param16? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined") && (typeof __param11 === "undefined") && (typeof __param12 === "undefined") && (typeof __param13 === "undefined") && (typeof __param14 === "undefined") && (typeof __param15 === "undefined") && (typeof __param16 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined) && (__param9 === undefined) && (__param10 === undefined) && (__param11 === undefined) && (__param12 === undefined) && (__param13 === undefined) && (__param14 === undefined) && (__param15 === undefined) && (__param16 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.fach.Fachgruppe'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.jahrgang.Jahrgaenge'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && typeof __param8 === "boolean") && ((typeof __param9 !== "undefined") && typeof __param9 === "boolean") && ((typeof __param10 !== "undefined") && typeof __param10 === "boolean") && ((typeof __param11 !== "undefined") && typeof __param11 === "boolean") && ((typeof __param12 !== "undefined") && typeof __param12 === "boolean") && ((typeof __param13 !== "undefined") && typeof __param13 === "boolean") && ((typeof __param14 !== "undefined") && ((__param14 instanceof JavaObject) && ((__param14 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param14 === null)) && ((typeof __param15 !== "undefined") && (typeof __param15 === "number") || (__param15 === null)) && ((typeof __param16 !== "undefined") && (typeof __param16 === "number") || (__param16 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && (typeof __param4 === "number") || (__param4 === null)) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.fach.Fachgruppe'))) || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.jahrgang.Jahrgaenge'))) || (__param6 === null)) && ((__param7 !== undefined) && typeof __param7 === "boolean") && ((__param8 !== undefined) && typeof __param8 === "boolean") && ((__param9 !== undefined) && typeof __param9 === "boolean") && ((__param10 !== undefined) && typeof __param10 === "boolean") && ((__param11 !== undefined) && typeof __param11 === "boolean") && ((__param12 !== undefined) && typeof __param12 === "boolean") && ((__param13 !== undefined) && typeof __param13 === "boolean") && ((__param14 !== undefined) && ((__param14 instanceof JavaObject) && ((__param14 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param14 === null)) && ((__param15 !== undefined) && (typeof __param15 === "number") || (__param15 === null)) && ((__param16 !== undefined) && (typeof __param16 === "number") || (__param16 === null))) {
 			const id : number = __param0 as number;
 			const kuerzelASD : string = __param1;
 			const bezeichnung : string = __param2;
@@ -197,40 +197,40 @@ export class FachKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): FachKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new FachKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzelASD === "undefined")
+		if (obj.kuerzelASD === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzelASD');
 		result.kuerzelASD = obj.kuerzelASD;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.aufgabenfeld = typeof obj.aufgabenfeld === "undefined" ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
-		result.fachgruppe = typeof obj.fachgruppe === "undefined" ? null : obj.fachgruppe === null ? null : obj.fachgruppe;
-		result.abJahrgang = typeof obj.abJahrgang === "undefined" ? null : obj.abJahrgang === null ? null : obj.abJahrgang;
-		if (typeof obj.istFremdsprache === "undefined")
+		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
+		result.fachgruppe = (obj.fachgruppe === undefined) ? null : obj.fachgruppe === null ? null : obj.fachgruppe;
+		result.abJahrgang = (obj.abJahrgang === undefined) ? null : obj.abJahrgang === null ? null : obj.abJahrgang;
+		if (obj.istFremdsprache === undefined)
 			 throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
-		if (typeof obj.istHKFS === "undefined")
+		if (obj.istHKFS === undefined)
 			 throw new Error('invalid json format, missing attribute istHKFS');
 		result.istHKFS = obj.istHKFS;
-		if (typeof obj.istAusRegUFach === "undefined")
+		if (obj.istAusRegUFach === undefined)
 			 throw new Error('invalid json format, missing attribute istAusRegUFach');
 		result.istAusRegUFach = obj.istAusRegUFach;
-		if (typeof obj.istErsatzPflichtFS === "undefined")
+		if (obj.istErsatzPflichtFS === undefined)
 			 throw new Error('invalid json format, missing attribute istErsatzPflichtFS');
 		result.istErsatzPflichtFS = obj.istErsatzPflichtFS;
-		if (typeof obj.istKonfKoop === "undefined")
+		if (obj.istKonfKoop === undefined)
 			 throw new Error('invalid json format, missing attribute istKonfKoop');
 		result.istKonfKoop = obj.istKonfKoop;
-		if (typeof obj.nurSII === "undefined")
+		if (obj.nurSII === undefined)
 			 throw new Error('invalid json format, missing attribute nurSII');
 		result.nurSII = obj.nurSII;
-		if (typeof obj.exportASD === "undefined")
+		if (obj.exportASD === undefined)
 			 throw new Error('invalid json format, missing attribute exportASD');
 		result.exportASD = obj.exportASD;
 		if ((obj.zulaessig !== undefined) && (obj.zulaessig !== null)) {
@@ -238,8 +238,8 @@ export class FachKatalogEintrag extends JavaObject {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -280,49 +280,49 @@ export class FachKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<FachKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzelASD !== "undefined") {
+		if (obj.kuerzelASD !== undefined) {
 			result += '"kuerzelASD" : ' + JSON.stringify(obj.kuerzelASD!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.aufgabenfeld !== "undefined") {
+		if (obj.aufgabenfeld !== undefined) {
 			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld) + ',';
 		}
-		if (typeof obj.fachgruppe !== "undefined") {
+		if (obj.fachgruppe !== undefined) {
 			result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
 		}
-		if (typeof obj.abJahrgang !== "undefined") {
+		if (obj.abJahrgang !== undefined) {
 			result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
 		}
-		if (typeof obj.istFremdsprache !== "undefined") {
+		if (obj.istFremdsprache !== undefined) {
 			result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		}
-		if (typeof obj.istHKFS !== "undefined") {
+		if (obj.istHKFS !== undefined) {
 			result += '"istHKFS" : ' + obj.istHKFS + ',';
 		}
-		if (typeof obj.istAusRegUFach !== "undefined") {
+		if (obj.istAusRegUFach !== undefined) {
 			result += '"istAusRegUFach" : ' + obj.istAusRegUFach + ',';
 		}
-		if (typeof obj.istErsatzPflichtFS !== "undefined") {
+		if (obj.istErsatzPflichtFS !== undefined) {
 			result += '"istErsatzPflichtFS" : ' + obj.istErsatzPflichtFS + ',';
 		}
-		if (typeof obj.istKonfKoop !== "undefined") {
+		if (obj.istKonfKoop !== undefined) {
 			result += '"istKonfKoop" : ' + obj.istKonfKoop + ',';
 		}
-		if (typeof obj.nurSII !== "undefined") {
+		if (obj.nurSII !== undefined) {
 			result += '"nurSII" : ' + obj.nurSII + ',';
 		}
-		if (typeof obj.exportASD !== "undefined") {
+		if (obj.exportASD !== undefined) {
 			result += '"exportASD" : ' + obj.exportASD + ',';
 		}
-		if (typeof obj.zulaessig !== "undefined") {
+		if (obj.zulaessig !== undefined) {
 			if (!obj.zulaessig) {
 				result += '"zulaessig" : []';
 			} else {
@@ -336,10 +336,10 @@ export class FachKatalogEintrag extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

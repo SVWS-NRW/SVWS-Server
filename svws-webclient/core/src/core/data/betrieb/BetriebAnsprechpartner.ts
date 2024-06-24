@@ -68,20 +68,20 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebAnsprechpartner {
 		const obj = JSON.parse(json);
 		const result = new BetriebAnsprechpartner();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.betrieb_id === "undefined")
+		if (obj.betrieb_id === undefined)
 			 throw new Error('invalid json format, missing attribute betrieb_id');
 		result.betrieb_id = obj.betrieb_id;
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : obj.telefon;
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
-		result.abteilung = typeof obj.abteilung === "undefined" ? null : obj.abteilung === null ? null : obj.abteilung;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : obj.titel;
-		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : obj.GU_ID;
+		result.name = (obj.name === undefined) ? null : obj.name === null ? null : obj.name;
+		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
+		result.anrede = (obj.anrede === undefined) ? null : obj.anrede === null ? null : obj.anrede;
+		result.telefon = (obj.telefon === undefined) ? null : obj.telefon === null ? null : obj.telefon;
+		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
+		result.abteilung = (obj.abteilung === undefined) ? null : obj.abteilung === null ? null : obj.abteilung;
+		result.titel = (obj.titel === undefined) ? null : obj.titel === null ? null : obj.titel;
+		result.GU_ID = (obj.GU_ID === undefined) ? null : obj.GU_ID === null ? null : obj.GU_ID;
 		return result;
 	}
 
@@ -104,34 +104,34 @@ export class BetriebAnsprechpartner extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BetriebAnsprechpartner>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.betrieb_id !== "undefined") {
+		if (obj.betrieb_id !== undefined) {
 			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
-		if (typeof obj.anrede !== "undefined") {
+		if (obj.anrede !== undefined) {
 			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
-		if (typeof obj.telefon !== "undefined") {
+		if (obj.telefon !== undefined) {
 			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
-		if (typeof obj.email !== "undefined") {
+		if (obj.email !== undefined) {
 			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
-		if (typeof obj.abteilung !== "undefined") {
+		if (obj.abteilung !== undefined) {
 			result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
 		}
-		if (typeof obj.titel !== "undefined") {
+		if (obj.titel !== undefined) {
 			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
-		if (typeof obj.GU_ID !== "undefined") {
+		if (obj.GU_ID !== undefined) {
 			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
 		}
 		result = result.slice(0, -1);

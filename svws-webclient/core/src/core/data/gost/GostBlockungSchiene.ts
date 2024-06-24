@@ -38,16 +38,16 @@ export class GostBlockungSchiene extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungSchiene {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungSchiene();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.nummer === "undefined")
+		if (obj.nummer === undefined)
 			 throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		return result;
@@ -66,16 +66,16 @@ export class GostBlockungSchiene extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungSchiene>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		result = result.slice(0, -1);

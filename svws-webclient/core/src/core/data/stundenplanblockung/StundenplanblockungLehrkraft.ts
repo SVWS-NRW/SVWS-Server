@@ -28,10 +28,10 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanblockungLehrkraft {
 		const obj = JSON.parse(json);
 		const result = new StundenplanblockungLehrkraft();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		return result;
@@ -48,10 +48,10 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungLehrkraft>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		result = result.slice(0, -1);

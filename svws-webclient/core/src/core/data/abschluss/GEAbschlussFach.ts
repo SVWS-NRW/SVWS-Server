@@ -53,17 +53,17 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerFromJSON(json : string): GEAbschlussFach {
 		const obj = JSON.parse(json);
 		const result = new GEAbschlussFach();
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		if (typeof obj.note === "undefined")
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.note === undefined)
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
-		result.istFremdsprache = typeof obj.istFremdsprache === "undefined" ? null : obj.istFremdsprache === null ? null : obj.istFremdsprache;
-		result.kursart = typeof obj.kursart === "undefined" ? null : obj.kursart === null ? null : obj.kursart;
-		result.ausgleich = typeof obj.ausgleich === "undefined" ? null : obj.ausgleich === null ? null : obj.ausgleich;
-		result.ausgeglichen = typeof obj.ausgeglichen === "undefined" ? null : obj.ausgeglichen === null ? null : obj.ausgeglichen;
+		result.istFremdsprache = (obj.istFremdsprache === undefined) ? null : obj.istFremdsprache === null ? null : obj.istFremdsprache;
+		result.kursart = (obj.kursart === undefined) ? null : obj.kursart === null ? null : obj.kursart;
+		result.ausgleich = (obj.ausgleich === undefined) ? null : obj.ausgleich === null ? null : obj.ausgleich;
+		result.ausgeglichen = (obj.ausgeglichen === undefined) ? null : obj.ausgeglichen === null ? null : obj.ausgeglichen;
 		return result;
 	}
 
@@ -83,25 +83,25 @@ export class GEAbschlussFach extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GEAbschlussFach>) : string {
 		let result = '{';
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + obj.note + ',';
 		}
-		if (typeof obj.istFremdsprache !== "undefined") {
+		if (obj.istFremdsprache !== undefined) {
 			result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache) + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
-		if (typeof obj.ausgleich !== "undefined") {
+		if (obj.ausgleich !== undefined) {
 			result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich) + ',';
 		}
-		if (typeof obj.ausgeglichen !== "undefined") {
+		if (obj.ausgeglichen !== undefined) {
 			result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen) + ',';
 		}
 		result = result.slice(0, -1);

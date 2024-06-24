@@ -38,16 +38,16 @@ export class StundenplanSchiene extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanSchiene {
 		const obj = JSON.parse(json);
 		const result = new StundenplanSchiene();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idJahrgang === "undefined")
+		if (obj.idJahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute idJahrgang');
 		result.idJahrgang = obj.idJahrgang;
-		if (typeof obj.nummer === "undefined")
+		if (obj.nummer === undefined)
 			 throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
@@ -66,16 +66,16 @@ export class StundenplanSchiene extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanSchiene>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idJahrgang !== "undefined") {
+		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		}
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);

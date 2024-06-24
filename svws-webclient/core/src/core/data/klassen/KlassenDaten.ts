@@ -146,19 +146,19 @@ export class KlassenDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): KlassenDaten {
 		const obj = JSON.parse(json);
 		const result = new KlassenDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
-		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
-		if (typeof obj.sortierung === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
+		result.parallelitaet = (obj.parallelitaet === undefined) ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		if ((obj.klassenLeitungen !== undefined) && (obj.klassenLeitungen !== null)) {
@@ -171,34 +171,34 @@ export class KlassenDaten extends JavaObject {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.teilstandort === "undefined")
+		if (obj.teilstandort === undefined)
 			 throw new Error('invalid json format, missing attribute teilstandort');
 		result.teilstandort = obj.teilstandort;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		result.idVorgaengerklasse = typeof obj.idVorgaengerklasse === "undefined" ? null : obj.idVorgaengerklasse === null ? null : obj.idVorgaengerklasse;
-		result.kuerzelVorgaengerklasse = typeof obj.kuerzelVorgaengerklasse === "undefined" ? null : obj.kuerzelVorgaengerklasse === null ? null : obj.kuerzelVorgaengerklasse;
-		result.idFolgeklasse = typeof obj.idFolgeklasse === "undefined" ? null : obj.idFolgeklasse === null ? null : obj.idFolgeklasse;
-		result.kuerzelFolgeklasse = typeof obj.kuerzelFolgeklasse === "undefined" ? null : obj.kuerzelFolgeklasse === null ? null : obj.kuerzelFolgeklasse;
-		result.idAllgemeinbildendOrganisationsform = typeof obj.idAllgemeinbildendOrganisationsform === "undefined" ? null : obj.idAllgemeinbildendOrganisationsform === null ? null : obj.idAllgemeinbildendOrganisationsform;
-		result.idBerufsbildendOrganisationsform = typeof obj.idBerufsbildendOrganisationsform === "undefined" ? null : obj.idBerufsbildendOrganisationsform === null ? null : obj.idBerufsbildendOrganisationsform;
-		result.idWeiterbildungOrganisationsform = typeof obj.idWeiterbildungOrganisationsform === "undefined" ? null : obj.idWeiterbildungOrganisationsform === null ? null : obj.idWeiterbildungOrganisationsform;
-		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
-		if (typeof obj.idSchulgliederung === "undefined")
+		result.idVorgaengerklasse = (obj.idVorgaengerklasse === undefined) ? null : obj.idVorgaengerklasse === null ? null : obj.idVorgaengerklasse;
+		result.kuerzelVorgaengerklasse = (obj.kuerzelVorgaengerklasse === undefined) ? null : obj.kuerzelVorgaengerklasse === null ? null : obj.kuerzelVorgaengerklasse;
+		result.idFolgeklasse = (obj.idFolgeklasse === undefined) ? null : obj.idFolgeklasse === null ? null : obj.idFolgeklasse;
+		result.kuerzelFolgeklasse = (obj.kuerzelFolgeklasse === undefined) ? null : obj.kuerzelFolgeklasse === null ? null : obj.kuerzelFolgeklasse;
+		result.idAllgemeinbildendOrganisationsform = (obj.idAllgemeinbildendOrganisationsform === undefined) ? null : obj.idAllgemeinbildendOrganisationsform === null ? null : obj.idAllgemeinbildendOrganisationsform;
+		result.idBerufsbildendOrganisationsform = (obj.idBerufsbildendOrganisationsform === undefined) ? null : obj.idBerufsbildendOrganisationsform === null ? null : obj.idBerufsbildendOrganisationsform;
+		result.idWeiterbildungOrganisationsform = (obj.idWeiterbildungOrganisationsform === undefined) ? null : obj.idWeiterbildungOrganisationsform === null ? null : obj.idWeiterbildungOrganisationsform;
+		result.pruefungsordnung = (obj.pruefungsordnung === undefined) ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
+		if (obj.idSchulgliederung === undefined)
 			 throw new Error('invalid json format, missing attribute idSchulgliederung');
 		result.idSchulgliederung = obj.idSchulgliederung;
-		if (typeof obj.idKlassenart === "undefined")
+		if (obj.idKlassenart === undefined)
 			 throw new Error('invalid json format, missing attribute idKlassenart');
 		result.idKlassenart = obj.idKlassenart;
-		if (typeof obj.noteneingabeGesperrt === "undefined")
+		if (obj.noteneingabeGesperrt === undefined)
 			 throw new Error('invalid json format, missing attribute noteneingabeGesperrt');
 		result.noteneingabeGesperrt = obj.noteneingabeGesperrt;
-		if (typeof obj.verwendungAnkreuzkompetenzen === "undefined")
+		if (obj.verwendungAnkreuzkompetenzen === undefined)
 			 throw new Error('invalid json format, missing attribute verwendungAnkreuzkompetenzen');
 		result.verwendungAnkreuzkompetenzen = obj.verwendungAnkreuzkompetenzen;
-		result.idFachklasse = typeof obj.idFachklasse === "undefined" ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
-		if (typeof obj.beginnSommersemester === "undefined")
+		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
+		if (obj.beginnSommersemester === undefined)
 			 throw new Error('invalid json format, missing attribute beginnSommersemester');
 		result.beginnSommersemester = obj.beginnSommersemester;
 		return result;
@@ -260,28 +260,28 @@ export class KlassenDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KlassenDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.idJahrgang !== "undefined") {
+		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		}
-		if (typeof obj.parallelitaet !== "undefined") {
+		if (obj.parallelitaet !== undefined) {
 			result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.klassenLeitungen !== "undefined") {
+		if (obj.klassenLeitungen !== undefined) {
 			if (!obj.klassenLeitungen) {
 				result += '"klassenLeitungen" : []';
 			} else {
@@ -295,7 +295,7 @@ export class KlassenDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -309,52 +309,52 @@ export class KlassenDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.teilstandort !== "undefined") {
+		if (obj.teilstandort !== undefined) {
 			result += '"teilstandort" : ' + JSON.stringify(obj.teilstandort!) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
-		if (typeof obj.idVorgaengerklasse !== "undefined") {
+		if (obj.idVorgaengerklasse !== undefined) {
 			result += '"idVorgaengerklasse" : ' + ((!obj.idVorgaengerklasse) ? 'null' : obj.idVorgaengerklasse) + ',';
 		}
-		if (typeof obj.kuerzelVorgaengerklasse !== "undefined") {
+		if (obj.kuerzelVorgaengerklasse !== undefined) {
 			result += '"kuerzelVorgaengerklasse" : ' + ((!obj.kuerzelVorgaengerklasse) ? 'null' : JSON.stringify(obj.kuerzelVorgaengerklasse)) + ',';
 		}
-		if (typeof obj.idFolgeklasse !== "undefined") {
+		if (obj.idFolgeklasse !== undefined) {
 			result += '"idFolgeklasse" : ' + ((!obj.idFolgeklasse) ? 'null' : obj.idFolgeklasse) + ',';
 		}
-		if (typeof obj.kuerzelFolgeklasse !== "undefined") {
+		if (obj.kuerzelFolgeklasse !== undefined) {
 			result += '"kuerzelFolgeklasse" : ' + ((!obj.kuerzelFolgeklasse) ? 'null' : JSON.stringify(obj.kuerzelFolgeklasse)) + ',';
 		}
-		if (typeof obj.idAllgemeinbildendOrganisationsform !== "undefined") {
+		if (obj.idAllgemeinbildendOrganisationsform !== undefined) {
 			result += '"idAllgemeinbildendOrganisationsform" : ' + ((!obj.idAllgemeinbildendOrganisationsform) ? 'null' : obj.idAllgemeinbildendOrganisationsform) + ',';
 		}
-		if (typeof obj.idBerufsbildendOrganisationsform !== "undefined") {
+		if (obj.idBerufsbildendOrganisationsform !== undefined) {
 			result += '"idBerufsbildendOrganisationsform" : ' + ((!obj.idBerufsbildendOrganisationsform) ? 'null' : obj.idBerufsbildendOrganisationsform) + ',';
 		}
-		if (typeof obj.idWeiterbildungOrganisationsform !== "undefined") {
+		if (obj.idWeiterbildungOrganisationsform !== undefined) {
 			result += '"idWeiterbildungOrganisationsform" : ' + ((!obj.idWeiterbildungOrganisationsform) ? 'null' : obj.idWeiterbildungOrganisationsform) + ',';
 		}
-		if (typeof obj.pruefungsordnung !== "undefined") {
+		if (obj.pruefungsordnung !== undefined) {
 			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		}
-		if (typeof obj.idSchulgliederung !== "undefined") {
+		if (obj.idSchulgliederung !== undefined) {
 			result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
 		}
-		if (typeof obj.idKlassenart !== "undefined") {
+		if (obj.idKlassenart !== undefined) {
 			result += '"idKlassenart" : ' + obj.idKlassenart + ',';
 		}
-		if (typeof obj.noteneingabeGesperrt !== "undefined") {
+		if (obj.noteneingabeGesperrt !== undefined) {
 			result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt + ',';
 		}
-		if (typeof obj.verwendungAnkreuzkompetenzen !== "undefined") {
+		if (obj.verwendungAnkreuzkompetenzen !== undefined) {
 			result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen + ',';
 		}
-		if (typeof obj.idFachklasse !== "undefined") {
+		if (obj.idFachklasse !== undefined) {
 			result += '"idFachklasse" : ' + ((!obj.idFachklasse) ? 'null' : obj.idFachklasse) + ',';
 		}
-		if (typeof obj.beginnSommersemester !== "undefined") {
+		if (obj.beginnSommersemester !== undefined) {
 			result += '"beginnSommersemester" : ' + obj.beginnSommersemester + ',';
 		}
 		result = result.slice(0, -1);

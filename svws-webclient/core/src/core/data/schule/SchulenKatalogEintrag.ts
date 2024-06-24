@@ -258,60 +258,60 @@ export class SchulenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchulenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulenKatalogEintrag();
-		if (typeof obj.SchulNr === "undefined")
+		if (obj.SchulNr === undefined)
 			 throw new Error('invalid json format, missing attribute SchulNr');
 		result.SchulNr = obj.SchulNr;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
-		if (typeof obj.KoRe === "undefined")
+		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		if (obj.KoRe === undefined)
 			 throw new Error('invalid json format, missing attribute KoRe');
 		result.KoRe = obj.KoRe;
-		if (typeof obj.KoHo === "undefined")
+		if (obj.KoHo === undefined)
 			 throw new Error('invalid json format, missing attribute KoHo');
 		result.KoHo = obj.KoHo;
-		result.ABez1 = typeof obj.ABez1 === "undefined" ? null : obj.ABez1 === null ? null : obj.ABez1;
-		result.ABez2 = typeof obj.ABez2 === "undefined" ? null : obj.ABez2 === null ? null : obj.ABez2;
-		result.ABez3 = typeof obj.ABez3 === "undefined" ? null : obj.ABez3 === null ? null : obj.ABez3;
-		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : obj.PLZ;
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
-		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : obj.Strasse;
-		result.TelVorw = typeof obj.TelVorw === "undefined" ? null : obj.TelVorw === null ? null : obj.TelVorw;
-		result.Telefon = typeof obj.Telefon === "undefined" ? null : obj.Telefon === null ? null : obj.Telefon;
-		result.FaxVorw = typeof obj.FaxVorw === "undefined" ? null : obj.FaxVorw === null ? null : obj.FaxVorw;
-		result.Fax = typeof obj.Fax === "undefined" ? null : obj.Fax === null ? null : obj.Fax;
-		result.ModemVorw = typeof obj.ModemVorw === "undefined" ? null : obj.ModemVorw === null ? null : obj.ModemVorw;
-		result.Modem = typeof obj.Modem === "undefined" ? null : obj.Modem === null ? null : obj.Modem;
-		result.SF = typeof obj.SF === "undefined" ? null : obj.SF === null ? null : obj.SF;
-		result.OeffPri = typeof obj.OeffPri === "undefined" ? null : obj.OeffPri === null ? null : obj.OeffPri;
-		result.KurzBez = typeof obj.KurzBez === "undefined" ? null : obj.KurzBez === null ? null : obj.KurzBez;
-		result.SchBetrSchl = typeof obj.SchBetrSchl === "undefined" ? null : obj.SchBetrSchl === null ? null : obj.SchBetrSchl;
-		result.SchBetrSchlDatum = typeof obj.SchBetrSchlDatum === "undefined" ? null : obj.SchBetrSchlDatum === null ? null : obj.SchBetrSchlDatum;
-		result.ArtDerTraegerschaft = typeof obj.ArtDerTraegerschaft === "undefined" ? null : obj.ArtDerTraegerschaft === null ? null : obj.ArtDerTraegerschaft;
-		result.SchultraegerNr = typeof obj.SchultraegerNr === "undefined" ? null : obj.SchultraegerNr === null ? null : obj.SchultraegerNr;
-		result.Schulgliederung = typeof obj.Schulgliederung === "undefined" ? null : obj.Schulgliederung === null ? null : obj.Schulgliederung;
-		result.Schulart = typeof obj.Schulart === "undefined" ? null : obj.Schulart === null ? null : obj.Schulart;
-		result.Ganztagsbetrieb = typeof obj.Ganztagsbetrieb === "undefined" ? null : obj.Ganztagsbetrieb === null ? null : obj.Ganztagsbetrieb;
-		result.FSP = typeof obj.FSP === "undefined" ? null : obj.FSP === null ? null : obj.FSP;
-		result.Verbund = typeof obj.Verbund === "undefined" ? null : obj.Verbund === null ? null : obj.Verbund;
-		result.Bus = typeof obj.Bus === "undefined" ? null : obj.Bus === null ? null : obj.Bus;
-		result.Fachberater = typeof obj.Fachberater === "undefined" ? null : obj.Fachberater === null ? null : obj.Fachberater;
-		result.FachberHauptamtl = typeof obj.FachberHauptamtl === "undefined" ? null : obj.FachberHauptamtl === null ? null : obj.FachberHauptamtl;
-		result.TelNrDBSalt = typeof obj.TelNrDBSalt === "undefined" ? null : obj.TelNrDBSalt === null ? null : obj.TelNrDBSalt;
-		result.RP = typeof obj.RP === "undefined" ? null : obj.RP === null ? null : obj.RP;
-		result.Email = typeof obj.Email === "undefined" ? null : obj.Email === null ? null : obj.Email;
-		result.URL = typeof obj.URL === "undefined" ? null : obj.URL === null ? null : obj.URL;
-		result.Bemerkung = typeof obj.Bemerkung === "undefined" ? null : obj.Bemerkung === null ? null : obj.Bemerkung;
-		result.CD = typeof obj.CD === "undefined" ? null : obj.CD === null ? null : obj.CD;
-		result.Stift = typeof obj.Stift === "undefined" ? null : obj.Stift === null ? null : obj.Stift;
-		result.OGTS = typeof obj.OGTS === "undefined" ? null : obj.OGTS === null ? null : obj.OGTS;
-		result.SELB = typeof obj.SELB === "undefined" ? null : obj.SELB === null ? null : obj.SELB;
-		result.Internat = typeof obj.Internat === "undefined" ? null : obj.Internat === null ? null : obj.Internat;
-		result.InternatPlaetze = typeof obj.InternatPlaetze === "undefined" ? null : obj.InternatPlaetze === null ? null : obj.InternatPlaetze;
-		result.SMail = typeof obj.SMail === "undefined" ? null : obj.SMail === null ? null : obj.SMail;
-		result.SportImAbi = typeof obj.SportImAbi === "undefined" ? null : obj.SportImAbi === null ? null : obj.SportImAbi;
-		result.Tal = typeof obj.Tal === "undefined" ? null : obj.Tal === null ? null : obj.Tal;
-		result.KonKop = typeof obj.KonKop === "undefined" ? null : obj.KonKop === null ? null : obj.KonKop;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.ABez1 = (obj.ABez1 === undefined) ? null : obj.ABez1 === null ? null : obj.ABez1;
+		result.ABez2 = (obj.ABez2 === undefined) ? null : obj.ABez2 === null ? null : obj.ABez2;
+		result.ABez3 = (obj.ABez3 === undefined) ? null : obj.ABez3 === null ? null : obj.ABez3;
+		result.PLZ = (obj.PLZ === undefined) ? null : obj.PLZ === null ? null : obj.PLZ;
+		result.Ort = (obj.Ort === undefined) ? null : obj.Ort === null ? null : obj.Ort;
+		result.Strasse = (obj.Strasse === undefined) ? null : obj.Strasse === null ? null : obj.Strasse;
+		result.TelVorw = (obj.TelVorw === undefined) ? null : obj.TelVorw === null ? null : obj.TelVorw;
+		result.Telefon = (obj.Telefon === undefined) ? null : obj.Telefon === null ? null : obj.Telefon;
+		result.FaxVorw = (obj.FaxVorw === undefined) ? null : obj.FaxVorw === null ? null : obj.FaxVorw;
+		result.Fax = (obj.Fax === undefined) ? null : obj.Fax === null ? null : obj.Fax;
+		result.ModemVorw = (obj.ModemVorw === undefined) ? null : obj.ModemVorw === null ? null : obj.ModemVorw;
+		result.Modem = (obj.Modem === undefined) ? null : obj.Modem === null ? null : obj.Modem;
+		result.SF = (obj.SF === undefined) ? null : obj.SF === null ? null : obj.SF;
+		result.OeffPri = (obj.OeffPri === undefined) ? null : obj.OeffPri === null ? null : obj.OeffPri;
+		result.KurzBez = (obj.KurzBez === undefined) ? null : obj.KurzBez === null ? null : obj.KurzBez;
+		result.SchBetrSchl = (obj.SchBetrSchl === undefined) ? null : obj.SchBetrSchl === null ? null : obj.SchBetrSchl;
+		result.SchBetrSchlDatum = (obj.SchBetrSchlDatum === undefined) ? null : obj.SchBetrSchlDatum === null ? null : obj.SchBetrSchlDatum;
+		result.ArtDerTraegerschaft = (obj.ArtDerTraegerschaft === undefined) ? null : obj.ArtDerTraegerschaft === null ? null : obj.ArtDerTraegerschaft;
+		result.SchultraegerNr = (obj.SchultraegerNr === undefined) ? null : obj.SchultraegerNr === null ? null : obj.SchultraegerNr;
+		result.Schulgliederung = (obj.Schulgliederung === undefined) ? null : obj.Schulgliederung === null ? null : obj.Schulgliederung;
+		result.Schulart = (obj.Schulart === undefined) ? null : obj.Schulart === null ? null : obj.Schulart;
+		result.Ganztagsbetrieb = (obj.Ganztagsbetrieb === undefined) ? null : obj.Ganztagsbetrieb === null ? null : obj.Ganztagsbetrieb;
+		result.FSP = (obj.FSP === undefined) ? null : obj.FSP === null ? null : obj.FSP;
+		result.Verbund = (obj.Verbund === undefined) ? null : obj.Verbund === null ? null : obj.Verbund;
+		result.Bus = (obj.Bus === undefined) ? null : obj.Bus === null ? null : obj.Bus;
+		result.Fachberater = (obj.Fachberater === undefined) ? null : obj.Fachberater === null ? null : obj.Fachberater;
+		result.FachberHauptamtl = (obj.FachberHauptamtl === undefined) ? null : obj.FachberHauptamtl === null ? null : obj.FachberHauptamtl;
+		result.TelNrDBSalt = (obj.TelNrDBSalt === undefined) ? null : obj.TelNrDBSalt === null ? null : obj.TelNrDBSalt;
+		result.RP = (obj.RP === undefined) ? null : obj.RP === null ? null : obj.RP;
+		result.Email = (obj.Email === undefined) ? null : obj.Email === null ? null : obj.Email;
+		result.URL = (obj.URL === undefined) ? null : obj.URL === null ? null : obj.URL;
+		result.Bemerkung = (obj.Bemerkung === undefined) ? null : obj.Bemerkung === null ? null : obj.Bemerkung;
+		result.CD = (obj.CD === undefined) ? null : obj.CD === null ? null : obj.CD;
+		result.Stift = (obj.Stift === undefined) ? null : obj.Stift === null ? null : obj.Stift;
+		result.OGTS = (obj.OGTS === undefined) ? null : obj.OGTS === null ? null : obj.OGTS;
+		result.SELB = (obj.SELB === undefined) ? null : obj.SELB === null ? null : obj.SELB;
+		result.Internat = (obj.Internat === undefined) ? null : obj.Internat === null ? null : obj.Internat;
+		result.InternatPlaetze = (obj.InternatPlaetze === undefined) ? null : obj.InternatPlaetze === null ? null : obj.InternatPlaetze;
+		result.SMail = (obj.SMail === undefined) ? null : obj.SMail === null ? null : obj.SMail;
+		result.SportImAbi = (obj.SportImAbi === undefined) ? null : obj.SportImAbi === null ? null : obj.SportImAbi;
+		result.Tal = (obj.Tal === undefined) ? null : obj.Tal === null ? null : obj.Tal;
+		result.KonKop = (obj.KonKop === undefined) ? null : obj.KonKop === null ? null : obj.KonKop;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -372,148 +372,148 @@ export class SchulenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulenKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.SchulNr !== "undefined") {
+		if (obj.SchulNr !== undefined) {
 			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
 		}
-		if (typeof obj.RegSchl !== "undefined") {
+		if (obj.RegSchl !== undefined) {
 			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
-		if (typeof obj.KoRe !== "undefined") {
+		if (obj.KoRe !== undefined) {
 			result += '"KoRe" : ' + obj.KoRe + ',';
 		}
-		if (typeof obj.KoHo !== "undefined") {
+		if (obj.KoHo !== undefined) {
 			result += '"KoHo" : ' + obj.KoHo + ',';
 		}
-		if (typeof obj.ABez1 !== "undefined") {
+		if (obj.ABez1 !== undefined) {
 			result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
 		}
-		if (typeof obj.ABez2 !== "undefined") {
+		if (obj.ABez2 !== undefined) {
 			result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
 		}
-		if (typeof obj.ABez3 !== "undefined") {
+		if (obj.ABez3 !== undefined) {
 			result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
 		}
-		if (typeof obj.PLZ !== "undefined") {
+		if (obj.PLZ !== undefined) {
 			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
-		if (typeof obj.Ort !== "undefined") {
+		if (obj.Ort !== undefined) {
 			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
-		if (typeof obj.Strasse !== "undefined") {
+		if (obj.Strasse !== undefined) {
 			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
-		if (typeof obj.TelVorw !== "undefined") {
+		if (obj.TelVorw !== undefined) {
 			result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
 		}
-		if (typeof obj.Telefon !== "undefined") {
+		if (obj.Telefon !== undefined) {
 			result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
 		}
-		if (typeof obj.FaxVorw !== "undefined") {
+		if (obj.FaxVorw !== undefined) {
 			result += '"FaxVorw" : ' + ((!obj.FaxVorw) ? 'null' : JSON.stringify(obj.FaxVorw)) + ',';
 		}
-		if (typeof obj.Fax !== "undefined") {
+		if (obj.Fax !== undefined) {
 			result += '"Fax" : ' + ((!obj.Fax) ? 'null' : JSON.stringify(obj.Fax)) + ',';
 		}
-		if (typeof obj.ModemVorw !== "undefined") {
+		if (obj.ModemVorw !== undefined) {
 			result += '"ModemVorw" : ' + ((!obj.ModemVorw) ? 'null' : JSON.stringify(obj.ModemVorw)) + ',';
 		}
-		if (typeof obj.Modem !== "undefined") {
+		if (obj.Modem !== undefined) {
 			result += '"Modem" : ' + ((!obj.Modem) ? 'null' : JSON.stringify(obj.Modem)) + ',';
 		}
-		if (typeof obj.SF !== "undefined") {
+		if (obj.SF !== undefined) {
 			result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
 		}
-		if (typeof obj.OeffPri !== "undefined") {
+		if (obj.OeffPri !== undefined) {
 			result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
 		}
-		if (typeof obj.KurzBez !== "undefined") {
+		if (obj.KurzBez !== undefined) {
 			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		}
-		if (typeof obj.SchBetrSchl !== "undefined") {
+		if (obj.SchBetrSchl !== undefined) {
 			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
 		}
-		if (typeof obj.SchBetrSchlDatum !== "undefined") {
+		if (obj.SchBetrSchlDatum !== undefined) {
 			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
 		}
-		if (typeof obj.ArtDerTraegerschaft !== "undefined") {
+		if (obj.ArtDerTraegerschaft !== undefined) {
 			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
 		}
-		if (typeof obj.SchultraegerNr !== "undefined") {
+		if (obj.SchultraegerNr !== undefined) {
 			result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
 		}
-		if (typeof obj.Schulgliederung !== "undefined") {
+		if (obj.Schulgliederung !== undefined) {
 			result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
 		}
-		if (typeof obj.Schulart !== "undefined") {
+		if (obj.Schulart !== undefined) {
 			result += '"Schulart" : ' + ((!obj.Schulart) ? 'null' : JSON.stringify(obj.Schulart)) + ',';
 		}
-		if (typeof obj.Ganztagsbetrieb !== "undefined") {
+		if (obj.Ganztagsbetrieb !== undefined) {
 			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
 		}
-		if (typeof obj.FSP !== "undefined") {
+		if (obj.FSP !== undefined) {
 			result += '"FSP" : ' + ((!obj.FSP) ? 'null' : JSON.stringify(obj.FSP)) + ',';
 		}
-		if (typeof obj.Verbund !== "undefined") {
+		if (obj.Verbund !== undefined) {
 			result += '"Verbund" : ' + ((!obj.Verbund) ? 'null' : JSON.stringify(obj.Verbund)) + ',';
 		}
-		if (typeof obj.Bus !== "undefined") {
+		if (obj.Bus !== undefined) {
 			result += '"Bus" : ' + ((!obj.Bus) ? 'null' : JSON.stringify(obj.Bus)) + ',';
 		}
-		if (typeof obj.Fachberater !== "undefined") {
+		if (obj.Fachberater !== undefined) {
 			result += '"Fachberater" : ' + ((!obj.Fachberater) ? 'null' : obj.Fachberater) + ',';
 		}
-		if (typeof obj.FachberHauptamtl !== "undefined") {
+		if (obj.FachberHauptamtl !== undefined) {
 			result += '"FachberHauptamtl" : ' + ((!obj.FachberHauptamtl) ? 'null' : obj.FachberHauptamtl) + ',';
 		}
-		if (typeof obj.TelNrDBSalt !== "undefined") {
+		if (obj.TelNrDBSalt !== undefined) {
 			result += '"TelNrDBSalt" : ' + ((!obj.TelNrDBSalt) ? 'null' : JSON.stringify(obj.TelNrDBSalt)) + ',';
 		}
-		if (typeof obj.RP !== "undefined") {
+		if (obj.RP !== undefined) {
 			result += '"RP" : ' + ((!obj.RP) ? 'null' : JSON.stringify(obj.RP)) + ',';
 		}
-		if (typeof obj.Email !== "undefined") {
+		if (obj.Email !== undefined) {
 			result += '"Email" : ' + ((!obj.Email) ? 'null' : JSON.stringify(obj.Email)) + ',';
 		}
-		if (typeof obj.URL !== "undefined") {
+		if (obj.URL !== undefined) {
 			result += '"URL" : ' + ((!obj.URL) ? 'null' : JSON.stringify(obj.URL)) + ',';
 		}
-		if (typeof obj.Bemerkung !== "undefined") {
+		if (obj.Bemerkung !== undefined) {
 			result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : JSON.stringify(obj.Bemerkung)) + ',';
 		}
-		if (typeof obj.CD !== "undefined") {
+		if (obj.CD !== undefined) {
 			result += '"CD" : ' + ((!obj.CD) ? 'null' : obj.CD) + ',';
 		}
-		if (typeof obj.Stift !== "undefined") {
+		if (obj.Stift !== undefined) {
 			result += '"Stift" : ' + ((!obj.Stift) ? 'null' : obj.Stift) + ',';
 		}
-		if (typeof obj.OGTS !== "undefined") {
+		if (obj.OGTS !== undefined) {
 			result += '"OGTS" : ' + ((!obj.OGTS) ? 'null' : JSON.stringify(obj.OGTS)) + ',';
 		}
-		if (typeof obj.SELB !== "undefined") {
+		if (obj.SELB !== undefined) {
 			result += '"SELB" : ' + ((!obj.SELB) ? 'null' : JSON.stringify(obj.SELB)) + ',';
 		}
-		if (typeof obj.Internat !== "undefined") {
+		if (obj.Internat !== undefined) {
 			result += '"Internat" : ' + ((!obj.Internat) ? 'null' : JSON.stringify(obj.Internat)) + ',';
 		}
-		if (typeof obj.InternatPlaetze !== "undefined") {
+		if (obj.InternatPlaetze !== undefined) {
 			result += '"InternatPlaetze" : ' + ((!obj.InternatPlaetze) ? 'null' : obj.InternatPlaetze) + ',';
 		}
-		if (typeof obj.SMail !== "undefined") {
+		if (obj.SMail !== undefined) {
 			result += '"SMail" : ' + ((!obj.SMail) ? 'null' : JSON.stringify(obj.SMail)) + ',';
 		}
-		if (typeof obj.SportImAbi !== "undefined") {
+		if (obj.SportImAbi !== undefined) {
 			result += '"SportImAbi" : ' + ((!obj.SportImAbi) ? 'null' : JSON.stringify(obj.SportImAbi)) + ',';
 		}
-		if (typeof obj.Tal !== "undefined") {
+		if (obj.Tal !== undefined) {
 			result += '"Tal" : ' + ((!obj.Tal) ? 'null' : JSON.stringify(obj.Tal)) + ',';
 		}
-		if (typeof obj.KonKop !== "undefined") {
+		if (obj.KonKop !== undefined) {
 			result += '"KonKop" : ' + ((!obj.KonKop) ? 'null' : JSON.stringify(obj.KonKop)) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

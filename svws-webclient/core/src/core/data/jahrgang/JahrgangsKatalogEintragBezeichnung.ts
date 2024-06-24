@@ -32,9 +32,9 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	 */
 	public constructor(__param0? : Schulform, __param1? : string) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((__param1 !== undefined) && (typeof __param1 === "string"))) {
 			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const bezeichnung : string = __param1;
 			this.schulform = schulform.daten.kuerzel;
@@ -53,10 +53,10 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerFromJSON(json : string): JahrgangsKatalogEintragBezeichnung {
 		const obj = JSON.parse(json);
 		const result = new JahrgangsKatalogEintragBezeichnung();
-		if (typeof obj.schulform === "undefined")
+		if (obj.schulform === undefined)
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
@@ -73,10 +73,10 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<JahrgangsKatalogEintragBezeichnung>) : string {
 		let result = '{';
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);

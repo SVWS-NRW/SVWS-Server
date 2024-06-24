@@ -73,25 +73,25 @@ export class JahrgangsDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): JahrgangsDaten {
 		const obj = JSON.parse(json);
 		const result = new JahrgangsDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		if (typeof obj.kuerzelStatistik === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		if (obj.kuerzelStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
 		result.kuerzelStatistik = obj.kuerzelStatistik;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		if (typeof obj.sortierung === "undefined")
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.kuerzelSchulgliederung = typeof obj.kuerzelSchulgliederung === "undefined" ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
-		result.idFolgejahrgang = typeof obj.idFolgejahrgang === "undefined" ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
-		result.anzahlRestabschnitte = typeof obj.anzahlRestabschnitte === "undefined" ? null : obj.anzahlRestabschnitte === null ? null : obj.anzahlRestabschnitte;
-		if (typeof obj.istSichtbar === "undefined")
+		result.kuerzelSchulgliederung = (obj.kuerzelSchulgliederung === undefined) ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
+		result.idFolgejahrgang = (obj.idFolgejahrgang === undefined) ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
+		result.anzahlRestabschnitte = (obj.anzahlRestabschnitte === undefined) ? null : obj.anzahlRestabschnitte === null ? null : obj.anzahlRestabschnitte;
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -115,37 +115,37 @@ export class JahrgangsDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<JahrgangsDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.kuerzelStatistik !== "undefined") {
+		if (obj.kuerzelStatistik !== undefined) {
 			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.kuerzelSchulgliederung !== "undefined") {
+		if (obj.kuerzelSchulgliederung !== undefined) {
 			result += '"kuerzelSchulgliederung" : ' + ((!obj.kuerzelSchulgliederung) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
 		}
-		if (typeof obj.idFolgejahrgang !== "undefined") {
+		if (obj.idFolgejahrgang !== undefined) {
 			result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
 		}
-		if (typeof obj.anzahlRestabschnitte !== "undefined") {
+		if (obj.anzahlRestabschnitte !== undefined) {
 			result += '"anzahlRestabschnitte" : ' + ((!obj.anzahlRestabschnitte) ? 'null' : obj.anzahlRestabschnitte) + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

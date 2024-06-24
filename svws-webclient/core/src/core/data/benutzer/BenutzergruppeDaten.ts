@@ -40,13 +40,13 @@ export class BenutzergruppeDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzergruppeDaten {
 		const obj = JSON.parse(json);
 		const result = new BenutzergruppeDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.istAdmin === "undefined")
+		if (obj.istAdmin === undefined)
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
 		if ((obj.kompetenzen !== undefined) && (obj.kompetenzen !== null)) {
@@ -81,16 +81,16 @@ export class BenutzergruppeDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzergruppeDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.istAdmin !== "undefined") {
+		if (obj.istAdmin !== undefined) {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';
 		}
-		if (typeof obj.kompetenzen !== "undefined") {
+		if (obj.kompetenzen !== undefined) {
 			if (!obj.kompetenzen) {
 				result += '"kompetenzen" : []';
 			} else {

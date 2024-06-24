@@ -28,10 +28,10 @@ export class BenutzerConfigElement extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerConfigElement {
 		const obj = JSON.parse(json);
 		const result = new BenutzerConfigElement();
-		if (typeof obj.key === "undefined")
+		if (obj.key === undefined)
 			 throw new Error('invalid json format, missing attribute key');
 		result.key = obj.key;
-		if (typeof obj.value === "undefined")
+		if (obj.value === undefined)
 			 throw new Error('invalid json format, missing attribute value');
 		result.value = obj.value;
 		return result;
@@ -48,10 +48,10 @@ export class BenutzerConfigElement extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerConfigElement>) : string {
 		let result = '{';
-		if (typeof obj.key !== "undefined") {
+		if (obj.key !== undefined) {
 			result += '"key" : ' + JSON.stringify(obj.key!) + ',';
 		}
-		if (typeof obj.value !== "undefined") {
+		if (obj.value !== undefined) {
 			result += '"value" : ' + JSON.stringify(obj.value!) + ',';
 		}
 		result = result.slice(0, -1);

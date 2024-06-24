@@ -101,23 +101,23 @@ export class ENMSchueler extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMSchueler {
 		const obj = JSON.parse(json);
 		const result = new ENMSchueler();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.jahrgangID === "undefined")
+		if (obj.jahrgangID === undefined)
 			 throw new Error('invalid json format, missing attribute jahrgangID');
 		result.jahrgangID = obj.jahrgangID;
-		if (typeof obj.klasseID === "undefined")
+		if (obj.klasseID === undefined)
 			 throw new Error('invalid json format, missing attribute klasseID');
 		result.klasseID = obj.klasseID;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : obj.nachname;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
-		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht === null ? null : obj.geschlecht;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (typeof obj.istZieldifferent === "undefined")
+		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
+		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
+		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		if (obj.istZieldifferent === undefined)
 			 throw new Error('invalid json format, missing attribute istZieldifferent');
 		result.istZieldifferent = obj.istZieldifferent;
-		if (typeof obj.istDaZFoerderung === "undefined")
+		if (obj.istDaZFoerderung === undefined)
 			 throw new Error('invalid json format, missing attribute istDaZFoerderung');
 		result.istDaZFoerderung = obj.istDaZFoerderung;
 		if ((obj.sprachenfolge !== undefined) && (obj.sprachenfolge !== null)) {
@@ -125,7 +125,7 @@ export class ENMSchueler extends JavaObject {
 				result.sprachenfolge?.add(ENMSprachenfolge.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.lernabschnitt === "undefined")
+		if (obj.lernabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute lernabschnitt');
 		result.lernabschnitt = ENMLernabschnitt.transpilerFromJSON(JSON.stringify(obj.lernabschnitt));
 		if ((obj.leistungsdaten !== undefined) && (obj.leistungsdaten !== null)) {
@@ -133,11 +133,11 @@ export class ENMSchueler extends JavaObject {
 				result.leistungsdaten?.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.bemerkungen === "undefined")
+		if (obj.bemerkungen === undefined)
 			 throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = ENMLeistungBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
-		result.zp10 = ((typeof obj.zp10 === "undefined") || (obj.zp10 === null)) ? null : ENMZP10.transpilerFromJSON(JSON.stringify(obj.zp10));
-		result.bkabschluss = ((typeof obj.bkabschluss === "undefined") || (obj.bkabschluss === null)) ? null : ENMBKAbschluss.transpilerFromJSON(JSON.stringify(obj.bkabschluss));
+		result.zp10 = ((obj.zp10 === undefined) || (obj.zp10 === null)) ? null : ENMZP10.transpilerFromJSON(JSON.stringify(obj.zp10));
+		result.bkabschluss = ((obj.bkabschluss === undefined) || (obj.bkabschluss === null)) ? null : ENMBKAbschluss.transpilerFromJSON(JSON.stringify(obj.bkabschluss));
 		return result;
 	}
 
@@ -187,34 +187,34 @@ export class ENMSchueler extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMSchueler>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.jahrgangID !== "undefined") {
+		if (obj.jahrgangID !== undefined) {
 			result += '"jahrgangID" : ' + obj.jahrgangID + ',';
 		}
-		if (typeof obj.klasseID !== "undefined") {
+		if (obj.klasseID !== undefined) {
 			result += '"klasseID" : ' + obj.klasseID + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
-		if (typeof obj.geschlecht !== "undefined") {
+		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.istZieldifferent !== "undefined") {
+		if (obj.istZieldifferent !== undefined) {
 			result += '"istZieldifferent" : ' + obj.istZieldifferent + ',';
 		}
-		if (typeof obj.istDaZFoerderung !== "undefined") {
+		if (obj.istDaZFoerderung !== undefined) {
 			result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung + ',';
 		}
-		if (typeof obj.sprachenfolge !== "undefined") {
+		if (obj.sprachenfolge !== undefined) {
 			if (!obj.sprachenfolge) {
 				result += '"sprachenfolge" : []';
 			} else {
@@ -228,10 +228,10 @@ export class ENMSchueler extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lernabschnitt !== "undefined") {
+		if (obj.lernabschnitt !== undefined) {
 			result += '"lernabschnitt" : ' + ENMLernabschnitt.transpilerToJSON(obj.lernabschnitt) + ',';
 		}
-		if (typeof obj.leistungsdaten !== "undefined") {
+		if (obj.leistungsdaten !== undefined) {
 			if (!obj.leistungsdaten) {
 				result += '"leistungsdaten" : []';
 			} else {
@@ -245,13 +245,13 @@ export class ENMSchueler extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.bemerkungen !== "undefined") {
+		if (obj.bemerkungen !== undefined) {
 			result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		}
-		if (typeof obj.zp10 !== "undefined") {
+		if (obj.zp10 !== undefined) {
 			result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
 		}
-		if (typeof obj.bkabschluss !== "undefined") {
+		if (obj.bkabschluss !== undefined) {
 			result += '"bkabschluss" : ' + ((!obj.bkabschluss) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
 		}
 		result = result.slice(0, -1);

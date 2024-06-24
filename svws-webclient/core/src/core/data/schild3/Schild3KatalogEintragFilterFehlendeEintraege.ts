@@ -53,13 +53,13 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragFilterFehlendeEintraege {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragFilterFehlendeEintraege();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : obj.ID;
-		result.Beschreibung = typeof obj.Beschreibung === "undefined" ? null : obj.Beschreibung === null ? null : obj.Beschreibung;
-		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname === null ? null : obj.Feldname;
-		result.Tabellen = typeof obj.Tabellen === "undefined" ? null : obj.Tabellen === null ? null : obj.Tabellen;
-		result.SQLText = typeof obj.SQLText === "undefined" ? null : obj.SQLText === null ? null : obj.SQLText;
-		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform === null ? null : obj.Schulform;
-		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp === null ? null : obj.Feldtyp;
+		result.ID = (obj.ID === undefined) ? null : obj.ID === null ? null : obj.ID;
+		result.Beschreibung = (obj.Beschreibung === undefined) ? null : obj.Beschreibung === null ? null : obj.Beschreibung;
+		result.Feldname = (obj.Feldname === undefined) ? null : obj.Feldname === null ? null : obj.Feldname;
+		result.Tabellen = (obj.Tabellen === undefined) ? null : obj.Tabellen === null ? null : obj.Tabellen;
+		result.SQLText = (obj.SQLText === undefined) ? null : obj.SQLText === null ? null : obj.SQLText;
+		result.Schulform = (obj.Schulform === undefined) ? null : obj.Schulform === null ? null : obj.Schulform;
+		result.Feldtyp = (obj.Feldtyp === undefined) ? null : obj.Feldtyp === null ? null : obj.Feldtyp;
 		return result;
 	}
 
@@ -79,25 +79,25 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragFilterFehlendeEintraege>) : string {
 		let result = '{';
-		if (typeof obj.ID !== "undefined") {
+		if (obj.ID !== undefined) {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
-		if (typeof obj.Beschreibung !== "undefined") {
+		if (obj.Beschreibung !== undefined) {
 			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
 		}
-		if (typeof obj.Feldname !== "undefined") {
+		if (obj.Feldname !== undefined) {
 			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
 		}
-		if (typeof obj.Tabellen !== "undefined") {
+		if (obj.Tabellen !== undefined) {
 			result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : JSON.stringify(obj.Tabellen)) + ',';
 		}
-		if (typeof obj.SQLText !== "undefined") {
+		if (obj.SQLText !== undefined) {
 			result += '"SQLText" : ' + ((!obj.SQLText) ? 'null' : JSON.stringify(obj.SQLText)) + ',';
 		}
-		if (typeof obj.Schulform !== "undefined") {
+		if (obj.Schulform !== undefined) {
 			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		}
-		if (typeof obj.Feldtyp !== "undefined") {
+		if (obj.Feldtyp !== undefined) {
 			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
 		}
 		result = result.slice(0, -1);

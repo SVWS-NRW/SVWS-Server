@@ -48,14 +48,14 @@ export class ENMJahrgang extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMJahrgang {
 		const obj = JSON.parse(json);
 		const result = new ENMJahrgang();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		result.stufe = typeof obj.stufe === "undefined" ? null : obj.stufe === null ? null : obj.stufe;
-		if (typeof obj.sortierung === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kuerzelAnzeige = (obj.kuerzelAnzeige === undefined) ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		result.stufe = (obj.stufe === undefined) ? null : obj.stufe === null ? null : obj.stufe;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		return result;
@@ -76,22 +76,22 @@ export class ENMJahrgang extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMJahrgang>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.kuerzelAnzeige !== "undefined") {
+		if (obj.kuerzelAnzeige !== undefined) {
 			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
-		if (typeof obj.stufe !== "undefined") {
+		if (obj.stufe !== undefined) {
 			result += '"stufe" : ' + ((!obj.stufe) ? 'null' : JSON.stringify(obj.stufe)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
 		result = result.slice(0, -1);

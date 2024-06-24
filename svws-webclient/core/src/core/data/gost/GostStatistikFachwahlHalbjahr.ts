@@ -43,19 +43,19 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 	public static transpilerFromJSON(json : string): GostStatistikFachwahlHalbjahr {
 		const obj = JSON.parse(json);
 		const result = new GostStatistikFachwahlHalbjahr();
-		if (typeof obj.wahlenGKMuendlich === "undefined")
+		if (obj.wahlenGKMuendlich === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenGKMuendlich');
 		result.wahlenGKMuendlich = obj.wahlenGKMuendlich;
-		if (typeof obj.wahlenGKSchriftlich === "undefined")
+		if (obj.wahlenGKSchriftlich === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenGKSchriftlich');
 		result.wahlenGKSchriftlich = obj.wahlenGKSchriftlich;
-		if (typeof obj.wahlenGK === "undefined")
+		if (obj.wahlenGK === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenGK');
 		result.wahlenGK = obj.wahlenGK;
-		if (typeof obj.wahlenZK === "undefined")
+		if (obj.wahlenZK === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenZK');
 		result.wahlenZK = obj.wahlenZK;
-		if (typeof obj.wahlenLK === "undefined")
+		if (obj.wahlenLK === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenLK');
 		result.wahlenLK = obj.wahlenLK;
 		return result;
@@ -75,19 +75,19 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostStatistikFachwahlHalbjahr>) : string {
 		let result = '{';
-		if (typeof obj.wahlenGKMuendlich !== "undefined") {
+		if (obj.wahlenGKMuendlich !== undefined) {
 			result += '"wahlenGKMuendlich" : ' + obj.wahlenGKMuendlich + ',';
 		}
-		if (typeof obj.wahlenGKSchriftlich !== "undefined") {
+		if (obj.wahlenGKSchriftlich !== undefined) {
 			result += '"wahlenGKSchriftlich" : ' + obj.wahlenGKSchriftlich + ',';
 		}
-		if (typeof obj.wahlenGK !== "undefined") {
+		if (obj.wahlenGK !== undefined) {
 			result += '"wahlenGK" : ' + obj.wahlenGK + ',';
 		}
-		if (typeof obj.wahlenZK !== "undefined") {
+		if (obj.wahlenZK !== undefined) {
 			result += '"wahlenZK" : ' + obj.wahlenZK + ',';
 		}
-		if (typeof obj.wahlenLK !== "undefined") {
+		if (obj.wahlenLK !== undefined) {
 			result += '"wahlenLK" : ' + obj.wahlenLK + ',';
 		}
 		result = result.slice(0, -1);

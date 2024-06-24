@@ -66,17 +66,17 @@ export class StundenplanUnterricht extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanUnterricht {
 		const obj = JSON.parse(json);
 		const result = new StundenplanUnterricht();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idZeitraster === "undefined")
+		if (obj.idZeitraster === undefined)
 			 throw new Error('invalid json format, missing attribute idZeitraster');
 		result.idZeitraster = obj.idZeitraster;
-		if (typeof obj.wochentyp === "undefined")
+		if (obj.wochentyp === undefined)
 			 throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
-		result.idKurs = typeof obj.idKurs === "undefined" ? null : obj.idKurs === null ? null : obj.idKurs;
-		if (typeof obj.idFach === "undefined")
+		result.idKurs = (obj.idKurs === undefined) ? null : obj.idKurs === null ? null : obj.idKurs;
+		if (obj.idFach === undefined)
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
@@ -164,22 +164,22 @@ export class StundenplanUnterricht extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanUnterricht>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idZeitraster !== "undefined") {
+		if (obj.idZeitraster !== undefined) {
 			result += '"idZeitraster" : ' + obj.idZeitraster + ',';
 		}
-		if (typeof obj.wochentyp !== "undefined") {
+		if (obj.wochentyp !== undefined) {
 			result += '"wochentyp" : ' + obj.wochentyp + ',';
 		}
-		if (typeof obj.idKurs !== "undefined") {
+		if (obj.idKurs !== undefined) {
 			result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs) + ',';
 		}
-		if (typeof obj.idFach !== "undefined") {
+		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {
@@ -193,7 +193,7 @@ export class StundenplanUnterricht extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -207,7 +207,7 @@ export class StundenplanUnterricht extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume !== "undefined") {
+		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
 				result += '"raeume" : []';
 			} else {
@@ -221,7 +221,7 @@ export class StundenplanUnterricht extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {

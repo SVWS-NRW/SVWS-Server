@@ -44,7 +44,7 @@ export class StundenplanKomplett extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanKomplett {
 		const obj = JSON.parse(json);
 		const result = new StundenplanKomplett();
-		if (typeof obj.daten === "undefined")
+		if (obj.daten === undefined)
 			 throw new Error('invalid json format, missing attribute daten');
 		result.daten = Stundenplan.transpilerFromJSON(JSON.stringify(obj.daten));
 		if ((obj.unterrichte !== undefined) && (obj.unterrichte !== null)) {
@@ -57,7 +57,7 @@ export class StundenplanKomplett extends JavaObject {
 				result.pausenaufsichten?.add(StundenplanPausenaufsicht.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.unterrichtsverteilung === "undefined")
+		if (obj.unterrichtsverteilung === undefined)
 			 throw new Error('invalid json format, missing attribute unterrichtsverteilung');
 		result.unterrichtsverteilung = StundenplanUnterrichtsverteilung.transpilerFromJSON(JSON.stringify(obj.unterrichtsverteilung));
 		return result;
@@ -98,10 +98,10 @@ export class StundenplanKomplett extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKomplett>) : string {
 		let result = '{';
-		if (typeof obj.daten !== "undefined") {
+		if (obj.daten !== undefined) {
 			result += '"daten" : ' + Stundenplan.transpilerToJSON(obj.daten) + ',';
 		}
-		if (typeof obj.unterrichte !== "undefined") {
+		if (obj.unterrichte !== undefined) {
 			if (!obj.unterrichte) {
 				result += '"unterrichte" : []';
 			} else {
@@ -115,7 +115,7 @@ export class StundenplanKomplett extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.pausenaufsichten !== "undefined") {
+		if (obj.pausenaufsichten !== undefined) {
 			if (!obj.pausenaufsichten) {
 				result += '"pausenaufsichten" : []';
 			} else {
@@ -129,7 +129,7 @@ export class StundenplanKomplett extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.unterrichtsverteilung !== "undefined") {
+		if (obj.unterrichtsverteilung !== undefined) {
 			result += '"unterrichtsverteilung" : ' + StundenplanUnterrichtsverteilung.transpilerToJSON(obj.unterrichtsverteilung) + ',';
 		}
 		result = result.slice(0, -1);

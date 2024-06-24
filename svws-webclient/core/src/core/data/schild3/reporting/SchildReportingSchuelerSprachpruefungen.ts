@@ -88,46 +88,46 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerSprachpruefungen {
 		const obj = JSON.parse(json);
 		const result = new SchildReportingSchuelerSprachpruefungen();
-		if (typeof obj.schuelerID === "undefined")
+		if (obj.schuelerID === undefined)
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (typeof obj.sprache === "undefined")
+		if (obj.sprache === undefined)
 			 throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
-		if (typeof obj.jahrgang === "undefined")
+		if (obj.jahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
-		if (typeof obj.anspruchsniveau === "undefined")
+		if (obj.anspruchsniveau === undefined)
 			 throw new Error('invalid json format, missing attribute anspruchsniveau');
 		result.anspruchsniveau = obj.anspruchsniveau;
-		if (typeof obj.ersetzteSprache === "undefined")
+		if (obj.ersetzteSprache === undefined)
 			 throw new Error('invalid json format, missing attribute ersetzteSprache');
 		result.ersetzteSprache = obj.ersetzteSprache;
-		if (typeof obj.istHSUPruefung === "undefined")
+		if (obj.istHSUPruefung === undefined)
 			 throw new Error('invalid json format, missing attribute istHSUPruefung');
 		result.istHSUPruefung = obj.istHSUPruefung;
-		if (typeof obj.istFeststellungspruefung === "undefined")
+		if (obj.istFeststellungspruefung === undefined)
 			 throw new Error('invalid json format, missing attribute istFeststellungspruefung');
 		result.istFeststellungspruefung = obj.istFeststellungspruefung;
-		if (typeof obj.kannErstePflichtfremdspracheErsetzen === "undefined")
+		if (obj.kannErstePflichtfremdspracheErsetzen === undefined)
 			 throw new Error('invalid json format, missing attribute kannErstePflichtfremdspracheErsetzen');
 		result.kannErstePflichtfremdspracheErsetzen = obj.kannErstePflichtfremdspracheErsetzen;
-		if (typeof obj.kannZweitePflichtfremdspracheErsetzen === "undefined")
+		if (obj.kannZweitePflichtfremdspracheErsetzen === undefined)
 			 throw new Error('invalid json format, missing attribute kannZweitePflichtfremdspracheErsetzen');
 		result.kannZweitePflichtfremdspracheErsetzen = obj.kannZweitePflichtfremdspracheErsetzen;
-		if (typeof obj.kannWahlpflichtfremdspracheErsetzen === "undefined")
+		if (obj.kannWahlpflichtfremdspracheErsetzen === undefined)
 			 throw new Error('invalid json format, missing attribute kannWahlpflichtfremdspracheErsetzen');
 		result.kannWahlpflichtfremdspracheErsetzen = obj.kannWahlpflichtfremdspracheErsetzen;
-		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben === "undefined")
+		if (obj.kannBelegungAlsFortgefuehrteSpracheErlauben === undefined)
 			 throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
-		if (typeof obj.pruefungsdatum === "undefined")
+		if (obj.pruefungsdatum === undefined)
 			 throw new Error('invalid json format, missing attribute pruefungsdatum');
 		result.pruefungsdatum = obj.pruefungsdatum;
-		if (typeof obj.referenzniveau === "undefined")
+		if (obj.referenzniveau === undefined)
 			 throw new Error('invalid json format, missing attribute referenzniveau');
 		result.referenzniveau = obj.referenzniveau;
-		if (typeof obj.note === "undefined")
+		if (obj.note === undefined)
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
 		return result;
@@ -156,46 +156,46 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerSprachpruefungen>) : string {
 		let result = '{';
-		if (typeof obj.schuelerID !== "undefined") {
+		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
-		if (typeof obj.sprache !== "undefined") {
+		if (obj.sprache !== undefined) {
 			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
-		if (typeof obj.anspruchsniveau !== "undefined") {
+		if (obj.anspruchsniveau !== undefined) {
 			result += '"anspruchsniveau" : ' + JSON.stringify(obj.anspruchsniveau!) + ',';
 		}
-		if (typeof obj.ersetzteSprache !== "undefined") {
+		if (obj.ersetzteSprache !== undefined) {
 			result += '"ersetzteSprache" : ' + JSON.stringify(obj.ersetzteSprache!) + ',';
 		}
-		if (typeof obj.istHSUPruefung !== "undefined") {
+		if (obj.istHSUPruefung !== undefined) {
 			result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
 		}
-		if (typeof obj.istFeststellungspruefung !== "undefined") {
+		if (obj.istFeststellungspruefung !== undefined) {
 			result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
 		}
-		if (typeof obj.kannErstePflichtfremdspracheErsetzen !== "undefined") {
+		if (obj.kannErstePflichtfremdspracheErsetzen !== undefined) {
 			result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
 		}
-		if (typeof obj.kannZweitePflichtfremdspracheErsetzen !== "undefined") {
+		if (obj.kannZweitePflichtfremdspracheErsetzen !== undefined) {
 			result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
 		}
-		if (typeof obj.kannWahlpflichtfremdspracheErsetzen !== "undefined") {
+		if (obj.kannWahlpflichtfremdspracheErsetzen !== undefined) {
 			result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
 		}
-		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben !== "undefined") {
+		if (obj.kannBelegungAlsFortgefuehrteSpracheErlauben !== undefined) {
 			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
 		}
-		if (typeof obj.pruefungsdatum !== "undefined") {
+		if (obj.pruefungsdatum !== undefined) {
 			result += '"pruefungsdatum" : ' + JSON.stringify(obj.pruefungsdatum!) + ',';
 		}
-		if (typeof obj.referenzniveau !== "undefined") {
+		if (obj.referenzniveau !== undefined) {
 			result += '"referenzniveau" : ' + JSON.stringify(obj.referenzniveau!) + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + JSON.stringify(obj.note!) + ',';
 		}
 		result = result.slice(0, -1);

@@ -38,12 +38,12 @@ export class OAuth2ClientSecret extends JavaObject {
 	public static transpilerFromJSON(json : string): OAuth2ClientSecret {
 		const obj = JSON.parse(json);
 		const result = new OAuth2ClientSecret();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.authServer = typeof obj.authServer === "undefined" ? null : obj.authServer === null ? null : obj.authServer;
-		result.clientID = typeof obj.clientID === "undefined" ? null : obj.clientID === null ? null : obj.clientID;
-		result.clientSecret = typeof obj.clientSecret === "undefined" ? null : obj.clientSecret === null ? null : obj.clientSecret;
+		result.authServer = (obj.authServer === undefined) ? null : obj.authServer === null ? null : obj.authServer;
+		result.clientID = (obj.clientID === undefined) ? null : obj.clientID === null ? null : obj.clientID;
+		result.clientSecret = (obj.clientSecret === undefined) ? null : obj.clientSecret === null ? null : obj.clientSecret;
 		return result;
 	}
 
@@ -60,16 +60,16 @@ export class OAuth2ClientSecret extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<OAuth2ClientSecret>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.authServer !== "undefined") {
+		if (obj.authServer !== undefined) {
 			result += '"authServer" : ' + ((!obj.authServer) ? 'null' : JSON.stringify(obj.authServer)) + ',';
 		}
-		if (typeof obj.clientID !== "undefined") {
+		if (obj.clientID !== undefined) {
 			result += '"clientID" : ' + ((!obj.clientID) ? 'null' : JSON.stringify(obj.clientID)) + ',';
 		}
-		if (typeof obj.clientSecret !== "undefined") {
+		if (obj.clientSecret !== undefined) {
 			result += '"clientSecret" : ' + ((!obj.clientSecret) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
 		}
 		result = result.slice(0, -1);

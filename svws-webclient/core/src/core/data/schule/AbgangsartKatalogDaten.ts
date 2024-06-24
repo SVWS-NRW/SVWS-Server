@@ -46,10 +46,10 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): AbgangsartKatalogDaten {
 		const obj = JSON.parse(json);
 		const result = new AbgangsartKatalogDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		if ((obj.zulaessig !== undefined) && (obj.zulaessig !== null)) {
@@ -57,8 +57,8 @@ export class AbgangsartKatalogDaten extends JavaObject {
 				result.zulaessig?.add(SchulformGliederungJahrgaenge.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -87,13 +87,13 @@ export class AbgangsartKatalogDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalogDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
-		if (typeof obj.zulaessig !== "undefined") {
+		if (obj.zulaessig !== undefined) {
 			if (!obj.zulaessig) {
 				result += '"zulaessig" : []';
 			} else {
@@ -107,10 +107,10 @@ export class AbgangsartKatalogDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

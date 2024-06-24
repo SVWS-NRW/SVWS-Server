@@ -86,32 +86,32 @@ export class ENMBKAbschluss extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMBKAbschluss {
 		const obj = JSON.parse(json);
 		const result = new ENMBKAbschluss();
-		if (typeof obj.hatZulassung === "undefined")
+		if (obj.hatZulassung === undefined)
 			 throw new Error('invalid json format, missing attribute hatZulassung');
 		result.hatZulassung = obj.hatZulassung;
-		if (typeof obj.hatBestanden === "undefined")
+		if (obj.hatBestanden === undefined)
 			 throw new Error('invalid json format, missing attribute hatBestanden');
 		result.hatBestanden = obj.hatBestanden;
-		if (typeof obj.hatZulassungErweiterteBeruflicheKenntnisse === "undefined")
+		if (obj.hatZulassungErweiterteBeruflicheKenntnisse === undefined)
 			 throw new Error('invalid json format, missing attribute hatZulassungErweiterteBeruflicheKenntnisse');
 		result.hatZulassungErweiterteBeruflicheKenntnisse = obj.hatZulassungErweiterteBeruflicheKenntnisse;
-		if (typeof obj.hatErworbenErweiterteBeruflicheKenntnisse === "undefined")
+		if (obj.hatErworbenErweiterteBeruflicheKenntnisse === undefined)
 			 throw new Error('invalid json format, missing attribute hatErworbenErweiterteBeruflicheKenntnisse');
 		result.hatErworbenErweiterteBeruflicheKenntnisse = obj.hatErworbenErweiterteBeruflicheKenntnisse;
-		result.notePraktischePruefung = typeof obj.notePraktischePruefung === "undefined" ? null : obj.notePraktischePruefung === null ? null : obj.notePraktischePruefung;
-		result.noteKolloqium = typeof obj.noteKolloqium === "undefined" ? null : obj.noteKolloqium === null ? null : obj.noteKolloqium;
-		if (typeof obj.hatZulassungBerufsabschlusspruefung === "undefined")
+		result.notePraktischePruefung = (obj.notePraktischePruefung === undefined) ? null : obj.notePraktischePruefung === null ? null : obj.notePraktischePruefung;
+		result.noteKolloqium = (obj.noteKolloqium === undefined) ? null : obj.noteKolloqium === null ? null : obj.noteKolloqium;
+		if (obj.hatZulassungBerufsabschlusspruefung === undefined)
 			 throw new Error('invalid json format, missing attribute hatZulassungBerufsabschlusspruefung');
 		result.hatZulassungBerufsabschlusspruefung = obj.hatZulassungBerufsabschlusspruefung;
-		if (typeof obj.hatBestandenBerufsabschlusspruefung === "undefined")
+		if (obj.hatBestandenBerufsabschlusspruefung === undefined)
 			 throw new Error('invalid json format, missing attribute hatBestandenBerufsabschlusspruefung');
 		result.hatBestandenBerufsabschlusspruefung = obj.hatBestandenBerufsabschlusspruefung;
-		result.themaAbschlussarbeit = typeof obj.themaAbschlussarbeit === "undefined" ? null : obj.themaAbschlussarbeit === null ? null : obj.themaAbschlussarbeit;
-		if (typeof obj.istVorhandenBerufsabschlusspruefung === "undefined")
+		result.themaAbschlussarbeit = (obj.themaAbschlussarbeit === undefined) ? null : obj.themaAbschlussarbeit === null ? null : obj.themaAbschlussarbeit;
+		if (obj.istVorhandenBerufsabschlusspruefung === undefined)
 			 throw new Error('invalid json format, missing attribute istVorhandenBerufsabschlusspruefung');
 		result.istVorhandenBerufsabschlusspruefung = obj.istVorhandenBerufsabschlusspruefung;
-		result.noteFachpraxis = typeof obj.noteFachpraxis === "undefined" ? null : obj.noteFachpraxis === null ? null : obj.noteFachpraxis;
-		if (typeof obj.istFachpraktischerTeilAusreichend === "undefined")
+		result.noteFachpraxis = (obj.noteFachpraxis === undefined) ? null : obj.noteFachpraxis === null ? null : obj.noteFachpraxis;
+		if (obj.istFachpraktischerTeilAusreichend === undefined)
 			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;
 		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
@@ -155,43 +155,43 @@ export class ENMBKAbschluss extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMBKAbschluss>) : string {
 		let result = '{';
-		if (typeof obj.hatZulassung !== "undefined") {
+		if (obj.hatZulassung !== undefined) {
 			result += '"hatZulassung" : ' + obj.hatZulassung + ',';
 		}
-		if (typeof obj.hatBestanden !== "undefined") {
+		if (obj.hatBestanden !== undefined) {
 			result += '"hatBestanden" : ' + obj.hatBestanden + ',';
 		}
-		if (typeof obj.hatZulassungErweiterteBeruflicheKenntnisse !== "undefined") {
+		if (obj.hatZulassungErweiterteBeruflicheKenntnisse !== undefined) {
 			result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse + ',';
 		}
-		if (typeof obj.hatErworbenErweiterteBeruflicheKenntnisse !== "undefined") {
+		if (obj.hatErworbenErweiterteBeruflicheKenntnisse !== undefined) {
 			result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse + ',';
 		}
-		if (typeof obj.notePraktischePruefung !== "undefined") {
+		if (obj.notePraktischePruefung !== undefined) {
 			result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
 		}
-		if (typeof obj.noteKolloqium !== "undefined") {
+		if (obj.noteKolloqium !== undefined) {
 			result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
 		}
-		if (typeof obj.hatZulassungBerufsabschlusspruefung !== "undefined") {
+		if (obj.hatZulassungBerufsabschlusspruefung !== undefined) {
 			result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung + ',';
 		}
-		if (typeof obj.hatBestandenBerufsabschlusspruefung !== "undefined") {
+		if (obj.hatBestandenBerufsabschlusspruefung !== undefined) {
 			result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung + ',';
 		}
-		if (typeof obj.themaAbschlussarbeit !== "undefined") {
+		if (obj.themaAbschlussarbeit !== undefined) {
 			result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
 		}
-		if (typeof obj.istVorhandenBerufsabschlusspruefung !== "undefined") {
+		if (obj.istVorhandenBerufsabschlusspruefung !== undefined) {
 			result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung + ',';
 		}
-		if (typeof obj.noteFachpraxis !== "undefined") {
+		if (obj.noteFachpraxis !== undefined) {
 			result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
 		}
-		if (typeof obj.istFachpraktischerTeilAusreichend !== "undefined") {
+		if (obj.istFachpraktischerTeilAusreichend !== undefined) {
 			result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend + ',';
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {

@@ -63,19 +63,19 @@ export class ENMTeilleistung extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMTeilleistung {
 		const obj = JSON.parse(json);
 		const result = new ENMTeilleistung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.artID === "undefined")
+		if (obj.artID === undefined)
 			 throw new Error('invalid json format, missing attribute artID');
 		result.artID = obj.artID;
-		result.tsArtID = typeof obj.tsArtID === "undefined" ? null : obj.tsArtID === null ? null : obj.tsArtID;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
-		result.tsDatum = typeof obj.tsDatum === "undefined" ? null : obj.tsDatum === null ? null : obj.tsDatum;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		result.tsBemerkung = typeof obj.tsBemerkung === "undefined" ? null : obj.tsBemerkung === null ? null : obj.tsBemerkung;
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
-		result.tsNote = typeof obj.tsNote === "undefined" ? null : obj.tsNote === null ? null : obj.tsNote;
+		result.tsArtID = (obj.tsArtID === undefined) ? null : obj.tsArtID === null ? null : obj.tsArtID;
+		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
+		result.tsDatum = (obj.tsDatum === undefined) ? null : obj.tsDatum === null ? null : obj.tsDatum;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.tsBemerkung = (obj.tsBemerkung === undefined) ? null : obj.tsBemerkung === null ? null : obj.tsBemerkung;
+		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
+		result.tsNote = (obj.tsNote === undefined) ? null : obj.tsNote === null ? null : obj.tsNote;
 		return result;
 	}
 
@@ -97,31 +97,31 @@ export class ENMTeilleistung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMTeilleistung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.artID !== "undefined") {
+		if (obj.artID !== undefined) {
 			result += '"artID" : ' + obj.artID + ',';
 		}
-		if (typeof obj.tsArtID !== "undefined") {
+		if (obj.tsArtID !== undefined) {
 			result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
 		}
-		if (typeof obj.datum !== "undefined") {
+		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
-		if (typeof obj.tsDatum !== "undefined") {
+		if (obj.tsDatum !== undefined) {
 			result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.tsBemerkung !== "undefined") {
+		if (obj.tsBemerkung !== undefined) {
 			result += '"tsBemerkung" : ' + ((!obj.tsBemerkung) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
-		if (typeof obj.tsNote !== "undefined") {
+		if (obj.tsNote !== undefined) {
 			result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		}
 		result = result.slice(0, -1);

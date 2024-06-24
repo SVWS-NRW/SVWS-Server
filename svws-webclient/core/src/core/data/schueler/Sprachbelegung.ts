@@ -73,25 +73,25 @@ export class Sprachbelegung extends JavaObject {
 	public static transpilerFromJSON(json : string): Sprachbelegung {
 		const obj = JSON.parse(json);
 		const result = new Sprachbelegung();
-		if (typeof obj.sprache === "undefined")
+		if (obj.sprache === undefined)
 			 throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
-		result.reihenfolge = typeof obj.reihenfolge === "undefined" ? null : obj.reihenfolge === null ? null : obj.reihenfolge;
-		result.belegungVonJahrgang = typeof obj.belegungVonJahrgang === "undefined" ? null : obj.belegungVonJahrgang === null ? null : obj.belegungVonJahrgang;
-		result.belegungVonAbschnitt = typeof obj.belegungVonAbschnitt === "undefined" ? null : obj.belegungVonAbschnitt === null ? null : obj.belegungVonAbschnitt;
-		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
-		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
-		if (typeof obj.hatKleinesLatinum === "undefined")
+		result.reihenfolge = (obj.reihenfolge === undefined) ? null : obj.reihenfolge === null ? null : obj.reihenfolge;
+		result.belegungVonJahrgang = (obj.belegungVonJahrgang === undefined) ? null : obj.belegungVonJahrgang === null ? null : obj.belegungVonJahrgang;
+		result.belegungVonAbschnitt = (obj.belegungVonAbschnitt === undefined) ? null : obj.belegungVonAbschnitt === null ? null : obj.belegungVonAbschnitt;
+		result.belegungBisJahrgang = (obj.belegungBisJahrgang === undefined) ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
+		result.belegungBisAbschnitt = (obj.belegungBisAbschnitt === undefined) ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
+		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
+		if (obj.hatKleinesLatinum === undefined)
 			 throw new Error('invalid json format, missing attribute hatKleinesLatinum');
 		result.hatKleinesLatinum = obj.hatKleinesLatinum;
-		if (typeof obj.hatLatinum === "undefined")
+		if (obj.hatLatinum === undefined)
 			 throw new Error('invalid json format, missing attribute hatLatinum');
 		result.hatLatinum = obj.hatLatinum;
-		if (typeof obj.hatGraecum === "undefined")
+		if (obj.hatGraecum === undefined)
 			 throw new Error('invalid json format, missing attribute hatGraecum');
 		result.hatGraecum = obj.hatGraecum;
-		if (typeof obj.hatHebraicum === "undefined")
+		if (obj.hatHebraicum === undefined)
 			 throw new Error('invalid json format, missing attribute hatHebraicum');
 		result.hatHebraicum = obj.hatHebraicum;
 		return result;
@@ -117,37 +117,37 @@ export class Sprachbelegung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Sprachbelegung>) : string {
 		let result = '{';
-		if (typeof obj.sprache !== "undefined") {
+		if (obj.sprache !== undefined) {
 			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		}
-		if (typeof obj.reihenfolge !== "undefined") {
+		if (obj.reihenfolge !== undefined) {
 			result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge) + ',';
 		}
-		if (typeof obj.belegungVonJahrgang !== "undefined") {
+		if (obj.belegungVonJahrgang !== undefined) {
 			result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
 		}
-		if (typeof obj.belegungVonAbschnitt !== "undefined") {
+		if (obj.belegungVonAbschnitt !== undefined) {
 			result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt) + ',';
 		}
-		if (typeof obj.belegungBisJahrgang !== "undefined") {
+		if (obj.belegungBisJahrgang !== undefined) {
 			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
 		}
-		if (typeof obj.belegungBisAbschnitt !== "undefined") {
+		if (obj.belegungBisAbschnitt !== undefined) {
 			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
 		}
-		if (typeof obj.referenzniveau !== "undefined") {
+		if (obj.referenzniveau !== undefined) {
 			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
-		if (typeof obj.hatKleinesLatinum !== "undefined") {
+		if (obj.hatKleinesLatinum !== undefined) {
 			result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum + ',';
 		}
-		if (typeof obj.hatLatinum !== "undefined") {
+		if (obj.hatLatinum !== undefined) {
 			result += '"hatLatinum" : ' + obj.hatLatinum + ',';
 		}
-		if (typeof obj.hatGraecum !== "undefined") {
+		if (obj.hatGraecum !== undefined) {
 			result += '"hatGraecum" : ' + obj.hatGraecum + ',';
 		}
-		if (typeof obj.hatHebraicum !== "undefined") {
+		if (obj.hatHebraicum !== undefined) {
 			result += '"hatHebraicum" : ' + obj.hatHebraicum + ',';
 		}
 		result = result.slice(0, -1);

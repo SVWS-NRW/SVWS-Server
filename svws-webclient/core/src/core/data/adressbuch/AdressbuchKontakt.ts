@@ -96,45 +96,45 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public static transpilerFromJSON(json : string): AdressbuchKontakt {
 		const obj = JSON.parse(json);
 		const result = new AdressbuchKontakt();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.adressbuchId === "undefined")
+		if (obj.adressbuchId === undefined)
 			 throw new Error('invalid json format, missing attribute adressbuchId');
 		result.adressbuchId = obj.adressbuchId;
-		if (typeof obj.uri === "undefined")
+		if (obj.uri === undefined)
 			 throw new Error('invalid json format, missing attribute uri');
 		result.uri = obj.uri;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if (typeof obj.nachname === "undefined")
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
+		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
+		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
+		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
 		if ((obj.telefonnummern !== undefined) && (obj.telefonnummern !== null)) {
 			for (const elem of obj.telefonnummern) {
 				result.telefonnummern?.add(Telefonnummer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
-		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : obj.webAdresse;
+		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
+		result.webAdresse = (obj.webAdresse === undefined) ? null : obj.webAdresse === null ? null : obj.webAdresse;
 		if ((obj.kategorien !== undefined) && (obj.kategorien !== null)) {
 			for (const elem of obj.kategorien) {
 				result.kategorien?.add(elem === null ? null : elem);
 			}
 		}
-		result.organisation = typeof obj.organisation === "undefined" ? null : obj.organisation === null ? null : obj.organisation;
-		result.rolle = typeof obj.rolle === "undefined" ? null : obj.rolle === null ? null : obj.rolle;
-		result.idKind = typeof obj.idKind === "undefined" ? null : obj.idKind === null ? null : obj.idKind;
-		result.idEltern = typeof obj.idEltern === "undefined" ? null : obj.idEltern === null ? null : obj.idEltern;
+		result.organisation = (obj.organisation === undefined) ? null : obj.organisation === null ? null : obj.organisation;
+		result.rolle = (obj.rolle === undefined) ? null : obj.rolle === null ? null : obj.rolle;
+		result.idKind = (obj.idKind === undefined) ? null : obj.idKind === null ? null : obj.idKind;
+		result.idEltern = (obj.idEltern === undefined) ? null : obj.idEltern === null ? null : obj.idEltern;
 		return result;
 	}
 
@@ -188,40 +188,40 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchKontakt>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
-		if (typeof obj.adressbuchId !== "undefined") {
+		if (obj.adressbuchId !== undefined) {
 			result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
 		}
-		if (typeof obj.uri !== "undefined") {
+		if (obj.uri !== undefined) {
 			result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.strassenname !== "undefined") {
+		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
-		if (typeof obj.hausnummer !== "undefined") {
+		if (obj.hausnummer !== undefined) {
 			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
-		if (typeof obj.hausnummerZusatz !== "undefined") {
+		if (obj.hausnummerZusatz !== undefined) {
 			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
-		if (typeof obj.plz !== "undefined") {
+		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
-		if (typeof obj.ort !== "undefined") {
+		if (obj.ort !== undefined) {
 			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
-		if (typeof obj.telefonnummern !== "undefined") {
+		if (obj.telefonnummern !== undefined) {
 			if (!obj.telefonnummern) {
 				result += '"telefonnummern" : []';
 			} else {
@@ -235,13 +235,13 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.email !== "undefined") {
+		if (obj.email !== undefined) {
 			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
-		if (typeof obj.webAdresse !== "undefined") {
+		if (obj.webAdresse !== undefined) {
 			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		}
-		if (typeof obj.kategorien !== "undefined") {
+		if (obj.kategorien !== undefined) {
 			if (!obj.kategorien) {
 				result += '"kategorien" : []';
 			} else {
@@ -255,16 +255,16 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.organisation !== "undefined") {
+		if (obj.organisation !== undefined) {
 			result += '"organisation" : ' + ((!obj.organisation) ? 'null' : JSON.stringify(obj.organisation)) + ',';
 		}
-		if (typeof obj.rolle !== "undefined") {
+		if (obj.rolle !== undefined) {
 			result += '"rolle" : ' + ((!obj.rolle) ? 'null' : JSON.stringify(obj.rolle)) + ',';
 		}
-		if (typeof obj.idKind !== "undefined") {
+		if (obj.idKind !== undefined) {
 			result += '"idKind" : ' + ((!obj.idKind) ? 'null' : JSON.stringify(obj.idKind)) + ',';
 		}
-		if (typeof obj.idEltern !== "undefined") {
+		if (obj.idEltern !== undefined) {
 			result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : JSON.stringify(obj.idEltern)) + ',';
 		}
 		result = result.slice(0, -1);

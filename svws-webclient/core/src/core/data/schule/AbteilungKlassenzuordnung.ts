@@ -33,13 +33,13 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): AbteilungKlassenzuordnung {
 		const obj = JSON.parse(json);
 		const result = new AbteilungKlassenzuordnung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idAbteilung === "undefined")
+		if (obj.idAbteilung === undefined)
 			 throw new Error('invalid json format, missing attribute idAbteilung');
 		result.idAbteilung = obj.idAbteilung;
-		if (typeof obj.idKlasse === "undefined")
+		if (obj.idKlasse === undefined)
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		return result;
@@ -57,13 +57,13 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbteilungKlassenzuordnung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idAbteilung !== "undefined") {
+		if (obj.idAbteilung !== undefined) {
 			result += '"idAbteilung" : ' + obj.idAbteilung + ',';
 		}
-		if (typeof obj.idKlasse !== "undefined") {
+		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
 		}
 		result = result.slice(0, -1);

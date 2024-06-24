@@ -58,7 +58,7 @@ export class SchuldateiKataloge extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiKataloge>) : string {
 		let result = '{';
-		if (typeof obj.katalog !== "undefined") {
+		if (obj.katalog !== undefined) {
 			if (!obj.katalog) {
 				result += '"katalog" : []';
 			} else {

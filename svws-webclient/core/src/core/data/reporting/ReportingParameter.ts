@@ -61,13 +61,13 @@ export class ReportingParameter extends JavaObject {
 	public static transpilerFromJSON(json : string): ReportingParameter {
 		const obj = JSON.parse(json);
 		const result = new ReportingParameter();
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (typeof obj.ausgabeformat === "undefined")
+		if (obj.ausgabeformat === undefined)
 			 throw new Error('invalid json format, missing attribute ausgabeformat');
 		result.ausgabeformat = obj.ausgabeformat;
-		if (typeof obj.reportvorlage === "undefined")
+		if (obj.reportvorlage === undefined)
 			 throw new Error('invalid json format, missing attribute reportvorlage');
 		result.reportvorlage = obj.reportvorlage;
 		if ((obj.idsHauptdaten !== undefined) && (obj.idsHauptdaten !== null)) {
@@ -75,7 +75,7 @@ export class ReportingParameter extends JavaObject {
 				result.idsHauptdaten?.add(elem);
 			}
 		}
-		if (typeof obj.einzelausgabeHauptdaten === "undefined")
+		if (obj.einzelausgabeHauptdaten === undefined)
 			 throw new Error('invalid json format, missing attribute einzelausgabeHauptdaten');
 		result.einzelausgabeHauptdaten = obj.einzelausgabeHauptdaten;
 		if ((obj.idsDetaildaten !== undefined) && (obj.idsDetaildaten !== null)) {
@@ -83,10 +83,10 @@ export class ReportingParameter extends JavaObject {
 				result.idsDetaildaten?.add(elem);
 			}
 		}
-		if (typeof obj.einzelausgabeDetaildaten === "undefined")
+		if (obj.einzelausgabeDetaildaten === undefined)
 			 throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
 		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
-		if (typeof obj.detailLevel === "undefined")
+		if (obj.detailLevel === undefined)
 			 throw new Error('invalid json format, missing attribute detailLevel');
 		result.detailLevel = obj.detailLevel;
 		return result;
@@ -131,16 +131,16 @@ export class ReportingParameter extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ReportingParameter>) : string {
 		let result = '{';
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.ausgabeformat !== "undefined") {
+		if (obj.ausgabeformat !== undefined) {
 			result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
 		}
-		if (typeof obj.reportvorlage !== "undefined") {
+		if (obj.reportvorlage !== undefined) {
 			result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage!) + ',';
 		}
-		if (typeof obj.idsHauptdaten !== "undefined") {
+		if (obj.idsHauptdaten !== undefined) {
 			if (!obj.idsHauptdaten) {
 				result += '"idsHauptdaten" : []';
 			} else {
@@ -154,10 +154,10 @@ export class ReportingParameter extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.einzelausgabeHauptdaten !== "undefined") {
+		if (obj.einzelausgabeHauptdaten !== undefined) {
 			result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten + ',';
 		}
-		if (typeof obj.idsDetaildaten !== "undefined") {
+		if (obj.idsDetaildaten !== undefined) {
 			if (!obj.idsDetaildaten) {
 				result += '"idsDetaildaten" : []';
 			} else {
@@ -171,10 +171,10 @@ export class ReportingParameter extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.einzelausgabeDetaildaten !== "undefined") {
+		if (obj.einzelausgabeDetaildaten !== undefined) {
 			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten + ',';
 		}
-		if (typeof obj.detailLevel !== "undefined") {
+		if (obj.detailLevel !== undefined) {
 			result += '"detailLevel" : ' + obj.detailLevel + ',';
 		}
 		result = result.slice(0, -1);

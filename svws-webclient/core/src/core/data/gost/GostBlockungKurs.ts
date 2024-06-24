@@ -66,28 +66,28 @@ export class GostBlockungKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungKurs {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungKurs();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.fach_id === "undefined")
+		if (obj.fach_id === undefined)
 			 throw new Error('invalid json format, missing attribute fach_id');
 		result.fach_id = obj.fach_id;
-		if (typeof obj.kursart === "undefined")
+		if (obj.kursart === undefined)
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.nummer === "undefined")
+		if (obj.nummer === undefined)
 			 throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
-		if (typeof obj.istKoopKurs === "undefined")
+		if (obj.istKoopKurs === undefined)
 			 throw new Error('invalid json format, missing attribute istKoopKurs');
 		result.istKoopKurs = obj.istKoopKurs;
-		if (typeof obj.suffix === "undefined")
+		if (obj.suffix === undefined)
 			 throw new Error('invalid json format, missing attribute suffix');
 		result.suffix = obj.suffix;
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		if (typeof obj.anzahlSchienen === "undefined")
+		if (obj.anzahlSchienen === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
 		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
@@ -127,31 +127,31 @@ export class GostBlockungKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungKurs>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fach_id !== "undefined") {
+		if (obj.fach_id !== undefined) {
 			result += '"fach_id" : ' + obj.fach_id + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
-		if (typeof obj.istKoopKurs !== "undefined") {
+		if (obj.istKoopKurs !== undefined) {
 			result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
 		}
-		if (typeof obj.suffix !== "undefined") {
+		if (obj.suffix !== undefined) {
 			result += '"suffix" : ' + JSON.stringify(obj.suffix!) + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.anzahlSchienen !== "undefined") {
+		if (obj.anzahlSchienen !== undefined) {
 			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {

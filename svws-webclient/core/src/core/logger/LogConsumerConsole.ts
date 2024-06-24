@@ -39,10 +39,10 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	 */
 	public constructor(__param0? : boolean, __param1? : boolean) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			this.printTime = false;
 			this.printLevel = false;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "boolean") && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const printTime : boolean = __param0 as boolean;
 			const printLevel : boolean = __param1 as boolean;
 			this.printTime = printTime;

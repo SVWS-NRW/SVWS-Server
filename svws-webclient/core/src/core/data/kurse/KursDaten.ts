@@ -106,13 +106,13 @@ export class KursDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): KursDaten {
 		const obj = JSON.parse(json);
 		const result = new KursDaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if ((obj.idJahrgaenge !== undefined) && (obj.idJahrgaenge !== null)) {
@@ -120,17 +120,17 @@ export class KursDaten extends JavaObject {
 				result.idJahrgaenge?.add(elem);
 			}
 		}
-		if (typeof obj.idFach === "undefined")
+		if (obj.idFach === undefined)
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
-		if (typeof obj.kursartAllg === "undefined")
+		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
+		if (obj.kursartAllg === undefined)
 			 throw new Error('invalid json format, missing attribute kursartAllg');
 		result.kursartAllg = obj.kursartAllg;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
@@ -143,20 +143,20 @@ export class KursDaten extends JavaObject {
 				result.schienen?.add(elem);
 			}
 		}
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		if (typeof obj.wochenstundenLehrer === "undefined")
+		if (obj.wochenstundenLehrer === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstundenLehrer');
 		result.wochenstundenLehrer = obj.wochenstundenLehrer;
-		if (typeof obj.idKursFortschreibungsart === "undefined")
+		if (obj.idKursFortschreibungsart === undefined)
 			 throw new Error('invalid json format, missing attribute idKursFortschreibungsart');
 		result.idKursFortschreibungsart = obj.idKursFortschreibungsart;
-		result.schulnummer = typeof obj.schulnummer === "undefined" ? null : obj.schulnummer === null ? null : obj.schulnummer;
-		if (typeof obj.istEpochalunterricht === "undefined")
+		result.schulnummer = (obj.schulnummer === undefined) ? null : obj.schulnummer === null ? null : obj.schulnummer;
+		if (obj.istEpochalunterricht === undefined)
 			 throw new Error('invalid json format, missing attribute istEpochalunterricht');
 		result.istEpochalunterricht = obj.istEpochalunterricht;
-		result.bezeichnungZeugnis = typeof obj.bezeichnungZeugnis === "undefined" ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
+		result.bezeichnungZeugnis = (obj.bezeichnungZeugnis === undefined) ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
 		return result;
 	}
 
@@ -219,16 +219,16 @@ export class KursDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KursDaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.idJahrgaenge !== "undefined") {
+		if (obj.idJahrgaenge !== undefined) {
 			if (!obj.idJahrgaenge) {
 				result += '"idJahrgaenge" : []';
 			} else {
@@ -242,22 +242,22 @@ export class KursDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.idFach !== "undefined") {
+		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		}
-		if (typeof obj.kursartAllg !== "undefined") {
+		if (obj.kursartAllg !== undefined) {
 			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -271,7 +271,7 @@ export class KursDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -285,22 +285,22 @@ export class KursDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.wochenstundenLehrer !== "undefined") {
+		if (obj.wochenstundenLehrer !== undefined) {
 			result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer + ',';
 		}
-		if (typeof obj.idKursFortschreibungsart !== "undefined") {
+		if (obj.idKursFortschreibungsart !== undefined) {
 			result += '"idKursFortschreibungsart" : ' + obj.idKursFortschreibungsart + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + ((!obj.schulnummer) ? 'null' : obj.schulnummer) + ',';
 		}
-		if (typeof obj.istEpochalunterricht !== "undefined") {
+		if (obj.istEpochalunterricht !== undefined) {
 			result += '"istEpochalunterricht" : ' + obj.istEpochalunterricht + ',';
 		}
-		if (typeof obj.bezeichnungZeugnis !== "undefined") {
+		if (obj.bezeichnungZeugnis !== undefined) {
 			result += '"bezeichnungZeugnis" : ' + ((!obj.bezeichnungZeugnis) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		}
 		result = result.slice(0, -1);

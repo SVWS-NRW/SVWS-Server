@@ -18,7 +18,7 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 	public constructor(c? : Collection<E>) {
 		super();
 		this._set = new Set<E>();
-		if (typeof c === "undefined")
+		if (c === undefined)
 			return;
 		if ((c instanceof JavaObject) && c.isTranspiledInstanceOf('java.util.Collection')) {
 			const coll : Collection<E> = cast_java_util_Collection(c);
@@ -69,7 +69,7 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 	public toArray() : Array<unknown>;
 	public toArray<U>(a: Array<U>) : Array<U>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this._set.size)) {
+		if ((__param0 === undefined) || (__param0 === null) || (__param0.length < this._set.size)) {
 			const result : Array<E> = [];
 			this._set.forEach((value : E) => {result.push(value)});
 			return result;

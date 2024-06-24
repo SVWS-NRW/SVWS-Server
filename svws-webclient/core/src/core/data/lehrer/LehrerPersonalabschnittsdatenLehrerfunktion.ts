@@ -33,13 +33,13 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdatenLehrerfunktion {
 		const obj = JSON.parse(json);
 		const result = new LehrerPersonalabschnittsdatenLehrerfunktion();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idAbschnittsdaten === "undefined")
+		if (obj.idAbschnittsdaten === undefined)
 			 throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
-		if (typeof obj.idFunktion === "undefined")
+		if (obj.idFunktion === undefined)
 			 throw new Error('invalid json format, missing attribute idFunktion');
 		result.idFunktion = obj.idFunktion;
 		return result;
@@ -57,13 +57,13 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdatenLehrerfunktion>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idAbschnittsdaten !== "undefined") {
+		if (obj.idAbschnittsdaten !== undefined) {
 			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
 		}
-		if (typeof obj.idFunktion !== "undefined") {
+		if (obj.idFunktion !== undefined) {
 			result += '"idFunktion" : ' + obj.idFunktion + ',';
 		}
 		result = result.slice(0, -1);

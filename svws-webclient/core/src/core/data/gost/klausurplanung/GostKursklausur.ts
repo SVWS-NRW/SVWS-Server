@@ -68,18 +68,18 @@ export class GostKursklausur extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKursklausur {
 		const obj = JSON.parse(json);
 		const result = new GostKursklausur();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idVorgabe === "undefined")
+		if (obj.idVorgabe === undefined)
 			 throw new Error('invalid json format, missing attribute idVorgabe');
 		result.idVorgabe = obj.idVorgabe;
-		if (typeof obj.idKurs === "undefined")
+		if (obj.idKurs === undefined)
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
-		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
-		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.idTermin = (obj.idTermin === undefined) ? null : obj.idTermin === null ? null : obj.idTermin;
+		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
 
@@ -98,22 +98,22 @@ export class GostKursklausur extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKursklausur>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idVorgabe !== "undefined") {
+		if (obj.idVorgabe !== undefined) {
 			result += '"idVorgabe" : ' + obj.idVorgabe + ',';
 		}
-		if (typeof obj.idKurs !== "undefined") {
+		if (obj.idKurs !== undefined) {
 			result += '"idKurs" : ' + obj.idKurs + ',';
 		}
-		if (typeof obj.idTermin !== "undefined") {
+		if (obj.idTermin !== undefined) {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		}
-		if (typeof obj.startzeit !== "undefined") {
+		if (obj.startzeit !== undefined) {
 			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);

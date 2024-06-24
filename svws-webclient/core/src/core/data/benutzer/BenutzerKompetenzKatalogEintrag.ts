@@ -48,9 +48,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : BenutzerKompetenzGruppe, __param2? : string, __param3? : List<Schulform> | null) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null))) {
 			const id : number = __param0 as number;
 			const gruppe : BenutzerKompetenzGruppe = cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenzGruppe(__param1);
 			const bezeichnung : string = __param2;
@@ -77,13 +77,13 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerKompetenzKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new BenutzerKompetenzKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.gruppe_id === "undefined")
+		if (obj.gruppe_id === undefined)
 			 throw new Error('invalid json format, missing attribute gruppe_id');
 		result.gruppe_id = obj.gruppe_id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if ((obj.nurSchulformen !== undefined) && (obj.nurSchulformen !== null)) {
@@ -118,16 +118,16 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerKompetenzKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.gruppe_id !== "undefined") {
+		if (obj.gruppe_id !== undefined) {
 			result += '"gruppe_id" : ' + obj.gruppe_id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.nurSchulformen !== "undefined") {
+		if (obj.nurSchulformen !== undefined) {
 			if (!obj.nurSchulformen) {
 				result += '"nurSchulformen" : []';
 			} else {

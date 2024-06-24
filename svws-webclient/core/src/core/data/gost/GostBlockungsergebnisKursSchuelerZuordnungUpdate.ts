@@ -47,7 +47,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 				result.listHinzuzufuegen?.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.regelUpdates === "undefined")
+		if (obj.regelUpdates === undefined)
 			 throw new Error('invalid json format, missing attribute regelUpdates');
 		result.regelUpdates = GostBlockungRegelUpdate.transpilerFromJSON(JSON.stringify(obj.regelUpdates));
 		return result;
@@ -87,7 +87,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisKursSchuelerZuordnungUpdate>) : string {
 		let result = '{';
-		if (typeof obj.listEntfernen !== "undefined") {
+		if (obj.listEntfernen !== undefined) {
 			if (!obj.listEntfernen) {
 				result += '"listEntfernen" : []';
 			} else {
@@ -101,7 +101,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.listHinzuzufuegen !== "undefined") {
+		if (obj.listHinzuzufuegen !== undefined) {
 			if (!obj.listHinzuzufuegen) {
 				result += '"listHinzuzufuegen" : []';
 			} else {
@@ -115,7 +115,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.regelUpdates !== "undefined") {
+		if (obj.regelUpdates !== undefined) {
 			result += '"regelUpdates" : ' + GostBlockungRegelUpdate.transpilerToJSON(obj.regelUpdates) + ',';
 		}
 		result = result.slice(0, -1);

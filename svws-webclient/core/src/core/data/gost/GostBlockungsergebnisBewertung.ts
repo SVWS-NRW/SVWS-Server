@@ -65,22 +65,22 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 				result.regelVerletzungen?.add(elem);
 			}
 		}
-		if (typeof obj.anzahlKurseNichtZugeordnet === "undefined")
+		if (obj.anzahlKurseNichtZugeordnet === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlKurseNichtZugeordnet');
 		result.anzahlKurseNichtZugeordnet = obj.anzahlKurseNichtZugeordnet;
-		if (typeof obj.anzahlSchuelerNichtZugeordnet === "undefined")
+		if (obj.anzahlSchuelerNichtZugeordnet === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlSchuelerNichtZugeordnet');
 		result.anzahlSchuelerNichtZugeordnet = obj.anzahlSchuelerNichtZugeordnet;
-		if (typeof obj.anzahlSchuelerKollisionen === "undefined")
+		if (obj.anzahlSchuelerKollisionen === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlSchuelerKollisionen');
 		result.anzahlSchuelerKollisionen = obj.anzahlSchuelerKollisionen;
-		if (typeof obj.kursdifferenzMax === "undefined")
+		if (obj.kursdifferenzMax === undefined)
 			 throw new Error('invalid json format, missing attribute kursdifferenzMax');
 		result.kursdifferenzMax = obj.kursdifferenzMax;
 		for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
 			result.kursdifferenzHistogramm[i] = obj.kursdifferenzHistogramm[i];
 		}
-		if (typeof obj.anzahlKurseMitGleicherFachartProSchiene === "undefined")
+		if (obj.anzahlKurseMitGleicherFachartProSchiene === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlKurseMitGleicherFachartProSchiene');
 		result.anzahlKurseMitGleicherFachartProSchiene = obj.anzahlKurseMitGleicherFachartProSchiene;
 		return result;
@@ -124,7 +124,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisBewertung>) : string {
 		let result = '{';
-		if (typeof obj.regelVerletzungen !== "undefined") {
+		if (obj.regelVerletzungen !== undefined) {
 			if (!obj.regelVerletzungen) {
 				result += '"regelVerletzungen" : []';
 			} else {
@@ -138,19 +138,19 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.anzahlKurseNichtZugeordnet !== "undefined") {
+		if (obj.anzahlKurseNichtZugeordnet !== undefined) {
 			result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet + ',';
 		}
-		if (typeof obj.anzahlSchuelerNichtZugeordnet !== "undefined") {
+		if (obj.anzahlSchuelerNichtZugeordnet !== undefined) {
 			result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet + ',';
 		}
-		if (typeof obj.anzahlSchuelerKollisionen !== "undefined") {
+		if (obj.anzahlSchuelerKollisionen !== undefined) {
 			result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen + ',';
 		}
-		if (typeof obj.kursdifferenzMax !== "undefined") {
+		if (obj.kursdifferenzMax !== undefined) {
 			result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
 		}
-		if (typeof obj.kursdifferenzHistogramm !== "undefined") {
+		if (obj.kursdifferenzHistogramm !== undefined) {
 			const a = obj.kursdifferenzHistogramm;
 			if (!a) {
 				result += '"kursdifferenzHistogramm" : []';
@@ -165,7 +165,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.anzahlKurseMitGleicherFachartProSchiene !== "undefined") {
+		if (obj.anzahlKurseMitGleicherFachartProSchiene !== undefined) {
 			result += '"anzahlKurseMitGleicherFachartProSchiene" : ' + obj.anzahlKurseMitGleicherFachartProSchiene + ',';
 		}
 		result = result.slice(0, -1);

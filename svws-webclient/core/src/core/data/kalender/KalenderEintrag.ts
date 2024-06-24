@@ -73,33 +73,33 @@ export class KalenderEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): KalenderEintrag {
 		const obj = JSON.parse(json);
 		const result = new KalenderEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kalenderId === "undefined")
+		if (obj.kalenderId === undefined)
 			 throw new Error('invalid json format, missing attribute kalenderId');
 		result.kalenderId = obj.kalenderId;
-		if (typeof obj.uid === "undefined")
+		if (obj.uid === undefined)
 			 throw new Error('invalid json format, missing attribute uid');
 		result.uid = obj.uid;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if (typeof obj.data === "undefined")
+		if (obj.data === undefined)
 			 throw new Error('invalid json format, missing attribute data');
 		result.data = obj.data;
-		result.kalenderStart = typeof obj.kalenderStart === "undefined" ? null : obj.kalenderStart === null ? null : obj.kalenderStart;
-		result.kalenderEnde = typeof obj.kalenderEnde === "undefined" ? null : obj.kalenderEnde === null ? null : obj.kalenderEnde;
-		if (typeof obj.darfSchreiben === "undefined")
+		result.kalenderStart = (obj.kalenderStart === undefined) ? null : obj.kalenderStart === null ? null : obj.kalenderStart;
+		result.kalenderEnde = (obj.kalenderEnde === undefined) ? null : obj.kalenderEnde === null ? null : obj.kalenderEnde;
+		if (obj.darfSchreiben === undefined)
 			 throw new Error('invalid json format, missing attribute darfSchreiben');
 		result.darfSchreiben = obj.darfSchreiben;
-		if (typeof obj.darfLesen === "undefined")
+		if (obj.darfLesen === undefined)
 			 throw new Error('invalid json format, missing attribute darfLesen');
 		result.darfLesen = obj.darfLesen;
-		if (typeof obj.istBesitzer === "undefined")
+		if (obj.istBesitzer === undefined)
 			 throw new Error('invalid json format, missing attribute istBesitzer');
 		result.istBesitzer = obj.istBesitzer;
-		if (typeof obj.kalenderTyp === "undefined")
+		if (obj.kalenderTyp === undefined)
 			 throw new Error('invalid json format, missing attribute kalenderTyp');
 		result.kalenderTyp = obj.kalenderTyp;
 		return result;
@@ -125,37 +125,37 @@ export class KalenderEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KalenderEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
-		if (typeof obj.kalenderId !== "undefined") {
+		if (obj.kalenderId !== undefined) {
 			result += '"kalenderId" : ' + JSON.stringify(obj.kalenderId!) + ',';
 		}
-		if (typeof obj.uid !== "undefined") {
+		if (obj.uid !== undefined) {
 			result += '"uid" : ' + JSON.stringify(obj.uid!) + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		}
-		if (typeof obj.data !== "undefined") {
+		if (obj.data !== undefined) {
 			result += '"data" : ' + JSON.stringify(obj.data!) + ',';
 		}
-		if (typeof obj.kalenderStart !== "undefined") {
+		if (obj.kalenderStart !== undefined) {
 			result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : JSON.stringify(obj.kalenderStart)) + ',';
 		}
-		if (typeof obj.kalenderEnde !== "undefined") {
+		if (obj.kalenderEnde !== undefined) {
 			result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : JSON.stringify(obj.kalenderEnde)) + ',';
 		}
-		if (typeof obj.darfSchreiben !== "undefined") {
+		if (obj.darfSchreiben !== undefined) {
 			result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
 		}
-		if (typeof obj.darfLesen !== "undefined") {
+		if (obj.darfLesen !== undefined) {
 			result += '"darfLesen" : ' + obj.darfLesen + ',';
 		}
-		if (typeof obj.istBesitzer !== "undefined") {
+		if (obj.istBesitzer !== undefined) {
 			result += '"istBesitzer" : ' + obj.istBesitzer + ',';
 		}
-		if (typeof obj.kalenderTyp !== "undefined") {
+		if (obj.kalenderTyp !== undefined) {
 			result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		}
 		result = result.slice(0, -1);

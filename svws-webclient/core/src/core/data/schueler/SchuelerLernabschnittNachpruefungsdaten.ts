@@ -77,7 +77,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefungsdaten>) : string {
 		let result = '{';
-		if (typeof obj.moegliche !== "undefined") {
+		if (obj.moegliche !== undefined) {
 			if (!obj.moegliche) {
 				result += '"moegliche" : []';
 			} else {
@@ -91,7 +91,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.pruefungen !== "undefined") {
+		if (obj.pruefungen !== undefined) {
 			if (!obj.pruefungen) {
 				result += '"pruefungen" : []';
 			} else {

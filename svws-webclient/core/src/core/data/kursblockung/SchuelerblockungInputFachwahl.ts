@@ -39,16 +39,16 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungInputFachwahl {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungInputFachwahl();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.fach === "undefined")
+		if (obj.fach === undefined)
 			 throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
-		if (typeof obj.kursart === "undefined")
+		if (obj.kursart === undefined)
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.representation === "undefined")
+		if (obj.representation === undefined)
 			 throw new Error('invalid json format, missing attribute representation');
 		result.representation = obj.representation;
 		return result;
@@ -67,16 +67,16 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInputFachwahl>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fach !== "undefined") {
+		if (obj.fach !== undefined) {
 			result += '"fach" : ' + obj.fach + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
-		if (typeof obj.representation !== "undefined") {
+		if (obj.representation !== undefined) {
 			result += '"representation" : ' + JSON.stringify(obj.representation!) + ',';
 		}
 		result = result.slice(0, -1);

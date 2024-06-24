@@ -39,10 +39,10 @@ export class AbschlussErgebnis extends JavaObject {
 	public static transpilerFromJSON(json : string): AbschlussErgebnis {
 		const obj = JSON.parse(json);
 		const result = new AbschlussErgebnis();
-		if (typeof obj.erworben === "undefined")
+		if (obj.erworben === undefined)
 			 throw new Error('invalid json format, missing attribute erworben');
 		result.erworben = obj.erworben;
-		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : obj.abschluss;
+		result.abschluss = (obj.abschluss === undefined) ? null : obj.abschluss === null ? null : obj.abschluss;
 		if ((obj.npFaecher !== undefined) && (obj.npFaecher !== null)) {
 			for (const elem of obj.npFaecher) {
 				result.npFaecher?.add(elem);
@@ -91,13 +91,13 @@ export class AbschlussErgebnis extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbschlussErgebnis>) : string {
 		let result = '{';
-		if (typeof obj.erworben !== "undefined") {
+		if (obj.erworben !== undefined) {
 			result += '"erworben" : ' + obj.erworben + ',';
 		}
-		if (typeof obj.abschluss !== "undefined") {
+		if (obj.abschluss !== undefined) {
 			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		}
-		if (typeof obj.npFaecher !== "undefined") {
+		if (obj.npFaecher !== undefined) {
 			if (!obj.npFaecher) {
 				result += '"npFaecher" : []';
 			} else {
@@ -111,7 +111,7 @@ export class AbschlussErgebnis extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.log !== "undefined") {
+		if (obj.log !== undefined) {
 			if (!obj.log) {
 				result += '"log" : []';
 			} else {

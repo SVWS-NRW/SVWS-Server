@@ -82,19 +82,19 @@ export class GostBlockungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsdaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.abijahrgang === "undefined")
+		if (obj.abijahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute abijahrgang');
 		result.abijahrgang = obj.abijahrgang;
-		if (typeof obj.gostHalbjahr === "undefined")
+		if (obj.gostHalbjahr === undefined)
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.istAktiv === "undefined")
+		if (obj.istAktiv === undefined)
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
@@ -216,22 +216,22 @@ export class GostBlockungsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsdaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.abijahrgang !== "undefined") {
+		if (obj.abijahrgang !== undefined) {
 			result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		}
-		if (typeof obj.gostHalbjahr !== "undefined") {
+		if (obj.gostHalbjahr !== undefined) {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		}
-		if (typeof obj.istAktiv !== "undefined") {
+		if (obj.istAktiv !== undefined) {
 			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -245,7 +245,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.regeln !== "undefined") {
+		if (obj.regeln !== undefined) {
 			if (!obj.regeln) {
 				result += '"regeln" : []';
 			} else {
@@ -259,7 +259,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kurse !== "undefined") {
+		if (obj.kurse !== undefined) {
 			if (!obj.kurse) {
 				result += '"kurse" : []';
 			} else {
@@ -273,7 +273,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -287,7 +287,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachwahlen !== "undefined") {
+		if (obj.fachwahlen !== undefined) {
 			if (!obj.fachwahlen) {
 				result += '"fachwahlen" : []';
 			} else {
@@ -301,7 +301,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.ergebnisse !== "undefined") {
+		if (obj.ergebnisse !== undefined) {
 			if (!obj.ergebnisse) {
 				result += '"ergebnisse" : []';
 			} else {

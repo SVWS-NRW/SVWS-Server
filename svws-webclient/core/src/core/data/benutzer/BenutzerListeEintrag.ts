@@ -53,25 +53,25 @@ export class BenutzerListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new BenutzerListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.typ === "undefined")
+		if (obj.typ === undefined)
 			 throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		if (typeof obj.typID === "undefined")
+		if (obj.typID === undefined)
 			 throw new Error('invalid json format, missing attribute typID');
 		result.typID = obj.typID;
-		if (typeof obj.anzeigename === "undefined")
+		if (obj.anzeigename === undefined)
 			 throw new Error('invalid json format, missing attribute anzeigename');
 		result.anzeigename = obj.anzeigename;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.istAdmin === "undefined")
+		if (obj.istAdmin === undefined)
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
-		if (typeof obj.idCredentials === "undefined")
+		if (obj.idCredentials === undefined)
 			 throw new Error('invalid json format, missing attribute idCredentials');
 		result.idCredentials = obj.idCredentials;
 		return result;
@@ -93,25 +93,25 @@ export class BenutzerListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.typ !== "undefined") {
+		if (obj.typ !== undefined) {
 			result += '"typ" : ' + obj.typ + ',';
 		}
-		if (typeof obj.typID !== "undefined") {
+		if (obj.typID !== undefined) {
 			result += '"typID" : ' + obj.typID + ',';
 		}
-		if (typeof obj.anzeigename !== "undefined") {
+		if (obj.anzeigename !== undefined) {
 			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.istAdmin !== "undefined") {
+		if (obj.istAdmin !== undefined) {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';
 		}
-		if (typeof obj.idCredentials !== "undefined") {
+		if (obj.idCredentials !== undefined) {
 			result += '"idCredentials" : ' + obj.idCredentials + ',';
 		}
 		result = result.slice(0, -1);

@@ -91,9 +91,9 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : null | number, __param2? : null | number, __param3? : string, __param4? : string, __param5? : RGBFarbe, __param6? : List<Schulform>, __param7? : number, __param8? : boolean, __param9? : null | number, __param10? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined) && (__param9 === undefined) && (__param10 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "number") || (__param1 === null)) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.RGBFarbe')))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number")) && ((typeof __param8 !== "undefined") && typeof __param8 === "boolean") && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "number") || (__param1 === null)) && ((__param2 !== undefined) && (typeof __param2 === "number") || (__param2 === null)) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && (typeof __param4 === "string")) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.RGBFarbe')))) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((__param7 !== undefined) && (typeof __param7 === "number")) && ((__param8 !== undefined) && typeof __param8 === "boolean") && ((__param9 !== undefined) && (typeof __param9 === "number") || (__param9 === null)) && ((__param10 !== undefined) && (typeof __param10 === "number") || (__param10 === null))) {
 			const id : number = __param0 as number;
 			const nummer : number | null = __param1;
 			const idSchild : number | null = __param2;
@@ -131,18 +131,18 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): FachgruppenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new FachgruppenKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.nummer = typeof obj.nummer === "undefined" ? null : obj.nummer === null ? null : obj.nummer;
-		result.idSchild = typeof obj.idSchild === "undefined" ? null : obj.idSchild === null ? null : obj.idSchild;
-		if (typeof obj.bezeichnung === "undefined")
+		result.nummer = (obj.nummer === undefined) ? null : obj.nummer === null ? null : obj.nummer;
+		result.idSchild = (obj.idSchild === undefined) ? null : obj.idSchild === null ? null : obj.idSchild;
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.farbe === "undefined")
+		if (obj.farbe === undefined)
 			 throw new Error('invalid json format, missing attribute farbe');
 		result.farbe = RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
 		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
@@ -150,14 +150,14 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 				result.schulformen?.add(elem);
 			}
 		}
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.fuerZeugnis === "undefined")
+		if (obj.fuerZeugnis === undefined)
 			 throw new Error('invalid json format, missing attribute fuerZeugnis');
 		result.fuerZeugnis = obj.fuerZeugnis;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -192,25 +192,25 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<FachgruppenKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer) + ',';
 		}
-		if (typeof obj.idSchild !== "undefined") {
+		if (obj.idSchild !== undefined) {
 			result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.farbe !== "undefined") {
+		if (obj.farbe !== undefined) {
 			result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
 		}
-		if (typeof obj.schulformen !== "undefined") {
+		if (obj.schulformen !== undefined) {
 			if (!obj.schulformen) {
 				result += '"schulformen" : []';
 			} else {
@@ -224,16 +224,16 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.fuerZeugnis !== "undefined") {
+		if (obj.fuerZeugnis !== undefined) {
 			result += '"fuerZeugnis" : ' + obj.fuerZeugnis + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

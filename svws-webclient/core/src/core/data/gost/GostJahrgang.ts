@@ -38,12 +38,12 @@ export class GostJahrgang extends JavaObject {
 	public static transpilerFromJSON(json : string): GostJahrgang {
 		const obj = JSON.parse(json);
 		const result = new GostJahrgang();
-		if (typeof obj.abiturjahr === "undefined")
+		if (obj.abiturjahr === undefined)
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		if (typeof obj.istAbgeschlossen === "undefined")
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.istAbgeschlossen === undefined)
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;
 		return result;
@@ -62,16 +62,16 @@ export class GostJahrgang extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgang>) : string {
 		let result = '{';
-		if (typeof obj.abiturjahr !== "undefined") {
+		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.istAbgeschlossen !== "undefined") {
+		if (obj.istAbgeschlossen !== undefined) {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		}
 		result = result.slice(0, -1);

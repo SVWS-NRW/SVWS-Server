@@ -88,42 +88,42 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchuelerLernabschnittListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schuelerID === "undefined")
+		if (obj.schuelerID === undefined)
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (typeof obj.schuljahresabschnitt === "undefined")
+		if (obj.schuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (typeof obj.abschnitt === "undefined")
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		if (typeof obj.wechselNr === "undefined")
+		if (obj.wechselNr === undefined)
 			 throw new Error('invalid json format, missing attribute wechselNr');
 		result.wechselNr = obj.wechselNr;
-		if (typeof obj.istGewertet === "undefined")
+		if (obj.istGewertet === undefined)
 			 throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
-		if (typeof obj.istWiederholung === "undefined")
+		if (obj.istWiederholung === undefined)
 			 throw new Error('invalid json format, missing attribute istWiederholung');
 		result.istWiederholung = obj.istWiederholung;
-		if (typeof obj.pruefungsOrdnung === "undefined")
+		if (obj.pruefungsOrdnung === undefined)
 			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
 		result.pruefungsOrdnung = obj.pruefungsOrdnung;
-		result.klassenID = typeof obj.klassenID === "undefined" ? null : obj.klassenID === null ? null : obj.klassenID;
-		if (typeof obj.klasse === "undefined")
+		result.klassenID = (obj.klassenID === undefined) ? null : obj.klassenID === null ? null : obj.klassenID;
+		if (obj.klasse === undefined)
 			 throw new Error('invalid json format, missing attribute klasse');
 		result.klasse = obj.klasse;
-		if (typeof obj.klasseStatistik === "undefined")
+		if (obj.klasseStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute klasseStatistik');
 		result.klasseStatistik = obj.klasseStatistik;
-		result.jahrgangID = typeof obj.jahrgangID === "undefined" ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
-		if (typeof obj.jahrgang === "undefined")
+		result.jahrgangID = (obj.jahrgangID === undefined) ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
+		if (obj.jahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
 		return result;
@@ -152,46 +152,46 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schuelerID !== "undefined") {
+		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
-		if (typeof obj.schuljahresabschnitt !== "undefined") {
+		if (obj.schuljahresabschnitt !== undefined) {
 			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
 		}
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.wechselNr !== "undefined") {
+		if (obj.wechselNr !== undefined) {
 			result += '"wechselNr" : ' + obj.wechselNr + ',';
 		}
-		if (typeof obj.istGewertet !== "undefined") {
+		if (obj.istGewertet !== undefined) {
 			result += '"istGewertet" : ' + obj.istGewertet + ',';
 		}
-		if (typeof obj.istWiederholung !== "undefined") {
+		if (obj.istWiederholung !== undefined) {
 			result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		}
-		if (typeof obj.pruefungsOrdnung !== "undefined") {
+		if (obj.pruefungsOrdnung !== undefined) {
 			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		}
-		if (typeof obj.klassenID !== "undefined") {
+		if (obj.klassenID !== undefined) {
 			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
 		}
-		if (typeof obj.klasse !== "undefined") {
+		if (obj.klasse !== undefined) {
 			result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
 		}
-		if (typeof obj.klasseStatistik !== "undefined") {
+		if (obj.klasseStatistik !== undefined) {
 			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
 		}
-		if (typeof obj.jahrgangID !== "undefined") {
+		if (obj.jahrgangID !== undefined) {
 			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
 		result = result.slice(0, -1);

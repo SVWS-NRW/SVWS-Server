@@ -53,19 +53,19 @@ export class SchuelerVermerke extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerVermerke {
 		const obj = JSON.parse(json);
 		const result = new SchuelerVermerke();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idSchueler === "undefined")
+		if (obj.idSchueler === undefined)
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		if (typeof obj.idVermerkart === "undefined")
+		if (obj.idVermerkart === undefined)
 			 throw new Error('invalid json format, missing attribute idVermerkart');
 		result.idVermerkart = obj.idVermerkart;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		result.angelegtVon = typeof obj.angelegtVon === "undefined" ? null : obj.angelegtVon === null ? null : obj.angelegtVon;
-		result.geaendertVon = typeof obj.geaendertVon === "undefined" ? null : obj.geaendertVon === null ? null : obj.geaendertVon;
+		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.angelegtVon = (obj.angelegtVon === undefined) ? null : obj.angelegtVon === null ? null : obj.angelegtVon;
+		result.geaendertVon = (obj.geaendertVon === undefined) ? null : obj.geaendertVon === null ? null : obj.geaendertVon;
 		return result;
 	}
 
@@ -85,25 +85,25 @@ export class SchuelerVermerke extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerVermerke>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idSchueler !== "undefined") {
+		if (obj.idSchueler !== undefined) {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
-		if (typeof obj.idVermerkart !== "undefined") {
+		if (obj.idVermerkart !== undefined) {
 			result += '"idVermerkart" : ' + obj.idVermerkart + ',';
 		}
-		if (typeof obj.datum !== "undefined") {
+		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.angelegtVon !== "undefined") {
+		if (obj.angelegtVon !== undefined) {
 			result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
 		}
-		if (typeof obj.geaendertVon !== "undefined") {
+		if (obj.geaendertVon !== undefined) {
 			result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		}
 		result = result.slice(0, -1);

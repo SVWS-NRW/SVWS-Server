@@ -55,16 +55,16 @@ export class StundenplanKlassenunterricht extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanKlassenunterricht {
 		const obj = JSON.parse(json);
 		const result = new StundenplanKlassenunterricht();
-		if (typeof obj.idKlasse === "undefined")
+		if (obj.idKlasse === undefined)
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
-		if (typeof obj.idFach === "undefined")
+		if (obj.idFach === undefined)
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
@@ -134,19 +134,19 @@ export class StundenplanKlassenunterricht extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKlassenunterricht>) : string {
 		let result = '{';
-		if (typeof obj.idKlasse !== "undefined") {
+		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
 		}
-		if (typeof obj.idFach !== "undefined") {
+		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -160,7 +160,7 @@ export class StundenplanKlassenunterricht extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -174,7 +174,7 @@ export class StundenplanKlassenunterricht extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {

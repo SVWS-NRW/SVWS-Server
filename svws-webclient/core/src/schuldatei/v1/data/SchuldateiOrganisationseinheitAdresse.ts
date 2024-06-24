@@ -91,47 +91,47 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitAdresse {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheitAdresse();
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		if (typeof obj.id === "undefined")
+		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schulnummer === "undefined")
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		if (typeof obj.liegenschaft === "undefined")
+		if (obj.liegenschaft === undefined)
 			 throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
-		if (typeof obj.strasse === "undefined")
+		if (obj.strasse === undefined)
 			 throw new Error('invalid json format, missing attribute strasse');
 		result.strasse = obj.strasse;
-		if (typeof obj.postleitzahl === "undefined")
+		if (obj.postleitzahl === undefined)
 			 throw new Error('invalid json format, missing attribute postleitzahl');
 		result.postleitzahl = obj.postleitzahl;
-		if (typeof obj.ort === "undefined")
+		if (obj.ort === undefined)
 			 throw new Error('invalid json format, missing attribute ort');
 		result.ort = obj.ort;
-		if (typeof obj.regionalschluessel === "undefined")
+		if (obj.regionalschluessel === undefined)
 			 throw new Error('invalid json format, missing attribute regionalschluessel');
 		result.regionalschluessel = obj.regionalschluessel;
-		if (typeof obj.qualitaetverortung === "undefined")
+		if (obj.qualitaetverortung === undefined)
 			 throw new Error('invalid json format, missing attribute qualitaetverortung');
 		result.qualitaetverortung = obj.qualitaetverortung;
-		if (typeof obj.koordinaterechtswert === "undefined")
+		if (obj.koordinaterechtswert === undefined)
 			 throw new Error('invalid json format, missing attribute koordinaterechtswert');
 		result.koordinaterechtswert = obj.koordinaterechtswert;
-		if (typeof obj.koordinatehochwert === "undefined")
+		if (obj.koordinatehochwert === undefined)
 			 throw new Error('invalid json format, missing attribute koordinatehochwert');
 		result.koordinatehochwert = obj.koordinatehochwert;
-		result.adresstypeid = typeof obj.adresstypeid === "undefined" ? null : obj.adresstypeid === null ? null : obj.adresstypeid;
-		if (typeof obj.standortkennzeichen === "undefined")
+		result.adresstypeid = (obj.adresstypeid === undefined) ? null : obj.adresstypeid === null ? null : obj.adresstypeid;
+		if (obj.standortkennzeichen === undefined)
 			 throw new Error('invalid json format, missing attribute standortkennzeichen');
 		result.standortkennzeichen = obj.standortkennzeichen;
-		if (typeof obj.adresskennzeichen === "undefined")
+		if (obj.adresskennzeichen === undefined)
 			 throw new Error('invalid json format, missing attribute adresskennzeichen');
 		result.adresskennzeichen = obj.adresskennzeichen;
-		if (typeof obj.hauptstandortadresse === "undefined")
+		if (obj.hauptstandortadresse === undefined)
 			 throw new Error('invalid json format, missing attribute hauptstandortadresse');
 		result.hauptstandortadresse = obj.hauptstandortadresse;
 		return result;
@@ -163,55 +163,55 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitAdresse>) : string {
 		let result = '{';
-		if (typeof obj.gueltigab !== "undefined") {
+		if (obj.gueltigab !== undefined) {
 			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
-		if (typeof obj.gueltigbis !== "undefined") {
+		if (obj.gueltigbis !== undefined) {
 			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
-		if (typeof obj.geaendertam !== "undefined") {
+		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.liegenschaft !== "undefined") {
+		if (obj.liegenschaft !== undefined) {
 			result += '"liegenschaft" : ' + obj.liegenschaft + ',';
 		}
-		if (typeof obj.strasse !== "undefined") {
+		if (obj.strasse !== undefined) {
 			result += '"strasse" : ' + JSON.stringify(obj.strasse!) + ',';
 		}
-		if (typeof obj.postleitzahl !== "undefined") {
+		if (obj.postleitzahl !== undefined) {
 			result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl!) + ',';
 		}
-		if (typeof obj.ort !== "undefined") {
+		if (obj.ort !== undefined) {
 			result += '"ort" : ' + JSON.stringify(obj.ort!) + ',';
 		}
-		if (typeof obj.regionalschluessel !== "undefined") {
+		if (obj.regionalschluessel !== undefined) {
 			result += '"regionalschluessel" : ' + JSON.stringify(obj.regionalschluessel!) + ',';
 		}
-		if (typeof obj.qualitaetverortung !== "undefined") {
+		if (obj.qualitaetverortung !== undefined) {
 			result += '"qualitaetverortung" : ' + obj.qualitaetverortung + ',';
 		}
-		if (typeof obj.koordinaterechtswert !== "undefined") {
+		if (obj.koordinaterechtswert !== undefined) {
 			result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert + ',';
 		}
-		if (typeof obj.koordinatehochwert !== "undefined") {
+		if (obj.koordinatehochwert !== undefined) {
 			result += '"koordinatehochwert" : ' + obj.koordinatehochwert + ',';
 		}
-		if (typeof obj.adresstypeid !== "undefined") {
+		if (obj.adresstypeid !== undefined) {
 			result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid) + ',';
 		}
-		if (typeof obj.standortkennzeichen !== "undefined") {
+		if (obj.standortkennzeichen !== undefined) {
 			result += '"standortkennzeichen" : ' + obj.standortkennzeichen + ',';
 		}
-		if (typeof obj.adresskennzeichen !== "undefined") {
+		if (obj.adresskennzeichen !== undefined) {
 			result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen!) + ',';
 		}
-		if (typeof obj.hauptstandortadresse !== "undefined") {
+		if (obj.hauptstandortadresse !== undefined) {
 			result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse!) + ',';
 		}
 		result = result.slice(0, -1);

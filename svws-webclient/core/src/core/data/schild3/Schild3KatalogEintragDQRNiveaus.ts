@@ -43,11 +43,11 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDQRNiveaus {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDQRNiveaus();
-		result.Gliederung = typeof obj.Gliederung === "undefined" ? null : obj.Gliederung === null ? null : obj.Gliederung;
-		result.FKS = typeof obj.FKS === "undefined" ? null : obj.FKS === null ? null : obj.FKS;
-		result.DQR_Niveau = typeof obj.DQR_Niveau === "undefined" ? null : obj.DQR_Niveau === null ? null : obj.DQR_Niveau;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.Gliederung = (obj.Gliederung === undefined) ? null : obj.Gliederung === null ? null : obj.Gliederung;
+		result.FKS = (obj.FKS === undefined) ? null : obj.FKS === null ? null : obj.FKS;
+		result.DQR_Niveau = (obj.DQR_Niveau === undefined) ? null : obj.DQR_Niveau === null ? null : obj.DQR_Niveau;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -65,19 +65,19 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDQRNiveaus>) : string {
 		let result = '{';
-		if (typeof obj.Gliederung !== "undefined") {
+		if (obj.Gliederung !== undefined) {
 			result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
 		}
-		if (typeof obj.FKS !== "undefined") {
+		if (obj.FKS !== undefined) {
 			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : JSON.stringify(obj.FKS)) + ',';
 		}
-		if (typeof obj.DQR_Niveau !== "undefined") {
+		if (obj.DQR_Niveau !== undefined) {
 			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

@@ -100,25 +100,25 @@ export class AbiturFachbelegung extends JavaObject {
 	public static transpilerFromJSON(json : string): AbiturFachbelegung {
 		const obj = JSON.parse(json);
 		const result = new AbiturFachbelegung();
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.letzteKursart = typeof obj.letzteKursart === "undefined" ? null : obj.letzteKursart === null ? null : obj.letzteKursart;
-		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : obj.abiturFach;
-		if (typeof obj.istFSNeu === "undefined")
+		result.letzteKursart = (obj.letzteKursart === undefined) ? null : obj.letzteKursart === null ? null : obj.letzteKursart;
+		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
+		if (obj.istFSNeu === undefined)
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
-		result.block1PunktSumme = typeof obj.block1PunktSumme === "undefined" ? null : obj.block1PunktSumme === null ? null : obj.block1PunktSumme;
-		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
-		result.block2NotenKuerzelPruefung = typeof obj.block2NotenKuerzelPruefung === "undefined" ? null : obj.block2NotenKuerzelPruefung === null ? null : obj.block2NotenKuerzelPruefung;
-		result.block2PunkteZwischenstand = typeof obj.block2PunkteZwischenstand === "undefined" ? null : obj.block2PunkteZwischenstand === null ? null : obj.block2PunkteZwischenstand;
-		result.block2MuendlichePruefungAbweichung = typeof obj.block2MuendlichePruefungAbweichung === "undefined" ? null : obj.block2MuendlichePruefungAbweichung === null ? null : obj.block2MuendlichePruefungAbweichung;
-		result.block2MuendlichePruefungBestehen = typeof obj.block2MuendlichePruefungBestehen === "undefined" ? null : obj.block2MuendlichePruefungBestehen === null ? null : obj.block2MuendlichePruefungBestehen;
-		result.block2MuendlichePruefungFreiwillig = typeof obj.block2MuendlichePruefungFreiwillig === "undefined" ? null : obj.block2MuendlichePruefungFreiwillig === null ? null : obj.block2MuendlichePruefungFreiwillig;
-		result.block2MuendlichePruefungReihenfolge = typeof obj.block2MuendlichePruefungReihenfolge === "undefined" ? null : obj.block2MuendlichePruefungReihenfolge === null ? null : obj.block2MuendlichePruefungReihenfolge;
-		result.block2MuendlichePruefungNotenKuerzel = typeof obj.block2MuendlichePruefungNotenKuerzel === "undefined" ? null : obj.block2MuendlichePruefungNotenKuerzel === null ? null : obj.block2MuendlichePruefungNotenKuerzel;
-		result.block2Punkte = typeof obj.block2Punkte === "undefined" ? null : obj.block2Punkte === null ? null : obj.block2Punkte;
-		result.block2Pruefer = typeof obj.block2Pruefer === "undefined" ? null : obj.block2Pruefer === null ? null : obj.block2Pruefer;
+		result.block1PunktSumme = (obj.block1PunktSumme === undefined) ? null : obj.block1PunktSumme === null ? null : obj.block1PunktSumme;
+		result.block1NotenpunkteDurchschnitt = (obj.block1NotenpunkteDurchschnitt === undefined) ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
+		result.block2NotenKuerzelPruefung = (obj.block2NotenKuerzelPruefung === undefined) ? null : obj.block2NotenKuerzelPruefung === null ? null : obj.block2NotenKuerzelPruefung;
+		result.block2PunkteZwischenstand = (obj.block2PunkteZwischenstand === undefined) ? null : obj.block2PunkteZwischenstand === null ? null : obj.block2PunkteZwischenstand;
+		result.block2MuendlichePruefungAbweichung = (obj.block2MuendlichePruefungAbweichung === undefined) ? null : obj.block2MuendlichePruefungAbweichung === null ? null : obj.block2MuendlichePruefungAbweichung;
+		result.block2MuendlichePruefungBestehen = (obj.block2MuendlichePruefungBestehen === undefined) ? null : obj.block2MuendlichePruefungBestehen === null ? null : obj.block2MuendlichePruefungBestehen;
+		result.block2MuendlichePruefungFreiwillig = (obj.block2MuendlichePruefungFreiwillig === undefined) ? null : obj.block2MuendlichePruefungFreiwillig === null ? null : obj.block2MuendlichePruefungFreiwillig;
+		result.block2MuendlichePruefungReihenfolge = (obj.block2MuendlichePruefungReihenfolge === undefined) ? null : obj.block2MuendlichePruefungReihenfolge === null ? null : obj.block2MuendlichePruefungReihenfolge;
+		result.block2MuendlichePruefungNotenKuerzel = (obj.block2MuendlichePruefungNotenKuerzel === undefined) ? null : obj.block2MuendlichePruefungNotenKuerzel === null ? null : obj.block2MuendlichePruefungNotenKuerzel;
+		result.block2Punkte = (obj.block2Punkte === undefined) ? null : obj.block2Punkte === null ? null : obj.block2Punkte;
+		result.block2Pruefer = (obj.block2Pruefer === undefined) ? null : obj.block2Pruefer === null ? null : obj.block2Pruefer;
 		for (let i = 0; i < obj.belegungen.length; i++) {
 			result.belegungen[i] = obj.belegungen[i] == null ? null : (AbiturFachbelegungHalbjahr.transpilerFromJSON(JSON.stringify(obj.belegungen[i])));
 		}
@@ -161,52 +161,52 @@ export class AbiturFachbelegung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbiturFachbelegung>) : string {
 		let result = '{';
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.letzteKursart !== "undefined") {
+		if (obj.letzteKursart !== undefined) {
 			result += '"letzteKursart" : ' + ((!obj.letzteKursart) ? 'null' : JSON.stringify(obj.letzteKursart)) + ',';
 		}
-		if (typeof obj.abiturFach !== "undefined") {
+		if (obj.abiturFach !== undefined) {
 			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
 		}
-		if (typeof obj.istFSNeu !== "undefined") {
+		if (obj.istFSNeu !== undefined) {
 			result += '"istFSNeu" : ' + obj.istFSNeu + ',';
 		}
-		if (typeof obj.block1PunktSumme !== "undefined") {
+		if (obj.block1PunktSumme !== undefined) {
 			result += '"block1PunktSumme" : ' + ((!obj.block1PunktSumme) ? 'null' : obj.block1PunktSumme) + ',';
 		}
-		if (typeof obj.block1NotenpunkteDurchschnitt !== "undefined") {
+		if (obj.block1NotenpunkteDurchschnitt !== undefined) {
 			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
 		}
-		if (typeof obj.block2NotenKuerzelPruefung !== "undefined") {
+		if (obj.block2NotenKuerzelPruefung !== undefined) {
 			result += '"block2NotenKuerzelPruefung" : ' + ((!obj.block2NotenKuerzelPruefung) ? 'null' : JSON.stringify(obj.block2NotenKuerzelPruefung)) + ',';
 		}
-		if (typeof obj.block2PunkteZwischenstand !== "undefined") {
+		if (obj.block2PunkteZwischenstand !== undefined) {
 			result += '"block2PunkteZwischenstand" : ' + ((!obj.block2PunkteZwischenstand) ? 'null' : obj.block2PunkteZwischenstand) + ',';
 		}
-		if (typeof obj.block2MuendlichePruefungAbweichung !== "undefined") {
+		if (obj.block2MuendlichePruefungAbweichung !== undefined) {
 			result += '"block2MuendlichePruefungAbweichung" : ' + ((!obj.block2MuendlichePruefungAbweichung) ? 'null' : obj.block2MuendlichePruefungAbweichung) + ',';
 		}
-		if (typeof obj.block2MuendlichePruefungBestehen !== "undefined") {
+		if (obj.block2MuendlichePruefungBestehen !== undefined) {
 			result += '"block2MuendlichePruefungBestehen" : ' + ((!obj.block2MuendlichePruefungBestehen) ? 'null' : obj.block2MuendlichePruefungBestehen) + ',';
 		}
-		if (typeof obj.block2MuendlichePruefungFreiwillig !== "undefined") {
+		if (obj.block2MuendlichePruefungFreiwillig !== undefined) {
 			result += '"block2MuendlichePruefungFreiwillig" : ' + ((!obj.block2MuendlichePruefungFreiwillig) ? 'null' : obj.block2MuendlichePruefungFreiwillig) + ',';
 		}
-		if (typeof obj.block2MuendlichePruefungReihenfolge !== "undefined") {
+		if (obj.block2MuendlichePruefungReihenfolge !== undefined) {
 			result += '"block2MuendlichePruefungReihenfolge" : ' + ((!obj.block2MuendlichePruefungReihenfolge) ? 'null' : obj.block2MuendlichePruefungReihenfolge) + ',';
 		}
-		if (typeof obj.block2MuendlichePruefungNotenKuerzel !== "undefined") {
+		if (obj.block2MuendlichePruefungNotenKuerzel !== undefined) {
 			result += '"block2MuendlichePruefungNotenKuerzel" : ' + ((!obj.block2MuendlichePruefungNotenKuerzel) ? 'null' : JSON.stringify(obj.block2MuendlichePruefungNotenKuerzel)) + ',';
 		}
-		if (typeof obj.block2Punkte !== "undefined") {
+		if (obj.block2Punkte !== undefined) {
 			result += '"block2Punkte" : ' + ((!obj.block2Punkte) ? 'null' : obj.block2Punkte) + ',';
 		}
-		if (typeof obj.block2Pruefer !== "undefined") {
+		if (obj.block2Pruefer !== undefined) {
 			result += '"block2Pruefer" : ' + ((!obj.block2Pruefer) ? 'null' : obj.block2Pruefer) + ',';
 		}
-		if (typeof obj.belegungen !== "undefined") {
+		if (obj.belegungen !== undefined) {
 			const a = obj.belegungen;
 			if (!a) {
 				result += '"belegungen" : []';

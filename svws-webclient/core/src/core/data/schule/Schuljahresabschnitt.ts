@@ -43,17 +43,17 @@ export class Schuljahresabschnitt extends JavaObject {
 	public static transpilerFromJSON(json : string): Schuljahresabschnitt {
 		const obj = JSON.parse(json);
 		const result = new Schuljahresabschnitt();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (typeof obj.abschnitt === "undefined")
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		result.idVorigerAbschnitt = typeof obj.idVorigerAbschnitt === "undefined" ? null : obj.idVorigerAbschnitt === null ? null : obj.idVorigerAbschnitt;
-		result.idFolgeAbschnitt = typeof obj.idFolgeAbschnitt === "undefined" ? null : obj.idFolgeAbschnitt === null ? null : obj.idFolgeAbschnitt;
+		result.idVorigerAbschnitt = (obj.idVorigerAbschnitt === undefined) ? null : obj.idVorigerAbschnitt === null ? null : obj.idVorigerAbschnitt;
+		result.idFolgeAbschnitt = (obj.idFolgeAbschnitt === undefined) ? null : obj.idFolgeAbschnitt === null ? null : obj.idFolgeAbschnitt;
 		return result;
 	}
 
@@ -71,19 +71,19 @@ export class Schuljahresabschnitt extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schuljahresabschnitt>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.idVorigerAbschnitt !== "undefined") {
+		if (obj.idVorigerAbschnitt !== undefined) {
 			result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt) + ',';
 		}
-		if (typeof obj.idFolgeAbschnitt !== "undefined") {
+		if (obj.idFolgeAbschnitt !== undefined) {
 			result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt) + ',';
 		}
 		result = result.slice(0, -1);

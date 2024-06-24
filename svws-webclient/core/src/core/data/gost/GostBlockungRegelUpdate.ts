@@ -77,7 +77,7 @@ export class GostBlockungRegelUpdate extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungRegelUpdate>) : string {
 		let result = '{';
-		if (typeof obj.listEntfernen !== "undefined") {
+		if (obj.listEntfernen !== undefined) {
 			if (!obj.listEntfernen) {
 				result += '"listEntfernen" : []';
 			} else {
@@ -91,7 +91,7 @@ export class GostBlockungRegelUpdate extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.listHinzuzufuegen !== "undefined") {
+		if (obj.listHinzuzufuegen !== undefined) {
 			if (!obj.listHinzuzufuegen) {
 				result += '"listHinzuzufuegen" : []';
 			} else {

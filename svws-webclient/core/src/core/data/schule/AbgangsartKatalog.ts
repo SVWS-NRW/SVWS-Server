@@ -31,7 +31,7 @@ export class AbgangsartKatalog extends JavaObject {
 	public static transpilerFromJSON(json : string): AbgangsartKatalog {
 		const obj = JSON.parse(json);
 		const result = new AbgangsartKatalog();
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.eintraege !== undefined) && (obj.eintraege !== null)) {
@@ -64,10 +64,10 @@ export class AbgangsartKatalog extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalog>) : string {
 		let result = '{';
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.eintraege !== "undefined") {
+		if (obj.eintraege !== undefined) {
 			if (!obj.eintraege) {
 				result += '"eintraege" : []';
 			} else {

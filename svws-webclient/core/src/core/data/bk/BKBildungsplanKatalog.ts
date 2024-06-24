@@ -31,7 +31,7 @@ export class BKBildungsplanKatalog extends JavaObject {
 	public static transpilerFromJSON(json : string): BKBildungsplanKatalog {
 		const obj = JSON.parse(json);
 		const result = new BKBildungsplanKatalog();
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.lehrplaene !== undefined) && (obj.lehrplaene !== null)) {
@@ -64,10 +64,10 @@ export class BKBildungsplanKatalog extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKBildungsplanKatalog>) : string {
 		let result = '{';
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.lehrplaene !== "undefined") {
+		if (obj.lehrplaene !== undefined) {
 			if (!obj.lehrplaene) {
 				result += '"lehrplaene" : []';
 			} else {

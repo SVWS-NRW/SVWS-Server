@@ -147,7 +147,7 @@ export class GostKlausurenDataCollection extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenDataCollection>) : string {
 		let result = '{';
-		if (typeof obj.vorgaben !== "undefined") {
+		if (obj.vorgaben !== undefined) {
 			if (!obj.vorgaben) {
 				result += '"vorgaben" : []';
 			} else {
@@ -161,7 +161,7 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kursklausuren !== "undefined") {
+		if (obj.kursklausuren !== undefined) {
 			if (!obj.kursklausuren) {
 				result += '"kursklausuren" : []';
 			} else {
@@ -175,7 +175,7 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schuelerklausuren !== "undefined") {
+		if (obj.schuelerklausuren !== undefined) {
 			if (!obj.schuelerklausuren) {
 				result += '"schuelerklausuren" : []';
 			} else {
@@ -189,7 +189,7 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schuelerklausurtermine !== "undefined") {
+		if (obj.schuelerklausurtermine !== undefined) {
 			if (!obj.schuelerklausurtermine) {
 				result += '"schuelerklausurtermine" : []';
 			} else {
@@ -203,7 +203,7 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.termine !== "undefined") {
+		if (obj.termine !== undefined) {
 			if (!obj.termine) {
 				result += '"termine" : []';
 			} else {

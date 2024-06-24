@@ -37,7 +37,7 @@ export class Sprachendaten extends JavaObject {
 	public static transpilerFromJSON(json : string): Sprachendaten {
 		const obj = JSON.parse(json);
 		const result = new Sprachendaten();
-		if (typeof obj.schuelerID === "undefined")
+		if (obj.schuelerID === undefined)
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
 		if ((obj.belegungen !== undefined) && (obj.belegungen !== null)) {
@@ -87,10 +87,10 @@ export class Sprachendaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Sprachendaten>) : string {
 		let result = '{';
-		if (typeof obj.schuelerID !== "undefined") {
+		if (obj.schuelerID !== undefined) {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
-		if (typeof obj.belegungen !== "undefined") {
+		if (obj.belegungen !== undefined) {
 			if (!obj.belegungen) {
 				result += '"belegungen" : []';
 			} else {
@@ -104,7 +104,7 @@ export class Sprachendaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.pruefungen !== "undefined") {
+		if (obj.pruefungen !== undefined) {
 			if (!obj.pruefungen) {
 				result += '"pruefungen" : []';
 			} else {

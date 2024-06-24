@@ -31,7 +31,7 @@ export class BerufskollegFachklassenKatalog extends JavaObject {
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalog {
 		const obj = JSON.parse(json);
 		const result = new BerufskollegFachklassenKatalog();
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.indizes !== undefined) && (obj.indizes !== null)) {
@@ -64,10 +64,10 @@ export class BerufskollegFachklassenKatalog extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalog>) : string {
 		let result = '{';
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.indizes !== "undefined") {
+		if (obj.indizes !== undefined) {
 			if (!obj.indizes) {
 				result += '"indizes" : []';
 			} else {

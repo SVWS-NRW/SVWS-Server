@@ -117,28 +117,28 @@ export class ENMLeistung extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMLeistung {
 		const obj = JSON.parse(json);
 		const result = new ENMLeistung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.lerngruppenID === "undefined")
+		if (obj.lerngruppenID === undefined)
 			 throw new Error('invalid json format, missing attribute lerngruppenID');
 		result.lerngruppenID = obj.lerngruppenID;
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
-		result.tsNote = typeof obj.tsNote === "undefined" ? null : obj.tsNote === null ? null : obj.tsNote;
-		result.noteQuartal = typeof obj.noteQuartal === "undefined" ? null : obj.noteQuartal === null ? null : obj.noteQuartal;
-		result.tsNoteQuartal = typeof obj.tsNoteQuartal === "undefined" ? null : obj.tsNoteQuartal === null ? null : obj.tsNoteQuartal;
-		result.istSchriftlich = typeof obj.istSchriftlich === "undefined" ? null : obj.istSchriftlich === null ? null : obj.istSchriftlich;
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
-		result.fehlstundenFach = typeof obj.fehlstundenFach === "undefined" ? null : obj.fehlstundenFach === null ? null : obj.fehlstundenFach;
-		result.tsFehlstundenFach = typeof obj.tsFehlstundenFach === "undefined" ? null : obj.tsFehlstundenFach === null ? null : obj.tsFehlstundenFach;
-		result.fehlstundenUnentschuldigtFach = typeof obj.fehlstundenUnentschuldigtFach === "undefined" ? null : obj.fehlstundenUnentschuldigtFach === null ? null : obj.fehlstundenUnentschuldigtFach;
-		result.tsFehlstundenUnentschuldigtFach = typeof obj.tsFehlstundenUnentschuldigtFach === "undefined" ? null : obj.tsFehlstundenUnentschuldigtFach === null ? null : obj.tsFehlstundenUnentschuldigtFach;
-		result.fachbezogeneBemerkungen = typeof obj.fachbezogeneBemerkungen === "undefined" ? null : obj.fachbezogeneBemerkungen === null ? null : obj.fachbezogeneBemerkungen;
-		result.tsFachbezogeneBemerkungen = typeof obj.tsFachbezogeneBemerkungen === "undefined" ? null : obj.tsFachbezogeneBemerkungen === null ? null : obj.tsFachbezogeneBemerkungen;
-		result.neueZuweisungKursart = typeof obj.neueZuweisungKursart === "undefined" ? null : obj.neueZuweisungKursart === null ? null : obj.neueZuweisungKursart;
-		result.istGemahnt = typeof obj.istGemahnt === "undefined" ? null : obj.istGemahnt === null ? null : obj.istGemahnt;
-		result.tsIstGemahnt = typeof obj.tsIstGemahnt === "undefined" ? null : obj.tsIstGemahnt === null ? null : obj.tsIstGemahnt;
-		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum === null ? null : obj.mahndatum;
+		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
+		result.tsNote = (obj.tsNote === undefined) ? null : obj.tsNote === null ? null : obj.tsNote;
+		result.noteQuartal = (obj.noteQuartal === undefined) ? null : obj.noteQuartal === null ? null : obj.noteQuartal;
+		result.tsNoteQuartal = (obj.tsNoteQuartal === undefined) ? null : obj.tsNoteQuartal === null ? null : obj.tsNoteQuartal;
+		result.istSchriftlich = (obj.istSchriftlich === undefined) ? null : obj.istSchriftlich === null ? null : obj.istSchriftlich;
+		result.abiturfach = (obj.abiturfach === undefined) ? null : obj.abiturfach === null ? null : obj.abiturfach;
+		result.fehlstundenFach = (obj.fehlstundenFach === undefined) ? null : obj.fehlstundenFach === null ? null : obj.fehlstundenFach;
+		result.tsFehlstundenFach = (obj.tsFehlstundenFach === undefined) ? null : obj.tsFehlstundenFach === null ? null : obj.tsFehlstundenFach;
+		result.fehlstundenUnentschuldigtFach = (obj.fehlstundenUnentschuldigtFach === undefined) ? null : obj.fehlstundenUnentschuldigtFach === null ? null : obj.fehlstundenUnentschuldigtFach;
+		result.tsFehlstundenUnentschuldigtFach = (obj.tsFehlstundenUnentschuldigtFach === undefined) ? null : obj.tsFehlstundenUnentschuldigtFach === null ? null : obj.tsFehlstundenUnentschuldigtFach;
+		result.fachbezogeneBemerkungen = (obj.fachbezogeneBemerkungen === undefined) ? null : obj.fachbezogeneBemerkungen === null ? null : obj.fachbezogeneBemerkungen;
+		result.tsFachbezogeneBemerkungen = (obj.tsFachbezogeneBemerkungen === undefined) ? null : obj.tsFachbezogeneBemerkungen === null ? null : obj.tsFachbezogeneBemerkungen;
+		result.neueZuweisungKursart = (obj.neueZuweisungKursart === undefined) ? null : obj.neueZuweisungKursart === null ? null : obj.neueZuweisungKursart;
+		result.istGemahnt = (obj.istGemahnt === undefined) ? null : obj.istGemahnt === null ? null : obj.istGemahnt;
+		result.tsIstGemahnt = (obj.tsIstGemahnt === undefined) ? null : obj.tsIstGemahnt === null ? null : obj.tsIstGemahnt;
+		result.mahndatum = (obj.mahndatum === undefined) ? null : obj.mahndatum === null ? null : obj.mahndatum;
 		if ((obj.teilleistungen !== undefined) && (obj.teilleistungen !== null)) {
 			for (const elem of obj.teilleistungen) {
 				result.teilleistungen?.add(ENMTeilleistung.transpilerFromJSON(JSON.stringify(elem)));
@@ -186,61 +186,61 @@ export class ENMLeistung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMLeistung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.lerngruppenID !== "undefined") {
+		if (obj.lerngruppenID !== undefined) {
 			result += '"lerngruppenID" : ' + obj.lerngruppenID + ',';
 		}
-		if (typeof obj.note !== "undefined") {
+		if (obj.note !== undefined) {
 			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
-		if (typeof obj.tsNote !== "undefined") {
+		if (obj.tsNote !== undefined) {
 			result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		}
-		if (typeof obj.noteQuartal !== "undefined") {
+		if (obj.noteQuartal !== undefined) {
 			result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
 		}
-		if (typeof obj.tsNoteQuartal !== "undefined") {
+		if (obj.tsNoteQuartal !== undefined) {
 			result += '"tsNoteQuartal" : ' + ((!obj.tsNoteQuartal) ? 'null' : JSON.stringify(obj.tsNoteQuartal)) + ',';
 		}
-		if (typeof obj.istSchriftlich !== "undefined") {
+		if (obj.istSchriftlich !== undefined) {
 			result += '"istSchriftlich" : ' + ((!obj.istSchriftlich) ? 'null' : obj.istSchriftlich) + ',';
 		}
-		if (typeof obj.abiturfach !== "undefined") {
+		if (obj.abiturfach !== undefined) {
 			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		}
-		if (typeof obj.fehlstundenFach !== "undefined") {
+		if (obj.fehlstundenFach !== undefined) {
 			result += '"fehlstundenFach" : ' + ((!obj.fehlstundenFach) ? 'null' : obj.fehlstundenFach) + ',';
 		}
-		if (typeof obj.tsFehlstundenFach !== "undefined") {
+		if (obj.tsFehlstundenFach !== undefined) {
 			result += '"tsFehlstundenFach" : ' + ((!obj.tsFehlstundenFach) ? 'null' : JSON.stringify(obj.tsFehlstundenFach)) + ',';
 		}
-		if (typeof obj.fehlstundenUnentschuldigtFach !== "undefined") {
+		if (obj.fehlstundenUnentschuldigtFach !== undefined) {
 			result += '"fehlstundenUnentschuldigtFach" : ' + ((!obj.fehlstundenUnentschuldigtFach) ? 'null' : obj.fehlstundenUnentschuldigtFach) + ',';
 		}
-		if (typeof obj.tsFehlstundenUnentschuldigtFach !== "undefined") {
+		if (obj.tsFehlstundenUnentschuldigtFach !== undefined) {
 			result += '"tsFehlstundenUnentschuldigtFach" : ' + ((!obj.tsFehlstundenUnentschuldigtFach) ? 'null' : JSON.stringify(obj.tsFehlstundenUnentschuldigtFach)) + ',';
 		}
-		if (typeof obj.fachbezogeneBemerkungen !== "undefined") {
+		if (obj.fachbezogeneBemerkungen !== undefined) {
 			result += '"fachbezogeneBemerkungen" : ' + ((!obj.fachbezogeneBemerkungen) ? 'null' : JSON.stringify(obj.fachbezogeneBemerkungen)) + ',';
 		}
-		if (typeof obj.tsFachbezogeneBemerkungen !== "undefined") {
+		if (obj.tsFachbezogeneBemerkungen !== undefined) {
 			result += '"tsFachbezogeneBemerkungen" : ' + ((!obj.tsFachbezogeneBemerkungen) ? 'null' : JSON.stringify(obj.tsFachbezogeneBemerkungen)) + ',';
 		}
-		if (typeof obj.neueZuweisungKursart !== "undefined") {
+		if (obj.neueZuweisungKursart !== undefined) {
 			result += '"neueZuweisungKursart" : ' + ((!obj.neueZuweisungKursart) ? 'null' : JSON.stringify(obj.neueZuweisungKursart)) + ',';
 		}
-		if (typeof obj.istGemahnt !== "undefined") {
+		if (obj.istGemahnt !== undefined) {
 			result += '"istGemahnt" : ' + ((!obj.istGemahnt) ? 'null' : obj.istGemahnt) + ',';
 		}
-		if (typeof obj.tsIstGemahnt !== "undefined") {
+		if (obj.tsIstGemahnt !== undefined) {
 			result += '"tsIstGemahnt" : ' + ((!obj.tsIstGemahnt) ? 'null' : JSON.stringify(obj.tsIstGemahnt)) + ',';
 		}
-		if (typeof obj.mahndatum !== "undefined") {
+		if (obj.mahndatum !== undefined) {
 			result += '"mahndatum" : ' + ((!obj.mahndatum) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
 		}
-		if (typeof obj.teilleistungen !== "undefined") {
+		if (obj.teilleistungen !== undefined) {
 			if (!obj.teilleistungen) {
 				result += '"teilleistungen" : []';
 			} else {

@@ -148,34 +148,34 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchultraegerKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchultraegerKatalogEintrag();
-		if (typeof obj.SchulNr === "undefined")
+		if (obj.SchulNr === undefined)
 			 throw new Error('invalid json format, missing attribute SchulNr');
 		result.SchulNr = obj.SchulNr;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
-		result.KoRe = typeof obj.KoRe === "undefined" ? null : obj.KoRe === null ? null : obj.KoRe;
-		result.KoHo = typeof obj.KoHo === "undefined" ? null : obj.KoHo === null ? null : obj.KoHo;
-		result.ABez1 = typeof obj.ABez1 === "undefined" ? null : obj.ABez1 === null ? null : obj.ABez1;
-		result.ABez2 = typeof obj.ABez2 === "undefined" ? null : obj.ABez2 === null ? null : obj.ABez2;
-		result.ABez3 = typeof obj.ABez3 === "undefined" ? null : obj.ABez3 === null ? null : obj.ABez3;
-		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : obj.PLZ;
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
-		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : obj.Strasse;
-		result.TelVorw = typeof obj.TelVorw === "undefined" ? null : obj.TelVorw === null ? null : obj.TelVorw;
-		result.Telefon = typeof obj.Telefon === "undefined" ? null : obj.Telefon === null ? null : obj.Telefon;
-		result.SF = typeof obj.SF === "undefined" ? null : obj.SF === null ? null : obj.SF;
-		result.OeffPri = typeof obj.OeffPri === "undefined" ? null : obj.OeffPri === null ? null : obj.OeffPri;
-		result.KurzBez = typeof obj.KurzBez === "undefined" ? null : obj.KurzBez === null ? null : obj.KurzBez;
-		result.SchBetrSchl = typeof obj.SchBetrSchl === "undefined" ? null : obj.SchBetrSchl === null ? null : obj.SchBetrSchl;
-		result.SchBetrSchlDatum = typeof obj.SchBetrSchlDatum === "undefined" ? null : obj.SchBetrSchlDatum === null ? null : obj.SchBetrSchlDatum;
-		result.SchuelerZahlASD = typeof obj.SchuelerZahlASD === "undefined" ? null : obj.SchuelerZahlASD === null ? null : obj.SchuelerZahlASD;
-		result.SchuelerZahlVS = typeof obj.SchuelerZahlVS === "undefined" ? null : obj.SchuelerZahlVS === null ? null : obj.SchuelerZahlVS;
-		result.ArtDerTraegerschaft = typeof obj.ArtDerTraegerschaft === "undefined" ? null : obj.ArtDerTraegerschaft === null ? null : obj.ArtDerTraegerschaft;
-		result.SchultraegerNr = typeof obj.SchultraegerNr === "undefined" ? null : obj.SchultraegerNr === null ? null : obj.SchultraegerNr;
-		result.Schulgliederung = typeof obj.Schulgliederung === "undefined" ? null : obj.Schulgliederung === null ? null : obj.Schulgliederung;
-		result.Ganztagsbetrieb = typeof obj.Ganztagsbetrieb === "undefined" ? null : obj.Ganztagsbetrieb === null ? null : obj.Ganztagsbetrieb;
-		result.Aktiv = typeof obj.Aktiv === "undefined" ? null : obj.Aktiv === null ? null : obj.Aktiv;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		result.KoRe = (obj.KoRe === undefined) ? null : obj.KoRe === null ? null : obj.KoRe;
+		result.KoHo = (obj.KoHo === undefined) ? null : obj.KoHo === null ? null : obj.KoHo;
+		result.ABez1 = (obj.ABez1 === undefined) ? null : obj.ABez1 === null ? null : obj.ABez1;
+		result.ABez2 = (obj.ABez2 === undefined) ? null : obj.ABez2 === null ? null : obj.ABez2;
+		result.ABez3 = (obj.ABez3 === undefined) ? null : obj.ABez3 === null ? null : obj.ABez3;
+		result.PLZ = (obj.PLZ === undefined) ? null : obj.PLZ === null ? null : obj.PLZ;
+		result.Ort = (obj.Ort === undefined) ? null : obj.Ort === null ? null : obj.Ort;
+		result.Strasse = (obj.Strasse === undefined) ? null : obj.Strasse === null ? null : obj.Strasse;
+		result.TelVorw = (obj.TelVorw === undefined) ? null : obj.TelVorw === null ? null : obj.TelVorw;
+		result.Telefon = (obj.Telefon === undefined) ? null : obj.Telefon === null ? null : obj.Telefon;
+		result.SF = (obj.SF === undefined) ? null : obj.SF === null ? null : obj.SF;
+		result.OeffPri = (obj.OeffPri === undefined) ? null : obj.OeffPri === null ? null : obj.OeffPri;
+		result.KurzBez = (obj.KurzBez === undefined) ? null : obj.KurzBez === null ? null : obj.KurzBez;
+		result.SchBetrSchl = (obj.SchBetrSchl === undefined) ? null : obj.SchBetrSchl === null ? null : obj.SchBetrSchl;
+		result.SchBetrSchlDatum = (obj.SchBetrSchlDatum === undefined) ? null : obj.SchBetrSchlDatum === null ? null : obj.SchBetrSchlDatum;
+		result.SchuelerZahlASD = (obj.SchuelerZahlASD === undefined) ? null : obj.SchuelerZahlASD === null ? null : obj.SchuelerZahlASD;
+		result.SchuelerZahlVS = (obj.SchuelerZahlVS === undefined) ? null : obj.SchuelerZahlVS === null ? null : obj.SchuelerZahlVS;
+		result.ArtDerTraegerschaft = (obj.ArtDerTraegerschaft === undefined) ? null : obj.ArtDerTraegerschaft === null ? null : obj.ArtDerTraegerschaft;
+		result.SchultraegerNr = (obj.SchultraegerNr === undefined) ? null : obj.SchultraegerNr === null ? null : obj.SchultraegerNr;
+		result.Schulgliederung = (obj.Schulgliederung === undefined) ? null : obj.Schulgliederung === null ? null : obj.Schulgliederung;
+		result.Ganztagsbetrieb = (obj.Ganztagsbetrieb === undefined) ? null : obj.Ganztagsbetrieb === null ? null : obj.Ganztagsbetrieb;
+		result.Aktiv = (obj.Aktiv === undefined) ? null : obj.Aktiv === null ? null : obj.Aktiv;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -214,82 +214,82 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchultraegerKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.SchulNr !== "undefined") {
+		if (obj.SchulNr !== undefined) {
 			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
 		}
-		if (typeof obj.RegSchl !== "undefined") {
+		if (obj.RegSchl !== undefined) {
 			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
-		if (typeof obj.KoRe !== "undefined") {
+		if (obj.KoRe !== undefined) {
 			result += '"KoRe" : ' + ((!obj.KoRe) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
 		}
-		if (typeof obj.KoHo !== "undefined") {
+		if (obj.KoHo !== undefined) {
 			result += '"KoHo" : ' + ((!obj.KoHo) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
 		}
-		if (typeof obj.ABez1 !== "undefined") {
+		if (obj.ABez1 !== undefined) {
 			result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
 		}
-		if (typeof obj.ABez2 !== "undefined") {
+		if (obj.ABez2 !== undefined) {
 			result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
 		}
-		if (typeof obj.ABez3 !== "undefined") {
+		if (obj.ABez3 !== undefined) {
 			result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
 		}
-		if (typeof obj.PLZ !== "undefined") {
+		if (obj.PLZ !== undefined) {
 			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
-		if (typeof obj.Ort !== "undefined") {
+		if (obj.Ort !== undefined) {
 			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
-		if (typeof obj.Strasse !== "undefined") {
+		if (obj.Strasse !== undefined) {
 			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
-		if (typeof obj.TelVorw !== "undefined") {
+		if (obj.TelVorw !== undefined) {
 			result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
 		}
-		if (typeof obj.Telefon !== "undefined") {
+		if (obj.Telefon !== undefined) {
 			result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
 		}
-		if (typeof obj.SF !== "undefined") {
+		if (obj.SF !== undefined) {
 			result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
 		}
-		if (typeof obj.OeffPri !== "undefined") {
+		if (obj.OeffPri !== undefined) {
 			result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
 		}
-		if (typeof obj.KurzBez !== "undefined") {
+		if (obj.KurzBez !== undefined) {
 			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		}
-		if (typeof obj.SchBetrSchl !== "undefined") {
+		if (obj.SchBetrSchl !== undefined) {
 			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
 		}
-		if (typeof obj.SchBetrSchlDatum !== "undefined") {
+		if (obj.SchBetrSchlDatum !== undefined) {
 			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
 		}
-		if (typeof obj.SchuelerZahlASD !== "undefined") {
+		if (obj.SchuelerZahlASD !== undefined) {
 			result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD) + ',';
 		}
-		if (typeof obj.SchuelerZahlVS !== "undefined") {
+		if (obj.SchuelerZahlVS !== undefined) {
 			result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS) + ',';
 		}
-		if (typeof obj.ArtDerTraegerschaft !== "undefined") {
+		if (obj.ArtDerTraegerschaft !== undefined) {
 			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
 		}
-		if (typeof obj.SchultraegerNr !== "undefined") {
+		if (obj.SchultraegerNr !== undefined) {
 			result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
 		}
-		if (typeof obj.Schulgliederung !== "undefined") {
+		if (obj.Schulgliederung !== undefined) {
 			result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
 		}
-		if (typeof obj.Ganztagsbetrieb !== "undefined") {
+		if (obj.Ganztagsbetrieb !== undefined) {
 			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
 		}
-		if (typeof obj.Aktiv !== "undefined") {
+		if (obj.Aktiv !== undefined) {
 			result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

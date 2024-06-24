@@ -71,7 +71,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanblockungLerngruppe {
 		const obj = JSON.parse(json);
 		const result = new StundenplanblockungLerngruppe();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if ((obj.lehrkraefte1 !== undefined) && (obj.lehrkraefte1 !== null)) {
@@ -223,10 +223,10 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungLerngruppe>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.lehrkraefte1 !== "undefined") {
+		if (obj.lehrkraefte1 !== undefined) {
 			if (!obj.lehrkraefte1) {
 				result += '"lehrkraefte1" : []';
 			} else {
@@ -240,7 +240,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrkraefte2 !== "undefined") {
+		if (obj.lehrkraefte2 !== undefined) {
 			if (!obj.lehrkraefte2) {
 				result += '"lehrkraefte2" : []';
 			} else {
@@ -254,7 +254,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -268,7 +268,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -282,7 +282,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume1 !== "undefined") {
+		if (obj.raeume1 !== undefined) {
 			if (!obj.raeume1) {
 				result += '"raeume1" : []';
 			} else {
@@ -296,7 +296,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume2 !== "undefined") {
+		if (obj.raeume2 !== undefined) {
 			if (!obj.raeume2) {
 				result += '"raeume2" : []';
 			} else {
@@ -310,7 +310,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kopplungen !== "undefined") {
+		if (obj.kopplungen !== undefined) {
 			if (!obj.kopplungen) {
 				result += '"kopplungen" : []';
 			} else {
@@ -324,7 +324,7 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.stundenelemente !== "undefined") {
+		if (obj.stundenelemente !== undefined) {
 			if (!obj.stundenelemente) {
 				result += '"stundenelemente" : []';
 			} else {

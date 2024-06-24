@@ -69,18 +69,18 @@ export class ENMLernabschnitt extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMLernabschnitt {
 		const obj = JSON.parse(json);
 		const result = new ENMLernabschnitt();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.fehlstundenGesamt = typeof obj.fehlstundenGesamt === "undefined" ? null : obj.fehlstundenGesamt === null ? null : obj.fehlstundenGesamt;
-		result.tsFehlstundenGesamt = typeof obj.tsFehlstundenGesamt === "undefined" ? null : obj.tsFehlstundenGesamt === null ? null : obj.tsFehlstundenGesamt;
-		result.fehlstundenGesamtUnentschuldigt = typeof obj.fehlstundenGesamtUnentschuldigt === "undefined" ? null : obj.fehlstundenGesamtUnentschuldigt === null ? null : obj.fehlstundenGesamtUnentschuldigt;
-		result.tsFehlstundenGesamtUnentschuldigt = typeof obj.tsFehlstundenGesamtUnentschuldigt === "undefined" ? null : obj.tsFehlstundenGesamtUnentschuldigt === null ? null : obj.tsFehlstundenGesamtUnentschuldigt;
-		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
-		result.lernbereich1note = typeof obj.lernbereich1note === "undefined" ? null : obj.lernbereich1note === null ? null : obj.lernbereich1note;
-		result.lernbereich2note = typeof obj.lernbereich2note === "undefined" ? null : obj.lernbereich2note === null ? null : obj.lernbereich2note;
-		result.foerderschwerpunkt1 = typeof obj.foerderschwerpunkt1 === "undefined" ? null : obj.foerderschwerpunkt1 === null ? null : obj.foerderschwerpunkt1;
-		result.foerderschwerpunkt2 = typeof obj.foerderschwerpunkt2 === "undefined" ? null : obj.foerderschwerpunkt2 === null ? null : obj.foerderschwerpunkt2;
+		result.fehlstundenGesamt = (obj.fehlstundenGesamt === undefined) ? null : obj.fehlstundenGesamt === null ? null : obj.fehlstundenGesamt;
+		result.tsFehlstundenGesamt = (obj.tsFehlstundenGesamt === undefined) ? null : obj.tsFehlstundenGesamt === null ? null : obj.tsFehlstundenGesamt;
+		result.fehlstundenGesamtUnentschuldigt = (obj.fehlstundenGesamtUnentschuldigt === undefined) ? null : obj.fehlstundenGesamtUnentschuldigt === null ? null : obj.fehlstundenGesamtUnentschuldigt;
+		result.tsFehlstundenGesamtUnentschuldigt = (obj.tsFehlstundenGesamtUnentschuldigt === undefined) ? null : obj.tsFehlstundenGesamtUnentschuldigt === null ? null : obj.tsFehlstundenGesamtUnentschuldigt;
+		result.pruefungsordnung = (obj.pruefungsordnung === undefined) ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
+		result.lernbereich1note = (obj.lernbereich1note === undefined) ? null : obj.lernbereich1note === null ? null : obj.lernbereich1note;
+		result.lernbereich2note = (obj.lernbereich2note === undefined) ? null : obj.lernbereich2note === null ? null : obj.lernbereich2note;
+		result.foerderschwerpunkt1 = (obj.foerderschwerpunkt1 === undefined) ? null : obj.foerderschwerpunkt1 === null ? null : obj.foerderschwerpunkt1;
+		result.foerderschwerpunkt2 = (obj.foerderschwerpunkt2 === undefined) ? null : obj.foerderschwerpunkt2 === null ? null : obj.foerderschwerpunkt2;
 		return result;
 	}
 
@@ -103,34 +103,34 @@ export class ENMLernabschnitt extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMLernabschnitt>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fehlstundenGesamt !== "undefined") {
+		if (obj.fehlstundenGesamt !== undefined) {
 			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
 		}
-		if (typeof obj.tsFehlstundenGesamt !== "undefined") {
+		if (obj.tsFehlstundenGesamt !== undefined) {
 			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
 		}
-		if (typeof obj.fehlstundenGesamtUnentschuldigt !== "undefined") {
+		if (obj.fehlstundenGesamtUnentschuldigt !== undefined) {
 			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
 		}
-		if (typeof obj.tsFehlstundenGesamtUnentschuldigt !== "undefined") {
+		if (obj.tsFehlstundenGesamtUnentschuldigt !== undefined) {
 			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
 		}
-		if (typeof obj.pruefungsordnung !== "undefined") {
+		if (obj.pruefungsordnung !== undefined) {
 			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		}
-		if (typeof obj.lernbereich1note !== "undefined") {
+		if (obj.lernbereich1note !== undefined) {
 			result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
 		}
-		if (typeof obj.lernbereich2note !== "undefined") {
+		if (obj.lernbereich2note !== undefined) {
 			result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
 		}
-		if (typeof obj.foerderschwerpunkt1 !== "undefined") {
+		if (obj.foerderschwerpunkt1 !== undefined) {
 			result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
 		}
-		if (typeof obj.foerderschwerpunkt2 !== "undefined") {
+		if (obj.foerderschwerpunkt2 !== undefined) {
 			result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
 		}
 		result = result.slice(0, -1);

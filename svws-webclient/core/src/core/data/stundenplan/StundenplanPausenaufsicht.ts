@@ -41,13 +41,13 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanPausenaufsicht {
 		const obj = JSON.parse(json);
 		const result = new StundenplanPausenaufsicht();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idPausenzeit === "undefined")
+		if (obj.idPausenzeit === undefined)
 			 throw new Error('invalid json format, missing attribute idPausenzeit');
 		result.idPausenzeit = obj.idPausenzeit;
-		if (typeof obj.idLehrer === "undefined")
+		if (obj.idLehrer === undefined)
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
 		if ((obj.bereiche !== undefined) && (obj.bereiche !== null)) {
@@ -82,16 +82,16 @@ export class StundenplanPausenaufsicht extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsicht>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idPausenzeit !== "undefined") {
+		if (obj.idPausenzeit !== undefined) {
 			result += '"idPausenzeit" : ' + obj.idPausenzeit + ',';
 		}
-		if (typeof obj.idLehrer !== "undefined") {
+		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer + ',';
 		}
-		if (typeof obj.bereiche !== "undefined") {
+		if (obj.bereiche !== undefined) {
 			if (!obj.bereiche) {
 				result += '"bereiche" : []';
 			} else {

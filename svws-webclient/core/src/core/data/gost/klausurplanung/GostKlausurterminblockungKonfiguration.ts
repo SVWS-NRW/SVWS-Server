@@ -51,22 +51,22 @@ export class GostKlausurterminblockungKonfiguration extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungKonfiguration {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurterminblockungKonfiguration();
-		if (typeof obj.maxTimeMillis === "undefined")
+		if (obj.maxTimeMillis === undefined)
 			 throw new Error('invalid json format, missing attribute maxTimeMillis');
 		result.maxTimeMillis = obj.maxTimeMillis;
-		if (typeof obj.algorithmus === "undefined")
+		if (obj.algorithmus === undefined)
 			 throw new Error('invalid json format, missing attribute algorithmus');
 		result.algorithmus = obj.algorithmus;
-		if (typeof obj.modusKursarten === "undefined")
+		if (obj.modusKursarten === undefined)
 			 throw new Error('invalid json format, missing attribute modusKursarten');
 		result.modusKursarten = obj.modusKursarten;
-		if (typeof obj.modusQuartale === "undefined")
+		if (obj.modusQuartale === undefined)
 			 throw new Error('invalid json format, missing attribute modusQuartale');
 		result.modusQuartale = obj.modusQuartale;
-		if (typeof obj.regelBeiTerminenGleicheLehrkraftFachKursart === "undefined")
+		if (obj.regelBeiTerminenGleicheLehrkraftFachKursart === undefined)
 			 throw new Error('invalid json format, missing attribute regelBeiTerminenGleicheLehrkraftFachKursart');
 		result.regelBeiTerminenGleicheLehrkraftFachKursart = obj.regelBeiTerminenGleicheLehrkraftFachKursart;
-		if (typeof obj.regelBevorzugeBeiTerminenGleicheKursschienen === "undefined")
+		if (obj.regelBevorzugeBeiTerminenGleicheKursschienen === undefined)
 			 throw new Error('invalid json format, missing attribute regelBevorzugeBeiTerminenGleicheKursschienen');
 		result.regelBevorzugeBeiTerminenGleicheKursschienen = obj.regelBevorzugeBeiTerminenGleicheKursschienen;
 		return result;
@@ -87,22 +87,22 @@ export class GostKlausurterminblockungKonfiguration extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurterminblockungKonfiguration>) : string {
 		let result = '{';
-		if (typeof obj.maxTimeMillis !== "undefined") {
+		if (obj.maxTimeMillis !== undefined) {
 			result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
 		}
-		if (typeof obj.algorithmus !== "undefined") {
+		if (obj.algorithmus !== undefined) {
 			result += '"algorithmus" : ' + obj.algorithmus + ',';
 		}
-		if (typeof obj.modusKursarten !== "undefined") {
+		if (obj.modusKursarten !== undefined) {
 			result += '"modusKursarten" : ' + obj.modusKursarten + ',';
 		}
-		if (typeof obj.modusQuartale !== "undefined") {
+		if (obj.modusQuartale !== undefined) {
 			result += '"modusQuartale" : ' + obj.modusQuartale + ',';
 		}
-		if (typeof obj.regelBeiTerminenGleicheLehrkraftFachKursart !== "undefined") {
+		if (obj.regelBeiTerminenGleicheLehrkraftFachKursart !== undefined) {
 			result += '"regelBeiTerminenGleicheLehrkraftFachKursart" : ' + obj.regelBeiTerminenGleicheLehrkraftFachKursart + ',';
 		}
-		if (typeof obj.regelBevorzugeBeiTerminenGleicheKursschienen !== "undefined") {
+		if (obj.regelBevorzugeBeiTerminenGleicheKursschienen !== undefined) {
 			result += '"regelBevorzugeBeiTerminenGleicheKursschienen" : ' + obj.regelBevorzugeBeiTerminenGleicheKursschienen + ',';
 		}
 		result = result.slice(0, -1);

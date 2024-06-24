@@ -128,58 +128,58 @@ export class GostFach extends JavaObject {
 	public static transpilerFromJSON(json : string): GostFach {
 		const obj = JSON.parse(json);
 		const result = new GostFach();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		if (typeof obj.sortierung === "undefined")
+		result.kuerzelAnzeige = (obj.kuerzelAnzeige === undefined) ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istPruefungsordnungsRelevant === "undefined")
+		if (obj.istPruefungsordnungsRelevant === undefined)
 			 throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
 		result.istPruefungsordnungsRelevant = obj.istPruefungsordnungsRelevant;
-		if (typeof obj.istFremdsprache === "undefined")
+		if (obj.istFremdsprache === undefined)
 			 throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
-		if (typeof obj.istFremdSpracheNeuEinsetzend === "undefined")
+		if (obj.istFremdSpracheNeuEinsetzend === undefined)
 			 throw new Error('invalid json format, missing attribute istFremdSpracheNeuEinsetzend');
 		result.istFremdSpracheNeuEinsetzend = obj.istFremdSpracheNeuEinsetzend;
-		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : obj.biliSprache;
-		if (typeof obj.istMoeglichAbiLK === "undefined")
+		result.biliSprache = (obj.biliSprache === undefined) ? null : obj.biliSprache === null ? null : obj.biliSprache;
+		if (obj.istMoeglichAbiLK === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichAbiLK');
 		result.istMoeglichAbiLK = obj.istMoeglichAbiLK;
-		if (typeof obj.istMoeglichAbiGK === "undefined")
+		if (obj.istMoeglichAbiGK === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichAbiGK');
 		result.istMoeglichAbiGK = obj.istMoeglichAbiGK;
-		if (typeof obj.istMoeglichEF1 === "undefined")
+		if (obj.istMoeglichEF1 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichEF1');
 		result.istMoeglichEF1 = obj.istMoeglichEF1;
-		if (typeof obj.istMoeglichEF2 === "undefined")
+		if (obj.istMoeglichEF2 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichEF2');
 		result.istMoeglichEF2 = obj.istMoeglichEF2;
-		if (typeof obj.istMoeglichQ11 === "undefined")
+		if (obj.istMoeglichQ11 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichQ11');
 		result.istMoeglichQ11 = obj.istMoeglichQ11;
-		if (typeof obj.istMoeglichQ12 === "undefined")
+		if (obj.istMoeglichQ12 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichQ12');
 		result.istMoeglichQ12 = obj.istMoeglichQ12;
-		if (typeof obj.istMoeglichQ21 === "undefined")
+		if (obj.istMoeglichQ21 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichQ21');
 		result.istMoeglichQ21 = obj.istMoeglichQ21;
-		if (typeof obj.istMoeglichQ22 === "undefined")
+		if (obj.istMoeglichQ22 === undefined)
 			 throw new Error('invalid json format, missing attribute istMoeglichQ22');
 		result.istMoeglichQ22 = obj.istMoeglichQ22;
-		if (typeof obj.wochenstundenQualifikationsphase === "undefined")
+		if (obj.wochenstundenQualifikationsphase === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstundenQualifikationsphase');
 		result.wochenstundenQualifikationsphase = obj.wochenstundenQualifikationsphase;
-		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID === null ? null : obj.projektKursLeitfach1ID;
-		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel === null ? null : obj.projektKursLeitfach1Kuerzel;
-		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID === null ? null : obj.projektKursLeitfach2ID;
-		result.projektKursLeitfach2Kuerzel = typeof obj.projektKursLeitfach2Kuerzel === "undefined" ? null : obj.projektKursLeitfach2Kuerzel === null ? null : obj.projektKursLeitfach2Kuerzel;
+		result.projektKursLeitfach1ID = (obj.projektKursLeitfach1ID === undefined) ? null : obj.projektKursLeitfach1ID === null ? null : obj.projektKursLeitfach1ID;
+		result.projektKursLeitfach1Kuerzel = (obj.projektKursLeitfach1Kuerzel === undefined) ? null : obj.projektKursLeitfach1Kuerzel === null ? null : obj.projektKursLeitfach1Kuerzel;
+		result.projektKursLeitfach2ID = (obj.projektKursLeitfach2ID === undefined) ? null : obj.projektKursLeitfach2ID === null ? null : obj.projektKursLeitfach2ID;
+		result.projektKursLeitfach2Kuerzel = (obj.projektKursLeitfach2Kuerzel === undefined) ? null : obj.projektKursLeitfach2Kuerzel === null ? null : obj.projektKursLeitfach2Kuerzel;
 		return result;
 	}
 
@@ -214,70 +214,70 @@ export class GostFach extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostFach>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.kuerzelAnzeige !== "undefined") {
+		if (obj.kuerzelAnzeige !== undefined) {
 			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istPruefungsordnungsRelevant !== "undefined") {
+		if (obj.istPruefungsordnungsRelevant !== undefined) {
 			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
 		}
-		if (typeof obj.istFremdsprache !== "undefined") {
+		if (obj.istFremdsprache !== undefined) {
 			result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		}
-		if (typeof obj.istFremdSpracheNeuEinsetzend !== "undefined") {
+		if (obj.istFremdSpracheNeuEinsetzend !== undefined) {
 			result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
 		}
-		if (typeof obj.biliSprache !== "undefined") {
+		if (obj.biliSprache !== undefined) {
 			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
-		if (typeof obj.istMoeglichAbiLK !== "undefined") {
+		if (obj.istMoeglichAbiLK !== undefined) {
 			result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK + ',';
 		}
-		if (typeof obj.istMoeglichAbiGK !== "undefined") {
+		if (obj.istMoeglichAbiGK !== undefined) {
 			result += '"istMoeglichAbiGK" : ' + obj.istMoeglichAbiGK + ',';
 		}
-		if (typeof obj.istMoeglichEF1 !== "undefined") {
+		if (obj.istMoeglichEF1 !== undefined) {
 			result += '"istMoeglichEF1" : ' + obj.istMoeglichEF1 + ',';
 		}
-		if (typeof obj.istMoeglichEF2 !== "undefined") {
+		if (obj.istMoeglichEF2 !== undefined) {
 			result += '"istMoeglichEF2" : ' + obj.istMoeglichEF2 + ',';
 		}
-		if (typeof obj.istMoeglichQ11 !== "undefined") {
+		if (obj.istMoeglichQ11 !== undefined) {
 			result += '"istMoeglichQ11" : ' + obj.istMoeglichQ11 + ',';
 		}
-		if (typeof obj.istMoeglichQ12 !== "undefined") {
+		if (obj.istMoeglichQ12 !== undefined) {
 			result += '"istMoeglichQ12" : ' + obj.istMoeglichQ12 + ',';
 		}
-		if (typeof obj.istMoeglichQ21 !== "undefined") {
+		if (obj.istMoeglichQ21 !== undefined) {
 			result += '"istMoeglichQ21" : ' + obj.istMoeglichQ21 + ',';
 		}
-		if (typeof obj.istMoeglichQ22 !== "undefined") {
+		if (obj.istMoeglichQ22 !== undefined) {
 			result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22 + ',';
 		}
-		if (typeof obj.wochenstundenQualifikationsphase !== "undefined") {
+		if (obj.wochenstundenQualifikationsphase !== undefined) {
 			result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
 		}
-		if (typeof obj.projektKursLeitfach1ID !== "undefined") {
+		if (obj.projektKursLeitfach1ID !== undefined) {
 			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID) + ',';
 		}
-		if (typeof obj.projektKursLeitfach1Kuerzel !== "undefined") {
+		if (obj.projektKursLeitfach1Kuerzel !== undefined) {
 			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
 		}
-		if (typeof obj.projektKursLeitfach2ID !== "undefined") {
+		if (obj.projektKursLeitfach2ID !== undefined) {
 			result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID) + ',';
 		}
-		if (typeof obj.projektKursLeitfach2Kuerzel !== "undefined") {
+		if (obj.projektKursLeitfach2Kuerzel !== undefined) {
 			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
 		}
 		result = result.slice(0, -1);

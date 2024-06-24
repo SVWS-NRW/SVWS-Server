@@ -38,16 +38,16 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdatenAnrechnungsstunden {
 		const obj = JSON.parse(json);
 		const result = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idAbschnittsdaten === "undefined")
+		if (obj.idAbschnittsdaten === undefined)
 			 throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
-		if (typeof obj.idGrund === "undefined")
+		if (obj.idGrund === undefined)
 			 throw new Error('invalid json format, missing attribute idGrund');
 		result.idGrund = obj.idGrund;
-		if (typeof obj.anzahl === "undefined")
+		if (obj.anzahl === undefined)
 			 throw new Error('invalid json format, missing attribute anzahl');
 		result.anzahl = obj.anzahl;
 		return result;
@@ -66,16 +66,16 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idAbschnittsdaten !== "undefined") {
+		if (obj.idAbschnittsdaten !== undefined) {
 			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
 		}
-		if (typeof obj.idGrund !== "undefined") {
+		if (obj.idGrund !== undefined) {
 			result += '"idGrund" : ' + obj.idGrund + ',';
 		}
-		if (typeof obj.anzahl !== "undefined") {
+		if (obj.anzahl !== undefined) {
 			result += '"anzahl" : ' + obj.anzahl + ',';
 		}
 		result = result.slice(0, -1);

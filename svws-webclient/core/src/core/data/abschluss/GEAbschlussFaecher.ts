@@ -41,13 +41,13 @@ export class GEAbschlussFaecher extends JavaObject {
 	public static transpilerFromJSON(json : string): GEAbschlussFaecher {
 		const obj = JSON.parse(json);
 		const result = new GEAbschlussFaecher();
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (typeof obj.abschnitt === "undefined")
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(GEAbschlussFach.transpilerFromJSON(JSON.stringify(elem)));
@@ -80,16 +80,16 @@ export class GEAbschlussFaecher extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GEAbschlussFaecher>) : string {
 		let result = '{';
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {

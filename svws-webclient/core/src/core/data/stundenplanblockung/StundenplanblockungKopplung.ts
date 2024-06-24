@@ -36,10 +36,10 @@ export class StundenplanblockungKopplung extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanblockungKopplung {
 		const obj = JSON.parse(json);
 		const result = new StundenplanblockungKopplung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if ((obj.stundenelemente !== undefined) && (obj.stundenelemente !== null)) {
@@ -73,13 +73,13 @@ export class StundenplanblockungKopplung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungKopplung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.stundenelemente !== "undefined") {
+		if (obj.stundenelemente !== undefined) {
 			if (!obj.stundenelemente) {
 				result += '"stundenelemente" : []';
 			} else {

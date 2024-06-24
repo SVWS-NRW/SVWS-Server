@@ -50,13 +50,13 @@ export class ENMKlasse extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMKlasse {
 		const obj = JSON.parse(json);
 		const result = new ENMKlasse();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
-		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
-		if (typeof obj.sortierung === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kuerzelAnzeige = (obj.kuerzelAnzeige === undefined) ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if ((obj.klassenlehrer !== undefined) && (obj.klassenlehrer !== null)) {
@@ -93,22 +93,22 @@ export class ENMKlasse extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMKlasse>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.kuerzelAnzeige !== "undefined") {
+		if (obj.kuerzelAnzeige !== undefined) {
 			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
-		if (typeof obj.idJahrgang !== "undefined") {
+		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.klassenlehrer !== "undefined") {
+		if (obj.klassenlehrer !== undefined) {
 			if (!obj.klassenlehrer) {
 				result += '"klassenlehrer" : []';
 			} else {

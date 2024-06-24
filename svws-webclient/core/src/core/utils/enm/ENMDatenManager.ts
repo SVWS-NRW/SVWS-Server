@@ -91,11 +91,11 @@ export class ENMDatenManager extends JavaObject {
 	 */
 	public constructor(__param0 : ENMDaten | null | number) {
 		super();
-		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
+		if (((__param0 !== undefined) && (typeof __param0 === "number") || (__param0 === null))) {
 			const lehrerID : number | null = __param0;
 			this.daten = new ENMDaten();
 			this.daten.lehrerID = lehrerID;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.enm.ENMDaten'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.enm.ENMDaten'))))) {
 			const daten : ENMDaten = cast_de_svws_nrw_core_data_enm_ENMDaten(__param0);
 			this.daten = daten;
 		} else throw new Error('invalid method overload');

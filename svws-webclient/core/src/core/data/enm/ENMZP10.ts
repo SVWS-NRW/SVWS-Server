@@ -53,19 +53,19 @@ export class ENMZP10 extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMZP10 {
 		const obj = JSON.parse(json);
 		const result = new ENMZP10();
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.vornote = typeof obj.vornote === "undefined" ? null : obj.vornote === null ? null : obj.vornote;
-		result.noteSchriftlichePruefung = typeof obj.noteSchriftlichePruefung === "undefined" ? null : obj.noteSchriftlichePruefung === null ? null : obj.noteSchriftlichePruefung;
-		if (typeof obj.muendlichePruefung === "undefined")
+		result.vornote = (obj.vornote === undefined) ? null : obj.vornote === null ? null : obj.vornote;
+		result.noteSchriftlichePruefung = (obj.noteSchriftlichePruefung === undefined) ? null : obj.noteSchriftlichePruefung === null ? null : obj.noteSchriftlichePruefung;
+		if (obj.muendlichePruefung === undefined)
 			 throw new Error('invalid json format, missing attribute muendlichePruefung');
 		result.muendlichePruefung = obj.muendlichePruefung;
-		if (typeof obj.muendlichePruefungFreiwillig === "undefined")
+		if (obj.muendlichePruefungFreiwillig === undefined)
 			 throw new Error('invalid json format, missing attribute muendlichePruefungFreiwillig');
 		result.muendlichePruefungFreiwillig = obj.muendlichePruefungFreiwillig;
-		result.noteMuendlichePruefung = typeof obj.noteMuendlichePruefung === "undefined" ? null : obj.noteMuendlichePruefung === null ? null : obj.noteMuendlichePruefung;
-		result.abschlussnote = typeof obj.abschlussnote === "undefined" ? null : obj.abschlussnote === null ? null : obj.abschlussnote;
+		result.noteMuendlichePruefung = (obj.noteMuendlichePruefung === undefined) ? null : obj.noteMuendlichePruefung === null ? null : obj.noteMuendlichePruefung;
+		result.abschlussnote = (obj.abschlussnote === undefined) ? null : obj.abschlussnote === null ? null : obj.abschlussnote;
 		return result;
 	}
 
@@ -85,25 +85,25 @@ export class ENMZP10 extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMZP10>) : string {
 		let result = '{';
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.vornote !== "undefined") {
+		if (obj.vornote !== undefined) {
 			result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
 		}
-		if (typeof obj.noteSchriftlichePruefung !== "undefined") {
+		if (obj.noteSchriftlichePruefung !== undefined) {
 			result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		}
-		if (typeof obj.muendlichePruefung !== "undefined") {
+		if (obj.muendlichePruefung !== undefined) {
 			result += '"muendlichePruefung" : ' + obj.muendlichePruefung + ',';
 		}
-		if (typeof obj.muendlichePruefungFreiwillig !== "undefined") {
+		if (obj.muendlichePruefungFreiwillig !== undefined) {
 			result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig + ',';
 		}
-		if (typeof obj.noteMuendlichePruefung !== "undefined") {
+		if (obj.noteMuendlichePruefung !== undefined) {
 			result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
 		}
-		if (typeof obj.abschlussnote !== "undefined") {
+		if (obj.abschlussnote !== undefined) {
 			result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		}
 		result = result.slice(0, -1);

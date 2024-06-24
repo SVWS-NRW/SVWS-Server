@@ -53,13 +53,13 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragOrte {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragOrte();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : obj.ID;
-		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : obj.PLZ;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.ID = (obj.ID === undefined) ? null : obj.ID === null ? null : obj.ID;
+		result.PLZ = (obj.PLZ === undefined) ? null : obj.PLZ === null ? null : obj.PLZ;
+		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		result.Ort = (obj.Ort === undefined) ? null : obj.Ort === null ? null : obj.Ort;
+		result.Sortierung = (obj.Sortierung === undefined) ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -79,25 +79,25 @@ export class KatalogEintragOrte extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragOrte>) : string {
 		let result = '{';
-		if (typeof obj.ID !== "undefined") {
+		if (obj.ID !== undefined) {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
-		if (typeof obj.PLZ !== "undefined") {
+		if (obj.PLZ !== undefined) {
 			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
-		if (typeof obj.RegSchl !== "undefined") {
+		if (obj.RegSchl !== undefined) {
 			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
-		if (typeof obj.Ort !== "undefined") {
+		if (obj.Ort !== undefined) {
 			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
-		if (typeof obj.Sortierung !== "undefined") {
+		if (obj.Sortierung !== undefined) {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

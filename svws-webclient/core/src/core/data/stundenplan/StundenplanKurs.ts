@@ -65,19 +65,19 @@ export class StundenplanKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanKurs {
 		const obj = JSON.parse(json);
 		const result = new StundenplanKurs();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idFach === "undefined")
+		if (obj.idFach === undefined)
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
@@ -165,22 +165,22 @@ export class StundenplanKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKurs>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idFach !== "undefined") {
+		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -194,7 +194,7 @@ export class StundenplanKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.jahrgaenge !== "undefined") {
+		if (obj.jahrgaenge !== undefined) {
 			if (!obj.jahrgaenge) {
 				result += '"jahrgaenge" : []';
 			} else {
@@ -208,7 +208,7 @@ export class StundenplanKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -222,7 +222,7 @@ export class StundenplanKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {

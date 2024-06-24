@@ -140,34 +140,34 @@ export class ENMDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMDaten {
 		const obj = JSON.parse(json);
 		const result = new ENMDaten();
-		if (typeof obj.enmRevision === "undefined")
+		if (obj.enmRevision === undefined)
 			 throw new Error('invalid json format, missing attribute enmRevision');
 		result.enmRevision = obj.enmRevision;
-		if (typeof obj.schulnummer === "undefined")
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (typeof obj.anzahlAbschnitte === "undefined")
+		if (obj.anzahlAbschnitte === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlAbschnitte');
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
-		if (typeof obj.aktuellerAbschnitt === "undefined")
+		if (obj.aktuellerAbschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute aktuellerAbschnitt');
 		result.aktuellerAbschnitt = obj.aktuellerAbschnitt;
-		result.publicKey = typeof obj.publicKey === "undefined" ? null : obj.publicKey === null ? null : obj.publicKey;
-		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID === null ? null : obj.lehrerID;
-		if (typeof obj.fehlstundenEingabe === "undefined")
+		result.publicKey = (obj.publicKey === undefined) ? null : obj.publicKey === null ? null : obj.publicKey;
+		result.lehrerID = (obj.lehrerID === undefined) ? null : obj.lehrerID === null ? null : obj.lehrerID;
+		if (obj.fehlstundenEingabe === undefined)
 			 throw new Error('invalid json format, missing attribute fehlstundenEingabe');
 		result.fehlstundenEingabe = obj.fehlstundenEingabe;
-		if (typeof obj.fehlstundenSIFachbezogen === "undefined")
+		if (obj.fehlstundenSIFachbezogen === undefined)
 			 throw new Error('invalid json format, missing attribute fehlstundenSIFachbezogen');
 		result.fehlstundenSIFachbezogen = obj.fehlstundenSIFachbezogen;
-		if (typeof obj.fehlstundenSIIFachbezogen === "undefined")
+		if (obj.fehlstundenSIIFachbezogen === undefined)
 			 throw new Error('invalid json format, missing attribute fehlstundenSIIFachbezogen');
 		result.fehlstundenSIIFachbezogen = obj.fehlstundenSIIFachbezogen;
-		result.schulform = typeof obj.schulform === "undefined" ? null : obj.schulform === null ? null : obj.schulform;
-		result.mailadresse = typeof obj.mailadresse === "undefined" ? null : obj.mailadresse === null ? null : obj.mailadresse;
+		result.schulform = (obj.schulform === undefined) ? null : obj.schulform === null ? null : obj.schulform;
+		result.mailadresse = (obj.mailadresse === undefined) ? null : obj.mailadresse === null ? null : obj.mailadresse;
 		if ((obj.noten !== undefined) && (obj.noten !== null)) {
 			for (const elem of obj.noten) {
 				result.noten?.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));
@@ -362,43 +362,43 @@ export class ENMDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMDaten>) : string {
 		let result = '{';
-		if (typeof obj.enmRevision !== "undefined") {
+		if (obj.enmRevision !== undefined) {
 			result += '"enmRevision" : ' + obj.enmRevision + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.anzahlAbschnitte !== "undefined") {
+		if (obj.anzahlAbschnitte !== undefined) {
 			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		}
-		if (typeof obj.aktuellerAbschnitt !== "undefined") {
+		if (obj.aktuellerAbschnitt !== undefined) {
 			result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
 		}
-		if (typeof obj.publicKey !== "undefined") {
+		if (obj.publicKey !== undefined) {
 			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
 		}
-		if (typeof obj.lehrerID !== "undefined") {
+		if (obj.lehrerID !== undefined) {
 			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
 		}
-		if (typeof obj.fehlstundenEingabe !== "undefined") {
+		if (obj.fehlstundenEingabe !== undefined) {
 			result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';
 		}
-		if (typeof obj.fehlstundenSIFachbezogen !== "undefined") {
+		if (obj.fehlstundenSIFachbezogen !== undefined) {
 			result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen + ',';
 		}
-		if (typeof obj.fehlstundenSIIFachbezogen !== "undefined") {
+		if (obj.fehlstundenSIIFachbezogen !== undefined) {
 			result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
 		}
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
 		}
-		if (typeof obj.mailadresse !== "undefined") {
+		if (obj.mailadresse !== undefined) {
 			result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
 		}
-		if (typeof obj.noten !== "undefined") {
+		if (obj.noten !== undefined) {
 			if (!obj.noten) {
 				result += '"noten" : []';
 			} else {
@@ -412,7 +412,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.foerderschwerpunkte !== "undefined") {
+		if (obj.foerderschwerpunkte !== undefined) {
 			if (!obj.foerderschwerpunkte) {
 				result += '"foerderschwerpunkte" : []';
 			} else {
@@ -426,7 +426,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.jahrgaenge !== "undefined") {
+		if (obj.jahrgaenge !== undefined) {
 			if (!obj.jahrgaenge) {
 				result += '"jahrgaenge" : []';
 			} else {
@@ -440,7 +440,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -454,7 +454,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.floskelgruppen !== "undefined") {
+		if (obj.floskelgruppen !== undefined) {
 			if (!obj.floskelgruppen) {
 				result += '"floskelgruppen" : []';
 			} else {
@@ -468,7 +468,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {
@@ -482,7 +482,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -496,7 +496,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.teilleistungsarten !== "undefined") {
+		if (obj.teilleistungsarten !== undefined) {
 			if (!obj.teilleistungsarten) {
 				result += '"teilleistungsarten" : []';
 			} else {
@@ -510,7 +510,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lerngruppen !== "undefined") {
+		if (obj.lerngruppen !== undefined) {
 			if (!obj.lerngruppen) {
 				result += '"lerngruppen" : []';
 			} else {
@@ -524,7 +524,7 @@ export class ENMDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {

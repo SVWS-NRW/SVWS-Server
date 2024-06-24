@@ -43,17 +43,17 @@ export class StundenplanZeitraster extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanZeitraster {
 		const obj = JSON.parse(json);
 		const result = new StundenplanZeitraster();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.wochentag === "undefined")
+		if (obj.wochentag === undefined)
 			 throw new Error('invalid json format, missing attribute wochentag');
 		result.wochentag = obj.wochentag;
-		if (typeof obj.unterrichtstunde === "undefined")
+		if (obj.unterrichtstunde === undefined)
 			 throw new Error('invalid json format, missing attribute unterrichtstunde');
 		result.unterrichtstunde = obj.unterrichtstunde;
-		result.stundenbeginn = typeof obj.stundenbeginn === "undefined" ? null : obj.stundenbeginn === null ? null : obj.stundenbeginn;
-		result.stundenende = typeof obj.stundenende === "undefined" ? null : obj.stundenende === null ? null : obj.stundenende;
+		result.stundenbeginn = (obj.stundenbeginn === undefined) ? null : obj.stundenbeginn === null ? null : obj.stundenbeginn;
+		result.stundenende = (obj.stundenende === undefined) ? null : obj.stundenende === null ? null : obj.stundenende;
 		return result;
 	}
 
@@ -71,19 +71,19 @@ export class StundenplanZeitraster extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanZeitraster>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.wochentag !== "undefined") {
+		if (obj.wochentag !== undefined) {
 			result += '"wochentag" : ' + obj.wochentag + ',';
 		}
-		if (typeof obj.unterrichtstunde !== "undefined") {
+		if (obj.unterrichtstunde !== undefined) {
 			result += '"unterrichtstunde" : ' + obj.unterrichtstunde + ',';
 		}
-		if (typeof obj.stundenbeginn !== "undefined") {
+		if (obj.stundenbeginn !== undefined) {
 			result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn) + ',';
 		}
-		if (typeof obj.stundenende !== "undefined") {
+		if (obj.stundenende !== undefined) {
 			result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende) + ',';
 		}
 		result = result.slice(0, -1);

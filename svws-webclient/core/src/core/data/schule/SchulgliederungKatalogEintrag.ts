@@ -107,9 +107,9 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : boolean, __param3? : List<Schulform>, __param4? : boolean, __param5? : boolean, __param6? : string, __param7? : BerufskollegAnlage | null, __param8? : null | string, __param9? : null | number, __param10? : boolean, __param11? : List<SchulabschlussBerufsbildend> | null, __param12? : List<SchulabschlussAllgemeinbildend> | null, __param13? : null | number, __param14? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined") && (typeof __param11 === "undefined") && (typeof __param12 === "undefined") && (typeof __param13 === "undefined") && (typeof __param14 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined) && (__param9 === undefined) && (__param10 === undefined) && (__param11 === undefined) && (__param12 === undefined) && (__param13 === undefined) && (__param14 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "boolean") && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && ((__param7 instanceof JavaObject) && ((__param7 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.BerufskollegAnlage'))) || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && typeof __param10 === "boolean") && ((typeof __param11 !== "undefined") && ((__param11 instanceof JavaObject) && ((__param11 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param11 === null)) && ((typeof __param12 !== "undefined") && ((__param12 instanceof JavaObject) && ((__param12 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param12 === null)) && ((typeof __param13 !== "undefined") && (typeof __param13 === "number") || (__param13 === null)) && ((typeof __param14 !== "undefined") && (typeof __param14 === "number") || (__param14 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && typeof __param4 === "boolean") && ((__param5 !== undefined) && typeof __param5 === "boolean") && ((__param6 !== undefined) && (typeof __param6 === "string")) && ((__param7 !== undefined) && ((__param7 instanceof JavaObject) && ((__param7 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.BerufskollegAnlage'))) || (__param7 === null)) && ((__param8 !== undefined) && (typeof __param8 === "string") || (__param8 === null)) && ((__param9 !== undefined) && (typeof __param9 === "number") || (__param9 === null)) && ((__param10 !== undefined) && typeof __param10 === "boolean") && ((__param11 !== undefined) && ((__param11 instanceof JavaObject) && ((__param11 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param11 === null)) && ((__param12 !== undefined) && ((__param12 instanceof JavaObject) && ((__param12 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param12 === null)) && ((__param13 !== undefined) && (typeof __param13 === "number") || (__param13 === null)) && ((__param14 !== undefined) && (typeof __param14 === "number") || (__param14 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const istBK : boolean = __param2 as boolean;
@@ -159,15 +159,15 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulgliederungKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
-		if (typeof obj.kuerzel === "undefined")
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.istBK === "undefined")
+		if (obj.istBK === undefined)
 			 throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
 		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
@@ -175,19 +175,19 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				result.schulformen?.add(elem);
 			}
 		}
-		if (typeof obj.istAuslaufend === "undefined")
+		if (obj.istAuslaufend === undefined)
 			 throw new Error('invalid json format, missing attribute istAuslaufend');
 		result.istAuslaufend = obj.istAuslaufend;
-		if (typeof obj.istAusgelaufen === "undefined")
+		if (obj.istAusgelaufen === undefined)
 			 throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
-		if (typeof obj.beschreibung === "undefined")
+		if (obj.beschreibung === undefined)
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		result.bkAnlage = typeof obj.bkAnlage === "undefined" ? null : obj.bkAnlage === null ? null : obj.bkAnlage;
-		result.bkTyp = typeof obj.bkTyp === "undefined" ? null : obj.bkTyp === null ? null : obj.bkTyp;
-		result.bkIndex = typeof obj.bkIndex === "undefined" ? null : obj.bkIndex === null ? null : obj.bkIndex;
-		if (typeof obj.istVZ === "undefined")
+		result.bkAnlage = (obj.bkAnlage === undefined) ? null : obj.bkAnlage === null ? null : obj.bkAnlage;
+		result.bkTyp = (obj.bkTyp === undefined) ? null : obj.bkTyp === null ? null : obj.bkTyp;
+		result.bkIndex = (obj.bkIndex === undefined) ? null : obj.bkIndex === null ? null : obj.bkIndex;
+		if (obj.istVZ === undefined)
 			 throw new Error('invalid json format, missing attribute istVZ');
 		result.istVZ = obj.istVZ;
 		if ((obj.bkAbschlussBerufsbildend !== undefined) && (obj.bkAbschlussBerufsbildend !== null)) {
@@ -260,22 +260,22 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulgliederungKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.istBK !== "undefined") {
+		if (obj.istBK !== undefined) {
 			result += '"istBK" : ' + obj.istBK + ',';
 		}
-		if (typeof obj.schulformen !== "undefined") {
+		if (obj.schulformen !== undefined) {
 			if (!obj.schulformen) {
 				result += '"schulformen" : []';
 			} else {
@@ -289,28 +289,28 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.istAuslaufend !== "undefined") {
+		if (obj.istAuslaufend !== undefined) {
 			result += '"istAuslaufend" : ' + obj.istAuslaufend + ',';
 		}
-		if (typeof obj.istAusgelaufen !== "undefined") {
+		if (obj.istAusgelaufen !== undefined) {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
-		if (typeof obj.bkAnlage !== "undefined") {
+		if (obj.bkAnlage !== undefined) {
 			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
 		}
-		if (typeof obj.bkTyp !== "undefined") {
+		if (obj.bkTyp !== undefined) {
 			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
 		}
-		if (typeof obj.bkIndex !== "undefined") {
+		if (obj.bkIndex !== undefined) {
 			result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex) + ',';
 		}
-		if (typeof obj.istVZ !== "undefined") {
+		if (obj.istVZ !== undefined) {
 			result += '"istVZ" : ' + obj.istVZ + ',';
 		}
-		if (typeof obj.bkAbschlussBerufsbildend !== "undefined") {
+		if (obj.bkAbschlussBerufsbildend !== undefined) {
 			if (!obj.bkAbschlussBerufsbildend) {
 				result += '"bkAbschlussBerufsbildend" : []';
 			} else {
@@ -324,7 +324,7 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.bkAbschlussAllgemeinbildend !== "undefined") {
+		if (obj.bkAbschlussAllgemeinbildend !== undefined) {
 			if (!obj.bkAbschlussAllgemeinbildend) {
 				result += '"bkAbschlussAllgemeinbildend" : []';
 			} else {

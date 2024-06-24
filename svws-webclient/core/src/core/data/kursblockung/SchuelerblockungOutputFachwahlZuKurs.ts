@@ -34,13 +34,13 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungOutputFachwahlZuKurs {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungOutputFachwahlZuKurs();
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		if (typeof obj.kursartID === "undefined")
+		if (obj.kursartID === undefined)
 			 throw new Error('invalid json format, missing attribute kursartID');
 		result.kursartID = obj.kursartID;
-		if (typeof obj.kursID === "undefined")
+		if (obj.kursID === undefined)
 			 throw new Error('invalid json format, missing attribute kursID');
 		result.kursID = obj.kursID;
 		return result;
@@ -58,13 +58,13 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungOutputFachwahlZuKurs>) : string {
 		let result = '{';
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.kursartID !== "undefined") {
+		if (obj.kursartID !== undefined) {
 			result += '"kursartID" : ' + obj.kursartID + ',';
 		}
-		if (typeof obj.kursID !== "undefined") {
+		if (obj.kursID !== undefined) {
 			result += '"kursID" : ' + obj.kursID + ',';
 		}
 		result = result.slice(0, -1);

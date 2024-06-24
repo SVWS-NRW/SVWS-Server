@@ -41,15 +41,15 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitGliederung {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheitGliederung();
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		if (typeof obj.schulnummer === "undefined")
+		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
-		result.foerderschwerpunkt = typeof obj.foerderschwerpunkt === "undefined" ? null : obj.foerderschwerpunkt === null ? null : obj.foerderschwerpunkt;
+		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
+		result.foerderschwerpunkt = (obj.foerderschwerpunkt === undefined) ? null : obj.foerderschwerpunkt === null ? null : obj.foerderschwerpunkt;
 		return result;
 	}
 
@@ -69,25 +69,25 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitGliederung>) : string {
 		let result = '{';
-		if (typeof obj.gueltigab !== "undefined") {
+		if (obj.gueltigab !== undefined) {
 			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
-		if (typeof obj.gueltigbis !== "undefined") {
+		if (obj.gueltigbis !== undefined) {
 			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
-		if (typeof obj.geaendertam !== "undefined") {
+		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.gliederung !== "undefined") {
+		if (obj.gliederung !== undefined) {
 			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
-		if (typeof obj.foerderschwerpunkt !== "undefined") {
+		if (obj.foerderschwerpunkt !== undefined) {
 			result += '"foerderschwerpunkt" : ' + ((!obj.foerderschwerpunkt) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
 		}
 		result = result.slice(0, -1);

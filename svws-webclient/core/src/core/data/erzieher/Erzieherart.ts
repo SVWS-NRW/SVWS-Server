@@ -28,10 +28,10 @@ export class Erzieherart extends JavaObject {
 	public static transpilerFromJSON(json : string): Erzieherart {
 		const obj = JSON.parse(json);
 		const result = new Erzieherart();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		return result;
 	}
 
@@ -46,10 +46,10 @@ export class Erzieherart extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Erzieherart>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		result = result.slice(0, -1);

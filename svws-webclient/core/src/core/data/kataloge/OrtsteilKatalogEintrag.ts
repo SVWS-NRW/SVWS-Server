@@ -48,18 +48,18 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): OrtsteilKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new OrtsteilKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : obj.ort_id;
-		result.ortsteil = typeof obj.ortsteil === "undefined" ? null : obj.ortsteil === null ? null : obj.ortsteil;
-		if (typeof obj.sortierung === "undefined")
+		result.ort_id = (obj.ort_id === undefined) ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.ortsteil = (obj.ortsteil === undefined) ? null : obj.ortsteil === null ? null : obj.ortsteil;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
+		if (obj.istAenderbar === undefined)
 			 throw new Error('invalid json format, missing attribute istAenderbar');
 		result.istAenderbar = obj.istAenderbar;
 		return result;
@@ -80,22 +80,22 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<OrtsteilKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.ort_id !== "undefined") {
+		if (obj.ort_id !== undefined) {
 			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		}
-		if (typeof obj.ortsteil !== "undefined") {
+		if (obj.ortsteil !== undefined) {
 			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.istAenderbar !== "undefined") {
+		if (obj.istAenderbar !== undefined) {
 			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		result = result.slice(0, -1);

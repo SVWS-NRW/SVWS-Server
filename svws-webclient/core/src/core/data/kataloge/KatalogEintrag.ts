@@ -43,15 +43,15 @@ export class KatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
-		if (typeof obj.istSichtbar === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istAenderbar === "undefined")
+		if (obj.istAenderbar === undefined)
 			 throw new Error('invalid json format, missing attribute istAenderbar');
 		result.istAenderbar = obj.istAenderbar;
 		return result;
@@ -71,19 +71,19 @@ export class KatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.text !== "undefined") {
+		if (obj.text !== undefined) {
 			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.istAenderbar !== "undefined") {
+		if (obj.istAenderbar !== undefined) {
 			result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		}
 		result = result.slice(0, -1);

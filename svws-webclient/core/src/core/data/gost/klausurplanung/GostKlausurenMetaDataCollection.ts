@@ -70,7 +70,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result.kurse?.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.klausurdata === "undefined")
+		if (obj.klausurdata === undefined)
 			 throw new Error('invalid json format, missing attribute klausurdata');
 		result.klausurdata = GostKlausurenDataCollection.transpilerFromJSON(JSON.stringify(obj.klausurdata));
 		return result;
@@ -134,7 +134,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenMetaDataCollection>) : string {
 		let result = '{';
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -148,7 +148,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -162,7 +162,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			if (!obj.lehrer) {
 				result += '"lehrer" : []';
 			} else {
@@ -176,7 +176,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kurse !== "undefined") {
+		if (obj.kurse !== undefined) {
 			if (!obj.kurse) {
 				result += '"kurse" : []';
 			} else {
@@ -190,7 +190,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klausurdata !== "undefined") {
+		if (obj.klausurdata !== undefined) {
 			result += '"klausurdata" : ' + GostKlausurenDataCollection.transpilerToJSON(obj.klausurdata) + ',';
 		}
 		result = result.slice(0, -1);

@@ -41,13 +41,13 @@ export class BKBildungsplanKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BKBildungsplanKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new BKBildungsplanKatalogEintrag();
-		if (typeof obj.index === "undefined")
+		if (obj.index === undefined)
 			 throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
-		if (typeof obj.schluessel === "undefined")
+		if (obj.schluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.historie !== undefined) && (obj.historie !== null)) {
@@ -82,16 +82,16 @@ export class BKBildungsplanKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKBildungsplanKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.index !== "undefined") {
+		if (obj.index !== undefined) {
 			result += '"index" : ' + obj.index + ',';
 		}
-		if (typeof obj.schluessel !== "undefined") {
+		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.historie !== "undefined") {
+		if (obj.historie !== undefined) {
 			if (!obj.historie) {
 				result += '"historie" : []';
 			} else {

@@ -54,7 +54,7 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurterminblockungErgebnisTermin>) : string {
 		let result = '{';
-		if (typeof obj.kursklausuren !== "undefined") {
+		if (obj.kursklausuren !== undefined) {
 			if (!obj.kursklausuren) {
 				result += '"kursklausuren" : []';
 			} else {

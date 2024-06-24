@@ -53,22 +53,22 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungInputKurs {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungInputKurs();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.fach === "undefined")
+		if (obj.fach === undefined)
 			 throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
-		if (typeof obj.kursart === "undefined")
+		if (obj.kursart === undefined)
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.istGesperrt === "undefined")
+		if (obj.istGesperrt === undefined)
 			 throw new Error('invalid json format, missing attribute istGesperrt');
 		result.istGesperrt = obj.istGesperrt;
-		if (typeof obj.istFixiert === "undefined")
+		if (obj.istFixiert === undefined)
 			 throw new Error('invalid json format, missing attribute istFixiert');
 		result.istFixiert = obj.istFixiert;
-		if (typeof obj.anzahlSuS === "undefined")
+		if (obj.anzahlSuS === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlSuS');
 		result.anzahlSuS = obj.anzahlSuS;
 		for (let i = 0; i < obj.schienen.length; i++) {
@@ -104,25 +104,25 @@ export class SchuelerblockungInputKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInputKurs>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fach !== "undefined") {
+		if (obj.fach !== undefined) {
 			result += '"fach" : ' + obj.fach + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
-		if (typeof obj.istGesperrt !== "undefined") {
+		if (obj.istGesperrt !== undefined) {
 			result += '"istGesperrt" : ' + obj.istGesperrt + ',';
 		}
-		if (typeof obj.istFixiert !== "undefined") {
+		if (obj.istFixiert !== undefined) {
 			result += '"istFixiert" : ' + obj.istFixiert + ',';
 		}
-		if (typeof obj.anzahlSuS !== "undefined") {
+		if (obj.anzahlSuS !== undefined) {
 			result += '"anzahlSuS" : ' + obj.anzahlSuS + ',';
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			const a = obj.schienen;
 			if (!a) {
 				result += '"schienen" : []';

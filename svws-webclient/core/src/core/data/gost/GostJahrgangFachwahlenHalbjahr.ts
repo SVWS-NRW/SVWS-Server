@@ -55,7 +55,7 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachwahlenHalbjahr>) : string {
 		let result = '{';
-		if (typeof obj.fachwahlen !== "undefined") {
+		if (obj.fachwahlen !== undefined) {
 			if (!obj.fachwahlen) {
 				result += '"fachwahlen" : []';
 			} else {

@@ -51,19 +51,19 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitErreichbarkeit {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheitErreichbarkeit();
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		if (typeof obj.schulnummer === "undefined")
+		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		if (typeof obj.liegenschaft === "undefined")
+		if (obj.liegenschaft === undefined)
 			 throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
-		result.kommgruppe = typeof obj.kommgruppe === "undefined" ? null : obj.kommgruppe === null ? null : obj.kommgruppe;
-		result.codekey = typeof obj.codekey === "undefined" ? null : obj.codekey === null ? null : obj.codekey;
-		result.codewert = typeof obj.codewert === "undefined" ? null : obj.codewert === null ? null : obj.codewert;
+		result.kommgruppe = (obj.kommgruppe === undefined) ? null : obj.kommgruppe === null ? null : obj.kommgruppe;
+		result.codekey = (obj.codekey === undefined) ? null : obj.codekey === null ? null : obj.codekey;
+		result.codewert = (obj.codewert === undefined) ? null : obj.codewert === null ? null : obj.codewert;
 		return result;
 	}
 
@@ -85,31 +85,31 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitErreichbarkeit>) : string {
 		let result = '{';
-		if (typeof obj.gueltigab !== "undefined") {
+		if (obj.gueltigab !== undefined) {
 			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
-		if (typeof obj.gueltigbis !== "undefined") {
+		if (obj.gueltigbis !== undefined) {
 			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
-		if (typeof obj.geaendertam !== "undefined") {
+		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.liegenschaft !== "undefined") {
+		if (obj.liegenschaft !== undefined) {
 			result += '"liegenschaft" : ' + obj.liegenschaft + ',';
 		}
-		if (typeof obj.kommgruppe !== "undefined") {
+		if (obj.kommgruppe !== undefined) {
 			result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe) + ',';
 		}
-		if (typeof obj.codekey !== "undefined") {
+		if (obj.codekey !== undefined) {
 			result += '"codekey" : ' + ((!obj.codekey) ? 'null' : JSON.stringify(obj.codekey)) + ',';
 		}
-		if (typeof obj.codewert !== "undefined") {
+		if (obj.codewert !== undefined) {
 			result += '"codewert" : ' + ((!obj.codewert) ? 'null' : JSON.stringify(obj.codewert)) + ',';
 		}
 		result = result.slice(0, -1);

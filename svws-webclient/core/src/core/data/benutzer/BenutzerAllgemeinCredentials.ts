@@ -33,13 +33,13 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerAllgemeinCredentials {
 		const obj = JSON.parse(json);
 		const result = new BenutzerAllgemeinCredentials();
-		if (typeof obj.anzeigename === "undefined")
+		if (obj.anzeigename === undefined)
 			 throw new Error('invalid json format, missing attribute anzeigename');
 		result.anzeigename = obj.anzeigename;
-		if (typeof obj.benutzername === "undefined")
+		if (obj.benutzername === undefined)
 			 throw new Error('invalid json format, missing attribute benutzername');
 		result.benutzername = obj.benutzername;
-		if (typeof obj.password === "undefined")
+		if (obj.password === undefined)
 			 throw new Error('invalid json format, missing attribute password');
 		result.password = obj.password;
 		return result;
@@ -57,13 +57,13 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerAllgemeinCredentials>) : string {
 		let result = '{';
-		if (typeof obj.anzeigename !== "undefined") {
+		if (obj.anzeigename !== undefined) {
 			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
 		}
-		if (typeof obj.benutzername !== "undefined") {
+		if (obj.benutzername !== undefined) {
 			result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
 		}
-		if (typeof obj.password !== "undefined") {
+		if (obj.password !== undefined) {
 			result += '"password" : ' + JSON.stringify(obj.password!) + ',';
 		}
 		result = result.slice(0, -1);

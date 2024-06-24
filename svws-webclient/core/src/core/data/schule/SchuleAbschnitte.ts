@@ -35,10 +35,10 @@ export class SchuleAbschnitte extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuleAbschnitte {
 		const obj = JSON.parse(json);
 		const result = new SchuleAbschnitte();
-		if (typeof obj.anzahlAbschnitte === "undefined")
+		if (obj.anzahlAbschnitte === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlAbschnitte');
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
-		if (typeof obj.abschnittBez === "undefined")
+		if (obj.abschnittBez === undefined)
 			 throw new Error('invalid json format, missing attribute abschnittBez');
 		result.abschnittBez = obj.abschnittBez;
 		if ((obj.bezAbschnitte !== undefined) && (obj.bezAbschnitte !== null)) {
@@ -72,13 +72,13 @@ export class SchuleAbschnitte extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuleAbschnitte>) : string {
 		let result = '{';
-		if (typeof obj.anzahlAbschnitte !== "undefined") {
+		if (obj.anzahlAbschnitte !== undefined) {
 			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		}
-		if (typeof obj.abschnittBez !== "undefined") {
+		if (obj.abschnittBez !== undefined) {
 			result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez!) + ',';
 		}
-		if (typeof obj.bezAbschnitte !== "undefined") {
+		if (obj.bezAbschnitte !== undefined) {
 			if (!obj.bezAbschnitte) {
 				result += '"bezAbschnitte" : []';
 			} else {

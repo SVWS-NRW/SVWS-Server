@@ -3,7 +3,7 @@ import  { IndexOutOfBoundsException } from './IndexOutOfBoundsException';
 export class StringIndexOutOfBoundsException extends IndexOutOfBoundsException {
 
 	public constructor(param? : string | number) {
-		if (typeof param === "undefined")
+		if (param === undefined)
 			super();
 		else if (typeof param === "string")
 			super(param);

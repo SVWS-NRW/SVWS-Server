@@ -38,10 +38,10 @@ export class KatalogEintragStrassen extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragStrassen {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragStrassen();
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
-		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : obj.Strasse;
-		result.Stand = typeof obj.Stand === "undefined" ? null : obj.Stand === null ? null : obj.Stand;
+		result.Ort = (obj.Ort === undefined) ? null : obj.Ort === null ? null : obj.Ort;
+		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		result.Strasse = (obj.Strasse === undefined) ? null : obj.Strasse === null ? null : obj.Strasse;
+		result.Stand = (obj.Stand === undefined) ? null : obj.Stand === null ? null : obj.Stand;
 		return result;
 	}
 
@@ -58,16 +58,16 @@ export class KatalogEintragStrassen extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragStrassen>) : string {
 		let result = '{';
-		if (typeof obj.Ort !== "undefined") {
+		if (obj.Ort !== undefined) {
 			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
-		if (typeof obj.RegSchl !== "undefined") {
+		if (obj.RegSchl !== undefined) {
 			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
-		if (typeof obj.Strasse !== "undefined") {
+		if (obj.Strasse !== undefined) {
 			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
-		if (typeof obj.Stand !== "undefined") {
+		if (obj.Stand !== undefined) {
 			result += '"Stand" : ' + ((!obj.Stand) ? 'null' : JSON.stringify(obj.Stand)) + ',';
 		}
 		result = result.slice(0, -1);

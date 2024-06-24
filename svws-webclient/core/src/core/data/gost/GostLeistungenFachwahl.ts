@@ -42,9 +42,9 @@ export class GostLeistungenFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLeistungenFachwahl {
 		const obj = JSON.parse(json);
 		const result = new GostLeistungenFachwahl();
-		result.fach = ((typeof obj.fach === "undefined") || (obj.fach === null)) ? null : GostFach.transpilerFromJSON(JSON.stringify(obj.fach));
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
-		if (typeof obj.istFSNeu === "undefined")
+		result.fach = ((obj.fach === undefined) || (obj.fach === null)) ? null : GostFach.transpilerFromJSON(JSON.stringify(obj.fach));
+		result.abiturfach = (obj.abiturfach === undefined) ? null : obj.abiturfach === null ? null : obj.abiturfach;
+		if (obj.istFSNeu === undefined)
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
 		if ((obj.belegungen !== undefined) && (obj.belegungen !== null)) {
@@ -79,16 +79,16 @@ export class GostLeistungenFachwahl extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungenFachwahl>) : string {
 		let result = '{';
-		if (typeof obj.fach !== "undefined") {
+		if (obj.fach !== undefined) {
 			result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
 		}
-		if (typeof obj.abiturfach !== "undefined") {
+		if (obj.abiturfach !== undefined) {
 			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		}
-		if (typeof obj.istFSNeu !== "undefined") {
+		if (obj.istFSNeu !== undefined) {
 			result += '"istFSNeu" : ' + obj.istFSNeu + ',';
 		}
-		if (typeof obj.belegungen !== "undefined") {
+		if (obj.belegungen !== undefined) {
 			if (!obj.belegungen) {
 				result += '"belegungen" : []';
 			} else {

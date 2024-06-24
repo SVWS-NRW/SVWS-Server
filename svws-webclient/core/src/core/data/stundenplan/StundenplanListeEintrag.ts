@@ -53,25 +53,25 @@ export class StundenplanListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new StundenplanListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		if (typeof obj.abschnitt === "undefined")
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		if (typeof obj.gueltigAb === "undefined")
+		if (obj.gueltigAb === undefined)
 			 throw new Error('invalid json format, missing attribute gueltigAb');
 		result.gueltigAb = obj.gueltigAb;
-		if (typeof obj.gueltigBis === "undefined")
+		if (obj.gueltigBis === undefined)
 			 throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
 		return result;
@@ -93,25 +93,25 @@ export class StundenplanListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.gueltigAb !== "undefined") {
+		if (obj.gueltigAb !== undefined) {
 			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
 		}
 		result = result.slice(0, -1);

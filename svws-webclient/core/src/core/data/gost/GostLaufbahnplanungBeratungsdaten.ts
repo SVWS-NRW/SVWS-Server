@@ -38,10 +38,10 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungBeratungsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostLaufbahnplanungBeratungsdaten();
-		result.beratungslehrerID = typeof obj.beratungslehrerID === "undefined" ? null : obj.beratungslehrerID === null ? null : obj.beratungslehrerID;
-		result.beratungsdatum = typeof obj.beratungsdatum === "undefined" ? null : obj.beratungsdatum === null ? null : obj.beratungsdatum;
-		result.kommentar = typeof obj.kommentar === "undefined" ? null : obj.kommentar === null ? null : obj.kommentar;
-		result.ruecklaufdatum = typeof obj.ruecklaufdatum === "undefined" ? null : obj.ruecklaufdatum === null ? null : obj.ruecklaufdatum;
+		result.beratungslehrerID = (obj.beratungslehrerID === undefined) ? null : obj.beratungslehrerID === null ? null : obj.beratungslehrerID;
+		result.beratungsdatum = (obj.beratungsdatum === undefined) ? null : obj.beratungsdatum === null ? null : obj.beratungsdatum;
+		result.kommentar = (obj.kommentar === undefined) ? null : obj.kommentar === null ? null : obj.kommentar;
+		result.ruecklaufdatum = (obj.ruecklaufdatum === undefined) ? null : obj.ruecklaufdatum === null ? null : obj.ruecklaufdatum;
 		return result;
 	}
 
@@ -58,16 +58,16 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungBeratungsdaten>) : string {
 		let result = '{';
-		if (typeof obj.beratungslehrerID !== "undefined") {
+		if (obj.beratungslehrerID !== undefined) {
 			result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID) + ',';
 		}
-		if (typeof obj.beratungsdatum !== "undefined") {
+		if (obj.beratungsdatum !== undefined) {
 			result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
 		}
-		if (typeof obj.kommentar !== "undefined") {
+		if (obj.kommentar !== undefined) {
 			result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
 		}
-		if (typeof obj.ruecklaufdatum !== "undefined") {
+		if (obj.ruecklaufdatum !== undefined) {
 			result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
 		}
 		result = result.slice(0, -1);

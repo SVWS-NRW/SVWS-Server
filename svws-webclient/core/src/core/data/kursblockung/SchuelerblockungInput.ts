@@ -42,7 +42,7 @@ export class SchuelerblockungInput extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungInput {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungInput();
-		if (typeof obj.schienen === "undefined")
+		if (obj.schienen === undefined)
 			 throw new Error('invalid json format, missing attribute schienen');
 		result.schienen = obj.schienen;
 		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
@@ -109,10 +109,10 @@ export class SchuelerblockungInput extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInput>) : string {
 		let result = '{';
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			result += '"schienen" : ' + obj.schienen + ',';
 		}
-		if (typeof obj.kurse !== "undefined") {
+		if (obj.kurse !== undefined) {
 			if (!obj.kurse) {
 				result += '"kurse" : []';
 			} else {
@@ -126,7 +126,7 @@ export class SchuelerblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachwahlen !== "undefined") {
+		if (obj.fachwahlen !== undefined) {
 			if (!obj.fachwahlen) {
 				result += '"fachwahlen" : []';
 			} else {
@@ -140,7 +140,7 @@ export class SchuelerblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachwahlenText !== "undefined") {
+		if (obj.fachwahlenText !== undefined) {
 			if (!obj.fachwahlenText) {
 				result += '"fachwahlenText" : []';
 			} else {

@@ -70,9 +70,9 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : boolean, __param5? : boolean, __param6? : boolean, __param7? : boolean, __param8? : null | number, __param9? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined) && (__param9 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && typeof __param6 === "boolean") && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && typeof __param4 === "boolean") && ((__param5 !== undefined) && typeof __param5 === "boolean") && ((__param6 !== undefined) && typeof __param6 === "boolean") && ((__param7 !== undefined) && typeof __param7 === "boolean") && ((__param8 !== undefined) && (typeof __param8 === "number") || (__param8 === null)) && ((__param9 !== undefined) && (typeof __param9 === "number") || (__param9 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const nummer : string = __param2;
@@ -107,30 +107,30 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulformKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulformKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
-		if (typeof obj.kuerzel === "undefined")
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.nummer === "undefined")
+		if (obj.nummer === undefined)
 			 throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.istAllgemeinbildend === "undefined")
+		if (obj.istAllgemeinbildend === undefined)
 			 throw new Error('invalid json format, missing attribute istAllgemeinbildend');
 		result.istAllgemeinbildend = obj.istAllgemeinbildend;
-		if (typeof obj.istBerufsbildend === "undefined")
+		if (obj.istBerufsbildend === undefined)
 			 throw new Error('invalid json format, missing attribute istBerufsbildend');
 		result.istBerufsbildend = obj.istBerufsbildend;
-		if (typeof obj.istWeiterbildung === "undefined")
+		if (obj.istWeiterbildung === undefined)
 			 throw new Error('invalid json format, missing attribute istWeiterbildung');
 		result.istWeiterbildung = obj.istWeiterbildung;
-		if (typeof obj.hatGymOb === "undefined")
+		if (obj.hatGymOb === undefined)
 			 throw new Error('invalid json format, missing attribute hatGymOb');
 		result.hatGymOb = obj.hatGymOb;
 		return result;
@@ -155,34 +155,34 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulformKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.istAllgemeinbildend !== "undefined") {
+		if (obj.istAllgemeinbildend !== undefined) {
 			result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend + ',';
 		}
-		if (typeof obj.istBerufsbildend !== "undefined") {
+		if (obj.istBerufsbildend !== undefined) {
 			result += '"istBerufsbildend" : ' + obj.istBerufsbildend + ',';
 		}
-		if (typeof obj.istWeiterbildung !== "undefined") {
+		if (obj.istWeiterbildung !== undefined) {
 			result += '"istWeiterbildung" : ' + obj.istWeiterbildung + ',';
 		}
-		if (typeof obj.hatGymOb !== "undefined") {
+		if (obj.hatGymOb !== undefined) {
 			result += '"hatGymOb" : ' + obj.hatGymOb + ',';
 		}
 		result = result.slice(0, -1);

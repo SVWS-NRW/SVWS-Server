@@ -43,11 +43,11 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragLaender {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragLaender();
-		result.Kurztext = typeof obj.Kurztext === "undefined" ? null : obj.Kurztext === null ? null : obj.Kurztext;
-		result.Langtext = typeof obj.Langtext === "undefined" ? null : obj.Langtext === null ? null : obj.Langtext;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.Kurztext = (obj.Kurztext === undefined) ? null : obj.Kurztext === null ? null : obj.Kurztext;
+		result.Langtext = (obj.Langtext === undefined) ? null : obj.Langtext === null ? null : obj.Langtext;
+		result.Sortierung = (obj.Sortierung === undefined) ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -65,19 +65,19 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragLaender>) : string {
 		let result = '{';
-		if (typeof obj.Kurztext !== "undefined") {
+		if (obj.Kurztext !== undefined) {
 			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
 		}
-		if (typeof obj.Langtext !== "undefined") {
+		if (obj.Langtext !== undefined) {
 			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
 		}
-		if (typeof obj.Sortierung !== "undefined") {
+		if (obj.Sortierung !== undefined) {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

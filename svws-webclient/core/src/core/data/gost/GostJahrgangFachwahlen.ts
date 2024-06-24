@@ -33,7 +33,7 @@ export class GostJahrgangFachwahlen extends JavaObject {
 		for (let i = 0; i < obj.halbjahr.length; i++) {
 			result.halbjahr[i] = obj.halbjahr[i] == null ? null : (GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(JSON.stringify(obj.halbjahr[i])));
 		}
-		if (typeof obj.abitur === "undefined")
+		if (obj.abitur === undefined)
 			 throw new Error('invalid json format, missing attribute abitur');
 		result.abitur = GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(JSON.stringify(obj.abitur));
 		return result;
@@ -61,7 +61,7 @@ export class GostJahrgangFachwahlen extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachwahlen>) : string {
 		let result = '{';
-		if (typeof obj.halbjahr !== "undefined") {
+		if (obj.halbjahr !== undefined) {
 			const a = obj.halbjahr;
 			if (!a) {
 				result += '"halbjahr" : []';
@@ -76,7 +76,7 @@ export class GostJahrgangFachwahlen extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.abitur !== "undefined") {
+		if (obj.abitur !== undefined) {
 			result += '"abitur" : ' + GostJahrgangFachwahlenHalbjahr.transpilerToJSON(obj.abitur) + ',';
 		}
 		result = result.slice(0, -1);

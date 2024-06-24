@@ -103,31 +103,31 @@ export class SchulEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchulEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kurzbezeichnung = typeof obj.kurzbezeichnung === "undefined" ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
-		if (typeof obj.schulnummer === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		result.schulformID = typeof obj.schulformID === "undefined" ? null : obj.schulformID === null ? null : obj.schulformID;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : obj.telefon;
-		result.fax = typeof obj.fax === "undefined" ? null : obj.fax === null ? null : obj.fax;
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
-		result.schulleiter = typeof obj.schulleiter === "undefined" ? null : obj.schulleiter === null ? null : obj.schulleiter;
-		if (typeof obj.sortierung === "undefined")
+		result.schulformID = (obj.schulformID === undefined) ? null : obj.schulformID === null ? null : obj.schulformID;
+		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
+		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
+		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
+		result.telefon = (obj.telefon === undefined) ? null : obj.telefon === null ? null : obj.telefon;
+		result.fax = (obj.fax === undefined) ? null : obj.fax === null ? null : obj.fax;
+		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
+		result.schulleiter = (obj.schulleiter === undefined) ? null : obj.schulleiter === null ? null : obj.schulleiter;
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istSichtbar === "undefined")
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		return result;
@@ -159,55 +159,55 @@ export class SchulEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.kurzbezeichnung !== "undefined") {
+		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + ((!obj.kurzbezeichnung) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer!) + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.schulformID !== "undefined") {
+		if (obj.schulformID !== undefined) {
 			result += '"schulformID" : ' + ((!obj.schulformID) ? 'null' : obj.schulformID) + ',';
 		}
-		if (typeof obj.strassenname !== "undefined") {
+		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
-		if (typeof obj.hausnummer !== "undefined") {
+		if (obj.hausnummer !== undefined) {
 			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
-		if (typeof obj.hausnummerZusatz !== "undefined") {
+		if (obj.hausnummerZusatz !== undefined) {
 			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
-		if (typeof obj.plz !== "undefined") {
+		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
-		if (typeof obj.ort !== "undefined") {
+		if (obj.ort !== undefined) {
 			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
-		if (typeof obj.telefon !== "undefined") {
+		if (obj.telefon !== undefined) {
 			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
-		if (typeof obj.fax !== "undefined") {
+		if (obj.fax !== undefined) {
 			result += '"fax" : ' + ((!obj.fax) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		}
-		if (typeof obj.email !== "undefined") {
+		if (obj.email !== undefined) {
 			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
-		if (typeof obj.schulleiter !== "undefined") {
+		if (obj.schulleiter !== undefined) {
 			result += '"schulleiter" : ' + ((!obj.schulleiter) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
 		result = result.slice(0, -1);

@@ -41,10 +41,10 @@ export class GostBlockungKursAufteilung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungKursAufteilung {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungKursAufteilung();
-		if (typeof obj.kurs1 === "undefined")
+		if (obj.kurs1 === undefined)
 			 throw new Error('invalid json format, missing attribute kurs1');
 		result.kurs1 = GostBlockungKurs.transpilerFromJSON(JSON.stringify(obj.kurs1));
-		if (typeof obj.kurs2 === "undefined")
+		if (obj.kurs2 === undefined)
 			 throw new Error('invalid json format, missing attribute kurs2');
 		result.kurs2 = GostBlockungKurs.transpilerFromJSON(JSON.stringify(obj.kurs2));
 		if ((obj.schueler1 !== undefined) && (obj.schueler1 !== null)) {
@@ -95,13 +95,13 @@ export class GostBlockungKursAufteilung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungKursAufteilung>) : string {
 		let result = '{';
-		if (typeof obj.kurs1 !== "undefined") {
+		if (obj.kurs1 !== undefined) {
 			result += '"kurs1" : ' + GostBlockungKurs.transpilerToJSON(obj.kurs1) + ',';
 		}
-		if (typeof obj.kurs2 !== "undefined") {
+		if (obj.kurs2 !== undefined) {
 			result += '"kurs2" : ' + GostBlockungKurs.transpilerToJSON(obj.kurs2) + ',';
 		}
-		if (typeof obj.schueler1 !== "undefined") {
+		if (obj.schueler1 !== undefined) {
 			if (!obj.schueler1) {
 				result += '"schueler1" : []';
 			} else {
@@ -115,7 +115,7 @@ export class GostBlockungKursAufteilung extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler2 !== "undefined") {
+		if (obj.schueler2 !== undefined) {
 			if (!obj.schueler2) {
 				result += '"schueler2" : []';
 			} else {

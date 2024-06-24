@@ -77,9 +77,9 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : boolean, __param4? : boolean, __param5? : null | string, __param6? : List<Schulform>, __param7? : null | number, __param8? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean") && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && (typeof __param5 === "string") || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && typeof __param4 === "boolean") && ((__param5 !== undefined) && (typeof __param5 === "string") || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && ((__param6 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((__param7 !== undefined) && (typeof __param7 === "number") || (__param7 === null)) && ((__param8 !== undefined) && (typeof __param8 === "number") || (__param8 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const bezeichnung : string = __param2;
@@ -113,29 +113,29 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): AllgemeineMerkmaleKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new AllgemeineMerkmaleKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.beiSchule === "undefined")
+		if (obj.beiSchule === undefined)
 			 throw new Error('invalid json format, missing attribute beiSchule');
 		result.beiSchule = obj.beiSchule;
-		if (typeof obj.beiSchueler === "undefined")
+		if (obj.beiSchueler === undefined)
 			 throw new Error('invalid json format, missing attribute beiSchueler');
 		result.beiSchueler = obj.beiSchueler;
-		result.kuerzelASD = typeof obj.kuerzelASD === "undefined" ? null : obj.kuerzelASD === null ? null : obj.kuerzelASD;
+		result.kuerzelASD = (obj.kuerzelASD === undefined) ? null : obj.kuerzelASD === null ? null : obj.kuerzelASD;
 		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -168,25 +168,25 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AllgemeineMerkmaleKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.beiSchule !== "undefined") {
+		if (obj.beiSchule !== undefined) {
 			result += '"beiSchule" : ' + obj.beiSchule + ',';
 		}
-		if (typeof obj.beiSchueler !== "undefined") {
+		if (obj.beiSchueler !== undefined) {
 			result += '"beiSchueler" : ' + obj.beiSchueler + ',';
 		}
-		if (typeof obj.kuerzelASD !== "undefined") {
+		if (obj.kuerzelASD !== undefined) {
 			result += '"kuerzelASD" : ' + ((!obj.kuerzelASD) ? 'null' : JSON.stringify(obj.kuerzelASD)) + ',';
 		}
-		if (typeof obj.schulformen !== "undefined") {
+		if (obj.schulformen !== undefined) {
 			if (!obj.schulformen) {
 				result += '"schulformen" : []';
 			} else {
@@ -200,10 +200,10 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

@@ -53,17 +53,17 @@ export class ErzieherListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): ErzieherListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new ErzieherListeEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idSchueler === "undefined")
+		if (obj.idSchueler === undefined)
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt === null ? null : obj.idErzieherArt;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
+		result.idErzieherArt = (obj.idErzieherArt === undefined) ? null : obj.idErzieherArt === null ? null : obj.idErzieherArt;
+		result.anrede = (obj.anrede === undefined) ? null : obj.anrede === null ? null : obj.anrede;
+		result.name = (obj.name === undefined) ? null : obj.name === null ? null : obj.name;
+		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
+		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
 		return result;
 	}
 
@@ -83,25 +83,25 @@ export class ErzieherListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ErzieherListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idSchueler !== "undefined") {
+		if (obj.idSchueler !== undefined) {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
-		if (typeof obj.idErzieherArt !== "undefined") {
+		if (obj.idErzieherArt !== undefined) {
 			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
 		}
-		if (typeof obj.anrede !== "undefined") {
+		if (obj.anrede !== undefined) {
 			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
-		if (typeof obj.email !== "undefined") {
+		if (obj.email !== undefined) {
 			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		result = result.slice(0, -1);

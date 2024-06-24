@@ -38,16 +38,16 @@ export class AdressbuchEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): AdressbuchEintrag {
 		const obj = JSON.parse(json);
 		const result = new AdressbuchEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.adressbuchId === "undefined")
+		if (obj.adressbuchId === undefined)
 			 throw new Error('invalid json format, missing attribute adressbuchId');
 		result.adressbuchId = obj.adressbuchId;
-		if (typeof obj.uri === "undefined")
+		if (obj.uri === undefined)
 			 throw new Error('invalid json format, missing attribute uri');
 		result.uri = obj.uri;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		return result;
@@ -66,16 +66,16 @@ export class AdressbuchEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
-		if (typeof obj.adressbuchId !== "undefined") {
+		if (obj.adressbuchId !== undefined) {
 			result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
 		}
-		if (typeof obj.uri !== "undefined") {
+		if (obj.uri !== undefined) {
 			result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		}
 		result = result.slice(0, -1);

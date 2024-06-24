@@ -22,12 +22,12 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 
 	public constructor(param1? : number | Collection<E>, param2? : number) {
 		super();
-		if ((typeof param2 === "undefined") && (typeof param1 !== "undefined") && (typeof param1 !== "number")) {
+		if ((param2 === undefined) && (param1 !== undefined) && (typeof param1 !== "number")) {
 			const c : Collection<E> = param1
 	        const a : E[] = c.toArray() as E[];
 	        this.elementData = a;
-		} else if (((typeof param1 === "undefined") && (typeof param2 === "undefined")) ||
-                   ((typeof param1 === "number") && (typeof param2 === "undefined")) ||
+		} else if (((param1 === undefined) && (param2 === undefined)) ||
+                   ((typeof param1 === "number") && (param2 === undefined)) ||
                    ((typeof param1 === "number") && (typeof param2 === "number"))) {
 			// do nothing special here since the typescript implementation does not need the capacity internally - so the parameters are not relevant
 			this.elementData = new Array<E>();
@@ -145,7 +145,7 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 	public indexOf(e : E) : number;
 	public indexOf(e : E, index : number) : number;
 	public indexOf(e : E, index? : number) : number {
-		if (typeof index === "undefined")
+		if (index === undefined)
 			return this.indexOf(e, 0);
 		if (index < 0)
 			throw new IndexOutOfBoundsException(`Invalid index: ${index}`);
@@ -168,7 +168,7 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 	public lastIndexOf(e : E) : number;
 	public lastIndexOf(e : E, index : number) : number;
 	public lastIndexOf(e : E, index? : number) : number {
-		if (typeof index === "undefined")
+		if (index === undefined)
 			return this.lastIndexOf(e, this.elementData.length - 1);
 		if (index >= this.elementData.length)
 			throw new IndexOutOfBoundsException(`Invalid index: ${index} is greater than the number of elements.`);
@@ -320,7 +320,7 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 	public toArray() : Array<unknown>;
 	public toArray<T>(a : Array<T>) : Array<T>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this.size())) {
+		if ((__param0 === undefined) || (__param0 === null) || (__param0.length < this.size())) {
 			return [...this.elementData];
 		} else if (Array.isArray(__param0)) {
 			const a : Array<T> = __param0;
@@ -377,11 +377,11 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 	public add(param1 : E | null | number, param2? : E | null) : boolean | void {
 		if ((param1 === null) || (param2 === null))
 			throw new NullPointerException();
-		if ((typeof param1 === "number") && (typeof param2 !== "undefined")) {
+		if ((typeof param1 === "number") && (param2 !== undefined)) {
 			this.insertElementAt(param2, param1);
-		} else if ((typeof param1 === "number") && (typeof param2 === "undefined")) {
+		} else if ((typeof param1 === "number") && (param2 === undefined)) {
 			this.addElement(Number(param1) as unknown as E);
-		} else if ((typeof param1 !== "number") && (typeof param2 === "undefined")) {
+		} else if ((typeof param1 !== "number") && (param2 === undefined)) {
 			this.addElement(param1);
 			return true;
 		} else throw new Error("invalid method overload");
@@ -439,8 +439,8 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 	public addAll(index : number, c : Collection<E>) : boolean;
 
 	public addAll(param1 : number | Collection<E>, param2? : Collection<E>) : boolean {
-		if (!((typeof param1 === "number") && (typeof param2 !== "undefined")) &&
-            !((typeof param1 !== "number") && (typeof param2 === "undefined")))
+		if (!((typeof param1 === "number") && (param2 !== undefined)) &&
+            !((typeof param1 !== "number") && (param2 === undefined)))
 			throw new Error("invalid method overload");
 		const index = (typeof param1 === "number") ? param1 : this.elementData.length;
 		if ((index < 0) || (index > this.elementData.length))

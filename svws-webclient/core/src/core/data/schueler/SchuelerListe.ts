@@ -55,7 +55,7 @@ export class SchuelerListe extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerListe {
 		const obj = JSON.parse(json);
 		const result = new SchuelerListe();
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
@@ -156,10 +156,10 @@ export class SchuelerListe extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerListe>) : string {
 		let result = '{';
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -173,7 +173,7 @@ export class SchuelerListe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -187,7 +187,7 @@ export class SchuelerListe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kurse !== "undefined") {
+		if (obj.kurse !== undefined) {
 			if (!obj.kurse) {
 				result += '"kurse" : []';
 			} else {
@@ -201,7 +201,7 @@ export class SchuelerListe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.jahrgaenge !== "undefined") {
+		if (obj.jahrgaenge !== undefined) {
 			if (!obj.jahrgaenge) {
 				result += '"jahrgaenge" : []';
 			} else {
@@ -215,7 +215,7 @@ export class SchuelerListe extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.jahrgaengeGost !== "undefined") {
+		if (obj.jahrgaengeGost !== undefined) {
 			if (!obj.jahrgaengeGost) {
 				result += '"jahrgaengeGost" : []';
 			} else {

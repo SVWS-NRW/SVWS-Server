@@ -36,10 +36,10 @@ export class BKBildungsplanKatalogIndex extends JavaObject {
 	public static transpilerFromJSON(json : string): BKBildungsplanKatalogIndex {
 		const obj = JSON.parse(json);
 		const result = new BKBildungsplanKatalogIndex();
-		if (typeof obj.index === "undefined")
+		if (obj.index === undefined)
 			 throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
-		if (typeof obj.version === "undefined")
+		if (obj.version === undefined)
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.lehrplaene !== undefined) && (obj.lehrplaene !== null)) {
@@ -73,13 +73,13 @@ export class BKBildungsplanKatalogIndex extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKBildungsplanKatalogIndex>) : string {
 		let result = '{';
-		if (typeof obj.index !== "undefined") {
+		if (obj.index !== undefined) {
 			result += '"index" : ' + obj.index + ',';
 		}
-		if (typeof obj.version !== "undefined") {
+		if (obj.version !== undefined) {
 			result += '"version" : ' + obj.version + ',';
 		}
-		if (typeof obj.lehrplaene !== "undefined") {
+		if (obj.lehrplaene !== undefined) {
 			if (!obj.lehrplaene) {
 				result += '"lehrplaene" : []';
 			} else {

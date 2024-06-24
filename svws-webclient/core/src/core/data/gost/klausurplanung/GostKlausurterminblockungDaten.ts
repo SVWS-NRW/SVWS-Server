@@ -38,7 +38,7 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungDaten {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurterminblockungDaten();
-		if (typeof obj.konfiguration === "undefined")
+		if (obj.konfiguration === undefined)
 			 throw new Error('invalid json format, missing attribute konfiguration');
 		result.konfiguration = GostKlausurterminblockungKonfiguration.transpilerFromJSON(JSON.stringify(obj.konfiguration));
 		if ((obj.klausuren !== undefined) && (obj.klausuren !== null)) {
@@ -88,10 +88,10 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurterminblockungDaten>) : string {
 		let result = '{';
-		if (typeof obj.konfiguration !== "undefined") {
+		if (obj.konfiguration !== undefined) {
 			result += '"konfiguration" : ' + GostKlausurterminblockungKonfiguration.transpilerToJSON(obj.konfiguration) + ',';
 		}
-		if (typeof obj.klausuren !== "undefined") {
+		if (obj.klausuren !== undefined) {
 			if (!obj.klausuren) {
 				result += '"klausuren" : []';
 			} else {
@@ -105,7 +105,7 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.richKlausuren !== "undefined") {
+		if (obj.richKlausuren !== undefined) {
 			if (!obj.richKlausuren) {
 				result += '"richKlausuren" : []';
 			} else {

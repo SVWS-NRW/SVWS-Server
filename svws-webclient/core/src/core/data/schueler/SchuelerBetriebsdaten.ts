@@ -78,28 +78,28 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerBetriebsdaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerBetriebsdaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schueler_id === "undefined")
+		if (obj.schueler_id === undefined)
 			 throw new Error('invalid json format, missing attribute schueler_id');
 		result.schueler_id = obj.schueler_id;
-		if (typeof obj.betrieb_id === "undefined")
+		if (obj.betrieb_id === undefined)
 			 throw new Error('invalid json format, missing attribute betrieb_id');
 		result.betrieb_id = obj.betrieb_id;
-		result.beschaeftigungsart_id = typeof obj.beschaeftigungsart_id === "undefined" ? null : obj.beschaeftigungsart_id === null ? null : obj.beschaeftigungsart_id;
-		result.vertragsbeginn = typeof obj.vertragsbeginn === "undefined" ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
-		result.vertragsende = typeof obj.vertragsende === "undefined" ? null : obj.vertragsende === null ? null : obj.vertragsende;
-		result.ausbilder = typeof obj.ausbilder === "undefined" ? null : obj.ausbilder === null ? null : obj.ausbilder;
-		if (typeof obj.allgadranschreiben === "undefined")
+		result.beschaeftigungsart_id = (obj.beschaeftigungsart_id === undefined) ? null : obj.beschaeftigungsart_id === null ? null : obj.beschaeftigungsart_id;
+		result.vertragsbeginn = (obj.vertragsbeginn === undefined) ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
+		result.vertragsende = (obj.vertragsende === undefined) ? null : obj.vertragsende === null ? null : obj.vertragsende;
+		result.ausbilder = (obj.ausbilder === undefined) ? null : obj.ausbilder === null ? null : obj.ausbilder;
+		if (obj.allgadranschreiben === undefined)
 			 throw new Error('invalid json format, missing attribute allgadranschreiben');
 		result.allgadranschreiben = obj.allgadranschreiben;
-		if (typeof obj.praktikum === "undefined")
+		if (obj.praktikum === undefined)
 			 throw new Error('invalid json format, missing attribute praktikum');
 		result.praktikum = obj.praktikum;
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : obj.sortierung;
-		result.ansprechpartner_id = typeof obj.ansprechpartner_id === "undefined" ? null : obj.ansprechpartner_id === null ? null : obj.ansprechpartner_id;
-		result.betreuungslehrer_id = typeof obj.betreuungslehrer_id === "undefined" ? null : obj.betreuungslehrer_id === null ? null : obj.betreuungslehrer_id;
+		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
+		result.ansprechpartner_id = (obj.ansprechpartner_id === undefined) ? null : obj.ansprechpartner_id === null ? null : obj.ansprechpartner_id;
+		result.betreuungslehrer_id = (obj.betreuungslehrer_id === undefined) ? null : obj.betreuungslehrer_id === null ? null : obj.betreuungslehrer_id;
 		return result;
 	}
 
@@ -124,40 +124,40 @@ export class SchuelerBetriebsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerBetriebsdaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schueler_id !== "undefined") {
+		if (obj.schueler_id !== undefined) {
 			result += '"schueler_id" : ' + obj.schueler_id + ',';
 		}
-		if (typeof obj.betrieb_id !== "undefined") {
+		if (obj.betrieb_id !== undefined) {
 			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		}
-		if (typeof obj.beschaeftigungsart_id !== "undefined") {
+		if (obj.beschaeftigungsart_id !== undefined) {
 			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
 		}
-		if (typeof obj.vertragsbeginn !== "undefined") {
+		if (obj.vertragsbeginn !== undefined) {
 			result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
 		}
-		if (typeof obj.vertragsende !== "undefined") {
+		if (obj.vertragsende !== undefined) {
 			result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		}
-		if (typeof obj.ausbilder !== "undefined") {
+		if (obj.ausbilder !== undefined) {
 			result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		}
-		if (typeof obj.allgadranschreiben !== "undefined") {
+		if (obj.allgadranschreiben !== undefined) {
 			result += '"allgadranschreiben" : ' + obj.allgadranschreiben + ',';
 		}
-		if (typeof obj.praktikum !== "undefined") {
+		if (obj.praktikum !== undefined) {
 			result += '"praktikum" : ' + obj.praktikum + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
 		}
-		if (typeof obj.ansprechpartner_id !== "undefined") {
+		if (obj.ansprechpartner_id !== undefined) {
 			result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id) + ',';
 		}
-		if (typeof obj.betreuungslehrer_id !== "undefined") {
+		if (obj.betreuungslehrer_id !== undefined) {
 			result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id) + ',';
 		}
 		result = result.slice(0, -1);

@@ -43,19 +43,19 @@ export class ENMFach extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFach {
 		const obj = JSON.parse(json);
 		const result = new ENMFach();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.kuerzelAnzeige === "undefined")
+		if (obj.kuerzelAnzeige === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzelAnzeige');
 		result.kuerzelAnzeige = obj.kuerzelAnzeige;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (typeof obj.istFremdsprache === "undefined")
+		if (obj.istFremdsprache === undefined)
 			 throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
 		return result;
@@ -75,19 +75,19 @@ export class ENMFach extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMFach>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.kuerzelAnzeige !== "undefined") {
+		if (obj.kuerzelAnzeige !== undefined) {
 			result += '"kuerzelAnzeige" : ' + JSON.stringify(obj.kuerzelAnzeige!) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.istFremdsprache !== "undefined") {
+		if (obj.istFremdsprache !== undefined) {
 			result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		}
 		result = result.slice(0, -1);

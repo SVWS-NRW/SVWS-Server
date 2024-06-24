@@ -38,9 +38,9 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	 */
 	public constructor(__param0? : Schulform, __param1? : string, __param2? : string) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string"))) {
 			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const kurzBezeichnung : string = __param1;
 			const bezeichnung : string = __param2;
@@ -61,13 +61,13 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerFromJSON(json : string): HerkunftsartKatalogEintragBezeichnung {
 		const obj = JSON.parse(json);
 		const result = new HerkunftsartKatalogEintragBezeichnung();
-		if (typeof obj.schulform === "undefined")
+		if (obj.schulform === undefined)
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
-		if (typeof obj.kurzBezeichnung === "undefined")
+		if (obj.kurzBezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute kurzBezeichnung');
 		result.kurzBezeichnung = obj.kurzBezeichnung;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
@@ -85,13 +85,13 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<HerkunftsartKatalogEintragBezeichnung>) : string {
 		let result = '{';
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
-		if (typeof obj.kurzBezeichnung !== "undefined") {
+		if (obj.kurzBezeichnung !== undefined) {
 			result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);

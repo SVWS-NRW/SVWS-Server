@@ -48,12 +48,12 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDatenart {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDatenart();
-		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
-		result.Datenart = typeof obj.Datenart === "undefined" ? null : obj.Datenart === null ? null : obj.Datenart;
-		result.Tabellenname = typeof obj.Tabellenname === "undefined" ? null : obj.Tabellenname === null ? null : obj.Tabellenname;
-		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : obj.Reihenfolge;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.DatenartKrz = (obj.DatenartKrz === undefined) ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
+		result.Datenart = (obj.Datenart === undefined) ? null : obj.Datenart === null ? null : obj.Datenart;
+		result.Tabellenname = (obj.Tabellenname === undefined) ? null : obj.Tabellenname === null ? null : obj.Tabellenname;
+		result.Reihenfolge = (obj.Reihenfolge === undefined) ? null : obj.Reihenfolge === null ? null : obj.Reihenfolge;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -72,22 +72,22 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDatenart>) : string {
 		let result = '{';
-		if (typeof obj.DatenartKrz !== "undefined") {
+		if (obj.DatenartKrz !== undefined) {
 			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		}
-		if (typeof obj.Datenart !== "undefined") {
+		if (obj.Datenart !== undefined) {
 			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
 		}
-		if (typeof obj.Tabellenname !== "undefined") {
+		if (obj.Tabellenname !== undefined) {
 			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
 		}
-		if (typeof obj.Reihenfolge !== "undefined") {
+		if (obj.Reihenfolge !== undefined) {
 			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

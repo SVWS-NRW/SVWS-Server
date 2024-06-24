@@ -63,15 +63,15 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnung {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragPruefungsordnung();
-		result.PO_Schulform = typeof obj.PO_Schulform === "undefined" ? null : obj.PO_Schulform === null ? null : obj.PO_Schulform;
-		result.PO_Krz = typeof obj.PO_Krz === "undefined" ? null : obj.PO_Krz === null ? null : obj.PO_Krz;
-		result.PO_Name = typeof obj.PO_Name === "undefined" ? null : obj.PO_Name === null ? null : obj.PO_Name;
-		result.PO_SGL = typeof obj.PO_SGL === "undefined" ? null : obj.PO_SGL === null ? null : obj.PO_SGL;
-		result.PO_MinJahrgang = typeof obj.PO_MinJahrgang === "undefined" ? null : obj.PO_MinJahrgang === null ? null : obj.PO_MinJahrgang;
-		result.PO_MaxJahrgang = typeof obj.PO_MaxJahrgang === "undefined" ? null : obj.PO_MaxJahrgang === null ? null : obj.PO_MaxJahrgang;
-		result.PO_Jahrgaenge = typeof obj.PO_Jahrgaenge === "undefined" ? null : obj.PO_Jahrgaenge === null ? null : obj.PO_Jahrgaenge;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.PO_Schulform = (obj.PO_Schulform === undefined) ? null : obj.PO_Schulform === null ? null : obj.PO_Schulform;
+		result.PO_Krz = (obj.PO_Krz === undefined) ? null : obj.PO_Krz === null ? null : obj.PO_Krz;
+		result.PO_Name = (obj.PO_Name === undefined) ? null : obj.PO_Name === null ? null : obj.PO_Name;
+		result.PO_SGL = (obj.PO_SGL === undefined) ? null : obj.PO_SGL === null ? null : obj.PO_SGL;
+		result.PO_MinJahrgang = (obj.PO_MinJahrgang === undefined) ? null : obj.PO_MinJahrgang === null ? null : obj.PO_MinJahrgang;
+		result.PO_MaxJahrgang = (obj.PO_MaxJahrgang === undefined) ? null : obj.PO_MaxJahrgang === null ? null : obj.PO_MaxJahrgang;
+		result.PO_Jahrgaenge = (obj.PO_Jahrgaenge === undefined) ? null : obj.PO_Jahrgaenge === null ? null : obj.PO_Jahrgaenge;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -93,31 +93,31 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragPruefungsordnung>) : string {
 		let result = '{';
-		if (typeof obj.PO_Schulform !== "undefined") {
+		if (obj.PO_Schulform !== undefined) {
 			result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : JSON.stringify(obj.PO_Schulform)) + ',';
 		}
-		if (typeof obj.PO_Krz !== "undefined") {
+		if (obj.PO_Krz !== undefined) {
 			result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : JSON.stringify(obj.PO_Krz)) + ',';
 		}
-		if (typeof obj.PO_Name !== "undefined") {
+		if (obj.PO_Name !== undefined) {
 			result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : JSON.stringify(obj.PO_Name)) + ',';
 		}
-		if (typeof obj.PO_SGL !== "undefined") {
+		if (obj.PO_SGL !== undefined) {
 			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : JSON.stringify(obj.PO_SGL)) + ',';
 		}
-		if (typeof obj.PO_MinJahrgang !== "undefined") {
+		if (obj.PO_MinJahrgang !== undefined) {
 			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
 		}
-		if (typeof obj.PO_MaxJahrgang !== "undefined") {
+		if (obj.PO_MaxJahrgang !== undefined) {
 			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
 		}
-		if (typeof obj.PO_Jahrgaenge !== "undefined") {
+		if (obj.PO_Jahrgaenge !== undefined) {
 			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : JSON.stringify(obj.PO_Jahrgaenge)) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

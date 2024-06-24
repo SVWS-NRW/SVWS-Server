@@ -58,14 +58,14 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragVersetzungsvermerke {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragVersetzungsvermerke();
-		result.Nr = typeof obj.Nr === "undefined" ? null : obj.Nr === null ? null : obj.Nr;
-		result.Klartext = typeof obj.Klartext === "undefined" ? null : obj.Klartext === null ? null : obj.Klartext;
-		result.StatistikKrz = typeof obj.StatistikKrz === "undefined" ? null : obj.StatistikKrz === null ? null : obj.StatistikKrz;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
-		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform === null ? null : obj.Schulform;
-		result.StatistikKrzNeu = typeof obj.StatistikKrzNeu === "undefined" ? null : obj.StatistikKrzNeu === null ? null : obj.StatistikKrzNeu;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.Nr = (obj.Nr === undefined) ? null : obj.Nr === null ? null : obj.Nr;
+		result.Klartext = (obj.Klartext === undefined) ? null : obj.Klartext === null ? null : obj.Klartext;
+		result.StatistikKrz = (obj.StatistikKrz === undefined) ? null : obj.StatistikKrz === null ? null : obj.StatistikKrz;
+		result.Sortierung = (obj.Sortierung === undefined) ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.Schulform = (obj.Schulform === undefined) ? null : obj.Schulform === null ? null : obj.Schulform;
+		result.StatistikKrzNeu = (obj.StatistikKrzNeu === undefined) ? null : obj.StatistikKrzNeu === null ? null : obj.StatistikKrzNeu;
+		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -86,28 +86,28 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragVersetzungsvermerke>) : string {
 		let result = '{';
-		if (typeof obj.Nr !== "undefined") {
+		if (obj.Nr !== undefined) {
 			result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
 		}
-		if (typeof obj.Klartext !== "undefined") {
+		if (obj.Klartext !== undefined) {
 			result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
 		}
-		if (typeof obj.StatistikKrz !== "undefined") {
+		if (obj.StatistikKrz !== undefined) {
 			result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
 		}
-		if (typeof obj.Sortierung !== "undefined") {
+		if (obj.Sortierung !== undefined) {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
-		if (typeof obj.Schulform !== "undefined") {
+		if (obj.Schulform !== undefined) {
 			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		}
-		if (typeof obj.StatistikKrzNeu !== "undefined") {
+		if (obj.StatistikKrzNeu !== undefined) {
 			result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
 		}
-		if (typeof obj.gueltigVon !== "undefined") {
+		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);

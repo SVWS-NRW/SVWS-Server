@@ -58,20 +58,20 @@ export class SchuleInfo extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuleInfo {
 		const obj = JSON.parse(json);
 		const result = new SchuleInfo();
-		if (typeof obj.schulNr === "undefined")
+		if (obj.schulNr === undefined)
 			 throw new Error('invalid json format, missing attribute schulNr');
 		result.schulNr = obj.schulNr;
-		if (typeof obj.schulform === "undefined")
+		if (obj.schulform === undefined)
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
+		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
+		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
+		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
 		return result;
 	}
 
@@ -92,28 +92,28 @@ export class SchuleInfo extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuleInfo>) : string {
 		let result = '{';
-		if (typeof obj.schulNr !== "undefined") {
+		if (obj.schulNr !== undefined) {
 			result += '"schulNr" : ' + obj.schulNr + ',';
 		}
-		if (typeof obj.schulform !== "undefined") {
+		if (obj.schulform !== undefined) {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.strassenname !== "undefined") {
+		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
-		if (typeof obj.hausnummer !== "undefined") {
+		if (obj.hausnummer !== undefined) {
 			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
-		if (typeof obj.hausnummerZusatz !== "undefined") {
+		if (obj.hausnummerZusatz !== undefined) {
 			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
-		if (typeof obj.plz !== "undefined") {
+		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
-		if (typeof obj.ort !== "undefined") {
+		if (obj.ort !== undefined) {
 			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
 		result = result.slice(0, -1);

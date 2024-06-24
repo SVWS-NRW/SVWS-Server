@@ -25,14 +25,14 @@ export class Throwable extends Error implements TranspiledObject {
 		this.name = this.constructor.name;
 
 		// TODO handle this.stack and .stack from Throwable parameter
-		if ((typeof param1 === "undefined") && (typeof param2 === "undefined")) {
+		if ((param1 === undefined) && (param2 === undefined)) {
 			this.message = "";
-		} else if ((typeof param1 === "string") && (typeof param2 === "undefined")) {
+		} else if ((typeof param1 === "string") && (param2 === undefined)) {
 			this.message = param1;
 		} else if ((typeof param1 === "string") && (param2 instanceof Throwable)) {
 			this.message = param1;
 			this._cause = param2;
-		} else if ((param1 instanceof Throwable) && (typeof param2 === "undefined")) {
+		} else if ((param1 instanceof Throwable) && (param2 === undefined)) {
 			this.message = param1.toString().valueOf();
 			this._cause = param1;
 		}

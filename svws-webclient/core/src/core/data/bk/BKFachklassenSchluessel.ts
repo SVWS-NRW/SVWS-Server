@@ -28,10 +28,10 @@ export class BKFachklassenSchluessel extends JavaObject {
 	public static transpilerFromJSON(json : string): BKFachklassenSchluessel {
 		const obj = JSON.parse(json);
 		const result = new BKFachklassenSchluessel();
-		if (typeof obj.index === "undefined")
+		if (obj.index === undefined)
 			 throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
-		if (typeof obj.schluessel === "undefined")
+		if (obj.schluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
 		return result;
@@ -48,10 +48,10 @@ export class BKFachklassenSchluessel extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKFachklassenSchluessel>) : string {
 		let result = '{';
-		if (typeof obj.index !== "undefined") {
+		if (obj.index !== undefined) {
 			result += '"index" : ' + obj.index + ',';
 		}
-		if (typeof obj.schluessel !== "undefined") {
+		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		}
 		result = result.slice(0, -1);

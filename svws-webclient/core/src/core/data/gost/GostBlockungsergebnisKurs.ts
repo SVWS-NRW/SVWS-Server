@@ -50,16 +50,16 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKurs {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisKurs();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.fachID === "undefined")
+		if (obj.fachID === undefined)
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		if (typeof obj.kursart === "undefined")
+		if (obj.kursart === undefined)
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.anzahlSchienen === "undefined")
+		if (obj.anzahlSchienen === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
 		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
@@ -112,19 +112,19 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisKurs>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.fachID !== "undefined") {
+		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
-		if (typeof obj.anzahlSchienen !== "undefined") {
+		if (obj.anzahlSchienen !== undefined) {
 			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {
@@ -138,7 +138,7 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {

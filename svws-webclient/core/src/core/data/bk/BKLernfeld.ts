@@ -45,10 +45,10 @@ export class BKLernfeld extends JavaObject {
 	public static transpilerFromJSON(json : string): BKLernfeld {
 		const obj = JSON.parse(json);
 		const result = new BKLernfeld();
-		if (typeof obj.nummer === "undefined")
+		if (obj.nummer === undefined)
 			 throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if ((obj.buendelfaecher !== undefined) && (obj.buendelfaecher !== null)) {
@@ -56,10 +56,10 @@ export class BKLernfeld extends JavaObject {
 				result.buendelfaecher?.add(elem);
 			}
 		}
-		if (typeof obj.ausbildungsjahr === "undefined")
+		if (obj.ausbildungsjahr === undefined)
 			 throw new Error('invalid json format, missing attribute ausbildungsjahr');
 		result.ausbildungsjahr = obj.ausbildungsjahr;
-		if (typeof obj.zeitrichtwert === "undefined")
+		if (obj.zeitrichtwert === undefined)
 			 throw new Error('invalid json format, missing attribute zeitrichtwert');
 		result.zeitrichtwert = obj.zeitrichtwert;
 		return result;
@@ -90,13 +90,13 @@ export class BKLernfeld extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BKLernfeld>) : string {
 		let result = '{';
-		if (typeof obj.nummer !== "undefined") {
+		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.buendelfaecher !== "undefined") {
+		if (obj.buendelfaecher !== undefined) {
 			if (!obj.buendelfaecher) {
 				result += '"buendelfaecher" : []';
 			} else {
@@ -110,10 +110,10 @@ export class BKLernfeld extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.ausbildungsjahr !== "undefined") {
+		if (obj.ausbildungsjahr !== undefined) {
 			result += '"ausbildungsjahr" : ' + obj.ausbildungsjahr + ',';
 		}
-		if (typeof obj.zeitrichtwert !== "undefined") {
+		if (obj.zeitrichtwert !== undefined) {
 			result += '"zeitrichtwert" : ' + obj.zeitrichtwert + ',';
 		}
 		result = result.slice(0, -1);

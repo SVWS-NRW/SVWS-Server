@@ -79,7 +79,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.sktRaumstunden?.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.idKlausurraum === "undefined")
+		if (obj.idKlausurraum === undefined)
 			 throw new Error('invalid json format, missing attribute idKlausurraum');
 		result.idKlausurraum = obj.idKlausurraum;
 		if ((obj.idsSchuelerklausurtermine !== undefined) && (obj.idsSchuelerklausurtermine !== null)) {
@@ -87,7 +87,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.idsSchuelerklausurtermine?.add(elem);
 			}
 		}
-		result.kursKlausurPatched = ((typeof obj.kursKlausurPatched === "undefined") || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
+		result.kursKlausurPatched = ((obj.kursKlausurPatched === undefined) || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
 		return result;
 	}
 
@@ -162,7 +162,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkrsKrs>) : string {
 		let result = '{';
-		if (typeof obj.raeume !== "undefined") {
+		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
 				result += '"raeume" : []';
 			} else {
@@ -176,7 +176,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raumstunden !== "undefined") {
+		if (obj.raumstunden !== undefined) {
 			if (!obj.raumstunden) {
 				result += '"raumstunden" : []';
 			} else {
@@ -190,7 +190,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raumstundenGeloescht !== "undefined") {
+		if (obj.raumstundenGeloescht !== undefined) {
 			if (!obj.raumstundenGeloescht) {
 				result += '"raumstundenGeloescht" : []';
 			} else {
@@ -204,7 +204,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.sktRaumstunden !== "undefined") {
+		if (obj.sktRaumstunden !== undefined) {
 			if (!obj.sktRaumstunden) {
 				result += '"sktRaumstunden" : []';
 			} else {
@@ -218,10 +218,10 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.idKlausurraum !== "undefined") {
+		if (obj.idKlausurraum !== undefined) {
 			result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
 		}
-		if (typeof obj.idsSchuelerklausurtermine !== "undefined") {
+		if (obj.idsSchuelerklausurtermine !== undefined) {
 			if (!obj.idsSchuelerklausurtermine) {
 				result += '"idsSchuelerklausurtermine" : []';
 			} else {
@@ -235,7 +235,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kursKlausurPatched !== "undefined") {
+		if (obj.kursKlausurPatched !== undefined) {
 			result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		}
 		result = result.slice(0, -1);

@@ -28,10 +28,10 @@ export class Telefonnummer extends JavaObject {
 	public static transpilerFromJSON(json : string): Telefonnummer {
 		const obj = JSON.parse(json);
 		const result = new Telefonnummer();
-		if (typeof obj.type === "undefined")
+		if (obj.type === undefined)
 			 throw new Error('invalid json format, missing attribute type');
 		result.type = obj.type;
-		if (typeof obj.number === "undefined")
+		if (obj.number === undefined)
 			 throw new Error('invalid json format, missing attribute number');
 		result.number = obj.number;
 		return result;
@@ -48,10 +48,10 @@ export class Telefonnummer extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Telefonnummer>) : string {
 		let result = '{';
-		if (typeof obj.type !== "undefined") {
+		if (obj.type !== undefined) {
 			result += '"type" : ' + JSON.stringify(obj.type!) + ',';
 		}
-		if (typeof obj.number !== "undefined") {
+		if (obj.number !== undefined) {
 			result += '"number" : ' + JSON.stringify(obj.number!) + ',';
 		}
 		result = result.slice(0, -1);

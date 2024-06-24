@@ -94,17 +94,17 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheit {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiOrganisationseinheit();
-		if (typeof obj.schulnummer === "undefined")
+		if (obj.schulnummer === undefined)
 			 throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		result.bundeslandkennung = typeof obj.bundeslandkennung === "undefined" ? null : obj.bundeslandkennung === null ? null : obj.bundeslandkennung;
-		result.xscid = typeof obj.xscid === "undefined" ? null : obj.xscid === null ? null : obj.xscid;
-		result.oeart = typeof obj.oeart === "undefined" ? null : obj.oeart === null ? null : obj.oeart;
-		if (typeof obj.amtsbez === "undefined")
+		result.bundeslandkennung = (obj.bundeslandkennung === undefined) ? null : obj.bundeslandkennung === null ? null : obj.bundeslandkennung;
+		result.xscid = (obj.xscid === undefined) ? null : obj.xscid === null ? null : obj.xscid;
+		result.oeart = (obj.oeart === undefined) ? null : obj.oeart === null ? null : obj.oeart;
+		if (obj.amtsbez === undefined)
 			 throw new Error('invalid json format, missing attribute amtsbez');
 		result.amtsbez = obj.amtsbez;
-		result.errichtung = typeof obj.errichtung === "undefined" ? null : obj.errichtung === null ? null : obj.errichtung;
-		result.aufloesung = typeof obj.aufloesung === "undefined" ? null : obj.aufloesung === null ? null : obj.aufloesung;
+		result.errichtung = (obj.errichtung === undefined) ? null : obj.errichtung === null ? null : obj.errichtung;
+		result.aufloesung = (obj.aufloesung === undefined) ? null : obj.aufloesung === null ? null : obj.aufloesung;
 		if ((obj.grunddaten !== undefined) && (obj.grunddaten !== null)) {
 			for (const elem of obj.grunddaten) {
 				result.grunddaten?.add(SchuldateiOrganisationseinheitGrunddaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -226,28 +226,28 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheit>) : string {
 		let result = '{';
-		if (typeof obj.schulnummer !== "undefined") {
+		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
-		if (typeof obj.bundeslandkennung !== "undefined") {
+		if (obj.bundeslandkennung !== undefined) {
 			result += '"bundeslandkennung" : ' + ((!obj.bundeslandkennung) ? 'null' : JSON.stringify(obj.bundeslandkennung)) + ',';
 		}
-		if (typeof obj.xscid !== "undefined") {
+		if (obj.xscid !== undefined) {
 			result += '"xscid" : ' + ((!obj.xscid) ? 'null' : JSON.stringify(obj.xscid)) + ',';
 		}
-		if (typeof obj.oeart !== "undefined") {
+		if (obj.oeart !== undefined) {
 			result += '"oeart" : ' + ((!obj.oeart) ? 'null' : JSON.stringify(obj.oeart)) + ',';
 		}
-		if (typeof obj.amtsbez !== "undefined") {
+		if (obj.amtsbez !== undefined) {
 			result += '"amtsbez" : ' + JSON.stringify(obj.amtsbez!) + ',';
 		}
-		if (typeof obj.errichtung !== "undefined") {
+		if (obj.errichtung !== undefined) {
 			result += '"errichtung" : ' + ((!obj.errichtung) ? 'null' : JSON.stringify(obj.errichtung)) + ',';
 		}
-		if (typeof obj.aufloesung !== "undefined") {
+		if (obj.aufloesung !== undefined) {
 			result += '"aufloesung" : ' + ((!obj.aufloesung) ? 'null' : JSON.stringify(obj.aufloesung)) + ',';
 		}
-		if (typeof obj.grunddaten !== "undefined") {
+		if (obj.grunddaten !== undefined) {
 			if (!obj.grunddaten) {
 				result += '"grunddaten" : []';
 			} else {
@@ -261,7 +261,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.adressen !== "undefined") {
+		if (obj.adressen !== undefined) {
 			if (!obj.adressen) {
 				result += '"adressen" : []';
 			} else {
@@ -275,7 +275,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.merkmal !== "undefined") {
+		if (obj.merkmal !== undefined) {
 			if (!obj.merkmal) {
 				result += '"merkmal" : []';
 			} else {
@@ -289,7 +289,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.erreichbarkeiten !== "undefined") {
+		if (obj.erreichbarkeiten !== undefined) {
 			if (!obj.erreichbarkeiten) {
 				result += '"erreichbarkeiten" : []';
 			} else {
@@ -303,7 +303,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.oe_eigenschaften !== "undefined") {
+		if (obj.oe_eigenschaften !== undefined) {
 			if (!obj.oe_eigenschaften) {
 				result += '"oe_eigenschaften" : []';
 			} else {
@@ -317,7 +317,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.gliederung !== "undefined") {
+		if (obj.gliederung !== undefined) {
 			if (!obj.gliederung) {
 				result += '"gliederung" : []';
 			} else {

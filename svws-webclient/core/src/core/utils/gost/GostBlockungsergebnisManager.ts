@@ -285,7 +285,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public constructor(__param0 : GostBlockungsdatenManager, __param1 : GostBlockungsergebnis | number) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager')))) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const pParent : GostBlockungsdatenManager = cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager(__param0);
 			const pGostBlockungsergebnisID : number = __param1 as number;
 			this._parent = pParent;
@@ -294,7 +294,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._kursComparator_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._kursComparator_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this.stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnis'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnis'))))) {
 			const pParent : GostBlockungsdatenManager = cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager(__param0);
 			const pErgebnis : GostBlockungsergebnis = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis(__param1);
 			this._parent = pParent;
@@ -1291,7 +1291,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Implementation for method overloads of 'deepCopyBewertung'
 	 */
 	private static deepCopyBewertung(__param0 : GostBlockungsergebnisBewertung | GostBlockungsergebnisSchiene) : GostBlockungsergebnisBewertung | GostBlockungsergebnisSchiene {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung'))))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung'))))) {
 			const b : GostBlockungsergebnisBewertung = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisBewertung(__param0);
 			const copy : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
 			copy.regelVerletzungen.addAll(b.regelVerletzungen);
@@ -1302,7 +1302,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			copy.kursdifferenzHistogramm = GostBlockungsergebnisManager.deepCopyArray(b.kursdifferenzHistogramm);
 			copy.anzahlKurseMitGleicherFachartProSchiene = b.anzahlKurseMitGleicherFachartProSchiene;
 			return copy;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene'))))) {
 			const s : GostBlockungsergebnisSchiene = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene(__param0);
 			const copy : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			copy.id = s.id;

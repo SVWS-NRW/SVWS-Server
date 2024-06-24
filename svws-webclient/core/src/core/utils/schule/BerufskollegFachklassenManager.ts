@@ -108,15 +108,15 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Implementation for method overloads of 'getVersion'
 	 */
 	public getVersion(__param0? : Schulgliederung | null | number) : number {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			return this._version;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const index : number = __param0 as number;
 			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex.version;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
 			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
@@ -175,7 +175,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Implementation for method overloads of 'getDaten'
 	 */
 	public getDaten(__param0 : number | string, __param1? : number) : BerufskollegFachklassenKatalogDaten | null {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const kuerzel : string = __param0;
 			const schuljahr : number = __param1 as number;
 			const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
@@ -185,7 +185,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
 					return daten;
 			return null;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined)) {
 			const id : number = __param0 as number;
 			return this._mapDatenByID.get(id);
 		} else throw new Error('invalid method overload');
@@ -229,13 +229,13 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Implementation for method overloads of 'getTeilKatalog'
 	 */
 	public getTeilKatalog(__param0 : Schulgliederung | null | number) : BerufskollegFachklassenKatalogIndex {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
+		if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const index : number = __param0 as number;
 			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
 			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")

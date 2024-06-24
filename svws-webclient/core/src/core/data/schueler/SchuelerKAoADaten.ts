@@ -68,26 +68,26 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerKAoADaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerKAoADaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.abschnitt === "undefined")
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		if (typeof obj.jahrgang === "undefined")
+		if (obj.jahrgang === undefined)
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
-		if (typeof obj.kategorie === "undefined")
+		if (obj.kategorie === undefined)
 			 throw new Error('invalid json format, missing attribute kategorie');
 		result.kategorie = obj.kategorie;
-		if (typeof obj.merkmal === "undefined")
+		if (obj.merkmal === undefined)
 			 throw new Error('invalid json format, missing attribute merkmal');
 		result.merkmal = obj.merkmal;
-		result.zusatzmerkmal = typeof obj.zusatzmerkmal === "undefined" ? null : obj.zusatzmerkmal === null ? null : obj.zusatzmerkmal;
-		result.anschlussoption = typeof obj.anschlussoption === "undefined" ? null : obj.anschlussoption === null ? null : obj.anschlussoption;
-		result.berufsfeld = typeof obj.berufsfeld === "undefined" ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
-		result.ebene4 = typeof obj.ebene4 === "undefined" ? null : obj.ebene4 === null ? null : obj.ebene4;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.zusatzmerkmal = (obj.zusatzmerkmal === undefined) ? null : obj.zusatzmerkmal === null ? null : obj.zusatzmerkmal;
+		result.anschlussoption = (obj.anschlussoption === undefined) ? null : obj.anschlussoption === null ? null : obj.anschlussoption;
+		result.berufsfeld = (obj.berufsfeld === undefined) ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
+		result.ebene4 = (obj.ebene4 === undefined) ? null : obj.ebene4 === null ? null : obj.ebene4;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
 
@@ -110,34 +110,34 @@ export class SchuelerKAoADaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerKAoADaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
-		if (typeof obj.kategorie !== "undefined") {
+		if (obj.kategorie !== undefined) {
 			result += '"kategorie" : ' + obj.kategorie + ',';
 		}
-		if (typeof obj.merkmal !== "undefined") {
+		if (obj.merkmal !== undefined) {
 			result += '"merkmal" : ' + obj.merkmal + ',';
 		}
-		if (typeof obj.zusatzmerkmal !== "undefined") {
+		if (obj.zusatzmerkmal !== undefined) {
 			result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal) + ',';
 		}
-		if (typeof obj.anschlussoption !== "undefined") {
+		if (obj.anschlussoption !== undefined) {
 			result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption) + ',';
 		}
-		if (typeof obj.berufsfeld !== "undefined") {
+		if (obj.berufsfeld !== undefined) {
 			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld) + ',';
 		}
-		if (typeof obj.ebene4 !== "undefined") {
+		if (obj.ebene4 !== undefined) {
 			result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4) + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);

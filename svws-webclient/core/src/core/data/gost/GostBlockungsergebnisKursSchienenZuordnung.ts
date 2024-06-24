@@ -28,10 +28,10 @@ export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKursSchienenZuordnung {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisKursSchienenZuordnung();
-		if (typeof obj.idKurs === "undefined")
+		if (obj.idKurs === undefined)
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
-		if (typeof obj.idSchiene === "undefined")
+		if (obj.idSchiene === undefined)
 			 throw new Error('invalid json format, missing attribute idSchiene');
 		result.idSchiene = obj.idSchiene;
 		return result;
@@ -48,10 +48,10 @@ export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisKursSchienenZuordnung>) : string {
 		let result = '{';
-		if (typeof obj.idKurs !== "undefined") {
+		if (obj.idKurs !== undefined) {
 			result += '"idKurs" : ' + obj.idKurs + ',';
 		}
-		if (typeof obj.idSchiene !== "undefined") {
+		if (obj.idSchiene !== undefined) {
 			result += '"idSchiene" : ' + obj.idSchiene + ',';
 		}
 		result = result.slice(0, -1);

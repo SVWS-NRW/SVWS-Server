@@ -80,7 +80,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result.kopplungen?.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.wochenstunden === "undefined")
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		return result;
@@ -156,7 +156,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanInputSimpleKurs>) : string {
 		let result = '{';
-		if (typeof obj.lehrkraefte !== "undefined") {
+		if (obj.lehrkraefte !== undefined) {
 			if (!obj.lehrkraefte) {
 				result += '"lehrkraefte" : []';
 			} else {
@@ -170,7 +170,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -184,7 +184,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -198,7 +198,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume !== "undefined") {
+		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
 				result += '"raeume" : []';
 			} else {
@@ -212,7 +212,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kopplungen !== "undefined") {
+		if (obj.kopplungen !== undefined) {
 			if (!obj.kopplungen) {
 				result += '"kopplungen" : []';
 			} else {
@@ -226,7 +226,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		result = result.slice(0, -1);

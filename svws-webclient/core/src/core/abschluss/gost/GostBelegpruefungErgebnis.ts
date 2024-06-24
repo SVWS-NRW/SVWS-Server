@@ -36,7 +36,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungErgebnis {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungErgebnis();
-		if (typeof obj.erfolgreich === "undefined")
+		if (obj.erfolgreich === undefined)
 			 throw new Error('invalid json format, missing attribute erfolgreich');
 		result.erfolgreich = obj.erfolgreich;
 		if ((obj.fehlercodes !== undefined) && (obj.fehlercodes !== null)) {
@@ -86,10 +86,10 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungErgebnis>) : string {
 		let result = '{';
-		if (typeof obj.erfolgreich !== "undefined") {
+		if (obj.erfolgreich !== undefined) {
 			result += '"erfolgreich" : ' + obj.erfolgreich + ',';
 		}
-		if (typeof obj.fehlercodes !== "undefined") {
+		if (obj.fehlercodes !== undefined) {
 			if (!obj.fehlercodes) {
 				result += '"fehlercodes" : []';
 			} else {
@@ -103,7 +103,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.log !== "undefined") {
+		if (obj.log !== undefined) {
 			if (!obj.log) {
 				result += '"log" : []';
 			} else {

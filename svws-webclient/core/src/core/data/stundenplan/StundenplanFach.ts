@@ -49,22 +49,22 @@ export class StundenplanFach extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanFach {
 		const obj = JSON.parse(json);
 		const result = new StundenplanFach();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.kuerzelStatistik === "undefined")
+		if (obj.kuerzelStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
 		result.kuerzelStatistik = obj.kuerzelStatistik;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.sortierung === "undefined")
+		if (obj.sortierung === undefined)
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.farbe = ((typeof obj.farbe === "undefined") || (obj.farbe === null)) ? null : RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
+		result.farbe = ((obj.farbe === undefined) || (obj.farbe === null)) ? null : RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
 		return result;
 	}
 
@@ -83,22 +83,22 @@ export class StundenplanFach extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanFach>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.kuerzelStatistik !== "undefined") {
+		if (obj.kuerzelStatistik !== undefined) {
 			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.sortierung !== "undefined") {
+		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.farbe !== "undefined") {
+		if (obj.farbe !== undefined) {
 			result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
 		}
 		result = result.slice(0, -1);

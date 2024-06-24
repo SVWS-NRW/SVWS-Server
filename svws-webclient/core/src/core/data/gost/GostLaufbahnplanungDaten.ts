@@ -105,34 +105,34 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDaten {
 		const obj = JSON.parse(json);
 		const result = new GostLaufbahnplanungDaten();
-		if (typeof obj.schulNr === "undefined")
+		if (obj.schulNr === undefined)
 			 throw new Error('invalid json format, missing attribute schulNr');
 		result.schulNr = obj.schulNr;
-		if (typeof obj.schulBezeichnung1 === "undefined")
+		if (obj.schulBezeichnung1 === undefined)
 			 throw new Error('invalid json format, missing attribute schulBezeichnung1');
 		result.schulBezeichnung1 = obj.schulBezeichnung1;
-		if (typeof obj.schulBezeichnung2 === "undefined")
+		if (obj.schulBezeichnung2 === undefined)
 			 throw new Error('invalid json format, missing attribute schulBezeichnung2');
 		result.schulBezeichnung2 = obj.schulBezeichnung2;
-		if (typeof obj.schulBezeichnung3 === "undefined")
+		if (obj.schulBezeichnung3 === undefined)
 			 throw new Error('invalid json format, missing attribute schulBezeichnung3');
 		result.schulBezeichnung3 = obj.schulBezeichnung3;
-		if (typeof obj.anmerkungen === "undefined")
+		if (obj.anmerkungen === undefined)
 			 throw new Error('invalid json format, missing attribute anmerkungen');
 		result.anmerkungen = obj.anmerkungen;
-		if (typeof obj.abiturjahr === "undefined")
+		if (obj.abiturjahr === undefined)
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : obj.textBeratungsbogen;
-		if (typeof obj.hatZusatzkursGE === "undefined")
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.textBeratungsbogen = (obj.textBeratungsbogen === undefined) ? null : obj.textBeratungsbogen === null ? null : obj.textBeratungsbogen;
+		if (obj.hatZusatzkursGE === undefined)
 			 throw new Error('invalid json format, missing attribute hatZusatzkursGE');
 		result.hatZusatzkursGE = obj.hatZusatzkursGE;
-		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : obj.beginnZusatzkursGE;
-		if (typeof obj.hatZusatzkursSW === "undefined")
+		result.beginnZusatzkursGE = (obj.beginnZusatzkursGE === undefined) ? null : obj.beginnZusatzkursGE === null ? null : obj.beginnZusatzkursGE;
+		if (obj.hatZusatzkursSW === undefined)
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
-		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
+		result.beginnZusatzkursSW = (obj.beginnZusatzkursSW === undefined) ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
 		if ((obj.beratungslehrer !== undefined) && (obj.beratungslehrer !== null)) {
 			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
@@ -225,43 +225,43 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungDaten>) : string {
 		let result = '{';
-		if (typeof obj.schulNr !== "undefined") {
+		if (obj.schulNr !== undefined) {
 			result += '"schulNr" : ' + obj.schulNr + ',';
 		}
-		if (typeof obj.schulBezeichnung1 !== "undefined") {
+		if (obj.schulBezeichnung1 !== undefined) {
 			result += '"schulBezeichnung1" : ' + JSON.stringify(obj.schulBezeichnung1!) + ',';
 		}
-		if (typeof obj.schulBezeichnung2 !== "undefined") {
+		if (obj.schulBezeichnung2 !== undefined) {
 			result += '"schulBezeichnung2" : ' + JSON.stringify(obj.schulBezeichnung2!) + ',';
 		}
-		if (typeof obj.schulBezeichnung3 !== "undefined") {
+		if (obj.schulBezeichnung3 !== undefined) {
 			result += '"schulBezeichnung3" : ' + JSON.stringify(obj.schulBezeichnung3!) + ',';
 		}
-		if (typeof obj.anmerkungen !== "undefined") {
+		if (obj.anmerkungen !== undefined) {
 			result += '"anmerkungen" : ' + JSON.stringify(obj.anmerkungen!) + ',';
 		}
-		if (typeof obj.abiturjahr !== "undefined") {
+		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
-		if (typeof obj.textBeratungsbogen !== "undefined") {
+		if (obj.textBeratungsbogen !== undefined) {
 			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		}
-		if (typeof obj.hatZusatzkursGE !== "undefined") {
+		if (obj.hatZusatzkursGE !== undefined) {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
 		}
-		if (typeof obj.beginnZusatzkursGE !== "undefined") {
+		if (obj.beginnZusatzkursGE !== undefined) {
 			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		}
-		if (typeof obj.hatZusatzkursSW !== "undefined") {
+		if (obj.hatZusatzkursSW !== undefined) {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		}
-		if (typeof obj.beginnZusatzkursSW !== "undefined") {
+		if (obj.beginnZusatzkursSW !== undefined) {
 			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		}
-		if (typeof obj.beratungslehrer !== "undefined") {
+		if (obj.beratungslehrer !== undefined) {
 			if (!obj.beratungslehrer) {
 				result += '"beratungslehrer" : []';
 			} else {
@@ -275,7 +275,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -289,7 +289,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.fachkombinationen !== "undefined") {
+		if (obj.fachkombinationen !== undefined) {
 			if (!obj.fachkombinationen) {
 				result += '"fachkombinationen" : []';
 			} else {
@@ -303,7 +303,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schueler !== "undefined") {
+		if (obj.schueler !== undefined) {
 			if (!obj.schueler) {
 				result += '"schueler" : []';
 			} else {

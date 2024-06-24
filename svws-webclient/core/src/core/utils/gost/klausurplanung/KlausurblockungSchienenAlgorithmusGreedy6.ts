@@ -30,7 +30,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	 * Implementation for method overloads of 'berechne'
 	 */
 	public berechne(__param0? : number) : void {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
+		if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const pZeitEnde : number = __param0 as number;
 			this.berechne();
 			this._dynDaten.aktionZustand1Speichern();
@@ -43,7 +43,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 			}
 			if (this._dynDaten.gibIstBesserAlsZustand2())
 				this._dynDaten.aktionZustand2Speichern();
-		} else if ((typeof __param0 === "undefined")) {
+		} else if ((__param0 === undefined)) {
 			this._dynDaten.aktionKlausurenAusSchienenEntfernen();
 			const setS : LinkedCollection<number> = new LinkedCollection<number>();
 			while (this._dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {

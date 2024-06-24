@@ -47,7 +47,7 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	public static transpilerFromJSON(json : string): GostNachschreibterminblockungKonfiguration {
 		const obj = JSON.parse(json);
 		const result = new GostNachschreibterminblockungKonfiguration();
-		if (typeof obj.maxTimeMillis === "undefined")
+		if (obj.maxTimeMillis === undefined)
 			 throw new Error('invalid json format, missing attribute maxTimeMillis');
 		result.maxTimeMillis = obj.maxTimeMillis;
 		if ((obj.schuelerklausurtermine !== undefined) && (obj.schuelerklausurtermine !== null)) {
@@ -60,10 +60,10 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 				result.termine?.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen === "undefined")
+		if (obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen === undefined)
 			 throw new Error('invalid json format, missing attribute _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen');
 		result._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen;
-		if (typeof obj._regel_gleiche_fachart_auf_selbe_termine_verteilen === "undefined")
+		if (obj._regel_gleiche_fachart_auf_selbe_termine_verteilen === undefined)
 			 throw new Error('invalid json format, missing attribute _regel_gleiche_fachart_auf_selbe_termine_verteilen');
 		result._regel_gleiche_fachart_auf_selbe_termine_verteilen = obj._regel_gleiche_fachart_auf_selbe_termine_verteilen;
 		return result;
@@ -105,10 +105,10 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostNachschreibterminblockungKonfiguration>) : string {
 		let result = '{';
-		if (typeof obj.maxTimeMillis !== "undefined") {
+		if (obj.maxTimeMillis !== undefined) {
 			result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
 		}
-		if (typeof obj.schuelerklausurtermine !== "undefined") {
+		if (obj.schuelerklausurtermine !== undefined) {
 			if (!obj.schuelerklausurtermine) {
 				result += '"schuelerklausurtermine" : []';
 			} else {
@@ -122,7 +122,7 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.termine !== "undefined") {
+		if (obj.termine !== undefined) {
 			if (!obj.termine) {
 				result += '"termine" : []';
 			} else {
@@ -136,10 +136,10 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen !== "undefined") {
+		if (obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen !== undefined) {
 			result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen + ',';
 		}
-		if (typeof obj._regel_gleiche_fachart_auf_selbe_termine_verteilen !== "undefined") {
+		if (obj._regel_gleiche_fachart_auf_selbe_termine_verteilen !== undefined) {
 			result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen + ',';
 		}
 		result = result.slice(0, -1);

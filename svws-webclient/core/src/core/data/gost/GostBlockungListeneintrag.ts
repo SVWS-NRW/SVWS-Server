@@ -43,19 +43,19 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungListeneintrag {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungListeneintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.gostHalbjahr === "undefined")
+		if (obj.gostHalbjahr === undefined)
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.istAktiv === "undefined")
+		if (obj.istAktiv === undefined)
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if (typeof obj.anzahlErgebnisse === "undefined")
+		if (obj.anzahlErgebnisse === undefined)
 			 throw new Error('invalid json format, missing attribute anzahlErgebnisse');
 		result.anzahlErgebnisse = obj.anzahlErgebnisse;
 		return result;
@@ -75,19 +75,19 @@ export class GostBlockungListeneintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungListeneintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.gostHalbjahr !== "undefined") {
+		if (obj.gostHalbjahr !== undefined) {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		}
-		if (typeof obj.istAktiv !== "undefined") {
+		if (obj.istAktiv !== undefined) {
 			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
-		if (typeof obj.anzahlErgebnisse !== "undefined") {
+		if (obj.anzahlErgebnisse !== undefined) {
 			result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse + ',';
 		}
 		result = result.slice(0, -1);

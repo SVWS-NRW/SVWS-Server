@@ -41,14 +41,14 @@ export class GostKlausurraumRich extends JavaObject {
 	 */
 	public constructor(__param0? : GostKlausurraum, __param1? : StundenplanRaum | null) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanRaum'))) || (__param1 === null))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanRaum'))) || (__param1 === null))) {
 			const klausurraum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stundenplanraum : StundenplanRaum | null = cast_de_svws_nrw_core_data_stundenplan_StundenplanRaum(__param1);
 			this.id = klausurraum.id;
 			if (stundenplanraum !== null) {
 				this.groesse = stundenplanraum.groesse;
 			}
-		} else if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		} else if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
 		} else throw new Error('invalid method overload');
 	}
@@ -83,10 +83,10 @@ export class GostKlausurraumRich extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurraumRich {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurraumRich();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.groesse === "undefined")
+		if (obj.groesse === undefined)
 			 throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
 		if ((obj.schuelerklausurterminIDs !== undefined) && (obj.schuelerklausurterminIDs !== null)) {
@@ -120,13 +120,13 @@ export class GostKlausurraumRich extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumRich>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.groesse !== "undefined") {
+		if (obj.groesse !== undefined) {
 			result += '"groesse" : ' + obj.groesse + ',';
 		}
-		if (typeof obj.schuelerklausurterminIDs !== "undefined") {
+		if (obj.schuelerklausurterminIDs !== undefined) {
 			if (!obj.schuelerklausurterminIDs) {
 				result += '"schuelerklausurterminIDs" : []';
 			} else {

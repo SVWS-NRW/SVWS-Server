@@ -53,25 +53,25 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchemaListeEintrag();
-		if (typeof obj.name === "undefined")
+		if (obj.name === undefined)
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.username === "undefined")
+		if (obj.username === undefined)
 			 throw new Error('invalid json format, missing attribute username');
 		result.username = obj.username;
-		if (typeof obj.isSVWS === "undefined")
+		if (obj.isSVWS === undefined)
 			 throw new Error('invalid json format, missing attribute isSVWS');
 		result.isSVWS = obj.isSVWS;
-		if (typeof obj.revision === "undefined")
+		if (obj.revision === undefined)
 			 throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;
-		if (typeof obj.isTainted === "undefined")
+		if (obj.isTainted === undefined)
 			 throw new Error('invalid json format, missing attribute isTainted');
 		result.isTainted = obj.isTainted;
-		if (typeof obj.isInConfig === "undefined")
+		if (obj.isInConfig === undefined)
 			 throw new Error('invalid json format, missing attribute isInConfig');
 		result.isInConfig = obj.isInConfig;
-		if (typeof obj.isDeactivated === "undefined")
+		if (obj.isDeactivated === undefined)
 			 throw new Error('invalid json format, missing attribute isDeactivated');
 		result.isDeactivated = obj.isDeactivated;
 		return result;
@@ -93,25 +93,25 @@ export class SchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchemaListeEintrag>) : string {
 		let result = '{';
-		if (typeof obj.name !== "undefined") {
+		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
-		if (typeof obj.username !== "undefined") {
+		if (obj.username !== undefined) {
 			result += '"username" : ' + JSON.stringify(obj.username!) + ',';
 		}
-		if (typeof obj.isSVWS !== "undefined") {
+		if (obj.isSVWS !== undefined) {
 			result += '"isSVWS" : ' + obj.isSVWS + ',';
 		}
-		if (typeof obj.revision !== "undefined") {
+		if (obj.revision !== undefined) {
 			result += '"revision" : ' + obj.revision + ',';
 		}
-		if (typeof obj.isTainted !== "undefined") {
+		if (obj.isTainted !== undefined) {
 			result += '"isTainted" : ' + obj.isTainted + ',';
 		}
-		if (typeof obj.isInConfig !== "undefined") {
+		if (obj.isInConfig !== undefined) {
 			result += '"isInConfig" : ' + obj.isInConfig + ',';
 		}
-		if (typeof obj.isDeactivated !== "undefined") {
+		if (obj.isDeactivated !== undefined) {
 			result += '"isDeactivated" : ' + obj.isDeactivated + ',';
 		}
 		result = result.slice(0, -1);

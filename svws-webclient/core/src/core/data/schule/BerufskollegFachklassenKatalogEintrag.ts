@@ -36,10 +36,10 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new BerufskollegFachklassenKatalogEintrag();
-		if (typeof obj.schluessel === "undefined")
+		if (obj.schluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
-		if (typeof obj.schluessel2 === "undefined")
+		if (obj.schluessel2 === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel2');
 		result.schluessel2 = obj.schluessel2;
 		if ((obj.historie !== undefined) && (obj.historie !== null)) {
@@ -73,13 +73,13 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.schluessel !== "undefined") {
+		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		}
-		if (typeof obj.schluessel2 !== "undefined") {
+		if (obj.schluessel2 !== undefined) {
 			result += '"schluessel2" : ' + JSON.stringify(obj.schluessel2!) + ',';
 		}
-		if (typeof obj.historie !== "undefined") {
+		if (obj.historie !== undefined) {
 			if (!obj.historie) {
 				result += '"historie" : []';
 			} else {

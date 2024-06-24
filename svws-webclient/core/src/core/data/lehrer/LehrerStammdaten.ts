@@ -141,43 +141,43 @@ export class LehrerStammdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): LehrerStammdaten {
 		const obj = JSON.parse(json);
 		const result = new LehrerStammdaten();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.kuerzel === "undefined")
+		if (obj.kuerzel === undefined)
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.personalTyp === "undefined")
+		if (obj.personalTyp === undefined)
 			 throw new Error('invalid json format, missing attribute personalTyp');
 		result.personalTyp = obj.personalTyp;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : obj.titel;
-		result.amtsbezeichnung = typeof obj.amtsbezeichnung === "undefined" ? null : obj.amtsbezeichnung === null ? null : obj.amtsbezeichnung;
-		if (typeof obj.nachname === "undefined")
+		result.anrede = (obj.anrede === undefined) ? null : obj.anrede === null ? null : obj.anrede;
+		result.titel = (obj.titel === undefined) ? null : obj.titel === null ? null : obj.titel;
+		result.amtsbezeichnung = (obj.amtsbezeichnung === undefined) ? null : obj.amtsbezeichnung === null ? null : obj.amtsbezeichnung;
+		if (obj.nachname === undefined)
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.vorname === "undefined")
+		if (obj.vorname === undefined)
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (typeof obj.geschlecht === "undefined")
+		if (obj.geschlecht === undefined)
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
-		result.geburtsdatum = typeof obj.geburtsdatum === "undefined" ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
-		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
-		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID === null ? null : obj.wohnortID;
-		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID === null ? null : obj.ortsteilID;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : obj.telefon;
-		result.telefonMobil = typeof obj.telefonMobil === "undefined" ? null : obj.telefonMobil === null ? null : obj.telefonMobil;
-		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat === null ? null : obj.emailPrivat;
-		result.emailDienstlich = typeof obj.emailDienstlich === "undefined" ? null : obj.emailDienstlich === null ? null : obj.emailDienstlich;
-		result.foto = typeof obj.foto === "undefined" ? null : obj.foto === null ? null : obj.foto;
-		if (typeof obj.istSichtbar === "undefined")
+		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
+		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
+		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
+		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.wohnortID = (obj.wohnortID === undefined) ? null : obj.wohnortID === null ? null : obj.wohnortID;
+		result.ortsteilID = (obj.ortsteilID === undefined) ? null : obj.ortsteilID === null ? null : obj.ortsteilID;
+		result.telefon = (obj.telefon === undefined) ? null : obj.telefon === null ? null : obj.telefon;
+		result.telefonMobil = (obj.telefonMobil === undefined) ? null : obj.telefonMobil === null ? null : obj.telefonMobil;
+		result.emailPrivat = (obj.emailPrivat === undefined) ? null : obj.emailPrivat === null ? null : obj.emailPrivat;
+		result.emailDienstlich = (obj.emailDienstlich === undefined) ? null : obj.emailDienstlich === null ? null : obj.emailDienstlich;
+		result.foto = (obj.foto === undefined) ? null : obj.foto === null ? null : obj.foto;
+		if (obj.istSichtbar === undefined)
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (typeof obj.istRelevantFuerStatistik === "undefined")
+		if (obj.istRelevantFuerStatistik === undefined)
 			 throw new Error('invalid json format, missing attribute istRelevantFuerStatistik');
 		result.istRelevantFuerStatistik = obj.istRelevantFuerStatistik;
 		if ((obj.leitungsfunktionen !== undefined) && (obj.leitungsfunktionen !== null)) {
@@ -232,76 +232,76 @@ export class LehrerStammdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<LehrerStammdaten>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
-		if (typeof obj.personalTyp !== "undefined") {
+		if (obj.personalTyp !== undefined) {
 			result += '"personalTyp" : ' + JSON.stringify(obj.personalTyp!) + ',';
 		}
-		if (typeof obj.anrede !== "undefined") {
+		if (obj.anrede !== undefined) {
 			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
-		if (typeof obj.titel !== "undefined") {
+		if (obj.titel !== undefined) {
 			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
-		if (typeof obj.amtsbezeichnung !== "undefined") {
+		if (obj.amtsbezeichnung !== undefined) {
 			result += '"amtsbezeichnung" : ' + ((!obj.amtsbezeichnung) ? 'null' : JSON.stringify(obj.amtsbezeichnung)) + ',';
 		}
-		if (typeof obj.nachname !== "undefined") {
+		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
+		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
-		if (typeof obj.geschlecht !== "undefined") {
+		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + obj.geschlecht + ',';
 		}
-		if (typeof obj.geburtsdatum !== "undefined") {
+		if (obj.geburtsdatum !== undefined) {
 			result += '"geburtsdatum" : ' + ((!obj.geburtsdatum) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
-		if (typeof obj.staatsangehoerigkeitID !== "undefined") {
+		if (obj.staatsangehoerigkeitID !== undefined) {
 			result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
 		}
-		if (typeof obj.strassenname !== "undefined") {
+		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
-		if (typeof obj.hausnummer !== "undefined") {
+		if (obj.hausnummer !== undefined) {
 			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
-		if (typeof obj.hausnummerZusatz !== "undefined") {
+		if (obj.hausnummerZusatz !== undefined) {
 			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
-		if (typeof obj.wohnortID !== "undefined") {
+		if (obj.wohnortID !== undefined) {
 			result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID) + ',';
 		}
-		if (typeof obj.ortsteilID !== "undefined") {
+		if (obj.ortsteilID !== undefined) {
 			result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID) + ',';
 		}
-		if (typeof obj.telefon !== "undefined") {
+		if (obj.telefon !== undefined) {
 			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
-		if (typeof obj.telefonMobil !== "undefined") {
+		if (obj.telefonMobil !== undefined) {
 			result += '"telefonMobil" : ' + ((!obj.telefonMobil) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
 		}
-		if (typeof obj.emailPrivat !== "undefined") {
+		if (obj.emailPrivat !== undefined) {
 			result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
 		}
-		if (typeof obj.emailDienstlich !== "undefined") {
+		if (obj.emailDienstlich !== undefined) {
 			result += '"emailDienstlich" : ' + ((!obj.emailDienstlich) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
 		}
-		if (typeof obj.foto !== "undefined") {
+		if (obj.foto !== undefined) {
 			result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		}
-		if (typeof obj.istSichtbar !== "undefined") {
+		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		}
-		if (typeof obj.istRelevantFuerStatistik !== "undefined") {
+		if (obj.istRelevantFuerStatistik !== undefined) {
 			result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik + ',';
 		}
-		if (typeof obj.leitungsfunktionen !== "undefined") {
+		if (obj.leitungsfunktionen !== undefined) {
 			if (!obj.leitungsfunktionen) {
 				result += '"leitungsfunktionen" : []';
 			} else {

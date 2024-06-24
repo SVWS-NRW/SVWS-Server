@@ -55,7 +55,7 @@ export class Arrays extends JavaObject {
 	public static fill(a : Array<unknown>, value : unknown) : void;
 	public static fill(a : Array<unknown>, fromIndex: number, toIndex : number, value : unknown) : void;
 	public static fill(a : Array<unknown>, param1 : number | unknown, param2? : number, param3? : unknown) : void {
-		if ((typeof param1 === "number") && (typeof param2 !== "undefined") && (typeof param3 !== "undefined")) {
+		if ((typeof param1 === "number") && (param2 !== undefined) && (param3 !== undefined)) {
 			a.fill(param3, param1, param2);
 		} else {
 			a.fill(param1);

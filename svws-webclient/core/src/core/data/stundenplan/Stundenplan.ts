@@ -92,22 +92,22 @@ export class Stundenplan extends JavaObject {
 	public static transpilerFromJSON(json : string): Stundenplan {
 		const obj = JSON.parse(json);
 		const result = new Stundenplan();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idSchuljahresabschnitt === "undefined")
+		if (obj.idSchuljahresabschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (typeof obj.gueltigAb === "undefined")
+		if (obj.gueltigAb === undefined)
 			 throw new Error('invalid json format, missing attribute gueltigAb');
 		result.gueltigAb = obj.gueltigAb;
-		if (typeof obj.gueltigBis === "undefined")
+		if (obj.gueltigBis === undefined)
 			 throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
-		if (typeof obj.bezeichnungStundenplan === "undefined")
+		if (obj.bezeichnungStundenplan === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
 		result.bezeichnungStundenplan = obj.bezeichnungStundenplan;
-		if (typeof obj.wochenTypModell === "undefined")
+		if (obj.wochenTypModell === undefined)
 			 throw new Error('invalid json format, missing attribute wochenTypModell');
 		result.wochenTypModell = obj.wochenTypModell;
 		if ((obj.zeitraster !== undefined) && (obj.zeitraster !== null)) {
@@ -247,25 +247,25 @@ export class Stundenplan extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Stundenplan>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.gueltigAb !== "undefined") {
+		if (obj.gueltigAb !== undefined) {
 			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
 		}
-		if (typeof obj.gueltigBis !== "undefined") {
+		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
 		}
-		if (typeof obj.bezeichnungStundenplan !== "undefined") {
+		if (obj.bezeichnungStundenplan !== undefined) {
 			result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan!) + ',';
 		}
-		if (typeof obj.wochenTypModell !== "undefined") {
+		if (obj.wochenTypModell !== undefined) {
 			result += '"wochenTypModell" : ' + obj.wochenTypModell + ',';
 		}
-		if (typeof obj.zeitraster !== "undefined") {
+		if (obj.zeitraster !== undefined) {
 			if (!obj.zeitraster) {
 				result += '"zeitraster" : []';
 			} else {
@@ -279,7 +279,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume !== "undefined") {
+		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
 				result += '"raeume" : []';
 			} else {
@@ -293,7 +293,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.schienen !== "undefined") {
+		if (obj.schienen !== undefined) {
 			if (!obj.schienen) {
 				result += '"schienen" : []';
 			} else {
@@ -307,7 +307,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.pausenzeiten !== "undefined") {
+		if (obj.pausenzeiten !== undefined) {
 			if (!obj.pausenzeiten) {
 				result += '"pausenzeiten" : []';
 			} else {
@@ -321,7 +321,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.aufsichtsbereiche !== "undefined") {
+		if (obj.aufsichtsbereiche !== undefined) {
 			if (!obj.aufsichtsbereiche) {
 				result += '"aufsichtsbereiche" : []';
 			} else {
@@ -335,7 +335,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kalenderwochenZuordnung !== "undefined") {
+		if (obj.kalenderwochenZuordnung !== undefined) {
 			if (!obj.kalenderwochenZuordnung) {
 				result += '"kalenderwochenZuordnung" : []';
 			} else {
@@ -349,7 +349,7 @@ export class Stundenplan extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.jahrgaenge !== "undefined") {
+		if (obj.jahrgaenge !== undefined) {
 			if (!obj.jahrgaenge) {
 				result += '"jahrgaenge" : []';
 			} else {

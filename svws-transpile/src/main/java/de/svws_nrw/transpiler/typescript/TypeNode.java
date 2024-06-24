@@ -730,7 +730,7 @@ public class TypeNode {
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + i.getName().toString());
 			if (type instanceof final ExpressionTypeVar tvType) {
 				if (tvType.getExtendsBound() == null)
-					return "(typeof " + obj + " !== \"undefined\")";
+					return "(" + obj + " !== undefined)";
 				type = tvType.getExtendsBound();
 			}
 			if (type instanceof final ExpressionClassType classType) {
@@ -748,7 +748,7 @@ public class TypeNode {
 				// Check whether we check for a functional interface - then we need only an object with the function...
 				final String functionalInterfaceMethodName = plugin.getTranspiler().getFunctionInterfaceMethodName(classType.getFullQualifiedName());
 				if (functionalInterfaceMethodName != null)
-					return "((typeof " + obj + " !== 'undefined') && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName + "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
+					return "((" + obj + " !== undefined) && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName + "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
 				// Check for java.lang.Object - in this case we must also check for Numbers
 				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
 					return "((" + obj + " instanceof Object) || ((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "'))))";

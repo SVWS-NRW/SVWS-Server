@@ -72,16 +72,16 @@ export class GostLeistungen extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLeistungen {
 		const obj = JSON.parse(json);
 		const result = new GostLeistungen();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.aktuellesSchuljahr = typeof obj.aktuellesSchuljahr === "undefined" ? null : obj.aktuellesSchuljahr === null ? null : obj.aktuellesSchuljahr;
-		result.aktuellerJahrgang = typeof obj.aktuellerJahrgang === "undefined" ? null : obj.aktuellerJahrgang === null ? null : obj.aktuellerJahrgang;
-		result.sprachendaten = ((typeof obj.sprachendaten === "undefined") || (obj.sprachendaten === null)) ? null : Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema === null ? null : obj.projektkursThema;
-		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
-		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
+		result.aktuellesSchuljahr = (obj.aktuellesSchuljahr === undefined) ? null : obj.aktuellesSchuljahr === null ? null : obj.aktuellesSchuljahr;
+		result.aktuellerJahrgang = (obj.aktuellerJahrgang === undefined) ? null : obj.aktuellerJahrgang === null ? null : obj.aktuellerJahrgang;
+		result.sprachendaten = ((obj.sprachendaten === undefined) || (obj.sprachendaten === null)) ? null : Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		result.projektkursThema = (obj.projektkursThema === undefined) ? null : obj.projektkursThema === null ? null : obj.projektkursThema;
+		result.projektkursLeitfach1Kuerzel = (obj.projektkursLeitfach1Kuerzel === undefined) ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
+		result.projektkursLeitfach2Kuerzel = (obj.projektkursLeitfach2Kuerzel === undefined) ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
@@ -134,31 +134,31 @@ export class GostLeistungen extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungen>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.aktuellesSchuljahr !== "undefined") {
+		if (obj.aktuellesSchuljahr !== undefined) {
 			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr) + ',';
 		}
-		if (typeof obj.aktuellerJahrgang !== "undefined") {
+		if (obj.aktuellerJahrgang !== undefined) {
 			result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
 		}
-		if (typeof obj.sprachendaten !== "undefined") {
+		if (obj.sprachendaten !== undefined) {
 			result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.projektkursThema !== "undefined") {
+		if (obj.projektkursThema !== undefined) {
 			result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
 		}
-		if (typeof obj.projektkursLeitfach1Kuerzel !== "undefined") {
+		if (obj.projektkursLeitfach1Kuerzel !== undefined) {
 			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		}
-		if (typeof obj.projektkursLeitfach2Kuerzel !== "undefined") {
+		if (obj.projektkursLeitfach2Kuerzel !== undefined) {
 			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		}
-		if (typeof obj.bewertetesHalbjahr !== "undefined") {
+		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;
 			if (!a) {
 				result += '"bewertetesHalbjahr" : []';
@@ -173,7 +173,7 @@ export class GostLeistungen extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {

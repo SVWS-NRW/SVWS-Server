@@ -43,9 +43,9 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	 */
 	public constructor(__param0? : number, __param1? : string, __param2? : number, __param3? : number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && typeof __param3 === "number")) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "number") && ((__param3 !== undefined) && typeof __param3 === "number")) {
 			const id : number = __param0 as number;
 			const bezeichnung : string = __param1;
 			const spalte : number = __param2 as number;
@@ -68,16 +68,16 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerKompetenzGruppenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new BenutzerKompetenzGruppenKatalogEintrag();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.spalte === "undefined")
+		if (obj.spalte === undefined)
 			 throw new Error('invalid json format, missing attribute spalte');
 		result.spalte = obj.spalte;
-		if (typeof obj.zeile === "undefined")
+		if (obj.zeile === undefined)
 			 throw new Error('invalid json format, missing attribute zeile');
 		result.zeile = obj.zeile;
 		return result;
@@ -96,16 +96,16 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<BenutzerKompetenzGruppenKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.spalte !== "undefined") {
+		if (obj.spalte !== undefined) {
 			result += '"spalte" : ' + obj.spalte + ',';
 		}
-		if (typeof obj.zeile !== "undefined") {
+		if (obj.zeile !== undefined) {
 			result += '"zeile" : ' + obj.zeile + ',';
 		}
 		result = result.slice(0, -1);

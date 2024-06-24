@@ -88,12 +88,12 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public constructor(__param0? : List<GostFach>, __param1? : List<GostJahrgangFachkombination>) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined)) {
 			const faecher : List<GostFach> = cast_java_util_List(__param0);
 			this.addAll(faecher);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
 			const faecher : List<GostFach> = cast_java_util_List(__param0);
 			const fachkombis : List<GostJahrgangFachkombination> = cast_java_util_List(__param1);
 			this.addAll(faecher);
@@ -203,12 +203,12 @@ export class GostFaecherManager extends JavaObject {
 	 * Implementation for method overloads of 'add'
 	 */
 	public add(__param0 : GostFach | GostJahrgangFachkombination) : boolean {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostFach'))))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostFach'))))) {
 			const fach : GostFach = cast_de_svws_nrw_core_data_gost_GostFach(__param0);
 			const result : boolean = this.addFachInternal(fach);
 			this.sort();
 			return result;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachkombination'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachkombination'))))) {
 			const fachkombi : GostJahrgangFachkombination = cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination(__param0);
 			return this.addFachkombinationInternal(fachkombi);
 		} else throw new Error('invalid method overload');

@@ -48,20 +48,20 @@ export class Schulleitung extends JavaObject {
 	public static transpilerFromJSON(json : string): Schulleitung {
 		const obj = JSON.parse(json);
 		const result = new Schulleitung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idLeitungsfunktion === "undefined")
+		if (obj.idLeitungsfunktion === undefined)
 			 throw new Error('invalid json format, missing attribute idLeitungsfunktion');
 		result.idLeitungsfunktion = obj.idLeitungsfunktion;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (typeof obj.idLehrer === "undefined")
+		if (obj.idLehrer === undefined)
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
-		result.beginn = typeof obj.beginn === "undefined" ? null : obj.beginn === null ? null : obj.beginn;
-		result.ende = typeof obj.ende === "undefined" ? null : obj.ende === null ? null : obj.ende;
+		result.beginn = (obj.beginn === undefined) ? null : obj.beginn === null ? null : obj.beginn;
+		result.ende = (obj.ende === undefined) ? null : obj.ende === null ? null : obj.ende;
 		return result;
 	}
 
@@ -80,22 +80,22 @@ export class Schulleitung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Schulleitung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idLeitungsfunktion !== "undefined") {
+		if (obj.idLeitungsfunktion !== undefined) {
 			result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.idLehrer !== "undefined") {
+		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer + ',';
 		}
-		if (typeof obj.beginn !== "undefined") {
+		if (obj.beginn !== undefined) {
 			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : JSON.stringify(obj.beginn)) + ',';
 		}
-		if (typeof obj.ende !== "undefined") {
+		if (obj.ende !== undefined) {
 			result += '"ende" : ' + ((!obj.ende) ? 'null' : JSON.stringify(obj.ende)) + ',';
 		}
 		result = result.slice(0, -1);

@@ -38,10 +38,10 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): DatenbankVerbindungsdaten {
 		const obj = JSON.parse(json);
 		const result = new DatenbankVerbindungsdaten();
-		result.username = typeof obj.username === "undefined" ? null : obj.username === null ? null : obj.username;
-		result.password = typeof obj.password === "undefined" ? null : obj.password === null ? null : obj.password;
-		result.location = typeof obj.location === "undefined" ? null : obj.location === null ? null : obj.location;
-		result.schema = typeof obj.schema === "undefined" ? null : obj.schema === null ? null : obj.schema;
+		result.username = (obj.username === undefined) ? null : obj.username === null ? null : obj.username;
+		result.password = (obj.password === undefined) ? null : obj.password === null ? null : obj.password;
+		result.location = (obj.location === undefined) ? null : obj.location === null ? null : obj.location;
+		result.schema = (obj.schema === undefined) ? null : obj.schema === null ? null : obj.schema;
 		return result;
 	}
 
@@ -58,16 +58,16 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<DatenbankVerbindungsdaten>) : string {
 		let result = '{';
-		if (typeof obj.username !== "undefined") {
+		if (obj.username !== undefined) {
 			result += '"username" : ' + ((!obj.username) ? 'null' : JSON.stringify(obj.username)) + ',';
 		}
-		if (typeof obj.password !== "undefined") {
+		if (obj.password !== undefined) {
 			result += '"password" : ' + ((!obj.password) ? 'null' : JSON.stringify(obj.password)) + ',';
 		}
-		if (typeof obj.location !== "undefined") {
+		if (obj.location !== undefined) {
 			result += '"location" : ' + ((!obj.location) ? 'null' : JSON.stringify(obj.location)) + ',';
 		}
-		if (typeof obj.schema !== "undefined") {
+		if (obj.schema !== undefined) {
 			result += '"schema" : ' + ((!obj.schema) ? 'null' : JSON.stringify(obj.schema)) + ',';
 		}
 		result = result.slice(0, -1);

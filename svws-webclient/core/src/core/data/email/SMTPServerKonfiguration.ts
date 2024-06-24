@@ -48,22 +48,22 @@ export class SMTPServerKonfiguration extends JavaObject {
 	public static transpilerFromJSON(json : string): SMTPServerKonfiguration {
 		const obj = JSON.parse(json);
 		const result = new SMTPServerKonfiguration();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.host === "undefined")
+		if (obj.host === undefined)
 			 throw new Error('invalid json format, missing attribute host');
 		result.host = obj.host;
-		if (typeof obj.port === "undefined")
+		if (obj.port === undefined)
 			 throw new Error('invalid json format, missing attribute port');
 		result.port = obj.port;
-		if (typeof obj.useStartTLS === "undefined")
+		if (obj.useStartTLS === undefined)
 			 throw new Error('invalid json format, missing attribute useStartTLS');
 		result.useStartTLS = obj.useStartTLS;
-		if (typeof obj.useTLS === "undefined")
+		if (obj.useTLS === undefined)
 			 throw new Error('invalid json format, missing attribute useTLS');
 		result.useTLS = obj.useTLS;
-		result.trustTLSHost = typeof obj.trustTLSHost === "undefined" ? null : obj.trustTLSHost === null ? null : obj.trustTLSHost;
+		result.trustTLSHost = (obj.trustTLSHost === undefined) ? null : obj.trustTLSHost === null ? null : obj.trustTLSHost;
 		return result;
 	}
 
@@ -82,22 +82,22 @@ export class SMTPServerKonfiguration extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SMTPServerKonfiguration>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.host !== "undefined") {
+		if (obj.host !== undefined) {
 			result += '"host" : ' + JSON.stringify(obj.host!) + ',';
 		}
-		if (typeof obj.port !== "undefined") {
+		if (obj.port !== undefined) {
 			result += '"port" : ' + obj.port + ',';
 		}
-		if (typeof obj.useStartTLS !== "undefined") {
+		if (obj.useStartTLS !== undefined) {
 			result += '"useStartTLS" : ' + obj.useStartTLS + ',';
 		}
-		if (typeof obj.useTLS !== "undefined") {
+		if (obj.useTLS !== undefined) {
 			result += '"useTLS" : ' + obj.useTLS + ',';
 		}
-		if (typeof obj.trustTLSHost !== "undefined") {
+		if (obj.trustTLSHost !== undefined) {
 			result += '"trustTLSHost" : ' + ((!obj.trustTLSHost) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
 		}
 		result = result.slice(0, -1);

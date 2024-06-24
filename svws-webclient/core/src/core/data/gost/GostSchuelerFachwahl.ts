@@ -31,7 +31,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 		for (let i = 0; i < obj.halbjahre.length; i++) {
 			result.halbjahre[i] = obj.halbjahre[i] === null ? null : obj.halbjahre[i];
 		}
-		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : obj.abiturFach;
+		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
 		return result;
 	}
 
@@ -57,7 +57,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerFachwahl>) : string {
 		let result = '{';
-		if (typeof obj.halbjahre !== "undefined") {
+		if (obj.halbjahre !== undefined) {
 			const a = obj.halbjahre;
 			if (!a) {
 				result += '"halbjahre" : []';
@@ -72,7 +72,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.abiturFach !== "undefined") {
+		if (obj.abiturFach !== undefined) {
 			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
 		}
 		result = result.slice(0, -1);

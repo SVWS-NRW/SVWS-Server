@@ -60,9 +60,9 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	 * Implementation for method overloads of 'toArray'
 	 */
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined")) {
+		if ((__param0 === undefined)) {
 			return this._sub.bcGetArrayListOfKeys().toArray();
-		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
+		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
 			const a : Array<T> = __param0;
 			return this._sub.bcGetArrayListOfKeys().toArray(a);
 		} else throw new Error('invalid method overload');
@@ -140,13 +140,13 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	 * Implementation for method overloads of 'subSet'
 	 */
 	public subSet(__param0 : K, __param1 : K | boolean, __param2? : K, __param3? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean") && ((typeof __param2 !== "undefined") && (typeof __param2 !== "undefined")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean") && ((__param2 !== undefined) && (__param2 !== undefined)) && ((__param3 !== undefined) && typeof __param3 === "boolean")) {
 			const fromElement : K = __param0 as unknown as K;
 			const fromInclusive : boolean = __param1 as boolean;
 			const toElement : K = __param2 as unknown as K;
 			const toInclusive : boolean = __param3 as boolean;
 			return this._sub.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && (typeof __param1 !== "undefined")) && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && (__param1 !== undefined)) && (__param2 === undefined) && (__param3 === undefined)) {
 			const fromElement : K = __param0 as unknown as K;
 			const toElement : K = __param1 as unknown as K;
 			return this._sub.bcGetSubKeySet(fromElement, toElement);
@@ -161,11 +161,11 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	 * Implementation for method overloads of 'headSet'
 	 */
 	public headSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const toElement : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._sub.bcGetSubKeyHeadSet(toElement, inclusive);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const toElement : K = __param0 as unknown as K;
 			return this._sub.bcGetSubKeyHeadSet(toElement);
 		} else throw new Error('invalid method overload');
@@ -179,11 +179,11 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	 * Implementation for method overloads of 'tailSet'
 	 */
 	public tailSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
-		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
+		if (((__param0 !== undefined) && (__param0 !== undefined)) && ((__param1 !== undefined) && typeof __param1 === "boolean")) {
 			const fromElement : K = __param0 as unknown as K;
 			const inclusive : boolean = __param1 as boolean;
 			return this._sub.bcGetSubKeyTailSet(fromElement, inclusive);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
+		} else if (((__param0 !== undefined) && (__param0 !== undefined)) && (__param1 === undefined)) {
 			const fromElement : K = __param0 as unknown as K;
 			return this._sub.bcGetSubKeyTailSet(fromElement);
 		} else throw new Error('invalid method overload');

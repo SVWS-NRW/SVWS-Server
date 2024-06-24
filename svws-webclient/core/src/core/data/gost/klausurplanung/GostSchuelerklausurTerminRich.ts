@@ -76,7 +76,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	 */
 	public constructor(__param0? : GostSchuelerklausurTermin | null, __param1? : GostKursklausurManager | null) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager'))) || (__param1 === null))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager'))) || (__param1 === null))) {
 			const termin : GostSchuelerklausurTermin | null = cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin(__param0);
 			const manager : GostKursklausurManager | null = cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager(__param1);
 			this.id = termin.id;
@@ -91,7 +91,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 			this.istMdlPruefung = vorgabe.istMdlPruefung;
 			this.istAudioNotwendig = vorgabe.istAudioNotwendig;
 			this.istVideoNotwendig = vorgabe.istVideoNotwendig;
-		} else if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+		} else if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
 		} else throw new Error('invalid method overload');
 	}
@@ -126,34 +126,34 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerklausurTerminRich {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerklausurTerminRich();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.startzeit === "undefined")
+		if (obj.startzeit === undefined)
 			 throw new Error('invalid json format, missing attribute startzeit');
 		result.startzeit = obj.startzeit;
-		if (typeof obj.idKursklausur === "undefined")
+		if (obj.idKursklausur === undefined)
 			 throw new Error('invalid json format, missing attribute idKursklausur');
 		result.idKursklausur = obj.idKursklausur;
-		if (typeof obj.idFach === "undefined")
+		if (obj.idFach === undefined)
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if (typeof obj.kursart === "undefined")
+		if (obj.kursart === undefined)
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.dauer === "undefined")
+		if (obj.dauer === undefined)
 			 throw new Error('invalid json format, missing attribute dauer');
 		result.dauer = obj.dauer;
-		if (typeof obj.auswahlzeit === "undefined")
+		if (obj.auswahlzeit === undefined)
 			 throw new Error('invalid json format, missing attribute auswahlzeit');
 		result.auswahlzeit = obj.auswahlzeit;
-		if (typeof obj.istMdlPruefung === "undefined")
+		if (obj.istMdlPruefung === undefined)
 			 throw new Error('invalid json format, missing attribute istMdlPruefung');
 		result.istMdlPruefung = obj.istMdlPruefung;
-		if (typeof obj.istAudioNotwendig === "undefined")
+		if (obj.istAudioNotwendig === undefined)
 			 throw new Error('invalid json format, missing attribute istAudioNotwendig');
 		result.istAudioNotwendig = obj.istAudioNotwendig;
-		if (typeof obj.istVideoNotwendig === "undefined")
+		if (obj.istVideoNotwendig === undefined)
 			 throw new Error('invalid json format, missing attribute istVideoNotwendig');
 		result.istVideoNotwendig = obj.istVideoNotwendig;
 		return result;
@@ -178,34 +178,34 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausurTerminRich>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.startzeit !== "undefined") {
+		if (obj.startzeit !== undefined) {
 			result += '"startzeit" : ' + obj.startzeit + ',';
 		}
-		if (typeof obj.idKursklausur !== "undefined") {
+		if (obj.idKursklausur !== undefined) {
 			result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		}
-		if (typeof obj.idFach !== "undefined") {
+		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
+		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		}
-		if (typeof obj.dauer !== "undefined") {
+		if (obj.dauer !== undefined) {
 			result += '"dauer" : ' + obj.dauer + ',';
 		}
-		if (typeof obj.auswahlzeit !== "undefined") {
+		if (obj.auswahlzeit !== undefined) {
 			result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
 		}
-		if (typeof obj.istMdlPruefung !== "undefined") {
+		if (obj.istMdlPruefung !== undefined) {
 			result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
 		}
-		if (typeof obj.istAudioNotwendig !== "undefined") {
+		if (obj.istAudioNotwendig !== undefined) {
 			result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
 		}
-		if (typeof obj.istVideoNotwendig !== "undefined") {
+		if (obj.istVideoNotwendig !== undefined) {
 			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		}
 		result = result.slice(0, -1);

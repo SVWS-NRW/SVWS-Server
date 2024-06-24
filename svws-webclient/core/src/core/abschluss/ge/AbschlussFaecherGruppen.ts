@@ -118,7 +118,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * Implementation for method overloads of 'getKuerzelListe'
 	 */
 	public getKuerzelListe(__param0 : Predicate<GEAbschlussFach>, __param1? : Predicate<GEAbschlussFach>) : string {
-		if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('test' in __param0) && (typeof __param0.test === 'function')) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		if (((__param0 !== undefined) && ((__param0 !== undefined) && (__param0 instanceof Object) && (__param0 !== null) && ('test' in __param0) && (typeof __param0.test === 'function')) || (__param0 === null)) && (__param1 === undefined)) {
 			const filter : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param0);
 			const sb : StringBuilder = new StringBuilder();
 			const faecher : List<string> = this.getKuerzel(filter);
@@ -128,7 +128,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 				sb.append(fach);
 			}
 			return sb.toString();
-		} else if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('test' in __param0) && (typeof __param0.test === 'function')) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((typeof __param1 !== 'undefined') && (__param1 instanceof Object) && (__param1 !== null) && ('test' in __param1) && (typeof __param1.test === 'function')) || (__param1 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 !== undefined) && (__param0 instanceof Object) && (__param0 !== null) && ('test' in __param0) && (typeof __param0.test === 'function')) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 !== undefined) && (__param1 instanceof Object) && (__param1 !== null) && ('test' in __param1) && (typeof __param1.test === 'function')) || (__param1 === null))) {
 			const filterFG1 : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param0);
 			const filterFG2 : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param1);
 			const sb : StringBuilder = new StringBuilder();

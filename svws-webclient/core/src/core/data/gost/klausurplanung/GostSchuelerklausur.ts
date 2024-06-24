@@ -58,16 +58,16 @@ export class GostSchuelerklausur extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerklausur {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerklausur();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.idKursklausur === "undefined")
+		if (obj.idKursklausur === undefined)
 			 throw new Error('invalid json format, missing attribute idKursklausur');
 		result.idKursklausur = obj.idKursklausur;
-		if (typeof obj.idSchueler === "undefined")
+		if (obj.idSchueler === undefined)
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
 
@@ -84,16 +84,16 @@ export class GostSchuelerklausur extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausur>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.idKursklausur !== "undefined") {
+		if (obj.idKursklausur !== undefined) {
 			result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		}
-		if (typeof obj.idSchueler !== "undefined") {
+		if (obj.idSchueler !== undefined) {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
-		if (typeof obj.bemerkung !== "undefined") {
+		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);

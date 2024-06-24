@@ -41,19 +41,19 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 	public static transpilerFromJSON(json : string): SchuldateiKatalogeintrag {
 		const obj = JSON.parse(json);
 		const result = new SchuldateiKatalogeintrag();
-		result.gueltigab = typeof obj.gueltigab === "undefined" ? null : obj.gueltigab === null ? null : obj.gueltigab;
-		result.gueltigbis = typeof obj.gueltigbis === "undefined" ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
-		result.geaendertam = typeof obj.geaendertam === "undefined" ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		if (typeof obj.katalog === "undefined")
+		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
+		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
+		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
+		if (obj.katalog === undefined)
 			 throw new Error('invalid json format, missing attribute katalog');
 		result.katalog = obj.katalog;
-		if (typeof obj.schluessel === "undefined")
+		if (obj.schluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
-		if (typeof obj.wert === "undefined")
+		if (obj.wert === undefined)
 			 throw new Error('invalid json format, missing attribute wert');
 		result.wert = obj.wert;
-		if (typeof obj.bezeichnung === "undefined")
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
@@ -75,25 +75,25 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiKatalogeintrag>) : string {
 		let result = '{';
-		if (typeof obj.gueltigab !== "undefined") {
+		if (obj.gueltigab !== undefined) {
 			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
-		if (typeof obj.gueltigbis !== "undefined") {
+		if (obj.gueltigbis !== undefined) {
 			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
-		if (typeof obj.geaendertam !== "undefined") {
+		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
-		if (typeof obj.katalog !== "undefined") {
+		if (obj.katalog !== undefined) {
 			result += '"katalog" : ' + JSON.stringify(obj.katalog!) + ',';
 		}
-		if (typeof obj.schluessel !== "undefined") {
+		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		}
-		if (typeof obj.wert !== "undefined") {
+		if (obj.wert !== undefined) {
 			result += '"wert" : ' + JSON.stringify(obj.wert!) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);

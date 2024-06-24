@@ -59,19 +59,19 @@ export class GostStatistikFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): GostStatistikFachwahl {
 		const obj = JSON.parse(json);
 		const result = new GostStatistikFachwahl();
-		if (typeof obj.abiturjahr === "undefined")
+		if (obj.abiturjahr === undefined)
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
-		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
-		if (typeof obj.wahlenAB3 === "undefined")
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		if (obj.wahlenAB3 === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenAB3');
 		result.wahlenAB3 = obj.wahlenAB3;
-		if (typeof obj.wahlenAB4 === "undefined")
+		if (obj.wahlenAB4 === undefined)
 			 throw new Error('invalid json format, missing attribute wahlenAB4');
 		result.wahlenAB4 = obj.wahlenAB4;
 		for (let i = 0; i < obj.fachwahlen.length; i++) {
@@ -108,28 +108,28 @@ export class GostStatistikFachwahl extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostStatistikFachwahl>) : string {
 		let result = '{';
-		if (typeof obj.abiturjahr !== "undefined") {
+		if (obj.abiturjahr !== undefined) {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.kuerzel !== "undefined") {
+		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
-		if (typeof obj.kuerzelStatistik !== "undefined") {
+		if (obj.kuerzelStatistik !== undefined) {
 			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
-		if (typeof obj.wahlenAB3 !== "undefined") {
+		if (obj.wahlenAB3 !== undefined) {
 			result += '"wahlenAB3" : ' + obj.wahlenAB3 + ',';
 		}
-		if (typeof obj.wahlenAB4 !== "undefined") {
+		if (obj.wahlenAB4 !== undefined) {
 			result += '"wahlenAB4" : ' + obj.wahlenAB4 + ',';
 		}
-		if (typeof obj.fachwahlen !== "undefined") {
+		if (obj.fachwahlen !== undefined) {
 			const a = obj.fachwahlen;
 			if (!a) {
 				result += '"fachwahlen" : []';

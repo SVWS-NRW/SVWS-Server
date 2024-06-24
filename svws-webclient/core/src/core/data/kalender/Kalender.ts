@@ -66,15 +66,15 @@ export class Kalender extends JavaObject {
 	public static transpilerFromJSON(json : string): Kalender {
 		const obj = JSON.parse(json);
 		const result = new Kalender();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.displayname = typeof obj.displayname === "undefined" ? null : obj.displayname === null ? null : obj.displayname;
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		if (typeof obj.synctoken === "undefined")
+		result.displayname = (obj.displayname === undefined) ? null : obj.displayname === null ? null : obj.displayname;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		if (obj.synctoken === undefined)
 			 throw new Error('invalid json format, missing attribute synctoken');
 		result.synctoken = obj.synctoken;
-		if (typeof obj.kalenderTyp === "undefined")
+		if (obj.kalenderTyp === undefined)
 			 throw new Error('invalid json format, missing attribute kalenderTyp');
 		result.kalenderTyp = obj.kalenderTyp;
 		if ((obj.kalenderEintraege !== undefined) && (obj.kalenderEintraege !== null)) {
@@ -82,13 +82,13 @@ export class Kalender extends JavaObject {
 				result.kalenderEintraege?.add(KalenderEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.darfSchreiben === "undefined")
+		if (obj.darfSchreiben === undefined)
 			 throw new Error('invalid json format, missing attribute darfSchreiben');
 		result.darfSchreiben = obj.darfSchreiben;
-		if (typeof obj.darfLesen === "undefined")
+		if (obj.darfLesen === undefined)
 			 throw new Error('invalid json format, missing attribute darfLesen');
 		result.darfLesen = obj.darfLesen;
-		if (typeof obj.besitzer === "undefined")
+		if (obj.besitzer === undefined)
 			 throw new Error('invalid json format, missing attribute besitzer');
 		result.besitzer = obj.besitzer;
 		return result;
@@ -123,22 +123,22 @@ export class Kalender extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Kalender>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
-		if (typeof obj.displayname !== "undefined") {
+		if (obj.displayname !== undefined) {
 			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		}
-		if (typeof obj.beschreibung !== "undefined") {
+		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
-		if (typeof obj.synctoken !== "undefined") {
+		if (obj.synctoken !== undefined) {
 			result += '"synctoken" : ' + obj.synctoken + ',';
 		}
-		if (typeof obj.kalenderTyp !== "undefined") {
+		if (obj.kalenderTyp !== undefined) {
 			result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		}
-		if (typeof obj.kalenderEintraege !== "undefined") {
+		if (obj.kalenderEintraege !== undefined) {
 			if (!obj.kalenderEintraege) {
 				result += '"kalenderEintraege" : []';
 			} else {
@@ -152,13 +152,13 @@ export class Kalender extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.darfSchreiben !== "undefined") {
+		if (obj.darfSchreiben !== undefined) {
 			result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
 		}
-		if (typeof obj.darfLesen !== "undefined") {
+		if (obj.darfLesen !== undefined) {
 			result += '"darfLesen" : ' + obj.darfLesen + ',';
 		}
-		if (typeof obj.besitzer !== "undefined") {
+		if (obj.besitzer !== undefined) {
 			result += '"besitzer" : ' + obj.besitzer + ',';
 		}
 		result = result.slice(0, -1);

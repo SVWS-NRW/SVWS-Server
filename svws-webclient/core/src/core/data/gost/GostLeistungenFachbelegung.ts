@@ -88,34 +88,34 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLeistungenFachbelegung {
 		const obj = JSON.parse(json);
 		const result = new GostLeistungenFachbelegung();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.schuljahr === "undefined")
+		if (obj.schuljahr === undefined)
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		result.halbjahrKuerzel = typeof obj.halbjahrKuerzel === "undefined" ? null : obj.halbjahrKuerzel === null ? null : obj.halbjahrKuerzel;
-		if (typeof obj.abschnitt === "undefined")
+		result.halbjahrKuerzel = (obj.halbjahrKuerzel === undefined) ? null : obj.halbjahrKuerzel === null ? null : obj.halbjahrKuerzel;
+		if (obj.abschnitt === undefined)
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		if (typeof obj.abschnittGewertet === "undefined")
+		if (obj.abschnittGewertet === undefined)
 			 throw new Error('invalid json format, missing attribute abschnittGewertet');
 		result.abschnittGewertet = obj.abschnittGewertet;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
-		if (typeof obj.istSchriftlich === "undefined")
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
+		result.notenKuerzel = (obj.notenKuerzel === undefined) ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
+		result.kursartKuerzel = (obj.kursartKuerzel === undefined) ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
+		if (obj.istSchriftlich === undefined)
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (typeof obj.wochenstunden === "undefined")
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		if (obj.wochenstunden === undefined)
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		if (typeof obj.fehlstundenGesamt === "undefined")
+		if (obj.fehlstundenGesamt === undefined)
 			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
-		if (typeof obj.fehlstundenUnentschuldigt === "undefined")
+		if (obj.fehlstundenUnentschuldigt === undefined)
 			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
 		return result;
@@ -144,46 +144,46 @@ export class GostLeistungenFachbelegung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungenFachbelegung>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.schuljahr !== "undefined") {
+		if (obj.schuljahr !== undefined) {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
-		if (typeof obj.halbjahrKuerzel !== "undefined") {
+		if (obj.halbjahrKuerzel !== undefined) {
 			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		}
-		if (typeof obj.abschnitt !== "undefined") {
+		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
-		if (typeof obj.abschnittGewertet !== "undefined") {
+		if (obj.abschnittGewertet !== undefined) {
 			result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
 		}
-		if (typeof obj.jahrgang !== "undefined") {
+		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
-		if (typeof obj.lehrer !== "undefined") {
+		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		}
-		if (typeof obj.notenKuerzel !== "undefined") {
+		if (obj.notenKuerzel !== undefined) {
 			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
 		}
-		if (typeof obj.kursartKuerzel !== "undefined") {
+		if (obj.kursartKuerzel !== undefined) {
 			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
-		if (typeof obj.istSchriftlich !== "undefined") {
+		if (obj.istSchriftlich !== undefined) {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
 		}
-		if (typeof obj.bilingualeSprache !== "undefined") {
+		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
-		if (typeof obj.wochenstunden !== "undefined") {
+		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
-		if (typeof obj.fehlstundenGesamt !== "undefined") {
+		if (obj.fehlstundenGesamt !== undefined) {
 			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
 		}
-		if (typeof obj.fehlstundenUnentschuldigt !== "undefined") {
+		if (obj.fehlstundenUnentschuldigt !== undefined) {
 			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
 		}
 		result = result.slice(0, -1);

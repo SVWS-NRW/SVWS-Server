@@ -50,15 +50,15 @@ export class StundenplanPausenzeit extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanPausenzeit {
 		const obj = JSON.parse(json);
 		const result = new StundenplanPausenzeit();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.wochentag === "undefined")
+		if (obj.wochentag === undefined)
 			 throw new Error('invalid json format, missing attribute wochentag');
 		result.wochentag = obj.wochentag;
-		result.beginn = typeof obj.beginn === "undefined" ? null : obj.beginn === null ? null : obj.beginn;
-		result.ende = typeof obj.ende === "undefined" ? null : obj.ende === null ? null : obj.ende;
-		if (typeof obj.bezeichnung === "undefined")
+		result.beginn = (obj.beginn === undefined) ? null : obj.beginn === null ? null : obj.beginn;
+		result.ende = (obj.ende === undefined) ? null : obj.ende === null ? null : obj.ende;
+		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
@@ -95,22 +95,22 @@ export class StundenplanPausenzeit extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenzeit>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.wochentag !== "undefined") {
+		if (obj.wochentag !== undefined) {
 			result += '"wochentag" : ' + obj.wochentag + ',';
 		}
-		if (typeof obj.beginn !== "undefined") {
+		if (obj.beginn !== undefined) {
 			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
 		}
-		if (typeof obj.ende !== "undefined") {
+		if (obj.ende !== undefined) {
 			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
+		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {

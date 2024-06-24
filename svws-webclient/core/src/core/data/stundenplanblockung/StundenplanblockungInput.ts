@@ -170,7 +170,7 @@ export class StundenplanblockungInput extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungInput>) : string {
 		let result = '{';
-		if (typeof obj.lehrkraefte !== "undefined") {
+		if (obj.lehrkraefte !== undefined) {
 			if (!obj.lehrkraefte) {
 				result += '"lehrkraefte" : []';
 			} else {
@@ -184,7 +184,7 @@ export class StundenplanblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.klassen !== "undefined") {
+		if (obj.klassen !== undefined) {
 			if (!obj.klassen) {
 				result += '"klassen" : []';
 			} else {
@@ -198,7 +198,7 @@ export class StundenplanblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.faecher !== "undefined") {
+		if (obj.faecher !== undefined) {
 			if (!obj.faecher) {
 				result += '"faecher" : []';
 			} else {
@@ -212,7 +212,7 @@ export class StundenplanblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.raeume !== "undefined") {
+		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
 				result += '"raeume" : []';
 			} else {
@@ -226,7 +226,7 @@ export class StundenplanblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.kopplungen !== "undefined") {
+		if (obj.kopplungen !== undefined) {
 			if (!obj.kopplungen) {
 				result += '"kopplungen" : []';
 			} else {
@@ -240,7 +240,7 @@ export class StundenplanblockungInput extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.lerngruppen !== "undefined") {
+		if (obj.lerngruppen !== undefined) {
 			if (!obj.lerngruppen) {
 				result += '"lerngruppen" : []';
 			} else {

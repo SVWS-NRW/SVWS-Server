@@ -35,8 +35,8 @@ export class SimpleOperationResponse extends JavaObject {
 	public static transpilerFromJSON(json : string): SimpleOperationResponse {
 		const obj = JSON.parse(json);
 		const result = new SimpleOperationResponse();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		if (typeof obj.success === "undefined")
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
+		if (obj.success === undefined)
 			 throw new Error('invalid json format, missing attribute success');
 		result.success = obj.success;
 		if ((obj.log !== undefined) && (obj.log !== null)) {
@@ -70,13 +70,13 @@ export class SimpleOperationResponse extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SimpleOperationResponse>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
-		if (typeof obj.success !== "undefined") {
+		if (obj.success !== undefined) {
 			result += '"success" : ' + obj.success + ',';
 		}
-		if (typeof obj.log !== "undefined") {
+		if (obj.log !== undefined) {
 			if (!obj.log) {
 				result += '"log" : []';
 			} else {

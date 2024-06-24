@@ -1827,14 +1827,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				continue;
 			final TypeNode type = variable.getTypeNode();
 			if (type.isPrimitive() || (type.isNotNull() && (type.isString() || type.isNumberClass() || type.isBoolean()))) {
-				sb.append(getIndent() + "if (typeof obj." + attribute.getName() + " === \"undefined\")" + System.lineSeparator());
+				sb.append(getIndent() + "if (obj." + attribute.getName() + " === undefined)" + System.lineSeparator());
 				sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator());
 				sb.append(getIndent() + "result." + attribute.getName() + " = obj." + attribute.getName() + ";" + System.lineSeparator());
 			} else if ((!type.isNotNull()) && (type.isString() || type.isNumberClass() || type.isBoolean())) {
 				String tmpAttribute = "obj." + attribute.getName();
 				if (type.isString() || type.isNumberClass() || type.isBoolean())
 					tmpAttribute = "" + tmpAttribute + " === null ? null : " + tmpAttribute;
-				sb.append(getIndent() + "result." + attribute.getName() + " = typeof obj." + attribute.getName() + " === \"undefined\" ? null : " + tmpAttribute + ";" + System.lineSeparator());
+				sb.append(getIndent() + "result." + attribute.getName() + " = (obj." + attribute.getName() + " === undefined) ? null : " + tmpAttribute + ";" + System.lineSeparator());
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
 				final TypeNode paramType = type.getParameterType(0, false);
@@ -1880,11 +1880,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(getIndent() + "}" + System.lineSeparator());
 			} else {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + "if (typeof obj." + attribute.getName() + " === \"undefined\")" + System.lineSeparator());
+					sb.append(getIndent() + "if (obj." + attribute.getName() + " === undefined)" + System.lineSeparator());
 					sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator());
 					sb.append(getIndent() + "result." + attribute.getName() + " = " + type.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
 				} else {
-					sb.append(getIndent() + "result." + attribute.getName() + " = ((typeof obj." + attribute.getName() + " === \"undefined\") || (obj." + attribute.getName() + " === null)) ? null : " + type.getNoDeclarationType().transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + " = ((obj." + attribute.getName() + " === undefined) || (obj." + attribute.getName() + " === null)) ? null : " + type.getNoDeclarationType().transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
 				}
 			}
 		}
@@ -2063,7 +2063,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final TypeNode type = variable.getTypeNode();
 			final String addAttrName = "result += '\"" + attribute.getName() + "\" : '";
 			final String objAttr = "obj." + attribute.getName();
-			sb.append(getIndent() + "if (typeof " + objAttr + " !== \"undefined\") {" + System.lineSeparator());
+			sb.append(getIndent() + "if (" + objAttr + " !== undefined) {" + System.lineSeparator());
 			indentC++;
 			if (type.isPrimitive()) {
 				if (type.isPrimitveBoolean()) {

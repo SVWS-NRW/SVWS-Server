@@ -33,13 +33,13 @@ export class StundenplanblockungStundenelement extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanblockungStundenelement {
 		const obj = JSON.parse(json);
 		const result = new StundenplanblockungStundenelement();
-		if (typeof obj.id === "undefined")
+		if (obj.id === undefined)
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.stunden === "undefined")
+		if (obj.stunden === undefined)
 			 throw new Error('invalid json format, missing attribute stunden');
 		result.stunden = obj.stunden;
-		if (typeof obj.typ === "undefined")
+		if (obj.typ === undefined)
 			 throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
 		return result;
@@ -57,13 +57,13 @@ export class StundenplanblockungStundenelement extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungStundenelement>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
+		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.stunden !== "undefined") {
+		if (obj.stunden !== undefined) {
 			result += '"stunden" : ' + obj.stunden + ',';
 		}
-		if (typeof obj.typ !== "undefined") {
+		if (obj.typ !== undefined) {
 			result += '"typ" : ' + obj.typ + ',';
 		}
 		result = result.slice(0, -1);
