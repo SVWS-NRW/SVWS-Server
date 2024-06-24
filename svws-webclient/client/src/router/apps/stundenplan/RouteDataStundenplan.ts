@@ -120,20 +120,17 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.start();
 		const listHinzuzufuegen = new ArrayList<Partial<StundenplanKalenderwochenzuordnung>>();
 		const listPatch = new ArrayList<StundenplanKalenderwochenzuordnung>();
-		for (const e of data) {
+		for (const e of data)
 			if (e.id < 0) {
 				const ee = e.clone() as Partial<StundenplanKalenderwochenzuordnung>;
 				delete ee.id;
 				listHinzuzufuegen.add(ee);
-			} else {
+			} else
 				listPatch.add(e);
-				// sollte als all-Methode verfügbar sein
-				this.stundenplanManager.kalenderwochenzuordnungPatchAttributes(e);
-				await api.server.patchStundenplanKalenderwochenzuordnung(e, api.schema, e.id);
-			}
+		if (!listPatch.isEmpty()) {
+			await api.server.patchStundenplanKalenderwochenzuordnungen(listPatch, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungPatchAll(listPatch);
 		}
-		if (!listPatch.isEmpty())
-			undefined//await api.server.patchStundenplanKalenderwochenzuordnung(listPatch, api.schema, this.auswahl.id);
 		if (!listHinzuzufuegen.isEmpty()) {
 			const resHinzufuegen = await api.server.addStundenplanKalenderwochenzuordnungen(listHinzuzufuegen, api.schema, this.auswahl.id);
 			this.stundenplanManager.kalenderwochenzuordnungAddAll(resHinzufuegen);
