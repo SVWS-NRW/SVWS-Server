@@ -3,7 +3,8 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="value => start = value " />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => ende = value" />
-			<svws-ui-button v-if="!disabled" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
+			<svws-ui-button v-if="!disabled && !ueberschneidung" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
+			<div v-if="ueberschneidung" class="text-error">Die Änderung der Stundenzeiten würde zu einer Überschneidung führen und ist nicht zulässig.</div>
 			<div class="col-span-full">
 				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" ref="numberInput" />
 			</div>
@@ -19,7 +20,6 @@
 
 <script setup lang="ts">
 	import { computed, ref, type Ref } from "vue";
-	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { SvwsUiInputNumber } from "@ui";
 	import type { StundenplanManager, Wochentag } from "@core";
 	import { ArrayList, DateUtils, StundenplanZeitraster } from "@core";
@@ -44,6 +44,18 @@
 	const ende = ref<string>(DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0));
 
 	const disabled = computed<boolean>(() => (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0) === start.value) && (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0) === ende.value));
+
+	const ueberschneidung = computed<boolean>(() => {
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const wt of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange()) {
+			const zeitraster = new StundenplanZeitraster();
+			zeitraster.wochentag = wt.id;
+			zeitraster.stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start.value);
+			zeitraster.stundenende = DateUtils.gibMinutenOfZeitAsString(ende.value);
+			list.add(zeitraster);
+		}
+		return props.stundenplanManager().zeitrasterGetSchneidenSichListe(list);
+	})
 
 	async function patchStunde(stunde: number | null) {
 		if (stunde === null)
