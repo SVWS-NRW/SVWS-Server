@@ -48,7 +48,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		// TODO Prüfe das Feld qualitaetverortung - Hier wird noch ein Katalog ergänzt
 
 		// Prüfe, ob die Art der Adresse (bzw. adresstypid) im Katalog existiert
-		this._artDerAdresse = (adresse.adresstypeid == null) ? "" : "" + adresse.adresstypeid;
+		this._artDerAdresse = (adresse.adresstypeid == null) ? "" : ("" + adresse.adresstypeid);
 		if (!_managerSchuldatei.katalogAddressarten.hatEintrag(this._artDerAdresse))
 			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + adresse.id
 					+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()

@@ -665,7 +665,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	public int getInternatsplaetze(final int schuljahr) throws IllegalArgumentException {
 		final SchuldateiOrganisationseinheitGrunddaten grunddaten = this.getGrunddaten(schuljahr);
-		return grunddaten.internatsplaetze == null ? 0 : grunddaten.internatsplaetze;
+		return (grunddaten.internatsplaetze == null) ? 0 : grunddaten.internatsplaetze;
 	}
 
 
