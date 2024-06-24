@@ -108,12 +108,12 @@ public final class SvwsServer {
 		handlerCollection.setHandlers(new Handler[] { contextHandlerCollection, new DefaultHandler() });
 
 		// Erstelle einen ConstraintSecurityHandler mit dem Login-Service, etc.
-        server.setHandler(createConstraintSecurityHandler(server, loginService, handlerCollection));
+		server.setHandler(createConstraintSecurityHandler(server, loginService, handlerCollection));
 
-        // Konfiguriere das Logging für API-Zugriffe
-        addLoggingHandler(handlerCollection);
+		// Konfiguriere das Logging für API-Zugriffe
+		addLoggingHandler(handlerCollection);
 
-        // Konfiguriere und ergänze die HTTP-Verbindungen, auf welchen der Server lauscht
+		// Konfiguriere und ergänze die HTTP-Verbindungen, auf welchen der Server lauscht
 		addHTTPServerConnections();
 
 		// Füge die einzelnen Servlets mit den verschiedenen APIs zum SVWS-Server hinzu.
@@ -157,26 +157,27 @@ public final class SvwsServer {
 
 
 	private static ConstraintMapping getSecurityConstraintMapping() {
-        final Constraint constraint = new Constraint();
-        constraint.setName("auth");
-        constraint.setAuthenticate(true);
-        constraint.setRoles(new String[] { "user", "admin" });
-        final ConstraintMapping mapping = new ConstraintMapping();
-        mapping.setPathSpec("/*");
-        mapping.setMethodOmissions(new String[] { HttpMethod.OPTIONS });
-        mapping.setConstraint(constraint);
+		final Constraint constraint = new Constraint();
+		constraint.setName("auth");
+		constraint.setAuthenticate(true);
+		constraint.setRoles(new String[] { "user", "admin" });
+		final ConstraintMapping mapping = new ConstraintMapping();
+		mapping.setPathSpec("/*");
+		mapping.setMethodOmissions(new String[] { HttpMethod.OPTIONS });
+		mapping.setConstraint(constraint);
 		return mapping;
 	}
 
 
-	private static ConstraintSecurityHandler createConstraintSecurityHandler(final Server server, final LoginService loginService, final HandlerCollection handlerCollection) {
+	private static ConstraintSecurityHandler createConstraintSecurityHandler(final Server server, final LoginService loginService,
+			final HandlerCollection handlerCollection) {
 		final ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-        security.addConstraintMapping(getSecurityConstraintMapping());
-        security.setAuthenticator(new SVWSAuthenticator());
-        security.setLoginService(loginService);
+		security.addConstraintMapping(getSecurityConstraintMapping());
+		security.setAuthenticator(new SVWSAuthenticator());
+		security.setLoginService(loginService);
 		security.setHandler(handlerCollection);
-        server.setHandler(security);
-        return security;
+		server.setHandler(security);
+		return security;
 	}
 
 
@@ -242,7 +243,8 @@ public final class SvwsServer {
 		sslContextFactory.setTrustStorePassword(keyStorePassword);
 		sslContextFactory.setIncludeProtocols("TLSv1.3", "TLSv1.2");
 		sslContextFactory.setIncludeCipherSuites("TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256",
-				"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
+				"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+				"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
 		sslContextFactory.setSniRequired(false);
 		sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
 
@@ -260,15 +262,15 @@ public final class SvwsServer {
 		final ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
 		if (disableTLS) {
 			final ServerConnector connector = preferHTTPv1_1
-				? new ServerConnector(server, connFactoryHTTPv1_1, connFactoryHTTPv2)
-				: new ServerConnector(server, connFactoryHTTPv2, connFactoryHTTPv1_1);
+					? new ServerConnector(server, connFactoryHTTPv1_1, connFactoryHTTPv2)
+					: new ServerConnector(server, connFactoryHTTPv2, connFactoryHTTPv1_1);
 			connector.setName(name);
 			connector.setPort(port);
 			return connector;
 		}
 		final ServerConnector connector = preferHTTPv1_1
-			? new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2)
-			: new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
+				? new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2)
+				: new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
 		connector.setName(name);
 		connector.setPort(port);
 		return connector;
@@ -283,21 +285,21 @@ public final class SvwsServer {
 	private void addHTTPServerConnections() {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		server.addConnector(getHttpServerConnector(
-			config.isTLSDisabled(),
-			config.useHTTPDefaultv11(),
-			config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS(),
-			"Server",
-			config.getTLSKeystorePath(),
-			config.getTLSKeystorePassword()
+				config.isTLSDisabled(),
+				config.useHTTPDefaultv11(),
+				config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS(),
+				"Server",
+				config.getTLSKeystorePath(),
+				config.getTLSKeystorePassword()
 		));
 		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess())
 			server.addConnector(getHttpServerConnector(
-				config.isTLSDisabled(),
-				config.useHTTPDefaultv11(),
-				config.getPortHTTPPrivilegedAccess(),
-				"Privileged",
-				config.getTLSKeystorePath(),
-				config.getTLSKeystorePassword()
+					config.isTLSDisabled(),
+					config.useHTTPDefaultv11(),
+					config.getPortHTTPPrivilegedAccess(),
+					"Privileged",
+					config.getTLSKeystorePath(),
+					config.getTLSKeystorePassword()
 			));
 	}
 

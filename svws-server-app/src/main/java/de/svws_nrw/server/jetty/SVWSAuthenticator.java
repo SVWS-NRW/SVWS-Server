@@ -38,84 +38,84 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 	public SVWSAuthenticator() {
 	}
 
-    @Override
-    public String getAuthMethod() {
-        return Constraint.__BASIC_AUTH;
-    }
+	@Override
+	public String getAuthMethod() {
+		return Constraint.__BASIC_AUTH;
+	}
 
-    @Override
-    public Authentication validateRequest(final ServletRequest req, final ServletResponse res, final boolean mandatory) throws ServerAuthException {
-    	final HttpServletRequest request = (HttpServletRequest) req;
-        final HttpServletResponse response = (HttpServletResponse) res;
-        // Prüfe, ob der Port zu dem Zugriffsbereich passt, falls in der SVWS-Konfiguration mehrere Ports verwendet werden
-        final SVWSKonfiguration config = SVWSKonfiguration.get();
-        if (config.hatPortHTTPPrivilegedAccess()) {
-        	final String pathInfo = request.getPathInfo();
-        	final boolean isCommonAccess = RestAppDebug.checkIsInPathSpecification(pathInfo)
-        			|| RestAppServer.checkIsInPathSpecificationCommon(pathInfo);
-        	final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
-        			|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
-        	if (!isCommonAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
-        		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
-        	if (!isCommonAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
-        		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
-        }
-        // Prüfe die Anmeldenamen...
-        final String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
-        String username = "";
-        String password = "";
-        String usernameISO_8859_1 = "";
-        String passwordISO_8859_1 = "";
-        if (auth != null) {
-            final int space = auth.indexOf(' ');
-            if ((space > 0) && ("basic".equalsIgnoreCase(auth.substring(0, space)))) {
-                final String authUTF_8 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.UTF_8);
-                final int colonUTF8 = authUTF_8.indexOf(':');
-                if (colonUTF8 > 0) {
-                    username = authUTF_8.substring(0, colonUTF8);
-                    password = authUTF_8.substring(colonUTF8 + 1);
-                }
-                final String authISO_8859_1 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.ISO_8859_1);
-                final int colonISO_8859_1 = authISO_8859_1.indexOf(':');
-                if (colonISO_8859_1 > 0) {
-                    usernameISO_8859_1 = authISO_8859_1.substring(0, colonISO_8859_1);
-                    passwordISO_8859_1 = authISO_8859_1.substring(colonISO_8859_1 + 1);
-                }
-            }
-        }
-        /* FIXME: Workaround. DAV-API muss im OPTIONS-Request den DAV-Header ausgeben. Zudem unterstützt DAV weitere HTTP-Methods.
-        Die Option-Requests werden in der HttpServer-Klasse als Ausnahme behandelt und nicht weiter an das API durchgeleitet.
-        Options-Requests und Header werde hier in dieser Klasse gesetzt. In Hinblick auf eine lose Kopplung ist die folgende Implementierung
-        keine gute Lösung. Eine Alternativlösung muss diskutiert werden.
-        */
-        if ("OPTIONS".equals(request.getMethod()) && request.getRequestURI().contains("/dav")) {
-            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, PROPFIND, REPORT");
-            response.setHeader("DAV", "addressbook, calendar-access");
-        }
-        //Workaround Ende
+	@Override
+	public Authentication validateRequest(final ServletRequest req, final ServletResponse res, final boolean mandatory) throws ServerAuthException {
+		final HttpServletRequest request = (HttpServletRequest) req;
+		final HttpServletResponse response = (HttpServletResponse) res;
+		// Prüfe, ob der Port zu dem Zugriffsbereich passt, falls in der SVWS-Konfiguration mehrere Ports verwendet werden
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		if (config.hatPortHTTPPrivilegedAccess()) {
+			final String pathInfo = request.getPathInfo();
+			final boolean isCommonAccess = RestAppDebug.checkIsInPathSpecification(pathInfo)
+					|| RestAppServer.checkIsInPathSpecificationCommon(pathInfo);
+			final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
+					|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
+			if (!isCommonAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
+				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
+			if (!isCommonAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
+				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
+		}
+		// Prüfe die Anmeldenamen...
+		final String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
+		String username = "";
+		String password = "";
+		String usernameISO_8859_1 = "";
+		String passwordISO_8859_1 = "";
+		if (auth != null) {
+			final int space = auth.indexOf(' ');
+			if ((space > 0) && ("basic".equalsIgnoreCase(auth.substring(0, space)))) {
+				final String authUTF_8 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.UTF_8);
+				final int colonUTF8 = authUTF_8.indexOf(':');
+				if (colonUTF8 > 0) {
+					username = authUTF_8.substring(0, colonUTF8);
+					password = authUTF_8.substring(colonUTF8 + 1);
+				}
+				final String authISO_8859_1 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.ISO_8859_1);
+				final int colonISO_8859_1 = authISO_8859_1.indexOf(':');
+				if (colonISO_8859_1 > 0) {
+					usernameISO_8859_1 = authISO_8859_1.substring(0, colonISO_8859_1);
+					passwordISO_8859_1 = authISO_8859_1.substring(colonISO_8859_1 + 1);
+				}
+			}
+		}
+		/* FIXME: Workaround. DAV-API muss im OPTIONS-Request den DAV-Header ausgeben. Zudem unterstützt DAV weitere HTTP-Methods.
+		Die Option-Requests werden in der HttpServer-Klasse als Ausnahme behandelt und nicht weiter an das API durchgeleitet.
+		Options-Requests und Header werde hier in dieser Klasse gesetzt. In Hinblick auf eine lose Kopplung ist die folgende Implementierung
+		keine gute Lösung. Eine Alternativlösung muss diskutiert werden.
+		*/
+		if ("OPTIONS".equals(request.getMethod()) && request.getRequestURI().contains("/dav")) {
+			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, PROPFIND, REPORT");
+			response.setHeader("DAV", "addressbook, calendar-access");
+		}
+		//Workaround Ende
 
-        if (((username == null) || (username.isBlank())) && (RestAppSchemaRoot.checkIsInPathSpecification(request.getPathInfo()))) {
-        	// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
-        } else {
-	        try {
-		        UserIdentity user = login(username, password, request);
-		        if (user != null)
-		            return new UserAuthentication(getAuthMethod(), user);
-		        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
-		        if (user != null)
-		            return new UserAuthentication(getAuthMethod(), user);
-	        } catch (final WebApplicationException wae) {
-	    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
-	    			response.setStatus(r.getStatus());
-	    			writer.print(r.getEntity());
-	        		return Authentication.SEND_FAILURE;
-	            } catch (final IOException e) {
-	                throw new ServerAuthException(e);
-	            }
-	        }
-        }
-        try {
-            response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
+		if (((username == null) || (username.isBlank())) && (RestAppSchemaRoot.checkIsInPathSpecification(request.getPathInfo()))) {
+			// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
+		} else {
+			try {
+				UserIdentity user = login(username, password, request);
+				if (user != null)
+					return new UserAuthentication(getAuthMethod(), user);
+				user = login(usernameISO_8859_1, passwordISO_8859_1, request);
+				if (user != null)
+					return new UserAuthentication(getAuthMethod(), user);
+			} catch (final WebApplicationException wae) {
+				try (var r = wae.getResponse(); var writer = response.getWriter()) {
+					response.setStatus(r.getStatus());
+					writer.print(r.getEntity());
+					return Authentication.SEND_FAILURE;
+				} catch (final IOException e) {
+					throw new ServerAuthException(e);
+				}
+			}
+		}
+		try {
+			response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
 			final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
 			final String origin = request.getHeader("Origin");
 			response.setHeader("Vary", "Origin");
@@ -125,16 +125,17 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
 			response.setIntHeader("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
 			// An OPTIONS-Http-Request must be OK for CORS-Preflight-Requests
-            response.sendError("OPTIONS".equals(request.getMethod()) ? HttpServletResponse.SC_OK : HttpServletResponse.SC_UNAUTHORIZED);
-            return Authentication.SEND_CONTINUE;
-        } catch (final IOException e) {
-            throw new ServerAuthException(e);
-        }
-    }
+			response.sendError("OPTIONS".equals(request.getMethod()) ? HttpServletResponse.SC_OK : HttpServletResponse.SC_UNAUTHORIZED);
+			return Authentication.SEND_CONTINUE;
+		} catch (final IOException e) {
+			throw new ServerAuthException(e);
+		}
+	}
 
-    @Override
-    public boolean secureResponse(final ServletRequest req, final ServletResponse res, final boolean mandatory, final User validatedUser) throws ServerAuthException {
-        return true;
-    }
+	@Override
+	public boolean secureResponse(final ServletRequest req, final ServletResponse res, final boolean mandatory, final User validatedUser)
+			throws ServerAuthException {
+		return true;
+	}
 
 }

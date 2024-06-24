@@ -24,19 +24,19 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class Main {
 
-    /**
-     * Diese Methode ist der Einsprungspunkt für die Java-Kommandozeilen-Applikation
-     * des SVWS-Servers.
-     * Hierbei wird zunächst die SVWS-Konfiguration geladen, dann basierend auf dem
-     * konfigurierten Pfad die Ressourcen des SVWS-Client, welche über die
-     * Open-API-Schnittstelle zur Verfügung gestellt werden.
-     * Anschließend wird dann der Jetty-Embedded Http-Server mit der
-     * OpenAPI-Schnittstellen-Web-Applikation gestartet.
-     *
-     * @param args   die Kommandozeilenargumente zum Starten des Servers.
-     *
-     * @throws Exception   gibt in einem unerwarteten Fehlerfall eine Exception zurück.
-     */
+	/**
+	 * Diese Methode ist der Einsprungspunkt für die Java-Kommandozeilen-Applikation
+	 * des SVWS-Servers.
+	 * Hierbei wird zunächst die SVWS-Konfiguration geladen, dann basierend auf dem
+	 * konfigurierten Pfad die Ressourcen des SVWS-Client, welche über die
+	 * Open-API-Schnittstelle zur Verfügung gestellt werden.
+	 * Anschließend wird dann der Jetty-Embedded Http-Server mit der
+	 * OpenAPI-Schnittstellen-Web-Applikation gestartet.
+	 *
+	 * @param args   die Kommandozeilenargumente zum Starten des Servers.
+	 *
+	 * @throws Exception   gibt in einem unerwarteten Fehlerfall eine Exception zurück.
+	 */
 	public static void main(final String[] args) throws Exception {
 		// Setze das Default-Encoding auf UTF-8
 		System.setProperty("file.encoding", "UTF-8");

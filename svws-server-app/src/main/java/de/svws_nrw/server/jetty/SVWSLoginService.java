@@ -64,7 +64,7 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		final HttpServletRequest req = (HttpServletRequest) request;
 
 		// Wandle die Crendentials in einen Passwort-String um
-		String password;
+		final String password;
 		if (credentials instanceof char[])
 			password = new String((char[]) credentials);
 		else if ((credentials instanceof String) || (credentials instanceof Password))
@@ -75,7 +75,7 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		}
 
 		// Prüfe, ob ein Login bei der OpenAPI-Applikation erfolgreich ist
-		BenutzerApiPrincipal principal;
+		final BenutzerApiPrincipal principal;
 		try {
 			principal = BenutzerApiPrincipal.login(username, password, req);
 			if (principal == null)
@@ -118,7 +118,6 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 	public String toString() {
 		return this.getClass().getSimpleName() + "[" + serviceName + "]";
 	}
-
 
 
 
