@@ -77,7 +77,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		// Zeitraster ...
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);
 		stundenplan.daten.zeitraster.addAll(zeitraster);
-		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
+		stundenplan.daten.kalenderwochenZuordnung.addAll(new DataStundenplanKalenderwochenzuordnung(conn, idStundenplan).getList());
 
 		// Bestime den Lernabschnitt des Schülers, um anschließend mithilfe de aktuellen Leistungsdaten den Stundenplan zu befüllen
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(

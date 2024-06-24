@@ -79,7 +79,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		stundenplan.daten.wochenTypModell = dtoStundenplan.WochentypModell;
 		final StundenplanKlasse klasse = DataStundenplanKlassen.getById(conn, idStundenplan, id);
 		stundenplan.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan));
-		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
+		stundenplan.daten.kalenderwochenZuordnung.addAll(new DataStundenplanKalenderwochenzuordnung(conn, idStundenplan).getList());
 		stundenplan.daten.zeitraster.addAll(DataStundenplanZeitraster.getZeitraster(conn, idStundenplan));
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);

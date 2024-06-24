@@ -83,7 +83,7 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		stundenplan.daten.pausenzeiten = new DataStundenplanPausenzeiten(conn, idStundenplan).getList();
 		stundenplan.daten.aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, idStundenplan);
 		stundenplan.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan));
-		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
+		stundenplan.daten.kalenderwochenZuordnung.addAll(new DataStundenplanKalenderwochenzuordnung(conn, idStundenplan).getList());
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, lehrer.id, stundenplan.daten.zeitraster);
 		// Füge ggf. noch die Klassen der Puasenzeiten hinzu

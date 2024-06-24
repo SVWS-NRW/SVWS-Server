@@ -1090,7 +1090,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Keine Kalenderwochen-Zuordnung eines Stundenplans gefunden")
 	public Response getStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).getAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -1123,7 +1123,41 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen mehrerer Kalenderwochen-Zuordnungen. Die IDs in dem Patch
+	 * müssen vorhanden sein, damit die zu patchenden Daten in der DB gefunden werden können.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID des Stundenplans
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/kalenderwochen/patch/multiple")
+	@Operation(summary = "Passt die Kalenderwochen-Zuordnungen eines Stundenplans an.",
+			description = "Passt die Kalenderwochen-Zuordnungen eines Stundenplans an. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag für mindestens eine der IDs der Daten gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchStundenplanKalenderwochenzuordnungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Kalenderwochenzuordnungen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).patchMultipleAsResponse("id", is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1154,7 +1188,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1186,7 +1220,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1214,7 +1248,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}
@@ -1247,7 +1281,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}

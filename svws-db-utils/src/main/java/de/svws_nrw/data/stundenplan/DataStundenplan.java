@@ -100,7 +100,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
 		final List<StundenplanPausenzeit> pausenzeiten = new DataStundenplanPausenzeiten(conn, id).getList();
 		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, id);
-		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, id);
+		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = new DataStundenplanKalenderwochenzuordnung(conn, id).getList();
 		// Erstelle das Core-DTO-Objekt für die Response
 		final Stundenplan daten = new Stundenplan();
 		daten.id = stundenplan.ID;
