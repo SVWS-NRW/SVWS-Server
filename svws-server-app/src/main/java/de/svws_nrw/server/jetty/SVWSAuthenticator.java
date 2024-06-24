@@ -94,7 +94,7 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         }
         //Workaround Ende
 
-        if (((username == null) || (username.isBlank())) && (request.getPathInfo().startsWith("/api/schema/root/"))) {
+        if (((username == null) || (username.isBlank())) && (RestAppSchemaRoot.checkIsInPathSpecification(request.getPathInfo()))) {
         	// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
         } else {
 	        try {

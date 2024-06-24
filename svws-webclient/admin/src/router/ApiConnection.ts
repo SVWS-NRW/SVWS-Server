@@ -1,6 +1,6 @@
 import { ref, shallowRef } from "vue";
 
-import { ApiSchemaPrivileged, BenutzerKennwort, UserNotificationException, OpenApiError, ApiServer, ServerMode } from "@core";
+import { ApiPrivileged, BenutzerKennwort, UserNotificationException, OpenApiError, ApiServer, ServerMode } from "@core";
 
 export class ApiConnection {
 
@@ -20,7 +20,7 @@ export class ApiConnection {
 	protected _password = "";
 
 	// Die API für die priviligierten Schema-Zugriffe
-	protected _schema_api_privileged: ApiSchemaPrivileged | undefined = undefined;
+	protected _schema_api_privileged: ApiPrivileged | undefined = undefined;
 
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
@@ -40,7 +40,7 @@ export class ApiConnection {
 	}
 
 	// Gibt die API für den priviligierten Schema-Zugriff zurück.
-	get api_privileged(): ApiSchemaPrivileged {
+	get api_privileged(): ApiPrivileged {
 		if (this._schema_api_privileged === undefined)
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können für den priviligierten Schema-Zugriff nicht erfolgen")
 		return this._schema_api_privileged;
@@ -136,7 +136,7 @@ export class ApiConnection {
 		try {
 			if (this._url === undefined)
 				throw new Error("Keine gültige URL für einen Login verfügbar.");
-			const api_priv = new ApiSchemaPrivileged(this._url, username, password);
+			const api_priv = new ApiPrivileged(this._url, username, password);
 			const data = new BenutzerKennwort();
 			data.user = username;
 			data.password = password;

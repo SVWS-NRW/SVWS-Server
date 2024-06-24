@@ -70,8 +70,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "SchemaPrivileged")
-public class APISchemaPrivileged {
+@Tag(name = "Privileged")
+public class APIPrivilegedSchema {
 
 	/**
 	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
@@ -254,30 +254,6 @@ public class APISchemaPrivileged {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage ob der angemeldete Datenbankuser ein priviligierter Datenbank-Benutzer
-	 * mit Rechten zur Anpassung der SVWS-Konfiguration ist.
-	 *
-	 * @param request     die Informationen zur HTTP-Anfrage
-	 *
-	 * @return            Rückmeldung, ob der angegebene User existiert
-	 */
-	@GET
-	@Path("/api/schema/root/privileged/{user}")
-	@Operation(summary = "Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der"
-			+ " SVWS-Konfiguration ist.",
-			description = "Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der"
-					+ " SVWS-Konfiguration ist.")
-	@ApiResponse(responseCode = "200", description = "true, wenn der Benutzer die Rechte hat",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
-	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um auf die priviligierte API zuzugreifen")
-	public Response isPrivilegedUser(@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(conn -> ApiUtils.getResponse(conn.isPrivilegedDatabaseUser()),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für das angegebene Password für einen Datenbankuser korrekt ist.
 	 *
 	 * @param kennwort    der Username und das Kennwort im json, das überprüft werden soll
@@ -450,7 +426,7 @@ public class APISchemaPrivileged {
 	 * @return Rückmeldung, ob die Operation erfolgreich war
 	 */
 	@POST
-	@Path("/api/schema/root/schema/{schema}/remove")
+	@Path("/api/schema/root/config/remove/schema/{schema}")
 	@Operation(summary = "Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration.",
 			description = "Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer"
 					+ " die benötigten Rechte besitzt.")

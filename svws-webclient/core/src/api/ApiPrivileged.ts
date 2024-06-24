@@ -11,7 +11,7 @@ import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag
 import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 
-export class ApiSchemaPrivileged extends BaseApi {
+export class ApiPrivileged extends BaseApi {
 
 	/**
 	 *
@@ -24,6 +24,27 @@ export class ApiSchemaPrivileged extends BaseApi {
 	public constructor(url : string, username : string, password : string) {
 		super(url, username, password);
 	}
+
+	/**
+	 * Implementierung der GET-Methode isPrivilegedUser für den Zugriff auf die URL https://{hostname}/api/privileged/api/schema/root/privileged/{user}
+	 *
+	 * Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der SVWS-Konfiguration ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: true, wenn der Benutzer die Rechte hat
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um auf die priviligierte API zuzugreifen
+	 *
+	 * @returns true, wenn der Benutzer die Rechte hat
+	 */
+	public async isPrivilegedUser() : Promise<boolean | null> {
+		const path = "/api/privileged/api/schema/root/privileged/{user}";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
 
 	/**
 	 * Implementierung der POST-Methode createSchemaCurrentInto für den Zugriff auf die URL https://{hostname}/api/schema/create/{schema}
@@ -494,6 +515,27 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/schema/root/config/remove/schema/{schema}
+	 *
+	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Schema wurde erfolgreich aus der Konfiguration entfernt.
+	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
+	 *   Code 403: Das Schema darf nicht gelöscht werden.
+	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async removeSchemaFromConfig(schema : string) : Promise<void> {
+		const path = "/api/schema/root/config/remove/schema/{schema}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createSchemaCurrent für den Zugriff auf die URL https://{hostname}/api/schema/root/create/{schema}
 	 *
 	 * Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen, falls keines mit dem angebenen Namen bereits existiert.
@@ -859,27 +901,6 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode isPrivilegedUser für den Zugriff auf die URL https://{hostname}/api/schema/root/privileged/{user}
-	 *
-	 * Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der SVWS-Konfiguration ist.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: true, wenn der Benutzer die Rechte hat
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
-	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um auf die priviligierte API zuzugreifen
-	 *
-	 * @returns true, wenn der Benutzer die Rechte hat
-	 */
-	public async isPrivilegedUser() : Promise<boolean | null> {
-		const path = "/api/schema/root/privileged/{user}";
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return (text === "true");
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode deactivateSchema für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}
 	 *
 	 * Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, der angemeldete Benutzer die benötigten Rechte besitzt.
@@ -896,27 +917,6 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const path = "/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{state\s*(:[^{}]+({[^{}]+})*)?}/g, state.toString());
-		await super.postJSON(path, null);
-		return;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/remove
-	 *
-	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Das Schema wurde erfolgreich aus der Konfiguration entfernt.
-	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
-	 *   Code 403: Das Schema darf nicht gelöscht werden.
-	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async removeSchemaFromConfig(schema : string) : Promise<void> {
-		const path = "/api/schema/root/schema/{schema}/remove"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
 		return;
 	}

@@ -2,7 +2,8 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
-import de.svws_nrw.api.privileged.APISchemaPrivileged;
+import de.svws_nrw.api.privileged.APIPrivilegedConfig;
+import de.svws_nrw.api.privileged.APIPrivilegedSchema;
 import jakarta.ws.rs.core.Application;
 
 
@@ -14,12 +15,14 @@ public final class RestAppSchemaRoot extends Application {
 
 	/** Die Pfad-Spezifikation für diese Applikation */
 	private static final String[] pathSpec = { "/api/schema/root/*", "/api/schema/liste/*", "/api/schema/create/*", "/api/schema/export/*",
-			"/api/schema/import/*", "/api/schema/migrate/*", "/api/schema/update/*", "/openapi/privileged.json", "/openapi/privileged.yaml" };
+			"/api/schema/import/*", "/api/schema/migrate/*", "/api/schema/update/*", "/api/privileged/*", "/openapi/privileged.json",
+			"/openapi/privileged.yaml" };
 
 	/// Enthält die API-Klassen für diese Applikation
 	private final Set<Class<?>> classes = Set.of(
 			OpenAPICorsFilter.class,
-			APISchemaPrivileged.class,
+			APIPrivilegedConfig.class,
+			APIPrivilegedSchema.class,
 			OpenApiSchemaRoot.class);
 
 	@Override

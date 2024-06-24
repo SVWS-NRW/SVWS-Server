@@ -1,5 +1,5 @@
+export { ApiPrivileged } from './api/ApiPrivileged';
 export { ApiSchema } from './api/ApiSchema';
-export { ApiSchemaPrivileged } from './api/ApiSchemaPrivileged';
 export { ApiServer } from './api/ApiServer';
 export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';
 export { BaseApi, type ApiFile } from './api/BaseApi';

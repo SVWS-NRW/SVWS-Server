@@ -1,4 +1,4 @@
-import type { ApiServer, ServerMode, ApiSchemaPrivileged } from "@core";
+import type { ApiServer, ServerMode, ApiPrivileged } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";
@@ -30,7 +30,7 @@ class Api {
 	}
 
 	/** Gibt den Namen des Schemas beim SVWS-Server zurück, welches mit dieser Verbindung angesprochen wird */
-	get privileged(): ApiSchemaPrivileged {
+	get privileged(): ApiPrivileged {
 		return this.conn.api_privileged;
 	}
 
