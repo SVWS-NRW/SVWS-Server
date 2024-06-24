@@ -26,7 +26,66 @@ export class ApiPrivileged extends BaseApi {
 	}
 
 	/**
-	 * Implementierung der GET-Methode isPrivilegedUser für den Zugriff auf die URL https://{hostname}/api/privileged/api/schema/root/privileged/{user}
+	 * Implementierung der POST-Methode unsetDefaultSchemaInConfig für den Zugriff auf die URL https://{hostname}/api/privileged/config/default/schema/
+	 *
+	 * Setzt Default-Schema zurück, sofern der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Default-Schema wurde zuürckgesetzt.
+	 *   Code 403: Das Default-Schema darf nicht zurückgesetzt werden.
+	 *   Code 404: Die Konfiguration wurde nicht gefunden.
+	 */
+	public async unsetDefaultSchemaInConfig() : Promise<void> {
+		const path = "/api/privileged/config/default/schema/";
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setDefaultSchemaInConfig für den Zugriff auf die URL https://{hostname}/api/privileged/config/default/schema/{schema}
+	 *
+	 * Setze das angegebene Schema als Default-Schema, sofern es in der SVWS-Konfiguration eingetragen ist und der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Schema wurde erfolgreich als Default-Schema gesetzt.
+	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
+	 *   Code 403: Das Default-Schema darf nicht gesetzt werden.
+	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async setDefaultSchemaInConfig(schema : string) : Promise<void> {
+		const path = "/api/privileged/config/default/schema/{schema}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/privileged/config/schema/{schema}/remove
+	 *
+	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Schema wurde erfolgreich aus der Konfiguration entfernt.
+	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
+	 *   Code 403: Das Schema darf nicht gelöscht werden.
+	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async removeSchemaFromConfig(schema : string) : Promise<void> {
+		const path = "/api/privileged/config/schema/{schema}/remove"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode isPrivilegedUser für den Zugriff auf die URL https://{hostname}/api/privileged/user/isprivileged
 	 *
 	 * Liefert die Information, ob der angemeldete Benutzer ein priviligierter Benutzer mit Rechten zur Anpassung der SVWS-Konfiguration ist.
 	 *
@@ -39,7 +98,7 @@ export class ApiPrivileged extends BaseApi {
 	 * @returns true, wenn der Benutzer die Rechte hat
 	 */
 	public async isPrivilegedUser() : Promise<boolean | null> {
-		const path = "/api/privileged/api/schema/root/privileged/{user}";
+		const path = "/api/privileged/user/isprivileged";
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
@@ -511,27 +570,6 @@ export class ApiPrivileged extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/schema/root/config/remove/schema/{schema}
-	 *
-	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Das Schema wurde erfolgreich aus der Konfiguration entfernt.
-	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
-	 *   Code 403: Das Schema darf nicht gelöscht werden.
-	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async removeSchemaFromConfig(schema : string) : Promise<void> {
-		const path = "/api/schema/root/config/remove/schema/{schema}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		await super.postJSON(path, null);
-		return;
 	}
 
 

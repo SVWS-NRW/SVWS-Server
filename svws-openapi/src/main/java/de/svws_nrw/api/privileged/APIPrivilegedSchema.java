@@ -417,48 +417,6 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Schemas aus der SVWS-Konfiguration. Der angemeldete Datenbankbenutzer
-	 * muss dafür priviligierte Rechte für die Bearbeitung der SVWS-Konfiguration haben.
-	 *
-	 * @param schemaname    der Name des Schemas, das aus der Konfiguration entfernt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return Rückmeldung, ob die Operation erfolgreich war
-	 */
-	@POST
-	@Path("/api/schema/root/config/remove/schema/{schema}")
-	@Operation(summary = "Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration.",
-			description = "Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer"
-					+ " die benötigten Rechte besitzt.")
-	@ApiResponse(responseCode = "204", description = "Das Schema wurde erfolgreich aus der Konfiguration entfernt.")
-	@ApiResponse(responseCode = "400", description = "Der Schema-Name darf nicht null oder leer sein.")
-	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht gelöscht werden.")
-	@ApiResponse(responseCode = "404", description = "Das angegebene Schema wurde nicht gefunden.")
-	public Response removeSchemaFromConfig(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
-			if (!conn.isPrivilegedDatabaseUser())
-				throw new ApiOperationException(Status.FORBIDDEN);
-
-			// Prüfe, ob der Schema-Name gültig ist
-			if ((schemaname == null) || schemaname.isBlank())
-				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
-
-			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
-			if (schemanameConfig == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.");
-			config.removeSchema(schemanameConfig);
-			SVWSKonfiguration.write();
-			return Response.status(Status.NO_CONTENT).build();
-		},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für das Setzen des Flags, ob ein Schema deaktiviert wurde oder nicht.
 	 * Der angemeldete Datenbankbenutzer muss dafür priviligierte Rechte für die Bearbeitung der
 	 * SVWS-Konfiguration haben.
