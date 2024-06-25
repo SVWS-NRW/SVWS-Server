@@ -53,7 +53,7 @@ public final class DummyMapIntervall {
 	 *         werden muss.
 	 */
 	int min() {
-		return fromInc ? from : from + 1;
+		return fromInc ? from : (from + 1);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class DummyMapIntervall {
 	 *         werden muss.
 	 */
 	int max() {
-		return toInc ? to : to - 1;
+		return toInc ? to : (to - 1);
 	}
 
 	/**

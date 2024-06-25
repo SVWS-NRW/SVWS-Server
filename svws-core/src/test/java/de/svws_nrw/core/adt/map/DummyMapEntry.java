@@ -59,7 +59,7 @@ public final class DummyMapEntry implements Entry<@NotNull Integer, @NotNull Int
 	}
 
 	@Override
-	public @NotNull Integer setValue(@NotNull final Integer value) {
+	public @NotNull Integer setValue(final @NotNull Integer value) {
 		throw new UnsupportedOperationException(); // Kann sonst den Zustand zerstören.
 	}
 

@@ -142,7 +142,7 @@ class SchuelerblockungTests {
 		}
 
 		// Keine Fachwahlen vorhanden?
-		@NotNull final List<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
+		final @NotNull List<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
 		if (fachwahlen == null) {
 			fail("SchuelerblockungOutput.fachwahlenZuKurs == null");
 			return;
@@ -156,7 +156,7 @@ class SchuelerblockungTests {
 
 		// Wurde wirklich jeder Fachwahl etwas zugeordnet?
 		for (int i = 0; i < fachwahlen.size(); i++) {
-			@NotNull final SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs = fachwahlen.get(i);
+			final @NotNull SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs = fachwahlen.get(i);
 			if (fachwahlZuKurs == null) {
 				fail("fachwahl == null");
 				return;

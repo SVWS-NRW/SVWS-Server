@@ -68,7 +68,7 @@ public final class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public boolean add(@NotNull final Integer e) {
+	public boolean add(final @NotNull Integer e) {
 		return _sub.bcAddKey(e);
 	}
 
@@ -93,7 +93,7 @@ public final class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public boolean removeAll(@NotNull final Collection<?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		return _sub.bcRemoveAllKeysReturnBool(c);
 	}
 
@@ -103,22 +103,22 @@ public final class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public @NotNull Integer lower(@NotNull final Integer e) {
+	public @NotNull Integer lower(final @NotNull Integer e) {
 		return _sub.lowerKey(e);
 	}
 
 	@Override
-	public @NotNull Integer floor(@NotNull final Integer e) {
+	public @NotNull Integer floor(final @NotNull Integer e) {
 		return _sub.floorKey(e);
 	}
 
 	@Override
-	public @NotNull Integer ceiling(@NotNull final Integer e) {
+	public @NotNull Integer ceiling(final @NotNull Integer e) {
 		return _sub.ceilingKey(e);
 	}
 
 	@Override
-	public @NotNull Integer higher(@NotNull final Integer e) {
+	public @NotNull Integer higher(final @NotNull Integer e) {
 		return _sub.higherKey(e);
 	}
 
@@ -148,33 +148,33 @@ public final class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, final boolean fromInclusive,
-			@NotNull final Integer toElement, final boolean toInclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> subSet(final @NotNull Integer fromElement, final boolean fromInclusive,
+			final @NotNull Integer toElement, final boolean toInclusive) {
 		return _sub.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull final Integer toElement, final boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> headSet(final @NotNull Integer toElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyHeadSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement, final boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> tailSet(final @NotNull Integer fromElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyTailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> subSet(final @NotNull Integer fromElement, final @NotNull Integer toElement) {
 		return _sub.bcGetSubKeySet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull final Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> headSet(final @NotNull Integer toElement) {
 		return _sub.bcGetSubKeyHeadSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement) {
+	public @NotNull SortedSet<@NotNull Integer> tailSet(final @NotNull Integer fromElement) {
 		return _sub.bcGetSubKeyTailSet(fromElement);
 	}
 

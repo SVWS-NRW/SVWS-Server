@@ -35,7 +35,7 @@ class DummyMapSubEntrySetIterator implements Iterator<@NotNull Entry<@NotNull In
 	 *
 	 * @param sub Die {@link DummyMapSub} auf der operiert wird.
 	 */
-	DummyMapSubEntrySetIterator(@NotNull final DummyMapSub sub) {
+	DummyMapSubEntrySetIterator(final @NotNull DummyMapSub sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.firstEntry();

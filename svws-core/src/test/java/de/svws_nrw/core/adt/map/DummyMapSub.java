@@ -45,7 +45,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @param iv  Das Intervall dieser Sub-Map.
 	 * @param asc Falls {@code false} werden alle Elemente absteigend interpretiert.
 	 */
-	public DummyMapSub(@NotNull final DummyMap par, @NotNull final DummyMapIntervall iv, final boolean asc) {
+	public DummyMapSub(final @NotNull DummyMap par, final @NotNull DummyMapIntervall iv, final boolean asc) {
 		_par = par;
 		_iv = iv;
 		_asc = asc;
@@ -71,7 +71,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public boolean equals(@NotNull final Object o) {
+	public boolean equals(final @NotNull Object o) {
 		if (o == this)
 			return true;
 
@@ -85,7 +85,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
-		for (@NotNull final Entry<@NotNull Integer, @NotNull Integer> e : entrySet())
+		for (final @NotNull Entry<@NotNull Integer, @NotNull Integer> e : entrySet())
 			if (!e.getValue().equals(mapO.get(e.getKey())))
 				return false;
 
@@ -133,32 +133,32 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public boolean containsKey(@NotNull final Object key) {
+	public boolean containsKey(final @NotNull Object key) {
 		return _par.bcContainsKey(_iv, key);
 	}
 
 	@Override
-	public boolean containsValue(@NotNull final Object value) {
+	public boolean containsValue(final @NotNull Object value) {
 		return _par.bcContainsValue(_iv, value);
 	}
 
 	@Override
-	public Integer get(@NotNull final Object key) {
+	public Integer get(final @NotNull Object key) {
 		return _par.bcGetValueOfKeyOrNull(_iv, key);
 	}
 
 	@Override
-	public Integer put(@NotNull final Integer key, @NotNull final Integer value) {
+	public Integer put(final @NotNull Integer key, final @NotNull Integer value) {
 		return _par.bcAddEntryReturnOldValueOrNull(_iv, key, value);
 	}
 
 	@Override
-	public Integer remove(@NotNull final Object objKey) {
+	public Integer remove(final @NotNull Object objKey) {
 		return _par.bcRemoveKeyReturnOldValue(_iv, objKey);
 	}
 
 	@Override
-	public void putAll(@NotNull final Map<? extends @NotNull Integer, ? extends @NotNull Integer> m) {
+	public void putAll(final @NotNull Map<? extends @NotNull Integer, ? extends @NotNull Integer> m) {
 		_par.bcAddAllEntriesOfMap(_iv, m);
 	}
 
@@ -168,42 +168,42 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public Entry<@NotNull Integer, @NotNull Integer> lowerEntry(@NotNull final Integer key) {
+	public Entry<@NotNull Integer, @NotNull Integer> lowerEntry(final @NotNull Integer key) {
 		return _asc ? _par.bcGetLowerEntryOrNull(_iv, key) : _par.bcGetHigherEntryOrNull(_iv, key);
 	}
 
 	@Override
-	public Integer lowerKey(@NotNull final Integer key) {
+	public Integer lowerKey(final @NotNull Integer key) {
 		return _asc ? _par.bcGetLowerKeyOrNull(_iv, key) : _par.bcGetHigherKeyOrNull(_iv, key);
 	}
 
 	@Override
-	public Entry<@NotNull Integer, @NotNull Integer> floorEntry(@NotNull final Integer key) {
+	public Entry<@NotNull Integer, @NotNull Integer> floorEntry(final @NotNull Integer key) {
 		return _asc ? _par.bcGetFloorEntryOrNull(_iv, key) : _par.bcGetCeilingEntryOrNull(_iv, key);
 	}
 
 	@Override
-	public Integer floorKey(@NotNull final Integer key) {
+	public Integer floorKey(final @NotNull Integer key) {
 		return _asc ? _par.bcGetFloorKeyOrNull(_iv, key) : _par.bcGetCeilingKeyOrNull(_iv, key);
 	}
 
 	@Override
-	public Entry<@NotNull Integer, @NotNull Integer> ceilingEntry(@NotNull final Integer key) {
+	public Entry<@NotNull Integer, @NotNull Integer> ceilingEntry(final @NotNull Integer key) {
 		return _asc ? _par.bcGetCeilingEntryOrNull(_iv, key) : _par.bcGetFloorEntryOrNull(_iv, key);
 	}
 
 	@Override
-	public Integer ceilingKey(@NotNull final Integer key) {
+	public Integer ceilingKey(final @NotNull Integer key) {
 		return _asc ? _par.bcGetCeilingKeyOrNull(_iv, key) : _par.bcGetFloorKeyOrNull(_iv, key);
 	}
 
 	@Override
-	public Entry<@NotNull Integer, @NotNull Integer> higherEntry(@NotNull final Integer key) {
+	public Entry<@NotNull Integer, @NotNull Integer> higherEntry(final @NotNull Integer key) {
 		return _asc ? _par.bcGetHigherEntryOrNull(_iv, key) : _par.bcGetLowerEntryOrNull(_iv, key);
 	}
 
 	@Override
-	public Integer higherKey(@NotNull final Integer key) {
+	public Integer higherKey(final @NotNull Integer key) {
 		return _asc ? _par.bcGetHigherKeyOrNull(_iv, key) : _par.bcGetLowerKeyOrNull(_iv, key);
 	}
 
@@ -243,34 +243,34 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> subMap(@NotNull final Integer fromKey,
-			final boolean fromInclusive, @NotNull final Integer toKey, final boolean toInclusive) {
+	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> subMap(final @NotNull Integer fromKey,
+			final boolean fromInclusive, final @NotNull Integer toKey, final boolean toInclusive) {
 		return _createMap(fromKey, fromInclusive, toKey, toInclusive, _asc);
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> headMap(@NotNull final Integer toKey, final boolean inc) {
+	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> headMap(final @NotNull Integer toKey, final boolean inc) {
 		return _createMap(_iv.from, _iv.fromInc, toKey, inc, _asc);
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> tailMap(@NotNull final Integer fromKey, final boolean inc) {
+	public @NotNull NavigableMap<@NotNull Integer, @NotNull Integer> tailMap(final @NotNull Integer fromKey, final boolean inc) {
 		return _createMap(fromKey, inc, _iv.to, _iv.toInc, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> subMap(@NotNull final Integer fromKey,
-			@NotNull final Integer toKey) {
+	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> subMap(final @NotNull Integer fromKey,
+			final @NotNull Integer toKey) {
 		return _createMap(fromKey, true, toKey, false, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> headMap(@NotNull final Integer toKey) {
+	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> headMap(final @NotNull Integer toKey) {
 		return _createMap(_iv.from, _iv.fromInc, toKey, false, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> tailMap(@NotNull final Integer fromKey) {
+	public @NotNull SortedMap<@NotNull Integer, @NotNull Integer> tailMap(final @NotNull Integer fromKey) {
 		return _createMap(fromKey, true, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -286,7 +286,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls der Schlüssel (Key) noch nicht existierte, sonst FALSE.
 	 */
-	boolean bcAddKey(@NotNull final Integer e) {
+	boolean bcAddKey(final @NotNull Integer e) {
 		return _par.bcAddKey(_iv, e);
 	}
 
@@ -309,7 +309,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls das Entry (e.getKey(), e.getValue()) neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddEntryReturnBool(@NotNull final Entry<@NotNull Integer, @NotNull Integer> e) {
+	boolean bcAddEntryReturnBool(final @NotNull Entry<@NotNull Integer, @NotNull Integer> e) {
 		return _par.bcAddEntry(_iv, e);
 	}
 
@@ -321,7 +321,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls mindestens ein Entry neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddAllEntries(@NotNull final Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
+	boolean bcAddAllEntries(final @NotNull Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
 		return _par.bcAddAllEntries(_iv, c);
 	}
 
@@ -357,7 +357,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllEntries(@NotNull final Collection<?> c) {
+	boolean bcContainsAllEntries(final @NotNull Collection<?> c) {
 		return _par.bcContainsAllEntries(_iv, c);
 	}
 
@@ -370,7 +370,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 *
 	 */
-	boolean bcContainsAllValues(@NotNull final Collection<?> c) {
+	boolean bcContainsAllValues(final @NotNull Collection<?> c) {
 		return _par.bcContainsAllValues(_iv, c);
 	}
 
@@ -382,7 +382,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	boolean bcRemoveAllKeysReturnBool(@NotNull final Collection<?> c) {
+	boolean bcRemoveAllKeysReturnBool(final @NotNull Collection<?> c) {
 		return _par.bcRemoveAllKeyReturnBool(_iv, c);
 	}
 
@@ -393,7 +393,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
-	boolean bcRemoveEntry(@NotNull final Object o) {
+	boolean bcRemoveEntry(final @NotNull Object o) {
 		return _par.bcRemoveEntryReturnBool(_iv, o);
 	}
 
@@ -405,7 +405,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	boolean bcRemoveAllEntriesReturnBool(@NotNull final Collection<?> c) {
+	boolean bcRemoveAllEntriesReturnBool(final @NotNull Collection<?> c) {
 		return _par.bcRemoveAllEntriesReturnBool(_iv, c);
 	}
 
@@ -458,7 +458,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	boolean bcRetainAllEntries(@NotNull final Collection<?> c) {
+	boolean bcRetainAllEntries(final @NotNull Collection<?> c) {
 		boolean changed = false;
 		final Iterator<Entry<Integer, Integer>> iterKey = entrySet().iterator(); // Es muss der Iterator von "this" sein!
 		while (iterKey.hasNext()) {
@@ -480,7 +480,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	@NotNull
 	ArrayList<@NotNull Integer> bcGetArrayListOfKeys() {
 		final ArrayList<Integer> list = new ArrayList<>();
-		@NotNull final Iterator<@NotNull Integer> iter = navigableKeySet().iterator();
+		final @NotNull Iterator<@NotNull Integer> iter = navigableKeySet().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		return list;
@@ -494,8 +494,8 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 */
 	@NotNull
 	ArrayList<@NotNull Integer> bcGetArrayListOfValues() {
-		@NotNull final ArrayList<@NotNull Integer> list = new ArrayList<>();
-		@NotNull final Iterator<@NotNull Integer> iter = values().iterator();
+		final @NotNull ArrayList<@NotNull Integer> list = new ArrayList<>();
+		final @NotNull Iterator<@NotNull Integer> iter = values().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		return list;
@@ -509,8 +509,8 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 */
 	@NotNull
 	ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> bcGetArrayListOfEntries() {
-		@NotNull final ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> list = new ArrayList<>();
-		@NotNull final Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> iter = entrySet().iterator();
+		final @NotNull ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> list = new ArrayList<>();
+		final @NotNull Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> iter = entrySet().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		// for (Entry<Integer, Integer> e : entrySet())
@@ -563,8 +563,8 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeySet(@NotNull final Integer fromElement, final boolean fromInclusive,
-			@NotNull final Integer toElement, final boolean toInclusive) {
+	NavigableSet<@NotNull Integer> bcGetSubKeySet(final @NotNull Integer fromElement, final boolean fromInclusive,
+			final @NotNull Integer toElement, final boolean toInclusive) {
 		return _createSet(fromElement, fromInclusive, toElement, toInclusive, _asc);
 	}
 
@@ -578,7 +578,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull final Integer toElement, final boolean inclusive) {
+	NavigableSet<@NotNull Integer> bcGetSubKeyHeadSet(final @NotNull Integer toElement, final boolean inclusive) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, inclusive, _asc);
 	}
 
@@ -592,7 +592,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull final Integer fromElement, final boolean inclusive) {
+	NavigableSet<@NotNull Integer> bcGetSubKeyTailSet(final @NotNull Integer fromElement, final boolean inclusive) {
 		return _createSet(fromElement, inclusive, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -609,7 +609,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeySet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
+	SortedSet<@NotNull Integer> bcGetSubKeySet(final @NotNull Integer fromElement, final @NotNull Integer toElement) {
 		return _createSet(fromElement, true, toElement, false, _asc);
 	}
 
@@ -624,7 +624,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull final Integer toElement) {
+	SortedSet<@NotNull Integer> bcGetSubKeyHeadSet(final @NotNull Integer toElement) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, false, _asc);
 	}
 
@@ -639,7 +639,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull final Integer fromElement) {
+	SortedSet<@NotNull Integer> bcGetSubKeyTailSet(final @NotNull Integer fromElement) {
 		return _createSet(fromElement, true, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -647,7 +647,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	// ########################## PRIVATE #####################################
 	// ########################################################################
 
-	private @NotNull DummyMapSub _createMap(@NotNull final Integer from, final boolean fromInc, @NotNull final Integer to, final boolean toInc,
+	private @NotNull DummyMapSub _createMap(final @NotNull Integer from, final boolean fromInc, final @NotNull Integer to, final boolean toInc,
 			final boolean asc) {
 
 		// System.out.println("IV = " + _iv);
@@ -662,7 +662,7 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 		return new DummyMapSub(_par, new DummyMapIntervall(from, fromInc, to, toInc), asc);
 	}
 
-	private @NotNull DummyMapSubKeySet _createSet(@NotNull final Integer from, final boolean fromInc, @NotNull final Integer to,
+	private @NotNull DummyMapSubKeySet _createSet(final @NotNull Integer from, final boolean fromInc, final @NotNull Integer to,
 			final boolean toInc, final boolean asc) {
 		return new DummyMapSubKeySet(_createMap(from, fromInc, to, toInc, asc));
 	}

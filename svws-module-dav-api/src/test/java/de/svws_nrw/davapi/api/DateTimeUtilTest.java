@@ -66,8 +66,8 @@ public class DateTimeUtilTest {
 		// MS Outlook nutzt andere Zeitzonen-IDs:
 		// Potenzieller Fehler: “The datetime zone id ‘W. Europe Standard Time’ is not
 		// recognised
-		IProperty fromString = IProperty.fromString("DTSTART;TZID=W. Europe Standard Time:20220702T100000");
-		Instant parseCalDav = DateTimeUtil.parseCalDav(fromString);
+		final IProperty fromString = IProperty.fromString("DTSTART;TZID=W. Europe Standard Time:20220702T100000");
+		final Instant parseCalDav = DateTimeUtil.parseCalDav(fromString);
 		assertEquals(Instant.parse("2022-07-02T10:00:00.000Z"), parseCalDav);
 		assertEquals(LocalDateTime.parse("2022-07-02T12:00:00.000").atZone(ZoneId.of(DateTimeUtil.TIMEZONE_DEFAULT))
 				.toInstant(), parseCalDav);
@@ -79,9 +79,9 @@ public class DateTimeUtilTest {
 	 */
 	@Test
 	void testBetween() {
-		Instant t1 = DateTimeUtil.parseCalDav("20220701T000000Z");
-		Instant t2 = DateTimeUtil.parseCalDav("20220702T000000Z");
-		Instant t3 = DateTimeUtil.parseCalDav("20220703T000000Z");
+		final Instant t1 = DateTimeUtil.parseCalDav("20220701T000000Z");
+		final Instant t2 = DateTimeUtil.parseCalDav("20220702T000000Z");
+		final Instant t3 = DateTimeUtil.parseCalDav("20220703T000000Z");
 		assertTrue(DateTimeUtil.between(t1, t3, t2));
 		assertFalse(DateTimeUtil.between(t1, t2, t3));
 		assertFalse(DateTimeUtil.between(t2, t3, t1));
@@ -96,10 +96,10 @@ public class DateTimeUtilTest {
 	 */
 	@Test
 	void testIntersect() {
-		Instant t1 = DateTimeUtil.parseCalDav("20220701T000000Z");
-		Instant t2 = DateTimeUtil.parseCalDav("20220702T000000Z");
-		Instant t3 = DateTimeUtil.parseCalDav("20220703T000000Z");
-		Instant t4 = DateTimeUtil.parseCalDav("20220704T000000Z");
+		final Instant t1 = DateTimeUtil.parseCalDav("20220701T000000Z");
+		final Instant t2 = DateTimeUtil.parseCalDav("20220702T000000Z");
+		final Instant t3 = DateTimeUtil.parseCalDav("20220703T000000Z");
+		final Instant t4 = DateTimeUtil.parseCalDav("20220704T000000Z");
 
 		// überschneidend:
 		// ---

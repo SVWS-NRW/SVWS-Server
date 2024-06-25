@@ -37,11 +37,11 @@ public class VCalendarParseTest {
 	 */
 	@Test
 	void testParserWithPayload() {
-		VCalendar calendar = VCalendar.parse(examplePayload);
+		final VCalendar calendar = VCalendar.parse(examplePayload);
 		assertNotNull(calendar.getEvents());
 		assertNotNull(calendar.getTimezoneDefinition());
-		Instant dtstart = Instant.parse("2022-10-21T21:00:00.000Z");
-		Instant dtend = Instant.parse("2022-10-21T22:00:00.000Z");
+		final Instant dtstart = Instant.parse("2022-10-21T21:00:00.000Z");
+		final Instant dtend = Instant.parse("2022-10-21T22:00:00.000Z");
 		assertEquals(dtstart, calendar.getMinDTStart());
 		assertEquals(dtend, calendar.getMaxDTEnd());
 		assertEquals(VCalendarTyp.VEVENT, calendar.getTyp());

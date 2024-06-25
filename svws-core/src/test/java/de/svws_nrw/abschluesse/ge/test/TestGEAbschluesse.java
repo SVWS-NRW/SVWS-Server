@@ -43,7 +43,7 @@ class TestGEAbschluesse {
 	static void setup() throws IOException {
 		System.out.println(" - Lade Notenbilder aus den JSON-Resourcen...");
 		notenBilder = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.ge.test", "geabschlusstest_", GEAbschlussTestfall.class);
-		if ((notenBilder == null) || notenBilder.size() == 0)
+		if ((notenBilder == null) || (notenBilder.size() == 0))
 			fail("Fehler beim laden der Notenbilder!");
 		System.out.println("    FERTIG!");
 		System.out.println();

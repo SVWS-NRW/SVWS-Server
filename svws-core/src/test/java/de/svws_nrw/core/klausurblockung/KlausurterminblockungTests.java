@@ -133,7 +133,7 @@ class KlausurterminblockungTests {
 		// Blocken pro Stufe
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
-			@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+			final @NotNull List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 
 			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
@@ -176,7 +176,7 @@ class KlausurterminblockungTests {
 		// Blocken pro Stufe
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
-			@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+			final @NotNull List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
 			for (final long schuelerID : map.get(stufe).keySet()) {
@@ -215,11 +215,11 @@ class KlausurterminblockungTests {
 			mapSchriftlich = mapKursSuSschriftlich2;
 
 		// Input-Erzeugen
-		@NotNull final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
+		final @NotNull List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 		// Für alle Klausuren ...
 		for (final EsserFormatKlausur klausur : klausuren) {
-			@NotNull final GostKursklausurRich gostKlausur = new GostKursklausurRich();
+			final @NotNull GostKursklausurRich gostKlausur = new GostKursklausurRich();
 			gostKlausur.id = klausur.id;
 
 			// Für alle schriftlichen Schüler ...
@@ -234,7 +234,7 @@ class KlausurterminblockungTests {
 	}
 
 
-	private static void starteKlausurblockungSchiene(@NotNull final List<@NotNull GostKursklausurRich> pInput) {
+	private static void starteKlausurblockungSchiene(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		// Algorithmus-Objekt erzeugen.
 		final @NotNull KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
 
@@ -253,11 +253,11 @@ class KlausurterminblockungTests {
 		check(daten, ergebnis);
 	}
 
-	private static void check(@NotNull final GostKlausurterminblockungDaten daten, @NotNull final GostKlausurterminblockungErgebnis ergebnis) {
+	private static void check(final @NotNull GostKlausurterminblockungDaten daten, final @NotNull GostKlausurterminblockungErgebnis ergebnis) {
 
 		// Map: Klausur-ID --> Klausur-Objekt
 		final HashMap<@NotNull Long, @NotNull GostKursklausurRich> mapKlausur = new HashMap<>();
-		for (@NotNull final GostKursklausurRich klausur : daten.richKlausuren) {
+		for (final @NotNull GostKursklausurRich klausur : daten.richKlausuren) {
 			mapKlausur.put(klausur.id, klausur);
 		}
 

@@ -43,7 +43,7 @@ class TestArrayMap {
 		/** Eintrag 8 */
 		I,
 		/** Eintrag 9 */
-		J;
+		J
 	}
 
 	/**

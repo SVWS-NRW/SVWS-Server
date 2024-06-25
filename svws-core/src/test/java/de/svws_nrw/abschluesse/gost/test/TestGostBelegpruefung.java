@@ -65,7 +65,7 @@ class TestGostBelegpruefung {
 		System.out.println("- Lade die Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostJahrgangsdaten> tempTestGostJahrgaenge =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangsdaten", GostJahrgangsdaten.class);
-		assert (tempTestGostJahrgaenge != null) && tempTestGostJahrgaenge.size() != 0 : "Fehler beim Laden der Gost-Testjahrgänge!";
+		assert (tempTestGostJahrgaenge != null) && (tempTestGostJahrgaenge.size() != 0) : "Fehler beim Laden der Gost-Testjahrgänge!";
 		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet())
 			testGostJahrgaenge.put(entry.getKey(), entry.getValue());
 		System.out.println("  FERTIG!");
@@ -73,7 +73,7 @@ class TestGostBelegpruefung {
 		System.out.println("- Lade die Fächer der Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostFach[]> tempTestGostJahrgaengeFaecher =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
-		assert (tempTestGostJahrgaengeFaecher != null) && tempTestGostJahrgaengeFaecher.size() != 0 : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
+		assert (tempTestGostJahrgaengeFaecher != null) && (tempTestGostJahrgaengeFaecher.size() != 0) : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
 		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet())
 			testGostJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
 		System.out.println("  FERTIG!");
@@ -89,7 +89,7 @@ class TestGostBelegpruefung {
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, Abiturdaten> tempTestAbiturdaten =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_Abiturdaten", Abiturdaten.class);
-		assert (tempTestAbiturdaten != null) && tempTestAbiturdaten.size() != 0 : "Fehler beim Laden der Abiturdaten!";
+		assert (tempTestAbiturdaten != null) && (tempTestAbiturdaten.size() != 0) : "Fehler beim Laden der Abiturdaten!";
 		for (final Map.Entry<String, Abiturdaten> entry : tempTestAbiturdaten.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
 			if (ids.length != 2)
@@ -106,7 +106,7 @@ class TestGostBelegpruefung {
 		System.out.println("- Lade die Gesamt-Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, GostBelegpruefungErgebnis> tempTestBelegpruefungsergebnisseGesamt =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_Belegpruefungsergebnis_Gesamt", GostBelegpruefungErgebnis.class);
-		assert (tempTestBelegpruefungsergebnisseGesamt != null) && tempTestBelegpruefungsergebnisseGesamt.size() != 0
+		assert (tempTestBelegpruefungsergebnisseGesamt != null) && (tempTestBelegpruefungsergebnisseGesamt.size() != 0)
 				: "Fehler beim Laden der Gesamt-Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseGesamt.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
@@ -125,7 +125,7 @@ class TestGostBelegpruefung {
 		System.out.println("- Lade die EF1-Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, GostBelegpruefungErgebnis> tempTestBelegpruefungsergebnisseEF1 =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_Belegpruefungsergebnis_EF1", GostBelegpruefungErgebnis.class);
-		assert (tempTestBelegpruefungsergebnisseEF1 != null) && tempTestBelegpruefungsergebnisseEF1.size() != 0
+		assert (tempTestBelegpruefungsergebnisseEF1 != null) && (tempTestBelegpruefungsergebnisseEF1.size() != 0)
 				: "Fehler beim Laden der EF1-Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseEF1.entrySet()) {
 			final String[] ids = entry.getKey().split("_");

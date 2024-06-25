@@ -35,7 +35,7 @@ class DummyMapSubCollectionIterator implements Iterator<Integer> {
 	 *
 	 * @param sub Die {@link DummyMapSub} auf der operiert wird.
 	 */
-	DummyMapSubCollectionIterator(@NotNull final DummyMapSub sub) {
+	DummyMapSubCollectionIterator(final @NotNull DummyMapSub sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.firstEntry();

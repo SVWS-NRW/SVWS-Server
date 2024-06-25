@@ -104,7 +104,7 @@ class TestAVLSetRandom {
 			}
 			case 9 -> { // containsAll
 				final LinkedCollection<Integer> c = new LinkedCollection<>();
-				for (int i = 0; i < MAX_VALUE / 5; i++)
+				for (int i = 0; i < (MAX_VALUE / 5); i++)
 					c.addLast(RANDOM.nextInt(MAX_VALUE));
 				final boolean b1 = set1.containsAll(c);
 				final boolean b2 = set2.containsAll(c);

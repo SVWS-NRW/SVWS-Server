@@ -91,7 +91,7 @@ class MatrixTests {
 				final int min = Math.min(dimR, dimC);
 				for (int r = 0; r < dimR; r++) {
 					if (r < min) {
-						if (r2c[r] != min - r - 1) {
+						if (r2c[r] != (min - r - 1)) {
 							System.out.println(m.convertToString("", 5, false));
 							fail("Matching schlug fehl.");
 						}

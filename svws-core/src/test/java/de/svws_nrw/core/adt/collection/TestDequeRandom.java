@@ -265,7 +265,7 @@ class TestDequeRandom {
 
 	private void testRetainAll() {
 		final LinkedList<Integer> temp = new LinkedList<>();
-		for (int i = 0; i < d1.size() / 4; i++)
+		for (int i = 0; i < (d1.size() / 4); i++)
 			temp.addLast(_random.nextInt(_MAX_VALUE));
 
 		final boolean b1 = d1.retainAll(temp);

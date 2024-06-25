@@ -231,24 +231,24 @@ public class StupasSchulmanagerFormatReader {
 		int max = 1;
 		for (final StupasSchulmanagerFormatLine line : csvData)
 			max = Math.max(max, line.Woche);
-		return max == 1 ? 0 : max;
+		return (max == 1) ? 0 : max;
 	}
 
 	private int getWochenStunden(final List<StupasSchulmanagerFormatLine> list) {
 		int summe = 0;
-		final int faktor = komplett.daten.wochenTypModell == 0 ? 1 : komplett.daten.wochenTypModell;
+		final int faktor = (komplett.daten.wochenTypModell == 0) ? 1 : komplett.daten.wochenTypModell;
 
 		for (final StupasSchulmanagerFormatLine line : list)
-			summe += line.Woche == 0 ? faktor : 1;
+			summe += (line.Woche == 0) ? faktor : 1;
 
-		if (summe % faktor != 0)
+		if ((summe % faktor) != 0)
 			throw new DeveloperNotificationException("Die CSV Datei hat keine glatten Wochenstunden: " + linesToString(list));
 
 		return summe / faktor;
 	}
 
 	private static String convertNull(final String s) {
-		return s == null ? "" : s;
+		return (s == null) ? "" : s;
 	}
 
 	private static String convertNull(final int id) {
@@ -279,7 +279,7 @@ public class StupasSchulmanagerFormatReader {
 			zeitraster.id = zeiraster_by_wochentag_and_stunde.size();
 			zeitraster.wochentag = line.Wochentag;
 			zeitraster.unterrichtstunde = line.Stunde;
-			zeitraster.stundenbeginn = 8 * 60 + (line.Stunde - 1) * 45;
+			zeitraster.stundenbeginn = (8 * 60) + ((line.Stunde - 1) * 45);
 			if (line.Stunde >= 3)
 				zeitraster.stundenbeginn += 25;
 			if (line.Stunde >= 5)
@@ -427,12 +427,12 @@ public class StupasSchulmanagerFormatReader {
 		return kuerzel.equals("AUF") || kuerzel.equals("AUF1") || kuerzel.equals("AUF2");
 	}
 
-	private static boolean getIstAG(@NotNull final String klassenKuerzel) {
+	private static boolean getIstAG(final @NotNull String klassenKuerzel) {
 		final String kuerzel = klassenKuerzel.toUpperCase();
 		return kuerzel.equals("AG") || kuerzel.equals("AG1") || kuerzel.equals("AG2");
 	}
 
-	private static boolean getIstMIA(@NotNull final String klassenKuerzel) {
+	private static boolean getIstMIA(final @NotNull String klassenKuerzel) {
 		final String kuerzel = klassenKuerzel.toUpperCase();
 		return kuerzel.equals("MIA") || kuerzel.equals("MIA1") || kuerzel.equals("MIA2");
 	}

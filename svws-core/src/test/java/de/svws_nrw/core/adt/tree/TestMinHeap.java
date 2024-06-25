@@ -403,7 +403,7 @@ class TestMinHeap {
 		assertNotNull(sorted);
 		assertEquals(heap.size(), sorted.length);
 		assertTrue(heap.containsAll(Arrays.asList(sorted)));
-		for (int i = 0; i < sorted.length - 1; i++)
+		for (int i = 0; i < (sorted.length - 1); i++)
 			assertTrue(heap.comparator().compare(sorted[i], sorted[i + 1]) <= 0);
 	}
 

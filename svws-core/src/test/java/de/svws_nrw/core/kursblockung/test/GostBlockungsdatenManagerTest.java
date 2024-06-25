@@ -30,22 +30,22 @@ class GostBlockungsdatenManagerTest {
 	@DisplayName("Test 001.")
 	void test001() {
 		// Pseudofach erzeugen
-		@NotNull final GostFach fa1 = new GostFach();
+		final @NotNull GostFach fa1 = new GostFach();
 		fa1.id = 1;
 
 		// Pseudoschiene erzeugen
-		@NotNull final GostBlockungSchiene sch1 = new GostBlockungSchiene();
+		final @NotNull GostBlockungSchiene sch1 = new GostBlockungSchiene();
 		sch1.id = 1;
 
 		// Pseudokurs erzeugen
-		@NotNull final GostBlockungKurs ku1 = new GostBlockungKurs();
+		final @NotNull GostBlockungKurs ku1 = new GostBlockungKurs();
 		ku1.id = 1;
 		ku1.nummer = 1;
 		ku1.fach_id = 1;
 		ku1.kursart = 1;
 
 		// Pseudolehrkraft erzeugen
-		@NotNull final GostBlockungKursLehrer le1 = new GostBlockungKursLehrer();
+		final @NotNull GostBlockungKursLehrer le1 = new GostBlockungKursLehrer();
 		le1.id = 1;
 
 		final GostBlockungsdatenManager man = new GostBlockungsdatenManager();

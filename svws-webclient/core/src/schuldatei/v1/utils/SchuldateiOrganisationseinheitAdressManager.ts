@@ -47,7 +47,7 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 		this._adresse = adresse;
 		if (this._managerOrganisationseinheit.getSchulnummer() !== this._adresse.schulnummer)
 			throw new IllegalArgumentException("Die Schulnummer " + adresse.schulnummer + " bei der Adresse mit der ID " + adresse.id + " passt nicht zu der Schulnummer der Organisationseinheit " + this._managerOrganisationseinheit.getSchulnummer() + ".")
-		this._artDerAdresse = (adresse.adresstypeid === null) ? "" : "" + adresse.adresstypeid;
+		this._artDerAdresse = (adresse.adresstypeid === null) ? "" : ("" + adresse.adresstypeid);
 		if (!this._managerSchuldatei.katalogAddressarten.hatEintrag(this._artDerAdresse))
 			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + adresse.id + " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer() + " ist im zugehörigen Katalog nicht vorhanden.")
 		this._istHauptstandort = JavaObject.equalsTranspiler("1", (adresse.hauptstandortadresse));

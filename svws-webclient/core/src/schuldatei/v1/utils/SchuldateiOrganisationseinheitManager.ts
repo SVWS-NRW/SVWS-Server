@@ -591,7 +591,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	public getInternatsplaetze(schuljahr : number) : number {
 		const grunddaten : SchuldateiOrganisationseinheitGrunddaten | null = this.getGrunddaten(schuljahr);
-		return grunddaten.internatsplaetze === null ? 0 : grunddaten.internatsplaetze;
+		return (grunddaten.internatsplaetze === null) ? 0 : grunddaten.internatsplaetze;
 	}
 
 	/**

@@ -1338,7 +1338,7 @@ class TestAVLMapRandom {
 		try {
 			set.last();
 			return false;
-		} catch (@SuppressWarnings("unused") Exception ex) {
+		} catch (@SuppressWarnings("unused") final Exception ex) {
 			return true;
 		}
 	}
@@ -1347,7 +1347,7 @@ class TestAVLMapRandom {
 		try {
 			set.first();
 			return false;
-		} catch (@SuppressWarnings("unused") Exception ex) {
+		} catch (@SuppressWarnings("unused") final Exception ex) {
 			return true;
 		}
 	}
@@ -1356,7 +1356,7 @@ class TestAVLMapRandom {
 		try {
 			i.remove();
 			return false;
-		} catch (@SuppressWarnings("unused") Exception ex) {
+		} catch (@SuppressWarnings("unused") final Exception ex) {
 			return true;
 		}
 	}
@@ -1365,7 +1365,7 @@ class TestAVLMapRandom {
 		try {
 			i.remove();
 			return false;
-		} catch (@SuppressWarnings("unused") Exception ex) {
+		} catch (@SuppressWarnings("unused") final Exception ex) {
 			return true;
 		}
 	}

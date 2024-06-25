@@ -46,18 +46,18 @@ public class VCardV4Test {
 	 */
 	@Test
 	void serializationTest() {
-		NameProperty np = new NameProperty();
+		final NameProperty np = new NameProperty();
 		np.setFamilyName("Mustermann");
 		np.setGivenName("Erika");
 		np.getHonorificPrefixes().add("Dr.");
-		VCard vc = new VCard(np);
+		final VCard vc = new VCard(np);
 		vc.setVersion(Version.V4);
 		vc.addProperty(new SimpleProperty("ORG", "Wikimedia"));
 		vc.addProperty(new SimpleProperty("ROLE", "Kommunikation"));
 		vc.addProperty(new SimpleProperty("TITLE", "Redaktion & Gestaltung"));
 		vc.addProperty(new PhoneProperty("WORK,VOICE", "+49 221 9999123"));
 		vc.addProperty(new PhoneProperty("HOME,VOICE", "+49 221 1234567"));
-		AddressProperty ap = new AddressProperty();
+		final AddressProperty ap = new AddressProperty();
 		ap.setAddressType("HOME");
 		ap.setCity("Köln");
 		ap.setCountry("Germany");
@@ -69,7 +69,7 @@ public class VCardV4Test {
 		vc.addProperty(new SimpleProperty("URL", "http://de.wikipedia.org/"));
 		vc.addProperty(new SimpleProperty("REV", "2014-03-01T22:11:10Z"));
 
-		String serialized = vc.serialize();
+		final String serialized = vc.serialize();
 		assertEquals(ERIKA_MUSTERMANN, serialized);
 	}
 
@@ -79,7 +79,7 @@ public class VCardV4Test {
 	 */
 	@Test
 	void serializationFromKontaktTest() {
-		AdressbuchKontakt k = new AdressbuchKontakt();
+		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.email = "mail@server.de";
 		k.hausnummer = "1";
 		k.hausnummerZusatz = "b";
@@ -106,9 +106,9 @@ public class VCardV4Test {
 		k.uri = ("https://example.com/db/gymabi/carddav/S_123");
 		k.kategorien.add("Klasse-9k-2018-2");
 		// FIXME telefonnummern zum test wieder zufügen.
-		VCard vc = VCard.createVCard(k);
+		final VCard vc = VCard.createVCard(k);
 		vc.setVersion(Version.V4);
-		String serialized = vc.serialize();
+		final String serialized = vc.serialize();
 		assertEquals(MAX_MUSTERMANN_VCF, serialized);
 	}
 
@@ -118,10 +118,10 @@ public class VCardV4Test {
 	 */
 	@Test
 	void serializeFullnameVCF() {
-		FullnameProperty fn = new FullnameProperty("Der Fullname der VCard");
-		VCard vc = new VCard(fn);
+		final FullnameProperty fn = new FullnameProperty("Der Fullname der VCard");
+		final VCard vc = new VCard(fn);
 		vc.setVersion(Version.V4);
-		String serialized = vc.serialize();
+		final String serialized = vc.serialize();
 		assertEquals(FULLNAME_VCF, serialized);
 	}
 
@@ -131,16 +131,16 @@ public class VCardV4Test {
 	 */
 	@Test
 	void serializeNameVCF() {
-		NameProperty np = new NameProperty();
+		final NameProperty np = new NameProperty();
 		np.setFamilyName("Family");
 		np.setGivenName("Given");
 		np.getAdditionalNames().add("Additional1");
 		np.getAdditionalNames().add("Additional2");
 		np.getHonorificPrefixes().add("Hnr");
 		np.getHonorificPrefixes().add("Prfx");
-		VCard vc = new VCard(np);
+		final VCard vc = new VCard(np);
 		vc.setVersion(Version.V4);
-		String serialize = vc.serialize();
+		final String serialize = vc.serialize();
 		assertEquals(NAME_VCF, serialize);
 	}
 }

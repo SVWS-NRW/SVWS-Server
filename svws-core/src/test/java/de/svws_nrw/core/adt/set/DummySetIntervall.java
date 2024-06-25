@@ -54,7 +54,7 @@ public final class DummySetIntervall {
 	 *         werden muss.
 	 */
 	int min() {
-		return fromInc ? from : from + 1;
+		return fromInc ? from : (from + 1);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public final class DummySetIntervall {
 	 *         werden muss.
 	 */
 	int max() {
-		return toInc ? to : to - 1;
+		return toInc ? to : (to - 1);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public final class DummySetIntervall {
 	boolean contains(final int e, final boolean inclusive) {
 		if (inclusive)
 			return contains(e);
-		return (e >= min() + 1) && (e <= max() - 1);
+		return (e >= (min() + 1)) && (e <= (max() - 1));
 	}
 
 }

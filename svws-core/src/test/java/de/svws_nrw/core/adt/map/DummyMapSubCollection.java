@@ -51,7 +51,7 @@ public final class DummyMapSubCollection implements Collection<@NotNull Integer>
 	}
 
 	@Override
-	public boolean contains(@NotNull final Object o) {
+	public boolean contains(final @NotNull Object o) {
 		return _sub.containsValue(o);
 	}
 
@@ -66,37 +66,37 @@ public final class DummyMapSubCollection implements Collection<@NotNull Integer>
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull final T @NotNull [] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return _sub.bcGetArrayListOfValues().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull final Integer e) {
+	public boolean add(final @NotNull Integer e) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean remove(@NotNull final Object o) {
+	public boolean remove(final @NotNull Object o) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean containsAll(@NotNull final Collection<?> c) {
+	public boolean containsAll(final @NotNull Collection<?> c) {
 		return _sub.bcContainsAllValues(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull final Collection<? extends @NotNull Integer> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull Integer> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean removeAll(@NotNull final Collection<?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean retainAll(@NotNull final Collection<?> c) {
+	public boolean retainAll(final @NotNull Collection<?> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 

@@ -92,7 +92,7 @@ class VCalendarTest {
 					+ "END:VEVENT\r\n"
 					+ "END:VCALENDAR";
 
-	private static String THUNDERBIRD_VCALENDAR_WITH_SPECIAL_CHARACTERS = "BEGIN:VCALENDAR\r\n"
+	private static final String THUNDERBIRD_VCALENDAR_WITH_SPECIAL_CHARACTERS = "BEGIN:VCALENDAR\r\n"
 			+ "PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN\r\n"
 			+ "VERSION:2.0\r\n"
 			+ "BEGIN:VTIMEZONE\r\n"

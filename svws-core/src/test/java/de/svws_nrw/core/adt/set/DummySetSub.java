@@ -39,7 +39,7 @@ public final class DummySetSub implements NavigableSet<Integer> {
 	 * @param iv  Definiert das Intervall der Sub-Sicht.
 	 * @param asc Falls FALSE werden alle Elemente absteigend interpretiert.
 	 */
-	public DummySetSub(@NotNull final DummySet par, @NotNull final DummySetIntervall iv, final boolean asc) {
+	public DummySetSub(final @NotNull DummySet par, final @NotNull DummySetIntervall iv, final boolean asc) {
 		_par = par;
 		_iv = iv;
 		_asc = asc;
@@ -71,37 +71,37 @@ public final class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public boolean contains(@NotNull final Object o) {
+	public boolean contains(final @NotNull Object o) {
 		return _par.bcContainsKey(_iv, o);
 	}
 
 	@Override
-	public boolean add(@NotNull final Integer e) {
+	public boolean add(final @NotNull Integer e) {
 		return _par.bcAddKey(_iv, e);
 	}
 
 	@Override
-	public boolean remove(@NotNull final Object o) {
+	public boolean remove(final @NotNull Object o) {
 		return _par.bcRemoveKeyReturnBool(_iv, o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull final Collection<?> c) {
+	public boolean containsAll(final @NotNull Collection<?> c) {
 		return _par.bcContainsAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull final Collection<? extends @NotNull Integer> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull Integer> c) {
 		return _par.bcAddAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull final Collection<?> c) {
+	public boolean retainAll(final @NotNull Collection<?> c) {
 		return _par.bcRetainAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull final Collection<?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		return _par.bcRemoveAllKeys(_iv, c);
 	}
 
@@ -111,22 +111,22 @@ public final class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public Integer lower(@NotNull final Integer e) {
+	public Integer lower(final @NotNull Integer e) {
 		return _asc ? _par.bcGetLowerKeyOrNull(_iv, e) : _par.bcGetHigherKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer floor(@NotNull final Integer e) {
+	public Integer floor(final @NotNull Integer e) {
 		return _asc ? _par.bcGetFloorKeyOrNull(_iv, e) : _par.bcGetCeilingKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer ceiling(@NotNull final Integer e) {
+	public Integer ceiling(final @NotNull Integer e) {
 		return _asc ? _par.bcGetCeilingKeyOrNull(_iv, e) : _par.bcGetFloorKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer higher(@NotNull final Integer e) {
+	public Integer higher(final @NotNull Integer e) {
 		return _asc ? _par.bcGetHigherKeyOrNull(_iv, e) : _par.bcGetLowerKeyOrNull(_iv, e);
 	}
 
@@ -162,31 +162,31 @@ public final class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull final Integer toElement, final boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> headSet(final @NotNull Integer toElement, final boolean inclusive) {
 		return createSet(_iv.from, _iv.fromInc, toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement, final boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> tailSet(final @NotNull Integer fromElement, final boolean inclusive) {
 		return createSet(fromElement, inclusive, _iv.to, _iv.toInc);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> subSet(final @NotNull Integer fromElement, final @NotNull Integer toElement) {
 		return createSet(fromElement, true, toElement, false);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull final Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> headSet(final @NotNull Integer toElement) {
 		return createSet(_iv.from, _iv.fromInc, toElement, false);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement) {
+	public @NotNull SortedSet<@NotNull Integer> tailSet(final @NotNull Integer fromElement) {
 		return createSet(fromElement, true, _iv.to, _iv.toInc);
 	}
 
-	private @NotNull NavigableSet<@NotNull Integer> createSet(final Integer from, final boolean fromInc, @NotNull final Integer to,
+	private @NotNull NavigableSet<@NotNull Integer> createSet(final Integer from, final boolean fromInc, final @NotNull Integer to,
 			final boolean toInc) {
 		if (_iv.contains(from, fromInc))
 			throw new IllegalArgumentException();
