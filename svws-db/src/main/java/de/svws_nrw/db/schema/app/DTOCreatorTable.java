@@ -25,7 +25,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 public final class DTOCreatorTable {
 
 	/** Der intern genutzte Logger für das Erzeugen des Quellcodes */
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 	/** Enthält alle definierten Objekt dieser Klasse */
 	public static final List<DTOCreatorTable> all = new ArrayList<>();

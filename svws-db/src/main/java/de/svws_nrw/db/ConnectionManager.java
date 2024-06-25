@@ -62,7 +62,7 @@ public final class ConnectionManager {
 	 *
 	 * @param config die Konfiguration für den Connection-Manager
 	 */
-	private ConnectionManager(@NotNull final DBConfig config) {
+	private ConnectionManager(final @NotNull DBConfig config) {
 		this.config = config;
 		this.emf = createEntityManagerFactory();
 	}

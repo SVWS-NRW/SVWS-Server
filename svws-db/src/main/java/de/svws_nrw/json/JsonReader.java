@@ -29,7 +29,7 @@ public final class JsonReader {
 	public static final ObjectMapper mapper = new ObjectMapper();
 
 	/** Eine HashMap zum Zwischenspeicher von Dateisystemen zum Zugriff auf Zip-Ressourcen */
-	private static HashMap<String, FileSystem> mapFilesystems = new HashMap<>();
+	private static final HashMap<String, FileSystem> mapFilesystems = new HashMap<>();
 
 
 	/**

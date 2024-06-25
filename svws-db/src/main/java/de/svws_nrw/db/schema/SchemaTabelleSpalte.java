@@ -550,7 +550,7 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 		final int result = this._tabelle.name().compareTo(other._tabelle.name());
 		if (result != 0)
 			return result;
-		return this.sortierung() < other.sortierung() ? -1 : 1;
+		return (this.sortierung() < other.sortierung()) ? -1 : 1;
 	}
 
 }

@@ -35,7 +35,7 @@ public final class Boolean01ConverterSerializer extends StdSerializer<Boolean> {
 	@Override
 	public void serialize(final Boolean value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		final Integer intValue = Boolean01Converter.instance.convertToDatabaseColumn(value);
-		gen.writeString(intValue == null ? null : "" + intValue);
+		gen.writeString((intValue == null) ? null : ("" + intValue));
 	}
 
 }

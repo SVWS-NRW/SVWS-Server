@@ -21,7 +21,7 @@ public final class VerkehrssprachenConverter extends DBAttributeConverter<Verkeh
 
 	@Override
 	public String convertToDatabaseColumn(final Verkehrssprache attribute) {
-		return attribute == null ? null : attribute.daten.kuerzel;
+		return (attribute == null) ? null : attribute.daten.kuerzel;
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public class DTOCreatorView {
 	public String getJavaKlasse(final long rev) {
 		if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
-		return (rev > 0) ? "Dev" + view.dtoName : view.dtoName;
+		return (rev > 0) ? ("Dev" + view.dtoName) : view.dtoName;
 	}
 
 

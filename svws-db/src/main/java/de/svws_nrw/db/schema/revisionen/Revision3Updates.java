@@ -76,7 +76,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			final Object[] aktAbschnitt = tmpAktAbschnitt.get(0);
 			final int aktSchuljahr = (Integer) aktAbschnitt[1];
 			final int aktQuartal = (Integer) aktAbschnitt[2];
-			final int aktHalbjahr = ((aktQuartal % 2) == 1) ? (aktQuartal / 2) + 1 : aktQuartal / 2;
+			final int aktHalbjahr = ((aktQuartal % 2) == 1) ? ((aktQuartal / 2) + 1) : (aktQuartal / 2);
 			final Long aktFolgeAbschnittID = (Long) aktAbschnitt[4];
 			// Lege temporär Indizes an, um die Umstellung zu beschleunigen
 			logger.logLn("* Lege temporär Indizes an, um die Umstellung zu beschleunigen");
@@ -326,7 +326,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				final long abschnittID = (Long) schuljahreAbschnitt[0];
 				final int schuljahr = (Integer) schuljahreAbschnitt[1];
 				final int quartal = (Integer) schuljahreAbschnitt[2];
-				final int halbjahr = ((quartal % 2) == 1) ? (quartal / 2) + 1 : quartal / 2;
+				final int halbjahr = ((quartal % 2) == 1) ? ((quartal / 2) + 1) : (quartal / 2);
 				final Long folgeAbschnittID = (Long) schuljahreAbschnitt[4];
 				logger.logLn("- Schuljahres-Abschnitt " + abschnittID + " (Schuljahr " + schuljahr + "/" + ((schuljahr + 1) - 2000) + ", " + halbjahr
 						+ ". Halbjahr, Quartal " + quartal + "):");
@@ -905,7 +905,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 	}
 
 	private static String convertToSQL(final String value) {
-		return (value == null) ? "NULL" : "'" + value + "'";
+		return (value == null) ? "NULL" : ("'" + value + "'");
 	}
 
 	private static String convertToSQL(final Number value) {

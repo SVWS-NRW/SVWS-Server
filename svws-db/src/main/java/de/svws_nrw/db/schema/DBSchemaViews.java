@@ -42,7 +42,7 @@ public final class DBSchemaViews {
 	 *
 	 * @param view   die hinzuzufügende View
 	 */
-	private void addView(@NotNull final View view) {
+	private void addView(final @NotNull View view) {
 		if (view == null)
 			throw new NullPointerException("Kann null nicht zu der Liste der Views hinzufügen.");
 		allViews.add(view);

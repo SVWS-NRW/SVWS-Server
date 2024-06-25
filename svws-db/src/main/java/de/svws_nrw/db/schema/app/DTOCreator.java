@@ -29,13 +29,13 @@ public class DTOCreator {
 	private static CommandLineParser cmdLine;
 
 	/** Der intern genutzte Logger */
-	private static Logger logger = new Logger();
+	private static final Logger logger = new Logger();
 
 	/** Die Konsole als Ziel der Log-Informationen */
-	private static LogConsumerConsole logConsumerConsole = new LogConsumerConsole();
+	private static final LogConsumerConsole logConsumerConsole = new LogConsumerConsole();
 
 	/** Ein ArrayList mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
-	private static ArrayList<String> allClasses = new ArrayList<>();
+	private static final ArrayList<String> allClasses = new ArrayList<>();
 
 
 	/**
@@ -151,7 +151,7 @@ public class DTOCreator {
 				}
 				final DTOCreatorView creator = new DTOCreatorView(view);
 				final String javaPackage = packagename + view.packageName;
-				final String className = (rev < 0) ? view.dtoName : "Dev" + view.dtoName;
+				final String className = (rev < 0) ? view.dtoName : ("Dev" + view.dtoName);
 				try {
 					// Erstelle das Verzeichnis für das Package
 					final String fullqualifiedClassname = javaPackage + "." + className;

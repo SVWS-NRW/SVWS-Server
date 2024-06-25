@@ -52,7 +52,7 @@ public class View {
 	 * @param veraltet       die Revision, in welcher die View als veraltet definiert wurde - null, wenn sie noch nicht veraltet ist
 	 * @param sql            der SQL-Code für den FROM-Teil des SELECT der View
 	 */
-	public View(final @NotNull String name, final @NotNull String packageName, @NotNull final String dtoName, final @NotNull String beschreibung,
+	public View(final @NotNull String name, final @NotNull String packageName, final @NotNull String dtoName, final @NotNull String beschreibung,
 			final Integer revision, final Integer veraltet, final @NotNull String sql) {
 		this.name = name;
 		this.packageName = packageName;
@@ -87,7 +87,7 @@ public class View {
 	 *
 	 * @return diese View-Definition
 	 */
-	public View add(@NotNull final String name, @NotNull final String beschreibung, @NotNull final String datentyp, @NotNull final String sql,
+	public View add(final @NotNull String name, final @NotNull String beschreibung, final @NotNull String datentyp, final @NotNull String sql,
 			final Class<? extends DBAttributeConverter<?, ?>> converter, final boolean istPrimaryKey) {
 		final ViewSpalte spalte = new ViewSpalte(name, beschreibung, datentyp, sql, converter);
 		spalten.add(spalte);

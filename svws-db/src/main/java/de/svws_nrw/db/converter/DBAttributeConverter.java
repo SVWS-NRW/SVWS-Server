@@ -61,13 +61,13 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 	 * zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
 	 */
 	@SuppressWarnings("rawtypes")
-	private static HashMap<Class<? extends DBAttributeConverter>, DBAttributeConverter> converter = new HashMap<>();
+	private static final HashMap<Class<? extends DBAttributeConverter>, DBAttributeConverter> converter = new HashMap<>();
 	/**
 	 * Eine Map, welche dem Namen einer Attribut-Konverter-Klasse eine
 	 * Instanz der Klasse zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
 	 */
 	@SuppressWarnings("rawtypes")
-	private static HashMap<String, DBAttributeConverter> converterByName = new HashMap<>();
+	private static final HashMap<String, DBAttributeConverter> converterByName = new HashMap<>();
 
 	/**
 	 * Fügt einen neuen Attribut-Konverter hinzu

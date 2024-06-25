@@ -326,7 +326,7 @@ public final class SVWSKonfiguration {
 	 */
 	public String getFilename() {
 		if ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString())))
-			return ((dto == null) || !dto.isXMLConfig ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
+			return (((dto == null) || !dto.isXMLConfig) ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
 		return dto.filepath.toString();
 	}
 
@@ -374,7 +374,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls die Dateien des SVWS-Clients geschützt werden, sonst false
 	 */
 	public boolean isEnableClientProtection() {
-		return (dto == null) || (this.dto.enableClientProtection == null) ? default_enableClientProtection : this.dto.enableClientProtection;
+		return ((dto == null) || (this.dto.enableClientProtection == null)) ? default_enableClientProtection : this.dto.enableClientProtection;
 	}
 
 
@@ -387,7 +387,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls der Zugriff deaktiviert wurde, sonst false
 	 */
 	public boolean isDBRootAccessDisabled() {
-		return (dto == null) || (this.dto.disableDBRootAccess == null) ? default_disableDBRootAccess : this.dto.disableDBRootAccess;
+		return ((dto == null) || (this.dto.disableDBRootAccess == null)) ? default_disableDBRootAccess : this.dto.disableDBRootAccess;
 	}
 
 
@@ -401,7 +401,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls die Updates deaktiviert wurden, sonst false (default)
 	 */
 	public boolean isAutoUpdatesDisabled() {
-		return (dto == null) || (this.dto.disableAutoUpdates == null) ? default_disableAutoUpdates : this.dto.disableAutoUpdates;
+		return ((dto == null) || (this.dto.disableAutoUpdates == null)) ? default_disableAutoUpdates : this.dto.disableAutoUpdates;
 	}
 
 
@@ -415,7 +415,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls TLS deaktiviert wurde, sonst false (default)
 	 */
 	public boolean isTLSDisabled() {
-		return (dto == null) || (this.dto.disableTLS == null) ? default_disableTLS : this.dto.disableTLS;
+		return ((dto == null) || (this.dto.disableTLS == null)) ? default_disableTLS : this.dto.disableTLS;
 	}
 
 
@@ -429,7 +429,7 @@ public final class SVWSKonfiguration {
 	 * @return der HTTP-Port des Servers, sofern TLS deaktiviert wurde
 	 */
 	public int getPortHTTP() {
-		return (dto == null) || (this.dto.portHTTP == null) ? default_PortHTTP : this.dto.portHTTP;
+		return ((dto == null) || (this.dto.portHTTP == null)) ? default_PortHTTP : this.dto.portHTTP;
 	}
 
 
@@ -442,7 +442,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls HTTP-Version 1.1 als Deafult genutzt werden soll, sonst false
 	 */
 	public boolean useHTTPDefaultv11() {
-		return (dto == null) || (this.dto.useHTTPDefaultv11 == null) ? default_useHTTPDefaultv11 : this.dto.useHTTPDefaultv11;
+		return ((dto == null) || (this.dto.useHTTPDefaultv11 == null)) ? default_useHTTPDefaultv11 : this.dto.useHTTPDefaultv11;
 	}
 
 
@@ -455,7 +455,7 @@ public final class SVWSKonfiguration {
 	 * @return der HTTPS-Port des Servers
 	 */
 	public int getPortHTTPS() {
-		return (dto == null) || (this.dto.portHTTPS == null) ? default_PortHTTPS : this.dto.portHTTPS;
+		return ((dto == null) || (this.dto.portHTTPS == null)) ? default_PortHTTPS : this.dto.portHTTPS;
 	}
 
 
@@ -489,7 +489,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls CORS-Header verwendet werden sollen, ansonsten false
 	 */
 	public boolean useCORSHeader() {
-		return (dto == null) || (this.dto.useCORSHeader == null) ? default_use_cors_header : this.dto.useCORSHeader;
+		return ((dto == null) || (this.dto.useCORSHeader == null)) ? default_use_cors_header : this.dto.useCORSHeader;
 	}
 
 	/** Gibt den Modus an, in welchem der Server betrieben wird */
@@ -502,7 +502,7 @@ public final class SVWSKonfiguration {
 	 * @return der Modus, in welche der Server betrieben wird.
 	 */
 	public ServerMode getServerMode() {
-		return (dto == null) || (this.dto.serverMode == null) ? default_server_mode : ServerMode.getByText(this.dto.serverMode);
+		return ((dto == null) || (this.dto.serverMode == null)) ? default_server_mode : ServerMode.getByText(this.dto.serverMode);
 	}
 
 
@@ -517,7 +517,7 @@ public final class SVWSKonfiguration {
 	 * @return der priviligierte Datenbank-Benutzer mit Änderungsrechten an der Server-Konfiguration
 	 */
 	public String getPrivilegedDatabaseUser() {
-		return (dto == null) || (this.dto.privilegedDatabaseUser == null) ? default_privileged_database_user : this.dto.privilegedDatabaseUser;
+		return ((dto == null) || (this.dto.privilegedDatabaseUser == null)) ? default_privileged_database_user : this.dto.privilegedDatabaseUser;
 	}
 
 
@@ -882,7 +882,7 @@ public final class SVWSKonfiguration {
 	 * @return der Basis-Pfad für das Logging
 	 */
 	public String getLoggingPath() {
-		return (dto == null) || (dto.loggingPath == null) ? "." : dto.loggingPath;
+		return ((dto == null) || (dto.loggingPath == null)) ? "." : dto.loggingPath;
 	}
 
 
@@ -892,7 +892,7 @@ public final class SVWSKonfiguration {
 	 * @return der Basis-Pfad für temporäre Dateien
 	 */
 	public String getTempPath() {
-		return (dto == null) || (dto.tempPath == null) ? "./tmp" : dto.tempPath;
+		return ((dto == null) || (dto.tempPath == null)) ? "./tmp" : dto.tempPath;
 	}
 
 
@@ -905,7 +905,7 @@ public final class SVWSKonfiguration {
 	 * @return der Alias des SVWS-Server-Keys
 	 */
 	public String getTLSKeyAlias() {
-		return (dto == null) || (dto.tlsKeyAlias == null) ? default_tls_key_alias : dto.tlsKeyAlias;
+		return ((dto == null) || (dto.tlsKeyAlias == null)) ? default_tls_key_alias : dto.tlsKeyAlias;
 	}
 
 
@@ -915,7 +915,7 @@ public final class SVWSKonfiguration {
 	 * @return der Pfad zum Keystore
 	 */
 	public String getTLSKeystorePath() {
-		return (dto == null) || (dto.tlsKeystorePath == null) ? "." : dto.tlsKeystorePath;
+		return ((dto == null) || (dto.tlsKeystorePath == null)) ? "." : dto.tlsKeystorePath;
 	}
 
 
@@ -929,7 +929,7 @@ public final class SVWSKonfiguration {
 	 * @return das Kennwort
 	 */
 	public String getTLSKeystorePassword() {
-		return (dto == null) || (dto.tlsKeystorePassword == null) ? default_tls_keystore_password : dto.tlsKeystorePassword;
+		return ((dto == null) || (dto.tlsKeystorePassword == null)) ? default_tls_keystore_password : dto.tlsKeystorePassword;
 	}
 
 

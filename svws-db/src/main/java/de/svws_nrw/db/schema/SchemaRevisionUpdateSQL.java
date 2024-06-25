@@ -60,7 +60,7 @@ public class SchemaRevisionUpdateSQL {
 	 */
 	public List<String> getSQL(final DBDriver dbms) {
 		final var liste = _sql.get(dbms);
-		return liste == null ? Collections.emptyList() : liste;
+		return (liste == null) ? Collections.emptyList() : liste;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class SchemaRevisionUpdateSQL {
 		_kommentare.add(kommentar);
 		_tabellen.addAll(Arrays.asList(tabellen));
 		for (final DBDriver dbms : DBDriver.values())
-			add(dbms, (dbms == dbms2) ? sql2 : (dbms == dbms3) ? sql3 : sql);
+			add(dbms, (dbms == dbms2) ? sql2 : ((dbms == dbms3) ? sql3 : sql));
 	}
 
 	/**

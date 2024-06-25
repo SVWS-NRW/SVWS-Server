@@ -49,13 +49,13 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/** Formatiert eine Zeitangabe als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
-	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 	/** Formatiert ein Datum als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
-	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	/** Formatiert ein Datum mit Zeitangabe als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
-	private static DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static final DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	/** Der Datenbank-Benutzer, der dieser Verbindung zugeordnet ist. */
 	private final Benutzer user;
@@ -574,7 +574,7 @@ public final class DBEntityManager implements AutoCloseable {
 		if (entities == null)
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
-		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
+		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		try {
 			this.lock();
 			this.transactionBegin();
@@ -850,7 +850,7 @@ public final class DBEntityManager implements AutoCloseable {
 		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
-		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
+		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		try {
 			this.lock();
 			this.transactionBegin();
@@ -956,7 +956,7 @@ public final class DBEntityManager implements AutoCloseable {
 		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
-		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
+		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		final StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO ").append(tablename).append("(")
 				.append(colnames.stream().collect(Collectors.joining(", ")))
@@ -1215,7 +1215,7 @@ public final class DBEntityManager implements AutoCloseable {
 		q.setParameter("tableName", tableName);
 		try {
 			final Long currentID = (Long) q.getSingleResult();
-			return currentID == null ? 1 : currentID + 1;
+			return (currentID == null) ? 1 : (currentID + 1);
 		} catch (@SuppressWarnings("unused") final NoResultException e) {
 			return 1;
 		}
@@ -1239,7 +1239,7 @@ public final class DBEntityManager implements AutoCloseable {
 		q.setParameter("tableName", tableName);
 		try {
 			final Long currentID = (Long) q.getSingleResult();
-			return currentID == null ? 1 : currentID + 1;
+			return (currentID == null) ? 1 : (currentID + 1);
 		} catch (@SuppressWarnings("unused") final NoResultException e) {
 			return 1;
 		}

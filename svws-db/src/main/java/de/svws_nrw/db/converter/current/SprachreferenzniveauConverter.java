@@ -20,7 +20,7 @@ public final class SprachreferenzniveauConverter extends DBAttributeConverter<Sp
 
 	@Override
 	public String convertToDatabaseColumn(final Sprachreferenzniveau attribute) {
-		return attribute == null ? null : attribute.daten.kuerzel;
+		return (attribute == null) ? null : attribute.daten.kuerzel;
 	}
 
 	@Override

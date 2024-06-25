@@ -30,7 +30,7 @@ public final class SQLiteUtils {
 			if (!matcher.find())
 				break;
 			final StringBuilder result = new StringBuilder();
-			result.append(tmpSql.substring(0, matcher.start()));
+			result.append(tmpSql, 0, matcher.start());
 			int countBraces = 0;
 			int countQuotes = 0;
 			String tmp = tmpSql.substring(matcher.end());
@@ -53,25 +53,25 @@ public final class SQLiteUtils {
 					case '(' -> {
 						if (countQuotes == 0)
 							countBraces++;
-						result.append(tmp.substring(0, matcher.end()));
+						result.append(tmp, 0, matcher.end());
 					}
 					case ')' -> {
 						if (countQuotes == 0)
 							countBraces--;
 						if (countBraces > 0)
-							result.append(tmp.substring(0, matcher.end()));
+							result.append(tmp, 0, matcher.end());
 						else
-							result.append(tmp.substring(0, matcher.start()));
+							result.append(tmp, 0, matcher.start());
 					}
 					case '\'' -> {
 						countQuotes = (countQuotes == 0) ? 1 : 0;
-						result.append(tmp.substring(0, matcher.end()));
+						result.append(tmp, 0, matcher.end());
 					}
 					case ',' -> {
 						if ((countQuotes == 0) && (countBraces == 1)) {
-							result.append(tmp.substring(0, matcher.start())).append(" || ");
+							result.append(tmp, 0, matcher.start()).append(" || ");
 						} else
-							result.append(tmp.substring(0, matcher.end()));
+							result.append(tmp, 0, matcher.end());
 					}
 					default -> {
 						// do nothing

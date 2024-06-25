@@ -74,9 +74,9 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 								1,
 								hasSMTP ? host : "",
 								hasSMTP ? port : 25,
-								hasSMTP && !useStartTLS ? 0 : 1,
-								hasSMTP && useTLS ? 1 : 0,
-								hasSMTP && useTLS ? "'*'" : "null"
+								(hasSMTP && !useStartTLS) ? 0 : 1,
+								(hasSMTP && useTLS) ? 1 : 0,
+								(hasSMTP && useTLS) ? "'*'" : "null"
 						))) {
 			logger.logLn(2, "Fehler beim Erstellen der SMTP-Server-Konfiguration.");
 			return false;

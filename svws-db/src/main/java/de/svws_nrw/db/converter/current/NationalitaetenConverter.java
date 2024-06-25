@@ -21,7 +21,7 @@ public final class NationalitaetenConverter extends DBAttributeConverter<Nationa
 
 	@Override
 	public String convertToDatabaseColumn(final Nationalitaeten attribute) {
-		return attribute == null ? null : attribute.daten.codeDEStatis;
+		return (attribute == null) ? null : attribute.daten.codeDEStatis;
 	}
 
 	@Override

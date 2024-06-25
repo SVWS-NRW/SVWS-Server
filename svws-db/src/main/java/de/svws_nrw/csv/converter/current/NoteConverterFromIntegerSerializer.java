@@ -37,7 +37,7 @@ public final class NoteConverterFromIntegerSerializer extends StdSerializer<Note
 	@Override
 	public void serialize(final Note value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		final Integer note = NoteConverterFromInteger.instance.convertToDatabaseColumn(value);
-		gen.writeString(note == null ? null : "" + note);
+		gen.writeString((note == null) ? null : ("" + note));
 	}
 
 }
