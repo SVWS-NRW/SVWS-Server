@@ -18,7 +18,7 @@ Willkommen zum offiziellen Repository des SVWS-Servers (Schulverwaltungssoftware
 
 Der SVWS-Server ist ein zentraler Bestandteil der Schulverwaltungssoftware Nordrhein-Westfalen (SVWS). 
 
-Das Projekt hat sich das Zeil gesetzt, für die Zukunft eine plattformunabhängige Web-Applikation für die Schulen in NRW zu schaffen.
+Das Projekt hat sich das Ziel gesetzt, für die Zukunft eine plattformunabhängige Web-Applikation für die Schulen in NRW zu schaffen.
 
 Dieses Repository enthält den Quellcode des Servers sowie Anleitungen zur Installation und Nutzung.
 
@@ -32,13 +32,13 @@ Das Handbuch für den Webclient werden wir hier aufbauen:
 Die fertigen (Pre-) Releases zur Installation findest du hier:
 https://github.com/SVWS-NRW/SVWS-Server/releases
 
-Hier findet man den zu den Releases gehörigen Container:
+Hier findet man den zu den Releases gehörigen Docker-Container:
 https://hub.docker.com/r/svwsnrw/svws-server
 
 Die npm-Packages, die auch in anderen Projekten verwendet werden dürfen:
 https://www.npmjs.com/~svws-nrw
 
-Maven-Packages ebenfalls zur freien Verwendung:
+Maven-Packages, ebenfalls zur freien Verwendung:
 https://central.sonatype.com/namespace/de.svws-nrw
 
 ## Installation für Entwickler
@@ -61,7 +61,7 @@ Stelle sicher, dass die folgenden Voraussetzungen erfüllt sind, bevor du mit de
     ```bash
     cd SVWS-Server
     ```
-3. Richte die `svwsconfig.json` ein gemäß der [Einrichtungsanleitung](https://doku.svws-nrw.de/Deployment/Einrichtung/).
+3. Richte die `svwsconfig.json` und den Keystore ein, gemäß der [Einrichtungsanleitung](https://doku.svws-nrw.de/Deployment/Einrichtung/).
 4. Erstelle das Projekt mit Gradle:
     ```bash
     ./gradlew build
