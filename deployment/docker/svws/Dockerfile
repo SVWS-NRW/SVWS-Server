@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21
 
-RUN apt update && apt-get -y install gettext zip
+RUN apt update && apt-get -y upgrade && apt-get -y install gettext zip
 
 RUN mkdir -p /opt/app/svws
 RUN mkdir /opt/app/svws/client
