@@ -17,9 +17,9 @@ public final class Revision17Updates extends SchemaRevisionUpdateSQL {
 	public Revision17Updates() {
 		super(SchemaRevisionen.REV_17);
 		add("Stundenplan: Verschieben der Informationen zu den Wochentypen bei Pausenaufsichten in die Zuordnung zu den Aufsichtsbereichen.",
-			"UPDATE %s b JOIN %s a ON b.Pausenaufsicht_ID = a.ID SET b.Wochentyp = a.Wochentyp"
-				.formatted(Schema.tab_Stundenplan_PausenaufsichtenBereich.name(), Schema.tab_Stundenplan_Pausenaufsichten.name()),
-			Schema.tab_Stundenplan_Pausenaufsichten, Schema.tab_Stundenplan_PausenaufsichtenBereich
+				"UPDATE %s b JOIN %s a ON b.Pausenaufsicht_ID = a.ID SET b.Wochentyp = a.Wochentyp"
+						.formatted(Schema.tab_Stundenplan_PausenaufsichtenBereich.name(), Schema.tab_Stundenplan_Pausenaufsichten.name()),
+				Schema.tab_Stundenplan_Pausenaufsichten, Schema.tab_Stundenplan_PausenaufsichtenBereich
 		);
 	}
 

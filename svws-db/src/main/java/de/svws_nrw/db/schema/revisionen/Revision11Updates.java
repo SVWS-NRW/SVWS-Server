@@ -32,7 +32,8 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 
 		// Ermittle ggf. eine SMTP-Server-Einstellung aus Schild2-Einstellungen und übernimmt diese in die Konfiguration des SVWS-Servers
 		logger.logLn("- Ermittle eine ggf. bestehende Email-Konfiguration aus den SchildNRW 2 - Einstellungen ...");
-		final List<String> tmpEinstellungen = conn.queryNative("SELECT Wert FROM Client_Konfiguration_Global WHERE AppName='Schild2' AND Schluessel='Einstellungen'");
+		final List<String> tmpEinstellungen =
+				conn.queryNative("SELECT Wert FROM Client_Konfiguration_Global WHERE AppName='Schild2' AND Schluessel='Einstellungen'");
 		if (tmpEinstellungen.isEmpty())
 			return true;
 		final String einstellungen = tmpEinstellungen.get(0);
@@ -62,17 +63,21 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 				}
 				case "SMTPSSL" -> useTLS = (!"0".equals(keyvalue[1]));
 				case "SMTPStartTLS" -> useStartTLS = (!"0".equals(keyvalue[1]));
-				default -> { /* nicht zu tun */ }
+				default -> {
+					/* nicht zu tun */
+				}
 			}
 		}
-		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("INSERT INTO EigeneSchule_Email(ID, SMTPServer, SMTPPort, SMTPStartTLS, SMTPUseTLS, SMTPTrustTLSHost) VALUES (%d, '%s', %d, %d, %d, %s)".formatted(
-					1,
-					hasSMTP ? host : "",
-					hasSMTP ? port : 25,
-					hasSMTP && !useStartTLS ? 0 : 1,
-					hasSMTP && useTLS ? 1 : 0,
-					hasSMTP && useTLS ? "'*'" : "null"
-				))) {
+		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(
+				"INSERT INTO EigeneSchule_Email(ID, SMTPServer, SMTPPort, SMTPStartTLS, SMTPUseTLS, SMTPTrustTLSHost) VALUES (%d, '%s', %d, %d, %d, %s)"
+						.formatted(
+								1,
+								hasSMTP ? host : "",
+								hasSMTP ? port : 25,
+								hasSMTP && !useStartTLS ? 0 : 1,
+								hasSMTP && useTLS ? 1 : 0,
+								hasSMTP && useTLS ? "'*'" : "null"
+						))) {
 			logger.logLn(2, "Fehler beim Erstellen der SMTP-Server-Konfiguration.");
 			return false;
 		}

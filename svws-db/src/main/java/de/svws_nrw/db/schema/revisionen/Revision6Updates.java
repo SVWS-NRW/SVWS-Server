@@ -21,16 +21,17 @@ public class Revision6Updates extends SchemaRevisionUpdateSQL {
 
 	private void updateENMZeitstempel() {
 		add("Aktualisisere die Zeitstempel für die ENM-Leistungsdaten",
-			"INSERT INTO " + Schema.tab_EnmLeistungsdaten.name() + "(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung)"
-			+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
-			+ Schema.tab_SchuelerLeistungsdaten.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmLeistungsdaten.name() + ");",
-			Schema.tab_EnmLeistungsdaten, Schema.tab_SchuelerLeistungsdaten
+				"INSERT INTO " + Schema.tab_EnmLeistungsdaten.name() + "(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung)"
+						+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
+						+ Schema.tab_SchuelerLeistungsdaten.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmLeistungsdaten.name() + ");",
+				Schema.tab_EnmLeistungsdaten, Schema.tab_SchuelerLeistungsdaten
 		);
 		add("Aktualisisere die Zeitstempel für die ENM-Lernabschnittsdaten",
-			"INSERT INTO " + Schema.tab_EnmLernabschnittsdaten.name() + "(ID, tsSumFehlStd, tsSumFehlStdU, tsZeugnisBem, tsASV, tsAUE, tsBemerkungVersetzung)"
-			+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
-			+ Schema.tab_SchuelerLernabschnittsdaten.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmLernabschnittsdaten.name() + ");",
-			Schema.tab_EnmLernabschnittsdaten, Schema.tab_SchuelerLernabschnittsdaten
+				"INSERT INTO " + Schema.tab_EnmLernabschnittsdaten.name()
+						+ "(ID, tsSumFehlStd, tsSumFehlStdU, tsZeugnisBem, tsASV, tsAUE, tsBemerkungVersetzung)"
+						+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
+						+ Schema.tab_SchuelerLernabschnittsdaten.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmLernabschnittsdaten.name() + ");",
+				Schema.tab_EnmLernabschnittsdaten, Schema.tab_SchuelerLernabschnittsdaten
 		);
 	}
 

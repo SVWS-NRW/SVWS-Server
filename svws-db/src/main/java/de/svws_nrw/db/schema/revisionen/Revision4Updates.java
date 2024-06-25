@@ -30,27 +30,27 @@ public final class Revision4Updates extends SchemaRevisionUpdateSQL {
 
 		// Übertrage die Daten aus der Tabelle NichtMoeglAbiFachKombi in die Tabelle Gost_Jahrgang_Fachkombinationen (zuerst eine Richtung der Regel)
 		add("Übertrage Regeln aus NichtMoeglAbiFachKombi nach Gost_Jahrgang_Fachkombinationen (Richtung 1)",
-			"""
-			INSERT INTO Gost_Jahrgang_Fachkombinationen(Abi_Jahrgang,Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
-			SELECT
-			  -1,
-			  nmk.Fach1_ID,
-			  nmk.Fach2_ID,
-			  nmk.Kursart1,
-			  nmk.Kursart2,
-			  nmk.Phase <> 'Q1Q4' AS EF1,
-			  nmk.Phase <> 'Q1Q4' AS EF2,
-			  1 AS Q11,
-			  1 AS Q12,
-			  1 AS Q21,
-			  1 AS Q22,
-			  CASE WHEN nmk.Typ = '+' THEN 1 ELSE 0 END AS Typ,
-			  '' AS Hinweistext
-			FROM
-			  NichtMoeglAbiFachKombi nmk JOIN EigeneSchule_Faecher f1 ON nmk.Fach1_ID = f1.ID
-			                             JOIN EigeneSchule_Faecher f2 ON nmk.Fach2_ID = f2.ID;
-			""",
-			Schema.tab_Gost_Jahrgang_Fachkombinationen, Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
+				"""
+				INSERT INTO Gost_Jahrgang_Fachkombinationen(Abi_Jahrgang,Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
+				SELECT
+				  -1,
+				  nmk.Fach1_ID,
+				  nmk.Fach2_ID,
+				  nmk.Kursart1,
+				  nmk.Kursart2,
+				  nmk.Phase <> 'Q1Q4' AS EF1,
+				  nmk.Phase <> 'Q1Q4' AS EF2,
+				  1 AS Q11,
+				  1 AS Q12,
+				  1 AS Q21,
+				  1 AS Q22,
+				  CASE WHEN nmk.Typ = '+' THEN 1 ELSE 0 END AS Typ,
+				  '' AS Hinweistext
+				FROM
+				  NichtMoeglAbiFachKombi nmk JOIN EigeneSchule_Faecher f1 ON nmk.Fach1_ID = f1.ID
+				                             JOIN EigeneSchule_Faecher f2 ON nmk.Fach2_ID = f2.ID;
+				""",
+				Schema.tab_Gost_Jahrgang_Fachkombinationen, Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
 		);
 
 		// Übertrage die Daten aus der Tabelle NichtMoeglAbiFachKombi in die Tabelle Gost_Jahrgang_Fachkombinationen (dann die andere Richtung der Regel)
@@ -76,7 +76,7 @@ public final class Revision4Updates extends SchemaRevisionUpdateSQL {
 				                             JOIN EigeneSchule_Faecher f2 ON nmk.Fach2_ID = f2.ID;
 				""",
 				Schema.tab_Gost_Jahrgang_Fachkombinationen, Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
-			);
+		);
 	}
 
 }

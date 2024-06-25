@@ -17,8 +17,8 @@ public final class Revision13Updates extends SchemaRevisionUpdateSQL {
 	public Revision13Updates() {
 		super(SchemaRevisionen.REV_13);
 		add("Entferne ggf. eine fehlerhafte Unique-Constraint, sofern sie überhaupt erstellt wurde",
-			"ALTER TABLE " + Schema.tab_SchuelerSprachpruefungen.name() + " DROP INDEX IF EXISTS " + Schema.tab_SchuelerSprachpruefungen.name() + "_UC1;",
-			Schema.tab_SchuelerSprachpruefungen
+				"ALTER TABLE " + Schema.tab_SchuelerSprachpruefungen.name() + " DROP INDEX IF EXISTS " + Schema.tab_SchuelerSprachpruefungen.name() + "_UC1;",
+				Schema.tab_SchuelerSprachpruefungen
 		);
 	}
 

@@ -21,9 +21,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.TABLES")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name = "DTOInformationSchemaTables.mysql", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_TYPE='BASE TABLE'")
-@NamedNativeQuery(name = "DTOInformationSchemaTables.mdb", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG='PUBLIC' AND TABLE_SCHEMA='PUBLIC'")
-@NamedNativeQuery(name = "DTOInformationSchemaTables.mssql", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG=? AND TABLE_SCHEMA='dbo' AND TABLE_TYPE='BASE TABLE'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mysql",
+		query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_TYPE='BASE TABLE'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mdb",
+		query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG='PUBLIC' AND TABLE_SCHEMA='PUBLIC'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mssql",
+		query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG=? AND TABLE_SCHEMA='dbo' AND TABLE_TYPE='BASE TABLE'")
 @NamedNativeQuery(name = "DTOInformationSchemaTables.sqlite", query = "SELECT name AS TABLE_NAME FROM sqlite_master WHERE type='table'")
 public final class DTOInformationSchemaTables {
 

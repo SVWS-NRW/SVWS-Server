@@ -20,10 +20,18 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.COLUMNS")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mysql", query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=? AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mdb", query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = 'PUBLIC' AND TABLE_SCHEMA='PUBLIC' AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mssql", query = "SELECT DISTINCT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG=? AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.sqlite", query = "SELECT ? AS TABLE_NAME, name AS COLUMN_NAME, cid + 1 AS ORDINAL_POSITION, dflt_value AS COLUMN_DEFAULT, CASE \"notnull\" WHEN 0 THEN 'YES' ELSE 'NO' END AS IS_NULLABLE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN type ELSE substr(type, 0, instr(type, '(')) END AS DATA_TYPE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN NULL ELSE substr(type, instr(type, '(') + 1, instr(type, ')') - instr(type, '(') - 1) END AS CHARACTER_MAXIMUM_LENGTH, * FROM pragma_table_info((?))", resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mysql",
+		query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=? AND TABLE_NAME=?",
+		resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mdb",
+		query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = 'PUBLIC' AND TABLE_SCHEMA='PUBLIC' AND TABLE_NAME=?",
+		resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mssql",
+		query = "SELECT DISTINCT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG=? AND TABLE_NAME=?",
+		resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.sqlite",
+		query = "SELECT ? AS TABLE_NAME, name AS COLUMN_NAME, cid + 1 AS ORDINAL_POSITION, dflt_value AS COLUMN_DEFAULT, CASE \"notnull\" WHEN 0 THEN 'YES' ELSE 'NO' END AS IS_NULLABLE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN type ELSE substr(type, 0, instr(type, '(')) END AS DATA_TYPE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN NULL ELSE substr(type, instr(type, '(') + 1, instr(type, ')') - instr(type, '(') - 1) END AS CHARACTER_MAXIMUM_LENGTH, * FROM pragma_table_info((?))",
+		resultClass = DTOInformationSchemaTableColumn.class)
 public final class DTOInformationSchemaTableColumn {
 
 	/** Der Name der Tabelle */
