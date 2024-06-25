@@ -18,18 +18,19 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Kurs_ID */
 	public SchemaTabelleSpalte col_Kurs_ID = add("Kurs_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID des Kurses – verweist auf den Kurs");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID des Kurses – verweist auf den Kurs");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID des Schülers – verweist auf den Schüler");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID des Schülers – verweist auf den Schüler");
 
 	/** Die Definition der Tabellenspalte LernabschnittWechselNr */
 	public SchemaTabelleSpalte col_LernabschnittWechselNr = add("LernabschnittWechselNr", SchemaDatentypen.SMALLINT, true)
-		.setDefault("0")
-		.setJavaComment("Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw");
+			.setDefault("0")
+			.setJavaComment("Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel"
+					+ " 2=vor dem zweiten Wechsel usw");
 
 	/** Die Definition des Fremdschlüssels KursSchueler_Kurse_FK */
 	public SchemaTabelleFremdschluessel fk_KursSchueler_Kurse_FK = addForeignKey(
@@ -37,7 +38,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels KursSchueler_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_KursSchueler_Schueler_FK = addForeignKey(
@@ -45,7 +46,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-		);
+	);
 
 
 	/** Trigger t_INSERT_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */

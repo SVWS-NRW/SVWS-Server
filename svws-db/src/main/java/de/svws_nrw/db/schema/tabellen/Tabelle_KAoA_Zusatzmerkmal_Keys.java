@@ -17,8 +17,8 @@ public class Tabelle_KAoA_Zusatzmerkmal_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID des Zusatzmerkmals");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID des Zusatzmerkmals");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_Zusatzmerkmal_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_Zusatzmerkmal_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAZusatzmerkmalKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Zusatzmerkmalen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAZusatzmerkmal.class, KAOAZusatzmerkmal.VERSION, rev -> Arrays
-            .stream(KAOAZusatzmerkmal.values())
-            .map(a -> Arrays.stream(a.historie)
-                .map(h -> "" + h.id)
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOAZusatzmerkmal.class, KAOAZusatzmerkmal.VERSION, rev -> Arrays
+				.stream(KAOAZusatzmerkmal.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

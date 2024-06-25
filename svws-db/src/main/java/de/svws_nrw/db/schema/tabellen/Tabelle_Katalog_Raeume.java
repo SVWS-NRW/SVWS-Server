@@ -13,30 +13,30 @@ public class Tabelle_Katalog_Raeume extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die ID identifiziert einen Raumeintrag eindeutig");
+			.setNotNull()
+			.setJavaComment("Die ID identifiziert einen Raumeintrag eindeutig");
 
 	/** Die Definition der Tabellenspalte Kuerzel */
 	public SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
-		.setNotNull()
-		.setJavaComment("Das Kürzel des Raums - auch eindeutig");
+			.setNotNull()
+			.setJavaComment("Das Kürzel des Raums - auch eindeutig");
 
 	/** Die Definition der Tabellenspalte Beschreibung */
 	public SchemaTabelleSpalte col_Beschreibung = add("Beschreibung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1000)
-		.setNotNull()
-		.setJavaComment("Gegebenenfalls eine ausführlichere Beschreibung des Raumes");
+			.setNotNull()
+			.setJavaComment("Gegebenenfalls eine ausführlichere Beschreibung des Raumes");
 
 	/** Die Definition der Tabellenspalte Groesse */
 	public SchemaTabelleSpalte col_Groesse = add("Groesse", SchemaDatentypen.INT, false)
-		.setDefault("40")
-		.setNotNull()
-		.setJavaComment("Die Größe des Raumes, d.h. wie viele Schüler hier max. Platz haben");
+			.setDefault("40")
+			.setNotNull()
+			.setJavaComment("Die Größe des Raumes, d.h. wie viele Schüler hier max. Platz haben");
 
 
 	/** Die Definition des Unique-Index Katalog_Raeume_UC1 */
 	public SchemaTabelleUniqueIndex unique_Katalog_Raeume_UC1 = addUniqueIndex("Katalog_Raeume_UC1",
 			col_Kuerzel
-		);
+	);
 
 
 	/**

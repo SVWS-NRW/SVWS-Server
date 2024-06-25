@@ -17,8 +17,8 @@ public class Tabelle_KAoA_Merkmal_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID des Merkmals");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID des Merkmals");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_Merkmal_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_Merkmal_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAMerkmalKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Merkmalen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAMerkmal.class, KAOAMerkmal.VERSION, rev -> Arrays
-            .stream(KAOAMerkmal.values())
-            .map(a -> Arrays.stream(a.historie)
-                .map(h -> "" + h.id)
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOAMerkmal.class, KAOAMerkmal.VERSION, rev -> Arrays
+				.stream(KAOAMerkmal.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

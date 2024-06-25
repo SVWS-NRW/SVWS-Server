@@ -12,18 +12,19 @@ public class Tabelle_TextExportVorlagen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 	/** Die Definition der Tabellenspalte VorlageName */
 	public SchemaTabelleSpalte col_VorlageName = add("VorlageName", SchemaDatentypen.VARCHAR, true).setDatenlaenge(50)
-		.setNotNull()
-		.setJavaComment("Name der Export-Textvorlage");
+			.setNotNull()
+			.setJavaComment("Name der Export-Textvorlage");
 
 	/** Die Definition der Tabellenspalte Daten */
 	public SchemaTabelleSpalte col_Daten = add("Daten", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Daten die in der Export-Textvorlage enthalten sind");
+			.setJavaComment("Daten die in der Export-Textvorlage enthalten sind");
 
 
 	/**

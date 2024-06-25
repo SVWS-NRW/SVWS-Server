@@ -16,21 +16,22 @@ public class Tabelle_Logins extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte LI_UserID */
 	public SchemaTabelleSpalte col_LI_UserID = add("LI_UserID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("UserID des Logins");
+			.setNotNull()
+			.setJavaComment("UserID des Logins");
 
 	/** Die Definition der Tabellenspalte LI_LoginTime */
 	public SchemaTabelleSpalte col_LI_LoginTime = add("LI_LoginTime", SchemaDatentypen.DATETIME, true)
-		.setJavaComment("Login Zeit");
+			.setJavaComment("Login Zeit");
 
 	/** Die Definition der Tabellenspalte LI_LogoffTime */
 	public SchemaTabelleSpalte col_LI_LogoffTime = add("LI_LogoffTime", SchemaDatentypen.DATETIME, false)
-		.setJavaComment("Logoff Zeit");
+			.setJavaComment("Logoff Zeit");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels Logins_Benutzer_FK */
@@ -39,8 +40,7 @@ public class Tabelle_Logins extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LI_UserID, Schema.tab_Benutzer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 
 	/**

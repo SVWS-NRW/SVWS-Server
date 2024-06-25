@@ -17,8 +17,8 @@ public class Tabelle_KAoA_Kategorie_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID der Kategorie");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID der Kategorie");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_Kategorie_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_Kategorie_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAKategorieKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Kategorien");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAKategorie.class, KAOAKategorie.VERSION, rev -> Arrays
-            .stream(KAOAKategorie.values())
-            .map(a -> Arrays.stream(a.historie)
-                .map(h -> "" + h.id)
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOAKategorie.class, KAOAKategorie.VERSION, rev -> Arrays
+				.stream(KAOAKategorie.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

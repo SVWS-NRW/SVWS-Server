@@ -12,19 +12,19 @@ public class Tabelle_Schema_Core_Type_Versionen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NameTabelle */
 	public SchemaTabelleSpalte col_NameTabelle = add("NameTabelle", SchemaDatentypen.VARCHAR, true).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Gibt den Namen der Tabelle an, wo die Daten des Core-Types hinterlegt werden.");
+			.setNotNull()
+			.setJavaComment("Gibt den Namen der Tabelle an, wo die Daten des Core-Types hinterlegt werden.");
 
 	/** Die Definition der Tabellenspalte Name */
 	public SchemaTabelleSpalte col_Name = add("Name", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1023)
-		.setNotNull()
-		.setJavaComment("Gibt den Namen des Core-Types an.");
+			.setNotNull()
+			.setJavaComment("Gibt den Namen des Core-Types an.");
 
 	/** Die Definition der Tabellenspalte Version */
 	public SchemaTabelleSpalte col_Version = add("Version", SchemaDatentypen.BIGINT, false)
-		.setDefault("1")
-		.setNotNull()
-		.setJavaComment("Die Version, in welcher der Core-Type in der DB vorliegt");
+			.setDefault("1")
+			.setNotNull()
+			.setJavaComment("Die Version, in welcher der Core-Type in der DB vorliegt");
 
 
 	/**

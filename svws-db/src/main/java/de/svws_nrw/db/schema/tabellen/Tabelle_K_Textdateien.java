@@ -13,36 +13,37 @@ public class Tabelle_K_Textdateien extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setNotNull()
+			.setJavaComment("ID des Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(32)
-		.setJavaComment("Bezeichnungdes Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setJavaComment("Bezeichnungdes Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte Text_ID */
 	public SchemaTabelleSpalte col_Text_ID = add("Text_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("TextID des Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setNotNull()
+			.setJavaComment("TextID des Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte Text_Body */
 	public SchemaTabelleSpalte col_Text_Body = add("Text_Body", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Text-Body des Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setJavaComment("Text-Body des Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("+")
-		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("Sichbarkeit des Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setDefault("+")
+			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+			.setJavaComment("Sichbarkeit des Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.SMALLINT, false)
-		.setJavaComment("Sortierung des Textes der zum Ersatz für txt-Dateien genutzt wird");
+			.setJavaComment("Sortierung des Textes der zum Ersatz für txt-Dateien genutzt wird");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/**

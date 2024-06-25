@@ -13,33 +13,34 @@ public class Tabelle_K_Einzelleistungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Teilleistung zu den Leistungsdaten");
+			.setNotNull()
+			.setJavaComment("ID der Teilleistung zu den Leistungsdaten");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
-		.setJavaComment("Bezeichnung der Teilleistung zu den Leistungsdaten");
+			.setJavaComment("Bezeichnung der Teilleistung zu den Leistungsdaten");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
-		.setDefault("32000")
-		.setJavaComment("Sortierung der Teilleistung zu den Leistungsdaten");
+			.setDefault("32000")
+			.setJavaComment("Sortierung der Teilleistung zu den Leistungsdaten");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("+")
-		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("Sichbarkeit der Teilleistung zu den Leistungsdaten");
+			.setDefault("+")
+			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+			.setJavaComment("Sichbarkeit der Teilleistung zu den Leistungsdaten");
 
 	/** Die Definition der Tabellenspalte Gewichtung */
 	public SchemaTabelleSpalte col_Gewichtung = add("Gewichtung", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Gewichtung der Teilleistung zu den Leistungsdaten");
+			.setJavaComment("Gewichtung der Teilleistung zu den Leistungsdaten");
 
 
 	/**

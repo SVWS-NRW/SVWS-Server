@@ -16,26 +16,26 @@ public class Tabelle_LehrerNotenmodulCredentials extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die LehrerID des Lehrers, für den die Credentials gelten");
+			.setNotNull()
+			.setJavaComment("Die LehrerID des Lehrers, für den die Credentials gelten");
 
 	/** Die Definition der Tabellenspalte Initialkennwort */
 	public SchemaTabelleSpalte col_Initialkennwort = add("Initialkennwort", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Initialkennwort für den Credential-Datensatz");
+			.setNotNull()
+			.setJavaComment("Initialkennwort für den Credential-Datensatz");
 
 	/** Die Definition der Tabellenspalte PasswordHash */
 	public SchemaTabelleSpalte col_PasswordHash = add("PasswordHash", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Passwordhash für den Credential-Datensatz");
+			.setNotNull()
+			.setJavaComment("Passwordhash für den Credential-Datensatz");
 
 
 	/** Die Definition des Fremdschlüssels LehrerNotenmodulCredentials_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerNotenmodulCredentials_Lehrer_FK = addForeignKey(
-		"LehrerNotenmodulCredentials_Lehrer_FK",
-		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-		new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
+			"LehrerNotenmodulCredentials_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 	);
 
 

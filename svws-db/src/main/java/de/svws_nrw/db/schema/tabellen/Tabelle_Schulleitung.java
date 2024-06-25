@@ -17,33 +17,33 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Schulleitungsfunktionseintrags");
+			.setNotNull()
+			.setJavaComment("ID der Schulleitungsfunktionseintrags");
 
 	/** Die Definition der Tabellenspalte LeitungsfunktionID */
 	public SchemaTabelleSpalte col_LeitungsfunktionID = add("LeitungsfunktionID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID der Schulleitungsfunktion (Fremdschlüssel aus der Tabelle SchulleitungFunktion)");
+			.setNotNull()
+			.setJavaComment("ID der Schulleitungsfunktion (Fremdschlüssel aus der Tabelle SchulleitungFunktion)");
 
 	/** Die Definition der Tabellenspalte Funktionstext */
 	public SchemaTabelleSpalte col_Funktionstext = add("Funktionstext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Beschreibung der Funktion (Default Text aus SchulleitungFunktion aber änderbar)");
+			.setNotNull()
+			.setJavaComment("Beschreibung der Funktion (Default Text aus SchulleitungFunktion aber änderbar)");
 
 	/** Die Definition der Tabellenspalte LehrerID */
 	public SchemaTabelleSpalte col_LehrerID = add("LehrerID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID des Lehrerdatensatzes");
+			.setNotNull()
+			.setJavaComment("ID des Lehrerdatensatzes");
 
 	/** Die Definition der Tabellenspalte Von */
 	public SchemaTabelleSpalte col_Von = add("Von", SchemaDatentypen.DATETIME, false)
-		.setConverter(DatumConverter.class)
-		.setJavaComment("Beginndatum");
+			.setConverter(DatumConverter.class)
+			.setJavaComment("Beginndatum");
 
 	/** Die Definition der Tabellenspalte Bis */
 	public SchemaTabelleSpalte col_Bis = add("Bis", SchemaDatentypen.DATETIME, false)
-		.setConverter(DatumConverter.class)
-		.setJavaComment("Endedatum");
+			.setConverter(DatumConverter.class)
+			.setJavaComment("Endedatum");
 
 
 	/** Die Definition des Fremdschlüssels Schulleitung_Leitungsfunktion_FK */
@@ -52,7 +52,7 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LeitungsfunktionID, Schema.tab_LehrerLeitungsfunktion_Keys.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Schulleitung_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_Schulleitung_Lehrer_FK = addForeignKey(
@@ -60,7 +60,7 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LehrerID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 
 	/**

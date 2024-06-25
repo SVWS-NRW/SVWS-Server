@@ -16,30 +16,31 @@ public class Tabelle_LehrerFotos extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("LehrerID zu der das Foto gehört");
+			.setNotNull()
+			.setJavaComment("LehrerID zu der das Foto gehört");
 
 	/** Die Definition der Tabellenspalte Foto */
 	public SchemaTabelleSpalte col_Foto = add("Foto", SchemaDatentypen.LONGBLOB, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Lehrerfoto im binär-Format");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Lehrerfoto im binär-Format");
 
 	/** Die Definition der Tabellenspalte FotoBase64 */
 	public SchemaTabelleSpalte col_FotoBase64 = add("FotoBase64", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Lehrerfoto im Base64-Format");
+			.setJavaComment("Lehrerfoto im Base64-Format");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels LehrerFotos_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerFotos_Lehrer_FK = addForeignKey(
-		"LehrerFotos_Lehrer_FK",
-		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-		new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
+			"LehrerFotos_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 	);
 
 

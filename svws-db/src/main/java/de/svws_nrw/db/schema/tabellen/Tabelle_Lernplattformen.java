@@ -12,29 +12,29 @@ public class Tabelle_Lernplattformen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Datensatzes für die verwendete Lernplattform");
+			.setNotNull()
+			.setJavaComment("ID des Datensatzes für die verwendete Lernplattform");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Bezeichnung der Lernplattform");
+			.setNotNull()
+			.setJavaComment("Bezeichnung der Lernplattform");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixLehrer */
 	public SchemaTabelleSpalte col_BenutzernameSuffixLehrer = add("BenutzernameSuffixLehrer", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Suffix für den Benutzernamen bei den Lehrern");
+			.setJavaComment("Suffix für den Benutzernamen bei den Lehrern");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixErzieher */
 	public SchemaTabelleSpalte col_BenutzernameSuffixErzieher = add("BenutzernameSuffixErzieher", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Suffix für den Benutzernamen bei den Erziehern");
+			.setJavaComment("Suffix für den Benutzernamen bei den Erziehern");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixSchueler */
 	public SchemaTabelleSpalte col_BenutzernameSuffixSchueler = add("BenutzernameSuffixSchueler", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Suffix für den Benutzernamen bei den Schülern");
+			.setJavaComment("Suffix für den Benutzernamen bei den Schülern");
 
 	/** Die Definition der Tabellenspalte Konfiguration */
 	public SchemaTabelleSpalte col_Konfiguration = add("Konfiguration", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform");
+			.setJavaComment("Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform");
 
 
 	/**

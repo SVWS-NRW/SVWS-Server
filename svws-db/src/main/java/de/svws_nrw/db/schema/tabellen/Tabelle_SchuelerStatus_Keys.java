@@ -16,8 +16,8 @@ public class Tabelle_SchuelerStatus_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.INT, true)
-		.setNotNull()
-		.setJavaComment("ID des Schüler-Status");
+			.setNotNull()
+			.setJavaComment("ID des Schüler-Status");
 
 
 
@@ -31,8 +31,8 @@ public class Tabelle_SchuelerStatus_Keys extends SchemaTabelle {
 		setJavaSubPackage("schueler");
 		setJavaClassName("DTOSchuelerStatus");
 		setJavaComment("Tabelle für die Schlüsselwerte des Core-Types SchuelerStatus");
-        setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.VERSION, rev ->
-            Arrays.stream(SchuelerStatus.values()).map(s -> "" + s.id).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.VERSION,
+				rev -> Arrays.stream(SchuelerStatus.values()).map(s -> "" + s.id).toList()));
 	}
 
 }

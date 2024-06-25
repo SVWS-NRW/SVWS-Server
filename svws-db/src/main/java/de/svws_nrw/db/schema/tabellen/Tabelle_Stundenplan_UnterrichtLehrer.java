@@ -17,18 +17,18 @@ public class Tabelle_Stundenplan_UnterrichtLehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID für die Zuordnung des Lehrer zum Unterricht");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID für die Zuordnung des Lehrer zum Unterricht");
 
 	/** Die Definition der Tabellenspalte Unterricht_ID */
 	public SchemaTabelleSpalte col_Unterricht_ID = add("Unterricht_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Die ID des Unterricht-Eintrages im Stundenplan");
+			.setNotNull()
+			.setJavaComment("Die ID des Unterricht-Eintrages im Stundenplan");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Die ID der unterrichtenden Lehrers. Im Falle von Team-Teaching werden für eine Unterricht-ID einfach mehrere Datensätze erzeugt");
+			.setNotNull()
+			.setJavaComment("Die ID der unterrichtenden Lehrers. Im Falle von Team-Teaching werden für eine Unterricht-ID einfach mehrere Datensätze erzeugt");
 
 
 	/** Die Definition des Fremdschlüssels Stundenplan_UnterrichtLehrer_K_Lehrer_FK */
@@ -37,7 +37,7 @@ public class Tabelle_Stundenplan_UnterrichtLehrer extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_UnterrichtLehrer_Unterricht_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_UnterrichtLehrer_Unterricht_FK = addForeignKey(
@@ -45,14 +45,14 @@ public class Tabelle_Stundenplan_UnterrichtLehrer extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Unterricht_ID, Schema.tab_Stundenplan_Unterricht.col_ID)
-		);
+	);
 
 
 	/** Die Definition des Unique-Index Stundenplan_UnterrichtLehrer_UC1 */
 	public SchemaTabelleUniqueIndex unique_Stundenplan_UnterrichtLehrer_UC1 = addUniqueIndex("Stundenplan_UnterrichtLehrer_UC1",
 			col_Unterricht_ID,
 			col_Lehrer_ID
-		);
+	);
 
 
 	/**
@@ -65,7 +65,8 @@ public class Tabelle_Stundenplan_UnterrichtLehrer extends SchemaTabelle {
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.stundenplan");
 		setJavaClassName("DTOStundenplanUnterrichtLehrer");
-		setJavaComment("Enthält die Zuordnung der Lehrer zu den Unterrichten bei einem Zeitraster-Eintrag. Über das Zeitraster ist diese Zuordnung auch immer eindeutig einem Stundenplan zugeordnet.");
+		setJavaComment("Enthält die Zuordnung der Lehrer zu den Unterrichten bei einem Zeitraster-Eintrag. Über das Zeitraster ist diese Zuordnung auch immer"
+				+ " eindeutig einem Stundenplan zugeordnet.");
 	}
 
 }

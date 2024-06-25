@@ -18,52 +18,53 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Fehlstundeneintrags");
+			.setNotNull()
+			.setJavaComment("ID des Fehlstundeneintrags");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("AbschnittsID des zugehörigen Lernabschnitts");
+			.setNotNull()
+			.setJavaComment("AbschnittsID des zugehörigen Lernabschnitts");
 
 	/** Die Definition der Tabellenspalte Datum */
 	public SchemaTabelleSpalte col_Datum = add("Datum", SchemaDatentypen.DATE, false)
-		.setNotNull()
-		.setConverter(DatumConverter.class)
-		.setJavaComment("Datum der Fehlzeit");
+			.setNotNull()
+			.setConverter(DatumConverter.class)
+			.setJavaComment("Datum der Fehlzeit");
 
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("FachID der Fehlzeit");
+			.setJavaComment("FachID der Fehlzeit");
 
 	/** Die Definition der Tabellenspalte FehlStd */
 	public SchemaTabelleSpalte col_FehlStd = add("FehlStd", SchemaDatentypen.FLOAT, false)
-		.setNotNull()
-		.setJavaComment("Anzahl der Fehlstunden");
+			.setNotNull()
+			.setJavaComment("Anzahl der Fehlstunden");
 
 	/** Die Definition der Tabellenspalte VonStd */
 	public SchemaTabelleSpalte col_VonStd = add("VonStd", SchemaDatentypen.INT, false)
-		.setJavaComment("Beginn Stunde Fehlzeit");
+			.setJavaComment("Beginn Stunde Fehlzeit");
 
 	/** Die Definition der Tabellenspalte BisStd */
 	public SchemaTabelleSpalte col_BisStd = add("BisStd", SchemaDatentypen.INT, false)
-		.setJavaComment("Ende Stunde Fehlzeit");
+			.setJavaComment("Ende Stunde Fehlzeit");
 
 	/** Die Definition der Tabellenspalte Entschuldigt */
 	public SchemaTabelleSpalte col_Entschuldigt = add("Entschuldigt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("-")
-		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-		.setJavaComment("Entschuldigt Ja Nein");
+			.setDefault("-")
+			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
+			.setJavaComment("Entschuldigt Ja Nein");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("LehrerID der Fehlzeit");
+			.setJavaComment("LehrerID der Fehlzeit");
 
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Abschnitt_FK */
@@ -72,7 +73,7 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFehlstunden_Fach_FK = addForeignKey(
@@ -80,8 +81,7 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFehlstunden_Lehrer_FK = addForeignKey(
@@ -89,8 +89,7 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 
 	/**

@@ -18,18 +18,18 @@ public class Tabelle_Gost_Klausuren_Raumstunden extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Raumstunde (generiert)");
+			.setNotNull()
+			.setJavaComment("ID der Raumstunde (generiert)");
 
 	/** Die Definition der Tabellenspalte Klausurraum_ID */
 	public SchemaTabelleSpalte col_Klausurraum_ID = add("Klausurraum_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID des Klausurraums");
+			.setNotNull()
+			.setJavaComment("ID des Klausurraums");
 
 	/** Die Definition der Tabellenspalte Zeitraster_ID */
 	public SchemaTabelleSpalte col_Zeitraster_ID = add("Zeitraster_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID des Zeitrasters");
+			.setNotNull()
+			.setJavaComment("ID des Zeitrasters");
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raumstunden_Klausurraum_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raumstunden_Klausurraum_ID_FK = addForeignKey(
@@ -37,7 +37,7 @@ public class Tabelle_Gost_Klausuren_Raumstunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Klausurraum_ID, Schema.tab_Gost_Klausuren_Raeume.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raumstunden_Zeitraster_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raumstunden_Zeitraster_ID_FK = addForeignKey(
@@ -45,16 +45,16 @@ public class Tabelle_Gost_Klausuren_Raumstunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zeitraster_ID, Schema.tab_Stundenplan_Zeitraster.col_ID)
-		);
+	);
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Raumstunden_UC1 */
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raumstunden_UC1 = addUniqueIndex("unique_Gost_Klausuren_Raumstunden_UC1",
 			col_Klausurraum_ID, col_Zeitraster_ID
-		);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Raumstunden_IDX_Klausurraum_ID */
 	public SchemaTabelleIndex index_Gost_Klausuren_Raumstunden_IDX_Klausurraum_ID = addIndex("Gost_Klausuren_Raumstunden_IDX_Klausurraum_ID",
-		col_Klausurraum_ID
+			col_Klausurraum_ID
 	);
 
 

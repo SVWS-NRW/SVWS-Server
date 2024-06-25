@@ -17,13 +17,13 @@ public class Tabelle_Gost_Jahrgang_Beratungslehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Abi_Jahrgang */
 	public SchemaTabelleSpalte col_Abi_Jahrgang = add("Abi_Jahrgang", SchemaDatentypen.INT, true)
-		.setNotNull()
-		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht ");
+			.setNotNull()
+			.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht ");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: ID des Beratungslehrers in der Lehrertabelle");
+			.setNotNull()
+			.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: ID des Beratungslehrers in der Lehrertabelle");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Beratungslehrer_Abi_Jahrgang_FK */
@@ -32,7 +32,7 @@ public class Tabelle_Gost_Jahrgang_Beratungslehrer extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK = addForeignKey(
@@ -40,12 +40,12 @@ public class Tabelle_Gost_Jahrgang_Beratungslehrer extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 
 	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang",
-		col_Abi_Jahrgang
+			col_Abi_Jahrgang
 	);
 
 

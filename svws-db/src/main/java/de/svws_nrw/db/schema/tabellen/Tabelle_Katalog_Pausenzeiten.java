@@ -14,31 +14,31 @@ public class Tabelle_Katalog_Pausenzeiten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Eine ID, die einen Pausenzeit-Eintrag eindeutig identifiziert");
+			.setNotNull()
+			.setJavaComment("Eine ID, die einen Pausenzeit-Eintrag eindeutig identifiziert");
 
 	/** Die Definition der Tabellenspalte Tag */
 	public SchemaTabelleSpalte col_Tag = add("Tag", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setJavaComment("Der Wochentag laut ISO-8601 Standard: (1 - Montag, 2 - Dienstag, ...)");
+			.setNotNull()
+			.setJavaComment("Der Wochentag laut ISO-8601 Standard: (1 - Montag, 2 - Dienstag, ...)");
 
 	/** Die Definition der Tabellenspalte Beginn */
 	public SchemaTabelleSpalte col_Beginn = add("Beginn", SchemaDatentypen.TIME, false)
-		.setNotNull()
-		.setConverter(UhrzeitConverter.class)
-		.setJavaComment("Die Uhrzeit, wann die Pausenzeit beginnt");
+			.setNotNull()
+			.setConverter(UhrzeitConverter.class)
+			.setJavaComment("Die Uhrzeit, wann die Pausenzeit beginnt");
 
 	/** Die Definition der Tabellenspalte Ende */
 	public SchemaTabelleSpalte col_Ende = add("Ende", SchemaDatentypen.TIME, false)
-		.setNotNull()
-		.setConverter(UhrzeitConverter.class)
-		.setJavaComment("Die Uhrzeit, wann die Pausenzeit endet");
+			.setNotNull()
+			.setConverter(UhrzeitConverter.class)
+			.setJavaComment("Die Uhrzeit, wann die Pausenzeit endet");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(40)
-		.setNotNull()
-		.setDefault("Pause")
-		.setJavaComment("Eine kurze Bezeichnung, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause)");
+			.setNotNull()
+			.setDefault("Pause")
+			.setJavaComment("Eine kurze Bezeichnung, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause)");
 
 
 	/** Die Definition des Unique-Index Katalog_Pausenzeiten_UC1 */
@@ -46,7 +46,7 @@ public class Tabelle_Katalog_Pausenzeiten extends SchemaTabelle {
 			col_Beginn,
 			col_Ende,
 			col_Tag
-		);
+	);
 
 
 	/**

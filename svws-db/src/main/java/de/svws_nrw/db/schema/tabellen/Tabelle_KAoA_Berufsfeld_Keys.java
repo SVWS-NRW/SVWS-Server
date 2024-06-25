@@ -17,8 +17,8 @@ public class Tabelle_KAoA_Berufsfeld_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID für das Berufsfeld");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID für das Berufsfeld");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_Berufsfeld_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_Berufsfeld_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoABerufsfeldKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Berufsfeldern");
-        setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.VERSION, rev -> Arrays
-            .stream(KAOABerufsfeld.values())
-            .map(a -> Arrays.stream(a.historie)
-                .map(h -> "" + h.id)
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.VERSION, rev -> Arrays
+				.stream(KAOABerufsfeld.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

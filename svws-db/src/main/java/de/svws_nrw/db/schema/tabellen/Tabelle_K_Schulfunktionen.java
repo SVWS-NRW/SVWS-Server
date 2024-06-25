@@ -13,27 +13,28 @@ public class Tabelle_K_Schulfunktionen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der schulinternen Funktion");
+			.setNotNull()
+			.setJavaComment("ID der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
-		.setJavaComment("Bezeichnung der schulinternen Funktion");
+			.setJavaComment("Bezeichnung der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
-		.setJavaComment("Sortierung der schulinternen Funktion");
+			.setJavaComment("Sortierung der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("+")
-		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("Sichbarkeit der schulinternen Funktion");
+			.setDefault("+")
+			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+			.setJavaComment("Sichbarkeit der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/**

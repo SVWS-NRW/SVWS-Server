@@ -12,8 +12,8 @@ public class Tabelle_Herkunft_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Kuerzel */
 	public SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
-		.setNotNull()
-		.setJavaComment("Das Kürzel der Herkunft");
+			.setNotNull()
+			.setJavaComment("Das Kürzel der Herkunft");
 
 
 	/**

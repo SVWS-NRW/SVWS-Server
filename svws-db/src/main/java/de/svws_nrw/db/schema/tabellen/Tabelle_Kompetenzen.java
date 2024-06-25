@@ -20,18 +20,18 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte KO_ID */
 	public SchemaTabelleSpalte col_KO_ID = add("KO_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID für die Berechtigungskompetenz");
+			.setNotNull()
+			.setJavaComment("ID für die Berechtigungskompetenz");
 
 	/** Die Definition der Tabellenspalte KO_Gruppe */
 	public SchemaTabelleSpalte col_KO_Gruppe = add("KO_Gruppe", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Gruppe der Berechtigungskompetenz");
+			.setNotNull()
+			.setJavaComment("Gruppe der Berechtigungskompetenz");
 
 	/** Die Definition der Tabellenspalte KO_Bezeichnung */
 	public SchemaTabelleSpalte col_KO_Bezeichnung = add("KO_Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(64)
-		.setNotNull()
-		.setJavaComment("Bezeichnung der Berechtigungskompetenz");
+			.setNotNull()
+			.setJavaComment("Bezeichnung der Berechtigungskompetenz");
 
 
 	/** Die Definition des Fremdschlüssels Kompetenzen_Kompetenzgruppen_FK */
@@ -40,7 +40,7 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_KO_Gruppe, Schema.tab_Kompetenzgruppen.col_KG_ID)
-		);
+	);
 
 
 	/**
@@ -53,10 +53,10 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 		setJavaSubPackage("schild.benutzer");
 		setJavaClassName("DTOKatalogBenutzerKompetenz");
 		setJavaComment("Rechte für die Benutzerverwaltung von Schild-NRW");
-        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenz.class, BenutzerKompetenz.VERSION, rev -> Arrays
-            .stream(BenutzerKompetenz.values())
-            .map(k -> k.daten.id + "," + k.daten.gruppe_id + ",'" + k.daten.bezeichnung + "'")
-            .toList()));
+		setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenz.class, BenutzerKompetenz.VERSION, rev -> Arrays
+				.stream(BenutzerKompetenz.values())
+				.map(k -> k.daten.id + "," + k.daten.gruppe_id + ",'" + k.daten.bezeichnung + "'")
+				.toList()));
 	}
 
 }

@@ -17,45 +17,45 @@ public class Tabelle_SchuelerLernplattform extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchuelerID */
 	public SchemaTabelleSpalte col_SchuelerID = add("SchuelerID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("SchülerID für den Lernplattform-Datensatz");
+			.setNotNull()
+			.setJavaComment("SchülerID für den Lernplattform-Datensatz");
 
 	/** Die Definition der Tabellenspalte LernplattformID */
 	public SchemaTabelleSpalte col_LernplattformID = add("LernplattformID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Lernplattform");
+			.setNotNull()
+			.setJavaComment("ID der Lernplattform");
 
 	/** Die Definition der Tabellenspalte CredentialID */
 	public SchemaTabelleSpalte col_CredentialID = add("CredentialID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("CredentialD für den Lernplattform-Datensatz");
+			.setJavaComment("CredentialD für den Lernplattform-Datensatz");
 
 	/** Die Definition der Tabellenspalte EinwilligungAbgefragt */
 	public SchemaTabelleSpalte col_EinwilligungAbgefragt = add("EinwilligungAbgefragt", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Einwilligung wurde abgefragt");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung wurde abgefragt");
 
 	/** Die Definition der Tabellenspalte EinwilligungNutzung */
 	public SchemaTabelleSpalte col_EinwilligungNutzung = add("EinwilligungNutzung", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Einwilligung zur Nutzung liegt vor");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung zur Nutzung liegt vor");
 
 	/** Die Definition der Tabellenspalte EinwilligungAudiokonferenz */
 	public SchemaTabelleSpalte col_EinwilligungAudiokonferenz = add("EinwilligungAudiokonferenz", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Einwilligung zur Audiokonferenz liegt vor");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung zur Audiokonferenz liegt vor");
 
 	/** Die Definition der Tabellenspalte EinwilligungVideokonferenz */
 	public SchemaTabelleSpalte col_EinwilligungVideokonferenz = add("EinwilligungVideokonferenz", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Einwilligung zur Videokonferenz liegt vor");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung zur Videokonferenz liegt vor");
 
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Schueler_FK */
@@ -64,7 +64,7 @@ public class Tabelle_SchuelerLernplattform extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_SchuelerID, Schema.tab_Schueler.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Lernplattform_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernplattform_Lernplattform_FK = addForeignKey(
@@ -72,7 +72,7 @@ public class Tabelle_SchuelerLernplattform extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LernplattformID, Schema.tab_Lernplattformen.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Credential_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernplattform_Credential_FK = addForeignKey(
@@ -80,7 +80,7 @@ public class Tabelle_SchuelerLernplattform extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_CredentialsLernplattformen.col_ID)
-		);
+	);
 
 
 	/**

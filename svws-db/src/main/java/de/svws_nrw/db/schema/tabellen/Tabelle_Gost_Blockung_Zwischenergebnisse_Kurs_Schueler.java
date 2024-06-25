@@ -17,18 +17,18 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 
 	/** Die Definition der Tabellenspalte Zwischenergebnis_ID */
 	public SchemaTabelleSpalte col_Zwischenergebnis_ID = add("Zwischenergebnis_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses");
+			.setNotNull()
+			.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses");
 
 	/** Die Definition der Tabellenspalte Blockung_Kurs_ID */
 	public SchemaTabelleSpalte col_Blockung_Kurs_ID = add("Blockung_Kurs_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Kurses");
+			.setNotNull()
+			.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Kurses");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Schülers");
+			.setNotNull()
+			.setJavaComment("Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Schülers");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_ErgID_FK */
@@ -37,7 +37,7 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zwischenergebnis_ID, Schema.tab_Gost_Blockung_Zwischenergebnisse.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK = addForeignKey(
@@ -45,7 +45,7 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_Kurs_ID, Schema.tab_Gost_Blockung_Kurse.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK = addForeignKey(
@@ -53,24 +53,24 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-		);
+	);
 
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1",
-		col_Zwischenergebnis_ID
+			col_Zwischenergebnis_ID
 	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2",
-		col_Zwischenergebnis_ID,
-		col_Blockung_Kurs_ID
+			col_Zwischenergebnis_ID,
+			col_Blockung_Kurs_ID
 	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3",
-		col_Zwischenergebnis_ID,
-		col_Schueler_ID
+			col_Zwischenergebnis_ID,
+			col_Schueler_ID
 	);
 
 	/**
@@ -82,7 +82,8 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 		setImportExport(true);
 		setJavaSubPackage("gost.kursblockung");
 		setJavaClassName("DTOGostBlockungZwischenergebnisKursSchueler");
-		setJavaComment("Tabelle für die Zuordnung von Schüler zu Kursen bei Zwischenergebnissen, welche einer Kursblockung der gymnasialen Oberstufe zugeordnet sind");
+		setJavaComment("Tabelle für die Zuordnung von Schüler zu Kursen bei Zwischenergebnissen, welche einer Kursblockung der gymnasialen Oberstufe"
+				+ " zugeordnet sind");
 	}
 
 }

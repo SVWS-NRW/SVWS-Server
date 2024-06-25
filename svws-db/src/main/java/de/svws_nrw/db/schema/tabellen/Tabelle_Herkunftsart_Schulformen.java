@@ -12,23 +12,23 @@ public class Tabelle_Herkunftsart_Schulformen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Herkunftsart_ID */
 	public SchemaTabelleSpalte col_Herkunftsart_ID = add("Herkunftsart_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("die ID der Herkunftsart");
+			.setNotNull()
+			.setJavaComment("die ID der Herkunftsart");
 
 	/** Die Definition der Tabellenspalte Schulform_Kuerzel */
 	public SchemaTabelleSpalte col_Schulform_Kuerzel = add("Schulform_Kuerzel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
-		.setNotNull()
-		.setJavaComment("das Kürzel der Schulform");
+			.setNotNull()
+			.setJavaComment("das Kürzel der Schulform");
 
 	/** Die Definition der Tabellenspalte KurzBezeichnung */
 	public SchemaTabelleSpalte col_KurzBezeichnung = add("KurzBezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Eine kurze Bezeichnung der Herkunftsart");
+			.setNotNull()
+			.setJavaComment("Eine kurze Bezeichnung der Herkunftsart");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setNotNull()
-		.setJavaComment("Die Bezeichnung der Herkunftsart");
+			.setNotNull()
+			.setJavaComment("Die Bezeichnung der Herkunftsart");
 
 
 	/**

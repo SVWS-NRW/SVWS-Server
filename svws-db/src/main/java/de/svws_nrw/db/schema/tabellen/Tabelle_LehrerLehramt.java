@@ -16,21 +16,22 @@ public class Tabelle_LehrerLehramt extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("LehrerID zu der das Lehramt gehört");
+			.setNotNull()
+			.setJavaComment("LehrerID zu der das Lehramt gehört");
 
 	/** Die Definition der Tabellenspalte LehramtKrz */
 	public SchemaTabelleSpalte col_LehramtKrz = add("LehramtKrz", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
-		.setJavaComment("Lehramtskürzel");
+			.setJavaComment("Lehramtskürzel");
 
 	/** Die Definition der Tabellenspalte LehramtAnerkennungKrz */
 	public SchemaTabelleSpalte col_LehramtAnerkennungKrz = add("LehramtAnerkennungKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setJavaComment("Lehramts-Anerkennung-Kürzel");
+			.setJavaComment("Lehramts-Anerkennung-Kürzel");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels LehrerLehramt_Lehrer_FK */
@@ -39,7 +40,7 @@ public class Tabelle_LehrerLehramt extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 
 	/**

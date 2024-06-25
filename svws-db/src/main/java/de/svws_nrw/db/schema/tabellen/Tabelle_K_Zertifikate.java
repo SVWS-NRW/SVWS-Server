@@ -12,19 +12,20 @@ public class Tabelle_K_Zertifikate extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Kuerzel */
 	public SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, true).setDatenlaenge(5)
-		.setNotNull()
-		.setJavaComment("Kürzel des Zertifikats");
+			.setNotNull()
+			.setJavaComment("Kürzel des Zertifikats");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
-		.setNotNull()
-		.setJavaComment("Bezeichnung des Zertifikats");
+			.setNotNull()
+			.setJavaComment("Bezeichnung des Zertifikats");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/**

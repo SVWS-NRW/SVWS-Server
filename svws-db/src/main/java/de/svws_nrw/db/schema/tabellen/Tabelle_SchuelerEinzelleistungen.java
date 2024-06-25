@@ -17,40 +17,41 @@ public class Tabelle_SchuelerEinzelleistungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Teilleistung");
+			.setNotNull()
+			.setJavaComment("ID der Teilleistung");
 
 	/** Die Definition der Tabellenspalte Datum */
 	public SchemaTabelleSpalte col_Datum = add("Datum", SchemaDatentypen.DATE, false)
-		.setConverter(DatumConverter.class)
-		.setJavaComment("Datum der Teilleistung");
+			.setConverter(DatumConverter.class)
+			.setJavaComment("Datum der Teilleistung");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("LehrerID der Teilleistung");
+			.setJavaComment("LehrerID der Teilleistung");
 
 	/** Die Definition der Tabellenspalte Art_ID */
 	public SchemaTabelleSpalte col_Art_ID = add("Art_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("Art der Teilleistung");
+			.setJavaComment("Art der Teilleistung");
 
 	/** Die Definition der Tabellenspalte Bemerkung */
 	public SchemaTabelleSpalte col_Bemerkung = add("Bemerkung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
-		.setJavaComment("Bemerkung zur Teilleistung");
+			.setJavaComment("Bemerkung zur Teilleistung");
 
 	/** Die Definition der Tabellenspalte Leistung_ID */
 	public SchemaTabelleSpalte col_Leistung_ID = add("Leistung_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("LeistungsdatenID der Teilleistung");
+			.setNotNull()
+			.setJavaComment("LeistungsdatenID der Teilleistung");
 
 	/** Die Definition der Tabellenspalte NotenKrz */
 	public SchemaTabelleSpalte col_NotenKrz = add("NotenKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-		.setJavaComment("Notenkürzel der Teilleistung");
+			.setJavaComment("Notenkürzel der Teilleistung");
 
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Art_FK */
@@ -59,8 +60,7 @@ public class Tabelle_SchuelerEinzelleistungen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Art_ID, Schema.tab_K_Einzelleistungen.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerEinzelleistungen_Lehrer_FK = addForeignKey(
@@ -68,8 +68,7 @@ public class Tabelle_SchuelerEinzelleistungen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Leistungsdaten_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerEinzelleistungen_Leistungsdaten_FK = addForeignKey(
@@ -77,8 +76,7 @@ public class Tabelle_SchuelerEinzelleistungen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Leistung_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 
 	/**

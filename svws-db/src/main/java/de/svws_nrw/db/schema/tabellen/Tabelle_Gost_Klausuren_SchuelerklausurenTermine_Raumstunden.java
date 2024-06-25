@@ -17,13 +17,13 @@ public class Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden extends
 
 	/** Die Definition der Tabellenspalte Schuelerklausurtermin_ID */
 	public SchemaTabelleSpalte col_Schuelerklausurtermin_ID = add("Schuelerklausurtermin_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Schuelerklausurtermins");
+			.setNotNull()
+			.setJavaComment("ID des Schuelerklausurtermins");
 
 	/** Die Definition der Tabellenspalte Raumstunde_ID */
 	public SchemaTabelleSpalte col_Raumstunde_ID = add("Raumstunde_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Klausurraumstunde");
+			.setNotNull()
+			.setJavaComment("ID der Klausurraumstunde");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_SchuelerklausurenTermine_Raumstunden_Schuelerklausurtermin_ID_FK */
@@ -32,7 +32,7 @@ public class Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden extends
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuelerklausurtermin_ID, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_SchuelerklausurenTermine_Raumstunden_KlausurRaumStunde_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden_KlausurRaumStunde_ID_FK = addForeignKey(
@@ -40,17 +40,19 @@ public class Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden extends
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Raumstunde_ID, Schema.tab_Gost_Klausuren_Raumstunden.col_ID)
-		);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_SchuelerklausurenTermine_Raumstunden_IDX_Schuelerklausur_ID */
-	public SchemaTabelleIndex index_Gost_Klausuren_SKT_Raumstunden_IDX_Schuelerklausurtermin_ID = addIndex("Gost_Klausuren_SKT_Raumstunden_IDX_Schuelerklausurtermin_ID",
-			col_Schuelerklausurtermin_ID
-		);
+	public SchemaTabelleIndex index_Gost_Klausuren_SKT_Raumstunden_IDX_Schuelerklausurtermin_ID =
+			addIndex("Gost_Klausuren_SKT_Raumstunden_IDX_Schuelerklausurtermin_ID",
+					col_Schuelerklausurtermin_ID
+			);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_SchuelerklausurenTermine_Raumstunden_IDX_KlausurRaumStunde_ID */
-	public SchemaTabelleIndex index_Gost_Klausuren_SKT_Raumstunden_IDX_KlausurRaumStunde_ID = addIndex("Gost_Klausuren_SKT_Raumstunden_IDX_KlausurRaumStunde_ID",
-			col_Raumstunde_ID
-		);
+	public SchemaTabelleIndex index_Gost_Klausuren_SKT_Raumstunden_IDX_KlausurRaumStunde_ID =
+			addIndex("Gost_Klausuren_SKT_Raumstunden_IDX_KlausurRaumStunde_ID",
+					col_Raumstunde_ID
+			);
 
 
 	/**

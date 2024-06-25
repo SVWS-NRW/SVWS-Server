@@ -17,8 +17,8 @@ public class Tabelle_KAoA_Anschlussoption_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID der Anschlussoption");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID der Anschlussoption");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_Anschlussoption_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_Anschlussoption_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAAnschlussoptionKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Anschlussoptionen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAAnschlussoption.class, KAOAAnschlussoption.VERSION, rev -> Arrays
-            .stream(KAOAAnschlussoption.values())
-            .map(a -> Arrays.stream(a.historie)
-                .map(h -> "" + h.id)
-                .toList()
-            ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOAAnschlussoption.class, KAOAAnschlussoption.VERSION, rev -> Arrays
+				.stream(KAOAAnschlussoption.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

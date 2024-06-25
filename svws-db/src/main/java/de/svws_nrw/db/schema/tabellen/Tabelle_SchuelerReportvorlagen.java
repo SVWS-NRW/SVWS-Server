@@ -16,21 +16,22 @@ public class Tabelle_SchuelerReportvorlagen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte User_ID */
 	public SchemaTabelleSpalte col_User_ID = add("User_ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("UserID des Users der die zugeordneten Reportvorlagen druckt");
+			.setNotNull()
+			.setJavaComment("UserID des Users der die zugeordneten Reportvorlagen druckt");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
-		.setVeraltet(SchemaRevisionen.REV_1)
-		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Reportvorlage */
 	public SchemaTabelleSpalte col_Reportvorlage = add("Reportvorlage", SchemaDatentypen.VARCHAR, true).setDatenlaenge(255)
-		.setJavaComment("Pfad zur Reportvorlage");
+			.setJavaComment("Pfad zur Reportvorlage");
 
 	/** Die Definition der Tabellenspalte Schueler_IDs */
 	public SchemaTabelleSpalte col_Schueler_IDs = add("Schueler_IDs", SchemaDatentypen.TEXT, false)
-		.setJavaComment("SchülerID für die gedruckt werden soll (temporär)");
+			.setJavaComment("SchülerID für die gedruckt werden soll (temporär)");
 
 
 	/** Die Definition des Fremdschlüssels SchuelerReportvorlagen_Benutzer_FK */
@@ -39,8 +40,7 @@ public class Tabelle_SchuelerReportvorlagen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_User_ID, Schema.tab_Benutzer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+	).setRevision(SchemaRevisionen.REV_2);
 
 
 	/**
@@ -52,7 +52,8 @@ public class Tabelle_SchuelerReportvorlagen extends SchemaTabelle {
 		setImportExport(true);
 		setJavaSubPackage("schild");
 		setJavaClassName("DTOSchuelerReportvorlagen");
-		setJavaComment("Wird im Gruppenprozess \"Zugeordnete Zeugnisformulare drucken\" verwendet. Die Tabelle wird temporär mit den IDs der Schüler gefüllt, die im Gruppenprozess berücksichtigt werden müssen.");
+		setJavaComment("Wird im Gruppenprozess \"Zugeordnete Zeugnisformulare drucken\" verwendet. Die Tabelle wird temporär mit den IDs der Schüler gefüllt,"
+				+ " die im Gruppenprozess berücksichtigt werden müssen.");
 	}
 
 }

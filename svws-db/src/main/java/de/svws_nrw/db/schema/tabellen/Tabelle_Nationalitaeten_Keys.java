@@ -12,8 +12,8 @@ public class Tabelle_Nationalitaeten_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DEStatisCode */
 	public SchemaTabelleSpalte col_DEStatisCode = add("DEStatisCode", SchemaDatentypen.VARCHAR, true).setDatenlaenge(3)
-		.setNotNull()
-		.setJavaComment("Der dreistellige Länder-Code des statistischen Bundesamtes (DESTATIS)");
+			.setNotNull()
+			.setJavaComment("Der dreistellige Länder-Code des statistischen Bundesamtes (DESTATIS)");
 
 
 	/**

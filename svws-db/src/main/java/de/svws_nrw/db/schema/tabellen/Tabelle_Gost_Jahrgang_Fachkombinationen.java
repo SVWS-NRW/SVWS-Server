@@ -19,32 +19,32 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Datensatzes");
+			.setNotNull()
+			.setJavaComment("ID des Datensatzes");
 
 	/** Die Definition der Tabellenspalte Abi_Jahrgang */
 	public SchemaTabelleSpalte col_Abi_Jahrgang = add("Abi_Jahrgang", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setDefault("-1")
-		.setJavaComment("Schuljahr, in welchem der Jahrgang das Abitur macht");
+			.setNotNull()
+			.setDefault("-1")
+			.setJavaComment("Schuljahr, in welchem der Jahrgang das Abitur macht");
 
 	/** Die Definition der Tabellenspalte Fach1_ID */
 	public SchemaTabelleSpalte col_Fach1_ID = add("Fach1_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Die ID des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
+			.setNotNull()
+			.setJavaComment("Die ID des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Fach2_ID */
 	public SchemaTabelleSpalte col_Fach2_ID = add("Fach2_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Die ID des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
+			.setNotNull()
+			.setJavaComment("Die ID des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Kursart1 */
 	public SchemaTabelleSpalte col_Kursart1 = add("Kursart1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setJavaComment("Die Kursart des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
+			.setJavaComment("Die Kursart des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Kursart2 */
 	public SchemaTabelleSpalte col_Kursart2 = add("Kursart2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setJavaComment("Die Kursart des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
+			.setJavaComment("Die Kursart des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte EF1 */
 	public SchemaTabelleSpalte col_EF1 = add("EF1", SchemaDatentypen.INT, false)
@@ -91,10 +91,10 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
-		.setConverter(GostLaufbahnplanungFachkombinationTypConverter.class)
-		.setDefault("0")
-		.setNotNull()
-		.setJavaComment("Gibt an, ob es sich um eine nicht mögliche Fächerkombination (0) oder ein Fächerprofil handelt (1)");
+			.setConverter(GostLaufbahnplanungFachkombinationTypConverter.class)
+			.setDefault("0")
+			.setNotNull()
+			.setJavaComment("Gibt an, ob es sich um eine nicht mögliche Fächerkombination (0) oder ein Fächerprofil handelt (1)");
 
 	/** Ein Kurzer Hinweistext zu der Fachkombination */
 	public SchemaTabelleSpalte col_Hinweistext = add("Hinweistext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
@@ -109,7 +109,7 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK = addForeignKey(
@@ -117,7 +117,7 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach1_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK = addForeignKey(
@@ -125,12 +125,12 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach2_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
-		);
+	);
 
 
 	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang",
-		col_Abi_Jahrgang
+			col_Abi_Jahrgang
 	);
 
 

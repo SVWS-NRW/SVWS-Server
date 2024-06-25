@@ -17,8 +17,8 @@ public class Tabelle_KAoA_SBO_Ebene4_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("Die eindeutige ID des Merkmals der SBO-Ebene 4");
+			.setNotNull()
+			.setJavaComment("Die eindeutige ID des Merkmals der SBO-Ebene 4");
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle KAoA_SBO_Ebene4_Keys.
@@ -30,12 +30,12 @@ public class Tabelle_KAoA_SBO_Ebene4_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoASBOEB4Keys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Merkmalen der SBO-Ebene 4");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAEbene4.class, KAOAEbene4.VERSION, rev -> Arrays
-                .stream(KAOAEbene4.values())
-                .map(a -> Arrays.stream(a.historie)
-                    .map(h -> "" + h.id)
-                    .toList()
-                ).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOAEbene4.class, KAOAEbene4.VERSION, rev -> Arrays
+				.stream(KAOAEbene4.values())
+				.map(a -> Arrays.stream(a.historie)
+						.map(h -> "" + h.id)
+						.toList()
+				).flatMap(Collection::stream).toList()));
 	}
 
 }

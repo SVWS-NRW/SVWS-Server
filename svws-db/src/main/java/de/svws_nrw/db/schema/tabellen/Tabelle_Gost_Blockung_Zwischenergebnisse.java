@@ -18,20 +18,20 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Zwischenergebnisses einer Blockung (generiert)");
+			.setNotNull()
+			.setJavaComment("ID der Zwischenergebnisses einer Blockung (generiert)");
 
 	/** Die Definition der Tabellenspalte Blockung_ID */
 	public SchemaTabelleSpalte col_Blockung_ID = add("Blockung_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID der Blockung");
+			.setNotNull()
+			.setJavaComment("ID der Blockung");
 
 	/** Die Definition der Tabellenspalte IstAktiv */
 	public SchemaTabelleSpalte col_IstAktiv = add("IstAktiv", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob das Zwischenergebnis als aktives Zwischenergebnis einer Blockung markiert wurde oder nicht: 1 - true, 0 - false ");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob das Zwischenergebnis als aktives Zwischenergebnis einer Blockung markiert wurde oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Blockung_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Blockung_FK = addForeignKey(
@@ -39,12 +39,12 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_ID, Schema.tab_Gost_Blockung.col_ID)
-		);
+	);
 
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_IDX_Blockung_ID */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_IDX_Blockung_ID = addIndex("Gost_Blockung_Zwischenergebnisse_IDX_Blockung_ID",
-		col_Blockung_ID
+			col_Blockung_ID
 	);
 
 

@@ -18,21 +18,21 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Klausurraums (generiert)");
+			.setNotNull()
+			.setJavaComment("ID des Klausurraums (generiert)");
 
 	/** Die Definition der Tabellenspalte Termin_ID */
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID des Termins");
+			.setNotNull()
+			.setJavaComment("ID des Termins");
 
 	/** Die Definition der Tabellenspalte Stundenplan_Raum_ID */
 	public SchemaTabelleSpalte col_Stundenplan_Raum_ID = add("Stundenplan_Raum_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("ID des Raums aus der Tabelle Stundenplan_Raeume");
+			.setJavaComment("ID des Raums aus der Tabelle Stundenplan_Raeume");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Text für Bemerkungen zum Klausurraum");
+			.setJavaComment("Text für Bemerkungen zum Klausurraum");
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Stundenplan_Raume_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Stundenplan_Raume_ID_FK = addForeignKey(
@@ -40,7 +40,7 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Stundenplan_Raum_ID, Schema.tab_Stundenplan_Raeume.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Termin_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Termin_ID_FK = addForeignKey(
@@ -48,17 +48,17 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
-		);
+	);
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Raume_UC1 */
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raume_UC1 = addUniqueIndex("Gost_Klausuren_Raume_UC1",
 			col_Termin_ID, col_Stundenplan_Raum_ID
-		);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Raume_IDX_Termin_ID */
 	public SchemaTabelleIndex index_Gost_Klausuren_Raume_IDX_Termin_ID = addIndex("Gost_Klausuren_Raume_IDX_Termin_ID",
 			col_Termin_ID
-		);
+	);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Klausuren_Raeume.

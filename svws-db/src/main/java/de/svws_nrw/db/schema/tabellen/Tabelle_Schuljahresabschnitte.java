@@ -16,26 +16,26 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID des Schuljahresabschnittes");
+			.setNotNull()
+			.setJavaComment("ID des Schuljahresabschnittes");
 
 	/** Die Definition der Tabellenspalte Jahr */
 	public SchemaTabelleSpalte col_Jahr = add("Jahr", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setJavaComment("Schuljahr des Schuljahresabschnitts (z.B. 2012 für 2012/13)");
+			.setNotNull()
+			.setJavaComment("Schuljahr des Schuljahresabschnitts (z.B. 2012 für 2012/13)");
 
 	/** Die Definition der Tabellenspalte Abschnitt */
 	public SchemaTabelleSpalte col_Abschnitt = add("Abschnitt", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setJavaComment("Abschnitt des Schuljahresabschnitts");
+			.setNotNull()
+			.setJavaComment("Abschnitt des Schuljahresabschnitts");
 
 	/** Die Definition der Tabellenspalte VorigerAbschnitt_ID */
 	public SchemaTabelleSpalte col_VorigerAbschnitt_ID = add("VorigerAbschnitt_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("ID des vorigen Schuljahresabschnitts");
+			.setJavaComment("ID des vorigen Schuljahresabschnitts");
 
 	/** Die Definition der Tabellenspalte FolgeAbschnitt_ID */
 	public SchemaTabelleSpalte col_FolgeAbschnitt_ID = add("FolgeAbschnitt_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("ID des nachfolgenden Schuljahresabschnitts");
+			.setJavaComment("ID des nachfolgenden Schuljahresabschnitts");
 
 
 	/** Trigger t_INSERT_EIGENESCHULE_ABSCHNITTE */
@@ -369,8 +369,8 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 
 	/** Die Definition des Non-Unique-Index Schuljahresabschnitte_IDX_Jahr_Abschnitt */
 	public SchemaTabelleIndex index_Schuljahresabschnitte_IDX_Jahr_Abschnitt = addIndex("Schuljahresabschnitte_IDX_Jahr_Abschnitt",
-		col_Jahr,
-		col_Abschnitt
+			col_Jahr,
+			col_Abschnitt
 	).setRevision(SchemaRevisionen.REV_12);
 
 

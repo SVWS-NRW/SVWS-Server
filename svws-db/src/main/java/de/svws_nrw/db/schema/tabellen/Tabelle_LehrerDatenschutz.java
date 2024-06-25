@@ -17,27 +17,27 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte LehrerID */
 	public SchemaTabelleSpalte col_LehrerID = add("LehrerID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("LehrerID des Datenschutzeintrags");
+			.setNotNull()
+			.setJavaComment("LehrerID des Datenschutzeintrags");
 
 	/** Die Definition der Tabellenspalte DatenschutzID */
 	public SchemaTabelleSpalte col_DatenschutzID = add("DatenschutzID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("DatenschutzID des Eintrags");
+			.setNotNull()
+			.setJavaComment("DatenschutzID des Eintrags");
 
 	/** Die Definition der Tabellenspalte Status */
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
 
 	/** Die Definition der Tabellenspalte Abgefragt */
 	public SchemaTabelleSpalte col_Abgefragt = add("Abgefragt", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Status der Abfrage Datenschutz-Eintrags (true/false)");
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Status der Abfrage Datenschutz-Eintrags (true/false)");
 
 
 	/** Die Definition des Fremdschlüssels LehrerDatenschutz_Lehrer_FK */
@@ -46,7 +46,7 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LehrerID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels LehrerDatenschutz_Datenschutz_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerDatenschutz_Datenschutz_FK = addForeignKey(
@@ -54,7 +54,7 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_DatenschutzID, Schema.tab_K_Datenschutz.col_ID)
-		);
+	);
 
 
 	/**

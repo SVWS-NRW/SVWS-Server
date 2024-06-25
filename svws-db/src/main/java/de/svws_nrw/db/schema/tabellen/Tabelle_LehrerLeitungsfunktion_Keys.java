@@ -12,8 +12,8 @@ public class Tabelle_LehrerLeitungsfunktion_Keys extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Leitungsfunktion");
+			.setNotNull()
+			.setJavaComment("ID der Leitungsfunktion");
 
 
 	/**

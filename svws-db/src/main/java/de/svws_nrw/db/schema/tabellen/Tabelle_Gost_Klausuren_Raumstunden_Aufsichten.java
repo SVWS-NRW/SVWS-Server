@@ -17,31 +17,31 @@ public class Tabelle_Gost_Klausuren_Raumstunden_Aufsichten extends SchemaTabelle
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
-		.setNotNull()
-		.setJavaComment("ID der Klausuraufsicht (generiert)");
+			.setNotNull()
+			.setJavaComment("ID der Klausuraufsicht (generiert)");
 
 	/** Die Definition der Tabellenspalte Raumstunde_ID */
 	public SchemaTabelleSpalte col_Raumstunde_ID = add("Raumstunde_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("ID der Klausur-Raumstunde");
+			.setNotNull()
+			.setJavaComment("ID der Klausur-Raumstunde");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("ID des Lehrers");
+			.setJavaComment("ID des Lehrers");
 
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
-		.setConverter(UhrzeitConverter.class)
-		.setJavaComment("Die Startzeit der Aufsicht");
+			.setConverter(UhrzeitConverter.class)
+			.setJavaComment("Die Startzeit der Aufsicht");
 
 	/** Die Definition der Tabellenspalte Endzeit */
 	public SchemaTabelleSpalte col_Endzeit = add("Endzeit", SchemaDatentypen.TIME, false)
-		.setConverter(UhrzeitConverter.class)
-		.setJavaComment("Die Endzeit der Aufsicht");
+			.setConverter(UhrzeitConverter.class)
+			.setJavaComment("Die Endzeit der Aufsicht");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Text für Bemerkungen zur Aufsicht");
+			.setJavaComment("Text für Bemerkungen zur Aufsicht");
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raumstunden_Aufsichten_KlausurRaumStunde_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raumstunden_Aufsichten_KlausurRaumStunde_ID_FK = addForeignKey(
@@ -49,7 +49,7 @@ public class Tabelle_Gost_Klausuren_Raumstunden_Aufsichten extends SchemaTabelle
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Raumstunde_ID, Schema.tab_Gost_Klausuren_Raumstunden.col_ID)
-		);
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raumstunden_Aufsichten_Lehrer_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raumstunden_Aufsichten_Lehrer_ID_FK = addForeignKey(
@@ -57,7 +57,7 @@ public class Tabelle_Gost_Klausuren_Raumstunden_Aufsichten extends SchemaTabelle
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		);
+	);
 
 
 	/**
