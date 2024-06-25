@@ -4,18 +4,24 @@
 			<svws-ui-table :items="[]" :no-data="false" has-background>
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
-						<div class="svws-ui-td svws-divider svws-align-center" role="columnheader" />
-						<div v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="svws-ui-td cursor-pointer svws-divider svws-align-center" role="columnheader" @click="selected = wochentag" :class="{ 'svws-selected bg-red-200': toRaw(selected) === wochentag }">
+						<div class="svws-ui-td svws-divider svws-align-center col-span-1" role="columnheader" />
+						<div v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="svws-ui-td cursor-pointer svws-divider svws-align-center" role="columnheader"
+							@click="selected = selected?.wochentag?.id === wochentag.id ? { wochentag: undefined } : { wochentag }"
+							:class="{ 'svws-selected bg-success/20': selected?.wochentag?.id === wochentag.id, [`col-span-${stundenplanManager().getWochenTypModell()+1}`]: true }">
 							{{ wochentag.kuerzel }}
 						</div>
 					</div>
 					<div role="row" class="svws-ui-tr select-none">
-						<div class="svws-ui-td svws-divider svws-align-center" :class="[`col-span-${stundenplanManager().getWochenTypModell()+1}`]" role="columnheader" />
+						<div class="svws-ui-td svws-divider svws-align-center" role="columnheader" />
 						<template v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id">
-							<div class="svws-ui-td cursor-pointer svws-align-center svws-divider" role="columnheader" @click="selected = 0" :class="{ 'svws-selected': toRaw(selected) === 0, }">
+							<div class="svws-ui-td cursor-pointer svws-align-center svws-divider" role="columnheader"
+								@click="selected = (selected?.wochentag?.id === wochentag.id) && (selected?.wochentyp === 0) ? { wochentag, wochentyp: undefined } : { wochentag, wochentyp: 0 }"
+								:class="{ 'svws-selected bg-success/20': (selected?.wochentag?.id === wochentag.id && (selected.wochentyp === 0 || selected.wochentyp === undefined)) || ((selected?.wochentag?.id === wochentag.id) && (selected.wochentyp === 0)), }">
 								{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(0) }}
 							</div>
-							<div v-for="wochentyp in stundenplanManager().getWochenTypModell()" :key="wochentyp" class="svws-ui-td cursor-pointer svws-align-center svws-divider" role="columnheader">
+							<div v-for="wochentyp in stundenplanManager().getWochenTypModell()" :key="wochentyp" class="svws-ui-td cursor-pointer svws-align-center svws-divider" role="columnheader"
+								@click="selected = (selected?.wochentag?.id === wochentag.id) && (selected?.wochentyp === wochentyp) ? { wochentag, wochentyp: undefined } : { wochentag, wochentyp }"
+								:class="{ 'svws-selected bg-success/20': (selected?.wochentag?.id === wochentag.id && (selected.wochentyp === wochentyp || selected.wochentyp === undefined)) || ((selected?.wochentag?.id === wochentag.id) && (selected.wochentyp === wochentyp)), }">
 								{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(wochentyp) }}
 							</div>
 						</template>
@@ -23,14 +29,18 @@
 				</template>
 				<template #body>
 					<div v-for="stunde in stundenplanManager().zeitrasterGetStundenRange()" :key="stunde" role="row" class="svws-ui-tr select-none cursor-pointer">
-						<div class="svws-ui-td select-none svws-align-center svws-divider svws-selectable" role="cell" @click="selected = stunde" :class="{ 'svws-selected bg-red-200': toRaw(selected) === stunde, }">
+						<div class="svws-ui-td select-none svws-align-center svws-divider svws-selectable" role="cell"
+							@click="selected = (selected?.stunde === stunde) ? { stunde: undefined }:{ stunde }"
+							:class="{ 'svws-selected bg-success/20': (selected?.stunde === stunde) }">
 							{{ stunde }}
 						</div>
-						<div v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="svws-ui-td select-none svws-align-center svws-selectable" role="cell" @click="selected = stunde" :class="{ 'svws-selected': selected === stunde, }">
-							<div v-for="wochentyp, i in stundenplanManager().getWochenTypModell()+1" :key="wochentyp" class="cursor-pointer svws-align-center svws-divider">
-								{{ stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, i).size() }}
+						<template v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id">
+							<div v-for="wochentyp, i in stundenplanManager().getWochenTypModell()+1" :key="wochentyp" class="svws-ui-td select-none svws-align-center svws-selectable svws-divider" role="cell"
+								@click="selected = (selected?.zeitraster?.id === stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde).id && selected.wochentyp === wochentyp) ? { zeitraster: undefined, wochentyp: undefined } : { zeitraster: stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), wochentyp}"
+								:class="{ 'svws-selected bg-success/20': (selected?.stunde === stunde) || (selected?.wochentag?.id === wochentag.id && (selected.wochentyp === wochentyp-1 || selected.wochentyp === undefined)) || (selected?.zeitraster?.id === stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde).id && selected.wochentyp === wochentyp), }">
+								{{ stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, i).size() || '' }}
 							</div>
-						</div>
+						</template>
 					</div>
 				</template>
 			</svws-ui-table>
@@ -44,7 +54,7 @@
 					{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}
 				</template>
 				<template #cell(idKurs)="{ rowData }">
-					{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}
+					<div class="svws-ui-badge" :style="{'--background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
 				<template #cell(lehrer)="{ value }">
 					<svws-ui-multi-select :model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
@@ -65,19 +75,20 @@
 
 <script setup lang="ts">
 
-	import { ref, effect, toRaw, computed } from "vue";
-	import type { List, StundenplanKlasse, StundenplanLehrer, StundenplanRaum, StundenplanSchiene, StundenplanUnterricht} from "@core";
-	import { ArrayList, Wochentag } from "@core";
+	import { ref, computed } from "vue";
+	import type { List, StundenplanKlasse, StundenplanLehrer, StundenplanRaum, StundenplanSchiene, StundenplanUnterricht, StundenplanZeitraster, Wochentag} from "@core";
+	import { ArrayList, ZulaessigesFach } from "@core";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
+
+	type Selected = { wochentag?: Wochentag, stunde?: number, wochentyp?: number, zeitraster?: StundenplanZeitraster };
 
 	const props = defineProps<StundenplanUnterrichteProps>();
 
-	const selected = ref<number | Wochentag>();
+	const selected = ref<Selected>();
 	const wochentage = [null, 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
-	const columns = [{key: 'idZeitraster', label: 'Stunde'}, {key: 'idKurs', label: 'Kurs oder Fach'}, {key: 'lehrer', label: 'Lehrer'}, {key: 'klassen', label: 'Klassen'}, {key: 'raeume', label: 'Räume'}, {key: 'schienen', label: 'Schienen'}];
-
-	effect(() => console.log(selected.value))
+	const columns = [{key: 'idZeitraster', label: 'Stunde'}, {key: 'wochentyp', label: 'Wochentyp'}, {key: 'idKurs', label: 'Kurs oder Fach'}, {key: 'lehrer', label: 'Lehrer'}, {key: 'klassen', label: 'Klassen'}, {key: 'raeume', label: 'Räume'}, {key: 'schienen', label: 'Schienen'}];
+	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
 
 	function modelValueLehrer(list: List<number>) {
 		const res: StundenplanLehrer[] = [];
@@ -126,14 +137,19 @@
 
 	const items = computed(() => {
 		const list: List<StundenplanUnterricht> = new ArrayList();
-		if (selected.value instanceof Wochentag)
+		if (selected.value?.zeitraster !== undefined && selected.value.wochentyp !== undefined)
+			list.addAll(props.stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.value.zeitraster.id, selected.value.wochentyp-1));
+		else if (selected.value?.wochentag !== undefined)
 			for (const stunde of props.stundenplanManager().zeitrasterGetStundenRange())
-				for (const wochentyp of wochentyprange.value)
-					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value, stunde, wochentyp));
-		else if (typeof selected.value === 'number')
+				if (selected.value.wochentyp === undefined)
+					for (const wochentyp of wochentyprange.value)
+						list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, wochentyp));
+				else
+					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, selected.value.wochentyp));
+		else if (selected.value?.stunde !== undefined)
 			for (const wochentag of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange())
 				for (const wochentyp of wochentyprange.value)
-					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, selected.value, wochentyp));
+					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, selected.value.stunde, wochentyp));
 		return list;
 	})
 
