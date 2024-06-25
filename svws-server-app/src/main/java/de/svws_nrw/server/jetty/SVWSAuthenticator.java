@@ -1,29 +1,27 @@
 package de.svws_nrw.server.jetty;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.security.AuthenticationState;
+import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ServerAuthException;
-import org.eclipse.jetty.security.UserAuthentication;
+import org.eclipse.jetty.security.UserIdentity;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.LoginAuthenticator;
-import org.eclipse.jetty.server.Authentication;
-import org.eclipse.jetty.server.Authentication.User;
-import org.eclipse.jetty.server.UserIdentity;
-import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
+import org.eclipse.jetty.util.Callback;
 
 import de.svws_nrw.api.RestAppAdminClient;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Implementiert eine Variante des {@link BasicAuthenticator} für den
@@ -36,32 +34,31 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 	 * Erstellt den LoginAuthenticator für den SVWS-Server.
 	 */
 	public SVWSAuthenticator() {
+		super();
 	}
 
 	@Override
-	public String getAuthMethod() {
-		return Constraint.__BASIC_AUTH;
+	public String getAuthenticationType() {
+		return Authenticator.BASIC_AUTH;
 	}
 
 	@Override
-	public Authentication validateRequest(final ServletRequest req, final ServletResponse res, final boolean mandatory) throws ServerAuthException {
-		final HttpServletRequest request = (HttpServletRequest) req;
-		final HttpServletResponse response = (HttpServletResponse) res;
+	public AuthenticationState validateRequest(final Request req, final Response res, final Callback callback) throws ServerAuthException {
 		// Prüfe, ob der Port zu dem Zugriffsbereich passt, falls in der SVWS-Konfiguration mehrere Ports verwendet werden
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		if (config.hatPortHTTPPrivilegedAccess()) {
-			final String pathInfo = request.getPathInfo();
+			final String pathInfo = Request.getPathInContext(req);
 			final boolean isCommonAccess = RestAppDebug.checkIsInPathSpecification(pathInfo)
 					|| RestAppServer.checkIsInPathSpecificationCommon(pathInfo);
 			final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
 					|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
-			if (!isCommonAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
+			if (!isCommonAccess && needsPriviledgedAccess && (Request.getServerPort(req) != config.getPortHTTPPrivilegedAccess()))
 				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
-			if (!isCommonAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
+			if (!isCommonAccess && !needsPriviledgedAccess && (Request.getServerPort(req) == config.getPortHTTPPrivilegedAccess()))
 				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
 		}
 		// Prüfe die Anmeldenamen...
-		final String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
+		final String auth = req.getHeaders().get(HttpHeader.AUTHORIZATION);
 		String username = "";
 		String password = "";
 		String usernameISO_8859_1 = "";
@@ -88,54 +85,42 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 		Options-Requests und Header werde hier in dieser Klasse gesetzt. In Hinblick auf eine lose Kopplung ist die folgende Implementierung
 		keine gute Lösung. Eine Alternativlösung muss diskutiert werden.
 		*/
-		if ("OPTIONS".equals(request.getMethod()) && request.getRequestURI().contains("/dav")) {
-			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, PROPFIND, REPORT");
-			response.setHeader("DAV", "addressbook, calendar-access");
+		if ("OPTIONS".equals(req.getMethod()) && req.getHttpURI().getPath().contains("/dav")) {
+			res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, PROPFIND, REPORT");
+			res.getHeaders().add("DAV", "addressbook, calendar-access");
 		}
 		//Workaround Ende
 
-		if (((username == null) || (username.isBlank())) && (RestAppSchemaRoot.checkIsInPathSpecification(request.getPathInfo()))) {
+		if (((username == null) || (username.isBlank())) && (RestAppSchemaRoot.checkIsInPathSpecification(Request.getPathInContext(req)))) {
 			// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
 		} else {
 			try {
-				UserIdentity user = login(username, password, request);
+				UserIdentity user = login(username, password, req, res);
 				if (user != null)
-					return new UserAuthentication(getAuthMethod(), user);
-				user = login(usernameISO_8859_1, passwordISO_8859_1, request);
+					return new UserAuthenticationSucceeded(getAuthenticationType(), user);
+				user = login(usernameISO_8859_1, passwordISO_8859_1, req, res);
 				if (user != null)
-					return new UserAuthentication(getAuthMethod(), user);
+					return new UserAuthenticationSucceeded(getAuthenticationType(), user);
 			} catch (final WebApplicationException wae) {
-				try (var r = wae.getResponse(); var writer = response.getWriter()) {
-					response.setStatus(r.getStatus());
-					writer.print(r.getEntity());
-					return Authentication.SEND_FAILURE;
-				} catch (final IOException e) {
-					throw new ServerAuthException(e);
+				try (var r = wae.getResponse()) {
+					res.setStatus(r.getStatus());
+					res.write(true, ByteBuffer.wrap(r.getEntity().toString().getBytes()), callback);
+					return AuthenticationState.SEND_FAILURE;
 				}
 			}
 		}
-		try {
-			response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
-			final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
-			final String origin = request.getHeader("Origin");
-			response.setHeader("Vary", "Origin");
-			response.setHeader("Access-Control-Allow-Origin", ((origin == null) || ("".equals(origin))) ? "*" : origin);
-			response.setHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
-			response.setHeader("Access-Control-Allow-Credentials", "true");
-			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
-			response.setIntHeader("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
-			// An OPTIONS-Http-Request must be OK for CORS-Preflight-Requests
-			response.sendError("OPTIONS".equals(request.getMethod()) ? HttpServletResponse.SC_OK : HttpServletResponse.SC_UNAUTHORIZED);
-			return Authentication.SEND_CONTINUE;
-		} catch (final IOException e) {
-			throw new ServerAuthException(e);
-		}
-	}
-
-	@Override
-	public boolean secureResponse(final ServletRequest req, final ServletResponse res, final boolean mandatory, final User validatedUser)
-			throws ServerAuthException {
-		return true;
+		res.getHeaders().add(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
+		final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
+		final String origin = req.getHeaders().get("Origin");
+		res.getHeaders().add("Vary", "Origin");
+		res.getHeaders().add("Access-Control-Allow-Origin", ((origin == null) || ("".equals(origin))) ? "*" : origin);
+		res.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+		res.getHeaders().add("Access-Control-Allow-Credentials", "true");
+		res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
+		res.getHeaders().add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
+		// An OPTIONS-Http-Request must be OK for CORS-Preflight-Requests
+		Response.writeError(req, res, callback, "OPTIONS".equals(req.getMethod()) ? Status.OK.getStatusCode() : Status.UNAUTHORIZED.getStatusCode());
+		return AuthenticationState.SEND_SUCCESS;
 	}
 
 }

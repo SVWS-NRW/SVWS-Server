@@ -3,7 +3,6 @@ package de.svws_nrw.data.benutzer;
 import java.io.Serializable;
 import java.security.Principal;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.db.Benutzer;
@@ -82,14 +81,13 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 	 *
 	 * @param username   der Benutzername
 	 * @param password   das Kennwort
-	 * @param request    der HTTP-Request
+	 * @param path       der Pfad aus dem HTTP-Request
 	 *
 	 * @return der Benutzerprincipal, falls der Login gültig ist, sonst null
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static BenutzerApiPrincipal login(final String username, final String password, final HttpServletRequest request) throws ApiOperationException {
-		final String path = request.getPathInfo();
+	public static BenutzerApiPrincipal login(final String username, final String password, final String path) throws ApiOperationException {
 		if (path == null)
 			return null;
 

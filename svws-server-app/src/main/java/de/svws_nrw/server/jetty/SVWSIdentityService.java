@@ -5,10 +5,7 @@ import java.security.Principal;
 import javax.security.auth.Subject;
 
 import org.eclipse.jetty.security.IdentityService;
-import org.eclipse.jetty.security.RoleRunAsToken;
-import org.eclipse.jetty.security.RunAsToken;
-import org.eclipse.jetty.server.UserIdentity;
-
+import org.eclipse.jetty.security.UserIdentity;
 import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 
 
@@ -20,36 +17,27 @@ import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 public final class SVWSIdentityService implements IdentityService {
 
 	@Override
-	public Object associate(final UserIdentity user) {
+	public Association associate(final UserIdentity user, final RunAsToken runAsToken) {
 		return null;
 	}
 
 	@Override
-	public void disassociate(final Object previous) {
-		//
+	public void onLogout(final UserIdentity user) {
+		// nichts zu tun
 	}
-
-	@Override
-	public Object setRunAs(final UserIdentity user, final RunAsToken token) {
-		return token;
-	}
-
-	@Override
-	public void unsetRunAs(final Object token) {
-		//
-	}
-
 
 	@Override
 	public UserIdentity newUserIdentity(final Subject subject, final Principal userPrincipal, final String[] roles) {
 		if (userPrincipal instanceof BenutzerApiPrincipal)
-			return new SVWSUserIdentity(subject, userPrincipal);
-		return UserIdentity.UNAUTHENTICATED_IDENTITY;
+			return UserIdentity.from(subject, userPrincipal, roles);
+		return null;
 	}
 
 	@Override
 	public RunAsToken newRunAsToken(final String runAsName) {
-		return new RoleRunAsToken(runAsName);
+		return new RunAsToken() {
+			/* empty */
+		};
 	}
 
 	@Override

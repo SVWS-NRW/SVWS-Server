@@ -6,10 +6,15 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletMapping;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.http2.HTTP2Cipher;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
-import org.eclipse.jetty.security.ConstraintMapping;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.Constraint;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.AbstractConnectionFactory;
 import org.eclipse.jetty.server.CustomRequestLog;
@@ -22,13 +27,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlet.ServletMapping;
-import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
@@ -67,7 +65,7 @@ public final class SvwsServer {
 	private final ServletContextHandler context_handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
 	/** Die Menge der Handler, welche dem Security Context - Handler des Jetty-Server zugeordnet sind */
-	private final HandlerCollection handlerCollection = new HandlerCollection();
+	private final Handler.Sequence handlerCollection = new Handler.Sequence();
 
 	/** Die Menge der Context-Handler, welche zu den Handlern gehören */
 	private final ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
@@ -101,7 +99,6 @@ public final class SvwsServer {
 
 		// Initialisieren den ServletContextHandler für die Unterstützung mehrerer Servlets
 		context_handler.setContextPath("/");
-		context_handler.setResourceBase(System.getProperty("java.io.tmpdir"));
 		contextHandlerCollection.addHandler(context_handler);
 
 		// Ordne die Context-Handler den allgemeinen Handlern zu
@@ -111,7 +108,7 @@ public final class SvwsServer {
 		server.setHandler(createConstraintSecurityHandler(server, loginService, handlerCollection));
 
 		// Konfiguriere das Logging für API-Zugriffe
-		addLoggingHandler(handlerCollection);
+		addLoggingHandler();
 
 		// Konfiguriere und ergänze die HTTP-Verbindungen, auf welchen der Server lauscht
 		addHTTPServerConnections();
@@ -157,10 +154,7 @@ public final class SvwsServer {
 
 
 	private static ConstraintMapping getSecurityConstraintMapping() {
-		final Constraint constraint = new Constraint();
-		constraint.setName("auth");
-		constraint.setAuthenticate(true);
-		constraint.setRoles(new String[] { "user", "admin" });
+		final Constraint constraint = Constraint.from("auth", Constraint.Authorization.SPECIFIC_ROLE, "user", "admin");
 		final ConstraintMapping mapping = new ConstraintMapping();
 		mapping.setPathSpec("/*");
 		mapping.setMethodOmissions(new String[] { HttpMethod.OPTIONS });
@@ -170,7 +164,7 @@ public final class SvwsServer {
 
 
 	private static ConstraintSecurityHandler createConstraintSecurityHandler(final Server server, final LoginService loginService,
-			final HandlerCollection handlerCollection) {
+			final Handler.Sequence handlerCollection) {
 		final ConstraintSecurityHandler security = new ConstraintSecurityHandler();
 		security.addConstraintMapping(getSecurityConstraintMapping());
 		security.setAuthenticator(new SVWSAuthenticator());
@@ -183,10 +177,8 @@ public final class SvwsServer {
 
 	/**
 	 * Fügt einen Logging-Handler für die API-Anfragen hinzu
-	 *
-	 * @param handlerCollection   die Handler-Collection, wo der Logging Handler hinzugefügt werden soll
 	 */
-	private static void addLoggingHandler(final HandlerCollection handlerCollection) {
+	private void addLoggingHandler() {
 		// logging
 		if (SVWSKonfiguration.get().isLoggingEnabled()) {
 			final String logPath = SVWSKonfiguration.get().getLoggingPath();
@@ -201,9 +193,8 @@ public final class SvwsServer {
 			logWriter.setAppend(true);
 			logWriter.setTimeZone("GMT");
 			final CustomRequestLog requestLog = new CustomRequestLog(logWriter, CustomRequestLog.EXTENDED_NCSA_FORMAT);
-			final RequestLogHandler requestLogHandler = new RequestLogHandler();
-			requestLogHandler.setRequestLog(requestLog);
-			handlerCollection.addHandler(requestLogHandler);
+			server.setRequestLog(requestLog);
+			server.setTempDirectory(System.getProperty("java.io.tmpdir"));
 		}
 	}
 

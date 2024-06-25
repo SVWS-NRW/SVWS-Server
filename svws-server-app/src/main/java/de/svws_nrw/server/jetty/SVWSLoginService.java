@@ -1,13 +1,16 @@
 package de.svws_nrw.server.jetty;
 
+import java.util.function.Function;
+
 import javax.security.auth.Subject;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.WebApplicationException;
 
+import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.server.UserIdentity;
+import org.eclipse.jetty.security.UserIdentity;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Session;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.security.Password;
 
@@ -19,8 +22,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 /**
  * Diese Klasse implementiert den {@link LoginService} des Jetty-Services und stellt
  * die wesentlichen Teile des Authentifizierungs-Prozesses im SVWS-Server zur Verfügung. <br>
- * Hierbei ist insbesondere die Implementierung der Methode
- * {@link SVWSLoginService#login(String, Object, ServletRequest)} von Beudeutung.
+ * Hierbei ist insbesondere die Implementierung der login-Methode von Beudeutung.
  */
 public final class SVWSLoginService extends AbstractLifeCycle implements LoginService {
 
@@ -41,27 +43,19 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		this.serviceName = serviceName;
 	}
 
-	/**
-	 * @see org.eclipse.jetty.security.LoginService#getName()
-	 */
+
 	@Override
 	public String getName() {
 		return serviceName;
 	}
 
 
-
-
-	/**
-	 * @see org.eclipse.jetty.security.LoginService#login(java.lang.String,
-	 *      java.lang.Object, jakarta.servlet.ServletRequest)
-	 */
 	@Override
-	public UserIdentity login(final String username, final Object credentials, final ServletRequest request) {
-		// Akzeptiere nur HTTP-Anfragen
-		if (!(request instanceof HttpServletRequest))
+	public UserIdentity login(final String username, final Object credentials, final Request req, final Function<Boolean, Session> getOrCreateSession) {
+		// Akzeptiere nur HTTP-Anfragen der richtigen Versionen
+		final HttpVersion version = req.getConnectionMetaData().getHttpVersion();
+		if ((version != HttpVersion.HTTP_1_1) && (version != HttpVersion.HTTP_2) && (version != HttpVersion.HTTP_3))
 			return null;
-		final HttpServletRequest req = (HttpServletRequest) request;
 
 		// Wandle die Crendentials in einen Passwort-String um
 		final String password;
@@ -77,7 +71,7 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		// Prüfe, ob ein Login bei der OpenAPI-Applikation erfolgreich ist
 		final BenutzerApiPrincipal principal;
 		try {
-			principal = BenutzerApiPrincipal.login(username, password, req);
+			principal = BenutzerApiPrincipal.login(username, password, Request.getPathInContext(req));
 			if (principal == null)
 				return null;
 		} catch (final ApiOperationException e) {
@@ -89,13 +83,10 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		final Subject subject = new Subject();
 		subject.getPrincipals().add(principal);
 		subject.setReadOnly();
-		return userIdentityService.newUserIdentity(subject, principal, null);
+		return userIdentityService.newUserIdentity(subject, principal, new String[] { "user" });
 	}
 
 
-	/**
-	 * @see org.eclipse.jetty.security.LoginService#validate(org.eclipse.jetty.server.UserIdentity)
-	 */
 	@Override
 	public boolean validate(final UserIdentity user) {
 		// TODO prüfe, ob der angemeldete Benutzer immer noch gültig angemeldet ist
@@ -103,15 +94,10 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 	}
 
 
-	/**
-	 * @see org.eclipse.jetty.security.LoginService#logout(org.eclipse.jetty.server.UserIdentity)
-	 */
 	@Override
 	public void logout(final UserIdentity user) {
 		// TODO invalidate UserIdentity
 	}
-
-
 
 
 	@Override
@@ -120,28 +106,17 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 	}
 
 
-
-
-	/**
-	 * @see org.eclipse.jetty.security.LoginService#getIdentityService()
-	 */
 	@Override
 	public IdentityService getIdentityService() {
 		return userIdentityService;
 	}
 
 
-	/**
-	 * Set the identityService.
-	 *
-	 * @param identityService the identityService to set
-	 */
 	@Override
 	public void setIdentityService(final IdentityService identityService) {
 		if (isRunning())
 			throw new IllegalStateException("Running");
 		userIdentityService = identityService;
 	}
-
 
 }
