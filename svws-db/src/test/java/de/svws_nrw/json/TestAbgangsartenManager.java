@@ -33,7 +33,8 @@ class TestAbgangsartenManager {
 			if (AbgangsartenManager.getAbschlussAllgemeinbildend(eintrag) == null)
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen allgmeinbildenden Abschluss.");
 			if (AbgangsartenManager.getAbschlussBerufsbildend(eintrag) != null)
-				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da ein Katalog-Eintrag für allgemeinbildende Schulformen keinen berufsbildenden Abschluss beinhalten kann.");
+				fail("Katalog-Eintrag " + eintrag.kuerzel
+						+ " ist fehlerhaft, da ein Katalog-Eintrag für allgemeinbildende Schulformen keinen berufsbildenden Abschluss beinhalten kann.");
 		}
 		System.out.println("Prüfe die Einträge des Abgangsarten-Katalogs für berufsbildende Schulformen");
 		for (final AbgangsartKatalogEintrag eintrag : manager.getKatalogBerufsbildend().eintraege) {

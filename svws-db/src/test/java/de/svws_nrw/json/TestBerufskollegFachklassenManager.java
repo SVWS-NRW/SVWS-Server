@@ -31,20 +31,21 @@ public class TestBerufskollegFachklassenManager {
 		System.out.println("Prüfe die Einträge des Fachklassen-Katalogs für berufsbildende Schulformen");
 		for (final BerufskollegFachklassenKatalogIndex index : manager.getKatalog().indizes) {
 			for (final BerufskollegFachklassenKatalogEintrag eintrag : index.fachklassen) {
-			if (eintrag.schluessel == null)
+				if (eintrag.schluessel == null)
 					fail("Katalog-Eintrag " + eintrag.schluessel + " ist fehlerhaft, da bei Fachklassen der erste Teil des Schlüssels nicht leer sein darf .");
-			if (eintrag.schluessel2 == null)
-				fail("Katalog-Eintrag " + eintrag.schluessel2 + " ist fehlerhaft, da bei Fachklassen der zweite Teil des Schlüssels nicht leer sein darf .");
-			for (final BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
-			    if (daten.bezeichnung == null)
-	                fail("Katalog-Eintrag " + daten.bezeichnung + " ist fehlerhaft, da bei Fachklassen die Bezeichnung nicht leer sein darf .");
-			    if (daten.bezeichnungM == null)
-	                fail("Katalog-Eintrag " + daten.bezeichnungM + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (männlich) nicht leer sein darf .");
-                if (daten.bezeichnungW == null)
-	                fail("Katalog-Eintrag " + daten.bezeichnungW + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (weiblich) nicht leer sein darf .");
-			    }
+				if (eintrag.schluessel2 == null)
+					fail("Katalog-Eintrag " + eintrag.schluessel2
+							+ " ist fehlerhaft, da bei Fachklassen der zweite Teil des Schlüssels nicht leer sein darf .");
+				for (final BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
+					if (daten.bezeichnung == null)
+						fail("Katalog-Eintrag " + daten.bezeichnung + " ist fehlerhaft, da bei Fachklassen die Bezeichnung nicht leer sein darf .");
+					if (daten.bezeichnungM == null)
+						fail("Katalog-Eintrag " + daten.bezeichnungM + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (männlich) nicht leer sein darf .");
+					if (daten.bezeichnungW == null)
+						fail("Katalog-Eintrag " + daten.bezeichnungW + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (weiblich) nicht leer sein darf .");
+				}
 			}
-		System.out.println("Prüfung des Katalogs der Fachklassen erfolgreich abgeschlossen.");
+			System.out.println("Prüfung des Katalogs der Fachklassen erfolgreich abgeschlossen.");
 		}
 	}
 }
