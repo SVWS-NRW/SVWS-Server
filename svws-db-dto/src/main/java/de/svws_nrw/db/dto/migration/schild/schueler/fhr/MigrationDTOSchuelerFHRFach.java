@@ -383,7 +383,7 @@ public final class MigrationDTOSchuelerFHRFach {
 	@JsonProperty
 	public Integer HSII_3_1;
 
-	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
+	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) */
 	@Column(name = "RSII_3_1")
 	@JsonProperty
 	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
