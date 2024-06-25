@@ -509,5 +509,5 @@ systemctl start svws.service
 systemctl enable svws.service
 
 # Überprüfen des Status des Services
-systemctl status svws.service
+systemctl status svws.service --no-pager
 
