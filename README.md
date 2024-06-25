@@ -84,7 +84,7 @@ Beiträge zur Verbesserung des SVWS-Servers sind willkommen. Um beizutragen, fol
 1. Forke das Repository.
 2. Erstelle einen neuen Branch:
     ```bash
-    git checkout -b feature/NeuesFeature
+    git checkout -b benutzername/NeuesFeature
     ```
 3. Nimm deine Änderungen vor und committe sie:
     ```bash
@@ -92,7 +92,7 @@ Beiträge zur Verbesserung des SVWS-Servers sind willkommen. Um beizutragen, fol
     ```
 4. Push deinen Branch:
     ```bash
-    git push origin feature/NeuesFeature
+    git push origin benutzername/NeuesFeature
     ```
 5. Erstelle einen Pull-Request.
 
