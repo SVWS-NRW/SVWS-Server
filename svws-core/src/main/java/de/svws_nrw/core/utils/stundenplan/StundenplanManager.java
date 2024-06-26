@@ -5185,6 +5185,16 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeAsList() {
+		return new ArrayList<>(_unterrichtmenge);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
