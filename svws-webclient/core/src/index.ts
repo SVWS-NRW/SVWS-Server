@@ -598,6 +598,8 @@ export { SchuljahresabschnittsUtils } from './core/utils/schule/Schuljahresabsch
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
 export { StundenplanListUtils } from './core/utils/stundenplan/StundenplanListUtils';
 export { StundenplanManager } from './core/utils/stundenplan/StundenplanManager';
+export { StundenplanUnterrichtListeManager } from './core/utils/stundenplan/StundenplanUnterrichtListeManager';
+export { StundenplanUnterrichtUtils } from './core/utils/stundenplan/StundenplanUnterrichtUtils';
 export { StundenplanblockungManager } from './core/utils/stundenplanblockung/StundenplanblockungManager';
 export { StundenplanblockungManagerFach } from './core/utils/stundenplanblockung/StundenplanblockungManagerFach';
 export { StundenplanblockungManagerFachMenge } from './core/utils/stundenplanblockung/StundenplanblockungManagerFachMenge';

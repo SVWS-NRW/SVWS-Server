@@ -28,6 +28,8 @@ export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan
 	public getProps(to: RouteLocationNormalized): StundenplanUnterrichteProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			stundenplanUnterrichtListeManager: () => routeStundenplan.data.stundenplanUnterrichtListeManager,
+			setFilter: routeStundenplan.data.setFilter,
 		};
 	}
 

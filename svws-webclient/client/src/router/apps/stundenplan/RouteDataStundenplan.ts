@@ -1,5 +1,5 @@
 import type { StundenplanListeEintrag, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung} from "@core";
-import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
+import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException, StundenplanUnterrichtListeManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -16,6 +16,7 @@ interface RouteStateStundenplan extends RouteStateInterface {
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 	daten: Stundenplan | undefined;
 	stundenplanManager: StundenplanManager | undefined;
+	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;
 	listRaeume: List<Raum>;
 	listPausenzeiten: List<StundenplanPausenzeit>;
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
@@ -29,6 +30,7 @@ const defaultState = <RouteStateStundenplan> {
 	mapKatalogeintraege: new Map(),
 	daten: undefined,
 	stundenplanManager: undefined,
+	stundenplanUnterrichtListeManager: undefined,
 	listRaeume: new ArrayList(),
 	listPausenzeiten: new ArrayList(),
 	listAufsichtsbereiche: new ArrayList(),
@@ -56,6 +58,12 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (this._state.value.daten === undefined)
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.daten;
+	}
+
+	get stundenplanUnterrichtListeManager(): StundenplanUnterrichtListeManager {
+		if (this._state.value.stundenplanUnterrichtListeManager === undefined)
+			throw new DeveloperNotificationException("Unerwarteter Fehler: stundenplanUnterrichtListeManager nicht initialisiert");
+		return this._state.value.stundenplanUnterrichtListeManager;
 	}
 
 	get stundenplanManager(): StundenplanManager {
@@ -548,13 +556,19 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	private async ladeEintrag(auswahl: StundenplanListeEintrag) : Promise<{ daten: Stundenplan, stundenplanManager: StundenplanManager }> {
+	private async ladeEintrag(auswahl: StundenplanListeEintrag) : Promise<{ daten: Stundenplan, stundenplanManager: StundenplanManager, stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager }> {
 		const daten = await api.server.getStundenplan(api.schema, auswahl.id);
 		const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
 		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
 		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
 		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
-		return { daten, stundenplanManager };
+		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(api.schulform, stundenplanManager, api.schuleStammdaten.abschnitte, daten.idSchuljahresabschnitt);
+		return { daten, stundenplanManager, stundenplanUnterrichtListeManager };
+	}
+
+	setFilter = async () => {
+		this.stundenplanUnterrichtListeManager.filterInvalidateCache();
+		this.setPatchedState({ stundenplanUnterrichtListeManager: this.stundenplanUnterrichtListeManager });
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
@@ -564,8 +578,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (auswahl === undefined)
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
 		else {
-			const result = await this.ladeEintrag(auswahl);
-			this.setPatchedState({ auswahl, daten: result.daten, stundenplanManager: result.stundenplanManager });
+			const { daten, stundenplanManager, stundenplanUnterrichtListeManager } = await this.ladeEintrag(auswahl);
+			this.setPatchedState({ auswahl, daten, stundenplanManager, stundenplanUnterrichtListeManager });
 		}
 		api.status.stop();
 	}

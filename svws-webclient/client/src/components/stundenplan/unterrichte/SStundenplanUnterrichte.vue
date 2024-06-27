@@ -1,12 +1,11 @@
 <template>
 	<div class="page--content page--content--full gap-2">
 		<svws-ui-content-card title="Übersicht aller Unterrichte im Zeitraster" class="page--content-flex-column">
-			<svws-ui-table :items="[]" :no-data="false" has-background>
-				<!-- <template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
-				</template> -->
+			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset>
+				<template #filterAdvanced>
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="stundenplanUnterrichtListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="stundenplanUnterrichtListeManager().kurse.list()" :item-text="kurs => kurs.bezeichnung" :item-filter="findKurs" />
+				</template>
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
 						<div class="svws-ui-td svws-divider svws-align-center col-span-1" role="columnheader" />
@@ -80,9 +79,9 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+	import { ref, computed, effect } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
-	import type { List, StundenplanKlasse, StundenplanRaum, StundenplanSchiene, StundenplanUnterricht, StundenplanZeitraster, Wochentag} from "@core";
+	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanUnterricht, StundenplanZeitraster, Wochentag} from "@core";
 	import { ArrayList, ZulaessigesFach, StundenplanLehrer } from "@core";
 
 	type Selected = { wochentag?: Wochentag, stunde?: number, wochentyp?: number, zeitraster?: StundenplanZeitraster };
@@ -97,6 +96,32 @@
 	function getBgColor(kuerzel: string | null) {
 		return ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
 	}
+
+	const filterKlassen = computed<StundenplanKlasse[]>({
+		get: () => [...props.stundenplanUnterrichtListeManager().klassen.auswahl()],
+		set: (value) => {
+			props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
+			for (const v of value)
+				props.stundenplanUnterrichtListeManager().klassen.auswahlAdd(v);
+			void props.setFilter();
+		}
+	});
+
+	const filterKurse = computed<StundenplanKurs[]>({
+		get: () => [...props.stundenplanUnterrichtListeManager().kurse.auswahl()],
+		set: (value) => {
+			props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
+			for (const v of value)
+				props.stundenplanUnterrichtListeManager().kurse.auswahlAdd(v);
+			void props.setFilter();
+		}
+	});
+
+	async function filterReset() {
+		props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
+		props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
+	}
+
 
 	function modelValueLehrer(list: List<number>) {
 		const res: StundenplanLehrer[] = [];
@@ -135,6 +160,15 @@
 		return list;
 	}
 
+
+	function findKurs(items: Iterable<StundenplanKurs>, search: string) {
+		const list = [];
+		for (const i of items)
+			if (i.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				list.push(i);
+		return list;
+	}
+
 	const wochentyprange = computed(() => {
 		const range = [];
 		const modell = props.stundenplanManager().stundenplanGetWochenTypModell();
@@ -143,24 +177,27 @@
 		return range;
 	})
 
+	effect(()=>console.log(props.stundenplanUnterrichtListeManager().filtered().size()))
+
 	const items = computed(() => {
-		if (selected.value === undefined)
-			return props.stundenplanManager().unterrichtGetMengeAsList();
-		if ((selected.value?.zeitraster !== undefined) && (selected.value.wochentyp !== undefined))
-			return props.stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.value.zeitraster.id, selected.value.wochentyp-1);
-		const list: List<StundenplanUnterricht> = new ArrayList();
-		if (selected.value?.wochentag !== undefined)
-			for (const stunde of props.stundenplanManager().zeitrasterGetStundenRange())
-				if (selected.value.wochentyp === undefined)
-					for (const wochentyp of wochentyprange.value)
-						list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, wochentyp));
-				else
-					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, selected.value.wochentyp));
-		else if (selected.value?.stunde !== undefined)
-			for (const wochentag of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange())
-				for (const wochentyp of wochentyprange.value)
-					list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, selected.value.stunde, wochentyp));
-		return list;
+		return props.stundenplanUnterrichtListeManager().filtered();
+		// if (selected.value === undefined)
+		// 	return props.stundenplanManager().unterrichtGetMengeAsList();
+		// if ((selected.value?.zeitraster !== undefined) && (selected.value.wochentyp !== undefined))
+		// 	return props.stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(selected.value.zeitraster.id, selected.value.wochentyp-1);
+		// const list: List<StundenplanUnterricht> = new ArrayList();
+		// if (selected.value?.wochentag !== undefined)
+		// 	for (const stunde of props.stundenplanManager().zeitrasterGetStundenRange())
+		// 		if (selected.value.wochentyp === undefined)
+		// 			for (const wochentyp of wochentyprange.value)
+		// 				list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, wochentyp));
+		// 		else
+		// 			list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(selected.value.wochentag, stunde, selected.value.wochentyp));
+		// else if (selected.value?.stunde !== undefined)
+		// 	for (const wochentag of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange())
+		// 		for (const wochentyp of wochentyprange.value)
+		// 			list.addAll(props.stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, selected.value.stunde, wochentyp));
+		// return list;
 	})
 
 </script>
