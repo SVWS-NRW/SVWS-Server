@@ -10,7 +10,6 @@ configurations {
  
 dependencies {
 	implementation project(':svws-core')
-	implementation project(':svws-db-utils')
 	implementation project(':svws-openapi')
 
 	implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
@@ -43,7 +42,6 @@ task transpileCore(type: JavaExec) {
 	group = "svws"
 	dependsOn prepareTranspile
 	dependsOn project(":svws-core").tasks.assemble
-	dependsOn project(":svws-openapi").tasks.assemble
 	doFirst {
 		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 	}
@@ -65,7 +63,7 @@ task transpileApi(type: JavaExec) {
 	dependsOn project(":svws-core").tasks.assemble
 	dependsOn project(":svws-openapi").tasks.assemble
 	doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
+		delete fileTree(dir: "$buildDir/tsapi"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
 	}
 	inputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories()
 	outputs.dir "$buildDir/tsapi"
