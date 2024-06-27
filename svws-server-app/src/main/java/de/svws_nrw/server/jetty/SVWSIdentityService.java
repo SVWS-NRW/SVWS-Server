@@ -12,7 +12,7 @@ import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 /**
  * Dies Klasse implmentiert die Schnittstelle {@link IdentityService}
  * des Jetty-Server und wird für die Klasse {@link SvwsServer}
- * und dem Umgang mit einer {@link SVWSUserIdentity} benötigt.
+ * und dem Umgang mit einer {@link UserIdentity} benötigt.
  */
 public final class SVWSIdentityService implements IdentityService {
 
