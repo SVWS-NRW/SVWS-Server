@@ -16,11 +16,11 @@ public final class ExpressionTypeVar extends ExpressionType {
 	/** the name of the type variable or null for the wildcard ? */
 	private final String name;
 
-    /** the extends bound of the type variable if it is a wildcard type (? extends T) */
-    private ExpressionType extendsBound;
+	/** the extends bound of the type variable if it is a wildcard type (? extends T) */
+	private ExpressionType extendsBound;
 
-    /** the super bound of the type variable if it is a wildcard type (? super T) */
-    private ExpressionType superBound;
+	/** the super bound of the type variable if it is a wildcard type (? super T) */
+	private ExpressionType superBound;
 
 
 
@@ -76,7 +76,9 @@ public final class ExpressionTypeVar extends ExpressionType {
 		if (type instanceof final WildcardTree wt) {
 			final ExpressionTypeVar result = new ExpressionTypeVar(null);
 			switch (wt.getKind()) {
-				case UNBOUNDED_WILDCARD -> { /**/ }
+				case UNBOUNDED_WILDCARD -> {
+					/**/
+				}
 				case EXTENDS_WILDCARD -> result.extendsBound = ExpressionType.getExpressionType(transpiler, wt.getBound());
 				case SUPER_WILDCARD -> result.superBound = ExpressionType.getExpressionType(transpiler, wt.getBound());
 				default ->
@@ -93,7 +95,7 @@ public final class ExpressionTypeVar extends ExpressionType {
 	 *
 	 * @return the new type variable expression type instance
 	 */
-	public static ExpressionTypeVar getWildcardExpressionTypeVariable()  {
+	public static ExpressionTypeVar getWildcardExpressionTypeVariable() {
 		return new ExpressionTypeVar(null);
 	}
 
@@ -176,9 +178,9 @@ public final class ExpressionTypeVar extends ExpressionType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + ((extendsBound == null) ? 0 : extendsBound.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((superBound == null) ? 0 : superBound.hashCode());
+		result = (prime * result) + ((extendsBound == null) ? 0 : extendsBound.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + ((superBound == null) ? 0 : superBound.hashCode());
 		return result;
 	}
 

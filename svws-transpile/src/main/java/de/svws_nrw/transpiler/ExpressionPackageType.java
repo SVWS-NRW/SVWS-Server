@@ -59,7 +59,7 @@ public final class ExpressionPackageType extends ExpressionType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(name);
+		result = (prime * result) + Objects.hash(name);
 		return result;
 	}
 

@@ -61,9 +61,9 @@ public class ApiContent {
 
 	private static ApiMimeType determineMimetype(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("mediaType");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing mediaType value for @Content annotation.");
-        }
+		if (value == null) {
+			throw new TranspilerException("Transpiler Exception: Missing mediaType value for @Content annotation.");
+		}
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return ApiMimeType.get(str);
 		if (value.getKind() == Kind.MEMBER_SELECT)

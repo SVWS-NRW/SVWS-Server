@@ -99,7 +99,8 @@ public class TypeNode {
 	 * @param notNull     true if the declaration has a not null annotation
 	 * @param resolved    a map with a mapping from a type variable to its resolved type
 	 */
-	public TypeNode(final TranspilerTypeScriptPlugin plugin, final TypeMirror typeMirror, final boolean decl, final boolean notNull, final Map<String, TypeMirror> resolved) {
+	public TypeNode(final TranspilerTypeScriptPlugin plugin, final TypeMirror typeMirror, final boolean decl, final boolean notNull,
+			final Map<String, TypeMirror> resolved) {
 		this.plugin = plugin;
 		this.node = null;
 		this.typeMirror = typeMirror;
@@ -299,12 +300,12 @@ public class TypeNode {
 					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
 				return ((type instanceof final ExpressionClassType classType)
 						&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+								|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
 			} else if (node instanceof final AnnotatedTypeTree att) {
 				if (att.getUnderlyingType() instanceof ArrayTypeTree)
 					return false;
@@ -313,23 +314,23 @@ public class TypeNode {
 					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the annotated type " + att.toString());
 				return ((type instanceof final ExpressionClassType classType)
 						&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
-							|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+								|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+								|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
 			}
 			if (node instanceof MemberSelectTree)
 				throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isNumberClass()");
 		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
 			return "java.lang.Number".equals(te.getQualifiedName().toString())
-				|| "java.lang.Byte".equals(te.getQualifiedName().toString())
-				|| "java.lang.Short".equals(te.getQualifiedName().toString())
-				|| "java.lang.Integer".equals(te.getQualifiedName().toString())
-				|| "java.lang.Long".equals(te.getQualifiedName().toString())
-				|| "java.lang.Float".equals(te.getQualifiedName().toString())
-				|| "java.lang.Double".equals(te.getQualifiedName().toString());
+					|| "java.lang.Byte".equals(te.getQualifiedName().toString())
+					|| "java.lang.Short".equals(te.getQualifiedName().toString())
+					|| "java.lang.Integer".equals(te.getQualifiedName().toString())
+					|| "java.lang.Long".equals(te.getQualifiedName().toString())
+					|| "java.lang.Float".equals(te.getQualifiedName().toString())
+					|| "java.lang.Double".equals(te.getQualifiedName().toString());
 		}
 		return false;
 	}
@@ -428,7 +429,8 @@ public class TypeNode {
 		}
 		if (typeMirror instanceof final ArrayType at)
 			return new TypeNode(plugin, at.getComponentType(), true, isVarArg && this.notNull, resolved);
-		throw new TranspilerException("Transpiler Error: TypeMirrors of kind " + this.typeMirror.getKind() + " not yet supported in Method getArrayContentType()");
+		throw new TranspilerException("Transpiler Error: TypeMirrors of kind " + this.typeMirror.getKind()
+				+ " not yet supported in Method getArrayContentType()");
 	}
 
 
@@ -493,7 +495,8 @@ public class TypeNode {
 					final TypeMirror et = this.plugin.getTranspiler().getTypeMirror(node);
 					if (et instanceof final DeclaredType dt) {
 						final ClassTree ct = this.plugin.getTranspiler().getClass(node);
-						final Map<String, TypeParameterTree> mapParams = ct.getTypeParameters().stream().collect(Collectors.toMap(tpt -> tpt.getName().toString(), tpt -> tpt));
+						final Map<String, TypeParameterTree> mapParams =
+								ct.getTypeParameters().stream().collect(Collectors.toMap(tpt -> tpt.getName().toString(), tpt -> tpt));
 						for (final TypeParameterTree tpt : mt.getTypeParameters())
 							mapParams.put(tpt.getName().toString(), tpt);
 						final List<Tree> paramTypes = new ArrayList<>();
@@ -748,13 +751,16 @@ public class TypeNode {
 				// Check whether we check for a functional interface - then we need only an object with the function...
 				final String functionalInterfaceMethodName = plugin.getTranspiler().getFunctionInterfaceMethodName(classType.getFullQualifiedName());
 				if (functionalInterfaceMethodName != null)
-					return "((" + obj + " !== undefined) && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName + "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
+					return "((" + obj + " !== undefined) && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName
+							+ "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
 				// Check for java.lang.Object - in this case we must also check for Numbers
 				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
-					return "((" + obj + " instanceof Object) || ((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "'))))";
+					return "((" + obj + " instanceof Object) || ((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('"
+							+ classType.getFullQualifiedName() + "'))))";
 				}
 				// Otherwise we can check for a complete Java-object...
-				return "((" + obj + " instanceof JavaObject) && ((" + obj + " as JavaObject).isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "')))";
+				return "((" + obj + " instanceof JavaObject) && ((" + obj + " as JavaObject).isTranspiledInstanceOf('" + classType.getFullQualifiedName()
+						+ "')))";
 			}
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());
 		}
@@ -828,8 +834,10 @@ public class TypeNode {
 			if (type instanceof final ExpressionClassType classType) {
 				return switch (classType.getFullQualifiedName()) {
 					case "java.lang.String", "java.lang.Boolean", "java.lang.Byte", "java.lang.Short",
-						"java.lang.Integer", "java.lang.Long", "java.lang.Float", "java.lang.Double" -> identifier;
-					case "java.lang.Object" -> "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+							"java.lang.Integer", "java.lang.Long", "java.lang.Float", "java.lang.Double" ->
+						identifier;
+					case "java.lang.Object" -> "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "("
+							+ identifier + ") : " + identifier;
 					case "java.lang.Enum" -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 				};
@@ -846,10 +854,12 @@ public class TypeNode {
 				if ("java.lang.String".equals(classType.getFullQualifiedName()))
 					return identifier;
 				if ("java.lang.Enum".equals(classType.getFullQualifiedName())) {
-					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : "
+							+ identifier;
 				}
 				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
-					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : "
+							+ identifier;
 				}
 				return "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 			}

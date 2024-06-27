@@ -11,7 +11,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class Utils {
 
-	private static final @NotNull Runnable runnable = () -> { /* nicht zu tun */ };
+	private static final @NotNull Runnable runnable = () -> {
+		/* nicht zu tun */
+	};
 
 	/**
 	 * Wendet die übergenene Aufgabe auf die übergebene Eingabe an.

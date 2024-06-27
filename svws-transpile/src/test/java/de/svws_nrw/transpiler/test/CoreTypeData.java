@@ -32,11 +32,13 @@ public class CoreTypeData {
 	public @NotNull String schluessel = "";
 
 	/** Das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
-	@Schema(description = "das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "GE")
+	@Schema(description = "das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden",
+			example = "GE")
 	public @NotNull String kuerzel = "";
 
 	/** Die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
-	@Schema(description = "die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "Gesamtschule")
+	@Schema(description = "die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden",
+			example = "Gesamtschule")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */

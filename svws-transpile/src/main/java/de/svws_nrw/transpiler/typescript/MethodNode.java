@@ -96,8 +96,8 @@ public final class MethodNode {
 		this.isStatic = this.plugin.getTranspiler().hasStaticModifier(method);
 		this.isDefault = this.plugin.getTranspiler().hasDefaultModifier(method);
 		final List<? extends VariableTree> tmpParameters = method.getParameters();
-		for (int i = 0; i < tmpParameters.size(); i++) {
-			final VariableNode varNode = new VariableNode(plugin, tmpParameters.get(i));
+		for (final VariableTree tmpParameter : tmpParameters) {
+			final VariableNode varNode = new VariableNode(plugin, tmpParameter);
 			this.parameters.add(varNode);
 		}
 		final boolean isNotNull = plugin.getTranspiler().hasNotNullAnnotation(method);
@@ -137,11 +137,13 @@ public final class MethodNode {
 	 * @return the transpiled comment
 	 */
 	private String formatComment(final String comment) {
-        return (comment == null)
-        		? ""
-        		: indent + "/**" + System.lineSeparator()
-                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> (indent + " *" +  s.stripTrailing()).stripTrailing()).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
-                + indent + " */" + System.lineSeparator();
+		return (comment == null)
+				? ""
+				: indent + "/**" + System.lineSeparator()
+						+ Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> (indent + " *" + s.stripTrailing()).stripTrailing())
+								.collect(Collectors.joining(System.lineSeparator()))
+						+ System.lineSeparator()
+						+ indent + " */" + System.lineSeparator();
 	}
 
 
@@ -276,7 +278,7 @@ public final class MethodNode {
 		}
 		for (int i = 0; i < parameters.size(); i++) {
 			sb.append(parameters.get(i).transpile());
-			if (i < parameters.size() - 1)
+			if (i < (parameters.size() - 1))
 				sb.append(", ");
 		}
 		sb.append(")");
@@ -477,8 +479,8 @@ public final class MethodNode {
 		// a comment for the method implementation
 		// TODO also describe parameters...
 		final String comment = indent + "/**" + System.lineSeparator()
-		               + indent + " * Implementation for method overloads of '" + methods.get(0).getName() + "'" + System.lineSeparator()
-		               + indent + " */" + System.lineSeparator();
+				+ indent + " * Implementation for method overloads of '" + methods.get(0).getName() + "'" + System.lineSeparator()
+				+ indent + " */" + System.lineSeparator();
 		sb.append(comment);
 
 		// the methods access modifier
@@ -515,7 +517,7 @@ public final class MethodNode {
 
 			sb.append(getUnionParamType(methods, i));
 
-			if (i < maxParams - 1)
+			if (i < (maxParams - 1))
 				sb.append(", ");
 		}
 		sb.append(")");
@@ -576,7 +578,7 @@ public final class MethodNode {
 					sb.append("(__param" + i + " === undefined)");
 				else
 					sb.append(method.getTypeCheck(i));
-				if (i < maxParams - 1)
+				if (i < (maxParams - 1))
 					sb.append(" && ");
 			}
 			sb.append(") {");
@@ -665,7 +667,7 @@ public final class MethodNode {
 		}
 		for (int i = 0; i < parameters.size(); i++) {
 			sb.append(parameters.get(i).transpile());
-			if (i < parameters.size() - 1)
+			if (i < (parameters.size() - 1))
 				sb.append(", ");
 		}
 		sb.append(")");

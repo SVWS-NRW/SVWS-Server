@@ -102,16 +102,16 @@ public final class Transpiler extends AbstractProcessor {
 	private final String classdir;
 
 	/** A temporary variable used by the annotation processor for accessing the Tree-API of the java compiler  */
-    private Trees trees;
+	private Trees trees;
 
-    /** A reference to the type utils of the java compiler processing environment */
-    private Types typeUtils;
+	/** A reference to the type utils of the java compiler processing environment */
+	private Types typeUtils;
 
-    /** A reference to the element utils of the java compiler processing environment */
-    private Elements elementUtils;
+	/** A reference to the element utils of the java compiler processing environment */
+	private Elements elementUtils;
 
 
-    /// Transpiler State attributes
+	/// Transpiler State attributes
 
 	/** a map containing a mapping between a java compiler abstract syntax tree node ant the corresponding tree path object */
 	private final HashMap<Tree, TreePath> mapTreePath = new HashMap<>();
@@ -139,12 +139,12 @@ public final class Transpiler extends AbstractProcessor {
 
 
 
-    /**
-     * Creates a new transpiler object for transpiling the specified java sources
-     *
-     * @param classdir   the directory where to place the compiler class output files
-     * @param sources    the {@link File}-Objects for all Java-Sources
-     */
+	/**
+	 * Creates a new transpiler object for transpiling the specified java sources
+	 *
+	 * @param classdir   the directory where to place the compiler class output files
+	 * @param sources    the {@link File}-Objects for all Java-Sources
+	 */
 	public Transpiler(final String classdir, final File... sources) {
 		compiler = ToolProvider.getSystemJavaCompiler();
 		diagnostics = new DiagnosticCollector<>();
@@ -183,10 +183,10 @@ public final class Transpiler extends AbstractProcessor {
 		if (!compilationTask.call()) {
 			System.out.println("Fehler beim Compilieren des Java-Codes!");
 			// TODO further reactions on compiler errors
-	        final List<Diagnostic<? extends JavaFileObject>> diags = diagnostics.getDiagnostics();
-	        for (final Diagnostic<? extends JavaFileObject> diag : diags) {
-	            System.err.println(diag.getMessage(null));
-	        }
+			final List<Diagnostic<? extends JavaFileObject>> diags = diagnostics.getDiagnostics();
+			for (final Diagnostic<? extends JavaFileObject> diag : diags) {
+				System.err.println(diag.getMessage(null));
+			}
 		}
 	}
 
@@ -915,7 +915,7 @@ public final class Transpiler extends AbstractProcessor {
 			for (final AnnotationMirror annotation : annotations) {
 				if ((annotation.getAnnotationType().asElement() instanceof final TypeElement te) && (te.getKind() == ElementKind.ANNOTATION_TYPE)
 						&& ("jakarta.validation.constraints.NotNull".equals(te.getQualifiedName().toString())))
-						return true;
+					return true;
 			}
 		}
 		return false;
@@ -1404,7 +1404,8 @@ public final class Transpiler extends AbstractProcessor {
 			for (final ExpressionTree param : mit.getArguments()) {
 				final ExpressionType paramType = transpilerUnit.allExpressionTypes.get(param);
 				if (paramType == null)
-					throw new TranspilerException("Transpiler Error: Could not retrieve parameter type for " + param + " of method " + memberName + " in class " + fullClassName);
+					throw new TranspilerException("Transpiler Error: Could not retrieve parameter type for " + param + " of method " + memberName + " in class "
+							+ fullClassName);
 				paramTypes.add(paramType);
 			}
 
@@ -1418,7 +1419,8 @@ public final class Transpiler extends AbstractProcessor {
 						continue;
 					// check method parameter types
 					final List<? extends VariableElement> elemParams = ee.getParameters();
-					if (!((elemParams.size() == paramTypes.size()) || ((!elemParams.isEmpty()) && (elemParams.size() - 1 <= paramTypes.size()) && ee.isVarArgs())))
+					if (!((elemParams.size() == paramTypes.size())
+							|| ((!elemParams.isEmpty()) && ((elemParams.size() - 1) <= paramTypes.size()) && ee.isVarArgs())))
 						continue;
 					int rated = 0;
 					final HashMap<String, ExpressionType> mapMethodTypeArgs = new HashMap<>(mapClassTypeArgs);
@@ -1429,14 +1431,15 @@ public final class Transpiler extends AbstractProcessor {
 
 						// Determine vararg Type of the executable element
 						TypeMirror tmpType;
-						if ((i >= elemParams.size() - 1) && ee.isVarArgs()) {
+						if ((i >= (elemParams.size() - 1)) && ee.isVarArgs()) {
 							tmpType = elemParams.get(elemParams.size() - 1).asType();
 							if (tmpType.getKind() != TypeKind.ARRAY)
 								continue;
 							// special check whether to skip determining the array component type if an array is passed as parameter type (also check whether the vararg is a vararg of arrays)
 							boolean doGetComponent = true;
 							final ExpressionType tmpElemType = ExpressionType.getExpressionType(this, tmpType);
-							if ((paramType instanceof final ExpressionArrayType eat) && (tmpElemType instanceof final ExpressionArrayType eat2) && (eat.getDimensions() == eat2.getDimensions()))
+							if ((paramType instanceof final ExpressionArrayType eat) && (tmpElemType instanceof final ExpressionArrayType eat2)
+									&& (eat.getDimensions() == eat2.getDimensions()))
 								doGetComponent = false;
 							if (doGetComponent)
 								tmpType = ((ArrayType) tmpType).getComponentType();
@@ -1463,7 +1466,8 @@ public final class Transpiler extends AbstractProcessor {
 						}
 
 						// substitute the type if a type variable is used inside an array type
-						if ((elemType instanceof final ExpressionArrayType et) && (et.getType() instanceof final ExpressionTypeVar tv) && (paramType instanceof final ExpressionArrayType pt)) {
+						if ((elemType instanceof final ExpressionArrayType et) && (et.getType() instanceof final ExpressionTypeVar tv)
+								&& (paramType instanceof final ExpressionArrayType pt)) {
 							// substitute the type if a class type variable is used
 							if (mapClassTypeArgs.get(tv.getName()) != null)
 								elemType = new ExpressionArrayType(mapClassTypeArgs.get(tv.getName()), et.getDimensions());
@@ -1537,7 +1541,7 @@ public final class Transpiler extends AbstractProcessor {
 	ExpressionType getNestedType(final String className, final String memberName) {
 		final TypeElement classElement = getTypeElement(className);
 		for (final Element e : classElement.getEnclosedElements())
-			if (e instanceof final TypeElement ve &&  (memberName.equals(ve.getSimpleName().toString())))
+			if ((e instanceof final TypeElement ve) && (memberName.equals(ve.getSimpleName().toString())))
 				return ExpressionType.getExpressionType(this, ve.asType());
 		return null;
 	}
@@ -1606,7 +1610,7 @@ public final class Transpiler extends AbstractProcessor {
 					return i;
 				for (final TypeMirror interfaceType : ste.getInterfaces()) {
 					final Element interfaceElement = typeUtils.asElement(interfaceType);
-					if ((interfaceElement instanceof final TypeElement ite) &&  (ite.toString().equals(superFullQualified)))
+					if ((interfaceElement instanceof final TypeElement ite) && (ite.toString().equals(superFullQualified)))
 						return i + 1;
 				}
 				superClass = ste.getSuperclass();
@@ -1658,7 +1662,7 @@ public final class Transpiler extends AbstractProcessor {
 				// check method parameter types
 				final List<? extends VariableElement> elemParams = ee.getParameters();
 				if (!((elemParams.size() == parameterTypes.size())
-						|| ((!elemParams.isEmpty()) && (elemParams.size() - 1 <= parameterTypes.size()) && ee.isVarArgs())))
+						|| ((!elemParams.isEmpty()) && ((elemParams.size() - 1) <= parameterTypes.size()) && ee.isVarArgs())))
 					continue;
 				int rated = 0;
 				final HashMap<String, ExpressionType> mapMethodTypeArgs = new HashMap<>(mapClassTypeArgs);
@@ -1669,14 +1673,15 @@ public final class Transpiler extends AbstractProcessor {
 
 					// Determine vararg Type of the executable element
 					TypeMirror tmpType;
-					if ((i >= elemParams.size() - 1) && ee.isVarArgs()) {
+					if ((i >= (elemParams.size() - 1)) && ee.isVarArgs()) {
 						tmpType = elemParams.get(elemParams.size() - 1).asType();
 						if (tmpType.getKind() != TypeKind.ARRAY)
 							continue;
 						// special check whether to skip determining the array component type if an array is passed as parameter type (also check whether the vararg is a vararg of arrays)
 						boolean doGetComponent = true;
 						final ExpressionType tmpElemType = ExpressionType.getExpressionType(this, tmpType);
-						if ((paramType instanceof final ExpressionArrayType eat) && (tmpElemType instanceof final ExpressionArrayType eat2) && (eat.getDimensions() == eat2.getDimensions()))
+						if ((paramType instanceof final ExpressionArrayType eat) && (tmpElemType instanceof final ExpressionArrayType eat2)
+								&& (eat.getDimensions() == eat2.getDimensions()))
 							doGetComponent = false;
 						if (doGetComponent)
 							tmpType = ((ArrayType) tmpType).getComponentType();
@@ -1703,7 +1708,8 @@ public final class Transpiler extends AbstractProcessor {
 					}
 
 					// substitute the type if a type variable is used inside an array type
-					if ((elemType instanceof final ExpressionArrayType et) && (et.getType() instanceof final ExpressionTypeVar tv) && (paramType instanceof final ExpressionArrayType pt)) {
+					if ((elemType instanceof final ExpressionArrayType et) && (et.getType() instanceof final ExpressionTypeVar tv)
+							&& (paramType instanceof final ExpressionArrayType pt)) {
 						// substitute the type if a class type variable is used
 						if (mapClassTypeArgs.get(tv.getName()) != null)
 							elemType = new ExpressionArrayType(mapClassTypeArgs.get(tv.getName()), et.getDimensions());
@@ -1727,7 +1733,8 @@ public final class Transpiler extends AbstractProcessor {
 							final List<ExpressionType> ectArgs = ect.getTypeArguments();
 							final List<ExpressionType> pectArgs = pect.getTypeArguments();
 							if (ectArgs.size() != pectArgs.size())
-								throw new TranspilerException("Transpiler Error: Unexpected transpiler state - number of type arguments do not match during type analysis");
+								throw new TranspilerException("Transpiler Error: Unexpected transpiler state - number of type arguments do not match during"
+										+ " type analysis");
 							for (int j = 0; j < ectArgs.size(); j++)
 								ectArgs.set(j, pectArgs.get(j));
 						}
@@ -1758,13 +1765,15 @@ public final class Transpiler extends AbstractProcessor {
 					if (found instanceof final ExpressionClassType foundClassType) {
 						final boolean typeVariablesResolved = foundClassType.resolveTypeVariables(mapMethodTypeArgs);
 						if (!typeVariablesResolved)
-							throw new TranspilerException("Transpiler Error: Cannot resolve all type vars for method return type for " + clazz.getFullQualifiedName() + "." + memberName);
+							throw new TranspilerException("Transpiler Error: Cannot resolve all type vars for method return type for "
+									+ clazz.getFullQualifiedName() + "." + memberName);
 						// TODO improvement: replace type variables recursively - see comment in ExpressionClassType
-					} else if (found instanceof final ExpressionArrayType foundArrayType)  {
+					} else if (found instanceof final ExpressionArrayType foundArrayType) {
 						if (foundArrayType.getType() instanceof final ExpressionTypeVar tv) {
 							final ExpressionType tmp = mapMethodTypeArgs.get(tv.getName());
 							if (tmp == null)
-								throw new TranspilerException("Transpiler Error: Cannot resolve all type vars for method return type for " + clazz.getFullQualifiedName() + "." + memberName);
+								throw new TranspilerException("Transpiler Error: Cannot resolve all type vars for method return type for "
+										+ clazz.getFullQualifiedName() + "." + memberName);
 							found = new ExpressionArrayType(tmp, foundArrayType.getDimensions());
 						}
 					}
@@ -1807,10 +1816,10 @@ public final class Transpiler extends AbstractProcessor {
 	@Override
 	public synchronized void init(final ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
-        trees = Trees.instance(processingEnv);
-        elementUtils = processingEnv.getElementUtils();
-        typeUtils = processingEnv.getTypeUtils();
-    }
+		trees = Trees.instance(processingEnv);
+		elementUtils = processingEnv.getElementUtils();
+		typeUtils = processingEnv.getTypeUtils();
+	}
 
 
 
@@ -1845,7 +1854,9 @@ public final class Transpiler extends AbstractProcessor {
 			}
 
 			// prepare the transpiler units for transpilation
-			for (final TranspilerUnit unit : mapUnits.values().stream().sorted((a, b) -> (a.getPackageName() + "." + a.getClassName()).compareTo(b.getPackageName() + "." + b.getClassName())).collect(Collectors.toList())) {
+			for (final TranspilerUnit unit : mapUnits.values().stream()
+					.sorted((a, b) -> (a.getPackageName() + "." + a.getClassName()).compareTo(b.getPackageName() + "." + b.getClassName()))
+					.collect(Collectors.toList())) {
 				System.out.println("  -> Preparing: " + unit.getPackageName() + "." + unit.getClassName());
 				// determine all local attribute and method identifiers of super classes and instantiated interfaces
 				unit.determineInheritedMembers(unit.getElement(), new ArrayList<>());

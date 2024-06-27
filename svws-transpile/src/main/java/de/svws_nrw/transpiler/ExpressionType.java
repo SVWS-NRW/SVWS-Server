@@ -207,7 +207,8 @@ public abstract class ExpressionType implements Tree {
 			if (e instanceof final VariableElement ve) {
 				return ExpressionType.getExpressionType(transpiler, ve.asType());
 			}
-			throw new TranspilerException("Transpiler Error: Unexpected identifier expression type " + type.toString() + " for element kind " + e.getKind() + ".");
+			throw new TranspilerException("Transpiler Error: Unexpected identifier expression type " + type.toString() + " for element kind " + e.getKind()
+					+ ".");
 		}
 		if (type instanceof final VariableTree variable) {
 			final Element e = transpiler.getElement(variable);
@@ -220,7 +221,8 @@ public abstract class ExpressionType implements Tree {
 			if (e instanceof final VariableElement ve) {
 				return ExpressionType.getExpressionType(transpiler, ve.asType());
 			}
-			throw new TranspilerException("Transpiler Error: Unexpected variable expression type " + type.toString() + " for element kind " + e.getKind() + ".");
+			throw new TranspilerException("Transpiler Error: Unexpected variable expression type " + type.toString() + " for element kind " + e.getKind()
+					+ ".");
 		}
 		if (type instanceof final ArrayTypeTree arrayType)
 			return new ExpressionArrayType(getExpressionType(transpiler, arrayType.getType()), 1);
@@ -289,7 +291,8 @@ public abstract class ExpressionType implements Tree {
 				case CONDITIONAL_AND, CONDITIONAL_OR -> {
 					return ExpressionPrimitiveType.get("boolean");
 				}
-				default -> throw new TranspilerException("Transpiler Error: Unexpected binary operator result type for expression type of kind " + type.getKind() + ".");
+				default -> throw new TranspilerException("Transpiler Error: Unexpected binary operator result type for expression type of kind "
+						+ type.getKind() + ".");
 			}
 		}
 		if (type instanceof final ExpressionTree et) {

@@ -45,7 +45,8 @@ public class CoreTranspiler {
 			cmdLine.addOption(new CommandLineOption("j", "java", true, "Die Java-Quellcode-Dateien für den Transpiler"));
 			cmdLine.addOption(new CommandLineOption("a", "api", true, "Die Quellcode-Dateien für das Generieren des API-Codes"));
 			cmdLine.addOption(new CommandLineOption("jf", "javafiles", true, "Eine Textdatei mit einer Liste aller Java-Quellcode-Dateien für den Transpiler"));
-			cmdLine.addOption(new CommandLineOption("af", "apifiles", true, "Eine Textdatei mit einer Liste aller Quellcode-Dateien für das Generieren des API-Codes"));
+			cmdLine.addOption(new CommandLineOption("af", "apifiles", true, "Eine Textdatei mit einer Liste aller Quellcode-Dateien für das Generieren des"
+					+ " API-Codes"));
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ziel-Ordner für den erzeugte TypeScript-Code"));
 			cmdLine.addOption(new CommandLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien dey Java-Compilers"));
 			cmdLine.addOption(new CommandLineOption("i", "ignore", true, "Das Package-Präfix, welches bei der Ziel-Verzeichnisstruktur ignoriert werden soll"));
@@ -94,7 +95,7 @@ public class CoreTranspiler {
 		final ArrayList<String> outputs = new ArrayList<>();
 		final ArrayList<Boolean> outputsTypeOnly = new ArrayList<>();
 
-    	// Create a transpiler object with the associated core java source files and use the TS Transpiler Plugin
+		// Create a transpiler object with the associated core java source files and use the TS Transpiler Plugin
 		final Transpiler transpiler = new Transpiler(tmpDir, coreJavaSources);
 
 		final TranspilerTypeScriptPlugin typescriptPlugin = new TranspilerTypeScriptPlugin(transpiler, typeScriptOutputDir);
@@ -106,7 +107,7 @@ public class CoreTranspiler {
 		outputs.addAll(typescriptPlugin.getOutputFiles());
 		outputsTypeOnly.addAll(typescriptPlugin.getOutputFilesTypeOnly());
 
-    	// Create a transpiler object with the associated api java source files and use the TS API Generator Plugin
+		// Create a transpiler object with the associated api java source files and use the TS API Generator Plugin
 // TODO Finish implementing the OpenApi-Plugin after reducing code in Server-API-Classes
 		if ((apiJavaSources != null) && (apiJavaSources.length > 0)) {
 			final Transpiler apiTranspiler = new Transpiler(tmpDir, apiJavaSources);
@@ -138,14 +139,15 @@ public class CoreTranspiler {
 				isTypeOnly = true;
 			sbExports.append("export ");
 			if (isTypeOnly)
-					sbExports.append("type ");
+				sbExports.append("type ");
 			if ("BaseApi".equals(classname))
-					sbExports.append("{ ").append(classname).append(", type ApiFile } from './").append(importName).append("';").append("\n");
+				sbExports.append("{ ").append(classname).append(", type ApiFile } from './").append(importName).append("';").append("\n");
 			else
-					sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
+				sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
 		}
 		try {
-			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), sbExports.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), sbExports.toString(), StandardOpenOption.TRUNCATE_EXISTING,
+					StandardOpenOption.CREATE);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			throw new TranspilerException("Transpiler Error: Cannot generated index.ts file.");
 		}

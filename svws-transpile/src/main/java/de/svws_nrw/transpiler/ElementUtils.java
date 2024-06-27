@@ -243,15 +243,15 @@ public final class ElementUtils {
 
 	/** Ein Set mit den Klassen für boxed primitives und dem abstrakten Typ Number */
 	private static final Set<String> setBoxedPrimitives = Set.of(
-		"java.lang.Character",
-		"java.lang.Boolean",
-		"java.lang.Number",
-		"java.lang.Byte",
-		"java.lang.Short",
-		"java.lang.Integer",
-		"java.lang.Long",
-		"java.lang.Float",
-		"java.lang.Double"
+			"java.lang.Character",
+			"java.lang.Boolean",
+			"java.lang.Number",
+			"java.lang.Byte",
+			"java.lang.Short",
+			"java.lang.Integer",
+			"java.lang.Long",
+			"java.lang.Float",
+			"java.lang.Double"
 	);
 
 	/**
@@ -332,10 +332,11 @@ public final class ElementUtils {
 				return false;
 			// Prüfe, ob dieser Typ das Collection-Interface implementiert
 			for (final var type : tmp.getInterfaces())
-				if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement typeInterface) && ("java.util.Collection".equals("" + typeInterface.getQualifiedName())))
+				if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement typeInterface)
+						&& ("java.util.Collection".equals("" + typeInterface.getQualifiedName())))
 					return true;
 			tmp = ((te.getSuperclass() instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement superClass))
-				? superClass : null;
+					? superClass : null;
 		}
 		return false;
 	}
@@ -402,8 +403,12 @@ public final class ElementUtils {
 			final TypeMirror type = types.getLast();
 			types.removeLast();
 			switch (type) {
-				case final NoType nt -> { /**/ }
-				case final PrimitiveType pt -> { /**/ }
+				case final NoType nt -> {
+					/**/
+				}
+				case final PrimitiveType pt -> {
+					/**/
+				}
 				case final TypeVariable tv -> result.put(tv.asElement().getSimpleName().toString(), tv);
 				case final DeclaredType dt -> types.addAll(dt.getTypeArguments());
 				case final ArrayType at -> types.add(at.getComponentType());

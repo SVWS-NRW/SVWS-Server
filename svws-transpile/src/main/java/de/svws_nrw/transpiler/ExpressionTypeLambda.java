@@ -101,7 +101,8 @@ public final class ExpressionTypeLambda extends ExpressionType {
 				if (baseType instanceof final IdentifierTree ident) {
 					final ExpressionType type = transpiler.getExpressionType(ident);
 					if (type == null)
-						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier "
+								+ ident.getName().toString());
 					if (type instanceof final ExpressionClassType classType)
 						return classType.getFullQualifiedName();
 				}
@@ -165,7 +166,8 @@ public final class ExpressionTypeLambda extends ExpressionType {
 
 	@Override
 	public String toString() {
-		return paramTypes.stream().map(Object::toString).collect(Collectors.joining(", ", "(", ")")) + " -> " + (resultType == null ? "void" : resultType.toString());
+		return paramTypes.stream().map(Object::toString).collect(Collectors.joining(", ", "(", ")")) + " -> "
+				+ (resultType == null ? "void" : resultType.toString());
 	}
 
 
@@ -173,8 +175,8 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + paramTypes.hashCode();
-		result = prime * result + ((resultType == null) ? 0 : resultType.hashCode());
+		result = (prime * result) + paramTypes.hashCode();
+		result = (prime * result) + ((resultType == null) ? 0 : resultType.hashCode());
 		return result;
 	}
 

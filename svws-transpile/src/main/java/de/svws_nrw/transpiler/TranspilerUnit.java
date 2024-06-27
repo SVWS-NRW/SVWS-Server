@@ -86,7 +86,7 @@ public final class TranspilerUnit {
 	public final Map<Tree, Map<String, VariableTree>> allLocalVariablesByScope = new HashMap<>();
 
 	/** a map with a mapping from the local method name to a set of {@link ExecutableElement} objects */
-	public final Map<String, Set<ExecutableElement>> allLocalMethodElements  = new HashMap<>();
+	public final Map<String, Set<ExecutableElement>> allLocalMethodElements = new HashMap<>();
 
 	/** a map with a mapping from the local method name to a set of scopes where it is used */
 	public final Map<String, Set<Tree>> allLocalMethods = new HashMap<>();
@@ -267,22 +267,22 @@ public final class TranspilerUnit {
 		// Check for Classes in java.lang and java.io
 		switch (name) {
 			case "Comparable", "Cloneable", "Override", "System",
-				"Object", "Class",
-				"Enum",
-				"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
-				"Math", "String", "StringBuilder",
-				"ArrayIndexOutOfBoundsException",
-				"ClassCastException",
-				"CloneNotSupportedException",
-				"Exception",
-				"IllegalAccessError",
-				"IllegalArgumentException",
-				"IllegalStateException",
-				"IndexOutOfBoundsException",
-				"NullPointerException",
-				"NumberFormatException",
-				"RuntimeException",
-				"UnsupportedOperationException":
+					"Object", "Class",
+					"Enum",
+					"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
+					"Math", "String", "StringBuilder",
+					"ArrayIndexOutOfBoundsException",
+					"ClassCastException",
+					"CloneNotSupportedException",
+					"Exception",
+					"IllegalAccessError",
+					"IllegalArgumentException",
+					"IllegalStateException",
+					"IndexOutOfBoundsException",
+					"NullPointerException",
+					"NumberFormatException",
+					"RuntimeException",
+					"UnsupportedOperationException":
 				imports.put(name, "java.lang");
 				return "java.lang";
 			case "PrintStream":
@@ -386,7 +386,9 @@ public final class TranspilerUnit {
 				for (final TypeMirror t : it.getBounds())
 					addImport(t, added);
 			}
-			default -> { /* do nothing */ }
+			default -> {
+				/* do nothing */
+			}
 			//default -> throw new TranspilerException("Unhandled type of kind " + type.getKind());
 		}
 	}
@@ -478,7 +480,7 @@ public final class TranspilerUnit {
 				} else {
 					methodElements.add(method);
 				}
-				if (this.getElement().getKind() != ElementKind.INTERFACE && method.isDefault())
+				if ((this.getElement().getKind() != ElementKind.INTERFACE) && method.isDefault())
 					allDefaultMethodsToBeImplemented.put(method, path);
 				if (!isUnitElement && (childPath != null)) {
 					// register method
@@ -663,7 +665,8 @@ public final class TranspilerUnit {
 			final Element elem = transpiler.getElement(node);
 			if ((elem instanceof final TypeParameterElement tpe) && (tpe.asType().getKind() == TypeKind.TYPEVAR))
 				return ExpressionTypeVar.getExpressionTypeVariable(transpiler, tpe.asType());
-			throw new TranspilerException("Transpiler Error: Cannot determine type of type parameter identifier '" + nodeName + "' in transpiler unit " + classTree.getSimpleName());
+			throw new TranspilerException("Transpiler Error: Cannot determine type of type parameter identifier '" + nodeName + "' in transpiler unit "
+					+ classTree.getSimpleName());
 		}
 
 		// get identifier of local package members if a transpiler unit exists
@@ -685,9 +688,9 @@ public final class TranspilerUnit {
 
 		// check in imports for nested classes
 		final Entry<String, String> importsEntry = importsSuper.entrySet().stream()
-			.filter(e -> e.getKey().endsWith("." + nodeName))
-			.max((a, b) -> Integer.compare(a.getKey().length(), b.getKey().length()))
-			.orElse(null);
+				.filter(e -> e.getKey().endsWith("." + nodeName))
+				.max((a, b) -> Integer.compare(a.getKey().length(), b.getKey().length()))
+				.orElse(null);
 		if (importsEntry != null)
 			return ExpressionClassType.getExpressionClassType(transpiler, transpiler.getTypeElement(importsEntry.getValue() + "." + importsEntry.getKey()));
 
@@ -699,12 +702,12 @@ public final class TranspilerUnit {
 		// return class type for specific known classes
 		final String canonicalNodeName = switch (nodeName) {
 			case "Comparable", "String", "StringBuilder", "System", "Math",
-			     "Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
-			     "NumberFormatException",
-			     "NullPointerException", "UnsupportedOperationException",
-			     "Exception",
-			     "CloneNotSupportedException", "IndexOutOfBoundsException"
-			     -> "java.lang." + nodeName;
+					"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
+					"NumberFormatException",
+					"NullPointerException", "UnsupportedOperationException",
+					"Exception",
+					"CloneNotSupportedException", "IndexOutOfBoundsException" ->
+				"java.lang." + nodeName;
 			default -> null;
 		};
 		if (canonicalNodeName != null)
@@ -713,9 +716,11 @@ public final class TranspilerUnit {
 		// check whether its a case tree in a switch expression
 		final TreePath parent = path.getParentPath();
 		if ((parent.getLeaf() instanceof ConstantCaseLabelTree) && (parent.getParentPath().getLeaf() instanceof CaseTree)) {
-			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st) && (st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it)))
+			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st) && (st.getExpression() instanceof final ParenthesizedTree pt)
+					&& ((pt.getExpression() instanceof final IdentifierTree it)))
 				return getIdentifierType(it);
-			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchExpressionTree st) && (st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it)))
+			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchExpressionTree st)
+					&& (st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it)))
 				return getIdentifierType(it);
 		}
 
@@ -731,7 +736,8 @@ public final class TranspilerUnit {
 		if (ect != null)
 			return ect;
 
-		throw new TranspilerException("Transpiler Error: Cannot determine type of identifier '" + nodeName + "' in transpiler unit " + classTree.getSimpleName());
+		throw new TranspilerException("Transpiler Error: Cannot determine type of identifier '" + nodeName + "' in transpiler unit "
+				+ classTree.getSimpleName());
 	}
 
 
@@ -786,7 +792,8 @@ public final class TranspilerUnit {
 
 		final MethodInvocationTree miTree = getMethodInvocationTree(node);
 		final String name = node.getExpression().toString();
-		ExpressionType type = "this".equals(name) ? ExpressionClassType.getExpressionClassType(transpiler, classElement) : allExpressionTypes.get(node.getExpression());
+		ExpressionType type =
+				"this".equals(name) ? ExpressionClassType.getExpressionClassType(transpiler, classElement) : allExpressionTypes.get(node.getExpression());
 		if ((type == null) && (transpiler.getElement(node.getExpression()).getKind() == ElementKind.PACKAGE)) {
 			if ((transpiler.getElement(node).getKind() == ElementKind.CLASS) || ((transpiler.getElement(node).getKind() == ElementKind.INTERFACE))) {
 				return ExpressionClassType.getExpressionClassType(transpiler, node);
@@ -833,13 +840,13 @@ public final class TranspilerUnit {
 		}
 
 		if ("this".equals(name)) {
-		    // TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
-		    if ("compareTo".equals(member))
-		        return new ExpressionPrimitiveType(TypeKind.INT);
+			// TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
+			if ("compareTo".equals(member))
+				return new ExpressionPrimitiveType(TypeKind.INT);
 		}
 		if (typeOfClass.getKind() == Kind.ENUM) {
-		    if ("compareTo".equals(member))
-		        return new ExpressionPrimitiveType(TypeKind.INT);
+			if ("compareTo".equals(member))
+				return new ExpressionPrimitiveType(TypeKind.INT);
 		}
 
 		// check method invocation
@@ -863,7 +870,8 @@ public final class TranspilerUnit {
 		final ExpressionType result = transpiler.getMethodReturnType(this, node, typeOfClass, member, paramTypes);
 		if (result != null)
 			return result;
-		throw new TranspilerException("Transpiler Error: Cannot determine method return type for " + name + "." + member + " : " + packageName + "." + typeName);
+		throw new TranspilerException("Transpiler Error: Cannot determine method return type for " + name + "." + member + " : " + packageName + "."
+				+ typeName);
 	}
 
 
@@ -880,19 +888,22 @@ public final class TranspilerUnit {
 		// TODO Unbox primitive numeric types...
 		return switch (binary.getKind()) {
 			case LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL, EQUAL_TO,
-			     NOT_EQUAL_TO, AND, XOR, OR, CONDITIONAL_AND, CONDITIONAL_OR
-			     -> new ExpressionPrimitiveType(TypeKind.BOOLEAN);
+					NOT_EQUAL_TO, AND, XOR, OR, CONDITIONAL_AND, CONDITIONAL_OR ->
+				new ExpressionPrimitiveType(TypeKind.BOOLEAN);
 			case LEFT_SHIFT, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT -> leftType;
 			case MULTIPLY, DIVIDE, REMAINDER, MINUS, PLUS -> {
 				if (leftType.toString().equals("String") || rightType.toString().equals("String"))
 					yield ExpressionClassType.getExpressionClassType(transpiler, transpiler.getTypeElement("java.lang.String"));
 				if (!leftType.isPrimitiveOrBoxedPrimitive() || !rightType.isPrimitiveOrBoxedPrimitive()) {
 					if (binary.getKind() == Tree.Kind.PLUS)
-						throw new TranspilerException("Transpiler Error: Operands of binary operation of kind " + binary.getKind() + " must be numeric or string types");
+						throw new TranspilerException("Transpiler Error: Operands of binary operation of kind " + binary.getKind()
+								+ " must be numeric or string types");
 					throw new TranspilerException("Transpiler Error: Operands of binary operation of kind " + binary.getKind() + " must be numeric types");
 				}
-				final ExpressionPrimitiveType left = (leftType instanceof final ExpressionClassType lct) ? ExpressionPrimitiveType.getUnboxed(lct) : (ExpressionPrimitiveType) leftType;
-				final ExpressionPrimitiveType right = (rightType instanceof final ExpressionClassType rct) ? ExpressionPrimitiveType.getUnboxed(rct) : (ExpressionPrimitiveType) rightType;
+				final ExpressionPrimitiveType left =
+						(leftType instanceof final ExpressionClassType lct) ? ExpressionPrimitiveType.getUnboxed(lct) : (ExpressionPrimitiveType) leftType;
+				final ExpressionPrimitiveType right =
+						(rightType instanceof final ExpressionClassType rct) ? ExpressionPrimitiveType.getUnboxed(rct) : (ExpressionPrimitiveType) rightType;
 				// TODO check invalid primitive kinds
 				if ((left.getPrimitiveTypeKind() == TypeKind.DOUBLE) || (right.getPrimitiveTypeKind() == TypeKind.DOUBLE))
 					yield new ExpressionPrimitiveType(TypeKind.DOUBLE);
@@ -933,19 +944,25 @@ public final class TranspilerUnit {
 				}
 				case final UnaryTree unary -> allExpressionTypes.put(unary, allExpressionTypes.get(unary.getExpression()));
 				case final BinaryTree binary -> allExpressionTypes.put(binary, getBinaryOperationResultTyp(binary));
-				case final ConditionalExpressionTree conditionalExpr -> allExpressionTypes.put(conditionalExpr, allExpressionTypes.get(conditionalExpr.getTrueExpression()));
+				case final ConditionalExpressionTree conditionalExpr ->
+					allExpressionTypes.put(conditionalExpr, allExpressionTypes.get(conditionalExpr.getTrueExpression()));
 				case final InstanceOfTree exprInstanceOf -> allExpressionTypes.put(exprInstanceOf, new ExpressionPrimitiveType(TypeKind.BOOLEAN));
-				case final CompoundAssignmentTree compoundAssignment -> allExpressionTypes.put(compoundAssignment, allExpressionTypes.get(compoundAssignment.getVariable()));
+				case final CompoundAssignmentTree compoundAssignment ->
+					allExpressionTypes.put(compoundAssignment, allExpressionTypes.get(compoundAssignment.getVariable()));
 				case final LiteralTree literal -> allExpressionTypes.put(literal, ExpressionType.getExpressionType(transpiler, literal));
 				case final MemberSelectTree memberSelect -> allExpressionTypes.put(memberSelect, getMemberSelectType(memberSelect));
 				case final MethodInvocationTree methodInvocation -> allExpressionTypes.put(methodInvocation, getMethodInvocationType(methodInvocation));
 				case final NewArrayTree newArray -> allExpressionTypes.put(newArray, ExpressionType.getExpressionType(transpiler, newArray));
 				case final NewClassTree newClass -> allExpressionTypes.put(newClass, ExpressionType.getExpressionType(transpiler, newClass.getIdentifier()));
-				case final ParenthesizedTree parenthesizedTree -> allExpressionTypes.put(parenthesizedTree, allExpressionTypes.get(parenthesizedTree.getExpression()));
+				case final ParenthesizedTree parenthesizedTree ->
+					allExpressionTypes.put(parenthesizedTree, allExpressionTypes.get(parenthesizedTree.getExpression()));
 				case final TypeCastTree typeCast -> allExpressionTypes.put(typeCast, ExpressionType.getExpressionType(transpiler, typeCast.getType()));
-				case final LambdaExpressionTree lambdaExpression -> allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
+				case final LambdaExpressionTree lambdaExpression ->
+					allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
 				// TODO MemberReferenceTree
-				default -> { /* do nothing */ }
+				default -> {
+					/* do nothing */
+				}
 			}
 		}
 	}

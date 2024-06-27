@@ -67,16 +67,16 @@ public class ApiRequestBody {
 		if (annotationContent == null) {
 			final String className = transpiler.getClass(method).getSimpleName().toString();
 			final String methodName = method.getName().toString();
-			throw new TranspilerException("Transpiler Exception: Transpiler requires content annotation for ApiResponse annotation (method " + methodName + " in class " + className + ").");
+			throw new TranspilerException("Transpiler Exception: Transpiler requires content annotation for ApiResponse annotation (method " + methodName
+					+ " in class " + className + ").");
 		}
 		content = new ApiContent(transpiler, annotationContent);
 	}
 
 	private static String determineDescription(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("description");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing description value for @RequestBody annotation.");
-        }
+		if (value == null)
+			throw new TranspilerException("Transpiler Exception: Missing description value for @RequestBody annotation.");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return str;
 		throw new TranspilerException("Transpiler Exception: Unhandled description argument for ApiResponse annotation.");

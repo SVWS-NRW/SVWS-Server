@@ -161,11 +161,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled comment
 	 */
 	private String formatComment(final String comment) {
-        return (comment == null)
-        		? ""
-        		: getIndent() + "/**" + System.lineSeparator()
-                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> (getIndent() + " * " + s.stripTrailing()).stripTrailing()).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
-                + getIndent() + " */" + System.lineSeparator();
+		return (comment == null)
+				? ""
+				: getIndent() + "/**" + System.lineSeparator()
+						+ Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> (getIndent() + " * " + s.stripTrailing()).stripTrailing())
+								.collect(Collectors.joining(System.lineSeparator()))
+						+ System.lineSeparator()
+						+ getIndent() + " */" + System.lineSeparator();
 	}
 
 
@@ -278,17 +280,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final TypeNode typeNode = new TypeNode(this, node.getType(), true, transpiler.hasNotNullAnnotation(node));
 		final ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
-			return "%s %s : %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false));
+			return "%s %s : %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), typeNode.transpile(false));
 		final ExpressionType typeInitializer = transpiler.getExpressionType(initializer);
 		if (initializer instanceof final SwitchExpressionTree set) {
 			final String strInitializer = convertSwitchExpression(set, node.getName().toString());
 			return "%s %s : %s;".formatted(strTsLet, node.getName(), typeNode.transpile(false))
-				+ System.lineSeparator() + getIndent() + "%s".formatted(strInitializer);
+					+ System.lineSeparator() + getIndent() + "%s".formatted(strInitializer);
 		}
-		String  strInitializer = convertExpression(initializer);
-		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType) && (typeInitializer.isPrimitiveOrBoxedPrimitive()))
+		String strInitializer = convertExpression(initializer);
+		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType)
+				&& (typeInitializer.isPrimitiveOrBoxedPrimitive()))
 			strInitializer += strTsValueOf;
-		return "%s %s : %s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false), strInitializer);
+		return "%s %s : %s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), typeNode.transpile(false), strInitializer);
 	}
 
 
@@ -302,9 +305,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertEnhancedForLoop(final EnhancedForLoopTree node) {
 		final boolean isFinal = transpiler.hasFinalModifier(node.getVariable());
 		String result = "for (%s %s of %s)".formatted(
-			isFinal ? strTsConst : strTsLet,
-			node.getVariable().getName(),
-			convertExpression(node.getExpression())
+				isFinal ? strTsConst : strTsLet,
+				node.getVariable().getName(),
+				convertExpression(node.getExpression())
 		);
 		if (node.getStatement() instanceof BlockTree)
 			result += " ";
@@ -322,9 +325,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String convertForLoop(final ForLoopTree node) {
 		String result = "for (%s; %s; %s)".formatted(
-			"let " + node.getInitializer().stream().map(st -> convertStatement(st, true)).collect(Collectors.joining(", ")).replace("let ", "").replace("const ", ""),
-			convertExpression(node.getCondition()),
-			node.getUpdate().stream().map(this::convertExpressionStatement).collect(Collectors.joining(", "))
+				"let " + node.getInitializer().stream().map(st -> convertStatement(st, true)).collect(Collectors.joining(", ")).replace("let ", "")
+						.replace("const ", ""),
+				convertExpression(node.getCondition()),
+				node.getUpdate().stream().map(this::convertExpressionStatement).collect(Collectors.joining(", "))
 		);
 		if (node.getStatement() instanceof BlockTree)
 			result += " ";
@@ -358,8 +362,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String convertDoWhileLoop(final DoWhileLoopTree node) {
 		return "do %s while %s;".formatted(
-			convertStatement(node.getStatement(), false),
-			convertExpression(node.getCondition())
+				convertStatement(node.getStatement(), false),
+				convertExpression(node.getCondition())
 		);
 	}
 
@@ -389,16 +393,16 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					yield strObject;
 				yield "unknown";
 			}
-			case strIterator ->
-				((type instanceof final ExpressionClassType classType) && (strIterator.equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
-			case strMap ->
-				((type instanceof final ExpressionClassType classType) && (strMap.equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
-			case strEntry ->
-				((type instanceof final ExpressionClassType classType) && (strEntry.equals(classType.toString())) && (strJavaMapFQ.equals(classType.getPackageName()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
-			case strSet ->
-				((type instanceof final ExpressionClassType classType) && (strSet.equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
-			case strFunction ->
-				((type instanceof final ExpressionClassType classType) && (strFunction.equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case strIterator -> ((type instanceof final ExpressionClassType classType) && (strIterator.equals(classType.toString())))
+					? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case strMap -> ((type instanceof final ExpressionClassType classType) && (strMap.equals(classType.toString())))
+					? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case strEntry -> ((type instanceof final ExpressionClassType classType) && (strEntry.equals(classType.toString()))
+					&& (strJavaMapFQ.equals(classType.getPackageName()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case strSet -> ((type instanceof final ExpressionClassType classType) && (strSet.equals(classType.toString())))
+					? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case strFunction -> ((type instanceof final ExpressionClassType classType) && (strFunction.equals(classType.toString())))
+					? getImportName(classType.toString(), classType.getPackageName()) : null;
 			default -> null;
 		};
 		if (result != null)
@@ -408,12 +412,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if ((type instanceof final ExpressionClassType classType) && ((classType.isNumberType()) || (classType.isString()))) {
 			final Tree parent = transpiler.getParent(node);
 			if ((parent instanceof final BinaryTree bt) && ((bt.getKind() == Kind.MULTIPLY) || (bt.getKind() == Kind.DIVIDE)
-			    || (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
-			    || (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
+					|| (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
+					|| (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
 				valueOf = "!";
 		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
-		if ((type instanceof final ExpressionClassType classType) && ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
+		if ((type instanceof final ExpressionClassType classType)
+				&& ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
 			return classType.toString() + "." + node.getName().toString() + valueOf;
 		}
 		if (!transpiler.isClassMember(node))
@@ -626,7 +631,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case AND_ASSIGNMENT -> "%s = %s && %s".formatted(variable, variable, expression);
 			case XOR_ASSIGNMENT -> "%s = %s ^ %s".formatted(variable, variable, expression);
 			case OR_ASSIGNMENT -> "%s = %s || %s".formatted(variable, variable, expression);
-			default -> throw new TranspilerException("Transpiler error: The kind " + node.getKind() + " for the compound assignment is not supported by the transpiler");
+			default -> throw new TranspilerException("Transpiler error: The kind " + node.getKind() + " for the compound assignment is not supported"
+					+ " by the transpiler");
 		};
 	}
 
@@ -760,7 +766,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append("if (").append(tmpExprVar).append(" instanceof ").append(typeNode.transpile(false)).append(") {");
 						indentC++;
 						sb.append(System.lineSeparator()).append(getIndent());
-						sb.append("const ").append(varNode.getName()).append(" = ").append(tmpExprVar).append(" as ").append(typeNode.transpile(false)).append(";");
+						sb.append("const ").append(varNode.getName()).append(" = ").append(tmpExprVar).append(" as ").append(typeNode.transpile(false))
+								.append(";");
 						final boolean isBlock = ct.getBody() instanceof BlockTree;
 						sb.append(System.lineSeparator());
 						if (!isBlock)
@@ -787,7 +794,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							} else {
 								sb.append(" else ");
 							}
-							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString()).append(") {");
+							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString())
+									.append(") {");
 							indentC++;
 							final boolean isBlock = ct.getBody() instanceof BlockTree;
 							sb.append(System.lineSeparator());
@@ -807,14 +815,20 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						} else
 							throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
 					}
-					case final DefaultCaseLabelTree dclt -> { /* Der Default Case muss immer der letzte in TS sein */ }
+					case final DefaultCaseLabelTree dclt -> {
+						/* Der Default Case muss immer der letzte in TS sein */
+					}
 					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
 				}
 			}
 			for (final CaseLabelTree clt : ct.getLabels()) {
 				switch (clt) {
-					case final PatternCaseLabelTree pclt -> { /* siehe oben */ }
-					case final ConstantCaseLabelTree cclt -> { /* siehe oben */ }
+					case final PatternCaseLabelTree pclt -> {
+						/* siehe oben */
+					}
+					case final ConstantCaseLabelTree cclt -> {
+						/* siehe oben */
+					}
 					case final DefaultCaseLabelTree dclt -> {
 						if (first) {
 							throw new TranspilerException("Transpiler Error: Switch Expression with only a default case is not supported");
@@ -887,9 +901,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String convertConditionalExpression(final ConditionalExpressionTree node) {
 		return "%s ? %s : %s".formatted(
-			convertExpression(node.getCondition()),
-			convertExpression(node.getTrueExpression()),
-			convertExpression(node.getFalseExpression())
+				convertExpression(node.getCondition()),
+				convertExpression(node.getTrueExpression()),
+				convertExpression(node.getFalseExpression())
 		);
 	}
 
@@ -907,8 +921,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case INT_LITERAL, LONG_LITERAL, FLOAT_LITERAL, DOUBLE_LITERAL, BOOLEAN_LITERAL -> "" + node.getValue();
 			case CHAR_LITERAL -> "'" + node.getValue() + "'";
 			case STRING_LITERAL -> "\"" + ((String) node.getValue()).replace("\\", "\\\\").replace("\t", "\\t").replace("\b", "\\b")
-				        .replace("\n", "\\n").replace("\r", "\\r").replace("\f", "\\f")
-				        .replace("\"", "\\\"") + "\"";
+					.replace("\n", "\\n").replace("\r", "\\r").replace("\f", "\\f")
+					.replace("\"", "\\\"") + "\"";
 			case NULL_LITERAL -> "null";
 			default -> throw new TranspilerException("Transpiler Exception: Unknown literal type " + node.getKind() + ".");
 		};
@@ -928,7 +942,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> "0";
 			case CHAR -> "\"\"";
 			default ->
-				throw new TranspilerException("Transpiler Error: Default value for primitive type of kind " + node.getPrimitiveTypeKind() + " is not supported.");
+				throw new TranspilerException("Transpiler Error: Default value for primitive type of kind " + node.getPrimitiveTypeKind()
+						+ " is not supported.");
 		};
 	}
 
@@ -966,8 +981,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// initialize an array with null values for java compatibility
 		final List<? extends ExpressionTree> dimensions = node.getDimensions();
 		String initializer = "Array(%s).fill(%s)".formatted(
-			convertExpression(dimensions.get(dimensions.size() - 1)),
-			getDefaultValueForType(elementType)
+				convertExpression(dimensions.get(dimensions.size() - 1)),
+				getDefaultValueForType(elementType)
 		);
 		for (int i = dimensions.size() - 2; i >= 0; i--)
 			initializer = "[...Array(%s)].map(e => %s)".formatted(convertExpression(dimensions.get(i)), initializer);
@@ -991,7 +1006,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final ExpressionType typeExpression = transpiler.getExpressionType(expression);
 		if ((typeVariable == null) || (typeExpression == null))
 			throw new TranspilerException("Transpiler Exception: Cannot determine expression types for assigment");
-		if ((typeVariable instanceof ExpressionPrimitiveType) && (typeExpression instanceof ExpressionClassType) && (typeExpression.isPrimitiveOrBoxedPrimitive()))
+		if ((typeVariable instanceof ExpressionPrimitiveType) && (typeExpression instanceof ExpressionClassType)
+				&& (typeExpression.isPrimitiveOrBoxedPrimitive()))
 			strExpression += strTsValueOf;
 		return "%s = %s".formatted(strVariable, strExpression);
 	}
@@ -1139,7 +1155,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (curCase.getExpressions().isEmpty())
 						sb.append(getIndent()).append("\tdefault:");
 					else
-						sb.append(curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp)).collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":")));
+						sb.append(curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp))
+								.collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":")));
 					indentC++;
 					final Tree body = curCase.getBody();
 					sb.append(" {").append(System.lineSeparator());
@@ -1151,7 +1168,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					} else if (body instanceof final ThrowTree tt) {
 						sb.append(getIndent()).append(convertThrow(tt)).append(System.lineSeparator());
 					} else
-						throw new TranspilerException("Transpiler Error: Case of type RULE currently not supported in switch statements for body type %s.".formatted(body.getKind()));
+						throw new TranspilerException("Transpiler Error: Case of type RULE currently not supported in switch statements for body type %s."
+								.formatted(body.getKind()));
 					sb.append(getIndent()).append("break;").append(System.lineSeparator());
 					indentC--;
 					sb.append(getIndent()).append("}").append(System.lineSeparator());
@@ -1161,7 +1179,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (curCase.getExpressions().isEmpty())
 						sb.append(getIndent()).append("\tdefault:");
 					else
-						sb.append(curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp)).collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":")));
+						sb.append(curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp))
+								.collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":")));
 					indentC++;
 					if ((curCase.getStatements().size() == 1) && (curCase.getStatements().get(0) instanceof BlockTree)) {
 						sb.append(convertStatement(curCase.getStatements().get(0), false));
@@ -1239,9 +1258,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled break statement
 	 */
 	public static String convertBreak(final BreakTree node) {
-		return "break%s;".formatted(
-			node.getLabel() == null ? "" : " " + node.getLabel()
-		);
+		return "break%s;".formatted((node.getLabel() == null) ? "" : " " + node.getLabel());
 	}
 
 
@@ -1253,9 +1270,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled continue statement
 	 */
 	public static String convertContinue(final ContinueTree node) {
-		return "continue%s;".formatted(
-			node.getLabel() == null ? "" : " " + node.getLabel()
-		);
+		return "continue%s;".formatted((node.getLabel() == null) ? "" : " " + node.getLabel());
 	}
 
 
@@ -1351,7 +1366,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					case THROW -> convertThrow((ThrowTree) child);
 					case EMPTY_STATEMENT -> "";
 					case YIELD -> convertYield((YieldTree) child, yieldVar);
-					default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind() + " currently not supported in statement blocks.");
+					default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind()
+							+ " currently not supported in statement blocks.");
 				};
 				if (strChild != null)
 					sb.append(getIndent()).append(strChild).append(System.lineSeparator());
@@ -1371,7 +1387,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 *
 	 * @return the transpiled method invocation parameters
 	 */
-	public String convertMethodInvocationParameters(final List<? extends ExpressionTree> expressions, final String enumValueName, final Integer enumOrdinal, final boolean noParentheses) {
+	public String convertMethodInvocationParameters(final List<? extends ExpressionTree> expressions, final String enumValueName, final Integer enumOrdinal,
+			final boolean noParentheses) {
 		if (expressions == null)
 			return "";
 		final String enumInject = ((enumValueName != null) && (enumOrdinal != null)) ? "\"" + enumValueName + "\", " + enumOrdinal + ", " : "";
@@ -1384,7 +1401,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final ExpressionType type = ExpressionType.getExpressionType(transpiler, expr);
 
 			// check whether we need a spread operator
-			if ((i == expressions.size() - 1) && (type instanceof ExpressionArrayType)) {
+			if ((i == (expressions.size() - 1)) && (type instanceof ExpressionArrayType)) {
 				// get the parameter and its type
 				final TranspilerUnit unit = transpiler.getTranspilerUnit(expr);
 				final Tree parent = transpiler.getParent(expr);
@@ -1553,7 +1570,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					return "Java" + expression + "." + identifier + convertMethodInvocationParameters(node.getArguments(), null, null, false);
 				}
 				//if ("intValue".equals(identifier) && (type instanceof ExpressionClassType ect)) {
-				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier)) && (type instanceof final ExpressionClassType ect)) {
+				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier))
+						&& (type instanceof final ExpressionClassType ect)) {
 					final String expression = convertExpression(ms.getExpression());
 					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
 						return "Math.trunc(" + expression + "!)";
@@ -1564,20 +1582,28 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			if (type.isString()) {
 				final String expression = convertExpression(ms.getExpression());
 				final Set<String> strMethods = Set.of(
-					"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
-					"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
+						"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
+						"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
 				);
 				if (strMethods.contains(ms.getIdentifier().toString())) {
 					transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
 					return switch (ms.getIdentifier().toString()) {
-						case "contains" -> "JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "indexOf" -> "JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "compareTo" -> "JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "compareToIgnoreCase" -> "JavaString.compareToIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "equalsIgnoreCase" -> "JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "replaceAll" -> "JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "replaceFirst" -> "JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-						case "formatted" -> "JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "contains" ->
+							"JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "indexOf" ->
+							"JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "compareTo" ->
+							"JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "compareToIgnoreCase" -> "JavaString.compareToIgnoreCase(" + expression + ", "
+								+ convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "equalsIgnoreCase" ->
+							"JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "replaceAll" ->
+							"JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "replaceFirst" ->
+							"JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "formatted" ->
+							"JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 						case "format" -> "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 						case "length" -> expression + ".length"; // in typescript it is not a method...
 						case "isBlank" -> "JavaString.isBlank(" + expression + ")";
@@ -1662,7 +1688,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		boolean forceNotNull = false;
 		if (node.getInitializer() != null) {
 			initializer = " = ";
-			if ((enumName != null) && (node.getInitializer() instanceof final NewClassTree newClassTree) && (newClassTree.getIdentifier()).toString().equals(enumName)) {
+			if ((enumName != null) && (node.getInitializer() instanceof final NewClassTree newClassTree)
+					&& (newClassTree.getIdentifier()).toString().equals(enumName)) {
 				forceNotNull = true; // for attribute generation below...
 				// print new operator and class identifier
 				final TypeNode typeNode = new TypeNode(this, newClassTree.getIdentifier(), false, false);
@@ -1685,7 +1712,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					case BOOLEAN -> "false";
 					case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> "0";
 					case CHAR -> "''";
-					default -> throw new TranspilerException("Transpiler Error: " + ptt.getPrimitiveTypeKind() + " is not supported as a primitive type for attributes.");
+					default -> throw new TranspilerException("Transpiler Error: " + ptt.getPrimitiveTypeKind()
+							+ " is not supported as a primitive type for attributes.");
 				};
 			} else {
 				if (!transpiler.hasNotNullAnnotation(node))
@@ -1702,14 +1730,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// convert to typescrypt code
 		final TypeNode typeNode = new TypeNode(this, node.getType(), true, forceNotNull ? true : transpiler.hasNotNullAnnotation(node));
 		return comment + getIndent() + "%s%s%s%s : %s%s;%s".formatted(
-			"".equals(accessModifier) ? "" : accessModifier + " ",
-			transpiler.hasStaticModifier(node) ? "static " : "",
-			transpiler.hasFinalModifier(node) ? "readonly " : "",
-			node.getName(),  // the attribute name
-			// the attribute type, for enums it is generated with a not null annonation
-			typeNode.transpile(false),
-			initializer,
-			System.lineSeparator()
+				"".equals(accessModifier) ? "" : accessModifier + " ",
+				transpiler.hasStaticModifier(node) ? "static " : "",
+				transpiler.hasFinalModifier(node) ? "readonly " : "",
+				node.getName(),  // the attribute name
+				// the attribute type, for enums it is generated with a not null annonation
+				typeNode.transpile(false),
+				initializer,
+				System.lineSeparator()
 		);
 	}
 
@@ -1735,14 +1763,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public void appendCast(final StringBuilder sb, final ClassTree node) {
 		sb.append(System.lineSeparator());
 		sb.append("%s%s%s%s%s%s%s%s".formatted(
-			getIndent(),
-			"export function ",
-			getCastFunctionName(node),
-			convertTypeParameters(node.getTypeParameters(), true),
-			"(obj : unknown) : ",
-			node.getSimpleName(),
-			convertTypeParameters(node.getTypeParameters(), false),
-			" {"
+				getIndent(),
+				"export function ",
+				getCastFunctionName(node),
+				convertTypeParameters(node.getTypeParameters(), true),
+				"(obj : unknown) : ",
+				node.getSimpleName(),
+				convertTypeParameters(node.getTypeParameters(), false),
+				" {"
 		));
 		sb.append(System.lineSeparator());
 		indentC++;
@@ -1752,7 +1780,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				node.getSimpleName(),
 				convertTypeParameters(node.getTypeParameters(), false),
 				";"
-			));
+		));
 		sb.append(System.lineSeparator());
 		indentC--;
 		sb.append(getIndent());
@@ -1834,13 +1862,15 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				String tmpAttribute = "obj." + attribute.getName();
 				if (type.isString() || type.isNumberClass() || type.isBoolean())
 					tmpAttribute = "" + tmpAttribute + " === null ? null : " + tmpAttribute;
-				sb.append(getIndent() + "result." + attribute.getName() + " = (obj." + attribute.getName() + " === undefined) ? null : " + tmpAttribute + ";" + System.lineSeparator());
+				sb.append(getIndent() + "result." + attribute.getName() + " = (obj." + attribute.getName() + " === undefined) ? null : " + tmpAttribute + ";"
+						+ System.lineSeparator());
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
 				final TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				sb.append(getIndent() + "if ((obj." + attribute.getName() + " !== undefined) && (obj." + attribute.getName() + " !== null)) {" + System.lineSeparator());
+				sb.append(getIndent() + "if ((obj." + attribute.getName() + " !== undefined) && (obj." + attribute.getName() + " !== null)) {"
+						+ System.lineSeparator());
 				indentC++;
 				sb.append(getIndent() + "for (const elem of obj." + attribute.getName() + ") {" + System.lineSeparator());
 				indentC++;
@@ -1849,7 +1879,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				else if (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean())
 					sb.append(getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : elem);" + System.lineSeparator());
 				else
-					sb.append(getIndent() + "result." + attribute.getName() + "?.add(" + paramType.transpile(true) + ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + "?.add(" + paramType.transpile(true)
+							+ ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator());
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				indentC--;
@@ -1857,7 +1888,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
-					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false) + " for JSON deserialization.");
+					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false)
+							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
 				sb.append(getIndent() + "for (let i = 0; i < obj." + attribute.getName() + ".length; i++) {" + System.lineSeparator());
 				indentC++;
@@ -1868,23 +1900,30 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
 						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + ";" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
+						sb.append(getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true)
+								+ ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
 				} else {
 					final String tmpAttribute = "obj." + attribute.getName() + "[i]";
 					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
-						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : " + tmpAttribute + ";" + System.lineSeparator());
+						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : " + tmpAttribute + ";"
+								+ System.lineSeparator());
 					else
-						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " == null ? null : (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
+						sb.append(getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " == null ? null : (" + contentType.transpile(true)
+								+ ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator());
 				}
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 			} else {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + "if (obj." + attribute.getName() + " === undefined)" + System.lineSeparator());
-					sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator());
-					sb.append(getIndent() + "result." + attribute.getName() + " = " + type.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
+					sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');"
+							+ System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + " = " + type.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj."
+							+ attribute.getName() + "));" + System.lineSeparator());
 				} else {
-					sb.append(getIndent() + "result." + attribute.getName() + " = ((obj." + attribute.getName() + " === undefined) || (obj." + attribute.getName() + " === null)) ? null : " + type.getNoDeclarationType().transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + " = ((obj." + attribute.getName() + " === undefined) || (obj."
+							+ attribute.getName() + " === null)) ? null : " + type.getNoDeclarationType().transpile(true)
+							+ ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "));" + System.lineSeparator());
 				}
 			}
 		}
@@ -1910,8 +1949,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 		sb.append(getIndent() + "let result = '{';" + System.lineSeparator());
 		final List<VariableTree> attributes = transpiler.getAttributesWithSuperclassAttributes(node);
-		for (int i = 0; i < attributes.size(); i++) {
-			final VariableTree attribute = attributes.get(i);
+		for (final VariableTree attribute : attributes) {
 			final String endline = " + ',';" + System.lineSeparator();
 			final VariableNode variable = new VariableNode(this, attribute);
 			if (variable.isStatic()) // ignore static members
@@ -1982,7 +2020,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
-					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false) + " for JSON deserialization.");
+					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false)
+							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
 
 				sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
@@ -2011,7 +2050,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);"
+								+ System.lineSeparator());
 				}
 				sb.append(getIndent() + "if (i < " + objAttr + ".length - 1)" + System.lineSeparator());
 				indentC++;
@@ -2026,7 +2066,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true) + ".transpilerToJSON(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}
 		}
@@ -2050,12 +2091,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String appendTranspilerToJSONPatch(final ClassTree node) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(getIndent() + "public static transpilerToJSONPatch(obj : Partial<" + node.getSimpleName().toString() + ">) : string {" + System.lineSeparator());
+		sb.append(getIndent() + "public static transpilerToJSONPatch(obj : Partial<" + node.getSimpleName().toString() + ">) : string {"
+				+ System.lineSeparator());
 		indentC++;
 		sb.append(getIndent() + "let result = '{';" + System.lineSeparator());
 		final List<VariableTree> attributes = transpiler.getAttributesWithSuperclassAttributes(node);
-		for (int i = 0; i < attributes.size(); i++) {
-			final VariableTree attribute = attributes.get(i);
+		for (final VariableTree attribute : attributes) {
 			final String endline = " + ',';" + System.lineSeparator();
 			final VariableNode variable = new VariableNode(this, attribute);
 			if (variable.isStatic()) // ignore static members
@@ -2128,7 +2169,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
-					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false) + " for JSON deserialization.");
+					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false)
+							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
 				sb.append(getIndent() + "const a = " + objAttr + ";" + System.lineSeparator());
 				sb.append(getIndent() + "if (!a) {" + System.lineSeparator());
@@ -2157,7 +2199,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);"
+								+ System.lineSeparator());
 				}
 				sb.append(getIndent() + "if (i < a.length - 1)" + System.lineSeparator());
 				indentC++;
@@ -2172,7 +2215,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true) + ".transpilerToJSON(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}
 			indentC--;
@@ -2197,8 +2241,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public void transpileClassMethods(final StringBuilder sb, final ClassTree node, final List<MethodTree> methodNodes) {
 		final List<MethodNode> methods = methodNodes.stream()
-			.map(method -> new MethodNode(this, node, method, getIndent()))
-			.toList();
+				.map(method -> new MethodNode(this, node, method, getIndent()))
+				.toList();
 		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
 		for (final MethodNode method : methods) {
 			final String methodName = method.getName();
@@ -2233,8 +2277,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertDefaultMethodParameters(final ExecutableElement method, final Map<String, TypeMirror> resolved) {
 		String result = "";
 		final var params = method.getParameters();
-		for (int i = 0; i < params.size(); i++) {
-			final var param = params.get(i);
+		for (final VariableElement param : params) {
 			if (!"".equals(result))
 				result += ", ";
 			result += (new VariableNode(this, param, method.isVarArgs(), resolved)).transpile();
@@ -2311,7 +2354,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final TypeNode returnType = new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method), resolved);
 			final String returnTypeStr = returnType.transpile(false);
 			// TODO the methods type parameters
-			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnTypeStr).append(" {").append(System.lineSeparator());
+			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnTypeStr).append(" {")
+					.append(System.lineSeparator());
 			indentC++;
 			sb.append(getIndent());
 			if (method.getReturnType().getKind() != TypeKind.VOID)
@@ -2368,7 +2412,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			for (int i = 0; i < implClause.size(); i++) {
 				final TypeNode typeNode = new TypeNode(this, implClause.get(i), false, false);
 				sb.append(typeNode.transpile(false));
-				if (i < implClause.size() - 1)
+				if (i < (implClause.size() - 1))
 					sb.append(", ");
 			}
 		}
@@ -2386,8 +2430,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		// Generate Constructors
 		final List<MethodNode> constructors = Transpiler.getConstructors(node).stream()
-			.map(method -> new MethodNode(this, node, method, getIndent()))
-			.toList();
+				.map(method -> new MethodNode(this, node, method, getIndent()))
+				.toList();
 		if (constructors.size() == 1) {
 			constructors.get(0).print(sb, "" + node.getSimpleName());
 			sb.append(System.lineSeparator());
@@ -2419,14 +2463,15 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		if (unit.superTypes.contains("java.util.Deque")) {
 			sb.append(getIndent()).append("public reversed() : Deque<E> {").append(System.lineSeparator());
-			sb.append(getIndent()).append("\tthrow new UnsupportedOperationException(\"Der Transpiler unterstützt diese Methode noch nicht.\");").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tthrow new UnsupportedOperationException(\"Der Transpiler unterstützt diese Methode noch nicht.\");")
+					.append(System.lineSeparator());
 			sb.append(getIndent()).append("}").append(System.lineSeparator());
 			sb.append(System.lineSeparator());
 		}
 		if (unit.superTypes.contains("java.util.NavigableSet")) {
 			String strType = "E";
 			if (transpiler.getElement(node) instanceof final TypeElement te) {
-				for (final TypeMirror tm: te.getInterfaces()) {
+				for (final TypeMirror tm : te.getInterfaces()) {
 					if ((tm instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement ste)
 							&& ("java.util.NavigableSet".equals(ste.getQualifiedName().toString()))
 							&& (dt.getTypeArguments().get(0) instanceof final TypeVariable tv)) {
@@ -2460,7 +2505,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			sb.append(getIndent()).append("}").append(System.lineSeparator());
 			sb.append(System.lineSeparator());
 		}
-		if ((unit.superTypes.contains("java.lang.Iterable")) && (!unit.superTypes.contains("java.util.AbstractCollection") && (!unit.superTypes.contains("java.util.AbstractList")))) {
+		if ((unit.superTypes.contains("java.lang.Iterable")) && (!unit.superTypes.contains("java.util.AbstractCollection")
+				&& (!unit.superTypes.contains("java.util.AbstractList")))) {
 			// TODO Get the type parameter that was passed through inheritance to the Iterable<...> interface
 			final TypeMirror type = unit.getIterableTypeArgument();
 			if (type == null)
@@ -2509,7 +2555,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			for (int i = 0; i < implClause.size(); i++) {
 				final TypeNode typeNode = new TypeNode(this, implClause.get(i), false, false);
 				sb.append(typeNode.transpile(false));
-				if (i < implClause.size() - 1)
+				if (i < (implClause.size() - 1))
 					sb.append(", ");
 			}
 		}
@@ -2520,10 +2566,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// Generate Attributes
 		indentC++;
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration */").append(System.lineSeparator());
-		sb.append(getIndent()).append("static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
+		sb.append(getIndent()).append("static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];")
+				.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration indexed by their name*/").append(System.lineSeparator());
-		sb.append(getIndent()).append("static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
+		sb.append(getIndent()).append("static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ")
+				.append(node.getSimpleName()).append(">();").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
 		for (final VariableTree attribute : transpiler.getAttributes(node)) {
@@ -2555,32 +2603,32 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
 		sb.append(
-			"""
-			%1$s/**
-			%1$s * Returns an array with enumeration values.
-			%1$s *
-			%1$s * @returns the array with enumeration values
-			%1$s */
-			%1$spublic static values() : Array<%2$s> {
-			%1$s\treturn [...this.all_values_by_ordinal];
-			%1$s}
-			""".formatted(getIndent(), node.getSimpleName())
+				"""
+				%1$s/**
+				%1$s * Returns an array with enumeration values.
+				%1$s *
+				%1$s * @returns the array with enumeration values
+				%1$s */
+				%1$spublic static values() : Array<%2$s> {
+				%1$s\treturn [...this.all_values_by_ordinal];
+				%1$s}
+				""".formatted(getIndent(), node.getSimpleName())
 		).append(System.lineSeparator());
 
 		sb.append(
-			"""
-			%1$s/**
-			%1$s * Returns the enumeration value with the specified name.
-			%1$s *
-			%1$s * @param name   the name of the enumeration value
-			%1$s *
-			%1$s * @returns the enumeration values or null
-			%1$s */
-			%1$spublic static valueOf(name : string) : %2$s | null {
-			%1$s\tconst tmp = this.all_values_by_name.get(name);
-			%1$s\treturn (!tmp) ? null : tmp;
-			%1$s}
-			""".formatted(getIndent(), node.getSimpleName())
+				"""
+				%1$s/**
+				%1$s * Returns the enumeration value with the specified name.
+				%1$s *
+				%1$s * @param name   the name of the enumeration value
+				%1$s *
+				%1$s * @returns the enumeration values or null
+				%1$s */
+				%1$spublic static valueOf(name : string) : %2$s | null {
+				%1$s\tconst tmp = this.all_values_by_name.get(name);
+				%1$s\treturn (!tmp) ? null : tmp;
+				%1$s}
+				""".formatted(getIndent(), node.getSimpleName())
 		).append(System.lineSeparator());
 
 		transpileDefaultMethodImplementations(sb, node);
@@ -2756,10 +2804,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		for (final Map.Entry<String, String> entry : entries) {
 			final String key = entry.getKey();
 			final String value = entry.getValue();
-			final String importCast = "cast_" + value.replace('.', '_') +  "_" + key.replace('.', '_');
+			final String importCast = "cast_" + value.replace('.', '_') + "_" + key.replace('.', '_');
 			switch (value + "." + key) {
-				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean",
-						"java.lang.Enum" -> {
+				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double",
+						"java.lang.Boolean", "java.lang.Enum" -> {
 					final String importName = "Java" + key;
 					final String importLocation = importPathPrefix + "java/lang/Java" + key;
 					final boolean hasClass = body.contains(importName);
@@ -2775,10 +2823,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(System.lineSeparator());
 					}
 				}
-				case "java.lang.reflect.Array" -> { /**/ }
-				case "java.lang.Character" -> { /**/ }
-				case "java.lang.Math" -> { /**/ }
-				case "java.io.PrintStream" -> { /**/ }
+				case "java.lang.reflect.Array" -> {
+					/**/
+				}
+				case "java.lang.Character" -> {
+					/**/
+				}
+				case "java.lang.Math" -> {
+					/**/
+				}
+				case "java.io.PrintStream" -> {
+					/**/
+				}
 				default -> {
 					final String importFullPackageName = getImportPackageName(key, value);
 					final String importName = getImportName(key, value);
@@ -2804,7 +2860,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
 							strImports.add(m);
 						if (!strTypeImports.isEmpty()) {
-							sb.append(strTypeImports.stream().collect(Collectors.joining(", ", "import type { ", " } from '%s';".formatted(importPath + importName))));
+							sb.append(strTypeImports.stream()
+									.collect(Collectors.joining(", ", "import type { ", " } from '%s';".formatted(importPath + importName))));
 							sb.append(System.lineSeparator());
 						}
 						if (!strImports.isEmpty()) {

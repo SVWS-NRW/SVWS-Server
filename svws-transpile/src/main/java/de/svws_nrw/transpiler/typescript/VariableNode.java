@@ -61,7 +61,8 @@ public class VariableNode {
 	 * @param isVarArg    specifies whether this variable node is a methods var arg parameter
 	 * @param resolved    a map with a mapping from a type variable to its resolved type
 	 */
-	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableElement varElem, final boolean isVarArg, final Map<String, TypeMirror> resolved) {
+	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableElement varElem, final boolean isVarArg,
+			final Map<String, TypeMirror> resolved) {
 		this.variable = null;
 		this.varElem = varElem;
 		this.isVarArg = isVarArg;

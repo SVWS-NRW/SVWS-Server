@@ -39,13 +39,13 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 		super(Kind.PRIMITIVE_TYPE);
 		this.typeKind = switch (type) {
 			case "boolean" -> TypeKind.BOOLEAN;
-	        case "byte" -> TypeKind.BYTE;
-	        case "short" -> TypeKind.SHORT;
-	        case "int" -> TypeKind.INT;
-	        case "long" -> TypeKind.LONG;
-	        case "char" -> TypeKind.CHAR;
-	        case "float" -> TypeKind.FLOAT;
-	        case "double" -> TypeKind.DOUBLE;
+			case "byte" -> TypeKind.BYTE;
+			case "short" -> TypeKind.SHORT;
+			case "int" -> TypeKind.INT;
+			case "long" -> TypeKind.LONG;
+			case "char" -> TypeKind.CHAR;
+			case "float" -> TypeKind.FLOAT;
+			case "double" -> TypeKind.DOUBLE;
 			default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(type));
 		};
 	}
@@ -60,7 +60,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	@Override
 	public boolean isNumberType() {
 		return switch (typeKind) {
-	        case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> true;
+			case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> true;
 			case BOOLEAN, CHAR -> false;
 			default -> throw new TranspilerException("Transpiler Error: Unhandled type kind");
 		};
@@ -70,7 +70,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	@Override
 	public boolean isIntegerType() {
 		return switch (typeKind) {
-	        case BYTE, SHORT, INT, LONG -> true;
+			case BYTE, SHORT, INT, LONG -> true;
 			case FLOAT, DOUBLE, BOOLEAN, CHAR -> false;
 			default -> throw new TranspilerException("Transpiler Error: Unhandled type kind");
 		};
@@ -96,14 +96,16 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 		if (other instanceof final ExpressionPrimitiveType o) {
 			return switch (typeKind) {
 				case BOOLEAN -> o.typeKind == TypeKind.BOOLEAN;
-		        case CHAR -> o.typeKind == TypeKind.CHAR;
-		        case BYTE -> o.typeKind == TypeKind.BYTE;
-		        case SHORT -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT;
-		        case INT -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT;
-		        case LONG -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG;
-		        case FLOAT -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG || o.typeKind == TypeKind.FLOAT;
-		        case DOUBLE -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG || o.typeKind == TypeKind.FLOAT || o.typeKind == TypeKind.DOUBLE;
-		        default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
+				case CHAR -> o.typeKind == TypeKind.CHAR;
+				case BYTE -> o.typeKind == TypeKind.BYTE;
+				case SHORT -> (o.typeKind == TypeKind.BYTE) || (o.typeKind == TypeKind.SHORT);
+				case INT -> (o.typeKind == TypeKind.BYTE) || (o.typeKind == TypeKind.SHORT) || (o.typeKind == TypeKind.INT);
+				case LONG -> (o.typeKind == TypeKind.BYTE) || (o.typeKind == TypeKind.SHORT) || (o.typeKind == TypeKind.INT) || (o.typeKind == TypeKind.LONG);
+				case FLOAT -> (o.typeKind == TypeKind.BYTE) || (o.typeKind == TypeKind.SHORT) || (o.typeKind == TypeKind.INT) || (o.typeKind == TypeKind.LONG)
+						|| (o.typeKind == TypeKind.FLOAT);
+				case DOUBLE -> (o.typeKind == TypeKind.BYTE) || (o.typeKind == TypeKind.SHORT) || (o.typeKind == TypeKind.INT) || (o.typeKind == TypeKind.LONG)
+						|| (o.typeKind == TypeKind.FLOAT) || (o.typeKind == TypeKind.DOUBLE);
+				default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
 			} ? 0 : -1;
 		}
 		return -1;
@@ -118,14 +120,14 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public String toString() {
 		return switch (typeKind) {
 			case BOOLEAN -> "boolean";
-	        case BYTE -> "byte";
-	        case SHORT -> "short";
-	        case INT -> "int";
-	        case LONG -> "long";
-	        case CHAR -> "char";
-	        case FLOAT -> "float";
-	        case DOUBLE -> "double";
-	        default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
+			case BYTE -> "byte";
+			case SHORT -> "short";
+			case INT -> "int";
+			case LONG -> "long";
+			case CHAR -> "char";
+			case FLOAT -> "float";
+			case DOUBLE -> "double";
+			default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
 		};
 	}
 
@@ -134,7 +136,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + ((typeKind == null) ? 0 : typeKind.hashCode());
+		result = (prime * result) + ((typeKind == null) ? 0 : typeKind.hashCode());
 		return result;
 	}
 
@@ -163,14 +165,14 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	 */
 	public static ExpressionPrimitiveType getUnboxed(final ExpressionClassType classType) {
 		return switch (classType.getFullQualifiedName()) {
-		    case "java.lang.Boolean" -> new ExpressionPrimitiveType(TypeKind.BOOLEAN);
-	        case "java.lang.Byte" -> new ExpressionPrimitiveType(TypeKind.BYTE);
-	        case "java.lang.Short" -> new ExpressionPrimitiveType(TypeKind.SHORT);
-	        case "java.lang.Integer" -> new ExpressionPrimitiveType(TypeKind.INT);
-	        case "java.lang.Long" -> new ExpressionPrimitiveType(TypeKind.LONG);
-	        case "java.lang.Character" -> new ExpressionPrimitiveType(TypeKind.CHAR);
-	        case "java.lang.Float" -> new ExpressionPrimitiveType(TypeKind.FLOAT);
-	        case "java.lang.Double" -> new ExpressionPrimitiveType(TypeKind.DOUBLE);
+			case "java.lang.Boolean" -> new ExpressionPrimitiveType(TypeKind.BOOLEAN);
+			case "java.lang.Byte" -> new ExpressionPrimitiveType(TypeKind.BYTE);
+			case "java.lang.Short" -> new ExpressionPrimitiveType(TypeKind.SHORT);
+			case "java.lang.Integer" -> new ExpressionPrimitiveType(TypeKind.INT);
+			case "java.lang.Long" -> new ExpressionPrimitiveType(TypeKind.LONG);
+			case "java.lang.Character" -> new ExpressionPrimitiveType(TypeKind.CHAR);
+			case "java.lang.Float" -> new ExpressionPrimitiveType(TypeKind.FLOAT);
+			case "java.lang.Double" -> new ExpressionPrimitiveType(TypeKind.DOUBLE);
 			default -> null;
 		};
 	}

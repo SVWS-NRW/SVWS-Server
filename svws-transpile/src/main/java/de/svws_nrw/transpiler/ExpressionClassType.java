@@ -92,9 +92,9 @@ public final class ExpressionClassType extends ExpressionType {
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
 		if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
 			final ExpressionClassType result = new ExpressionClassType(
-				dt.getTypeArguments().isEmpty() ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
-				te.getSimpleName().toString(),
-				getPackageName(te.getQualifiedName().toString())
+					dt.getTypeArguments().isEmpty() ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
+					te.getSimpleName().toString(),
+					getPackageName(te.getQualifiedName().toString())
 			);
 			for (final TypeMirror typeArg : dt.getTypeArguments()) {
 				if (typeArg instanceof DeclaredType) {
@@ -138,9 +138,9 @@ public final class ExpressionClassType extends ExpressionType {
 			return result;
 		}
 		return new ExpressionClassType(
-			Kind.CLASS,
-			getClassName(type.toString()),
-			getPackageName(type.toString())
+				Kind.CLASS,
+				getClassName(type.toString()),
+				getPackageName(type.toString())
 		);
 	}
 
@@ -182,9 +182,9 @@ public final class ExpressionClassType extends ExpressionType {
 		if (type != null)
 			return getExpressionClassType(transpiler, type);
 		final ExpressionClassType result = new ExpressionClassType(
-			Kind.PARAMETERIZED_TYPE,
-			temp.toString(),
-			temp.getPackageName()
+				Kind.PARAMETERIZED_TYPE,
+				temp.toString(),
+				temp.getPackageName()
 		);
 		for (final Tree typeArgument : tree.getTypeArguments()) {
 			result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
@@ -209,9 +209,9 @@ public final class ExpressionClassType extends ExpressionType {
 			if (et instanceof final ExpressionClassType ect) {
 				// TODO incorrect class type are generated - check with: System.err.println(ect.getFullQualifiedName() + "   " + tree.getExpression().toString() + "   " + tree.getIdentifier().toString());
 				return new ExpressionClassType(
-					Kind.PARAMETERIZED_TYPE,
-					tree.getIdentifier().toString(),
-					ect.getFullQualifiedName()
+						Kind.PARAMETERIZED_TYPE,
+						tree.getIdentifier().toString(),
+						ect.getFullQualifiedName()
 				);
 			}
 		}
@@ -471,7 +471,8 @@ public final class ExpressionClassType extends ExpressionType {
 						yield -1;
 					yield 1;
 				}
-				default -> throw new TranspilerException("Transpiler Error: Lambda expression type checking for type " + getFullQualifiedName() + " not yet supported.");
+				default -> throw new TranspilerException("Transpiler Error: Lambda expression type checking for type " + getFullQualifiedName()
+						+ " not yet supported.");
 			};
 		}
 		if (other instanceof ExpressionTypeNull)
@@ -495,10 +496,10 @@ public final class ExpressionClassType extends ExpressionType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + ((className == null) ? 0 : className.hashCode());
-		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
-		result = prime * result + typeArguments.hashCode();
-		result = prime * result + typeVariables.hashCode();
+		result = (prime * result) + ((className == null) ? 0 : className.hashCode());
+		result = (prime * result) + ((packageName == null) ? 0 : packageName.hashCode());
+		result = (prime * result) + typeArguments.hashCode();
+		result = (prime * result) + typeVariables.hashCode();
 		return result;
 	}
 

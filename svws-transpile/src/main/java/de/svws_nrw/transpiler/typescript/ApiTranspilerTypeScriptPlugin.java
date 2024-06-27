@@ -61,8 +61,6 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 
 
 
-
-
 	@Override
 	public void transpile() {
 		System.out.println("Running TypeScript-API-Transpiler...");
@@ -135,13 +133,14 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 
 			// Generiere den Code für die API-Methoden
 			for (final ApiMethod apiMethod : apiMethods) {
-                System.out.println("    -> " + apiClassName + "." + apiMethod.name);
-			    if (apiMethod.isTranspilable()) {
-			        fileData += apiMethod.getTSMethod();
-			    } else {
-			        System.out.println("      Methode kann nicht transpiliert werden -> sie wird ausgelassen...");
-			        fileData += "\t// API-Methode " + apiMethod.name + " konnte nicht nach Typescript transpiliert werden" + System.lineSeparator() + System.lineSeparator() + System.lineSeparator();
-			    }
+				System.out.println("    -> " + apiClassName + "." + apiMethod.name);
+				if (apiMethod.isTranspilable()) {
+					fileData += apiMethod.getTSMethod();
+				} else {
+					System.out.println("      Methode kann nicht transpiliert werden -> sie wird ausgelassen...");
+					fileData += "\t// API-Methode " + apiMethod.name + " konnte nicht nach Typescript transpiliert werden" + System.lineSeparator()
+							+ System.lineSeparator() + System.lineSeparator();
+				}
 			}
 
 			// Schliesse den Code der API-Klasse ab.
@@ -154,7 +153,8 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 					final String value = imports.get(importEntry.getKey());
 					if (value != null) {
 						if (!value.equals(importEntry.getValue()))
-							throw new TranspilerException("Transpiler Error: Transpiler cannot handle classes in the API with the same name in different packages.");
+							throw new TranspilerException("Transpiler Error: Transpiler cannot handle classes in the API with the same name in"
+									+ " different packages.");
 						continue;
 					}
 					imports.put(importEntry.getKey(), importEntry.getValue());
@@ -172,7 +172,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 					continue;
 				final String className = TranspilerTypeScriptPlugin.getImportName(imp.getKey(), imp.getValue());
 				final String packageName = TranspilerTypeScriptPlugin.getImportPackageName(imp.getKey(), imp.getValue());
-				final String importCast = "cast_" + packageName.replace('.', '_') +  "_" + imp.getKey().replace('.', '_');
+				final String importCast = "cast_" + packageName.replace('.', '_') + "_" + imp.getKey().replace('.', '_');
 				final String importPath = "../" + packageName.replace(strIgnoreJavaPackagePrefix + ".", "").replace('.', '/') + "/";
 				final boolean hasClass = fileData.contains(className);
 				final boolean hasCast = fileData.contains(importCast);

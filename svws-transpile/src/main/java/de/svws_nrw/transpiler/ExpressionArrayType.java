@@ -10,31 +10,31 @@ import com.sun.source.tree.Tree;
 public final class ExpressionArrayType extends ExpressionType implements ArrayTypeTree {
 
 	/** the element type of the array */
-    private final ExpressionType type;
+	private final ExpressionType type;
 
-    /** the number of dimensions of the array */
-    private final long dim;
+	/** the number of dimensions of the array */
+	private final long dim;
 
 
-    /**
-     * Creates a new instance of the array expression type with the specified element
-     * type and the specified number of dimensions. If the element type is an array
-     * expression type, its element type is reused and its number of dimensions is added
-     * to the number of dimensions specified in the constrcutor parameter.
-     *
-     * @param type   the element type
-     * @param dim    the number of dimensions
-     */
-    public ExpressionArrayType(final ExpressionType type, final long dim) {
-    	super(Kind.ARRAY_TYPE);
-    	if (type instanceof final ExpressionArrayType eat) {
-	    	this.type = eat.type;
-	    	this.dim = eat.dim + dim;
-    	} else {
-	    	this.type = type;
-	    	this.dim = dim;
-    	}
-    }
+	/**
+	 * Creates a new instance of the array expression type with the specified element
+	 * type and the specified number of dimensions. If the element type is an array
+	 * expression type, its element type is reused and its number of dimensions is added
+	 * to the number of dimensions specified in the constrcutor parameter.
+	 *
+	 * @param type   the element type
+	 * @param dim    the number of dimensions
+	 */
+	public ExpressionArrayType(final ExpressionType type, final long dim) {
+		super(Kind.ARRAY_TYPE);
+		if (type instanceof final ExpressionArrayType eat) {
+			this.type = eat.type;
+			this.dim = eat.dim + dim;
+		} else {
+			this.type = type;
+			this.dim = dim;
+		}
+	}
 
 
 
@@ -115,8 +115,8 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + (int) (dim ^ (dim >>> 32));
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = (prime * result) + (int) (dim ^ (dim >>> 32));
+		result = (prime * result) + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 

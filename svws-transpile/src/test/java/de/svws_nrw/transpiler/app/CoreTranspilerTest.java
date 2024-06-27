@@ -20,16 +20,16 @@ public class CoreTranspilerTest {
 	 */
 	@Test
 	@DisplayName("Teste den Core-Transpiler mit Test-Klassen...")
-    void test() throws Exception  {
+	void test() throws Exception {
 		try {
 			// Prüfe, ob das Ausgabe-Verzeichnis für die Tests existiert
 			Files.createDirectories(Paths.get("build/tests"));
 			// Führe den Transpiler aus
 			final String[] params = {
-				"--output", "build/tests/ts",
-				"--ignore", "de.svws_nrw",
-				"--javafiles", "src/test/resources/de/svws_nrw/transpiler/app/transpiler-java-files.txt",
-				"--apifiles", "src/test/resources/de/svws_nrw/transpiler/app/transpiler-api-files.txt"
+					"--output", "build/tests/ts",
+					"--ignore", "de.svws_nrw",
+					"--javafiles", "src/test/resources/de/svws_nrw/transpiler/app/transpiler-java-files.txt",
+					"--apifiles", "src/test/resources/de/svws_nrw/transpiler/app/transpiler-api-files.txt"
 			};
 			CoreTranspiler.main(params);
 		} catch (final Exception e) {

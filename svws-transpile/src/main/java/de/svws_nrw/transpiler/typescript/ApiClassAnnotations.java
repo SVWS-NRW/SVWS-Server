@@ -59,9 +59,9 @@ public class ApiClassAnnotations {
 			throw new TranspilerException("Transpiler Exception: Missing Tag annotation for class " + classTree.getSimpleName().toString() + ".");
 		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationTag);
 		final ExpressionTree name = args.get("name");
-        if (name == null) {
-            throw new TranspilerException("Transpiler Exception: Missing name value for @Tag annotation.");
-        }
+		if (name == null) {
+			throw new TranspilerException("Transpiler Exception: Missing name value for @Tag annotation.");
+		}
 		if ((name.getKind() == Kind.STRING_LITERAL) && (name instanceof final LiteralTree literal) && (literal.getValue() instanceof final String tag))
 			return tag;
 		throw new TranspilerException("Transpiler Exception: Unhandled name argument for Tag annotation.");
@@ -74,9 +74,9 @@ public class ApiClassAnnotations {
 			throw new TranspilerException("Transpiler Exception: Missing Path annotation for class " + classTree.getSimpleName().toString() + ".");
 		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationPath);
 		final ExpressionTree value = args.get("value");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing value value for @Path annotation.");
-        }
+		if (value == null) {
+			throw new TranspilerException("Transpiler Exception: Missing value value for @Path annotation.");
+		}
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String path))
 			return path;
 		throw new TranspilerException("Transpiler Exception: Unhandled value argument for Path annotation.");

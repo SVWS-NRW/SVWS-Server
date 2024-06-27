@@ -42,19 +42,17 @@ public class ApiResponse {
 
 	private static int determineResponseCode(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("responseCode");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing responseCode value for @Response annotation.");
-        }
+		if (value == null)
+			throw new TranspilerException("Transpiler Exception: Missing responseCode value for @Response annotation.");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
-			return Integer.valueOf(str);
+			return Integer.parseInt(str);
 		throw new TranspilerException("Transpiler Exception: Unhandled responseCode argument for ApiResponse annotation.");
 	}
 
 	private static String determineDescription(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("description");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing description value for @Response annotation.");
-        }
+		if (value == null)
+			throw new TranspilerException("Transpiler Exception: Missing description value for @Response annotation.");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return str;
 		throw new TranspilerException("Transpiler Exception: Unhandled description argument for ApiResponse annotation.");

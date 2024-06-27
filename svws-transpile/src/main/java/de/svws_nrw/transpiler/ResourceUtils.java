@@ -47,11 +47,13 @@ public class ResourceUtils {
 			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
 				dirStream.forEach(p -> {
 					if (Files.isDirectory(p)) {
-						classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : packagePath + "/" + p.getFileName(), fileextension));
+						classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : packagePath + "/" + p.getFileName(),
+								fileextension));
 					} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
 						final String shortFilename = p.getFileName().toString();
 						try {
-							classes.add(new TranspilerResource(packagePath.replace('/', '.'), shortFilename.substring(0, shortFilename.length() - fileextension.length()), fileextension, p));
+							classes.add(new TranspilerResource(packagePath.replace('/', '.'),
+									shortFilename.substring(0, shortFilename.length() - fileextension.length()), fileextension, p));
 						} catch (final IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -102,6 +104,7 @@ public class ResourceUtils {
 	 *
 	 * @return eine List mit den Pfaden der gefundenen Dateien
 	 */
+	@SuppressWarnings("resource")
 	public static List<TranspilerResource> getFilesInPackage(final String packageName, final String fileextension) {
 		final List<TranspilerResource> result = new ArrayList<>();
 		Enumeration<URL> res;
@@ -130,9 +133,7 @@ public class ResourceUtils {
 					final int j = "".equals(packagePath) ? 0 : Paths.get(packagePath).getNameCount();
 					for (int i = 0; i < j; i++)
 						path = path.getParent();
-					@SuppressWarnings("resource")
-					final
-					FileSystem fs = FileSystems.getDefault();
+					final FileSystem fs = FileSystems.getDefault();
 					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 				}
 			}

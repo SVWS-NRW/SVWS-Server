@@ -48,10 +48,10 @@ public class ApiPathParams {
 				final Tree type = param.getType();
 				if (type instanceof final PrimitiveTypeTree ptt) {
 					switch (ptt.getPrimitiveTypeKind()) {
-				        case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> this.params.add(new AbstractMap.SimpleEntry<>(name, "number"));
-				        case BOOLEAN -> this.params.add(new AbstractMap.SimpleEntry<>(name, "boolean"));
-				        case CHAR -> this.params.add(new AbstractMap.SimpleEntry<>(name, "string"));
-				        default -> throw new TranspilerException("Transpiler Error: Unexpected primitive type kind");
+						case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> this.params.add(new AbstractMap.SimpleEntry<>(name, "number"));
+						case BOOLEAN -> this.params.add(new AbstractMap.SimpleEntry<>(name, "boolean"));
+						case CHAR -> this.params.add(new AbstractMap.SimpleEntry<>(name, "string"));
+						default -> throw new TranspilerException("Transpiler Error: Unexpected primitive type kind");
 					}
 				} else {
 					final String tstype = param.getType().toString();
@@ -70,9 +70,8 @@ public class ApiPathParams {
 	private static String determineValue(final Transpiler transpiler, final AnnotationTree annotation) {
 		final Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
 		final ExpressionTree value = args.get("value");
-        if (value == null) {
-            throw new TranspilerException("Transpiler Exception: Missing value value for @PathParam annotation.");
-        }
+		if (value == null)
+			throw new TranspilerException("Transpiler Exception: Missing value value for @PathParam annotation.");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return str;
 		throw new TranspilerException("Transpiler Exception: Unhandled value argument for PathParam annotation.");

@@ -62,7 +62,7 @@ public final class ExpressionTypeNone extends ExpressionType implements Primitiv
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + ((typeKind == null) ? 0 : typeKind.hashCode());
+		result = (prime * result) + ((typeKind == null) ? 0 : typeKind.hashCode());
 		return result;
 	}
 
