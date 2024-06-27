@@ -1,7 +1,3 @@
-export { ApiPrivileged } from './api/ApiPrivileged';
-export { ApiSchema } from './api/ApiSchema';
-export { ApiServer } from './api/ApiServer';
-export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';
 export { BaseApi, type ApiFile } from './api/BaseApi';
 export { OpenApiError } from './api/OpenApiError';
 export { Service } from './core/Service';
@@ -717,3 +713,7 @@ export { SchuldateiManager } from './schuldatei/v1/utils/SchuldateiManager';
 export { SchuldateiOrganisationseinheitAdressManager } from './schuldatei/v1/utils/SchuldateiOrganisationseinheitAdressManager';
 export { SchuldateiOrganisationseinheitManager } from './schuldatei/v1/utils/SchuldateiOrganisationseinheitManager';
 export { SchuldateiUtils } from './schuldatei/v1/utils/SchuldateiUtils';
+export { ApiPrivileged } from './api/ApiPrivileged';
+export { ApiSchema } from './api/ApiSchema';
+export { ApiServer } from './api/ApiServer';
+export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';

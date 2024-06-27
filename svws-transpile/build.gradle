@@ -13,11 +13,11 @@ dependencies {
 	implementation project(':svws-db-utils')
 	implementation project(':svws-openapi')
 
-    implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
-    
-    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java', '**/svws_nrw/schuldatei/*/data/**/*.java', '**/svws_nrw/schuldatei/*/utils/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
-    
-    javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java']) 
+	implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
+
+	javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java', '**/svws_nrw/schuldatei/*/data/**/*.java', '**/svws_nrw/schuldatei/*/utils/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
+
+	javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java']) 
 }
 
 checkstyleMain.enabled = false
@@ -35,31 +35,71 @@ task prepareTranspile {
 	}
 	group "svws"
 	dependsOn compileJava
-    inputs.files configurations.javacore.files, configurations.javaapi.files
-    outputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt"
+	inputs.files configurations.javacore.files, configurations.javaapi.files
+	outputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt"
 }
 
-task transpile(type: JavaExec) {
+task transpileCore(type: JavaExec) {
 	group = "svws"
 	dependsOn prepareTranspile
-    dependsOn project(":svws-core").tasks.assemble
-    dependsOn project(":svws-openapi").tasks.assemble
-    doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpile/build/tmp/transpiler", includes: ["**/*.class"])
+	dependsOn project(":svws-core").tasks.assemble
+	dependsOn project(":svws-openapi").tasks.assemble
+	doFirst {
+		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 	}
-    inputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories()
-    outputs.dir "$rootDir/svws-webclient/core/src"
-    description = "Transpiliert den Java-Code nach Type-/Javascript"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "de.svws_nrw.transpiler.app.CoreTranspiler"
-    args "--output", "$rootDir/svws-webclient/core/src",
-         "--ignore", "de.svws_nrw",
-         "--javafiles", "build/transpiler-java-files.txt",
-         "--apifiles", "build/transpiler-api-files.txt"
+	inputs.files "build/transpiler-java-files.txt", sourceSets.main.resources.getSourceDirectories()
+	outputs.dir "$buildDir/ts"
+	description = "Transpiliert den Java-Code nach Type-/Javascript"
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = "de.svws_nrw.transpiler.app.TranspileTs"
+	args "--output", "$buildDir/ts",
+		"--ignore", "de.svws_nrw",
+		"--tmpdir", "$buildDir/tmp/transpiler/ts",
+		"--files", "build/transpiler-java-files.txt"
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
 }
 
-assemble.dependsOn transpile
+task transpileApi(type: JavaExec) {
+	group = "svws"
+	dependsOn prepareTranspile
+	dependsOn project(":svws-core").tasks.assemble
+	dependsOn project(":svws-openapi").tasks.assemble
+	doFirst {
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
+	}
+	inputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories()
+	outputs.dir "$buildDir/tsapi"
+	description = "Transpiliert den Java-Code nach Type-/Javascript"
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = "de.svws_nrw.transpiler.app.GenerateTsOpenApi"
+	args "--output", "$buildDir/tsapi",
+		"--ignore", "de.svws_nrw",
+		"--tmpdir", "$buildDir/tmp/transpiler/tsapi",
+		"--files", "build/transpiler-api-files.txt"
+	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+}
+
+task transpileAll(type: Copy) {
+	group = "svws"
+	dependsOn transpileCore
+	dependsOn transpileApi
+	inputs.dir "$buildDir/ts"
+	inputs.dir "$buildDir/tsapi"
+	outputs.dir "$rootDir/svws-webclient/core/src"
+	doFirst {
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"])
+	}
+	from "$buildDir/ts"
+	from "$buildDir/tsapi"
+	into "$rootDir/svws-webclient/core/src"
+	include "**/*.ts"
+	exclude "index.ts"
+	doLast {
+		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = file("$buildDir/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
+	}
+}
+
+assemble.dependsOn transpileAll
 
 
 task testTranspilerCore(type: NpmRun) {
