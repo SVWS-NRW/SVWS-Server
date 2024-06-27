@@ -219,7 +219,7 @@ public class StundenplanManager {
 	// StundenplanFach
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _fach_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanFach> _fachmenge_sortiert = new ArrayList<>();
-	private final @NotNull List<@NotNull StundenplanFach> _fachmenge_verwendet_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanFach> _fachmenge_verwendet_sortiert = new ArrayList<>();
 
 	// StundenplanJahrgang
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _jahrgang_by_id = new HashMap<>();
@@ -360,6 +360,7 @@ public class StundenplanManager {
 	// StundenplanUnterricht
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _unterricht_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanUnterricht> _unterrichtmenge = new ArrayList<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idFach = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idRaum = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idLehrer = new HashMap<>();
@@ -369,6 +370,7 @@ public class StundenplanManager {
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idUnterricht = new HashMap<>();  // u --> Partner von u (inklusive u selbst)
+	private @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_wochentyp = new HashMap<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idZeitraster =
 			new HashMap2D<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idRaum_and_idZeitraster =
@@ -632,6 +634,8 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idLehrer_and_idZeitraster();                            // _unterrichtmenge
 		update_unterrichtmenge_by_idRaum();                                               // _unterrichtmenge
 		update_unterrichtmenge_by_idRaum_and_idZeitraster();                              // _unterrichtmenge
+		update_unterrichtmenge_by_idFach();                                               // _unterrichtmenge
+		update_unterrichtmenge_by_wochentyp();                                            // _unterrichtmenge
 		update_zeitraster_by_wochentag_and_stunde();                                      // _zeitrastermenge
 		update_zeitrastermenge_by_wochentag();                                            // _zeitrastermenge
 		update_zeitrastermenge_by_stunde();                                               // _zeitrastermenge
@@ -663,7 +667,7 @@ public class StundenplanManager {
 		update_schienenmenge_verwendet_sortiert();                                           // _schienenmenge_sortiert, _unterrichtmenge_by_idSchiene
 		update_lehrermenge_verwendet_sortiert();                                             // _lehrermenge_sortiert, _lehrermenge_by_idUnterricht
 		update_kursmenge_verwendet_sortiert();                                               // _kursmenge_sortiert, _unterrichtmenge_by_idKurs
-
+		update_fachmenge_verwendet_sortiert();                                               // _fachmenge_sortiert, _unterrichtmenge_by_idFach
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();                                  // _pausenzeitmenge_by_idKlasse
@@ -682,7 +686,6 @@ public class StundenplanManager {
 		update_klassenmenge_verwendet_sortiert();                                            // _klassenmenge_sortiert, _unterrichtmenge_by_idKlasse
 	}
 
-
 	private void update_lehrermenge_verwendet_sortiert() {
 		_lehrermenge_verwendet_sortiert = new ArrayList<>();
 
@@ -691,13 +694,20 @@ public class StundenplanManager {
 				_lehrermenge_verwendet_sortiert.add(lehrer);
 	}
 
-
 	private void update_kursmenge_verwendet_sortiert() {
 		_kursmenge_verwendet_sortiert = new ArrayList<>();
 
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, kurs.id).isEmpty())
 				_kursmenge_verwendet_sortiert.add(kurs);
+	}
+
+	private void update_fachmenge_verwendet_sortiert() {
+		_fachmenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanFach fach : _fachmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idFach, fach.id).isEmpty())
+				_fachmenge_verwendet_sortiert.add(fach);
 	}
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
@@ -1576,6 +1586,19 @@ public class StundenplanManager {
 				Map2DUtils.addToList(_unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster, u);
 	}
 
+	private void update_unterrichtmenge_by_idFach() {
+		_unterrichtmenge_by_idFach = new HashMap<>();
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
+			if (u.idFach >= 0)
+				MapUtils.addToList(_unterrichtmenge_by_idFach, u.idFach, u);
+	}
+
+	private void update_unterrichtmenge_by_wochentyp() {
+		_unterrichtmenge_by_wochentyp = new HashMap<>();
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
+			MapUtils.addToList(_unterrichtmenge_by_wochentyp, u.wochentyp, u);
+	}
+
 	private void update_unterrichtmenge_by_idSchueler() {
 		_unterrichtmenge_by_idSchueler = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
@@ -2052,6 +2075,16 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
 		return _fachmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}, die gerade verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}, die gerade verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanFach> fachGetMengeVerwendetAsList() {
+		return _fachmenge_verwendet_sortiert;
 	}
 
 	// #####################################################################
@@ -5323,6 +5356,28 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Faches.
+	 *
+	 * @param idFach   Die Datenbank-ID des Faches.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Faches.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByFachId(final long idFach) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idFach, idFach);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Wochentyps.
+	 *
+	  * @param wochentyp Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Wochentyps.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByWochentyp(final int wochentyp) {
+		return MapUtils.getOrCreateArrayList(_unterrichtmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -6092,6 +6147,18 @@ public class StundenplanManager {
 		final @NotNull String sEnde = (zeitraster.stundenende == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 
 		return sBeginn + "–" + sEnde + " Uhr";
+	}
+
+	/**
+	 * Liefert ein Array der Größe {@link #_stundenplanWochenTypModell} mit TRUE-Werten, falls der Wochentyp (Index) derzeit verwendet wird.
+	 *
+	 * @return ein Array der Größe {@link #_stundenplanWochenTypModell} mit TRUE-Werten, falls der Wochentyp (Index) derzeit verwendet wird.
+	 */
+	public boolean[] wochentypGetMengeVerwendet() {
+		final boolean[] temp = new boolean[_stundenplanWochenTypModell];
+		for (int wochentyp = 0; wochentyp < _stundenplanWochenTypModell; wochentyp++)
+			temp[wochentyp] = !MapUtils.getOrCreateArrayList(_unterrichtmenge_by_wochentyp, wochentyp).isEmpty();
+		return temp;
 	}
 
 	// #####################################################################

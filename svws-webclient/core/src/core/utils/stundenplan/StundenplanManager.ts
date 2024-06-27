@@ -203,7 +203,7 @@ export class StundenplanManager extends JavaObject {
 
 	private _fachmenge_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
 
-	private readonly _fachmenge_verwendet_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
+	private _fachmenge_verwendet_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
 
 	private readonly _jahrgang_by_id : HashMap<number, StundenplanJahrgang> = new HashMap<number, StundenplanJahrgang>();
 
@@ -393,6 +393,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
+	private _unterrichtmenge_by_idFach : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
+
 	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idRaum : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
@@ -410,6 +412,8 @@ export class StundenplanManager extends JavaObject {
 	private _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
+
+	private _unterrichtmenge_by_wochentyp : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
@@ -647,6 +651,8 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idLehrer_and_idZeitraster();
 		this.update_unterrichtmenge_by_idRaum();
 		this.update_unterrichtmenge_by_idRaum_and_idZeitraster();
+		this.update_unterrichtmenge_by_idFach();
+		this.update_unterrichtmenge_by_wochentyp();
 		this.update_zeitraster_by_wochentag_and_stunde();
 		this.update_zeitrastermenge_by_wochentag();
 		this.update_zeitrastermenge_by_stunde();
@@ -675,6 +681,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_schienenmenge_verwendet_sortiert();
 		this.update_lehrermenge_verwendet_sortiert();
 		this.update_kursmenge_verwendet_sortiert();
+		this.update_fachmenge_verwendet_sortiert();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -701,6 +708,13 @@ export class StundenplanManager extends JavaObject {
 		for (const kurs of this._kursmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, kurs.id).isEmpty())
 				this._kursmenge_verwendet_sortiert.add(kurs);
+	}
+
+	private update_fachmenge_verwendet_sortiert() : void {
+		this._fachmenge_verwendet_sortiert = new ArrayList();
+		for (const fach of this._fachmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idFach, fach.id).isEmpty())
+				this._fachmenge_verwendet_sortiert.add(fach);
 	}
 
 	private update_pausenzeit_by_tag_and_beginn_and_ende() : void {
@@ -1489,6 +1503,19 @@ export class StundenplanManager extends JavaObject {
 				Map2DUtils.addToList(this._unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster, u);
 	}
 
+	private update_unterrichtmenge_by_idFach() : void {
+		this._unterrichtmenge_by_idFach = new HashMap();
+		for (const u of this._unterrichtmenge)
+			if (u.idFach >= 0)
+				MapUtils.addToList(this._unterrichtmenge_by_idFach, u.idFach, u);
+	}
+
+	private update_unterrichtmenge_by_wochentyp() : void {
+		this._unterrichtmenge_by_wochentyp = new HashMap();
+		for (const u of this._unterrichtmenge)
+			MapUtils.addToList(this._unterrichtmenge_by_wochentyp, u.wochentyp, u);
+	}
+
 	private update_unterrichtmenge_by_idSchueler() : void {
 		this._unterrichtmenge_by_idSchueler = new HashMap();
 		for (const u of this._unterrichtmenge)
@@ -1882,6 +1909,16 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public fachGetMengeAsList() : List<StundenplanFach> {
 		return this._fachmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}, die gerade verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}, die gerade verwendet werden.
+	 */
+	public fachGetMengeVerwendetAsList() : List<StundenplanFach> {
+		return this._fachmenge_verwendet_sortiert;
 	}
 
 	/**
@@ -4781,6 +4818,28 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Faches.
+	 *
+	 * @param idFach   Die Datenbank-ID des Faches.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Faches.
+	 */
+	public unterrichtGetMengeByFachId(idFach : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idFach, idFach);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Wochentyps.
+	 *
+	 * @param wochentyp Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Wochentyps.
+	 */
+	public unterrichtGetMengeByWochentyp(wochentyp : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.
@@ -5453,6 +5512,18 @@ export class StundenplanManager extends JavaObject {
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 		return sBeginn! + "–" + sEnde! + " Uhr";
+	}
+
+	/**
+	 * Liefert ein Array der Größe {@link #_stundenplanWochenTypModell} mit TRUE-Werten, falls der Wochentyp (Index) derzeit verwendet wird.
+	 *
+	 * @return ein Array der Größe {@link #_stundenplanWochenTypModell} mit TRUE-Werten, falls der Wochentyp (Index) derzeit verwendet wird.
+	 */
+	public wochentypGetMengeVerwendet() : Array<boolean> | null {
+		const temp : Array<boolean> | null = Array(this._stundenplanWochenTypModell).fill(false);
+		for (let wochentyp : number = 0; wochentyp < this._stundenplanWochenTypModell; wochentyp++)
+			temp[wochentyp] = !MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_wochentyp, wochentyp).isEmpty();
+		return temp;
 	}
 
 	/**
