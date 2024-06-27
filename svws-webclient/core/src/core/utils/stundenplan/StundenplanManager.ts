@@ -495,6 +495,16 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanBezeichnung : string;
 
+	private _stundenplanDefaultUnterrichtsbeginn : number = 0;
+
+	private _stundenplanDefaultStundendauer : number = 0;
+
+	private _stundenplanDefaultPausenzeitFuerRaumwechsel : number = 0;
+
+	private _stundenplanDefaultVormittagspause : number = 0;
+
+	private _stundenplanDefaultMittagspause : number = 0;
+
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -531,6 +541,11 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
+			this._stundenplanDefaultUnterrichtsbeginn = 8 * 60;
+			this._stundenplanDefaultStundendauer = 45;
+			this._stundenplanDefaultPausenzeitFuerRaumwechsel = 5;
+			this._stundenplanDefaultVormittagspause = 20;
+			this._stundenplanDefaultMittagspause = 60;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
 				uv = new StundenplanUnterrichtsverteilung();
@@ -4703,6 +4718,101 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanGetID() : number {
 		return this._stundenplanID;
+	}
+
+	/**
+	 * Liefert den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
+	 *
+	 * @return den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
+	 */
+	public stundenplanGetDefaultUnterrichtsbeginn() : number {
+		return this._stundenplanDefaultUnterrichtsbeginn;
+	}
+
+	/**
+	 * Setzt den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
+	 *
+	 * @param defaultUnterrichtsbeginn  kodiert als Minuten seit 0 Uhr.
+	 */
+	public stundenplanSetDefaultUnterrichtsbeginn(defaultUnterrichtsbeginn : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultUnterrichtsbeginn' muss >= 0 sein!", defaultUnterrichtsbeginn < 0);
+		this._stundenplanDefaultUnterrichtsbeginn = defaultUnterrichtsbeginn;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
+	 *
+	 * @return den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
+	 */
+	public stundenplanGetDefaultStundendauer() : number {
+		return this._stundenplanDefaultStundendauer;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
+	 *
+	 * @param defaultStundendauer  Minuten einer Unterrichtsstunde.
+	 */
+	public stundenplanSetDefaultStundendauer(defaultStundendauer : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultStundendauer' muss >= 0 sein!", defaultStundendauer < 0);
+		this._stundenplanDefaultStundendauer = defaultStundendauer;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
+	 *
+	 * @return den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
+	 */
+	public stundenplanGetDefaultPausenzeitFuerRaumwechsel() : number {
+		return this._stundenplanDefaultPausenzeitFuerRaumwechsel;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
+	 *
+	 * @param defaultPausenzeitFuerRaumwechsel  Minuten für einen Raumwechsel.
+	 */
+	public stundenplanSetDefaultPausenzeitFuerRaumwechsel(defaultPausenzeitFuerRaumwechsel : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultPausenzeitFuerRaumwechsel' muss >= 0 sein!", defaultPausenzeitFuerRaumwechsel < 0);
+		this._stundenplanDefaultPausenzeitFuerRaumwechsel = defaultPausenzeitFuerRaumwechsel;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Vormittagspause (in Minuten).
+	 *
+	 * @return den Default-Wert für die Vormittagspause (in Minuten).
+	 */
+	public stundenplanGetDefaultVormittagspause() : number {
+		return this._stundenplanDefaultVormittagspause;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Vormittagspause (in Minuten).
+	 *
+	 * @param defaultVormittagspause  Minuten für die Vormittagspause.
+	 */
+	public stundenplanSetDefaultVormittagspause(defaultVormittagspause : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultVormittagspause' muss >= 0 sein!", defaultVormittagspause < 0);
+		this._stundenplanDefaultVormittagspause = defaultVormittagspause;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Mittagspause (in Minuten).
+	 *
+	 * @return den Default-Wert für die Mittagspause (in Minuten).
+	 */
+	public stundenplanGetDefaultMittagspause() : number {
+		return this._stundenplanDefaultMittagspause;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Mittagspause (in Minuten).
+	 *
+	 * @param defaultMittagspause  Minuten für die Mittagspause.
+	 */
+	public stundenplanSetDefaultMittagspause(defaultMittagspause : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultMittagspause' muss >= 0 sein!", defaultMittagspause < 0);
+		this._stundenplanDefaultMittagspause = defaultMittagspause;
 	}
 
 	/**
