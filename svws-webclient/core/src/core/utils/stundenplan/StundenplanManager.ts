@@ -5916,23 +5916,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
-	 * <br> Hinweis: Die Objekte der Liste dürfen noch nicht im Manager existieren, da sonst eine Überschneidung garantiert ist.
-	 *
-	 * @param zeitrasterListe  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
-	 * @deprecated  Es soll die Methode mit "ignore"-List stattdessen verwendet werden.
-	 *
-	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
-	 */
-	public zeitrasterGetSchneidenSichListe(zeitrasterListe : List<StundenplanZeitraster>) : boolean {
-		for (const z1 of zeitrasterListe)
-			for (const z2 of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z1.wochentag))
-				if (this.zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
-					return true;
-		return false;
-	}
-
-	/**
 	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 *
