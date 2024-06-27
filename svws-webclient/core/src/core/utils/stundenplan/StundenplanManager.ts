@@ -219,6 +219,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D<number, number, StundenplanKalenderwochenzuordnung>();
 
+	private _kwzmenge_by_wochentyp : HashMap<number, List<StundenplanKalenderwochenzuordnung>> = new HashMap<number, List<StundenplanKalenderwochenzuordnung>>();
+
 	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap<number, StundenplanKlasse>();
 
 	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
@@ -640,6 +642,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_zeitrastermenge_by_stunde();
 		this.update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp();
 		this.update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp();
+		this.update_kwzmenge_by_wochentyp();
 		this.update_kursmenge_by_idKlasse();
 		this.update_klassenmenge_by_idKurs();
 		this.update_pausenzeitmenge_by_idLehrer_and_wochentag();
@@ -1609,6 +1612,12 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
+	private update_kwzmenge_by_wochentyp() : void {
+		this._kwzmenge_by_wochentyp = new HashMap();
+		for (const kwz of this._kwzmenge_sortiert)
+			MapUtils.addToList(this._kwzmenge_by_wochentyp, kwz.wochentyp, kwz);
+	}
+
 	private update_klassenmenge_by_idUnterricht() : void {
 		this._klassenmenge_by_idUnterricht = new HashMap();
 		for (const u of this._unterrichtmenge) {
@@ -2090,10 +2099,12 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
 	 *
+	 * @param wochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
 	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte eines bestimmten Wochentyps.
 	 */
 	public kalenderwochenzuordnungGetMengeByWochentyp(wochentyp : number) : List<StundenplanKalenderwochenzuordnung> {
-		return new ArrayList<StundenplanKalenderwochenzuordnung>();
+		return MapUtils.getOrCreateArrayList(this._kwzmenge_by_wochentyp, wochentyp);
 	}
 
 	/**
@@ -5770,6 +5781,7 @@ export class StundenplanManager extends JavaObject {
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 *
 	 * @param zeitrasterList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 * @param ignorList       Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
 	 *
 	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
@@ -5779,7 +5791,7 @@ export class StundenplanManager extends JavaObject {
 			for (const z2 of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z1.wochentag))
 				if (this.zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
 					return true;
-		return !false;
+		return true;
 	}
 
 	/**

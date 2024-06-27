@@ -4619,7 +4619,7 @@ public class StundenplanManager {
 	 * @return das zur ID zugehörige {@link StundenplanSchiene}-Objekt.
 	 */
 	public @NotNull StundenplanSchiene schieneGetByIdOrException(final long idSchiene) {
-		return DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene); // TODO BAR 27.06.2024 - 002
+		return DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 	}
 
 	/**
