@@ -121,8 +121,8 @@
 
 	function modelValueSchienen(list: List<number>) {
 		const res: StundenplanSchiene[] = [];
-		// for (const s of list)
-		// 	res.push(props.stundenplanManager().schieneGetByIdOrException(s));
+		for (const s of list)
+			res.push(props.stundenplanManager().schieneGetByIdOrException(s));
 		return res;
 	}
 

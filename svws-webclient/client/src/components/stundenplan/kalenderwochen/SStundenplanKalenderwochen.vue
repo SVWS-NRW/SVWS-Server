@@ -10,7 +10,7 @@
 		</Teleport>
 		<div class="page--content-flex-column">
 			Anzahl Zuordnungen:
-			<span v-for="wt of stundenplanManager().getWochenTypModell()" :key="wt"> {{ stundenplanManager().stundenplanGetWochenTypAsString(wt) }}: {{ [...stundenplanManager().kalenderwochenzuordnungGetMengeAsList()].filter(e=>e.wochentyp === wt).length }}</span>
+			<span v-for="wt of stundenplanManager().getWochenTypModell()" :key="wt"> {{ stundenplanManager().stundenplanGetWochenTypAsString(wt) }}: {{ stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size() }}</span>
 			<div class="flex gap-1">
 				<div v-for="kw, i of stundenplanManager().kalenderwochenzuordnungGetMengeAsList()" :key="i" class="border flex flex-row p-2 cursor-pointer" @click="nextWochentyp(kw)">
 					<div>{{ stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw) }}</div>
