@@ -389,6 +389,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _schuelermenge_by_idKurs : HashMap<number, List<StundenplanSchueler>> = new HashMap<number, List<StundenplanSchueler>>();
 
+	private _schuelermenge_by_idUnterricht : HashMap<number, List<StundenplanSchueler>> = new HashMap<number, List<StundenplanSchueler>>();
+
 	private readonly _unterricht_by_id : HashMap<number, StundenplanUnterricht> = new HashMap<number, StundenplanUnterricht>();
 
 	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
@@ -697,6 +699,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_lehrermenge_verwendet_sortiert();
 		this.update_kursmenge_verwendet_sortiert();
 		this.update_fachmenge_verwendet_sortiert();
+		this.update_schuelermenge_by_idUnterricht();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -730,6 +733,22 @@ export class StundenplanManager extends JavaObject {
 		for (const fach of this._fachmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idFach, fach.id).isEmpty())
 				this._fachmenge_verwendet_sortiert.add(fach);
+	}
+
+	private update_schuelermenge_by_idUnterricht() : void {
+		this._schuelermenge_by_idUnterricht = new HashMap();
+		for (const u of this._unterrichtmenge) {
+			if (u.idKurs === null) {
+				for (const idKlasse of u.klassen) {
+					const susDerKlasse : List<StundenplanSchueler> = MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, idKlasse);
+					MapUtils.getOrCreateArrayList(this._schuelermenge_by_idUnterricht, u.id).addAll(susDerKlasse);
+				}
+			} else {
+				const susDesKurses : List<StundenplanSchueler> = MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, u.idKurs);
+				MapUtils.getOrCreateArrayList(this._schuelermenge_by_idUnterricht, u.id).addAll(susDesKurses);
+			}
+			MapUtils.getOrCreateArrayList(this._schuelermenge_by_idUnterricht, u.id).sort(StundenplanManager._compSchueler);
+		}
 	}
 
 	private update_pausenzeit_by_tag_and_beginn_and_ende() : void {
@@ -4532,6 +4551,20 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public schuelerGetMengeByKursIdAsListOrException(idKurs : number) : List<StundenplanSchueler> {
 		return MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, idKurs);
+	}
+
+	/**
+	 * Liefert alle {@link StundenplanSchueler}-Objekte des Unterrichts.
+	 * <br>Hinweis: Bei Klassenunterricht werden die SuS aus den Klassen aggregiert, bei Kursunterricht sind es die SuS des Kurses.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return alle {@link StundenplanSchueler}-Objekte des Unterrichts.
+	 * @throws DeveloperNotificationException falls der Unterricht nicht existiert.
+	 */
+	public schuelerGetMengeByUnterrichtIdAsList(idUnterricht : number) : List<StundenplanSchueler> {
+		return MapUtils.getOrCreateArrayList(this._schuelermenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**

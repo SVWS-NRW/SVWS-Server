@@ -356,6 +356,7 @@ public class StundenplanManager {
 	private @NotNull List<@NotNull StundenplanSchueler> _schuelermenge = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchueler>> _schuelermenge_by_idKlasse = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchueler>> _schuelermenge_by_idKurs = new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchueler>> _schuelermenge_by_idUnterricht = new HashMap<>();
 
 	// StundenplanUnterricht
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _unterricht_by_id = new HashMap<>();
@@ -680,6 +681,7 @@ public class StundenplanManager {
 		update_lehrermenge_verwendet_sortiert();                                             // _lehrermenge_sortiert, _lehrermenge_by_idUnterricht
 		update_kursmenge_verwendet_sortiert();                                               // _kursmenge_sortiert, _unterrichtmenge_by_idKurs
 		update_fachmenge_verwendet_sortiert();                                               // _fachmenge_sortiert, _unterrichtmenge_by_idFach
+		update_schuelermenge_by_idUnterricht();                                              // _unterrichtmenge, _schuelermenge_by_idKlasse, _schuelermenge_by_idKurs
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();                                  // _pausenzeitmenge_by_idKlasse
@@ -697,6 +699,7 @@ public class StundenplanManager {
 		// 4. Ordnung
 		update_klassenmenge_verwendet_sortiert();                                            // _klassenmenge_sortiert, _unterrichtmenge_by_idKlasse
 	}
+
 
 	private void update_lehrermenge_verwendet_sortiert() {
 		_lehrermenge_verwendet_sortiert = new ArrayList<>();
@@ -720,6 +723,28 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanFach fach : _fachmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idFach, fach.id).isEmpty())
 				_fachmenge_verwendet_sortiert.add(fach);
+	}
+
+
+	private void update_schuelermenge_by_idUnterricht() {
+		_schuelermenge_by_idUnterricht = new HashMap<>();
+
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
+			if (u.idKurs == null) {
+				// Klassenunterricht (aggregiere die SuS aus allen Klassen)
+				for (final @NotNull Long idKlasse : u.klassen) {
+					final @NotNull List<@NotNull StundenplanSchueler> susDerKlasse = MapUtils.getOrCreateArrayList(_schuelermenge_by_idKlasse, idKlasse);
+					MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, u.id).addAll(susDerKlasse);
+				}
+			} else {
+				// Kursunterricht (hole die SuS vom Kurs)
+				final @NotNull List<@NotNull StundenplanSchueler> susDesKurses = MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, u.idKurs);
+				MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, u.id).addAll(susDesKurses);
+			}
+
+			// Sortiere die SuS-Liste des Unterrichts.
+			MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, u.id).sort(_compSchueler);
+		}
 	}
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
@@ -5003,6 +5028,20 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeByKursIdAsListOrException(final long idKurs) throws DeveloperNotificationException {
 		return MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, idKurs);
+	}
+
+	/**
+	 * Liefert alle {@link StundenplanSchueler}-Objekte des Unterrichts.
+	 * <br>Hinweis: Bei Klassenunterricht werden die SuS aus den Klassen aggregiert, bei Kursunterricht sind es die SuS des Kurses.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return alle {@link StundenplanSchueler}-Objekte des Unterrichts.
+	 * @throws DeveloperNotificationException falls der Unterricht nicht existiert.
+	 */
+	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeByUnterrichtIdAsList(final long idUnterricht) throws DeveloperNotificationException {
+		return MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, idUnterricht);
 	}
 
 	/**
