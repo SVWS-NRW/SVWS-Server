@@ -225,8 +225,6 @@ export class StundenplanManager extends JavaObject {
 
 	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
 
-	private _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
-
 	private _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
 	private _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
@@ -1216,10 +1214,6 @@ export class StundenplanManager extends JavaObject {
 	private update_klassenmenge() : void {
 		this._klassenmenge_sortiert = new ArrayList(this._klasse_by_id.values());
 		this._klassenmenge_sortiert.sort(StundenplanManager._compKlasse);
-		this._klassenmenge_sichtbar_sortiert = new ArrayList();
-		for (const kl of this._klassenmenge_sortiert)
-			if (kl.istSichtbar)
-				this._klassenmenge_sichtbar_sortiert.add(kl);
 	}
 
 	private update_klassenunterrichtmenge() : void {
@@ -2344,17 +2338,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public klasseGetMengeAsList() : List<StundenplanKlasse> {
 		return this._klassenmenge_sortiert;
-	}
-
-	/**
-	 * Liefert eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
-	 * <br>Laufzeit: O(1)
-	 * @deprecated  Das Attribut "sichtbar" gibt es bald gar nicht mehr.
-	 *
-	 * @return eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
-	 */
-	public klasseGetMengeSichtbarAsList() : List<StundenplanKlasse> {
-		return this._klassenmenge_sichtbar_sortiert;
 	}
 
 	/**

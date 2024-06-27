@@ -58,7 +58,7 @@
 						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
 					</template>
 					<template #cell(klassen)="{ rowData }">
-						<svws-ui-multi-select :model-value="[...rowData.klassen]" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
+						<svws-ui-multi-select :model-value="[...rowData.klassen]" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
 					</template>
 					<template #actions>
 						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>

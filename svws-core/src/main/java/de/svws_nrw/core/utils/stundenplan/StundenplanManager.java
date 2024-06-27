@@ -236,7 +236,6 @@ public class StundenplanManager {
 	// StundenplanKlasse
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _klasse_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sortiert = new ArrayList<>();
-	private @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sichtbar_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idKurs = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idJahrgang = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idSchueler = new HashMap<>();
@@ -1285,11 +1284,6 @@ public class StundenplanManager {
 	private void update_klassenmenge() {
 		_klassenmenge_sortiert = new ArrayList<>(_klasse_by_id.values());
 		_klassenmenge_sortiert.sort(_compKlasse);
-
-		_klassenmenge_sichtbar_sortiert = new ArrayList<>();
-		for (final StundenplanKlasse kl : _klassenmenge_sortiert)
-			if (kl.istSichtbar)
-				_klassenmenge_sichtbar_sortiert.add(kl);
 	}
 
 	private void update_klassenunterrichtmenge() {
@@ -2587,18 +2581,6 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeAsList() {
 		return _klassenmenge_sortiert;
-	}
-
-	/**
-	 * Liefert eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
-	 * <br>Laufzeit: O(1)
-	 * @deprecated  Das Attribut "sichtbar" gibt es bald gar nicht mehr.
-	 *
-	 * @return eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
-	 */
-	@Deprecated(forRemoval = true)
-	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeSichtbarAsList() { // TODO BAR 27.06.2024 - 003
-		return _klassenmenge_sichtbar_sortiert;
 	}
 
 	/**

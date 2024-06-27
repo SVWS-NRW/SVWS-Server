@@ -7,7 +7,7 @@
 				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" :valid="() => !disabled" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" :valid="() => !disabled" />
-				<svws-ui-multi-select v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeSichtbarAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
+				<svws-ui-multi-select v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
 			</div>
 		</template>
 		<template #modalActions>

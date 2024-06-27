@@ -4,7 +4,7 @@
 			<svws-ui-sub-nav>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeSichtbarAsList()" :item-text="i => i.kuerzel" autocomplete
+					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
 						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
 					<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
 					<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
@@ -159,7 +159,7 @@
 				try {
 					return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
 				} catch (e) { /* empty */ }
-			return props.stundenplanManager().klasseGetMengeSichtbarAsList().get(0);
+			return props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
 		set: (value : StundenplanKlasse) => _klasse.value = value
 	});
