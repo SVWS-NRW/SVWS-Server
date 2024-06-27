@@ -231,6 +231,7 @@ public class StundenplanManager {
 	private @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert = new ArrayList<>();
 	private @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_invers = new ArrayList<>();
 	private @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _kwz_by_jahr_and_kw = new HashMap2D<>();
+	private @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanKalenderwochenzuordnung>> _kwzmenge_by_wochentyp = new HashMap<>();
 
 	// StundenplanKlasse
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _klasse_by_id = new HashMap<>();
@@ -632,6 +633,7 @@ public class StundenplanManager {
 		update_zeitrastermenge_by_stunde();                                               // _zeitrastermenge
 		update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp();                  // _pausenaufsichtbereichmenge, _lehrermenge
 		update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp();                   // _pausenaufsichtbereichmenge, _lehrermenge
+		update_kwzmenge_by_wochentyp();
 
 		// 2. Ordnung
 
@@ -667,6 +669,8 @@ public class StundenplanManager {
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
 		update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();   // _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
 	}
+
+
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
 		_pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
@@ -1731,6 +1735,13 @@ public class StundenplanManager {
 
 	}
 
+	private void update_kwzmenge_by_wochentyp() {
+		_kwzmenge_by_wochentyp = new HashMap<>();
+
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
+			MapUtils.addToList(_kwzmenge_by_wochentyp, kwz.wochentyp, kwz);
+	}
+
 	private void update_klassenmenge_by_idUnterricht() {
 		_klassenmenge_by_idUnterricht = new HashMap<>();
 
@@ -2297,6 +2308,19 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte eines bestimmten Wochentyps.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte eines bestimmten Wochentyps.
+	 */
+	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeByWochentyp(final int wochentyp) {
+		return MapUtils.getOrCreateArrayList(_kwzmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
 	 * Liefert das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
@@ -2568,10 +2592,12 @@ public class StundenplanManager {
 	/**
 	 * Liefert eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
 	 * <br>Laufzeit: O(1)
+	 * @deprecated  Das Attribut "sichtbar" gibt es bald gar nicht mehr.
 	 *
 	 * @return eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
 	 */
-	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeSichtbarAsList() {
+	@Deprecated(forRemoval = true)
+	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeSichtbarAsList() { // TODO BAR 27.06.2024 - 003
 		return _klassenmenge_sichtbar_sortiert;
 	}
 
@@ -4585,6 +4611,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanSchiene}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idSchiene Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanSchiene}-Objekt.
+	 */
+	public @NotNull StundenplanSchiene schieneGetByIdOrException(final long idSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene); // TODO BAR 27.06.2024 - 002
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -5191,7 +5229,7 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeAsList() {
-		return new ArrayList<>(_unterrichtmenge);
+		return _unterrichtmenge;
 	}
 
 	/**
@@ -6379,9 +6417,11 @@ public class StundenplanManager {
 	 * <br> Hinweis: Die Objekte der Liste dürfen noch nicht im Manager existieren, da sonst eine Überschneidung garantiert ist.
 	 *
 	 * @param zeitrasterListe  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 * @deprecated  Es soll die Methode mit "ignore"-List stattdessen verwendet werden.
 	 *
 	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet.
 	 */
+	@Deprecated(forRemoval = true)
 	public boolean zeitrasterGetSchneidenSichListe(final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterListe) {
 		for (final @NotNull StundenplanZeitraster z1 : zeitrasterListe)
 			for (final @NotNull StundenplanZeitraster z2 : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, z1.wochentag))
@@ -6389,6 +6429,25 @@ public class StundenplanManager {
 					return true;
 
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
+	 * dabei werden optional bestimmte Objekte ignoriert.
+	 *
+	 * @param zeitrasterList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 * @param ignorList       Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
+	 *
+	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
+	 * dabei werden optional bestimmte Objekte ignoriert.
+	 */
+	public boolean zeitrasterGetSchneidenSichListeMitIgnore(final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterList, final @NotNull List<@NotNull StundenplanZeitraster> ignorList) {
+		for (final @NotNull StundenplanZeitraster z1 : zeitrasterList)
+			for (final @NotNull StundenplanZeitraster z2 : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, z1.wochentag))
+				if (zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
+					return true;
+		// TODO BAR 27.06.2024 - 004
+		return true;
 	}
 
 	/**
