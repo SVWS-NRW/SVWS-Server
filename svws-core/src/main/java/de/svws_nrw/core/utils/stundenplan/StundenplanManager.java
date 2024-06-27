@@ -632,7 +632,7 @@ public class StundenplanManager {
 		update_zeitrastermenge_by_stunde();                                               // _zeitrastermenge
 		update_wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp();                  // _pausenaufsichtbereichmenge, _lehrermenge
 		update_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp();                   // _pausenaufsichtbereichmenge, _lehrermenge
-		update_kwzmenge_by_wochentyp();
+		update_kwzmenge_by_wochentyp();                                                   // _kwzmenge_sortiert
 
 		// 2. Ordnung
 
@@ -1661,9 +1661,10 @@ public class StundenplanManager {
 
 		// Summe erhöhen um die jeweiligen Zeitdifferenzen.
 		for (final @NotNull StundenplanPausenaufsichtBereich pab : _pausenaufsichtbereichmenge) {
-			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idPausenaufsicht);
 			final @NotNull StundenplanPausenzeit pz = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, pa.idPausenzeit);
 
+			// Ignoriere undefinierte Beginn-/Endzeiten.
 			if (pz.beginn == null)
 				continue;
 			if (pz.ende == null)
@@ -1700,9 +1701,10 @@ public class StundenplanManager {
 
 		// Summe erhöhen um die jeweiligen Zeitdifferenzen.
 		for (final @NotNull StundenplanPausenaufsichtBereich pab : _pausenaufsichtbereichmenge) {
-			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			final @NotNull StundenplanPausenaufsicht pa = DeveloperNotificationException.ifMapGetIsNull(_pausenaufsicht_by_id, pab.idPausenaufsicht);
 			final @NotNull StundenplanPausenzeit pz = DeveloperNotificationException.ifMapGetIsNull(_pausenzeit_by_id, pa.idPausenzeit);
 
+			// Ignoriere undefinierte Beginn-/Endzeiten.
 			if (pz.beginn == null)
 				continue;
 			if (pz.ende == null)
@@ -5135,7 +5137,8 @@ public class StundenplanManager {
 	}
 
 	// TODO unterrichtCheckDuplicateInCell
-	private void unterrichtCheckDuplicateInCell(@SuppressWarnings("unused") final @NotNull List<@NotNull StundenplanUnterricht> list) {
+	@SuppressWarnings("unused")
+	private void unterrichtCheckDuplicateInCell(final @NotNull List<@NotNull StundenplanUnterricht> list) {
 		// Simuliere die neue Lage für Kursunterricht (idKurs, tag, stunde) -->
 		// final @NotNull Set<@NotNull String> _menge_by_idKurs = new HashSet<>()
 	}

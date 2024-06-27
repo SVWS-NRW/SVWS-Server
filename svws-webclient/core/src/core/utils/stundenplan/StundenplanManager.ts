@@ -1556,7 +1556,7 @@ export class StundenplanManager extends JavaObject {
 			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
 				this._wertPausenaufsichtMinuten_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
 		for (const pab of this._pausenaufsichtbereichmenge) {
-			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idPausenaufsicht);
 			const pz : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pa.idPausenzeit);
 			if (pz.beginn === null)
 				continue;
@@ -1584,7 +1584,7 @@ export class StundenplanManager extends JavaObject {
 			for (let wochentyp : number = 0; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
 				this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(lehrer.id, wochentyp, 0.0);
 		for (const pab of this._pausenaufsichtbereichmenge) {
-			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idAufsichtsbereich);
+			const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._pausenaufsicht_by_id, pab.idPausenaufsicht);
 			const pz : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pa.idPausenzeit);
 			if (pz.beginn === null)
 				continue;
