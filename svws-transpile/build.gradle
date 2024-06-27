@@ -45,7 +45,7 @@ task transpileCore(type: JavaExec) {
 	doFirst {
 		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
 	}
-	inputs.files "build/transpiler-java-files.txt", sourceSets.main.resources.getSourceDirectories()
+	inputs.files "build/transpiler-java-files.txt", sourceSets.main.resources.getSourceDirectories(), configurations.javacore.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Type-/Javascript"
 	classpath = sourceSets.main.runtimeClasspath
@@ -65,7 +65,7 @@ task transpileApi(type: JavaExec) {
 	doFirst {
 		delete fileTree(dir: "$buildDir/tsapi"), fileTree(dir: "$buildDir/tmp/transpiler/tsapi", includes: ["**/*.class"])
 	}
-	inputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories()
+	inputs.files "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories(), configurations.javaapi.files
 	outputs.dir "$buildDir/tsapi"
 	description = "Transpiliert den Java-Code nach Type-/Javascript"
 	classpath = sourceSets.main.runtimeClasspath
