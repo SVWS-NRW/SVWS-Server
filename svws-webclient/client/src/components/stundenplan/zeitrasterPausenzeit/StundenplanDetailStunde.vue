@@ -54,7 +54,8 @@
 			zeitraster.stundenende = DateUtils.gibMinutenOfZeitAsString(ende.value);
 			list.add(zeitraster);
 		}
-		return props.stundenplanManager().zeitrasterGetSchneidenSichListe(list);
+		const ignoreList = props.stundenplanManager().getListZeitrasterZuStunde(props.item);
+		return props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList);
 	})
 
 	async function patchStunde(stunde: number | null) {

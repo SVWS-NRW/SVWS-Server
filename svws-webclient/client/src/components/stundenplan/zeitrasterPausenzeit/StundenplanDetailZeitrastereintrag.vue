@@ -55,7 +55,8 @@
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenbeginn = stundenbeginn;
 		const list = ListUtils.create1(zeitraster);
-		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListe(list))
+		const ignoreList = ListUtils.create1(props.item);
+		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList))
 			await props.patchZeitraster(list);
 		else
 			ueberschneidung.value = true;
@@ -70,7 +71,8 @@
 		Object.assign(zeitraster, props.item);
 		zeitraster.stundenende = stundenende;
 		const list = ListUtils.create1(zeitraster);
-		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListe(list))
+		const ignoreList = ListUtils.create1(props.item);
+		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList))
 			await props.patchZeitraster(list);
 		else
 			ueberschneidung.value = true;
