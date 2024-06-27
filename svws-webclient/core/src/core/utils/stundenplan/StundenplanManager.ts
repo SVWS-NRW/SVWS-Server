@@ -5763,18 +5763,21 @@ export class StundenplanManager extends JavaObject {
 	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 *
-	 * @param zeitrasterList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
-	 * @param ignorList       Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
+	 * @param checkList   Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 * @param ignoreList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
 	 *
 	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 */
-	public zeitrasterGetSchneidenSichListeMitIgnore(zeitrasterList : List<StundenplanZeitraster>, ignorList : List<StundenplanZeitraster>) : boolean {
-		for (const z1 of zeitrasterList)
+	public zeitrasterGetSchneidenSichListeMitIgnore(checkList : List<StundenplanZeitraster>, ignoreList : List<StundenplanZeitraster>) : boolean {
+		const mapIgnore : HashMap<number, StundenplanZeitraster> = new HashMap<number, StundenplanZeitraster>();
+		for (const z of ignoreList)
+			mapIgnore.put(z.id, z);
+		for (const z1 of checkList)
 			for (const z2 of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z1.wochentag))
-				if (this.zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
+				if (!mapIgnore.containsKey(z2.id) && this.zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
 					return true;
-		return true;
+		return false;
 	}
 
 	/**

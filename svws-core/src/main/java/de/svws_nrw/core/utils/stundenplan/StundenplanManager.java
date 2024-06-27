@@ -6417,19 +6417,28 @@ public class StundenplanManager {
 	 * Liefert TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 *
-	 * @param zeitrasterList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
-	 * @param ignorList       Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
+	 * @param checkList   Die Liste aller {@link StundenplanZeitraster}-Objekte, die mit den existierenden Objekten verglichen werden.
+	 * @param ignoreList  Die Liste aller {@link StundenplanZeitraster}-Objekte, die bei der Prüfung ignoriert werden sollen.
 	 *
 	 * @return TRUE, falls mindestens ein {@link StundenplanZeitraster}-Objekt der Liste sich mit den existierenden Objekten schneidet,
 	 * dabei werden optional bestimmte Objekte ignoriert.
 	 */
-	public boolean zeitrasterGetSchneidenSichListeMitIgnore(final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterList, final @NotNull List<@NotNull StundenplanZeitraster> ignorList) {
-		for (final @NotNull StundenplanZeitraster z1 : zeitrasterList)
+	public boolean zeitrasterGetSchneidenSichListeMitIgnore(final @NotNull List<@NotNull StundenplanZeitraster> checkList,
+			final @NotNull List<@NotNull StundenplanZeitraster> ignoreList) {
+
+		// "mapIgnore" füllen
+		final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> mapIgnore = new HashMap<>();
+		for (final @NotNull StundenplanZeitraster z : ignoreList)
+			mapIgnore.put(z.id, z);
+
+		// Alle nicht zu ignorierenden Objekte überprüfen.
+		for (final @NotNull StundenplanZeitraster z1 : checkList)
 			for (final @NotNull StundenplanZeitraster z2 : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, z1.wochentag))
-				if (zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
+				if (!mapIgnore.containsKey(z2.id) && zeitrasterGetSchneidenSich(z1.stundenbeginn, z1.stundenende, z2.stundenbeginn, z2.stundenende))
 					return true;
-		// TODO BAR 27.06.2024 - 004
-		return true;
+
+		// Es wurde keine Überschneidung festgestellt.
+		return false;
 	}
 
 	/**
