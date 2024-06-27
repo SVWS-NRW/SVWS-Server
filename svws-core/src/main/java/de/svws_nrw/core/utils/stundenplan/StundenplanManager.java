@@ -219,6 +219,7 @@ public class StundenplanManager {
 	// StundenplanFach
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _fach_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanFach> _fachmenge_sortiert = new ArrayList<>();
+	private final @NotNull List<@NotNull StundenplanFach> _fachmenge_verwendet_sortiert = new ArrayList<>();
 
 	// StundenplanJahrgang
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _jahrgang_by_id = new HashMap<>();
@@ -236,6 +237,7 @@ public class StundenplanManager {
 	// StundenplanKlasse
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _klasse_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_verwendet_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idKurs = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idJahrgang = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idSchueler = new HashMap<>();
@@ -255,7 +257,8 @@ public class StundenplanManager {
 
 	// StundenplanKurs
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _kurs_by_id = new HashMap<>();
-	private @NotNull List<@NotNull StundenplanKurs> _kursmenge = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanKurs> _kursmenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanKurs> _kursmenge_verwendet_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idSchueler = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idSchiene = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idLehrer = new HashMap<>();
@@ -266,6 +269,7 @@ public class StundenplanManager {
 	// StundenplanLehrer
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _lehrer_by_id = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanLehrer> _lehrermenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanLehrer> _lehrermenge_verwendet_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _lehrermenge_by_idUnterricht = new HashMap<>();
 	private @NotNull HashMap3D<@NotNull Long, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanLehrer>> _lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp =
 			new HashMap3D<>();
@@ -337,10 +341,12 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _raum_by_id = new HashMap<>();
 	private @NotNull HashMap<@NotNull String, @NotNull StundenplanRaum> _raum_by_kuerzel = new HashMap<>();
 	private @NotNull List<@NotNull StundenplanRaum> _raummenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanRaum> _raummenge_verwendet_sortiert = new ArrayList<>();
 
 	// StundenplanSchiene
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _schiene_by_id = new HashMap<>();
-	private @NotNull List<@NotNull StundenplanSchiene> _schienenmenge = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanSchiene> _schienenmenge_sortiert = new ArrayList<>();
+	private @NotNull List<@NotNull StundenplanSchiene> _schienenmenge_verwendet_sortiert = new ArrayList<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchiene>> _schienenmenge_by_idJahrgang = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchiene>> _schienenmenge_by_idUnterricht = new HashMap<>();
 	private @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanSchiene>> _schienenmenge_by_idKlasse = new HashMap<>();
@@ -585,7 +591,6 @@ public class StundenplanManager {
 		update_zeitrastermengeOhneLeereUnterrichtmenge();            // _zeitrastermenge, _unterrichtmenge_by_idZeitraster
 
 		// 1. Ordnung (nur Referenzen zu den sortierten Mengen)
-
 		update_pausenzeit_by_tag_and_beginn_and_ende();                                   // _pausenzeitmenge_sortiert
 		update_aufsichtsbereich_by_kuerzel();                                             // _aufsichtsbereichmenge_sortiert
 		update_raum_by_kuerzel();                                                         // _raummenge_sortiert
@@ -654,22 +659,46 @@ public class StundenplanManager {
 		update_wertWochenminuten_by_idKlasse_und_idFach();                                   // _klassenmenge, _fachmenge, _unterrichtmenge_by_idKlasse_and_idFach
 		update_unterrichtmenge_by_idUnterricht();                                            // _unterrichtmenge_by_idKurs, _unterrichtmenge_by_idKlasse_and_idFach
 		update_unterrichtsgruppenMergeable();                                                // _unterrichtmenge_by_idKurs, _unterrichtmenge_by_idKlasse_and_idFach
+		update_raummenge_verwendet_sortiert();                                               // _raummenge_sortiert, _unterrichtmenge_by_idRaum
+		update_schienenmenge_verwendet_sortiert();                                           // _schienenmenge_sortiert, _unterrichtmenge_by_idSchiene
+		update_lehrermenge_verwendet_sortiert();                                             // _lehrermenge_sortiert, _lehrermenge_by_idUnterricht
+		update_kursmenge_verwendet_sortiert();                                               // _kursmenge_sortiert, _unterrichtmenge_by_idKurs
+
 
 		// 3. Ordnung
-		update_pausenzeitmenge_by_idKlasse_and_wochentag();          // _pausenzeitmenge_by_idKlasse
-		update_pausenzeitmenge_by_idJahrgang_and_wochentag();        // _pausenzeitmenge_by_idJahrgang
-		update_pausenzeitmenge_by_idSchueler_and_wochentag();        // _pausenzeitmenge_by_idSchueler
-		update_unterrichtmenge_by_idKlasse();                        // _unterrichtmenge, _klassenmenge_by_idKurs
-		update_unterrichtmenge_by_idKlasse_and_idZeitraster();       // _unterrichtmenge, _klassenmenge_by_idKurs
-		update_klassenmenge_by_idUnterricht();                       // _unterrichtmenge, _klassenmenge_by_idKurs
-		update_unterrichtmenge_by_idJahrgang_and_idZeitraster();     // _unterrichtmenge_by_idJahrgang
-		update_unterrichtmenge_by_idSchueler_and_idZeitraster();     // _unterrichtmenge_by_idSchueler
-		update_schienenmenge_by_idKlasse();                          // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
-		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
-		update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();   // _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
+		update_pausenzeitmenge_by_idKlasse_and_wochentag();                                  // _pausenzeitmenge_by_idKlasse
+		update_pausenzeitmenge_by_idJahrgang_and_wochentag();                                // _pausenzeitmenge_by_idJahrgang
+		update_pausenzeitmenge_by_idSchueler_and_wochentag();                                // _pausenzeitmenge_by_idSchueler
+		update_unterrichtmenge_by_idKlasse();                                                // _unterrichtmenge, _klassenmenge_by_idKurs
+		update_unterrichtmenge_by_idKlasse_and_idZeitraster();                               // _unterrichtmenge, _klassenmenge_by_idKurs
+		update_klassenmenge_by_idUnterricht();                                               // _unterrichtmenge, _klassenmenge_by_idKurs
+		update_unterrichtmenge_by_idJahrgang_and_idZeitraster();                             // _unterrichtmenge_by_idJahrgang
+		update_unterrichtmenge_by_idSchueler_and_idZeitraster();                             // _unterrichtmenge_by_idSchueler
+		update_schienenmenge_by_idKlasse();                                                  // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
+		update_kursmenge_by_idKlasse_and_idSchiene();                                        // _kursmenge_by_idKlasse
+		update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();           // _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp
+
+		// 4. Ordnung
+		update_klassenmenge_verwendet_sortiert();                                            // _klassenmenge_sortiert, _unterrichtmenge_by_idKlasse
 	}
 
 
+	private void update_lehrermenge_verwendet_sortiert() {
+		_lehrermenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanLehrer lehrer : _lehrermenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idLehrer, lehrer.id).isEmpty())
+				_lehrermenge_verwendet_sortiert.add(lehrer);
+	}
+
+
+	private void update_kursmenge_verwendet_sortiert() {
+		_kursmenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, kurs.id).isEmpty())
+				_kursmenge_verwendet_sortiert.add(kurs);
+	}
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
 		_pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
@@ -707,7 +736,6 @@ public class StundenplanManager {
 				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
 	}
 
-
 	private void update_unterrichtsgruppenMergeable() {
 		_unterrichtsgruppenMergeable = new ArrayList<>();
 
@@ -723,6 +751,25 @@ public class StundenplanManager {
 		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
 			update_unterrichtsgruppenMergeableHelper1(menge);
 	}
+
+
+
+	private void update_raummenge_verwendet_sortiert() {
+		_raummenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanRaum raum : _raummenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idRaum, raum.id).isEmpty())
+				_raummenge_verwendet_sortiert.add(raum);
+	}
+
+	private void update_schienenmenge_verwendet_sortiert() {
+		_schienenmenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanSchiene schiene : _schienenmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idSchiene, schiene.id).isEmpty())
+				_schienenmenge_verwendet_sortiert.add(schiene);
+	}
+
 
 	private void update_unterrichtsgruppenMergeableHelper1(final @NotNull List<@NotNull StundenplanUnterricht> menge) {
 		// Können überhaupt genügend Unterrichte zum "Mergen" gesammelt werden?
@@ -807,7 +854,7 @@ public class StundenplanManager {
 		_wertWochenminuten_by_idKurs = new HashMap<>();
 
 		final double faktor = (_stundenplanWochenTypModell == 0) ? 1 : _stundenplanWochenTypModell;
-		for (final @NotNull StundenplanKurs kurs : _kursmenge) {
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
 			double summe_minuten = 0;
 			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, kurs.id)) {
 				final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, u.idZeitraster);
@@ -922,7 +969,7 @@ public class StundenplanManager {
 
 	private void update_jahrgangmenge_by_idKurs() {
 		_jahrgangmenge_by_idKurs = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge) {
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
 			for (final @NotNull Long idJahrgang : kurs.jahrgaenge) {
 				final @NotNull StundenplanJahrgang jahrgang = DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
 				MapUtils.addToList(_jahrgangmenge_by_idKurs, kurs.id, jahrgang);
@@ -940,7 +987,7 @@ public class StundenplanManager {
 
 	private void update_kursmenge_by_idSchiene() {
 		_kursmenge_by_idSchiene = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge)
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			for (final @NotNull Long idSchiene : kurs.schienen)
 				MapUtils.addToList(_kursmenge_by_idSchiene, idSchiene, kurs);
 	}
@@ -1096,14 +1143,14 @@ public class StundenplanManager {
 
 	private void update_kursmenge_by_idJahrgang() {
 		_kursmenge_by_idJahrgang = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge)
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			for (final @NotNull Long idJahrgang : kurs.jahrgaenge)
 				MapUtils.addToList(_kursmenge_by_idJahrgang, idJahrgang, kurs);
 	}
 
 	private void update_schienenmenge_by_idJahrgang() {
 		_schienenmenge_by_idJahrgang = new HashMap<>();
-		for (final @NotNull StundenplanSchiene schiene : _schienenmenge)
+		for (final @NotNull StundenplanSchiene schiene : _schienenmenge_sortiert)
 			MapUtils.addToList(_schienenmenge_by_idJahrgang, schiene.idJahrgang, schiene);
 	}
 
@@ -1213,7 +1260,7 @@ public class StundenplanManager {
 	private void update_klassenmenge_by_idKurs() {
 		_klassenmenge_by_idKurs = new HashMap<>();
 
-		for (final @NotNull StundenplanKurs kurs : _kursmenge) {
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
 			for (final @NotNull StundenplanSchueler schueler : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0) {
 					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, schueler.idKlasse);
@@ -1312,27 +1359,27 @@ public class StundenplanManager {
 	}
 
 	private void update_kursmenge() {
-		_kursmenge = new ArrayList<>(_kurs_by_id.values());
-		_kursmenge.sort(_compKurs);
+		_kursmenge_sortiert = new ArrayList<>(_kurs_by_id.values());
+		_kursmenge_sortiert.sort(_compKurs);
 	}
 
 	private void update_kursmenge_by_idSchueler() {
 		_kursmenge_by_idSchueler = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge)
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			for (final @NotNull Long idSchueler : kurs.schueler)
 				MapUtils.addToList(_kursmenge_by_idSchueler, idSchueler, kurs);
 	}
 
 	private void update_kursmenge_by_idLehrer() {
 		_kursmenge_by_idLehrer = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge)
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			for (final @NotNull Long idLehrer : kurs.lehrer)
 				MapUtils.addToList(_kursmenge_by_idLehrer, idLehrer, kurs);
 	}
 
 	private void update_kursmenge_by_idKlasse() {
 		_kursmenge_by_idKlasse = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge)
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
 			for (final @NotNull StundenplanSchueler schueler : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0)
 					MapUtils.addToListIfNotExists(_kursmenge_by_idKlasse, schueler.idKlasse, kurs);
@@ -1378,6 +1425,14 @@ public class StundenplanManager {
 		}
 	}
 
+	private void update_klassenmenge_verwendet_sortiert() {
+		_klassenmenge_verwendet_sortiert = new ArrayList<>();
+
+		for (final @NotNull StundenplanKlasse klasse : _klassenmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, klasse.id).isEmpty())
+				_klassenmenge_verwendet_sortiert.add(klasse);
+	}
+
 
 	private void update_raummenge() {
 		_raummenge_sortiert = new ArrayList<>(_raum_by_id.values());
@@ -1385,8 +1440,8 @@ public class StundenplanManager {
 	}
 
 	private void update_schienenmenge() {
-		_schienenmenge = new ArrayList<>(_schiene_by_id.values());
-		_schienenmenge.sort(_compSchiene);
+		_schienenmenge_sortiert = new ArrayList<>(_schiene_by_id.values());
+		_schienenmenge_sortiert.sort(_compSchiene);
 	}
 
 	private void update_schuelermenge() {
@@ -1403,7 +1458,7 @@ public class StundenplanManager {
 
 	private void update_schuelermenge_by_idKurs() {
 		_schuelermenge_by_idKurs = new HashMap<>();
-		for (final @NotNull StundenplanKurs kurs : _kursmenge) {
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
 			for (final @NotNull Long idSchueler : kurs.schueler) {
 				final @NotNull StundenplanSchueler schueler = DeveloperNotificationException.ifMapGetIsNull(_schueler_by_id, idSchueler);
 				MapUtils.addToList(_schuelermenge_by_idKurs, kurs.id, schueler);
@@ -2586,6 +2641,16 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanKlasse}-Objekte, die derzeit verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeVerwendetAsList() {
+		return _klassenmenge_verwendet_sortiert;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanKlasse}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanKlasse#id}
@@ -3051,7 +3116,17 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanKurs}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanKurs> kursGetMengeAsList() {
-		return _kursmenge;
+		return _kursmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte, die derzeit verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanKurs> kursGetMengeVerwendetAsList() {
+		return _kursmenge_verwendet_sortiert;
 	}
 
 	/**
@@ -3368,6 +3443,16 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeAsList() {
 		return _lehrermenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanLehrer}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanLehrer}-Objekte, die derzeit verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeVerwendetAsList() {
+		return _lehrermenge_verwendet_sortiert;
 	}
 
 	/**
@@ -4486,6 +4571,16 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanRaum}-Objekte, die derzeit verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanRaum> raumGetMengeVerwendetAsList() {
+		return _raummenge_verwendet_sortiert;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanRaum}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanRaum#id}
@@ -4613,7 +4708,17 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeAsList() {
-		return _schienenmenge;
+		return _schienenmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte, die derzeit verwendet werden.
+	 */
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeVerwendetAsList() {
+		return _schienenmenge_verwendet_sortiert;
 	}
 
 	/**

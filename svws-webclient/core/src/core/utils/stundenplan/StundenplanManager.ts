@@ -203,6 +203,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _fachmenge_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
 
+	private readonly _fachmenge_verwendet_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
+
 	private readonly _jahrgang_by_id : HashMap<number, StundenplanJahrgang> = new HashMap<number, StundenplanJahrgang>();
 
 	private _jahrgangmenge_sortiert : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>();
@@ -224,6 +226,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap<number, StundenplanKlasse>();
 
 	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
+
+	private _klassenmenge_verwendet_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
 
 	private _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
@@ -251,7 +255,9 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _kurs_by_id : HashMap<number, StundenplanKurs> = new HashMap<number, StundenplanKurs>();
 
-	private _kursmenge : List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
+	private _kursmenge_sortiert : List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
+
+	private _kursmenge_verwendet_sortiert : List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
 
 	private _kursmenge_by_idSchueler : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
@@ -268,6 +274,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap<number, StundenplanLehrer>();
 
 	private _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList<StundenplanLehrer>();
+
+	private _lehrermenge_verwendet_sortiert : List<StundenplanLehrer> = new ArrayList<StundenplanLehrer>();
 
 	private _lehrermenge_by_idUnterricht : HashMap<number, List<StundenplanLehrer>> = new HashMap<number, List<StundenplanLehrer>>();
 
@@ -359,9 +367,13 @@ export class StundenplanManager extends JavaObject {
 
 	private _raummenge_sortiert : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 
+	private _raummenge_verwendet_sortiert : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
+
 	private readonly _schiene_by_id : HashMap<number, StundenplanSchiene> = new HashMap<number, StundenplanSchiene>();
 
-	private _schienenmenge : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
+	private _schienenmenge_sortiert : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
+
+	private _schienenmenge_verwendet_sortiert : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 
 	private _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap<number, List<StundenplanSchiene>>();
 
@@ -659,6 +671,10 @@ export class StundenplanManager extends JavaObject {
 		this.update_wertWochenminuten_by_idKlasse_und_idFach();
 		this.update_unterrichtmenge_by_idUnterricht();
 		this.update_unterrichtsgruppenMergeable();
+		this.update_raummenge_verwendet_sortiert();
+		this.update_schienenmenge_verwendet_sortiert();
+		this.update_lehrermenge_verwendet_sortiert();
+		this.update_kursmenge_verwendet_sortiert();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -670,6 +686,21 @@ export class StundenplanManager extends JavaObject {
 		this.update_schienenmenge_by_idKlasse();
 		this.update_kursmenge_by_idKlasse_and_idSchiene();
 		this.update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();
+		this.update_klassenmenge_verwendet_sortiert();
+	}
+
+	private update_lehrermenge_verwendet_sortiert() : void {
+		this._lehrermenge_verwendet_sortiert = new ArrayList();
+		for (const lehrer of this._lehrermenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idLehrer, lehrer.id).isEmpty())
+				this._lehrermenge_verwendet_sortiert.add(lehrer);
+	}
+
+	private update_kursmenge_verwendet_sortiert() : void {
+		this._kursmenge_verwendet_sortiert = new ArrayList();
+		for (const kurs of this._kursmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, kurs.id).isEmpty())
+				this._kursmenge_verwendet_sortiert.add(kurs);
 	}
 
 	private update_pausenzeit_by_tag_and_beginn_and_ende() : void {
@@ -712,6 +743,20 @@ export class StundenplanManager extends JavaObject {
 			this.update_unterrichtsgruppenMergeableHelper1(menge);
 		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
 			this.update_unterrichtsgruppenMergeableHelper1(menge);
+	}
+
+	private update_raummenge_verwendet_sortiert() : void {
+		this._raummenge_verwendet_sortiert = new ArrayList();
+		for (const raum of this._raummenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idRaum, raum.id).isEmpty())
+				this._raummenge_verwendet_sortiert.add(raum);
+	}
+
+	private update_schienenmenge_verwendet_sortiert() : void {
+		this._schienenmenge_verwendet_sortiert = new ArrayList();
+		for (const schiene of this._schienenmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idSchiene, schiene.id).isEmpty())
+				this._schienenmenge_verwendet_sortiert.add(schiene);
 	}
 
 	private update_unterrichtsgruppenMergeableHelper1(menge : List<StundenplanUnterricht>) : void {
@@ -777,7 +822,7 @@ export class StundenplanManager extends JavaObject {
 	private update_wertWochenminuten_by_idKurs() : void {
 		this._wertWochenminuten_by_idKurs = new HashMap();
 		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
-		for (const kurs of this._kursmenge) {
+		for (const kurs of this._kursmenge_sortiert) {
 			let summe_minuten : number = 0;
 			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, kurs.id)) {
 				const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
@@ -873,7 +918,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_jahrgangmenge_by_idKurs() : void {
 		this._jahrgangmenge_by_idKurs = new HashMap();
-		for (const kurs of this._kursmenge) {
+		for (const kurs of this._kursmenge_sortiert) {
 			for (const idJahrgang of kurs.jahrgaenge) {
 				const jahrgang : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._jahrgang_by_id, idJahrgang);
 				MapUtils.addToList(this._jahrgangmenge_by_idKurs, kurs.id, jahrgang);
@@ -891,7 +936,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_kursmenge_by_idSchiene() : void {
 		this._kursmenge_by_idSchiene = new HashMap();
-		for (const kurs of this._kursmenge)
+		for (const kurs of this._kursmenge_sortiert)
 			for (const idSchiene of kurs.schienen)
 				MapUtils.addToList(this._kursmenge_by_idSchiene, idSchiene, kurs);
 	}
@@ -1042,14 +1087,14 @@ export class StundenplanManager extends JavaObject {
 
 	private update_kursmenge_by_idJahrgang() : void {
 		this._kursmenge_by_idJahrgang = new HashMap();
-		for (const kurs of this._kursmenge)
+		for (const kurs of this._kursmenge_sortiert)
 			for (const idJahrgang of kurs.jahrgaenge)
 				MapUtils.addToList(this._kursmenge_by_idJahrgang, idJahrgang, kurs);
 	}
 
 	private update_schienenmenge_by_idJahrgang() : void {
 		this._schienenmenge_by_idJahrgang = new HashMap();
-		for (const schiene of this._schienenmenge)
+		for (const schiene of this._schienenmenge_sortiert)
 			MapUtils.addToList(this._schienenmenge_by_idJahrgang, schiene.idJahrgang, schiene);
 	}
 
@@ -1154,7 +1199,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_klassenmenge_by_idKurs() : void {
 		this._klassenmenge_by_idKurs = new HashMap();
-		for (const kurs of this._kursmenge) {
+		for (const kurs of this._kursmenge_sortiert) {
 			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0) {
 					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, schueler.idKlasse);
@@ -1242,27 +1287,27 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_kursmenge() : void {
-		this._kursmenge = new ArrayList(this._kurs_by_id.values());
-		this._kursmenge.sort(StundenplanManager._compKurs);
+		this._kursmenge_sortiert = new ArrayList(this._kurs_by_id.values());
+		this._kursmenge_sortiert.sort(StundenplanManager._compKurs);
 	}
 
 	private update_kursmenge_by_idSchueler() : void {
 		this._kursmenge_by_idSchueler = new HashMap();
-		for (const kurs of this._kursmenge)
+		for (const kurs of this._kursmenge_sortiert)
 			for (const idSchueler of kurs.schueler)
 				MapUtils.addToList(this._kursmenge_by_idSchueler, idSchueler, kurs);
 	}
 
 	private update_kursmenge_by_idLehrer() : void {
 		this._kursmenge_by_idLehrer = new HashMap();
-		for (const kurs of this._kursmenge)
+		for (const kurs of this._kursmenge_sortiert)
 			for (const idLehrer of kurs.lehrer)
 				MapUtils.addToList(this._kursmenge_by_idLehrer, idLehrer, kurs);
 	}
 
 	private update_kursmenge_by_idKlasse() : void {
 		this._kursmenge_by_idKlasse = new HashMap();
-		for (const kurs of this._kursmenge)
+		for (const kurs of this._kursmenge_sortiert)
 			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0)
 					MapUtils.addToListIfNotExists(this._kursmenge_by_idKlasse, schueler.idKlasse, kurs);
@@ -1304,14 +1349,21 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
+	private update_klassenmenge_verwendet_sortiert() : void {
+		this._klassenmenge_verwendet_sortiert = new ArrayList();
+		for (const klasse of this._klassenmenge_sortiert)
+			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, klasse.id).isEmpty())
+				this._klassenmenge_verwendet_sortiert.add(klasse);
+	}
+
 	private update_raummenge() : void {
 		this._raummenge_sortiert = new ArrayList(this._raum_by_id.values());
 		this._raummenge_sortiert.sort(StundenplanManager._compRaum);
 	}
 
 	private update_schienenmenge() : void {
-		this._schienenmenge = new ArrayList(this._schiene_by_id.values());
-		this._schienenmenge.sort(StundenplanManager._compSchiene);
+		this._schienenmenge_sortiert = new ArrayList(this._schiene_by_id.values());
+		this._schienenmenge_sortiert.sort(StundenplanManager._compSchiene);
 	}
 
 	private update_schuelermenge() : void {
@@ -1328,7 +1380,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_schuelermenge_by_idKurs() : void {
 		this._schuelermenge_by_idKurs = new HashMap();
-		for (const kurs of this._kursmenge) {
+		for (const kurs of this._kursmenge_sortiert) {
 			for (const idSchueler of kurs.schueler) {
 				const schueler : StundenplanSchueler = DeveloperNotificationException.ifMapGetIsNull(this._schueler_by_id, idSchueler);
 				MapUtils.addToList(this._schuelermenge_by_idKurs, kurs.id, schueler);
@@ -2341,6 +2393,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanKlasse}-Objekte, die derzeit verwendet werden.
+	 */
+	public klasseGetMengeVerwendetAsList() : List<StundenplanKlasse> {
+		return this._klassenmenge_verwendet_sortiert;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanKlasse}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanKlasse#id}
@@ -2753,7 +2815,17 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanKurs}-Objekte.
 	 */
 	public kursGetMengeAsList() : List<StundenplanKurs> {
-		return this._kursmenge;
+		return this._kursmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte, die derzeit verwendet werden.
+	 */
+	public kursGetMengeVerwendetAsList() : List<StundenplanKurs> {
+		return this._kursmenge_verwendet_sortiert;
 	}
 
 	/**
@@ -3047,6 +3119,16 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public lehrerGetMengeAsList() : List<StundenplanLehrer> {
 		return this._lehrermenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanLehrer}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanLehrer}-Objekte, die derzeit verwendet werden.
+	 */
+	public lehrerGetMengeVerwendetAsList() : List<StundenplanLehrer> {
+		return this._lehrermenge_verwendet_sortiert;
 	}
 
 	/**
@@ -4056,6 +4138,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanRaum}-Objekte, die derzeit verwendet werden.
+	 */
+	public raumGetMengeVerwendetAsList() : List<StundenplanRaum> {
+		return this._raummenge_verwendet_sortiert;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanRaum}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanRaum#id}
@@ -4164,7 +4256,17 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte.
 	 */
 	public schieneGetMengeAsList() : List<StundenplanSchiene> {
-		return this._schienenmenge;
+		return this._schienenmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte, die derzeit verwendet werden.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte, die derzeit verwendet werden.
+	 */
+	public schieneGetMengeVerwendetAsList() : List<StundenplanSchiene> {
+		return this._schienenmenge_verwendet_sortiert;
 	}
 
 	/**
