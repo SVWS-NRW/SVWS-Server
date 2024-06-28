@@ -158,8 +158,9 @@ public class VariableNode {
 	 * @return the transpiled code
 	 */
 	public String transpile() {
+		if ((variable != null) && (Transpiler.isDeclaredUsingVar(variable)))
+			return "" + this.getName();
 		return "%s%s : %s".formatted(this.isVarArg ? "..." : "", "" + this.getName(), this.transpileType());
 	}
-
 
 }

@@ -278,20 +278,21 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final boolean isFinal = transpiler.hasFinalModifier(node);
 		pruefeBezeichner(node.getName().toString());
 		final TypeNode typeNode = new TypeNode(this, node.getType(), true, transpiler.hasNotNullAnnotation(node));
+		final String strType = Transpiler.isDeclaredUsingVar(node) ? "" : " : " + typeNode.transpile(false);
 		final ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
-			return "%s %s : %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), typeNode.transpile(false));
+			return "%s %s%s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), strType);
 		final ExpressionType typeInitializer = transpiler.getExpressionType(initializer);
 		if (initializer instanceof final SwitchExpressionTree set) {
 			final String strInitializer = convertSwitchExpression(set, node.getName().toString());
-			return "%s %s : %s;".formatted(strTsLet, node.getName(), typeNode.transpile(false))
+			return "%s %s%s;".formatted(strTsLet, node.getName(), strType)
 					+ System.lineSeparator() + getIndent() + "%s".formatted(strInitializer);
 		}
 		String strInitializer = convertExpression(initializer);
 		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType)
 				&& (typeInitializer.isPrimitiveOrBoxedPrimitive()))
 			strInitializer += strTsValueOf;
-		return "%s %s : %s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), typeNode.transpile(false), strInitializer);
+		return "%s %s%s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(), strType, strInitializer);
 	}
 
 

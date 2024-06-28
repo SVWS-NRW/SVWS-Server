@@ -458,8 +458,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const sb : StringBuilder = new StringBuilder();
 		let wahlkonflikte : number = 0;
 		let wahlkonflikte_ignored : number = 0;
-		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet()) {
+			const entries = this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
+			for (const e of entries) {
 				if (e.getValue() !== null)
 					continue;
 				if (wahlkonflikte < 10) {
@@ -471,6 +472,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				}
 				wahlkonflikte++;
 			}
+		}
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
 			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
 				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();

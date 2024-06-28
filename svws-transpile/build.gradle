@@ -40,6 +40,7 @@ task prepareTranspile {
 
 task transpileCore(type: JavaExec) {
 	group = "svws"
+	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(":svws-core").tasks.assemble
 	doFirst {
@@ -59,6 +60,7 @@ task transpileCore(type: JavaExec) {
 
 task transpileApi(type: JavaExec) {
 	group = "svws"
+	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(":svws-core").tasks.assemble
 	dependsOn project(":svws-openapi").tasks.assemble

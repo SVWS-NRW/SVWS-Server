@@ -978,6 +978,8 @@ public final class Transpiler extends AbstractProcessor {
 	 * @return true, falls das Schlüsselwort var verwendet wurde.
 	 */
 	public static boolean isDeclaredUsingVar(final VariableTree node) {
+		if (node == null)
+			return false;
 		try {
 			final Field field = node.getClass().getDeclaredField("declaredUsingVar");
 			field.setAccessible(true);

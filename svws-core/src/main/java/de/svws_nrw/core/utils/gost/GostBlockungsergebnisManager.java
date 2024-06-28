@@ -436,9 +436,9 @@ public class GostBlockungsergebnisManager {
 		// Nichtwahlen des Schülers.
 		int wahlkonflikte = 0;
 		int wahlkonflikte_ignored = 0;
-		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e
-					: _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet()) {
+			final var entries = _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
+			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : entries) {
 				if (e.getValue() != null)
 					continue;
 
@@ -452,6 +452,7 @@ public class GostBlockungsergebnisManager {
 				}
 				wahlkonflikte++;
 			}
+		}
 
 		// Kollisionen des Schülers.
 		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet())
@@ -1238,7 +1239,7 @@ public class GostBlockungsergebnisManager {
 			if (size <= maxProSchiene)
 				continue;
 			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = "In " + _parent.toStringSchieneSimple(idSchiene) +  " ist die Fachart "
+			final @NotNull String beschreibung = "In " + _parent.toStringSchieneSimple(idSchiene) + " ist die Fachart "
 					+ _parent.toStringFachartSimpleByFachartID(idFachart) + " insgesamt " + size
 					+ " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
 			MapUtils.addToList(_regelTyp_to_verletzungList, 18, beschreibung);
@@ -6406,8 +6407,8 @@ public class GostBlockungsergebnisManager {
 			for (final long idFachart : _schienenID_fachartID_to_kurseList.getKeySetOf(idSchiene)) {
 				if (!Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart).isEmpty()) {
 					sb.append("    Fachart " + _parent.toStringFachartSimpleByFachartID(idFachart) + "\n");
-					for (final @NotNull GostBlockungsergebnisKurs eKurs
-							: Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart)) {
+					for (final @NotNull GostBlockungsergebnisKurs eKurs : Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene,
+							idFachart)) {
 						sb.append("        Kurs " + _parent.toStringKursSimple(eKurs.id) + "\n");
 					}
 				}
