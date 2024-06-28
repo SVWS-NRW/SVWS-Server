@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.abschluss;
 
 import java.util.List;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;

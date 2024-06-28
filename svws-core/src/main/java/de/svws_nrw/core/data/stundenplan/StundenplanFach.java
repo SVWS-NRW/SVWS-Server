@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.stundenplan;
 
 import de.svws_nrw.core.data.RGBFarbe;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;

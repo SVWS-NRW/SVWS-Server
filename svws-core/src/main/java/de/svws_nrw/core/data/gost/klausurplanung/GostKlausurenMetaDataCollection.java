@@ -7,7 +7,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;

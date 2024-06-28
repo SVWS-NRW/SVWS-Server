@@ -7,10 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-import de.svws_nrw.base.shell.CommandLineOption;
-import de.svws_nrw.base.shell.CommandLineParser;
-import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.transpiler.Transpiler;
 import de.svws_nrw.transpiler.TranspilerException;
 import de.svws_nrw.transpiler.typescript.ApiTranspilerTypeScriptPlugin;
@@ -32,14 +28,12 @@ public class GenerateTsOpenApi {
 		String tmpDir = null;
 		String typeScriptOutputDir = null;
 		String typeScriptIgnorePackagePrefix = null;
-		final Logger logger = new Logger();
-		logger.addConsumer(new LogConsumerConsole());
-		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
+		final CmdLineParser cmdLine = new CmdLineParser(args);
 		try {
-			cmdLine.addOption(new CommandLineOption("f", "files", true, "Eine Textdatei mit einer Liste aller API-Quellcode-Dateien"));
-			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ziel-Ordner für den erzeugte TypeScript-Code"));
-			cmdLine.addOption(new CommandLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien dey Java-Compilers"));
-			cmdLine.addOption(new CommandLineOption("i", "ignore", true, "Das Package-Präfix, welches bei der Ziel-Verzeichnisstruktur ignoriert werden soll"));
+			cmdLine.addOption(new CmdLineOption("f", "files", true, "Eine Textdatei mit einer Liste aller API-Quellcode-Dateien"));
+			cmdLine.addOption(new CmdLineOption("o", "output", true, "Der Ziel-Ordner für den erzeugte TypeScript-Code"));
+			cmdLine.addOption(new CmdLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien dey Java-Compilers"));
+			cmdLine.addOption(new CmdLineOption("i", "ignore", true, "Das Package-Präfix, welches bei der Ziel-Verzeichnisstruktur ignoriert werden soll"));
 			typeScriptOutputDir = cmdLine.getValue("o", "build/tsapi");
 			tmpDir = cmdLine.getValue("t", "build/tmp/transpiler");
 			typeScriptIgnorePackagePrefix = cmdLine.getValue("i", "");

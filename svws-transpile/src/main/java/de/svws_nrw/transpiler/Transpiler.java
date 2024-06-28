@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,8 +67,6 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-
-import de.svws_nrw.core.adt.collection.LinkedCollection;
 
 
 /**
@@ -1004,7 +1003,7 @@ public final class Transpiler extends AbstractProcessor {
 			for (final AnnotationTree annotation : annotations) {
 				if ("TranspilerDTO".equals(annotation.getAnnotationType().toString())) {
 					final String packageName = tu.allAnnotations.get(annotation.getAnnotationType());
-					if ("de.svws_nrw.core.transpiler".equals(packageName) || "de.svws_nrw.asd.annotation".equals(packageName))
+					if ("de.svws_nrw.transpiler".equals(packageName) || "de.svws_nrw.asd.annotation".equals(packageName))
 						return true;
 				}
 			}
@@ -1584,7 +1583,7 @@ public final class Transpiler extends AbstractProcessor {
 		if (te.toString().equals(superFullQualified))
 			return 0;
 		// check all interfaces of the class
-		final LinkedCollection<TypeMirror> interfaces = new LinkedCollection<>();
+		final LinkedList<TypeMirror> interfaces = new LinkedList<>();
 		interfaces.addAll(te.getInterfaces());
 		while (!interfaces.isEmpty()) {
 			final TypeMirror interfaceType = interfaces.removeFirst();

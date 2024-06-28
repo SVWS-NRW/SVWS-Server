@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**

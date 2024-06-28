@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.jahrgang;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.fach;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;

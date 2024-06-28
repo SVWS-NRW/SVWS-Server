@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle

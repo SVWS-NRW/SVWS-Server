@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.data.CoreTypeData;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.BerufskollegAnlage;
 import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;

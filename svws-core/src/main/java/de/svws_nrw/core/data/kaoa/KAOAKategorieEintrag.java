@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

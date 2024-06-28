@@ -1,4 +1,4 @@
-package de.svws_nrw.core.transpiler;
+package de.svws_nrw.transpiler;
 
 /**
  * This annotation is used to annotate data transfer object classes

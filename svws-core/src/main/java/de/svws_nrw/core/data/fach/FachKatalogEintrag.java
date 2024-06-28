@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulform;

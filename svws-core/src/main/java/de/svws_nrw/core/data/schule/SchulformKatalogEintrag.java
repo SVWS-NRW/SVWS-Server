@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.schule;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.data.CoreTypeData;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

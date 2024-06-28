@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.reporting;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import io.swagger.v3.oas.annotations.media.Schema;

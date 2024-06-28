@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale;

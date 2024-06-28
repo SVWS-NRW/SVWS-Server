@@ -1,6 +1,6 @@
 package de.svws_nrw.transpiler.test;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 
 /**
  * Test-Klasse: Ein leeres DTO

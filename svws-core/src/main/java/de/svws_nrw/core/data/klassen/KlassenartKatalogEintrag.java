@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.xml.bind.annotation.XmlRootElement;

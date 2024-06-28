@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.data.schueler.Sprachendaten;
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;

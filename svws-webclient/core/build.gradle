@@ -3,10 +3,10 @@ plugins {
 }
 
 task assembleCore(type: NpmRun) {
-	dependsOn rootProject.npmPrepare, project(':svws-transpile').tasks.assemble
+	dependsOn rootProject.npmPrepare, project(':svws-openapi').tasks.assemble
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir").matching { exclude "build", "dist" }, file("$rootDir/svws-transpile/src/main/resources/typescript")
+	inputs.files fileTree("$projectDir").matching { exclude "build", "dist" }
 	outputs.dir file("$projectDir/dist")
 }
 

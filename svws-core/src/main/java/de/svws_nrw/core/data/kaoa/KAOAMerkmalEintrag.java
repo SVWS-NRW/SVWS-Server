@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.kaoa;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.kaoa.KAOAKategorie;
 import de.svws_nrw.core.types.kaoa.KAOAMerkmaleOptionsarten;
 import de.svws_nrw.core.types.schule.Schulgliederung;
