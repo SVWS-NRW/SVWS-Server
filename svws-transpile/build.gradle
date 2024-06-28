@@ -38,6 +38,10 @@ task prepareTranspile {
 	outputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt"
 }
 
+test {
+	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+}
+
 task transpileCore(type: JavaExec) {
 	group = "svws"
 	dependsOn compileJava
