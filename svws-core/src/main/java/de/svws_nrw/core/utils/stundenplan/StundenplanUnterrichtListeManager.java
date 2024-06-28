@@ -65,9 +65,17 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Wochentag> wochentage;
 	private static final @NotNull Function<@NotNull Wochentag, @NotNull Integer> _wochentagToId = (final @NotNull Wochentag w) -> w.id;
 
+	/** Das Filter-Attribut für die Zeitraster */
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanZeitraster> zeitraster;
+	private static final @NotNull Function<@NotNull StundenplanZeitraster, @NotNull Long> _zeitrasterToId = (final @NotNull StundenplanZeitraster z) -> z.id;
+
 	/** Das Filter-Attribut für die Stunden */
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Integer> stunden;
 	private static final @NotNull Function<@NotNull Integer, @NotNull Integer> _stundeToStunde = (final @NotNull Integer s) -> s;
+
+	/** Das Filter-Attribut für die Wochentypen */
+	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Integer> wochentypen;
+	private static final @NotNull Function<@NotNull Integer, @NotNull Integer> _wochentypToWochentyp = (final @NotNull Integer w) -> w;
 
 
 	/**
@@ -89,13 +97,18 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 		this.schueler = new AttributMitAuswahl<>(stundenplanManager.schuelerGetMengeAsList(), _schuelerToId, StundenplanUnterrichtUtils.comparatorSchueler, _eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl<>(stundenplanManager.fachGetMengeAsList(), _fachToId, StundenplanUnterrichtUtils.comparatorFaecher, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(stundenplanManager.kursGetMengeAsList(), _kursToId, StundenplanUnterrichtUtils.comparatorKurse, _eventHandlerFilterChanged);
-		this.wochentage = new AttributMitAuswahl<>(Arrays.asList(stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), _wochentagToId, StundenplanUnterrichtUtils.comparatorWochentag, _eventHandlerFilterChanged);
+		this.wochentage = new AttributMitAuswahl<>(Arrays.asList(stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), _wochentagToId, StundenplanUnterrichtUtils.comparatorWochentage, _eventHandlerFilterChanged);
 		final @NotNull List<@NotNull Integer> tmpStunden = new ArrayList<>();
 		for (final int s : stundenplanManager.zeitrasterGetStundenRange())
 			tmpStunden.add(s);
 		this.stunden = new AttributMitAuswahl<>(tmpStunden, _stundeToStunde, StundenplanUnterrichtUtils.comparatorStunden, _eventHandlerFilterChanged);
+		final @NotNull List<@NotNull Integer> tmpWochentypen = new ArrayList<>();
+		for (int w = 0; w <= stundenplanManager.getWochenTypModell(); w++)
+			tmpWochentypen.add(w);
+		this.wochentypen = new AttributMitAuswahl<>(tmpWochentypen, _wochentypToWochentyp, StundenplanUnterrichtUtils.comparatorWochentypen, _eventHandlerFilterChanged);
 		this.raeume = new AttributMitAuswahl<>(stundenplanManager.raumGetMengeAsList(), _raumToId, StundenplanUnterrichtUtils.comparatorRaeume, _eventHandlerFilterChanged);
 		this.schienen = new AttributMitAuswahl<>(stundenplanManager.schieneGetMengeAsList(), _schieneToId, StundenplanUnterrichtUtils.comparatorSchienen, _eventHandlerFilterChanged);
+		this.zeitraster = new AttributMitAuswahl<>(stundenplanManager.getListZeitraster(), _zeitrasterToId, StundenplanUnterrichtUtils.comparatorZeitraster, _eventHandlerFilterChanged);
 	}
 
 	/**
@@ -142,6 +155,10 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 		if (this.faecher.auswahlExists() && (!this.faecher.auswahlHasKey(eintrag.idFach)))
 			return false;
 		if (this.kurse.auswahlExists() && ((eintrag.idKurs == null) || (!this.kurse.auswahlHasKey(eintrag.idKurs))))
+			return false;
+		if (this.zeitraster.auswahlExists() && (!this.zeitraster.auswahlHasKey(eintrag.idZeitraster)))
+			return false;
+		if (this.wochentypen.auswahlExists() && (!this.wochentypen.auswahlHasKey(eintrag.wochentyp)))
 			return false;
 		final @NotNull StundenplanZeitraster zeitraster = stundenplanManager.zeitrasterGetByIdOrException(eintrag.idZeitraster);
 		if (this.wochentage.auswahlExists() && (!this.wochentage.auswahlHasKey(zeitraster.wochentag)))

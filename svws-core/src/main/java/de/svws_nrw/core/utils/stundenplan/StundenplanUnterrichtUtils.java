@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
 import jakarta.validation.constraints.NotNull;
 
@@ -48,12 +49,22 @@ public final class StundenplanUnterrichtUtils {
 	};
 
 	/** Ein Default-Comparator für den Vergleich von Wochentagen in Listen. */
-	public static final @NotNull Comparator<@NotNull Wochentag> comparatorWochentag = (final @NotNull Wochentag a, final @NotNull Wochentag b) -> {
+	public static final @NotNull Comparator<@NotNull Wochentag> comparatorWochentage = (final @NotNull Wochentag a, final @NotNull Wochentag b) -> {
+		return Long.compare(a.id, b.id);
+	};
+
+	/** Ein Default-Comparator für den Vergleich von Zeitrastern in Listen. */
+	public static final @NotNull Comparator<@NotNull StundenplanZeitraster> comparatorZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
 		return Long.compare(a.id, b.id);
 	};
 
 	/** Ein Default-Comparator für den Vergleich von Stunden in Listen. */
 	public static final @NotNull Comparator<@NotNull Integer> comparatorStunden = (final @NotNull Integer a, final @NotNull Integer b) -> {
+		return Long.compare(a, b);
+	};
+
+	/** Ein Default-Comparator für den Vergleich von Wochentypen in Listen. */
+	public static final @NotNull Comparator<@NotNull Integer> comparatorWochentypen = (final @NotNull Integer a, final @NotNull Integer b) -> {
 		return Long.compare(a, b);
 	};
 

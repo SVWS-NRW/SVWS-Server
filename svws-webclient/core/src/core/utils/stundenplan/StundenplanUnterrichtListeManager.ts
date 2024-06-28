@@ -88,11 +88,25 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 	private static readonly _wochentagToId : JavaFunction<Wochentag, number> = { apply : (w: Wochentag) => w.id };
 
 	/**
+	 * Das Filter-Attribut für die Zeitraster
+	 */
+	public readonly zeitraster : AttributMitAuswahl<number, StundenplanZeitraster>;
+
+	private static readonly _zeitrasterToId : JavaFunction<StundenplanZeitraster, number> = { apply : (z: StundenplanZeitraster) => z.id };
+
+	/**
 	 * Das Filter-Attribut für die Stunden
 	 */
 	public readonly stunden : AttributMitAuswahl<number, number>;
 
 	private static readonly _stundeToStunde : JavaFunction<number, number> = { apply : (s: number) => s };
+
+	/**
+	 * Das Filter-Attribut für die Wochentypen
+	 */
+	public readonly wochentypen : AttributMitAuswahl<number, number>;
+
+	private static readonly _wochentypToWochentyp : JavaFunction<number, number> = { apply : (w: number) => w };
 
 
 	/**
@@ -111,13 +125,18 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 		this.schueler = new AttributMitAuswahl(stundenplanManager.schuelerGetMengeAsList(), StundenplanUnterrichtListeManager._schuelerToId, StundenplanUnterrichtUtils.comparatorSchueler, this._eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl(stundenplanManager.fachGetMengeAsList(), StundenplanUnterrichtListeManager._fachToId, StundenplanUnterrichtUtils.comparatorFaecher, this._eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl(stundenplanManager.kursGetMengeAsList(), StundenplanUnterrichtListeManager._kursToId, StundenplanUnterrichtUtils.comparatorKurse, this._eventHandlerFilterChanged);
-		this.wochentage = new AttributMitAuswahl(Arrays.asList(...stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), StundenplanUnterrichtListeManager._wochentagToId, StundenplanUnterrichtUtils.comparatorWochentag, this._eventHandlerFilterChanged);
+		this.wochentage = new AttributMitAuswahl(Arrays.asList(...stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), StundenplanUnterrichtListeManager._wochentagToId, StundenplanUnterrichtUtils.comparatorWochentage, this._eventHandlerFilterChanged);
 		const tmpStunden : List<number> = new ArrayList<number>();
 		for (const s of stundenplanManager.zeitrasterGetStundenRange())
 			tmpStunden.add(s);
 		this.stunden = new AttributMitAuswahl(tmpStunden, StundenplanUnterrichtListeManager._stundeToStunde, StundenplanUnterrichtUtils.comparatorStunden, this._eventHandlerFilterChanged);
+		const tmpWochentypen : List<number> = new ArrayList<number>();
+		for (let w : number = 0; w <= stundenplanManager.getWochenTypModell(); w++)
+			tmpWochentypen.add(w);
+		this.wochentypen = new AttributMitAuswahl(tmpWochentypen, StundenplanUnterrichtListeManager._wochentypToWochentyp, StundenplanUnterrichtUtils.comparatorWochentypen, this._eventHandlerFilterChanged);
 		this.raeume = new AttributMitAuswahl(stundenplanManager.raumGetMengeAsList(), StundenplanUnterrichtListeManager._raumToId, StundenplanUnterrichtUtils.comparatorRaeume, this._eventHandlerFilterChanged);
 		this.schienen = new AttributMitAuswahl(stundenplanManager.schieneGetMengeAsList(), StundenplanUnterrichtListeManager._schieneToId, StundenplanUnterrichtUtils.comparatorSchienen, this._eventHandlerFilterChanged);
+		this.zeitraster = new AttributMitAuswahl(stundenplanManager.getListZeitraster(), StundenplanUnterrichtListeManager._zeitrasterToId, StundenplanUnterrichtUtils.comparatorZeitraster, this._eventHandlerFilterChanged);
 	}
 
 	/**
@@ -158,6 +177,10 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 		if (this.faecher.auswahlExists() && (!this.faecher.auswahlHasKey(eintrag.idFach)))
 			return false;
 		if (this.kurse.auswahlExists() && ((eintrag.idKurs === null) || (!this.kurse.auswahlHasKey(eintrag.idKurs))))
+			return false;
+		if (this.zeitraster.auswahlExists() && (!this.zeitraster.auswahlHasKey(eintrag.idZeitraster)))
+			return false;
+		if (this.wochentypen.auswahlExists() && (!this.wochentypen.auswahlHasKey(eintrag.wochentyp)))
 			return false;
 		const zeitraster : StundenplanZeitraster = this.stundenplanManager.zeitrasterGetByIdOrException(eintrag.idZeitraster);
 		if (this.wochentage.auswahlExists() && (!this.wochentage.auswahlHasKey(zeitraster.wochentag)))

@@ -3,6 +3,7 @@ import { IllegalStateException } from '../../../java/lang/IllegalStateException'
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { JavaString } from '../../../java/lang/JavaString';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import type { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
@@ -56,7 +57,14 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	/**
 	 * Ein Default-Comparator für den Vergleich von Wochentagen in Listen.
 	 */
-	public static readonly comparatorWochentag : Comparator<Wochentag> = { compare : (a: Wochentag, b: Wochentag) => {
+	public static readonly comparatorWochentage : Comparator<Wochentag> = { compare : (a: Wochentag, b: Wochentag) => {
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von Zeitrastern in Listen.
+	 */
+	public static readonly comparatorZeitraster : Comparator<StundenplanZeitraster> = { compare : (a: StundenplanZeitraster, b: StundenplanZeitraster) => {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -64,6 +72,13 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Stunden in Listen.
 	 */
 	public static readonly comparatorStunden : Comparator<number> = { compare : (a: number, b: number) => {
+		return JavaLong.compare(a!, b!);
+	} };
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von Wochentypen in Listen.
+	 */
+	public static readonly comparatorWochentypen : Comparator<number> = { compare : (a: number, b: number) => {
 		return JavaLong.compare(a!, b!);
 	} };
 
