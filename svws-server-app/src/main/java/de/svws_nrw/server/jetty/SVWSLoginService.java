@@ -54,8 +54,10 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 	public UserIdentity login(final String username, final Object credentials, final Request req, final Function<Boolean, Session> getOrCreateSession) {
 		// Akzeptiere nur HTTP-Anfragen der richtigen Versionen
 		final HttpVersion version = req.getConnectionMetaData().getHttpVersion();
-		if ((version != HttpVersion.HTTP_1_1) && (version != HttpVersion.HTTP_2) && (version != HttpVersion.HTTP_3))
+		if ((version != HttpVersion.HTTP_1_1) && (version != HttpVersion.HTTP_2) && (version != HttpVersion.HTTP_3)) {
+			System.err.println("Fehler bei dem Verbindungsaufbau. Die Protokolle Version %s wird nicht unterstützt.".formatted(version.toString()));
 			return null;
+		}
 
 		// Wandle die Crendentials in einen Passwort-String um
 		final String password;
