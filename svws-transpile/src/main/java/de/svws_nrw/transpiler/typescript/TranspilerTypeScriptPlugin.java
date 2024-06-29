@@ -102,6 +102,9 @@ import com.sun.source.tree.YieldTree;
  */
 public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
+	/** Specifies whether der typescript file for the simulation of the java core should be included or not */
+	private final boolean includeTSJavaCore;
+
 	/** The output directory where all generated files should be placed */
 	private final String outputDir;
 
@@ -177,11 +180,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @param transpiler   the transpiler that uses this plugin
 	 * @param outputDir    the output directory where all generated files should be placed
 	 */
-	public TranspilerTypeScriptPlugin(final Transpiler transpiler, final String outputDir) {
+	public TranspilerTypeScriptPlugin(final Transpiler transpiler, final String outputDir, final boolean includeTSJavaCore) {
 		super(transpiler);
 		if (outputDir == null)
 			throw new TranspilerException("Transpiler Error: An output directory for the transpiler language plugin is required.");
 		this.outputDir = outputDir;
+		this.includeTSJavaCore = includeTSJavaCore;
 		this.tsResources = ResourceUtils.getFilesInPackage("", ".ts");
 	}
 
@@ -2909,21 +2913,23 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		// write typescript resources
-		System.out.println("Writing prepared TypeScript resources...");
-		for (final TranspilerResource res : tsResources) {
-			// remove package prefix "typescript." from package path and replace all dots by slashes
-			final String packageName = res.packageName.substring(11);
-			final String fileName = packageName.replace(".", "/") + "/" + res.className + res.extension;
-			System.out.println("  -> " + fileName);
-			final Path path = Paths.get(outputDir + "/" + fileName);
-			super.outputFiles.add(fileName);
-			final TypeElement elem = transpiler.getTypeElement(packageName + "." + res.className);
-			super.outputFilesTypeOnly.add((elem != null) && (elem.getKind() == ElementKind.INTERFACE));
-			try {
-				Files.createDirectories(path.getParent());
-				Files.writeString(path, res.data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
+		if (includeTSJavaCore) {
+			System.out.println("Writing prepared TypeScript resources...");
+			for (final TranspilerResource res : tsResources) {
+				// remove package prefix "typescript." from package path and replace all dots by slashes
+				final String packageName = res.packageName.substring(11);
+				final String fileName = packageName.replace(".", "/") + "/" + res.className + res.extension;
+				System.out.println("  -> " + fileName);
+				final Path path = Paths.get(outputDir + "/" + fileName);
+				super.outputFiles.add(fileName);
+				final TypeElement elem = transpiler.getTypeElement(packageName + "." + res.className);
+				super.outputFilesTypeOnly.add((elem != null) && (elem.getKind() == ElementKind.INTERFACE));
+				try {
+					Files.createDirectories(path.getParent());
+					Files.writeString(path, res.data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+				} catch (@SuppressWarnings("unused") final IOException e) {
+					throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
+				}
 			}
 		}
 	}

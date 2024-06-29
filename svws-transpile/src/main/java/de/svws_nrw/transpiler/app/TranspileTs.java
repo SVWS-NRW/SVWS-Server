@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.logging.Logger;
 
 import de.svws_nrw.transpiler.Transpiler;
 import de.svws_nrw.transpiler.TranspilerException;
@@ -28,6 +27,7 @@ public class TranspileTs {
 		File[] javaSources = null;
 		String tmpDir = null;
 		String typeScriptOutputDir = null;
+		boolean includeTSJavaCore = false;
 		String typeScriptIgnorePackagePrefix = null;
 		final CmdLineParser cmdLine = new CmdLineParser(args);
 		try {
@@ -35,7 +35,9 @@ public class TranspileTs {
 			cmdLine.addOption(new CmdLineOption("o", "output", true, "Der Ziel-Ordner für den erzeugte TypeScript-Code"));
 			cmdLine.addOption(new CmdLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien dey Java-Compilers"));
 			cmdLine.addOption(new CmdLineOption("i", "ignore", true, "Das Package-Präfix, welches bei der Ziel-Verzeichnisstruktur ignoriert werden soll"));
+			cmdLine.addOption(new CmdLineOption("r", "resources", false, "Gibt an, ob die Typescript-Klassen zur Emulation des Java-Kerns mit ausgegeben werden sollen."));
 			typeScriptOutputDir = cmdLine.getValue("o", "build/ts");
+			includeTSJavaCore = cmdLine.isSet("r");
 			tmpDir = cmdLine.getValue("t", "build/tmp/transpiler");
 			typeScriptIgnorePackagePrefix = cmdLine.getValue("i", "");
 			final String fileNameJavaFiles = cmdLine.getValue("f", "");
@@ -56,7 +58,7 @@ public class TranspileTs {
 
 		// Erstelle ein Transpiler-Objekt mit den übergebenen Java-Dateien und Nutze das Typescript-Plugin des Transpilers
 		final Transpiler transpiler = new Transpiler(tmpDir, javaSources);
-		final TranspilerTypeScriptPlugin typescriptPlugin = new TranspilerTypeScriptPlugin(transpiler, typeScriptOutputDir);
+		final TranspilerTypeScriptPlugin typescriptPlugin = new TranspilerTypeScriptPlugin(transpiler, typeScriptOutputDir, includeTSJavaCore);
 		typescriptPlugin.setIgnoreJavaPackagePrefix(typeScriptIgnorePackagePrefix);
 		transpiler.transpile();
 

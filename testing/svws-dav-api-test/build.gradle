@@ -3,10 +3,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
 }
 apply from: ('../subproject-plugin.gradle')
-//exclude javadoc for generated model without comments
-testJavadoc {
-    exclude 'de/svws_nrw/test/**'
-}
 
 task apiTest(type: Test) {
 	group 'verification'
