@@ -97,7 +97,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!", tmpNSchienen < 1);
 		const nKurse : number = pInput.kurse.size();
 		DeveloperNotificationException.ifTrue("Die Kursanzahl (" + nKurse + ") ist zu gering!", nKurse < 1);
-		const setKursID : HashSet<number | null> | null = new HashSet<number | null>();
+		const setKursID : HashSet<number> | null = new HashSet<number>();
 		for (const kurs of pInput.kurse) {
 			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);

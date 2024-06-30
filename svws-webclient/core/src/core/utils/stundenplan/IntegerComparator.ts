@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { Comparator } from '../../../java/util/Comparator';
 
-export class IntegerComparator extends JavaObject implements Comparator<number | null> {
+export class IntegerComparator extends JavaObject implements Comparator<number> {
 
 
 	public constructor() {

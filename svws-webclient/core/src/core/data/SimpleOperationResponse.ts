@@ -17,7 +17,7 @@ export class SimpleOperationResponse extends JavaObject {
 	/**
 	 * Das Log der Operation.
 	 */
-	public log : List<string | null> = new ArrayList<string | null>();
+	public log : List<string> = new ArrayList<string>();
 
 
 	public constructor() {

@@ -118,12 +118,12 @@ export class LehrerMinderleistungArt extends JavaEnum<LehrerMinderleistungArt> {
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt | null> = new HashMap<number, LehrerMinderleistungArt | null>();
+	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt> = new HashMap<number, LehrerMinderleistungArt>();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt | null> = new HashMap<string, LehrerMinderleistungArt | null>();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt> = new HashMap<string, LehrerMinderleistungArt>();
 
 	/**
 	 * Erzeugt eine neue Art von Minderleistung in der Aufzählung.
@@ -144,7 +144,7 @@ export class LehrerMinderleistungArt extends JavaEnum<LehrerMinderleistungArt> {
 	 *
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static getMapArtenByID() : HashMap<number, LehrerMinderleistungArt | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerMinderleistungArt> {
 		if (LehrerMinderleistungArt._artenByID.size() === 0)
 			for (const g of LehrerMinderleistungArt.values())
 				LehrerMinderleistungArt._artenByID.put(g.daten.id, g);
@@ -157,7 +157,7 @@ export class LehrerMinderleistungArt extends JavaEnum<LehrerMinderleistungArt> {
 	 *
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<string, LehrerMinderleistungArt | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerMinderleistungArt> {
 		if (LehrerMinderleistungArt._artenByKuerzel.size() === 0)
 			for (const g of LehrerMinderleistungArt.values())
 				LehrerMinderleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);

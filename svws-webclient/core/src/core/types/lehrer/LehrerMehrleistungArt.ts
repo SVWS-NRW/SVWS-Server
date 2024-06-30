@@ -58,12 +58,12 @@ export class LehrerMehrleistungArt extends JavaEnum<LehrerMehrleistungArt> {
 	/**
 	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _artenByID : HashMap<number, LehrerMehrleistungArt | null> = new HashMap<number, LehrerMehrleistungArt | null>();
+	private static readonly _artenByID : HashMap<number, LehrerMehrleistungArt> = new HashMap<number, LehrerMehrleistungArt>();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _artenByKuerzel : HashMap<string, LehrerMehrleistungArt | null> = new HashMap<string, LehrerMehrleistungArt | null>();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerMehrleistungArt> = new HashMap<string, LehrerMehrleistungArt>();
 
 	/**
 	 * Erzeugt eine neue Art von Mehrleistung in der Aufzählung.
@@ -84,7 +84,7 @@ export class LehrerMehrleistungArt extends JavaEnum<LehrerMehrleistungArt> {
 	 *
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static getMapArtenByID() : HashMap<number, LehrerMehrleistungArt | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerMehrleistungArt> {
 		if (LehrerMehrleistungArt._artenByID.size() === 0)
 			for (const g of LehrerMehrleistungArt.values())
 				LehrerMehrleistungArt._artenByID.put(g.daten.id, g);
@@ -97,7 +97,7 @@ export class LehrerMehrleistungArt extends JavaEnum<LehrerMehrleistungArt> {
 	 *
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<string, LehrerMehrleistungArt | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerMehrleistungArt> {
 		if (LehrerMehrleistungArt._artenByKuerzel.size() === 0)
 			for (const g of LehrerMehrleistungArt.values())
 				LehrerMehrleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);

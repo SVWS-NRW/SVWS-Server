@@ -165,12 +165,12 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Jahrgaenge | null> = new HashMap<string, Jahrgaenge | null>();
+	private static readonly _mapKuerzel : HashMap<string, Jahrgaenge> = new HashMap<string, Jahrgaenge>();
 
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu der ID des Jahrgangs
 	 */
-	private static readonly _mapID : HashMap<number, Jahrgaenge | null> = new HashMap<number, Jahrgaenge | null>();
+	private static readonly _mapID : HashMap<number, Jahrgaenge> = new HashMap<number, Jahrgaenge>();
 
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
@@ -213,7 +213,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 *
 	 * @return die Map von den Kürzel der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge | null> {
+	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge> {
 		if (Jahrgaenge._mapKuerzel.size() === 0)
 			for (const j of Jahrgaenge.values())
 				Jahrgaenge._mapKuerzel.put(j.daten.kuerzel, j);
@@ -226,7 +226,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 *
 	 * @return die Map von den IDs der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge | null> {
+	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge> {
 		if (Jahrgaenge._mapID.size() === 0)
 			for (const j of Jahrgaenge.values()) {
 				for (const k of j.historie)

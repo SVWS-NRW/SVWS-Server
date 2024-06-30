@@ -22,27 +22,27 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	/**
 	 * Die Lehrkräfte der Lerngruppe.
 	 */
-	_menge_le : ArrayList<StundenplanblockungManagerLehrkraft | null> = new ArrayList<StundenplanblockungManagerLehrkraft | null>();
+	_menge_le : ArrayList<StundenplanblockungManagerLehrkraft> = new ArrayList<StundenplanblockungManagerLehrkraft>();
 
 	/**
 	 * Die Klassen der Lerngruppe.
 	 */
-	_menge_kl : ArrayList<StundenplanblockungManagerKlasse | null> = new ArrayList<StundenplanblockungManagerKlasse | null>();
+	_menge_kl : ArrayList<StundenplanblockungManagerKlasse> = new ArrayList<StundenplanblockungManagerKlasse>();
 
 	/**
 	 * Die Fächer Lerngruppe.
 	 */
-	_menge_fa : ArrayList<StundenplanblockungManagerFach | null> = new ArrayList<StundenplanblockungManagerFach | null>();
+	_menge_fa : ArrayList<StundenplanblockungManagerFach> = new ArrayList<StundenplanblockungManagerFach>();
 
 	/**
 	 * Die Räume Lerngruppe.
 	 */
-	_menge_ra : ArrayList<StundenplanblockungManagerRaum | null> = new ArrayList<StundenplanblockungManagerRaum | null>();
+	_menge_ra : ArrayList<StundenplanblockungManagerRaum> = new ArrayList<StundenplanblockungManagerRaum>();
 
 	/**
 	 * Die Kopplungen Lerngruppe.
 	 */
-	_menge_ko : ArrayList<StundenplanblockungManagerKopplung | null> = new ArrayList<StundenplanblockungManagerKopplung | null>();
+	_menge_ko : ArrayList<StundenplanblockungManagerKopplung> = new ArrayList<StundenplanblockungManagerKopplung>();
 
 
 	/**

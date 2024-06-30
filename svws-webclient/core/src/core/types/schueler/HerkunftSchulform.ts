@@ -95,7 +95,7 @@ export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, HerkunftSchulform | null> = new HashMap<string, HerkunftSchulform | null>();
+	private static readonly _ebenen : HashMap<string, HerkunftSchulform> = new HashMap<string, HerkunftSchulform>();
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulform in der Aufzählung.
@@ -118,7 +118,7 @@ export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsschulformen
 	 */
-	private static getMapByKuerzel() : HashMap<string, HerkunftSchulform | null> {
+	private static getMapByKuerzel() : HashMap<string, HerkunftSchulform> {
 		if (HerkunftSchulform._ebenen.size() === 0) {
 			for (const s of HerkunftSchulform.values()) {
 				if (s.daten !== null)

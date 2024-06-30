@@ -1472,14 +1472,15 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	private static readonly _listFremdsprachenKuerzel : List<string> = new ArrayList<string>();
 
 	/**
-	 * Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das atomare Kürzel mit dem Statistik-Kürzel übereinstimmt.
+	 * Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das
+	 *  atomare Kürzel mit dem Statistik-Kürzel übereinstimmt.
 	 */
 	private static readonly _mapFremdsprachenKuerzelAtomar : HashMap<string, ZulaessigesFach> = new HashMap<string, ZulaessigesFach>();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist
 	 */
-	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform, Schulgliederung | null>>>;
 
 	/**
 	 * Erzeugt eine zulässiges Fach in der Aufzählung.

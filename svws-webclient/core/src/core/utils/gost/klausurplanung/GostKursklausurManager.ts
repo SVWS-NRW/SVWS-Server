@@ -972,10 +972,10 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private checkTerminUeberschneidung(t1 : GostKlausurtermin, t2 : GostKlausurtermin) : boolean {
-		let s1 : number = this.minKursklausurstartzeitByTerminid(t1.id);
-		let s2 : number = this.minKursklausurstartzeitByTerminid(t2.id);
-		let e1 : number = this.maxKursklausurendzeitByTerminid(t1.id);
-		let e2 : number = this.maxKursklausurendzeitByTerminid(t2.id);
+		const s1 : number = this.minKursklausurstartzeitByTerminid(t1.id);
+		const s2 : number = this.minKursklausurstartzeitByTerminid(t2.id);
+		const e1 : number = this.maxKursklausurendzeitByTerminid(t1.id);
+		const e2 : number = this.maxKursklausurendzeitByTerminid(t2.id);
 		return (e1 >= s2) && (e2 >= s1);
 	}
 
@@ -1002,7 +1002,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public terminGetFremdmengeByDatumAndAbijahr(datum : string, abiJahrgang : number) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
-		const jgDatumMap : JavaMap<number, List<GostKlausurtermin> | null> | null = this._terminmenge_by_datum_and_abijahr.getSubMapOrNull(datum);
+		const jgDatumMap : JavaMap<number, List<GostKlausurtermin>> | null = this._terminmenge_by_datum_and_abijahr.getSubMapOrNull(datum);
 		if (jgDatumMap !== null)
 			for (const entry of jgDatumMap.entrySet())
 				if (entry.getKey() !== abiJahrgang)
@@ -1059,7 +1059,7 @@ export class GostKursklausurManager extends JavaObject {
 	public kursklausurMitNachschreibernGetMengeByTerminid(idTermin : number | null, mitNachschreibern : boolean) : JavaSet<GostKursklausur> {
 		const klausuren : JavaSet<GostKursklausur> | null = new HashSet<GostKursklausur>(this.kursklausurGetMengeByTerminid(idTermin));
 		if (mitNachschreibern)
-			for (let skt of this.schuelerklausurterminGetMengeByTerminid(idTermin!)) {
+			for (const skt of this.schuelerklausurterminGetMengeByTerminid(idTermin!)) {
 				klausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
 			}
 		return klausuren;
@@ -1121,10 +1121,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von Paaren, die das Abiturjahr und GostHalbjahr beinhalten.
 	 */
 	public static getParallelHalbjahre(abiJahrgang : number, halbjahr : number, includeSelf : boolean) : List<PairNN<number, GostHalbjahr>> {
-		let hjAktuell : GostHalbjahr | null = GostHalbjahr.fromIDorException(halbjahr);
+		const hjAktuell : GostHalbjahr | null = GostHalbjahr.fromIDorException(halbjahr);
 		if (hjAktuell === null)
 			throw new DeveloperNotificationException("Kein gültiges Gost-Halbjahr")
-		let ergebnis : List<PairNN<number, GostHalbjahr>> = new ArrayList<PairNN<number, GostHalbjahr>>();
+		const ergebnis : List<PairNN<number, GostHalbjahr>> = new ArrayList<PairNN<number, GostHalbjahr>>();
 		if (includeSelf)
 			ergebnis.add(new PairNN<number, GostHalbjahr>(abiJahrgang, hjAktuell));
 		if (halbjahr >= 2)
@@ -1153,7 +1153,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (!multijahrgang)
 			return this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal);
 		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
-		for (let jgHj of GostKursklausurManager.getParallelHalbjahre(abiJahrgang, halbjahr.id, true))
+		for (const jgHj of GostKursklausurManager.getParallelHalbjahre(abiJahrgang, halbjahr.id, true))
 			termine.addAll(this.terminGetMengeByHalbjahrAndQuartal(jgHj.a, jgHj.b, quartal));
 		return termine;
 	}
@@ -1517,8 +1517,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Anzahl der Konflikte
 	 */
 	public konfliktZuKursklausurBySchuelerklausur(schuelerklausur : GostSchuelerklausur, kursklausur : GostKursklausur) : boolean {
-		let schuelerids : List<number> = new ArrayList<number>();
-		for (let sk of this.schuelerklausurGetMengeByKursklausurid(kursklausur.id))
+		const schuelerids : List<number> = new ArrayList<number>();
+		for (const sk of this.schuelerklausurGetMengeByKursklausurid(kursklausur.id))
 			schuelerids.add(sk.idSchueler);
 		return schuelerids.contains(schuelerklausur.idSchueler);
 	}
@@ -1663,7 +1663,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (termin.datum === null)
 			return ergebnis;
 		const kw : number = DateUtils.gibKwDesDatumsISO8601(termin.datum);
-		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const entry of kursklausurmenge_by_schuelerId.entrySet()) {
@@ -1726,7 +1726,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
 		const ergebnis : JavaMap<number, HashSet<GostKursklausur>> = new HashMap<number, HashSet<GostKursklausur>>();
-		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const entry of kursklausurmenge_by_schuelerId.entrySet()) {
@@ -2080,7 +2080,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return den aktuellen Schülerklausurtermin
 	 */
 	public schuelerklausurterminaktuellBySchuelerklausur(idSchuelerklausur : number) : GostSchuelerklausurTermin {
-		const skts : List<GostSchuelerklausurTermin | null> = DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idSchuelerklausur, idSchuelerklausur);
+		const skts : List<GostSchuelerklausurTermin> = DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idSchuelerklausur, idSchuelerklausur);
 		return DeveloperNotificationException.ifNull("Schülerklausur " + idSchuelerklausur + " enthält keine Schülerklausurtermine.", skts.getLast());
 	}
 

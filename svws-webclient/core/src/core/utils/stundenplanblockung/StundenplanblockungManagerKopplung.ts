@@ -17,7 +17,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Kopplungen.
 	 */
-	private readonly _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe | null> = new ArrayList<StundenplanblockungManagerLerngruppe | null>();
+	private readonly _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe> = new ArrayList<StundenplanblockungManagerLerngruppe>();
 
 
 	/**

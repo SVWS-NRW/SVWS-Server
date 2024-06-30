@@ -4,7 +4,7 @@ import { Arrays } from '../../java/util/Arrays';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { System } from '../../java/lang/System';
 
-export class LogData extends JavaObject implements Comparable<LogData | null> {
+export class LogData extends JavaObject implements Comparable<LogData> {
 
 	private readonly time : number;
 

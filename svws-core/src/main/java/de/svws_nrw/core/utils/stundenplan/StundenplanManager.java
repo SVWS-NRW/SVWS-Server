@@ -42,6 +42,7 @@ import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.SetUtils;
 import de.svws_nrw.core.utils.StringUtils;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -400,8 +401,8 @@ public class StundenplanManager {
 	private Integer _zeitrasterMinutenMax = null;
 	private Integer _zeitrasterMinutenMinOhneLeere = null;
 	private Integer _zeitrasterMinutenMaxOhneLeere = null;
-	private @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMinByStunde = new HashMap<>();
-	private @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMaxByStunde = new HashMap<>();
+	private @NotNull HashMap<@NotNull Integer, @AllowNull Integer> _zeitrasterMinutenMinByStunde = new HashMap<>();
+	private @NotNull HashMap<@NotNull Integer, @AllowNull Integer> _zeitrasterMinutenMaxByStunde = new HashMap<>();
 
 	private int _zeitrasterWochentagMin = Wochentag.MONTAG.id;
 	private int _zeitrasterWochentagMax = Wochentag.MONTAG.id;
@@ -1451,7 +1452,7 @@ public class StundenplanManager {
 	private void update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp() {
 		_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D<>();
 		for (final long idPausenZeit : _pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getKeySet()) {
-			final Map<@NotNull Long, Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>>> map2 =
+			final Map<@NotNull Long, @NotNull Map<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>>> map2 =
 					_pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap2OrNull(idPausenZeit);
 			if (map2 == null)
 				continue;

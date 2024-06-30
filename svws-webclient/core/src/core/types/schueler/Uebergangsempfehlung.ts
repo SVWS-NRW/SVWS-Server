@@ -59,7 +59,7 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> {
 	/**
 	 * Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung | null> = new HashMap<string, Uebergangsempfehlung | null>();
+	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung> = new HashMap<string, Uebergangsempfehlung>();
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
@@ -81,7 +81,7 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> {
 	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
-	private static getMapByKuerzel() : HashMap<string, Uebergangsempfehlung | null> {
+	private static getMapByKuerzel() : HashMap<string, Uebergangsempfehlung> {
 		if (Uebergangsempfehlung._mapKuerzel.size() === 0) {
 			for (const s of Uebergangsempfehlung.values()) {
 				if (s.daten !== null)

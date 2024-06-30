@@ -583,12 +583,12 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> {
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _fachrichtungenByID : HashMap<number, LehrerFachrichtung | null> = new HashMap<number, LehrerFachrichtung | null>();
+	private static readonly _fachrichtungenByID : HashMap<number, LehrerFachrichtung> = new HashMap<number, LehrerFachrichtung>();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _fachrichtungenByKuerzel : HashMap<string, LehrerFachrichtung | null> = new HashMap<string, LehrerFachrichtung | null>();
+	private static readonly _fachrichtungenByKuerzel : HashMap<string, LehrerFachrichtung> = new HashMap<string, LehrerFachrichtung>();
 
 	/**
 	 * Erzeugt eine neuen Fachrichtung in der Aufzählung.
@@ -609,7 +609,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> {
 	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static getMapFachrichtungByID() : HashMap<number, LehrerFachrichtung | null> {
+	private static getMapFachrichtungByID() : HashMap<number, LehrerFachrichtung> {
 		if (LehrerFachrichtung._fachrichtungenByID.size() === 0)
 			for (const g of LehrerFachrichtung.values())
 				LehrerFachrichtung._fachrichtungenByID.put(g.daten.id, g);
@@ -622,7 +622,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> {
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static getMapFachrichtungByKuerzel() : HashMap<string, LehrerFachrichtung | null> {
+	private static getMapFachrichtungByKuerzel() : HashMap<string, LehrerFachrichtung> {
 		if (LehrerFachrichtung._fachrichtungenByKuerzel.size() === 0)
 			for (const g of LehrerFachrichtung.values())
 				LehrerFachrichtung._fachrichtungenByKuerzel.put(g.daten.kuerzel, g);

@@ -199,17 +199,17 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	/**
 	 * Eine Map mit der Zuordnung der Herkunftsart zu dem Kürzel der Herkunftsart
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Herkunftsarten | null> = new HashMap<string, Herkunftsarten | null>();
+	private static readonly _mapKuerzel : HashMap<string, Herkunftsarten> = new HashMap<string, Herkunftsarten>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Herkunftsart zu der ID der Herkunftsart
 	 */
-	private static readonly _mapID : HashMap<number, Herkunftsarten | null> = new HashMap<number, Herkunftsarten | null>();
+	private static readonly _mapID : HashMap<number, Herkunftsarten> = new HashMap<number, Herkunftsarten>();
 
 	/**
 	 * Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private readonly schulformen : Array<ArrayList<Schulform | null>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
@@ -247,7 +247,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	 *
 	 * @return die Map von den Kürzeln der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
-	private static getMapHerkunftsartByKuerzel() : HashMap<string, Herkunftsarten | null> {
+	private static getMapHerkunftsartByKuerzel() : HashMap<string, Herkunftsarten> {
 		if (Herkunftsarten._mapKuerzel.size() === 0)
 			for (const j of Herkunftsarten.values())
 				if (!Herkunftsarten._mapKuerzel.containsKey(j.daten.kuerzel))
@@ -261,7 +261,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	 *
 	 * @return die Map von den IDs der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
-	private static getMapHerkunftsartByID() : HashMap<number, Herkunftsarten | null> {
+	private static getMapHerkunftsartByID() : HashMap<number, Herkunftsarten> {
 		if (Herkunftsarten._mapID.size() === 0)
 			for (const j of Herkunftsarten.values()) {
 				for (const k of j.historie)
@@ -318,7 +318,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public getSchulformen() : List<Schulform | null> {
+	public getSchulformen() : List<Schulform> {
 		return this.schulformen[this.historie.length - 1];
 	}
 
@@ -329,8 +329,8 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	 *
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
-	public static get(schulform : Schulform | null) : List<Herkunftsarten | null> {
-		const result : ArrayList<Herkunftsarten | null> = new ArrayList<Herkunftsarten | null>();
+	public static get(schulform : Schulform | null) : List<Herkunftsarten> {
+		const result : ArrayList<Herkunftsarten> = new ArrayList<Herkunftsarten>();
 		if (schulform === null)
 			return result;
 		const herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();

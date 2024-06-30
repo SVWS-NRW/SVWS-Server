@@ -383,7 +383,7 @@ export class Herkunft extends JavaEnum<Herkunft> {
 	/**
 	 * Eine Hashmap mit allen definierten Herkünften, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _kuerzel : HashMap<string, Herkunft | null> = new HashMap<string, Herkunft | null>();
+	private static readonly _kuerzel : HashMap<string, Herkunft> = new HashMap<string, Herkunft>();
 
 	/**
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer sonstigen Herkunft.
@@ -462,7 +462,7 @@ export class Herkunft extends JavaEnum<Herkunft> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkünfte
 	 */
-	private static getMapByKuerzel() : HashMap<string, Herkunft | null> {
+	private static getMapByKuerzel() : HashMap<string, Herkunft> {
 		if (Herkunft._kuerzel.size() === 0) {
 			for (const h of Herkunft.values()) {
 				if (h.daten !== null)

@@ -173,7 +173,7 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", input.daten().kurse);
 		const schienenAnzahl : number = input.schieneGetAnzahl();
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
-		const usedSchiene : HashSet<number | null> | null = new HashSet<number | null>();
+		const usedSchiene : HashSet<number> | null = new HashSet<number>();
 		for (const gSchiene of input.daten().schienen) {
 			DeveloperNotificationException.ifInvalidID("gSchiene.id", gSchiene.id);
 			DeveloperNotificationException.ifSmaller("gSchiene.id", gSchiene.nummer, 1);
@@ -466,7 +466,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
-		const regelDatabaseIDs : HashSet<number | null> | null = new HashSet<number | null>();
+		const regelDatabaseIDs : HashSet<number> | null = new HashSet<number>();
 		for (const iRegel of pRegeln) {
 			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("regelDatabaseIDs", regelDatabaseIDs, iRegel.id);
@@ -760,7 +760,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
-		const setSSF : HashSet<string | null> = new HashSet<string | null>();
+		const setSSF : HashSet<string> = new HashSet<string>();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();
 			const idS2 : number = regel11.parameter.get(1).valueOf();

@@ -65,6 +65,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 
@@ -875,6 +876,92 @@ public final class Transpiler extends AbstractProcessor {
 				return ct;
 		}
 		return null;
+	}
+
+
+	/**
+	 * Checks whether the annotation list contains a AllowNull annotation.
+	 *
+	 * @param annotations   the list of annotation nodes
+	 * @param tu            the transpiler unit
+	 *
+	 * @return true if the list contains a AllowNull annotation
+	 */
+	public static boolean hasAllowNullAnnotation(final List<? extends AnnotationTree> annotations, final TranspilerUnit tu) {
+		if (annotations != null) {
+			for (final AnnotationTree annotation : annotations) {
+				if ("AllowNull".equals(annotation.getAnnotationType().toString())) {
+					final String packageName = tu.allAnnotations.get(annotation.getAnnotationType());
+					if ("de.svws_nrw.transpiler.annotations".equals(packageName))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks whether the annotation list contains a AllowNull annotation.
+	 *
+	 * @param annotations   the list of annotation nodes
+	 *
+	 * @return true if the list contains a AllowNull annotation
+	 */
+	public static boolean hasAllowNullAnnotation(final List<? extends AnnotationMirror> annotations) {
+		if (annotations != null) {
+			for (final AnnotationMirror annotation : annotations) {
+				if ((annotation.getAnnotationType().asElement() instanceof final TypeElement te) && (te.getKind() == ElementKind.ANNOTATION_TYPE)
+						&& ("de.svws_nrw.transpiler.annotations.AllowNull".equals(te.getQualifiedName().toString())))
+					return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks whether the type mirror has a AllowNull annotation assigned.
+	 *
+	 * @param type   the type mirror
+	 *
+	 * @return true if is has a AllowNull annotation assigned
+	 */
+	public static boolean hasAllowNullAnnotation(final TypeMirror type) {
+		return hasAllowNullAnnotation(type.getAnnotationMirrors());
+	}
+
+
+	/**
+	 * Checks whether the element has a AllowNull annotation assigned.
+	 *
+	 * @param elem   the element
+	 *
+	 * @return true if is has a AllowNull annotation assigned
+	 */
+	public static boolean hasAllowNullAnnotation(final Element elem) {
+		return hasAllowNullAnnotation(elem.getAnnotationMirrors());
+	}
+
+
+	/**
+	 * Checks whether the tree node has a AllowNull annotation assigned.
+	 *
+	 * @param node   the tree node
+	 *
+	 * @return true if is has a AllowNull annotation assigned
+	 */
+	public boolean hasAllowNullAnnotation(final Tree node) {
+		return switch (node) {
+			case final VariableTree vt -> hasAllowNullAnnotation(vt.getModifiers().getAnnotations(), getTranspilerUnit(vt));
+			case final MethodTree mt -> hasAllowNullAnnotation(mt.getModifiers().getAnnotations(), getTranspilerUnit(mt));
+			case final AnnotatedTypeTree att -> hasAllowNullAnnotation(att.getAnnotations(), getTranspilerUnit(att));
+			case final TypeParameterTree tpt -> hasAllowNullAnnotation(tpt.getAnnotations(), getTranspilerUnit(tpt));
+			case final ParameterizedTypeTree ptt -> hasAllowNullAnnotation(ptt.getType());
+			case final IdentifierTree it -> false;
+			case final WildcardTree wt -> false;
+			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
+		};
 	}
 
 

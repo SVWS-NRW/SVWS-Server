@@ -248,7 +248,7 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 *
 	 * @return das EntrySet der SubMap des 1. Schlüssels.
 	 */
-	public getEntrySet() : JavaSet<JavaMapEntry<K1 | null, JavaMap<K2, JavaMap<K3, V>>>> {
+	public getEntrySet() : JavaSet<JavaMapEntry<K1, JavaMap<K2, JavaMap<K3, V>>>> {
 		return this._map1.entrySet();
 	}
 

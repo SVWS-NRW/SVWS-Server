@@ -22,7 +22,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Lehrkraft.
 	 */
-	readonly _menge_gr : ArrayList<StundenplanblockungManagerLerngruppe | null>;
+	readonly _menge_gr : ArrayList<StundenplanblockungManagerLerngruppe>;
 
 
 	/**

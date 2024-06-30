@@ -78,7 +78,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	/**
 	 * Mapping von "Typ --> GostKursblockungRegelTyp".
 	 */
-	private static readonly _map_id_regel : HashMap<number, StundenplanblockungRegelTyp | null> = new HashMap<number, StundenplanblockungRegelTyp | null>();
+	private static readonly _map_id_regel : HashMap<number, StundenplanblockungRegelTyp> = new HashMap<number, StundenplanblockungRegelTyp>();
 
 	/**
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
@@ -101,7 +101,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	 *
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
-	private static getMap() : HashMap<number, StundenplanblockungRegelTyp | null> {
+	private static getMap() : HashMap<number, StundenplanblockungRegelTyp> {
 		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty())
 			for (const typ of StundenplanblockungRegelTyp.values())
 				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null)
@@ -114,7 +114,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	 *
 	 * @return Die Menge aller existierender Regeln.
 	 */
-	public static getCollection() : Collection<StundenplanblockungRegelTyp | null> {
+	public static getCollection() : Collection<StundenplanblockungRegelTyp> {
 		return StundenplanblockungRegelTyp.getMap().values();
 	}
 

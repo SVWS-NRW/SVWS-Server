@@ -5213,7 +5213,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {
-		const set : JavaSet<number | null> = new HashSet<number | null>();
+		const set : JavaSet<number> = new HashSet<number>();
 		set.addAll(kurs1.schueler);
 		set.retainAll(kurs2.schueler);
 		return set.size();

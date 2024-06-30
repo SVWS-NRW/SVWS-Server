@@ -58,7 +58,7 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	/**
 	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, Einschulungsart | null> = new HashMap<string, Einschulungsart | null>();
+	private static readonly _ebenen : HashMap<string, Einschulungsart> = new HashMap<string, Einschulungsart>();
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
@@ -81,7 +81,7 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
-	private static getMapByKuerzel() : HashMap<string, Einschulungsart | null> {
+	private static getMapByKuerzel() : HashMap<string, Einschulungsart> {
 		if (Einschulungsart._ebenen.size() === 0) {
 			for (const s of Einschulungsart.values()) {
 				if (s.daten !== null)

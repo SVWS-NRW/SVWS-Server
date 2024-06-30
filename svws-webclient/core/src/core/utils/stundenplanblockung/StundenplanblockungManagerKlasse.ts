@@ -17,7 +17,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Klasse.
 	 */
-	_menge_gr : ArrayList<StundenplanblockungManagerLerngruppe | null>;
+	_menge_gr : ArrayList<StundenplanblockungManagerLerngruppe>;
 
 
 	/**

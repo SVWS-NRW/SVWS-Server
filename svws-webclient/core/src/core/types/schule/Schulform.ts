@@ -125,17 +125,17 @@ export class Schulform extends JavaEnum<Schulform> {
 	/**
 	 * Ein ArrayList mit allen definierten Schulformen
 	 */
-	private static readonly _schulformen : HashMap<string, Schulform | null> = new HashMap<string, Schulform | null>();
+	private static readonly _schulformen : HashMap<string, Schulform> = new HashMap<string, Schulform>();
 
 	/**
 	 * Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben.
 	 */
-	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap<string, Schulform | null>();
+	private static readonly _schulformenNummer : HashMap<string, Schulform> = new HashMap<string, Schulform>();
 
 	/**
 	 * Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _mapEintragById : HashMap<number, SchulformKatalogEintrag | null> = new HashMap<number, SchulformKatalogEintrag | null>();
+	private static readonly _mapEintragById : HashMap<number, SchulformKatalogEintrag> = new HashMap<number, SchulformKatalogEintrag>();
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
@@ -156,7 +156,7 @@ export class Schulform extends JavaEnum<Schulform> {
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform | null> {
+	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform> {
 		if (Schulform._schulformen.size() === 0) {
 			for (const s of Schulform.values()) {
 				if (s.daten !== null)
@@ -172,7 +172,7 @@ export class Schulform extends JavaEnum<Schulform> {
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
+	private static getMapSchulformenByNummer() : HashMap<string, Schulform> {
 		if (Schulform._schulformenNummer.size() === 0)
 			for (const s of Schulform.values())
 				if ((s.daten !== null) && (s.daten.nummer !== null))
@@ -186,7 +186,7 @@ export class Schulform extends JavaEnum<Schulform> {
 	 *
 	 * @return die Map von den Kürzels der Schulform-Katalog-Einträge auf die zugehörigen Schulform-Katalog-Einträge
 	 */
-	private static getMapEintragById() : HashMap<number, SchulformKatalogEintrag | null> {
+	private static getMapEintragById() : HashMap<number, SchulformKatalogEintrag> {
 		if (Schulform._mapEintragById.size() === 0) {
 			for (const s of Schulform.values()) {
 				for (const e of s.historie)

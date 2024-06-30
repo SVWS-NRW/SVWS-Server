@@ -84,7 +84,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Räume.
 	 */
-	public getMenge() : List<StundenplanblockungManagerRaum | null> | null {
+	public getMenge() : List<StundenplanblockungManagerRaum> | null {
 		return this._menge;
 	}
 

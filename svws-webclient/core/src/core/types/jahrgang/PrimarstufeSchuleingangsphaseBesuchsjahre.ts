@@ -43,12 +43,12 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	/**
 	 * Eine Map mit der Zuordnung der Besuchsjahre zu dem Kürzel der Besuchsjahre
 	 */
-	private static readonly _mapKuerzel : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null>();
+	private static readonly _mapKuerzel : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre> = new HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Besuchsjahre zu der ID der Besuchsjahre
 	 */
-	private static readonly _mapID : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null>();
+	private static readonly _mapID : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre> = new HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre>();
 
 	/**
 	 * Erzeugt einen neuen Eintrage für Besuchsjahre in der Aufzählung.
@@ -69,7 +69,7 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	 *
 	 * @return die Map von den Kürzel der Besuchsjahre auf die zugehörigen Besuchsjahre
 	 */
-	private static getMapJahrgangByKuerzel() : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null> {
+	private static getMapJahrgangByKuerzel() : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre> {
 		if (PrimarstufeSchuleingangsphaseBesuchsjahre._mapKuerzel.size() === 0)
 			for (const j of PrimarstufeSchuleingangsphaseBesuchsjahre.values())
 				PrimarstufeSchuleingangsphaseBesuchsjahre._mapKuerzel.put(j.daten.kuerzel, j);
@@ -82,7 +82,7 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	 *
 	 * @return die Map von den IDs der Besuchsjahre auf die zugehörigen Besuchsjahre
 	 */
-	private static getMapJahrgangByID() : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null> {
+	private static getMapJahrgangByID() : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre> {
 		if (PrimarstufeSchuleingangsphaseBesuchsjahre._mapID.size() === 0)
 			for (const j of PrimarstufeSchuleingangsphaseBesuchsjahre.values()) {
 				for (const k of j.historie)

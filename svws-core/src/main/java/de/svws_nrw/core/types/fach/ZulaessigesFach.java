@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -4985,19 +4986,20 @@ public enum ZulaessigesFach {
 	public final @NotNull FachKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit allen zulässigen Fächern. Der Zugriff erfolgt dabei über die ID */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull ZulaessigesFach> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, ZulaessigesFach> _mapID = new HashMap<>();
 
 	/** Eine HashMap mit zulässigen Fächern. Der Zugriff erfolgt dabei das Statistik-Kürzel */
-	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapKuerzelASD = new HashMap<>();
+	private static final @NotNull HashMap<String, ZulaessigesFach> _mapKuerzelASD = new HashMap<>();
 
 	/** Eine Liste mit allen atomaren Kürzeln von Fremdsprachen */
-	private static final @NotNull List<@NotNull String> _listFremdsprachenKuerzel = new ArrayList<>();
+	private static final @NotNull List<String> _listFremdsprachenKuerzel = new ArrayList<>();
 
-	/** Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das atomare Kürzel mit dem Statistik-Kürzel übereinstimmt. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapFremdsprachenKuerzelAtomar = new HashMap<>();
+	/** Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das
+	 * atomare Kürzel mit dem Statistik-Kürzel übereinstimmt. */
+	private static final @NotNull HashMap<String, ZulaessigesFach> _mapFremdsprachenKuerzelAtomar = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist */
-	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
+	private final @NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -5010,7 +5012,7 @@ public enum ZulaessigesFach {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
@@ -5030,7 +5032,7 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> getMapByASDKuerzel() {
+	private static @NotNull HashMap<String, ZulaessigesFach> getMapByASDKuerzel() {
 		if (_mapKuerzelASD.isEmpty())
 			for (final @NotNull ZulaessigesFach s : ZulaessigesFach.values())
 				_mapKuerzelASD.put(s.daten.kuerzelASD, s);
@@ -5044,7 +5046,7 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die Map von den atomaren Kürzeln der Fremdsprachen auf eine Liste der zugehörigen Sprach-Fächer
 	 */
-	private static @NotNull Map<@NotNull String, @NotNull ZulaessigesFach> getMapFremdsprachenByKuerzelAtomar() {
+	private static @NotNull Map<String, ZulaessigesFach> getMapFremdsprachenByKuerzelAtomar() {
 		if (_mapFremdsprachenKuerzelAtomar.isEmpty()) {
 			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
 				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
@@ -5062,7 +5064,7 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die Liste aller atomaren Kürzeln von Fremdsprachen-Fächern
 	 */
-	public static @NotNull List<@NotNull String> getListFremdsprachenKuerzelAtomar() {
+	public static @NotNull List<String> getListFremdsprachenKuerzelAtomar() {
 		if (_listFremdsprachenKuerzel.isEmpty()) {
 			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
 				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
@@ -5085,7 +5087,7 @@ public enum ZulaessigesFach {
 	private boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
-		for (final @NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
+		for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> sfsgl : zulaessig[0]) {
 			if (sfsgl.a == schulform)
 				return true;
 		}
@@ -5102,7 +5104,7 @@ public enum ZulaessigesFach {
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
 	public static @NotNull List<@NotNull ZulaessigesFach> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull ZulaessigesFach> faecher = new ArrayList<>();
+		final @NotNull ArrayList<ZulaessigesFach> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
 		for (final @NotNull ZulaessigesFach fach : ZulaessigesFach.values())

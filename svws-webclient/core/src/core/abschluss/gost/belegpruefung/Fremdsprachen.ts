@@ -214,7 +214,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache, sofern dieses durchgehende und schriftlich belegt werden kann.
 	 */
 	private pruefeEF1AnzahlDurchgehenedeSprachen() : void {
-		const fremdsprachenDurchgehend : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._fremdsprachen), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
+		const fremdsprachenDurchgehend : List<AbiturFachbelegung> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._fremdsprachen), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
 		this._anzahlDurchgehendSchriftlich = fremdsprachenDurchgehend.size();
 		if (this._anzahlDurchgehendSchriftlich !== 1)
 			return;
@@ -224,7 +224,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const fremdspracheDurchgehend : string | null = GostFachUtils.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null)
 			return;
-		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
+		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
 		for (const biliSachfach of biliSachfaecherDurchgehendSchriftlich) {
 			const fach : GostFach | null = this.manager.getFach(biliSachfach);
 			if ((fach === null) || (JavaObject.equalsTranspiler(fremdspracheDurchgehend, (fach.biliSprache))))
@@ -478,7 +478,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if ((!this.manager.pruefeBelegungMitSchriftlichkeit(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2) || (!this.manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))))
 			this.addFehler(GostBelegungsfehler.BIL_10);
-		const biliSachfaecherEF : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
+		const biliSachfaecherEF : List<AbiturFachbelegung> | null = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
 		if (biliSachfaecherEF.isEmpty()) {
 			this.addFehler(GostBelegungsfehler.BIL_15);
 			return;

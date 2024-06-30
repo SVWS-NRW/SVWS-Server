@@ -38,12 +38,12 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> {
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, LehrerLeitungsfunktion | null> = new HashMap<string, LehrerLeitungsfunktion | null>();
+	private static readonly _mapByKuerzel : HashMap<string, LehrerLeitungsfunktion> = new HashMap<string, LehrerLeitungsfunktion>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren IDs
 	 */
-	private static readonly _mapByID : HashMap<number, LehrerLeitungsfunktion | null> = new HashMap<number, LehrerLeitungsfunktion | null>();
+	private static readonly _mapByID : HashMap<number, LehrerLeitungsfunktion> = new HashMap<number, LehrerLeitungsfunktion>();
 
 	/**
 	 * Erzeugt eine neue Leitungsfunktion in der Aufzählung.
@@ -64,7 +64,7 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> {
 	 *
 	 * @return die Map von den Kürzeln der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static getMapByKuerzel() : HashMap<string, LehrerLeitungsfunktion | null> {
+	private static getMapByKuerzel() : HashMap<string, LehrerLeitungsfunktion> {
 		if (LehrerLeitungsfunktion._mapByKuerzel.size() === 0) {
 			for (const s of LehrerLeitungsfunktion.values()) {
 				if (s.daten !== null)
@@ -80,7 +80,7 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> {
 	 *
 	 * @return die Map von den IDs der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static getMapByID() : HashMap<number, LehrerLeitungsfunktion | null> {
+	private static getMapByID() : HashMap<number, LehrerLeitungsfunktion> {
 		if (LehrerLeitungsfunktion._mapByID.size() === 0) {
 			for (const s of LehrerLeitungsfunktion.values()) {
 				if (s.daten !== null)

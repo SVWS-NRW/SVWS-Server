@@ -43,12 +43,12 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> {
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, LehrerEinsatzstatus | null> = new HashMap<number, LehrerEinsatzstatus | null>();
+	private static readonly _statusByID : HashMap<number, LehrerEinsatzstatus> = new HashMap<number, LehrerEinsatzstatus>();
 
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, LehrerEinsatzstatus | null> = new HashMap<string, LehrerEinsatzstatus | null>();
+	private static readonly _statusByKuerzel : HashMap<string, LehrerEinsatzstatus> = new HashMap<string, LehrerEinsatzstatus>();
 
 	/**
 	 * Erzeugt einen neuen Einsatzstatus in der Aufzählung.
@@ -69,7 +69,7 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> {
 	 *
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static getMapStatusByID() : HashMap<number, LehrerEinsatzstatus | null> {
+	private static getMapStatusByID() : HashMap<number, LehrerEinsatzstatus> {
 		if (LehrerEinsatzstatus._statusByID.size() === 0)
 			for (const g of LehrerEinsatzstatus.values())
 				LehrerEinsatzstatus._statusByID.put(g.daten.id, g);
@@ -82,7 +82,7 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> {
 	 *
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static getMapStatusByKuerzel() : HashMap<string, LehrerEinsatzstatus | null> {
+	private static getMapStatusByKuerzel() : HashMap<string, LehrerEinsatzstatus> {
 		if (LehrerEinsatzstatus._statusByKuerzel.size() === 0)
 			for (const g of LehrerEinsatzstatus.values())
 				LehrerEinsatzstatus._statusByKuerzel.put(g.daten.kuerzel, g);

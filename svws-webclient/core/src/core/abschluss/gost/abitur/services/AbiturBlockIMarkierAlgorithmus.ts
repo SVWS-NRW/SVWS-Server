@@ -2,7 +2,7 @@ import { Service } from '../../../../../core/Service';
 import { Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
 import { LogLevel } from '../../../../../core/logger/LogLevel';
 
-export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten | null, Abiturdaten | null> {
+export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten, Abiturdaten> {
 
 
 	/**

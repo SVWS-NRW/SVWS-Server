@@ -78,12 +78,12 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> {
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis | null> = new HashMap<number, LehrerRechtsverhaeltnis | null>();
+	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis> = new HashMap<number, LehrerRechtsverhaeltnis>();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis | null> = new HashMap<string, LehrerRechtsverhaeltnis | null>();
+	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis> = new HashMap<string, LehrerRechtsverhaeltnis>();
 
 	/**
 	 * Erzeugt eine neue Art von Rechtsverhältnissen in der Aufzählung.
@@ -104,7 +104,7 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> {
 	 *
 	 * @return die Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static getMapRechtsverhaeltnisByID() : HashMap<number, LehrerRechtsverhaeltnis | null> {
+	private static getMapRechtsverhaeltnisByID() : HashMap<number, LehrerRechtsverhaeltnis> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.size() === 0)
 			for (const l of LehrerRechtsverhaeltnis.values())
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.put(l.daten.id, l);
@@ -117,7 +117,7 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> {
 	 *
 	 * @return die Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<string, LehrerRechtsverhaeltnis | null> {
+	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<string, LehrerRechtsverhaeltnis> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.size() === 0)
 			for (const l of LehrerRechtsverhaeltnis.values())
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.put(l.daten.kuerzel, l);

@@ -174,7 +174,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	}
 
 	private aktionSetzeKlausurgruppeInDenRaum(kg : number, r : number) : boolean {
-		const gruppe : List<GostSchuelerklausurTerminRich | null> = this._klausurGruppen.get(kg);
+		const gruppe : List<GostSchuelerklausurTerminRich> = this._klausurGruppen.get(kg);
 		if ((this._raumZuBelegung[r] + gruppe.size()) > this._raumAt[r].groesse)
 			return false;
 		if ((this._regel_forciere_selben_klausurstart_pro_raum) && (this._raumZuKlausurstart[r] >= 0) && (this._klausurGruppeZuKlausurstart[kg] !== this._raumZuKlausurstart[r]))

@@ -91,7 +91,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Kopplungen.
 	 */
-	public getMenge() : List<StundenplanblockungManagerKopplung | null> | null {
+	public getMenge() : List<StundenplanblockungManagerKopplung> | null {
 		return this._menge;
 	}
 

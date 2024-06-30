@@ -466,7 +466,7 @@ public class TypeNode {
 			if (!first)
 				result += ", ";
 			first = false;
-			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
+			final TypeNode typeArgNode = new TypeNode(plugin, t, true, !plugin.getTranspiler().hasAllowNullAnnotation(t));
 			result += typeArgNode.transpile(false, noBounds);
 		}
 		result += ">" + ((decl && !notNull) ? " | null" : "");
@@ -571,7 +571,7 @@ public class TypeNode {
 		final String typeVar = tv.asElement().getSimpleName().toString();
 		if (resolved.containsKey(typeVar)) {
 			final TypeMirror tm = resolved.get(typeVar);
-			final TypeNode tn = new TypeNode(plugin, tm, true, Transpiler.hasNotNullAnnotation(tv), resolved);
+			final TypeNode tn = new TypeNode(plugin, tm, true, !Transpiler.hasAllowNullAnnotation(tv), resolved);
 			return tn.transpile(false);
 		}
 		if (withBounds) {
@@ -602,7 +602,7 @@ public class TypeNode {
 
 
 	private String transpileAnnotatedType(final AnnotatedTypeTree node, final boolean noTypeArgs, final boolean parentNotNull) {
-		final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
+		final boolean hasNotNull = !plugin.getTranspiler().hasAllowNullAnnotation(node);
 		final TypeNode underlyingTypeNode = new TypeNode(plugin, node.getUnderlyingType(), decl, hasNotNull);
 		return underlyingTypeNode.transpileInternal(noTypeArgs, parentNotNull, hasNotNull, false);
 	}
@@ -624,7 +624,7 @@ public class TypeNode {
 	}
 
 	private String transpileTypeParameter(final TypeParameterTree node, final boolean noBounds) {
-		final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
+		final boolean hasNotNull = !plugin.getTranspiler().hasAllowNullAnnotation(node);
 		final StringBuilder sb = new StringBuilder();
 		sb.append(node.getName().toString());
 		if (!noBounds && !node.getBounds().isEmpty()) {

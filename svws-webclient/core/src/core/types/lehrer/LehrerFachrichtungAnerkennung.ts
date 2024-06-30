@@ -48,12 +48,12 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung | null> = new HashMap<number, LehrerFachrichtungAnerkennung | null>();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung> = new HashMap<number, LehrerFachrichtungAnerkennung>();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung | null> = new HashMap<string, LehrerFachrichtungAnerkennung | null>();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung> = new HashMap<string, LehrerFachrichtungAnerkennung>();
 
 	/**
 	 * Erzeugt neue Anerkennung für Fachrichtungen in der Aufzählung.
@@ -74,7 +74,7 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	 *
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<number, LehrerFachrichtungAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerFachrichtungAnerkennung> {
 		if (LehrerFachrichtungAnerkennung._anerkennungenByID.size() === 0)
 			for (const l of LehrerFachrichtungAnerkennung.values())
 				LehrerFachrichtungAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -87,7 +87,7 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerFachrichtungAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerFachrichtungAnerkennung> {
 		if (LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.size() === 0)
 			for (const l of LehrerFachrichtungAnerkennung.values())
 				LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);

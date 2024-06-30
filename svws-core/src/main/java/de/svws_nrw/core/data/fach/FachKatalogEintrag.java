@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -135,7 +136,7 @@ public class FachKatalogEintrag {
 	public FachKatalogEintrag(final long id, final @NotNull String kuerzelASD, final @NotNull String bezeichnung, final @NotNull String kuerzel,
 			final Integer aufgabenfeld, final Fachgruppe fachgruppe, final Jahrgaenge abJahrgang, final boolean istFremdsprache, final boolean istHKFS,
 			final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istKonfKoop, final boolean nurSII, final boolean exportASD,
-			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
+			final @NotNull List<@NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzelASD = kuerzelASD;
@@ -151,7 +152,7 @@ public class FachKatalogEintrag {
 		this.istKonfKoop = istKonfKoop;
 		this.nurSII = nurSII;
 		this.exportASD = exportASD;
-		for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+		for (final @NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
 			final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
 			final @NotNull Schulform sf = zul.a;
 			if (sf.daten == null)

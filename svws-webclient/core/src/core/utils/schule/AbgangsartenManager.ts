@@ -97,7 +97,7 @@ export class AbgangsartenManager extends JavaObject {
 	 *
 	 * @return eine Liste mit allen Katalog-Einträgen
 	 */
-	public getAll() : List<AbgangsartKatalogEintrag | null> | null {
+	public getAll() : List<AbgangsartKatalogEintrag> | null {
 		return this._alle;
 	}
 

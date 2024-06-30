@@ -2,7 +2,7 @@ import { Service } from '../../../../../core/Service';
 import { Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
 import { LogLevel } from '../../../../../core/logger/LogLevel';
 
-export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, boolean | null> {
+export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten, boolean> {
 
 
 	/**

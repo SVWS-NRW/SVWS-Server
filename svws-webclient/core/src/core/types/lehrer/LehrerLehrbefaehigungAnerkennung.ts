@@ -48,12 +48,12 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap<number, LehrerLehrbefaehigungAnerkennung | null>();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung> = new HashMap<number, LehrerLehrbefaehigungAnerkennung>();
 
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> = new HashMap<string, LehrerLehrbefaehigungAnerkennung | null>();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung> = new HashMap<string, LehrerLehrbefaehigungAnerkennung>();
 
 	/**
 	 * Erzeugt einen neuen Anerkennungsgrund für Lehrbefähigungen in der Aufzählung.
@@ -74,7 +74,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	 *
 	 * @return die Map von den IDs der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehrbefaehigungAnerkennung> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByID.size() === 0)
 			for (const l of LehrerLehrbefaehigungAnerkennung.values())
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -87,7 +87,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	 *
 	 * @return die Map von den Kürzeln der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehrbefaehigungAnerkennung> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.size() === 0)
 			for (const l of LehrerLehrbefaehigungAnerkennung.values())
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);

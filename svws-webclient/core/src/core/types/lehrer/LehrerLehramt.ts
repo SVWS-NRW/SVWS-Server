@@ -258,12 +258,12 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> {
 	/**
 	 * Eine Hashmap mit allen Lehrämtern, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _aemterByID : HashMap<number, LehrerLehramt | null> = new HashMap<number, LehrerLehramt | null>();
+	private static readonly _aemterByID : HashMap<number, LehrerLehramt> = new HashMap<number, LehrerLehramt>();
 
 	/**
 	 * Eine Hashmap mit allen Lehrämtern, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _aemterByKuerzel : HashMap<string, LehrerLehramt | null> = new HashMap<string, LehrerLehramt | null>();
+	private static readonly _aemterByKuerzel : HashMap<string, LehrerLehramt> = new HashMap<string, LehrerLehramt>();
 
 	/**
 	 * Erzeugt ein neues Lehramt in der Aufzählung.
@@ -284,7 +284,7 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> {
 	 *
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static getMapLehraemterByID() : HashMap<number, LehrerLehramt | null> {
+	private static getMapLehraemterByID() : HashMap<number, LehrerLehramt> {
 		if (LehrerLehramt._aemterByID.size() === 0)
 			for (const l of LehrerLehramt.values())
 				LehrerLehramt._aemterByID.put(l.daten.id, l);
@@ -297,7 +297,7 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> {
 	 *
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static getMapLehraemterByKuerzel() : HashMap<string, LehrerLehramt | null> {
+	private static getMapLehraemterByKuerzel() : HashMap<string, LehrerLehramt> {
 		if (LehrerLehramt._aemterByKuerzel.size() === 0)
 			for (const l of LehrerLehramt.values())
 				LehrerLehramt._aemterByKuerzel.put(l.daten.kuerzel, l);

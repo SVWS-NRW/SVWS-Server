@@ -89,7 +89,7 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist
 	 */
-	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform, Schulgliederung | null>>>;
 
 	/**
 	 * Erzeugt eine zulässige Klassenart in der Aufzählung.
@@ -240,7 +240,7 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
-	public getGliederungen() : List<Pair<Schulform | null, Schulgliederung | null>> {
+	public getGliederungen() : List<Pair<Schulform, Schulgliederung | null>> {
 		return this.zulaessig[0];
 	}
 

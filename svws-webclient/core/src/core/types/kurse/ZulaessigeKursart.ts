@@ -406,17 +406,17 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	/**
 	 * Eine HashMap mit allen zulässigen Kursarten. Der Zugriff erfolgt dabei über die ID
 	 */
-	private static readonly _mapID : HashMap<number, ZulaessigeKursart | null> = new HashMap<number, ZulaessigeKursart | null>();
+	private static readonly _mapID : HashMap<number, ZulaessigeKursart> = new HashMap<number, ZulaessigeKursart>();
 
 	/**
 	 * Eine HashMap mit zulässigen Kursarten. Der Zugriff erfolgt dabei über das Kürzel
 	 */
-	private static readonly _mapKuerzel : HashMap<string, ZulaessigeKursart | null> = new HashMap<string, ZulaessigeKursart | null>();
+	private static readonly _mapKuerzel : HashMap<string, ZulaessigeKursart> = new HashMap<string, ZulaessigeKursart>();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist
 	 */
-	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform, Schulgliederung | null>>>;
 
 	/**
 	 * Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten
@@ -453,7 +453,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 *
 	 * @return die Map von den IDs der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static getMapByID() : HashMap<number, ZulaessigeKursart | null> {
+	private static getMapByID() : HashMap<number, ZulaessigeKursart> {
 		if (ZulaessigeKursart._mapID.size() === 0)
 			for (const s of ZulaessigeKursart.values())
 				if (s.daten !== null)
@@ -467,7 +467,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 *
 	 * @return die Map von den Kürzeln der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart | null> {
+	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart> {
 		if (ZulaessigeKursart._mapKuerzel.size() === 0)
 			for (const s of ZulaessigeKursart.values())
 				if (s.daten !== null)
@@ -542,7 +542,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
-	public getGliederungen() : List<Pair<Schulform | null, Schulgliederung | null>> {
+	public getGliederungen() : List<Pair<Schulform, Schulgliederung | null>> {
 		return this.zulaessig[0];
 	}
 

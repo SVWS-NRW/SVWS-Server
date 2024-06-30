@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -65,13 +66,13 @@ public class HerkunftsschulnummerKatalogEintrag {
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public HerkunftsschulnummerKatalogEintrag(final long id, final int schulnummer, final @NotNull String bezeichnung,
-			final List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
+			final List<@NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.schulnummer = schulnummer;
 		this.bezeichnung = bezeichnung;
 		if (zulaessig != null) {
-			for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+			for (final @NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
 				final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
 				final @NotNull Schulform sf = zul.a;
 				if (sf.daten == null)

@@ -13,6 +13,7 @@ import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 public class GostFaecherManager {
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
-	public static final @NotNull Comparator<GostFach> comp = (a, b) -> GostFachbereich.compareGostFach(a, b);
+	public static final @NotNull Comparator<@AllowNull GostFach> comp = (a, b) -> GostFachbereich.compareGostFach(a, b);
 
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */

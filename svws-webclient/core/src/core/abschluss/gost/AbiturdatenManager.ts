@@ -744,7 +744,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
-	public pruefeBelegungExistiertMitSchriftlichkeitEinzeln(fachbelegungen : List<AbiturFachbelegung | null> | null, schriftlichkeit : GostSchriftlichkeit, halbjahr : GostHalbjahr) : boolean {
+	public pruefeBelegungExistiertMitSchriftlichkeitEinzeln(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, halbjahr : GostHalbjahr) : boolean {
 		if (fachbelegungen === null)
 			return false;
 		for (const fachbelegung of fachbelegungen) {
@@ -1300,8 +1300,8 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return die Menge der Statistik-Fächer
 	 */
-	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach | null> {
-		const faecher : HashSet<ZulaessigesFach | null> = new HashSet<ZulaessigesFach | null>();
+	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach> {
+		const faecher : HashSet<ZulaessigesFach> = new HashSet<ZulaessigesFach>();
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.faecherManager.get(fb.fachID);
 			if (fach === null)
@@ -1326,7 +1326,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : JavaSet<ZulaessigesFach | null> = this.getMengeStatistikFaecher(fachbelegungen);
+		const faecher : JavaSet<ZulaessigesFach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;
@@ -1367,7 +1367,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : JavaSet<ZulaessigesFach | null> = this.getMengeStatistikFaecher(fachbelegungen);
+		const faecher : JavaSet<ZulaessigesFach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;

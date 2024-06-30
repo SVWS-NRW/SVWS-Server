@@ -578,12 +578,12 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> {
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _lehrbefaehigungenByID : HashMap<number, LehrerLehrbefaehigung | null> = new HashMap<number, LehrerLehrbefaehigung | null>();
+	private static readonly _lehrbefaehigungenByID : HashMap<number, LehrerLehrbefaehigung> = new HashMap<number, LehrerLehrbefaehigung>();
 
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _lehrbefaehigungenByKuerzel : HashMap<string, LehrerLehrbefaehigung | null> = new HashMap<string, LehrerLehrbefaehigung | null>();
+	private static readonly _lehrbefaehigungenByKuerzel : HashMap<string, LehrerLehrbefaehigung> = new HashMap<string, LehrerLehrbefaehigung>();
 
 	/**
 	 * Erzeugt eine neue Lehrbefähigung in der Aufzählung.
@@ -604,7 +604,7 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> {
 	 *
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static getMapLehrbefaehigungByID() : HashMap<number, LehrerLehrbefaehigung | null> {
+	private static getMapLehrbefaehigungByID() : HashMap<number, LehrerLehrbefaehigung> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByID.size() === 0)
 			for (const l of LehrerLehrbefaehigung.values())
 				LehrerLehrbefaehigung._lehrbefaehigungenByID.put(l.daten.id, l);
@@ -617,7 +617,7 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> {
 	 *
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static getMapLehrbefaehigungByKuerzel() : HashMap<string, LehrerLehrbefaehigung | null> {
+	private static getMapLehrbefaehigungByKuerzel() : HashMap<string, LehrerLehrbefaehigung> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.size() === 0)
 			for (const l of LehrerLehrbefaehigung.values())
 				LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);

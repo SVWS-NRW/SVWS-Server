@@ -17,7 +17,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Räume.
 	 */
-	private _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe | null> = new ArrayList<StundenplanblockungManagerLerngruppe | null>();
+	private _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe> = new ArrayList<StundenplanblockungManagerLerngruppe>();
 
 
 	/**

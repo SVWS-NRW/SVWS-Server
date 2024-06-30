@@ -93,7 +93,7 @@ public class AbgangsartenManager {
 	 *
 	 * @return eine Liste mit allen Katalog-Einträgen
 	 */
-	public List<AbgangsartKatalogEintrag> getAll() {
+	public List<@NotNull AbgangsartKatalogEintrag> getAll() {
 		return this._alle;
 	}
 

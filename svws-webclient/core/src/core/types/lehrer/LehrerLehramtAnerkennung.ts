@@ -53,12 +53,12 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung | null> = new HashMap<number, LehrerLehramtAnerkennung | null>();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung> = new HashMap<number, LehrerLehramtAnerkennung>();
 
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung | null> = new HashMap<string, LehrerLehramtAnerkennung | null>();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung> = new HashMap<string, LehrerLehramtAnerkennung>();
 
 	/**
 	 * Erzeugt eine neue Lehramtsanerkennung in der Aufzählung.
@@ -79,7 +79,7 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	 *
 	 * @return die Map von den IDs der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung> {
 		if (LehrerLehramtAnerkennung._anerkennungenByID.size() === 0)
 			for (const l of LehrerLehramtAnerkennung.values())
 				LehrerLehramtAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -92,7 +92,7 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	 *
 	 * @return die Map von den Kürzeln der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung> {
 		if (LehrerLehramtAnerkennung._anerkennungenByKuerzel.size() === 0)
 			for (const l of LehrerLehramtAnerkennung.values())
 				LehrerLehramtAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);

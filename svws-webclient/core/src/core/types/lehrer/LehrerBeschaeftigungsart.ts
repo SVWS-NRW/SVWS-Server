@@ -98,12 +98,12 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart | null> = new HashMap<number, LehrerBeschaeftigungsart | null>();
+	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart> = new HashMap<number, LehrerBeschaeftigungsart>();
 
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart | null> = new HashMap<string, LehrerBeschaeftigungsart | null>();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart> = new HashMap<string, LehrerBeschaeftigungsart>();
 
 	/**
 	 * Erzeugt eine neue Beschäftigungsart in der Aufzählung.
@@ -124,7 +124,7 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	 *
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static getMapArtenByID() : HashMap<number, LehrerBeschaeftigungsart | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerBeschaeftigungsart> {
 		if (LehrerBeschaeftigungsart._artenByID.size() === 0)
 			for (const l of LehrerBeschaeftigungsart.values())
 				LehrerBeschaeftigungsart._artenByID.put(l.daten.id, l);
@@ -137,7 +137,7 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	 *
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<string, LehrerBeschaeftigungsart | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerBeschaeftigungsart> {
 		if (LehrerBeschaeftigungsart._artenByKuerzel.size() === 0)
 			for (const l of LehrerBeschaeftigungsart.values())
 				LehrerBeschaeftigungsart._artenByKuerzel.put(l.daten.kuerzel, l);

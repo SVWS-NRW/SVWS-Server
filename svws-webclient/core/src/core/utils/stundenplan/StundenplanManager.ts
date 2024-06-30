@@ -1380,7 +1380,7 @@ export class StundenplanManager extends JavaObject {
 	private update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp() : void {
 		this._lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp = new HashMap3D();
 		for (const idPausenZeit of this._pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getKeySet()) {
-			const map2 : JavaMap<number, JavaMap<number, List<StundenplanPausenaufsicht>> | null> | null = this._pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap2OrNull(idPausenZeit);
+			const map2 : JavaMap<number, JavaMap<number, List<StundenplanPausenaufsicht>>> | null = this._pausenaufsichtmenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp.getMap2OrNull(idPausenZeit);
 			if (map2 === null)
 				continue;
 			for (const idAufsichtsbereich of map2.keySet()) {

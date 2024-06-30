@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -36,7 +37,7 @@ public class KlassenartKatalogEintrag {
 
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.")
-	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new ArrayList<>();
+	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -66,12 +67,12 @@ public class KlassenartKatalogEintrag {
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public KlassenartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
-			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
+			final @NotNull List<Pair<Schulform, @AllowNull Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;
-		for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+		for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
 			final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
 			final @NotNull Schulform sf = zul.a;
 			if (sf.daten == null)

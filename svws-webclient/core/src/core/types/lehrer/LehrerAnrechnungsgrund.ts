@@ -437,12 +437,12 @@ export class LehrerAnrechnungsgrund extends JavaEnum<LehrerAnrechnungsgrund> {
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _gruendeByID : HashMap<number, LehrerAnrechnungsgrund | null> = new HashMap<number, LehrerAnrechnungsgrund | null>();
+	private static readonly _gruendeByID : HashMap<number, LehrerAnrechnungsgrund> = new HashMap<number, LehrerAnrechnungsgrund>();
 
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _gruendeByKuerzel : HashMap<string, LehrerAnrechnungsgrund | null> = new HashMap<string, LehrerAnrechnungsgrund | null>();
+	private static readonly _gruendeByKuerzel : HashMap<string, LehrerAnrechnungsgrund> = new HashMap<string, LehrerAnrechnungsgrund>();
 
 	/**
 	 * Erzeugt einen neuen Grund in der Aufzählung.
@@ -463,7 +463,7 @@ export class LehrerAnrechnungsgrund extends JavaEnum<LehrerAnrechnungsgrund> {
 	 *
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static getMapGruendeByID() : HashMap<number, LehrerAnrechnungsgrund | null> {
+	private static getMapGruendeByID() : HashMap<number, LehrerAnrechnungsgrund> {
 		if (LehrerAnrechnungsgrund._gruendeByID.size() === 0)
 			for (const g of LehrerAnrechnungsgrund.values())
 				LehrerAnrechnungsgrund._gruendeByID.put(g.daten.id, g);
@@ -476,7 +476,7 @@ export class LehrerAnrechnungsgrund extends JavaEnum<LehrerAnrechnungsgrund> {
 	 *
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static getMapGruendeByKuerzel() : HashMap<string, LehrerAnrechnungsgrund | null> {
+	private static getMapGruendeByKuerzel() : HashMap<string, LehrerAnrechnungsgrund> {
 		if (LehrerAnrechnungsgrund._gruendeByKuerzel.size() === 0)
 			for (const g of LehrerAnrechnungsgrund.values())
 				LehrerAnrechnungsgrund._gruendeByKuerzel.put(g.daten.kuerzel, g);

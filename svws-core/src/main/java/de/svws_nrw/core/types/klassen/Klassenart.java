@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -144,7 +145,7 @@ public enum Klassenart {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
-	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull [] zulaessig;
+	private final @NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -157,7 +158,7 @@ public enum Klassenart {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
@@ -212,7 +213,7 @@ public enum Klassenart {
 	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
-		for (final @NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
+		for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> sfsgl : zulaessig[0]) {
 			if (sfsgl.a == schulform)
 				return true;
 		}
@@ -262,7 +263,7 @@ public enum Klassenart {
 	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
-	public @NotNull List<@NotNull Pair<Schulform, Schulgliederung>> getGliederungen() {
+	public @NotNull List<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> getGliederungen() {
 		return zulaessig[0];
 	}
 

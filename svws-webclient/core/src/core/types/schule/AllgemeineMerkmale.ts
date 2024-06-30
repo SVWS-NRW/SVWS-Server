@@ -135,7 +135,7 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 	/**
 	 * Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, AllgemeineMerkmale | null> = new HashMap<string, AllgemeineMerkmale | null>();
+	private static readonly _mapByKuerzel : HashMap<string, AllgemeineMerkmale> = new HashMap<string, AllgemeineMerkmale>();
 
 	/**
 	 * Erzeugt ein neues allgemeines Merkmal in der Aufzählung.
@@ -158,7 +158,7 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen allgemeinen Merkmale
 	 */
-	private static getMapByKuerzel() : HashMap<string, AllgemeineMerkmale | null> {
+	private static getMapByKuerzel() : HashMap<string, AllgemeineMerkmale> {
 		if (AllgemeineMerkmale._mapByKuerzel.size() === 0) {
 			for (const s of AllgemeineMerkmale.values()) {
 				if (s.daten !== null)

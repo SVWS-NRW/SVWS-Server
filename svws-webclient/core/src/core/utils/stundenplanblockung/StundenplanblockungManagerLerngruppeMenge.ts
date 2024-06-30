@@ -85,7 +85,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Lerngruppen.
 	 */
-	public getMenge() : List<StundenplanblockungManagerLerngruppe | null> | null {
+	public getMenge() : List<StundenplanblockungManagerLerngruppe> | null {
 		return this._menge;
 	}
 

@@ -90,7 +90,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Klassen.
 	 */
-	public getMenge() : List<StundenplanblockungManagerKlasse | null> | null {
+	public getMenge() : List<StundenplanblockungManagerKlasse> | null {
 		return this._menge;
 	}
 
