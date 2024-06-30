@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,7 +20,7 @@ public class StundenplanblockungManagerKlasse {
 
 	/** Alle Lerngruppen der Klasse. */
 	@NotNull
-	ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr;
+	List<StundenplanblockungManagerLerngruppe> _menge_gr;
 
 	/**
 	 * Erzeugt eine neue Klasse.

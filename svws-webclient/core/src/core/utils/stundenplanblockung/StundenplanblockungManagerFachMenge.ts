@@ -3,12 +3,14 @@ import { StundenplanblockungManagerFach, cast_de_svws_nrw_core_utils_stundenplan
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerFachMenge extends JavaObject {
 
-	private readonly _menge : ArrayList<StundenplanblockungManagerFach>;
+	private readonly _menge : List<StundenplanblockungManagerFach>;
 
-	private readonly _map : HashMap<number, StundenplanblockungManagerFach>;
+	private readonly _map : JavaMap<number, StundenplanblockungManagerFach>;
 
 
 	/**

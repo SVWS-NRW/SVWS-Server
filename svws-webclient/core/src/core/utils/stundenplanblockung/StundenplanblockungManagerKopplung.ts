@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 
 export class StundenplanblockungManagerKopplung extends JavaObject {
@@ -17,7 +18,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Kopplungen.
 	 */
-	private readonly _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe> = new ArrayList<StundenplanblockungManagerLerngruppe>();
+	private readonly _lerngruppen : List<StundenplanblockungManagerLerngruppe> = new ArrayList<StundenplanblockungManagerLerngruppe>();
 
 
 	/**

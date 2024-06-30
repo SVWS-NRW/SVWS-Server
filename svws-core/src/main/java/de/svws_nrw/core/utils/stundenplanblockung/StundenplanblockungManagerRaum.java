@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +18,7 @@ public class StundenplanblockungManagerRaum {
 	private @NotNull String _kuerzel = "";
 
 	/** Alle Lerngruppen der Räume. */
-	private @NotNull ArrayList<StundenplanblockungManagerLerngruppe> _lerngruppen = new ArrayList<>();
+	private @NotNull List<StundenplanblockungManagerLerngruppe> _lerngruppen = new ArrayList<>();
 
 	/**
 	 * @param pRaumID   Die Datenbank-ID des Raumes.

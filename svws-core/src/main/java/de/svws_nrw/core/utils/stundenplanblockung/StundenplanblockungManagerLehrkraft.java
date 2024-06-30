@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -20,7 +22,7 @@ public class StundenplanblockungManagerLehrkraft {
 	boolean _darf_vertreten = false;
 
 	/** Alle Lerngruppen der Lehrkraft. */
-	final @NotNull ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr;
+	final @NotNull List<StundenplanblockungManagerLerngruppe> _menge_gr;
 
 	/**
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.

@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,7 +20,7 @@ public class StundenplanblockungManagerFach {
 
 	/** Alle Lerngruppen in denen das Fach vertreten ist. */
 	@NotNull
-	ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr = new ArrayList<>();
+	List<StundenplanblockungManagerLerngruppe> _menge_gr = new ArrayList<>();
 
 	/**
 	 * Erzeugt ein neues Fach.

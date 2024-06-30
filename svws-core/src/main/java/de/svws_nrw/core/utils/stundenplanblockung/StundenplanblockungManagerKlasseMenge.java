@@ -15,8 +15,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanblockungManagerKlasseMenge {
 
-	private final @NotNull List<@NotNull StundenplanblockungManagerKlasse> _menge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull StundenplanblockungManagerKlasse> _map = new HashMap<>();
+	private final @NotNull List<StundenplanblockungManagerKlasse> _menge = new ArrayList<>();
+	private final @NotNull Map<Long, StundenplanblockungManagerKlasse> _map = new HashMap<>();
 
 	/**
 	 * Fügt die Klasse hinzu. <br>

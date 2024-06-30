@@ -16,8 +16,8 @@ import jakarta.validation.constraints.NotNull;
 public class StundenplanblockungManagerLerngruppeMenge {
 
 	/** Alle Lerngruppen. */
-	private final @NotNull List<@NotNull StundenplanblockungManagerLerngruppe> _menge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull StundenplanblockungManagerLerngruppe> _map = new HashMap<>();
+	private final @NotNull List<StundenplanblockungManagerLerngruppe> _menge = new ArrayList<>();
+	private final @NotNull Map<Long, StundenplanblockungManagerLerngruppe> _map = new HashMap<>();
 
 	/**
 	 * Liefert die zuvor erzeugte Lerngruppe. <br>
