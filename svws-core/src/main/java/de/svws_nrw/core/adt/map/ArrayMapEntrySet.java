@@ -20,17 +20,17 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüsselwerte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull Entry<@NotNull K, @NotNull V>> {
+final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
 	/** Die {@link ArrayMap} zu der dieses Entry-Set gehört. */
-	private final @NotNull ArrayMap<@NotNull K, @NotNull V> _map;
+	private final @NotNull ArrayMap<K, V> _map;
 
 	/**
 	 * Erstellt eine neues Entry-Set für die übergebene {@link ArrayMap}.
 	 *
 	 * @param map   die {@link ArrayMap}, zu welcher dieses Entry-Set gehört
 	 */
-	ArrayMapEntrySet(final @NotNull ArrayMap<@NotNull K, @NotNull V> map) {
+	ArrayMapEntrySet(final @NotNull ArrayMap<K, V> map) {
 		_map = map;
 	}
 
@@ -45,16 +45,16 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 	}
 
 	@SuppressWarnings("unchecked")
-	private Entry<@NotNull K, @NotNull V> toEntry(final Object obj) {
+	private Entry<K, V> toEntry(final Object obj) {
 		if (obj == null)
 			return null;
 		if (!(obj instanceof Entry))
 			return null;
-		final @NotNull Entry<@NotNull K, @NotNull V> entry = (@NotNull Entry<@NotNull K, @NotNull V>) obj;
+		final @NotNull Entry<K, V> entry = (@NotNull Entry<K, V>) obj;
 		return entry;
 	}
 
-	private boolean containsEntry(final Entry<@NotNull K, @NotNull V> entry) {
+	private boolean containsEntry(final Entry<K, V> entry) {
 		if (entry == null)
 			return false;
 		if (!_map.containsKey(entry.getKey()))
@@ -67,21 +67,21 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 
 	@Override
 	public boolean contains(final Object obj) {
-		final Entry<@NotNull K, @NotNull V> entry = toEntry(obj);
+		final Entry<K, V> entry = toEntry(obj);
 		if (entry == null)
 			return false;
 		return containsEntry(entry);
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull Entry<@NotNull K, @NotNull V>> iterator() {
+	public @NotNull Iterator<Entry<K, V>> iterator() {
 		return new ArrayMapEntrySetIterator<>(_map);
 	}
 
-	private @NotNull List<@NotNull ArrayMapEntry<@NotNull K, @NotNull V>> getEntryList() {
-		final @NotNull ArrayList<@NotNull ArrayMapEntry<@NotNull K, @NotNull V>> list = new ArrayList<>(_map.size());
+	private @NotNull List<ArrayMapEntry<K, V>> getEntryList() {
+		final @NotNull ArrayList<ArrayMapEntry<K, V>> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
-			final ArrayMapEntry<@NotNull K, @NotNull V> value = _map.getEntryByIndex(i);
+			final ArrayMapEntry<K, V> value = _map.getEntryByIndex(i);
 			if (value != null)
 				list.add(value);
 		}
@@ -108,7 +108,7 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 
 	@Override
 	public boolean remove(final Object obj) {
-		final Entry<@NotNull K, @NotNull V> entry = toEntry(obj);
+		final Entry<K, V> entry = toEntry(obj);
 		if (entry == null)
 			return false;
 		if (!containsEntry(entry))
@@ -128,12 +128,12 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> collection) {
+	public boolean addAll(final Collection<? extends @NotNull Entry<K, V>> collection) {
 		if (collection == null)
 			throw new NullPointerException();
 		if (this == collection)
 			return true;
-		for (final @NotNull Entry<@NotNull K, @NotNull V> entry : collection)
+		for (final @NotNull Entry<K, V> entry : collection)
 			if (!add(entry))
 				return false;
 		return true;
@@ -145,7 +145,7 @@ final class ArrayMapEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull
 			throw new NullPointerException();
 		boolean changed = false;
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
-			final ArrayMapEntry<@NotNull K, @NotNull V> entry = _map.getEntryByIndex(i);
+			final ArrayMapEntry<K, V> entry = _map.getEntryByIndex(i);
 			if (entry == null)
 				continue;
 			if (!collection.contains(entry)) {

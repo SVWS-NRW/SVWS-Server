@@ -23,31 +23,31 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @NotNull V> {
+public final class ArrayMap<K, V> implements Map<K, V> {
 
 	/** Das Array mit allen gültigen Schlüsselwerten */
 	private final @NotNull K @NotNull [] keyArray;
 
 	/** Die Funktion, welche jedem Schlüsselwert einem Index im Array zuordnet. */
-	private final @NotNull Function<@NotNull K, @NotNull Integer> keyIndexFunction;
+	private final @NotNull Function<K, Integer> keyIndexFunction;
 
 	/** Das Array mit den Einträgen der Map. Dieses hat die gleiche Länge wie das keyArray. Nicht vorhandene Einträge sind mit null initialisiert. */
-	private final @NotNull ArrayMapEntry<@NotNull K, @NotNull V>[] entries;
+	private final @NotNull ArrayMapEntry<K, V>[] entries;
 
 	/** Das Key-Set als View auf diese Map */
-	private final @NotNull Set<@NotNull K> _keySet;
+	private final @NotNull Set<K> _keySet;
 
 	/** Das Entry-Set als View auf diese Map */
-	private final @NotNull Collection<@NotNull V> _collection;
+	private final @NotNull Collection<V> _collection;
 
 	/** Das Entry-Set als View auf diese Map */
-	private final @NotNull Set<@NotNull Entry<@NotNull K, @NotNull V>> _entrySet;
+	private final @NotNull Set<Entry<K, V>> _entrySet;
 
 	private @NotNull int numEntries = 0;
 
 
 	/** Die Funktion, welche jedem Schlüsselwert einem Index im Array zuordnet - für den Fall, dass es sich um einen Enum-Type handelt. */
-	private final @NotNull Function<@NotNull K, @NotNull Integer> keyIndexFunctionEnum = (final @NotNull K key) -> {
+	private final @NotNull Function<K, Integer> keyIndexFunctionEnum = (final @NotNull K key) -> {
 		final boolean isEnum = key instanceof Enum<?>;
 		if (!isEnum)
 			throw new IllegalArgumentException("Der Schlüsselwerte ist keine Enum-Konstanten und somit nicht zulässig.");
@@ -71,7 +71,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 					"Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.");
 		this.keyArray = keyArray;
 		this.keyIndexFunction = keyIndexFunctionEnum;
-		this.entries = (ArrayMapEntry<@NotNull K, @NotNull V>[]) Array.newInstance(ArrayMapEntry.class, keyArray.length);
+		this.entries = (ArrayMapEntry<K, V>[]) Array.newInstance(ArrayMapEntry.class, keyArray.length);
 		this._keySet = new ArrayMapKeySet<>(this);
 		this._collection = new ArrayMapCollection<>(this);
 		this._entrySet = new ArrayMapEntrySet<>(this);
@@ -85,29 +85,29 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	 * @param keyIndexFunction   die Funktion zur Bestimmung des Index eines Schlüsselwertes im Array
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayMap(final @NotNull K @NotNull [] keyArray, final @NotNull Function<@NotNull K, @NotNull Integer> keyIndexFunction) {
+	public ArrayMap(final @NotNull K @NotNull [] keyArray, final @NotNull Function<K, Integer> keyIndexFunction) {
 		if (keyArray.length <= 0)
 			throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.");
 		this.keyArray = keyArray;
 		this.keyIndexFunction = keyIndexFunction;
-		this.entries = (ArrayMapEntry<@NotNull K, @NotNull V>[]) Array.newInstance(ArrayMapEntry.class, keyArray.length);
+		this.entries = (ArrayMapEntry<K, V>[]) Array.newInstance(ArrayMapEntry.class, keyArray.length);
 		this._keySet = new ArrayMapKeySet<>(this);
 		this._collection = new ArrayMapCollection<>(this);
 		this._entrySet = new ArrayMapEntrySet<>(this);
 	}
 
 	@Override
-	public @NotNull Set<@NotNull K> keySet() {
+	public @NotNull Set<K> keySet() {
 		return _keySet;
 	}
 
 	@Override
-	public @NotNull Collection<@NotNull V> values() {
+	public @NotNull Collection<V> values() {
 		return _collection;
 	}
 
 	@Override
-	public @NotNull Set<@NotNull Entry<@NotNull K, @NotNull V>> entrySet() {
+	public @NotNull Set<Entry<K, V>> entrySet() {
 		return _entrySet;
 	}
 
@@ -155,7 +155,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	 *
 	 * @return der zugeordnete Eintrag oder null, wenn kein Eintrag zugeordnet ist
 	 */
-	ArrayMapEntry<@NotNull K, @NotNull V> getEntryByIndex(final int index) {
+	ArrayMapEntry<K, V> getEntryByIndex(final int index) {
 		return isValidIndex(index) ? this.entries[index] : null;
 	}
 
@@ -167,7 +167,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	 * @return der zugeordnete Eintrag oder null, wenn kein Eintrag zugeordnet ist
 	 */
 	@SuppressWarnings("unchecked")
-	ArrayMapEntry<@NotNull K, @NotNull V> getEntry(final Object key) {
+	ArrayMapEntry<K, V> getEntry(final Object key) {
 		final K k = (K) key;
 		if (k == null)
 			return null;
@@ -184,7 +184,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	public boolean containsValue(final Object value) {
 		if (value == null)
 			return false;
-		for (final ArrayMapEntry<@NotNull K, @NotNull V> entry : entries)
+		for (final ArrayMapEntry<K, V> entry : entries)
 			if ((entry != null) && (value.equals(entry.getValue())))
 				return true;
 		return false;
@@ -192,7 +192,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 
 	@Override
 	public V get(final Object key) {
-		final ArrayMapEntry<@NotNull K, @NotNull V> entry = this.getEntry(key);
+		final ArrayMapEntry<K, V> entry = this.getEntry(key);
 		return (entry == null) ? null : entry.getValue();
 	}
 
@@ -209,7 +209,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	public V getValueAt(final int index) {
 		if (!isValidIndex(index))
 			throw new ArrayIndexOutOfBoundsException("Fehlerhafter Index für die Schlüsselwerte");
-		final ArrayMapEntry<@NotNull K, @NotNull V> entry = this.getEntryByIndex(index);
+		final ArrayMapEntry<K, V> entry = this.getEntryByIndex(index);
 		return (entry == null) ? null : entry.getValue();
 	}
 
@@ -218,7 +218,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 		final int index = keyIndexFunction.apply(key);
 		if (!isValidIndex(index))
 			throw new IllegalArgumentException("Der Schlüsselwert ist ungültig und kann keinem Index zugeordnet werden.");
-		final ArrayMapEntry<@NotNull K, @NotNull V> entry = this.getEntryByIndex(index);
+		final ArrayMapEntry<K, V> entry = this.getEntryByIndex(index);
 		if (entry == null)
 			this.numEntries++;
 		this.entries[index] = new ArrayMapEntry<>(key, value);
@@ -233,7 +233,7 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 		final int index = keyIndexFunction.apply((K) key);
 		if (!isValidIndex(index))
 			return null;
-		final ArrayMapEntry<@NotNull K, @NotNull V> entry = this.getEntryByIndex(index);
+		final ArrayMapEntry<K, V> entry = this.getEntryByIndex(index);
 		if (entry != null) {
 			this.entries[index] = null;
 			this.numEntries--;
@@ -242,10 +242,10 @@ public final class ArrayMap<@NotNull K, @NotNull V> implements Map<@NotNull K, @
 	}
 
 	@Override
-	public void putAll(final Map<? extends @NotNull K, ? extends @NotNull V> map) {
+	public void putAll(final Map<? extends K, ? extends V> map) {
 		if (map == null)
 			throw new NullPointerException("Der Parameter map darf nicht null sein.");
-		for (final @NotNull Entry<? extends @NotNull K, ? extends @NotNull V> entry : map.entrySet())
+		for (final @NotNull Entry<? extends K, ? extends V> entry : map.entrySet())
 			this.put(entry.getKey(), entry.getValue());
 	}
 

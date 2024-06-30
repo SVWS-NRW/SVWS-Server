@@ -14,10 +14,10 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ für die Schlüsselwerte
  * @param <V> Der Typ für die zugeordneten Werte in der {@link ArrayMap}
  */
-class ArrayMapKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNull K> {
+class ArrayMapKeySetIterator<K, V> implements Iterator<K> {
 
 	/** Die {@link ArrayMap}, deren Schlüsselwerte iteriert werden. */
-	private final @NotNull ArrayMap<@NotNull K, @NotNull V> _map;
+	private final @NotNull ArrayMap<K, V> _map;
 
 	/** Die aktuelle Position in der Map. Der Wert null bedeutet, dass sich der Iterator vor dem
 	 * ersten Element befindet. */
@@ -31,7 +31,7 @@ class ArrayMapKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNul
 	 *
 	 * @param map  die {@link ArrayMap}
 	 */
-	ArrayMapKeySetIterator(final @NotNull ArrayMap<@NotNull K, @NotNull V> map) {
+	ArrayMapKeySetIterator(final @NotNull ArrayMap<K, V> map) {
 		_map = map;
 		_current = null;
 		_next = getNextIndex(_current);

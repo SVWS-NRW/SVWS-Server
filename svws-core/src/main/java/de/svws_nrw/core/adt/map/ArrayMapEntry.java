@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ des Schlüssel-Eintrages.
  * @param <V> Der Typ des zugeordneten Wertes des Schlüssel-Eintrages.
  */
-final class ArrayMapEntry<@NotNull K, @NotNull V> implements Entry<@NotNull K, @NotNull V> {
+final class ArrayMapEntry<K, V> implements Entry<K, V> {
 
 	/** Der Schlüsselwert. */
 	final @NotNull K _key;

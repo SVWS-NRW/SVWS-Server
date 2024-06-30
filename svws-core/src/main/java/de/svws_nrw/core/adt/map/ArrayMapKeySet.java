@@ -18,17 +18,17 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüsselwerte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
+final class ArrayMapKeySet<K, V> implements Set<K> {
 
 	/** Die {@link ArrayMap} zu der dieses Key-Set gehört. */
-	private final @NotNull ArrayMap<@NotNull K, @NotNull V> _map;
+	private final @NotNull ArrayMap<K, V> _map;
 
 	/**
 	 * Erstellt eine neues Key-Set für die übergebene {@link ArrayMap}.
 	 *
 	 * @param map   die {@link ArrayMap}, zu welcher dieses Key-set gehört
 	 */
-	ArrayMapKeySet(final @NotNull ArrayMap<@NotNull K, @NotNull V> map) {
+	ArrayMapKeySet(final @NotNull ArrayMap<K, V> map) {
 		_map = map;
 	}
 
@@ -48,14 +48,14 @@ final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull K> iterator() {
+	public @NotNull Iterator<K> iterator() {
 		return new ArrayMapKeySetIterator<>(_map);
 	}
 
-	private @NotNull List<@NotNull K> getKeyList() {
-		final @NotNull ArrayList<@NotNull K> list = new ArrayList<>(_map.size());
+	private @NotNull List<K> getKeyList() {
+		final @NotNull ArrayList<K> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
-			final ArrayMapEntry<@NotNull K, @NotNull V> value = _map.getEntryByIndex(i);
+			final ArrayMapEntry<K, V> value = _map.getEntryByIndex(i);
 			if (value != null)
 				list.add(value.getKey());
 		}
@@ -93,7 +93,7 @@ final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull K> c) {
+	public boolean addAll(final Collection<? extends K> c) {
 		throw new UnsupportedOperationException("addAll: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).");
 	}
 
@@ -103,7 +103,7 @@ final class ArrayMapKeySet<@NotNull K, @NotNull V> implements Set<@NotNull K> {
 			throw new NullPointerException();
 		boolean changed = false;
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
-			final ArrayMapEntry<@NotNull K, @NotNull V> entry = _map.getEntryByIndex(i);
+			final ArrayMapEntry<K, V> entry = _map.getEntryByIndex(i);
 			if (entry == null)
 				continue;
 			if (!collection.contains(entry.getKey())) {

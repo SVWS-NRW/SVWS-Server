@@ -15,10 +15,10 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ für die Schlüsselwerte
  * @param <V> Der Typ für die zugeordneten Werte in der {@link ArrayMap}
  */
-class ArrayMapEntrySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNull Entry<@NotNull K, @NotNull V>> {
+class ArrayMapEntrySetIterator<K, V> implements Iterator<Entry<K, V>> {
 
 	/** Die {@link ArrayMap}, deren Schlüsselwerte iteriert werden. */
-	private final @NotNull ArrayMap<@NotNull K, @NotNull V> _map;
+	private final @NotNull ArrayMap<K, V> _map;
 
 	/** Die aktuelle Position in der Map. Der Wert null bedeutet, dass sich der Iterator vor dem
 	 * ersten Element befindet. */
@@ -32,7 +32,7 @@ class ArrayMapEntrySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotN
 	 *
 	 * @param map  die {@link ArrayMap}
 	 */
-	ArrayMapEntrySetIterator(final @NotNull ArrayMap<@NotNull K, @NotNull V> map) {
+	ArrayMapEntrySetIterator(final @NotNull ArrayMap<K, V> map) {
 		_map = map;
 		_current = null;
 		_next = getNextIndex(_current);
@@ -48,12 +48,12 @@ class ArrayMapEntrySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotN
 	}
 
 	@Override
-	public @NotNull Entry<@NotNull K, @NotNull V> next() {
+	public @NotNull Entry<K, V> next() {
 		if (_next == null)
 			throw new NoSuchElementException();
 		_current = _next;
 		_next = getNextIndex(_current);
-		final ArrayMapEntry<@NotNull K, @NotNull V> result = _map.getEntryByIndex(_current);
+		final ArrayMapEntry<K, V> result = _map.getEntryByIndex(_current);
 		if (result == null)
 			throw new NoSuchElementException();
 		return result;

@@ -960,6 +960,7 @@ public final class Transpiler extends AbstractProcessor {
 			case final ParameterizedTypeTree ptt -> hasAllowNullAnnotation(ptt.getType());
 			case final IdentifierTree it -> false;
 			case final WildcardTree wt -> false;
+			case final MemberSelectTree mst -> false;
 			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
 		};
 	}
@@ -1052,6 +1053,7 @@ public final class Transpiler extends AbstractProcessor {
 			case final ParameterizedTypeTree ptt -> hasNotNullAnnotation(ptt.getType());
 			case final IdentifierTree it -> true;
 			case final WildcardTree wt -> true;
+			case final MemberSelectTree mst -> true;
 			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
 		};
 	}

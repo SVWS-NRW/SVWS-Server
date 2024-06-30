@@ -15,17 +15,17 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüsselwerte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-final class ArrayMapCollection<@NotNull K, @NotNull V> implements Collection<@NotNull V> {
+final class ArrayMapCollection<K, V> implements Collection<V> {
 
 	/** Die {@link ArrayMap} zu der diese Collection gehört. */
-	private final @NotNull ArrayMap<@NotNull K, @NotNull V> _map;
+	private final @NotNull ArrayMap<K, V> _map;
 
 	/**
 	 * Erstellt eine neues Key-Set für die übergebene {@link ArrayMap}.
 	 *
 	 * @param map   die {@link ArrayMap}, zu welcher dieses Key-set gehört
 	 */
-	ArrayMapCollection(final @NotNull ArrayMap<@NotNull K, @NotNull V> map) {
+	ArrayMapCollection(final @NotNull ArrayMap<K, V> map) {
 		_map = map;
 	}
 
@@ -45,12 +45,12 @@ final class ArrayMapCollection<@NotNull K, @NotNull V> implements Collection<@No
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull V> iterator() {
+	public @NotNull Iterator<V> iterator() {
 		return new ArrayMapCollectionIterator<>(_map);
 	}
 
-	private @NotNull List<@NotNull V> getValueList() {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>(_map.size());
+	private @NotNull List<V> getValueList() {
+		final @NotNull ArrayList<V> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final V value = _map.getValueAt(i);
 			if (value != null)
@@ -90,7 +90,7 @@ final class ArrayMapCollection<@NotNull K, @NotNull V> implements Collection<@No
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull V> c) {
+	public boolean addAll(final Collection<? extends V> c) {
 		throw new UnsupportedOperationException("addAll: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.");
 	}
 
