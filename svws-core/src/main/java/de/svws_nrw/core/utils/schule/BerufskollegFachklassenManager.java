@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.schule;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
@@ -24,22 +26,22 @@ public class BerufskollegFachklassenManager {
 	private final long _version;
 
 	/** Ein Vektor mit allen Katalog-Einträgen */
-	private final @NotNull ArrayList<@NotNull BerufskollegFachklassenKatalogEintrag> _values = new ArrayList<>();
+	private final @NotNull List<BerufskollegFachklassenKatalogEintrag> _values = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index. */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull BerufskollegFachklassenKatalogIndex> _mapByIndex = new HashMap<>();
+	private final @NotNull Map<Integer, BerufskollegFachklassenKatalogIndex> _mapByIndex = new HashMap<>();
 
 	/** Eine HashMap für den Zugriff auf den Index anhand eines Eintrags. */
-	private final @NotNull HashMap<@NotNull BerufskollegFachklassenKatalogEintrag, @NotNull Integer> _mapIndexByEintrag = new HashMap<>();
+	private final @NotNull Map<BerufskollegFachklassenKatalogEintrag, Integer> _mapIndexByEintrag = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels. */
-	private final @NotNull HashMap<@NotNull String, @NotNull BerufskollegFachklassenKatalogEintrag> _mapByKuerzel = new HashMap<>();
+	private final @NotNull Map<String, BerufskollegFachklassenKatalogEintrag> _mapByKuerzel = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull BerufskollegFachklassenKatalogEintrag> _mapByID = new HashMap<>();
+	private final @NotNull Map<Long, BerufskollegFachklassenKatalogEintrag> _mapByID = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull BerufskollegFachklassenKatalogDaten> _mapDatenByID = new HashMap<>();
+	private final @NotNull Map<Long, BerufskollegFachklassenKatalogDaten> _mapDatenByID = new HashMap<>();
 
 
 	/**

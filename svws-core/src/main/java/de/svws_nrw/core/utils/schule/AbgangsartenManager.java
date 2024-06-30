@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.schule;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
@@ -28,16 +29,16 @@ public class AbgangsartenManager {
 	private final long _version;
 
 	/** Die kombinierten Daten der beiden Kataloge */
-	private final @NotNull ArrayList<@NotNull AbgangsartKatalogEintrag> _alle = new ArrayList<>();
+	private final @NotNull List<AbgangsartKatalogEintrag> _alle = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels. */
-	private final @NotNull HashMap<@NotNull String, @NotNull AbgangsartKatalogEintrag> _mapByKuerzel = new HashMap<>();
+	private final @NotNull Map<String, AbgangsartKatalogEintrag> _mapByKuerzel = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand der ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull AbgangsartKatalogEintrag> _mapByID = new HashMap<>();
+	private final @NotNull Map<Long, AbgangsartKatalogEintrag> _mapByID = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Daten der Abgangsarten anhand der ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull AbgangsartKatalogDaten> _mapDatenByID = new HashMap<>();
+	private final @NotNull Map<Long, AbgangsartKatalogDaten> _mapDatenByID = new HashMap<>();
 
 
 	/**
@@ -93,7 +94,7 @@ public class AbgangsartenManager {
 	 *
 	 * @return eine Liste mit allen Katalog-Einträgen
 	 */
-	public List<@NotNull AbgangsartKatalogEintrag> getAll() {
+	public List<AbgangsartKatalogEintrag> getAll() {
 		return this._alle;
 	}
 

@@ -3,10 +3,12 @@ import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule
 import { BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
 import { BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
+import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class BerufskollegFachklassenManager extends JavaObject {
@@ -24,32 +26,32 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	/**
 	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
-	private readonly _values : ArrayList<BerufskollegFachklassenKatalogEintrag> = new ArrayList<BerufskollegFachklassenKatalogEintrag>();
+	private readonly _values : List<BerufskollegFachklassenKatalogEintrag> = new ArrayList<BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index.
 	 */
-	private readonly _mapByIndex : HashMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap<number, BerufskollegFachklassenKatalogIndex>();
+	private readonly _mapByIndex : JavaMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap<number, BerufskollegFachklassenKatalogIndex>();
 
 	/**
 	 * Eine HashMap für den Zugriff auf den Index anhand eines Eintrags.
 	 */
-	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap<BerufskollegFachklassenKatalogEintrag, number>();
+	private readonly _mapIndexByEintrag : JavaMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap<BerufskollegFachklassenKatalogEintrag, number>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels.
 	 */
-	private readonly _mapByKuerzel : HashMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap<string, BerufskollegFachklassenKatalogEintrag>();
+	private readonly _mapByKuerzel : JavaMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap<string, BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap<number, BerufskollegFachklassenKatalogEintrag>();
+	private readonly _mapByID : JavaMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap<number, BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID.
 	 */
-	private readonly _mapDatenByID : HashMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap<number, BerufskollegFachklassenKatalogDaten>();
+	private readonly _mapDatenByID : JavaMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap<number, BerufskollegFachklassenKatalogDaten>();
 
 
 	/**

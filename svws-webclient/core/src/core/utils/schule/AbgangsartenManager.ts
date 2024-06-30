@@ -2,11 +2,12 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { HashMap } from '../../../java/util/HashMap';
 import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
 
 export class AbgangsartenManager extends JavaObject {
@@ -29,22 +30,22 @@ export class AbgangsartenManager extends JavaObject {
 	/**
 	 * Die kombinierten Daten der beiden Kataloge
 	 */
-	private readonly _alle : ArrayList<AbgangsartKatalogEintrag> = new ArrayList<AbgangsartKatalogEintrag>();
+	private readonly _alle : List<AbgangsartKatalogEintrag> = new ArrayList<AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels.
 	 */
-	private readonly _mapByKuerzel : HashMap<string, AbgangsartKatalogEintrag> = new HashMap<string, AbgangsartKatalogEintrag>();
+	private readonly _mapByKuerzel : JavaMap<string, AbgangsartKatalogEintrag> = new HashMap<string, AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, AbgangsartKatalogEintrag> = new HashMap<number, AbgangsartKatalogEintrag>();
+	private readonly _mapByID : JavaMap<number, AbgangsartKatalogEintrag> = new HashMap<number, AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Daten der Abgangsarten anhand der ID.
 	 */
-	private readonly _mapDatenByID : HashMap<number, AbgangsartKatalogDaten> = new HashMap<number, AbgangsartKatalogDaten>();
+	private readonly _mapDatenByID : JavaMap<number, AbgangsartKatalogDaten> = new HashMap<number, AbgangsartKatalogDaten>();
 
 
 	/**

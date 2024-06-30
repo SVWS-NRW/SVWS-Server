@@ -16,7 +16,7 @@ public final class LehrerUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Lehrern in Lehrerlisten. */
-	public static final @NotNull Comparator<@NotNull LehrerListeEintrag> comparator =
+	public static final @NotNull Comparator<LehrerListeEintrag> comparator =
 			(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> {
 				int cmp = a.nachname.compareTo(b.nachname);
 				if (cmp != 0)

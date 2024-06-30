@@ -18,14 +18,14 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten des Kataloges der Religionen.
  */
-public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @NotNull ReligionEintrag, @NotNull ReligionEintrag> {
+public final class ReligionListeManager extends AuswahlManager<Long, ReligionEintrag, ReligionEintrag> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull ReligionEintrag, @NotNull Long> _religionToId = (final @NotNull ReligionEintrag r) -> r.id;
+	private static final @NotNull Function<ReligionEintrag, Long> _religionToId = (final @NotNull ReligionEintrag r) -> r.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull ReligionEintrag> _mapReligionEintragIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap<@NotNull String, @NotNull ReligionEintrag> _mapReligionEintragByKuerzel = new HashMap<>();
+	private final @NotNull HashMap2D<Boolean, Long, ReligionEintrag> _mapReligionEintragIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap<String, ReligionEintrag> _mapReligionEintragByKuerzel = new HashMap<>();
 
 	/** Das Filter-Attribut auf nur sichtbare ReligionEintragen */
 	private boolean _filterNurSichtbar = true;
@@ -42,8 +42,8 @@ public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @N
 	 * @param religionen                   die Liste der Katalog-Einträge
 	 */
 	public ReligionListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<@NotNull ReligionEintrag> religionen) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull List<ReligionEintrag> religionen) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, religionen, ReligionUtils.comparator, _religionToId,
 				_religionToId, Arrays.asList());
 		initEintrage();
@@ -112,7 +112,7 @@ public final class ReligionListeManager extends AuswahlManager<@NotNull Long, @N
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull ReligionEintrag a, final @NotNull ReligionEintrag b) {
-		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;

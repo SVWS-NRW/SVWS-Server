@@ -19,15 +19,16 @@ public final class JahrgangsUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten. */
-	public static final @NotNull Comparator<@NotNull JahrgangsDaten> comparator = (final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
-		int cmp = a.sortierung - b.sortierung;
-		if (cmp != 0)
-			return cmp;
-		if ((a.kuerzel == null) || (b.kuerzel == null))
-			return Long.compare(a.id, b.id);
-		cmp = a.kuerzel.compareTo(b.kuerzel);
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-	};
+	public static final @NotNull Comparator<JahrgangsDaten> comparator =
+			(final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
+				int cmp = a.sortierung - b.sortierung;
+				if (cmp != 0)
+					return cmp;
+				if ((a.kuerzel == null) || (b.kuerzel == null))
+					return Long.compare(a.id, b.id);
+				cmp = a.kuerzel.compareTo(b.kuerzel);
+				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+			};
 
 
 	/**

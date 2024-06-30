@@ -31,17 +31,17 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	/**
 	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
-	private readonly _values : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
+	private readonly _values : List<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand des Kürzels
 	 */
-	private readonly _mapFachByKuerzel : HashMap<string, BKFBFach> = new HashMap<string, BKFBFach>();
+	private readonly _mapFachByKuerzel : JavaMap<string, BKFBFach> = new HashMap<string, BKFBFach>();
 
 	/**
 	 * Eine HashMap für den Zugriff auf einen Bildungsplan anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, BKBildungsplan> = new HashMap<number, BKBildungsplan>();
+	private readonly _mapByID : JavaMap<number, BKBildungsplan> = new HashMap<number, BKBildungsplan>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Lehrpläne anhand des Fachklassen-Schlüssels.
@@ -158,7 +158,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public getLehrplaeneByIndexSchuljahrAll(index : number, schuljahr : number) : List<BKBildungsplan> | null {
-		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
+		const lehrplaene : List<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
@@ -285,7 +285,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getFaecherByFachklassenschuesselSchuljahr(__param0? : BKFachklassenSchluessel, __param1? : number) : List<BKFBFach> | null {
 		if ((__param0 === undefined) && (__param1 === undefined)) {
-			const faecher : ArrayList<BKFBFach> = new ArrayList<BKFBFach>();
+			const faecher : List<BKFBFach> = new ArrayList<BKFBFach>();
 			faecher.addAll(this._mapFachByKuerzel.values());
 			return faecher;
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((__param1 !== undefined) && typeof __param1 === "number")) {

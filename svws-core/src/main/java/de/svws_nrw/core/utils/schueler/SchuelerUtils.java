@@ -16,7 +16,7 @@ public final class SchuelerUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten. */
-	public static final @NotNull Comparator<@NotNull SchuelerListeEintrag> comparator =
+	public static final @NotNull Comparator<SchuelerListeEintrag> comparator =
 			(final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> {
 				int cmp = a.nachname.compareTo(b.nachname);
 				if (cmp != 0)

@@ -31,48 +31,47 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Kurs-Listen.
  */
-public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNull KursDaten, @NotNull KursDaten> {
+public final class KursListeManager extends AuswahlManager<Long, KursDaten, KursDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull KursDaten, @NotNull Long> _kursToId = (final @NotNull KursDaten k) -> k.id;
+	private static final @NotNull Function<KursDaten, Long> _kursToId = (final @NotNull KursDaten k) -> k.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull KursDaten> _mapKursIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapKursInJahrgang = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapKursHatSchueler = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapLehrerInKurs = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapKursHatFach = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KursDaten> _mapKursInSchulgliederung = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KursDaten> _mapKursByKuerzelAndJahrgang = new HashMap2D<>();
+	private final @NotNull HashMap2D<Boolean, Long, KursDaten> _mapKursIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Long, KursDaten> _mapKursInJahrgang = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Long, KursDaten> _mapKursHatSchueler = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Long, KursDaten> _mapLehrerInKurs = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Long, KursDaten> _mapKursHatFach = new HashMap2D<>();
+	private final @NotNull HashMap2D<String, Long, KursDaten> _mapKursInSchulgliederung = new HashMap2D<>();
+	private final @NotNull HashMap2D<String, Long, KursDaten> _mapKursByKuerzelAndJahrgang = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsDaten> jahrgaenge;
-	private static final @NotNull Function<@NotNull JahrgangsDaten, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
+	public final @NotNull AttributMitAuswahl<Long, JahrgangsDaten> jahrgaenge;
+	private static final @NotNull Function<JahrgangsDaten, Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
 
 	/** Das Filter-Attribut für die Lehrer */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull LehrerListeEintrag> lehrer;
-	private static final @NotNull Function<@NotNull LehrerListeEintrag, @NotNull Long> _lehrerToId = (final @NotNull LehrerListeEintrag l) -> l.id;
+	public final @NotNull AttributMitAuswahl<Long, LehrerListeEintrag> lehrer;
+	private static final @NotNull Function<LehrerListeEintrag, Long> _lehrerToId = (final @NotNull LehrerListeEintrag l) -> l.id;
 
 	/** Das Filter-Attribut für die Fächer */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull FachDaten> faecher;
-	private static final @NotNull Function<@NotNull FachDaten, @NotNull Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
+	public final @NotNull AttributMitAuswahl<Long, FachDaten> faecher;
+	private static final @NotNull Function<FachDaten, Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
 
 	/** Das Filter-Attribut für die Schüler */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
-	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
-	private List<@NotNull Schueler> _filteredSchuelerListe = null;
+	public final @NotNull AttributMitAuswahl<Long, SchuelerListeEintrag> schueler;
+	private static final @NotNull Function<SchuelerListeEintrag, Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
+	private List<Schueler> _filteredSchuelerListe = null;
 
 	/** Das Filter-Attribut für die Schulgliederungen */
-	public final @NotNull AttributMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
-	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId =
-			(final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
-	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung =
+	public final @NotNull AttributMitAuswahl<String, Schulgliederung> schulgliederungen;
+	private static final @NotNull Function<Schulgliederung, String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
+	private static final @NotNull Comparator<Schulgliederung> _comparatorSchulgliederung =
 			(final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
-	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
-	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
-	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus =
+	public final @NotNull AttributMitAuswahl<Integer, SchuelerStatus> schuelerstatus;
+	private static final @NotNull Function<SchuelerStatus, Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
+	private static final @NotNull Comparator<SchuelerStatus> _comparatorSchuelerStatus =
 			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Kurse */
@@ -94,12 +93,12 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * @param faecher       die Liste der Fächer
 	 */
 	public KursListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<@NotNull KursDaten> kurse,
-			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
-			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
-			final @NotNull List<@NotNull LehrerListeEintrag> lehrer,
-			final @NotNull List<@NotNull FachDaten> faecher) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull List<KursDaten> kurse,
+			final @NotNull List<SchuelerListeEintrag> schueler,
+			final @NotNull List<JahrgangsDaten> jahrgaenge,
+			final @NotNull List<LehrerListeEintrag> lehrer,
+			final @NotNull List<FachDaten> faecher) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
 				Arrays.asList(new Pair<>("idJahrgaenge", true), new Pair<>("kuerzel", true)));
 		this.schuelerstatus =
@@ -108,7 +107,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, FachUtils.comparator, _eventHandlerFilterChanged);
-		final @NotNull List<@NotNull Schulgliederung> gliederungen =
+		final @NotNull List<Schulgliederung> gliederungen =
 				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		initKurse();
@@ -167,8 +166,8 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 *
 	 * @return die Schulgliederungen des Kurses
 	 */
-	public @NotNull List<@NotNull Schulgliederung> datenGetSchulgliederung() {
-		final @NotNull List<@NotNull Schulgliederung> result = new ArrayList<>();
+	public @NotNull List<Schulgliederung> datenGetSchulgliederung() {
+		final @NotNull List<Schulgliederung> result = new ArrayList<>();
 		if ((this._daten == null) || (this._daten.idJahrgaenge.isEmpty()))
 			return result;
 		for (final long idJahrgang : this._daten.idJahrgaenge) {
@@ -211,7 +210,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull KursDaten a, final @NotNull KursDaten b) {
-		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
@@ -325,7 +324,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 *
 	 * @return die Liste der Schüler
 	 */
-	public @NotNull List<@NotNull Schueler> getSchuelerListe() {
+	public @NotNull List<Schueler> getSchuelerListe() {
 		if (_filteredSchuelerListe == null) {
 			_filteredSchuelerListe = new ArrayList<>();
 			if (_daten != null)

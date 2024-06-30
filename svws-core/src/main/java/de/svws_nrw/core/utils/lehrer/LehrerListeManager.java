@@ -25,21 +25,21 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Lehrer-Listen.
  */
-public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull LehrerListeEintrag, @NotNull LehrerStammdaten> {
+public final class LehrerListeManager extends AuswahlManager<Long, LehrerListeEintrag, LehrerStammdaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull LehrerListeEintrag, @NotNull Long> _lehrerToId = (final @NotNull LehrerListeEintrag k) -> k.id;
-	private static final @NotNull Function<@NotNull LehrerStammdaten, @NotNull Long> _lehrerDatenToId = (final @NotNull LehrerStammdaten k) -> k.id;
+	private static final @NotNull Function<LehrerListeEintrag, Long> _lehrerToId = (final @NotNull LehrerListeEintrag k) -> k.id;
+	private static final @NotNull Function<LehrerStammdaten, Long> _lehrerDatenToId = (final @NotNull LehrerStammdaten k) -> k.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull LehrerListeEintrag> _mapKlasseIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull LehrerListeEintrag> _mapLehrerIstStatistikrelevant = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull PersonalTyp, @NotNull Long, @NotNull LehrerListeEintrag> _mapKlasseHatPersonaltyp = new HashMap2D<>();
+	private final @NotNull HashMap2D<Boolean, Long, LehrerListeEintrag> _mapKlasseIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap2D<Boolean, Long, LehrerListeEintrag> _mapLehrerIstStatistikrelevant = new HashMap2D<>();
+	private final @NotNull HashMap2D<PersonalTyp, Long, LehrerListeEintrag> _mapKlasseHatPersonaltyp = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Personal-Typen */
-	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull PersonalTyp> personaltypen;
-	private static final @NotNull Function<@NotNull PersonalTyp, @NotNull Integer> _personaltypToId = (final @NotNull PersonalTyp pt) -> pt.id;
-	private static final @NotNull Comparator<@NotNull PersonalTyp> _comparatorPersonaltypen =
+	public final @NotNull AttributMitAuswahl<Integer, PersonalTyp> personaltypen;
+	private static final @NotNull Function<PersonalTyp, Integer> _personaltypToId = (final @NotNull PersonalTyp pt) -> pt.id;
+	private static final @NotNull Comparator<PersonalTyp> _comparatorPersonaltypen =
 			(final @NotNull PersonalTyp a, final @NotNull PersonalTyp b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Lehrer */
@@ -50,8 +50,8 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 
 	/** Die Personal-Daten, sofern eine Auswahl vorhanden ist. */
 	private LehrerPersonaldaten _personaldaten = null;
-	private final @NotNull Map<@NotNull Long, @NotNull LehrerPersonalabschnittsdaten> _mapAbschnittsdatenById = new HashMap<>();
-	private final @NotNull Map<@NotNull Long, @NotNull LehrerPersonalabschnittsdaten> _mapAbschnittsdatenBySchuljahresabschnittsId = new HashMap<>();
+	private final @NotNull Map<Long, LehrerPersonalabschnittsdaten> _mapAbschnittsdatenById = new HashMap<>();
+	private final @NotNull Map<Long, LehrerPersonalabschnittsdaten> _mapAbschnittsdatenBySchuljahresabschnittsId = new HashMap<>();
 
 
 
@@ -65,8 +65,8 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 	 * @param lehrer                       die Liste der Lehrer
 	 */
 	public LehrerListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull List<LehrerListeEintrag> lehrer) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
 				Arrays.asList(new Pair<>("nachname", true), new Pair<>("vorname", true), new Pair<>("kuerzel", true)));
 		this.personaltypen =
@@ -181,7 +181,7 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) {
-		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;

@@ -29,65 +29,64 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Alternative der KAoA-Daten.
  */
-public class SchuelerKAoAManager
-		extends AuswahlManager<@NotNull Long, @NotNull SchuelerKAoADaten, @NotNull SchuelerKAoADaten> {
+public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten, SchuelerKAoADaten> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static final @NotNull Function<@NotNull SchuelerKAoADaten, @NotNull Long> _kaoaToId =
+	private static final @NotNull Function<SchuelerKAoADaten, Long> _kaoaToId =
 			(final @NotNull SchuelerKAoADaten kaoa) -> kaoa.id;
-	private static final @NotNull Function<@NotNull KAOAKategorie, @NotNull Long> _kategorieToId =
+	private static final @NotNull Function<KAOAKategorie, Long> _kategorieToId =
 			(final @NotNull KAOAKategorie kategorie) -> kategorie.daten.id;
-	private static final @NotNull Comparator<@NotNull KAOAKategorie> _comparatorKategorie =
+	private static final @NotNull Comparator<KAOAKategorie> _comparatorKategorie =
 			(final @NotNull KAOAKategorie a, final @NotNull KAOAKategorie b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<@NotNull KAOAMerkmal, @NotNull Long> _merkmalToId =
+	private static final @NotNull Function<KAOAMerkmal, Long> _merkmalToId =
 			(final @NotNull KAOAMerkmal merkmal) -> merkmal.daten.id;
-	private static final @NotNull Comparator<@NotNull KAOAMerkmal> _comparatorMerkmal =
+	private static final @NotNull Comparator<KAOAMerkmal> _comparatorMerkmal =
 			(final @NotNull KAOAMerkmal a, final @NotNull KAOAMerkmal b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<@NotNull KAOAZusatzmerkmal, @NotNull Long> _zusatzmerkmalToId =
+	private static final @NotNull Function<KAOAZusatzmerkmal, Long> _zusatzmerkmalToId =
 			(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) -> zusatzmerkmal.daten.id;
-	private static final @NotNull Comparator<@NotNull KAOAZusatzmerkmal> _comparatorZusatzmerkmal =
+	private static final @NotNull Comparator<KAOAZusatzmerkmal> _comparatorZusatzmerkmal =
 			(final @NotNull KAOAZusatzmerkmal a, final @NotNull KAOAZusatzmerkmal b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<@NotNull KAOAAnschlussoption, @NotNull Long> _anschlussoptionToId =
+	private static final @NotNull Function<KAOAAnschlussoption, Long> _anschlussoptionToId =
 			(final @NotNull KAOAAnschlussoption anschlussoption) -> anschlussoption.daten.id;
-	private static final @NotNull Comparator<@NotNull KAOAAnschlussoption> _comparatorAnschlussoptionen =
+	private static final @NotNull Comparator<KAOAAnschlussoption> _comparatorAnschlussoptionen =
 			(final @NotNull KAOAAnschlussoption a, final @NotNull KAOAAnschlussoption b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<@NotNull KAOAEbene4, @NotNull Long> _ebene4ToId =
+	private static final @NotNull Function<KAOAEbene4, Long> _ebene4ToId =
 			(final @NotNull KAOAEbene4 ebene4) -> ebene4.daten.id;
-	private static final @NotNull Comparator<@NotNull KAOAEbene4> _comparatorEbene4 =
+	private static final @NotNull Comparator<KAOAEbene4> _comparatorEbene4 =
 			(final @NotNull KAOAEbene4 a, final @NotNull KAOAEbene4 b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Comparator<@NotNull KAOABerufsfeld> _comparatorBerufsfelder =
+	private static final @NotNull Comparator<KAOABerufsfeld> _comparatorBerufsfelder =
 			(final @NotNull KAOABerufsfeld a, final @NotNull KAOABerufsfeld b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für die Kategorien */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KAOAKategorie> _kategorien;
+	public final @NotNull AttributMitAuswahl<Long, KAOAKategorie> _kategorien;
 
 	/** Das Filter-Attribut für die Merkmale */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KAOAMerkmal> _merkmale;
+	public final @NotNull AttributMitAuswahl<Long, KAOAMerkmal> _merkmale;
 
 	/** Das Filter-Attribut für die Zusatzmerkmale */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KAOAZusatzmerkmal> _zusatzmerkmale;
+	public final @NotNull AttributMitAuswahl<Long, KAOAZusatzmerkmal> _zusatzmerkmale;
 
 	/** Das Filter-Attribut für die Anschlussoptionen */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KAOAAnschlussoption> _anschlussoptionen;
+	public final @NotNull AttributMitAuswahl<Long, KAOAAnschlussoption> _anschlussoptionen;
 
 	/** Das Filter-Attribut für die Ebene4 */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KAOAEbene4> _ebene4;
-	private final @NotNull List<@NotNull SchuelerLernabschnittsdaten> _lernabschnittsdaten;
+	public final @NotNull AttributMitAuswahl<Long, KAOAEbene4> _ebene4;
+	private final @NotNull List<SchuelerLernabschnittsdaten> _lernabschnittsdaten;
 
 	/** Das Filter-Attribut für die Berufsfelder */
-	private final @NotNull List<@NotNull KAOABerufsfeld> _berufsfelder;
+	private final @NotNull List<KAOABerufsfeld> _berufsfelder;
 
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste
 	 * verwendet werden können
 	 */
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull SchuelerKAoADaten>> _mapKAoABySchueler = new HashMap<>();
-	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull KAOAMerkmal>> _mapMerkmalByKategorie = new HashMap<>();
-	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull KAOAZusatzmerkmal>> _mapZusatzmerkmalByMerkmal = new HashMap<>();
-	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull KAOAAnschlussoption>> _mapAnschlussoptionByZusatzmerkmal = new HashMap<>();
-	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull KAOAEbene4>> _mapEbene4ByZusatzmerkmal = new HashMap<>();
+	private final @NotNull Map<Long, List<SchuelerKAoADaten>> _mapKAoABySchueler = new HashMap<>();
+	private final @NotNull Map<String, List<KAOAMerkmal>> _mapMerkmalByKategorie = new HashMap<>();
+	private final @NotNull Map<String, List<KAOAZusatzmerkmal>> _mapZusatzmerkmalByMerkmal = new HashMap<>();
+	private final @NotNull Map<String, List<KAOAAnschlussoption>> _mapAnschlussoptionByZusatzmerkmal = new HashMap<>();
+	private final @NotNull Map<String, List<KAOAEbene4>> _mapEbene4ByZusatzmerkmal = new HashMap<>();
 
 
 	/**
@@ -101,9 +100,9 @@ public class SchuelerKAoAManager
 	 * @param schuelerLernabschnitt      the schueler lernabschnitt
 	 */
 	public SchuelerKAoAManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<@NotNull SchuelerKAoADaten> schuelerKAoA,
-			final @NotNull List<@NotNull SchuelerLernabschnittsdaten> schuelerLernabschnitt) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull List<SchuelerKAoADaten> schuelerKAoA,
+			final @NotNull List<SchuelerLernabschnittsdaten> schuelerLernabschnitt) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA,
 				SchuelerKAoAUtils.comparator, _kaoaToId, _kaoaToId,
 				Arrays.asList(new Pair<>("schuljahr", true), new Pair<>("kategorie", true)));
@@ -125,12 +124,12 @@ public class SchuelerKAoAManager
 
 	private void initKAoA() {
 		for (final @NotNull KAOAKategorie kategorie : this._kategorien.list()) {
-			final @NotNull ArrayList<@NotNull KAOAMerkmal> merkmaleOfKategorie = new ArrayList<>();
+			final @NotNull List<KAOAMerkmal> merkmaleOfKategorie = new ArrayList<>();
 			for (final @NotNull KAOAMerkmal merkmal : this._merkmale.list()) {
 				if (merkmal.daten.kategorie.equals(kategorie.daten.kuerzel))
 					merkmaleOfKategorie.add(merkmal);
 
-				final @NotNull ArrayList<@NotNull KAOAZusatzmerkmal> zusatzmerkmaleOfMerkmal = new ArrayList<>();
+				final @NotNull List<KAOAZusatzmerkmal> zusatzmerkmaleOfMerkmal = new ArrayList<>();
 				for (final @NotNull KAOAZusatzmerkmal zusatzmerkmal : this._zusatzmerkmale.list()) {
 					if (zusatzmerkmal.daten.merkmal.equals(merkmal.daten.kuerzel))
 						zusatzmerkmaleOfMerkmal.add(zusatzmerkmal);
@@ -144,14 +143,14 @@ public class SchuelerKAoAManager
 	}
 
 	private void processZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
-		final @NotNull ArrayList<@NotNull KAOAAnschlussoption> anschlussoptionOfZusatzmerkmal = new ArrayList<>();
+		final @NotNull List<KAOAAnschlussoption> anschlussoptionOfZusatzmerkmal = new ArrayList<>();
 		for (final @NotNull KAOAAnschlussoption anschlussoption : this._anschlussoptionen.list())
 			for (final @NotNull String anzeigeMerkmal : anschlussoption.daten.anzeigeZusatzmerkmal)
 				if (anzeigeMerkmal.equals(zusatzmerkmal.daten.kuerzel))
 					anschlussoptionOfZusatzmerkmal.add(anschlussoption);
 		this._mapAnschlussoptionByZusatzmerkmal.put(zusatzmerkmal.daten.kuerzel, anschlussoptionOfZusatzmerkmal);
 
-		final @NotNull ArrayList<@NotNull KAOAEbene4> ebene4OfZusatzmerkmal = new ArrayList<>();
+		final @NotNull List<KAOAEbene4> ebene4OfZusatzmerkmal = new ArrayList<>();
 		for (final @NotNull KAOAEbene4 ebene4 : this._ebene4.list())
 			if (ebene4.daten.zusatzmerkmal.equals(zusatzmerkmal.daten.kuerzel))
 				ebene4OfZusatzmerkmal.add(ebene4);
@@ -160,7 +159,7 @@ public class SchuelerKAoAManager
 
 	private void initSchuelerKAoA() {
 		for (final @NotNull SchuelerLernabschnittsdaten lernabschnitt : this._lernabschnittsdaten) {
-			final @NotNull ArrayList<@NotNull SchuelerKAoADaten> schuelerKAoA = new ArrayList<>();
+			final @NotNull List<SchuelerKAoADaten> schuelerKAoA = new ArrayList<>();
 			for (final @NotNull SchuelerKAoADaten kaoa : this.liste.list())
 				if (lernabschnitt.id == kaoa.abschnitt)
 					schuelerKAoA.add(kaoa);
@@ -200,7 +199,7 @@ public class SchuelerKAoAManager
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull SchuelerKAoADaten a, final @NotNull SchuelerKAoADaten b) {
-		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp;
@@ -224,8 +223,7 @@ public class SchuelerKAoAManager
 	 * @param schuelerKAoADaten Das neue KAoA-Daten-Objekt zu der Auswahl
 	 */
 	@Override
-	protected boolean onSetDaten(final @NotNull SchuelerKAoADaten eintrag,
-			final @NotNull SchuelerKAoADaten schuelerKAoADaten) {
+	protected boolean onSetDaten(final @NotNull SchuelerKAoADaten eintrag, final @NotNull SchuelerKAoADaten schuelerKAoADaten) {
 		boolean updateEintrag = false;
 		// Passe ggf. die Daten an ... (beim Patchen der Daten)
 		if (schuelerKAoADaten.id != eintrag.id) {
@@ -242,7 +240,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die KAoA Daten des Schülers
 	 */
-	public @NotNull List<@NotNull SchuelerKAoADaten> getKAoABySchuelerID(final @NotNull SchuelerListeEintrag schueler) {
+	public @NotNull List<SchuelerKAoADaten> getKAoABySchuelerID(final @NotNull SchuelerListeEintrag schueler) {
 		return MapUtils.getOrCreateArrayList(_mapKAoABySchueler, schueler.id);
 	}
 
@@ -251,7 +249,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die KAoA Kategorien
 	 */
-	public @NotNull List<@NotNull KAOAKategorie> getKAOAKategorien() {
+	public @NotNull List<KAOAKategorie> getKAOAKategorien() {
 		return this._kategorien.list();
 	}
 
@@ -262,7 +260,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die KAoA Merkmale
 	 */
-	public @NotNull List<@NotNull KAOAMerkmal> getKAOAMerkmaleByKategorie(final @NotNull KAOAKategorie kategorie) {
+	public @NotNull List<KAOAMerkmal> getKAOAMerkmaleByKategorie(final @NotNull KAOAKategorie kategorie) {
 		return MapUtils.getOrCreateArrayList(_mapMerkmalByKategorie, kategorie.daten.kuerzel);
 	}
 
@@ -273,7 +271,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die Zusatzmerkmale
 	 */
-	public @NotNull List<@NotNull KAOAZusatzmerkmal> getKAOAZusatzmerkmaleByMerkmal(final @NotNull KAOAMerkmal merkmal) {
+	public @NotNull List<KAOAZusatzmerkmal> getKAOAZusatzmerkmaleByMerkmal(final @NotNull KAOAMerkmal merkmal) {
 		return MapUtils.getOrCreateArrayList(_mapZusatzmerkmalByMerkmal, merkmal.daten.kuerzel);
 	}
 
@@ -285,7 +283,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die Anschlussoptionen
 	 */
-	public @NotNull List<@NotNull KAOAAnschlussoption> getKAOAAnschlussoptionByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
+	public @NotNull List<KAOAAnschlussoption> getKAOAAnschlussoptionByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
 		return MapUtils.getOrCreateArrayList(_mapAnschlussoptionByZusatzmerkmal, zusatzmerkmal.daten.kuerzel);
 	}
 
@@ -296,7 +294,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die Ebene4 Optionen
 	 */
-	public @NotNull List<@NotNull KAOAEbene4> getKAOAEbene4ByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
+	public @NotNull List<KAOAEbene4> getKAOAEbene4ByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
 		return MapUtils.getOrCreateArrayList(_mapEbene4ByZusatzmerkmal, zusatzmerkmal.daten.kuerzel);
 	}
 
@@ -305,7 +303,7 @@ public class SchuelerKAoAManager
 	 *
 	 * @return Die Berufsfelder
 	 */
-	public @NotNull List<@NotNull KAOABerufsfeld> getKAOABerufsfelder() {
+	public @NotNull List<KAOABerufsfeld> getKAOABerufsfelder() {
 		return this._berufsfelder;
 	}
 

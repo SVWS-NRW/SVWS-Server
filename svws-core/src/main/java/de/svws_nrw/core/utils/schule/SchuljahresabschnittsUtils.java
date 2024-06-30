@@ -16,7 +16,7 @@ public final class SchuljahresabschnittsUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Schuljahresabschnitten in Schuljahresabschnittslisten. */
-	public static final @NotNull Comparator<@NotNull Schuljahresabschnitt> comparator =
+	public static final @NotNull Comparator<Schuljahresabschnitt> comparator =
 			(final @NotNull Schuljahresabschnitt a, final @NotNull Schuljahresabschnitt b) -> {
 				int cmp = a.schuljahr - b.schuljahr;
 				if (cmp != 0)

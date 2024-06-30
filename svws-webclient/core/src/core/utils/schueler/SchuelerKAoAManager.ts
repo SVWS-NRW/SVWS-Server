@@ -127,11 +127,11 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private initKAoA() : void {
 		for (const kategorie of this._kategorien.list()) {
-			const merkmaleOfKategorie : ArrayList<KAOAMerkmal> = new ArrayList<KAOAMerkmal>();
+			const merkmaleOfKategorie : List<KAOAMerkmal> = new ArrayList<KAOAMerkmal>();
 			for (const merkmal of this._merkmale.list()) {
 				if (JavaObject.equalsTranspiler(merkmal.daten.kategorie, (kategorie.daten.kuerzel)))
 					merkmaleOfKategorie.add(merkmal);
-				const zusatzmerkmaleOfMerkmal : ArrayList<KAOAZusatzmerkmal> = new ArrayList<KAOAZusatzmerkmal>();
+				const zusatzmerkmaleOfMerkmal : List<KAOAZusatzmerkmal> = new ArrayList<KAOAZusatzmerkmal>();
 				for (const zusatzmerkmal of this._zusatzmerkmale.list()) {
 					if (JavaObject.equalsTranspiler(zusatzmerkmal.daten.merkmal, (merkmal.daten.kuerzel)))
 						zusatzmerkmaleOfMerkmal.add(zusatzmerkmal);
@@ -144,13 +144,13 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	}
 
 	private processZusatzmerkmal(zusatzmerkmal : KAOAZusatzmerkmal) : void {
-		const anschlussoptionOfZusatzmerkmal : ArrayList<KAOAAnschlussoption> = new ArrayList<KAOAAnschlussoption>();
+		const anschlussoptionOfZusatzmerkmal : List<KAOAAnschlussoption> = new ArrayList<KAOAAnschlussoption>();
 		for (const anschlussoption of this._anschlussoptionen.list())
 			for (const anzeigeMerkmal of anschlussoption.daten.anzeigeZusatzmerkmal)
 				if (JavaObject.equalsTranspiler(anzeigeMerkmal, (zusatzmerkmal.daten.kuerzel)))
 					anschlussoptionOfZusatzmerkmal.add(anschlussoption);
 		this._mapAnschlussoptionByZusatzmerkmal.put(zusatzmerkmal.daten.kuerzel, anschlussoptionOfZusatzmerkmal);
-		const ebene4OfZusatzmerkmal : ArrayList<KAOAEbene4> = new ArrayList<KAOAEbene4>();
+		const ebene4OfZusatzmerkmal : List<KAOAEbene4> = new ArrayList<KAOAEbene4>();
 		for (const ebene4 of this._ebene4.list())
 			if (JavaObject.equalsTranspiler(ebene4.daten.zusatzmerkmal, (zusatzmerkmal.daten.kuerzel)))
 				ebene4OfZusatzmerkmal.add(ebene4);
@@ -159,7 +159,7 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 
 	private initSchuelerKAoA() : void {
 		for (const lernabschnitt of this._lernabschnittsdaten) {
-			const schuelerKAoA : ArrayList<SchuelerKAoADaten> = new ArrayList<SchuelerKAoADaten>();
+			const schuelerKAoA : List<SchuelerKAoADaten> = new ArrayList<SchuelerKAoADaten>();
 			for (const kaoa of this.liste.list())
 				if (lernabschnitt.id === kaoa.abschnitt)
 					schuelerKAoA.add(kaoa);

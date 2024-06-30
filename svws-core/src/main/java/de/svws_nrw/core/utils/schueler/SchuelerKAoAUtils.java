@@ -16,7 +16,7 @@ public final class SchuelerKAoAUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von KAoA in KAoA-Listen. */
-	public static final @NotNull Comparator<@NotNull SchuelerKAoADaten> comparator =
+	public static final @NotNull Comparator<SchuelerKAoADaten> comparator =
 			(final @NotNull SchuelerKAoADaten a, final @NotNull SchuelerKAoADaten b) -> {
 				int cmp = Long.compare(a.abschnitt, b.abschnitt);
 				if (cmp != 0)
