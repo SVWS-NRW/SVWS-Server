@@ -41,7 +41,7 @@ export class SimpleOperationResponse extends JavaObject {
 		result.success = obj.success;
 		if ((obj.log !== undefined) && (obj.log !== null)) {
 			for (const elem of obj.log) {
-				result.log?.add(elem === null ? null : elem);
+				result.log?.add(elem);
 			}
 		}
 		return result;
@@ -57,7 +57,7 @@ export class SimpleOperationResponse extends JavaObject {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
 				const elem = obj.log.get(i);
-				result += (elem === null) ? null : '"' + elem + '"';
+				result += '"' + elem + '"';
 				if (i < obj.log.size() - 1)
 					result += ',';
 			}
@@ -83,7 +83,7 @@ export class SimpleOperationResponse extends JavaObject {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {
 					const elem = obj.log.get(i);
-					result += (elem === null) ? null : '"' + elem + '"';
+					result += '"' + elem + '"';
 					if (i < obj.log.size() - 1)
 						result += ',';
 				}

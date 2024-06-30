@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt einen Service zur Prognoseberechnung in Bezug auf die Gesamtschulabschlüsse
  * zur Verfügung.
  */
-public class ServicePrognose extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
+public class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
 
 	/**
@@ -32,7 +32,7 @@ public class ServicePrognose extends Service<@NotNull GEAbschlussFaecher, @NotNu
 		boolean hatLBAL = false;
 		if (faecher.faecher == null)
 			return false;
-		final @NotNull List<@NotNull GEAbschlussFach> tmp = faecher.faecher;
+		final @NotNull List<GEAbschlussFach> tmp = faecher.faecher;
 		for (final GEAbschlussFach fach : tmp) {
 			if (fach == null)
 				continue;
@@ -71,7 +71,7 @@ public class ServicePrognose extends Service<@NotNull GEAbschlussFaecher, @NotNu
 
 		// Gehe zunächst davon aus, dass noch kein Abschluss erworben wurde und prüfe dann der Reihe nach auf die einzelnen Abschlüsse HA9, HA10, MSA und MSAQ
 		@NotNull SchulabschlussAllgemeinbildend abschluss = SchulabschlussAllgemeinbildend.OA;
-		List<@NotNull String> np_faecher = null;
+		List<String> np_faecher = null;
 		if (!"10".equals(input.jahrgang)) {
 			final @NotNull ServiceAbschlussHA9 ha9 = new ServiceAbschlussHA9();
 			final @NotNull AbschlussErgebnis ha9output = ha9.handle(input);

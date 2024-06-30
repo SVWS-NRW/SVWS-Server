@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
  *	  * Englisch-GER B1
  *    * Durchschnittsnote besser als oder gleich 2.5
  */
-public class BKAnlageA01Abschluss extends Service<@NotNull BKAnlageAFaecher, @NotNull AbschlussErgebnisBerufsbildend> {
+public class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErgebnisBerufsbildend> {
 
 	/**
 	 * TODO

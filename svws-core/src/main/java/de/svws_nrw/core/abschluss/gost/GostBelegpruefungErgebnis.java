@@ -25,10 +25,10 @@ public class GostBelegpruefungErgebnis {
 	/** eine Liste der Belegungsfehler und Hinweise zur Belegung */
 	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class,
 			description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
-	public @NotNull List<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
+	public @NotNull List<GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
 
 	/** Ein Log, der den Ablauf der Belegprüfung verdeutlicht */
 	@ArraySchema(schema = @Schema(description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))
-	public @NotNull List<@NotNull String> log = new ArrayList<>();
+	public @NotNull List<String> log = new ArrayList<>();
 
 }

@@ -18,23 +18,23 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt einen Service zur Abschlussberechnung in Bezug auf den Hauptschulabschluss
  * nach Klasse 9 zur Verfügung.
  */
-public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
+public class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
 	/** Filter für alle nicht ausgeglichenen Defizite */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> (f.note > 4) && (!f.ausgeglichen);
+	private static final @NotNull Predicate<GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> (f.note > 4) && (!f.ausgeglichen);
 
 	/** Filter für alle mangelhaften Fächer */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
+	private static final @NotNull Predicate<GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
 
 	/** Filter für alle ungenügenden Fächer */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
+	private static final @NotNull Predicate<GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
 
 	/** Filter für alle Fächer, welche als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse =
+	private static final @NotNull Predicate<GEAbschlussFach> filterEKurse =
 			(final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
-	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen =
+	private static final @NotNull Predicate<GEAbschlussFach> filterWeitereFremdsprachen =
 			(final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
 
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
@@ -93,7 +93,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 		}
 
 		// Ignoriere alle Fremdsprachen ausser Englisch
-		final @NotNull List<@NotNull GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
+		final @NotNull List<GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
 		if (!weitereFS.isEmpty()) {
 			for (final GEAbschlussFach fs : weitereFS) {
 				if (fs.bezeichnung == null)
@@ -104,7 +104,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 
 		// Verbessere ggf. die Noten aller E-Kurse in beiden Fächergruppen um eine Note
 		logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
-		final @NotNull List<@NotNull GEAbschlussFach> tmpFaecher = faecher.getFaecher(filterEKurse);
+		final @NotNull List<GEAbschlussFach> tmpFaecher = faecher.getFaecher(filterEKurse);
 		for (final @NotNull GEAbschlussFach f : tmpFaecher) {
 			if (f.kuerzel == null)
 				continue;
@@ -186,7 +186,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 		if (hatNP) {
 			// Nachprüfung kann prinzipiell bei allen Fächern mit mangelhaft erfolgen
 			// bei 2x5 in FG1 muss die Nachprüfung allerdings in FG1 erfolgen!
-			final @NotNull List<@NotNull String> np_faecher = (fg1_mangelhaft == 2)
+			final @NotNull List<String> np_faecher = (fg1_mangelhaft == 2)
 					? faecher.fg1.getKuerzel(filterMangelhaft)
 					: faecher.getKuerzel(filterMangelhaft);
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: "

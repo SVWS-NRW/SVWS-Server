@@ -128,7 +128,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		result.webAdresse = (obj.webAdresse === undefined) ? null : obj.webAdresse === null ? null : obj.webAdresse;
 		if ((obj.kategorien !== undefined) && (obj.kategorien !== null)) {
 			for (const elem of obj.kategorien) {
-				result.kategorien?.add(elem === null ? null : elem);
+				result.kategorien?.add(elem);
 			}
 		}
 		result.organisation = (obj.organisation === undefined) ? null : obj.organisation === null ? null : obj.organisation;
@@ -171,7 +171,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += '"kategorien" : [ ';
 			for (let i = 0; i < obj.kategorien.size(); i++) {
 				const elem = obj.kategorien.get(i);
-				result += (elem === null) ? null : '"' + elem + '"';
+				result += '"' + elem + '"';
 				if (i < obj.kategorien.size() - 1)
 					result += ',';
 			}
@@ -248,7 +248,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += '"kategorien" : [ ';
 				for (let i = 0; i < obj.kategorien.size(); i++) {
 					const elem = obj.kategorien.get(i);
-					result += (elem === null) ? null : '"' + elem + '"';
+					result += '"' + elem + '"';
 					if (i < obj.kategorien.size() - 1)
 						result += ',';
 				}

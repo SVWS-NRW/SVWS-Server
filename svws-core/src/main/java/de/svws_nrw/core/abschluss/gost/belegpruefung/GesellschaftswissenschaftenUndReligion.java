@@ -27,25 +27,25 @@ import jakarta.validation.constraints.NotNull;
 public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/// Die Belegungen für alle Fächer der Gesellschaftswissenschaften
-	private List<@NotNull AbiturFachbelegung> gesellschaftswissenschaften;
+	private List<AbiturFachbelegung> gesellschaftswissenschaften;
 
 	/// Die Belegung des Faches Geschichte - oder null, falls es nicht belegt wurde
-	private List<@NotNull AbiturFachbelegung> geschichte;
+	private List<AbiturFachbelegung> geschichte;
 
 	/// Die Belegung des Faches Sozialwissenschaften - oder null, falls es nicht belegt wurde
-	private List<@NotNull AbiturFachbelegung> sozialwissenschaften;
+	private List<AbiturFachbelegung> sozialwissenschaften;
 
 	/// Die Belegung des Faches Philosophie - oder null, falls es nicht belegt wurde
 	private AbiturFachbelegung philosophie;
 
 	/// Die Belegungen für die Fächer Gesellschaftswissenschaften außer Geschichte, Sozialwissenschaften und Philosophie
-	private List<@NotNull AbiturFachbelegung> sonstige_gesellschaftswissenschaften;
+	private List<AbiturFachbelegung> sonstige_gesellschaftswissenschaften;
 
 	/// Die Belegung des Faches Religion - oder null, falls es nicht belegt wurde
-	private List<@NotNull AbiturFachbelegung> religion;
+	private List<AbiturFachbelegung> religion;
 
 	/// Alle Fachbelegungen bei denen Zusatzkurse in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt wurden.
-	private ArrayList<@NotNull AbiturFachbelegung> zusatzkursFachbelegungen;
+	private ArrayList<AbiturFachbelegung> zusatzkursFachbelegungen;
 
 
 
@@ -187,12 +187,12 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	 *
 	 * @param fachbelegungen   die Fachbelegung für Geschichte oder Sozialwissenschaften
 	 */
-	private void pruefeZusatzkurs(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	private void pruefeZusatzkurs(final List<AbiturFachbelegung> fachbelegungen) {
 		// Prüfe zunächst, ob das Fach überhaupt belegt wurde
 		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return;
 		// ob die Kursart "Zusatzkurs" überhaupt in einem Halbjahr gewählt wurde
-		final List<@NotNull AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
+		final List<AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
 		if (fachbelegungenZK.isEmpty())
 			return;
 
@@ -218,7 +218,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			addFehler(GostBelegungsfehler.ZK_15);
 
 		// Bestimme die Halbjahre des Zusatzkurses
-		final @NotNull List<@NotNull GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
+		final @NotNull List<GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 		// Prüfe, ob zwei Zusatzkurse in aufeinanderfolgenden Halbjahren belegt wurden
 		if (halbjahre.size() == 2) {
 			final boolean belegungQ11 = manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12);

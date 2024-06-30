@@ -25,16 +25,16 @@ import jakarta.validation.constraints.NotNull;
 public final class Fremdsprachen extends GostBelegpruefung {
 
 	/// Die Belegungen für alle Fächer der Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> _fremdsprachen = new ArrayList<>();
+	private @NotNull List<AbiturFachbelegung> _fremdsprachen = new ArrayList<>();
 
 	/// Die Belegungen für alle neu einsetzenden Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> _fremdsprachenNeu = new ArrayList<>();
+	private @NotNull List<AbiturFachbelegung> _fremdsprachenNeu = new ArrayList<>();
 
 	/// Die Belegungen für alle fortgeführten Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> _fremdsprachenFortgefuehrt = new ArrayList<>();
+	private @NotNull List<AbiturFachbelegung> _fremdsprachenFortgefuehrt = new ArrayList<>();
 
 	/// Die Belegungen von bilingualen Sachfächern
-	private @NotNull List<@NotNull AbiturFachbelegung> _biliSachfaecher = new ArrayList<>();
+	private @NotNull List<AbiturFachbelegung> _biliSachfaecher = new ArrayList<>();
 
 	/** Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
 	 * - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde) */
@@ -675,11 +675,10 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 */
 	private void pruefeGesamtAnzahlDurchgehenedeSprachen() {
 		// Zähle die durchgängig schriftlich belegten Fremdsprachen für die Prüfung des Schwerpunktes
-		final @NotNull List<@NotNull AbiturFachbelegung> fremdsprachenDurchgehend = manager.filterBelegungen(_fremdsprachen, GostHalbjahr.EF1, GostHalbjahr.EF2,
+		final @NotNull List<AbiturFachbelegung> fremdsprachenDurchgehend = manager.filterBelegungen(_fremdsprachen, GostHalbjahr.EF1, GostHalbjahr.EF2,
 				GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
-		final @NotNull List<@NotNull AbiturFachbelegung> fremdsprachenDurchgehendSchriftlich =
-				manager.filterBelegungenMitSchriftlichkeit(fremdsprachenDurchgehend,
-						GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
+		final @NotNull List<AbiturFachbelegung> fremdsprachenDurchgehendSchriftlich = manager.filterBelegungenMitSchriftlichkeit(fremdsprachenDurchgehend,
+				GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
 		_anzahlDurchgehendSchriftlich = fremdsprachenDurchgehendSchriftlich.size();
 
 		// Eine Prüfung der bilingualen Sachfächer ist nur nötig, sofern nur eine durchgängig belegbare schriftlich belegte Fremdsprache vorliegt
@@ -693,9 +692,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			return;
 
 		// Bestimme die bilingualen Sachfächer, die durchgehend schriftlich belegt wurden
-		final @NotNull List<@NotNull AbiturFachbelegung> biliSachfaecherDurchgehend = manager.filterBelegungen(_biliSachfaecher, GostHalbjahr.EF1,
+		final @NotNull List<AbiturFachbelegung> biliSachfaecherDurchgehend = manager.filterBelegungen(_biliSachfaecher, GostHalbjahr.EF1,
 				GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
-		final @NotNull List<@NotNull AbiturFachbelegung> biliSachfaecherDurchgehendSchriftlich =
+		final @NotNull List<AbiturFachbelegung> biliSachfaecherDurchgehendSchriftlich =
 				manager.filterBelegungenMitSchriftlichkeit(biliSachfaecherDurchgehend,
 						GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
 		// Prüfe bei diesen Fächern, ob eines davon für einen möglichen Sprachenschwerpunkt genutzt werden kann

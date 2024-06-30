@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public final class Sport extends GostBelegpruefung {
 
 	/// Die Belegungen für das Fach Sport
-	private @NotNull List<@NotNull AbiturFachbelegung> _sport = new ArrayList<>();
+	private @NotNull List<AbiturFachbelegung> _sport = new ArrayList<>();
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Sport.

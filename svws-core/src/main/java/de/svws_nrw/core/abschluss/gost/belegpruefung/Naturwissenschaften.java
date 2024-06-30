@@ -19,10 +19,10 @@ import jakarta.validation.constraints.NotNull;
 public final class Naturwissenschaften extends GostBelegpruefung {
 
 	/// Die Belegungen für alle Fächer der Naturwissenschaften
-	private List<@NotNull AbiturFachbelegung> _naturwissenschaften;
+	private List<AbiturFachbelegung> _naturwissenschaften;
 
 	/// Die Belegungen für alle Fächer der klassischen Naturwissenschaften
-	private List<@NotNull AbiturFachbelegung> _naturwissenschaftenKlassisch;
+	private List<AbiturFachbelegung> _naturwissenschaftenKlassisch;
 
 	// Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung)
 	private int _anzahlDurchgehend;
@@ -61,7 +61,7 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.NW_11);
 
 		// Zähle die durchgehend belegbaren Belegungen
-		List<@NotNull AbiturFachbelegung> fachbelegungen = manager.filterDurchgehendBelegbar(_naturwissenschaften);
+		List<AbiturFachbelegung> fachbelegungen = manager.filterDurchgehendBelegbar(_naturwissenschaften);
 		fachbelegungen = manager.filterBelegungen(fachbelegungen, GostHalbjahr.EF1);
 		_anzahlDurchgehend = (fachbelegungen == null) ? 0 : fachbelegungen.size();
 

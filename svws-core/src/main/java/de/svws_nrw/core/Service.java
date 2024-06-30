@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <T_IN>    die Klasse des Input-Objektes
  * @param <T_OUT>   die Klasse des Output-Objektes
  */
-public abstract class Service<@NotNull T_IN, @NotNull T_OUT> {
+public abstract class Service<T_IN, T_OUT> {
 
 	/** Die Instanz des Logger, der von diesem Service genutzt wird */
 	protected @NotNull Logger logger = new Logger();

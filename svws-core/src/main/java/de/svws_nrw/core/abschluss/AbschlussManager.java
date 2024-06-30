@@ -165,8 +165,8 @@ public final class AbschlussManager {
 	 *
 	 * @return die Liste mit den Fachkürzeln
 	 */
-	public static @NotNull List<@NotNull String> getKuerzel(final @NotNull List<@NotNull GEAbschlussFach> faecher) {
-		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
+	public static @NotNull List<String> getKuerzel(final @NotNull List<GEAbschlussFach> faecher) {
+		final @NotNull ArrayList<String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if ((fach.kuerzel == null) || result.contains(fach.kuerzel))
@@ -189,7 +189,7 @@ public final class AbschlussManager {
 		if (abschlussFaecher.faecher == null)
 			return false;
 		int count = 0;
-		final @NotNull List<@NotNull GEAbschlussFach> faecher = abschlussFaecher.faecher;
+		final @NotNull List<GEAbschlussFach> faecher = abschlussFaecher.faecher;
 		for (final GEAbschlussFach fach : faecher) {
 			if (fach == null)
 				continue;
@@ -213,8 +213,8 @@ public final class AbschlussManager {
 	public static boolean pruefeKuerzelDuplikate(final @NotNull GEAbschlussFaecher abschlussFaecher) {
 		if (abschlussFaecher.faecher == null)
 			return true;
-		final @NotNull HashSet<@NotNull String> kuerzel = new HashSet<>();
-		final @NotNull List<@NotNull GEAbschlussFach> faecher = abschlussFaecher.faecher;
+		final @NotNull HashSet<String> kuerzel = new HashSet<>();
+		final @NotNull List<GEAbschlussFach> faecher = abschlussFaecher.faecher;
 		for (final GEAbschlussFach fach : faecher) {
 			if ((fach == null) || (fach.kuerzel == null))
 				continue;

@@ -27,13 +27,13 @@ import jakarta.validation.constraints.NotNull;
 public final class Projektkurse extends GostBelegpruefung {
 
 	/// Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
-	private ArrayList<@NotNull AbiturFachbelegung> projektkursBelegung;
+	private ArrayList<AbiturFachbelegung> projektkursBelegung;
 
 	/// falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null
 	private AbiturFachbelegung projektkurs;
 
 	/// ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
-	private ArrayList<@NotNull GostHalbjahr> projektkursHalbjahre;
+	private ArrayList<GostHalbjahr> projektkursHalbjahre;
 
 
 	/**
@@ -54,7 +54,7 @@ public final class Projektkurse extends GostBelegpruefung {
 		projektkursHalbjahre = new ArrayList<>();
 
 		// Bestimme die belegten Projektfächer
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
+		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			if (manager.zaehleBelegung(fachbelegung) <= 0)
@@ -172,7 +172,7 @@ public final class Projektkurse extends GostBelegpruefung {
 			return;
 
 		// Erstelle eine Menge zur Prüfung, ob in einem Halbjahr mehr als ein Projektkurs belegt wurde.
-		final @NotNull HashSet<@NotNull GostHalbjahr> pjkHalbjahre = new HashSet<>();
+		final @NotNull HashSet<GostHalbjahr> pjkHalbjahre = new HashSet<>();
 
 		// Gehe alle Projektfächer durch und prüfe die Halbjahresbelegungen auf ungültige Einzelbelegungen
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {

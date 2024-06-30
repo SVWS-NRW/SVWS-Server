@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 public final class AbiFaecher extends GostBelegpruefung {
 
 	/// Eine ArrayMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind
-	private ArrayMap<@NotNull GostAbiturFach, @NotNull AbiturFachbelegung> mapAbiturFachbelegungen;
+	private ArrayMap<GostAbiturFach, AbiturFachbelegung> mapAbiturFachbelegungen;
 
 	/// Die Anzahl der belegten Abitur-Fächer (sollten 4 sein)
 	private int anzahlAbiFaecher;
@@ -70,7 +70,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 		hatAufgabenfeldIII = false;
 
 		// Bestimme die Abiturfächer aus den Belegungsdaten
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
+		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -169,8 +169,8 @@ public final class AbiFaecher extends GostBelegpruefung {
 	 * Abiturfächer mehrfach belegt zu haben.
 	 */
 	private void pruefeMehrfacheAbiturfaecher() {
-		final @NotNull HashSet<@NotNull GostAbiturFach> abiFaecher = new HashSet<>();
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
+		final @NotNull HashSet<GostAbiturFach> abiFaecher = new HashSet<>();
+		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -205,7 +205,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 		// Prüfe weitere Fach-spezifische Fälle...
 		final GostFach fach = manager.getFach(belegung);
 		if (fach != null) {
-			@NotNull List<@NotNull AbiturFachbelegung> belegungen;
+			@NotNull List<AbiturFachbelegung> belegungen;
 			// Fall Kurs-Wechsel bei bilingualen Fächern: Prüfe, ob ein Fach mit dem gleichen Statistik-Kürzel schriftlich belegt wurde
 			belegungen = manager.getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))

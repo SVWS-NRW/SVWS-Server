@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
 public class AbschlussFaecherGruppe {
 
 	/** Eine Liste mit allen Fächern dieser Fachgruppe */
-	private final @NotNull ArrayList<@NotNull GEAbschlussFach> faecher = new ArrayList<>();
+	private final @NotNull ArrayList<GEAbschlussFach> faecher = new ArrayList<>();
 
 
 	/**
@@ -32,8 +32,8 @@ public class AbschlussFaecherGruppe {
 	 * @param faecherNutzen     nur die gelisteten Fächer nutzen, null bedeutet grundsätzlich alle benoteten Fächer nutzen (außer den gefilterten)
 	 * @param faecherFiltern    null bedeutet keinen Filter verwenden, ansonsten werden die gelisteten Fächer gefiltert
 	 */
-	public AbschlussFaecherGruppe(final @NotNull List<@NotNull GEAbschlussFach> faecherAlle, final List<@NotNull String> faecherNutzen,
-			final List<@NotNull String> faecherFiltern) {
+	public AbschlussFaecherGruppe(final @NotNull List<GEAbschlussFach> faecherAlle, final List<String> faecherNutzen,
+			final List<String> faecherFiltern) {
 		// Gehe alle Leistungsdaten des Lernabschnittes durch und füge alle Fächer hinzu, die den Kriterien entsprechen
 		for (int i = 0; i < faecherAlle.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecherAlle.get(i);
@@ -56,7 +56,7 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return true, falls die angegebenen Fächer und nur diese in der Fächergruppe sind, ansonsten false.
 	 */
-	public boolean istVollstaendig(final List<@NotNull String> faecherAbgleich) {
+	public boolean istVollstaendig(final List<String> faecherAbgleich) {
 		if (faecherAbgleich == null)
 			return true;
 		if (isEmpty())
@@ -111,8 +111,8 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return die Liste der tatsächlich entfernten Fächer
 	 */
-	public @NotNull List<@NotNull GEAbschlussFach> entferneFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull ArrayList<@NotNull GEAbschlussFach> selected = new ArrayList<>();
+	public @NotNull List<GEAbschlussFach> entferneFaecher(final @NotNull Predicate<GEAbschlussFach> filter) {
+		final @NotNull ArrayList<GEAbschlussFach> selected = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach))
@@ -132,7 +132,7 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return das Fach, sofern eines gefunden wurde, ansonsten false
 	 */
-	public GEAbschlussFach getFach(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+	public GEAbschlussFach getFach(final @NotNull Predicate<GEAbschlussFach> filter) {
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach))
@@ -149,8 +149,8 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
 	 */
-	public @NotNull List<@NotNull GEAbschlussFach> getFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull ArrayList<@NotNull GEAbschlussFach> result = new ArrayList<>();
+	public @NotNull List<GEAbschlussFach> getFaecher(final @NotNull Predicate<GEAbschlussFach> filter) {
+		final @NotNull ArrayList<GEAbschlussFach> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach))
@@ -167,7 +167,7 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return die Anzahl der Fächer
 	 */
-	public long getFaecherAnzahl(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+	public long getFaecherAnzahl(final @NotNull Predicate<GEAbschlussFach> filter) {
 		long count = 0;
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
@@ -185,8 +185,8 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
-	public @NotNull List<@NotNull String> getKuerzel(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
+	public @NotNull List<String> getKuerzel(final @NotNull Predicate<GEAbschlussFach> filter) {
+		final @NotNull ArrayList<String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach) && (fach.kuerzel != null))
@@ -204,7 +204,7 @@ public class AbschlussFaecherGruppe {
 	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+	public @NotNull String getKuerzelListe(final @NotNull Predicate<GEAbschlussFach> filter) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);

@@ -374,13 +374,15 @@ public class TypeNode {
 			final List<? extends Tree> typeArgs = ptt.getTypeArguments();
 			if ((typeArgs == null) || (i < 0) || (i >= typeArgs.size()))
 				return null;
-			return new TypeNode(plugin, typeArgs.get(i), decl, false);
+			final boolean isNotNull = !plugin.getTranspiler().hasAllowNullAnnotation(ptt);
+			return new TypeNode(plugin, typeArgs.get(i), decl, isNotNull);
 		}
 		if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
 			final List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
 			if ((typeParams == null) || (i < 0) || (i >= typeParams.size()))
 				return null;
-			return new TypeNode(plugin, typeParams.get(i).asType(), decl, false, resolved);
+			final boolean isNotNull = !Transpiler.hasAllowNullAnnotation(typeMirror);
+			return new TypeNode(plugin, typeParams.get(i).asType(), decl, isNotNull, resolved);
 		}
 		return null;
 	}

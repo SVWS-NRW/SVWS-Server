@@ -50,7 +50,7 @@ public final class Allgemeines extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeGesamt() {
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
+		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {

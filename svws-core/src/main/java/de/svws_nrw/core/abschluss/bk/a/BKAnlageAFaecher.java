@@ -5,7 +5,6 @@ import java.util.List;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * TODO
@@ -16,7 +15,7 @@ public class BKAnlageAFaecher {
 
 	/** Die Fachinformationen. */
 	@Schema(description = "Die Fachinformationen.")
-	public List<@NotNull BKAnlageAFach> faecher;
+	public List<BKAnlageAFach> faecher;
 
 	/** Information zur praktischen Teil der Berufsabschlussprüfung (IHK). */
 	@Schema(description = "Information zur praktischen Teil der Berufsabschlussprüfung (IHK).")

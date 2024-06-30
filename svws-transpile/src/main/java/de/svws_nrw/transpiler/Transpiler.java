@@ -1050,6 +1050,8 @@ public final class Transpiler extends AbstractProcessor {
 			case final AnnotatedTypeTree att -> hasNotNullAnnotation(att.getAnnotations(), getTranspilerUnit(att));
 			case final TypeParameterTree tpt -> hasNotNullAnnotation(tpt.getAnnotations(), getTranspilerUnit(tpt));
 			case final ParameterizedTypeTree ptt -> hasNotNullAnnotation(ptt.getType());
+			case final IdentifierTree it -> true;
+			case final WildcardTree wt -> true;
 			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
 		};
 	}

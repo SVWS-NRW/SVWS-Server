@@ -24,22 +24,22 @@ import jakarta.validation.constraints.NotNull;
 public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private ArrayMap<@NotNull GostHalbjahr, @NotNull ArrayMap<@NotNull GostKursart, @NotNull Integer>> kurszahlen;
+	private ArrayMap<GostHalbjahr, ArrayMap<GostKursart, Integer>> kurszahlen;
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenGrundkurse;
+	private ArrayMap<GostHalbjahr, Integer> kurszahlenGrundkurse;
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenLeistungskurse;
+	private ArrayMap<GostHalbjahr, Integer> kurszahlenLeistungskurse;
 
 	/// Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre
-	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenAnrechenbar;
+	private ArrayMap<GostHalbjahr, Integer> kurszahlenAnrechenbar;
 
 	/// Die Kurszahlen der Einführungsphase
-	private ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenEinfuehrungsphase;
+	private ArrayMap<GostKursart, Integer> kurszahlenEinfuehrungsphase;
 
 	/// Die Kurszahlen der Qualifikationsphase
-	private ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenQualifikationsphase;
+	private ArrayMap<GostKursart, Integer> kurszahlenQualifikationsphase;
 
 	/// Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen)
 	private int blockIAnzahlGrundkurse;
@@ -54,7 +54,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	private int blockIAnzahlAnrechenbar;
 
 	/// Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr
-	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> wochenstunden;
+	private ArrayMap<GostHalbjahr, Integer> wochenstunden;
 
 	/// Die Anzahl der WochenStunden in der Einführungsphase
 	private int wochenstundenEinfuehrungsphase;
@@ -104,7 +104,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		final @NotNull GostKursart @NotNull [] kursarten = GostKursart.values();
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-			final @NotNull ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
+			final @NotNull ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 			kurszahlen.put(halbjahr, kurszahlenHalbjahr);
 			for (final GostKursart kursart : kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);
@@ -119,7 +119,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		}
 
 		// Zähle nun die einzelnen Kurse und die Wochenstunden...
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
+		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostFach fach = manager.getFach(fachbelegung);
@@ -185,7 +185,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 				// Für das Halbjahr
 				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
-					ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
+					ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 					if (kurszahlenHalbjahr == null)
 						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 					final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
@@ -455,7 +455,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	public int getKurszahlen(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart) {
 		if (kurszahlen == null)
 			return 0;
-		final ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
+		final ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 		if (kurszahlenHalbjahr == null)
 			return 0;
 		final Integer kurszahl = kurszahlenHalbjahr.get(kursart);
