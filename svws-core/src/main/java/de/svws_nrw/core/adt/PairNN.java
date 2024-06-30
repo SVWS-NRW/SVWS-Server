@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <A> Der 1. Typ des Paares.
  * @param <B> Der 2. Typ des Paares.
  */
-public final class PairNN<@NotNull A, @NotNull B> {
+public final class PairNN<A, B> {
 
 	/** Der 1. Wert des Paares. */
 	public @NotNull A a;

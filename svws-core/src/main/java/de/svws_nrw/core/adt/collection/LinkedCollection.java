@@ -48,13 +48,13 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   der Inhaltstyp der LinkedCollection
  */
-public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
+public final class LinkedCollection<E> implements Deque<E> {
 
 	/** Das erste Element der Collection. */
-	LinkedCollectionElement<@NotNull E> _head;
+	LinkedCollectionElement<E> _head;
 
 	/** Das letzte Element der Collection. */
-	LinkedCollectionElement<@NotNull E> _tail;
+	LinkedCollectionElement<E> _tail;
 
 	/** Die Anzahl der Elemente in der Collection. */
 	private int _size;
@@ -79,10 +79,10 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @param c   die LinkedCollection, die kopiert wird
 	 */
-	public LinkedCollection(final LinkedCollection<? extends @NotNull E> c) {
+	public LinkedCollection(final LinkedCollection<? extends E> c) {
 		_size = 0;
 		_modCount = 0;
-		final @NotNull Iterator<? extends @NotNull E> iter = c.iterator();
+		final @NotNull Iterator<? extends E> iter = c.iterator();
 		while (iter.hasNext())
 			this.add(iter.next());
 		_modCount = c._modCount;
@@ -102,7 +102,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	public boolean contains(final Object obj) {
 		if (this.isEmpty())
 			return false;
-		final @NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<E> iter = this.iterator();
 		while (iter.hasNext())
 			if (iter.next().equals(obj))
 				return true;
@@ -110,7 +110,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull E> iterator() {
+	public @NotNull Iterator<E> iterator() {
 		return new LinkedCollectionIterator<>(this);
 	}
 
@@ -121,7 +121,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 		if (_size == 0)
 			return new Object[0];
 		final @NotNull E @NotNull [] array = (@NotNull E @NotNull []) Array.newInstance(_head.getValue().getClass(), _size);
-		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
+		final @NotNull Iterator<? extends E> iter = this.iterator();
 		for (int i = 0; i < _size; i++) {
 			// Die Werte der LinkedCollection werden zurückgegeben. Nicht die Elemente mit der Zeigerstruktur und den Werten
 			array[i] = iter.next();
@@ -131,10 +131,10 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
+	public <T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		if (a.length < _size)
 			return (@NotNull T @NotNull []) this.toArray();
-		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
+		final @NotNull Iterator<? extends E> iter = this.iterator();
 		for (int i = 0; i < _size; i++) {
 			final @NotNull E e = iter.next();
 			a[i] = (@NotNull T) e;
@@ -147,7 +147,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	public boolean add(final E e) {
 		if (e == null)
 			return false;
-		final @NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
+		final @NotNull LinkedCollectionElement<E> newElem = new LinkedCollectionElement<>(e, null, null);
 		if ((_head == null) || (_tail == null)) {
 			_head = newElem;
 			_tail = newElem;
@@ -171,11 +171,11 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde.
 	 */
-	private boolean removeElement(final LinkedCollectionElement<@NotNull E> elem) {
+	private boolean removeElement(final LinkedCollectionElement<E> elem) {
 		if (elem == null)
 			return false;
-		final LinkedCollectionElement<@NotNull E> prev = elem.getPrev();
-		final LinkedCollectionElement<@NotNull E> next = elem.getNext();
+		final LinkedCollectionElement<E> prev = elem.getPrev();
+		final LinkedCollectionElement<E> next = elem.getNext();
 		if (this._size == 1) {
 			_head = null;
 			_tail = null;
@@ -217,16 +217,16 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull E> c) {
+	public boolean addAll(final Collection<? extends E> c) {
 		if ((c == null) || (c.size() == 0))
 			return false;
 		if (c instanceof LinkedCollection) {  // handle the special case where c is this collection (and also other cases)
-			final @NotNull LinkedCollection<? extends @NotNull E> coll = (LinkedCollection<? extends @NotNull E>) c;
+			final @NotNull LinkedCollection<? extends E> coll = (LinkedCollection<? extends E>) c;
 			// _tail and _head are never null since coll is not empty
 			if ((coll._tail == null) || (coll._head == null))
 				throw new NullPointerException();
-			final @NotNull LinkedCollectionElement<? extends @NotNull E> last = coll._tail;
-			LinkedCollectionElement<? extends @NotNull E> current = coll._head;
+			final @NotNull LinkedCollectionElement<? extends E> last = coll._tail;
+			LinkedCollectionElement<? extends E> current = coll._head;
 			this.add(current.getValue());
 			while (current != last) {
 				current = current.getNext();
@@ -271,8 +271,8 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 			this.clear();
 			return true;
 		}
-		final @NotNull Iterator<@NotNull E> iter = this.iterator();
-		final @NotNull LinkedCollection<@NotNull E> tmp = new LinkedCollection<>();
+		final @NotNull Iterator<E> iter = this.iterator();
+		final @NotNull LinkedCollection<E> tmp = new LinkedCollection<>();
 		while (iter.hasNext()) {
 			final @NotNull E elem = iter.next();
 			if (!c.contains(elem))
@@ -308,7 +308,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 		final @NotNull Collection<?> other = (@NotNull Collection<?>) obj;
 		if (this._size != other.size())
 			return false;
-		final @NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<E> iter = this.iterator();
 		final @NotNull Iterator<?> otherIter = other.iterator();
 		while (iter.hasNext()) {
 			if (!iter.next().equals(otherIter.next()))
@@ -321,7 +321,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	public @NotNull String toString() {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		final @NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<E> iter = this.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
 			if (iter.hasNext())
@@ -342,20 +342,20 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @return die kombinierte sortierte Liste
 	 */
-	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator,
-			final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
+	private @NotNull LinkedCollectionElement<E> merge(final @NotNull Comparator<E> comparator,
+			final @NotNull LinkedCollectionElement<E> left, final @NotNull LinkedCollectionElement<E> right) {
 		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element
 		final boolean l2r = (comparator.compare(left.getValue(), right.getValue()) > 0);
-		final LinkedCollectionElement<@NotNull E> headTo = l2r ? right : left;
-		LinkedCollectionElement<@NotNull E> headFrom = l2r ? left : right;
+		final LinkedCollectionElement<E> headTo = l2r ? right : left;
+		LinkedCollectionElement<E> headFrom = l2r ? left : right;
 		// Iteriere durch die Zielliste (target-Zeiger)
-		@NotNull LinkedCollectionElement<@NotNull E> target = headTo;
+		@NotNull LinkedCollectionElement<E> target = headTo;
 		while (headFrom != null) {
 			// Entferne das erste Element aus der Quellliste
-			final @NotNull LinkedCollectionElement<@NotNull E> current = headFrom;
+			final @NotNull LinkedCollectionElement<E> current = headFrom;
 			headFrom = headFrom.getPrev();
 			// Finde das Element in der Zielliste, welches kleiner ist als das aktuelle Element
-			LinkedCollectionElement<@NotNull E> targetPrev = target.getPrev();
+			LinkedCollectionElement<E> targetPrev = target.getPrev();
 			while ((targetPrev != null) && (comparator.compare(targetPrev.getValue(), current.getValue()) < 0)) {
 				target = targetPrev;
 				targetPrev = target.getPrev();
@@ -379,7 +379,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @return true, falls eine Sortierung erfolgreich war
 	 */
-	public boolean sort(final Comparator<@NotNull E> comparator) {
+	public boolean sort(final Comparator<E> comparator) {
 		if (comparator == null)
 			return false;
 		// Spezialfall bei einem oder keinem Element -> die Liste ist automatisch sortiert.
@@ -388,20 +388,20 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 		_modCount++;
 		// Alle prev-Zeiger auf null setzen (über diese wird die Sortierung aufgebaut,
 		// während die next-Zeiger, die noch zu kombinierenden Teil-Listen miteinander verketten.
-		for (LinkedCollectionElement<@NotNull E> current = this._head; current != null; current = current.getNext())
+		for (LinkedCollectionElement<E> current = this._head; current != null; current = current.getNext())
 			current.setPrev(null);
 		// Entferne aus der Liste der noch zu kombinierenden Teil-Listen die ersten beiden Element, führe eine Merge aus und hänge diese hinten an
 		while (this._head != null) {
 			// Entferne die ersten beiden Elemente (zwei sortierte Teil-Listen, die zu kombinieren sind)
-			final @NotNull LinkedCollectionElement<@NotNull E> left = this._head;
-			final LinkedCollectionElement<@NotNull E> right = left.getNext();
+			final @NotNull LinkedCollectionElement<E> left = this._head;
+			final LinkedCollectionElement<E> right = left.getNext();
 			if (right == null)
 				throw new NullPointerException();
 			this._head = right.getNext();
 			left.setNext(null);
 			right.setNext(null);
 			// Führe einen Merge der beiden Teillisten aus
-			final @NotNull LinkedCollectionElement<@NotNull E> sorted = this.merge(comparator, left, right);
+			final @NotNull LinkedCollectionElement<E> sorted = this.merge(comparator, left, right);
 			// Hänge die kombinierte Liste hinten an.
 			this._tail.setNext(sorted);
 			this._tail = sorted;
@@ -417,8 +417,8 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 		}
 		// Setze die prev-Zeiger für die umgekehrte Verkettung.
 		this._head.setPrev(null);
-		@NotNull LinkedCollectionElement<@NotNull E> current = this._head;
-		LinkedCollectionElement<@NotNull E> next = current.getNext();
+		@NotNull LinkedCollectionElement<E> current = this._head;
+		LinkedCollectionElement<E> next = current.getNext();
 		while (next != null) {
 			next.setPrev(current);
 			current = next;
@@ -438,10 +438,10 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 *
 	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))
 	 */
-	private @NotNull LinkedCollectionElement<@NotNull E> find(final int index) throws IndexOutOfBoundsException {
+	private @NotNull LinkedCollectionElement<E> find(final int index) throws IndexOutOfBoundsException {
 		if ((index < 0) || (index >= this._size))
 			throw new IndexOutOfBoundsException();
-		LinkedCollectionElement<@NotNull E> current = this._head;
+		LinkedCollectionElement<E> current = this._head;
 		for (int i = 0; (current != null); i++, current = current.getNext())
 			if (i == index)
 				return current;
@@ -458,10 +458,10 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen , ansonsten null
 	 */
-	private LinkedCollectionElement<@NotNull E> findFirst(final Object obj) {
+	private LinkedCollectionElement<E> findFirst(final Object obj) {
 		if (obj == null)
 			return null;
-		LinkedCollectionElement<@NotNull E> current = _head;
+		LinkedCollectionElement<E> current = _head;
 		while (current != null) {
 			if (current.getValue().equals(obj))
 				return current;
@@ -479,10 +479,10 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen, ansonsten null
 	 */
-	private LinkedCollectionElement<@NotNull E> findLast(final Object obj) {
+	private LinkedCollectionElement<E> findLast(final Object obj) {
 		if (obj == null)
 			return null;
-		LinkedCollectionElement<@NotNull E> current = _tail;
+		LinkedCollectionElement<E> current = _tail;
 		while (current != null) {
 			if (current.getValue().equals(obj))
 				return current;
@@ -530,7 +530,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	public void addFirst(final E e) {
 		if (e == null)
 			throw new NullPointerException();
-		final @NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
+		final @NotNull LinkedCollectionElement<E> newElem = new LinkedCollectionElement<>(e, null, null);
 		if ((_head == null) || (_tail == null)) {
 			_head = newElem;
 			_tail = newElem;
@@ -650,7 +650,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull E> descendingIterator() {
+	public @NotNull Iterator<E> descendingIterator() {
 		return new LinkedCollectionDescendingIterator<>(this);
 	}
 

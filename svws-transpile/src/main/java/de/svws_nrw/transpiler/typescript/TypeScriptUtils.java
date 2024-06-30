@@ -28,8 +28,8 @@ public final class TypeScriptUtils {
 	 *
 	 * @return der String mit dem transpilierten Typ
 	 */
-	public static String transpileTypeMirror(final TypeMirror type) {
-		final boolean hasNotNull = Transpiler.hasNotNullAnnotation(type);
+	public static String transpileTypeParamTypeMirror(final TypeMirror type) {
+		final boolean hasNotNull = !Transpiler.hasAllowNullAnnotation(type);
 		if (type instanceof final TypeVariable tv) {
 			final String result = tv.asElement().getSimpleName().toString();
 			return hasNotNull ? result : result + " | null";
@@ -48,7 +48,7 @@ public final class TypeScriptUtils {
 						first = false;
 					else
 						sb.append(", ");
-					sb.append(transpileTypeMirror(ta));
+					sb.append(transpileTypeParamTypeMirror(ta));
 				}
 				sb.append(">");
 			}

@@ -40,16 +40,16 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   Der Inhaltstyp der LinkedCollection
  */
-final class LinkedCollectionElement<@NotNull E> {
+final class LinkedCollectionElement<E> {
 
 	/** Der Wert, der in diesem Element gespeichert wird. */
 	private @NotNull E _value;
 
 	/** Referenz auf das vorige Element. */
-	private LinkedCollectionElement<@NotNull E> _prev = null;
+	private LinkedCollectionElement<E> _prev = null;
 
 	/** Referenz auf das nachfolgende Element. */
-	private LinkedCollectionElement<@NotNull E> _next = null;
+	private LinkedCollectionElement<E> _next = null;
 
 	/**
 	 * Erstellt eine neues LinkedCollectionElement mit den Wert _value und den
@@ -59,7 +59,7 @@ final class LinkedCollectionElement<@NotNull E> {
 	 * @param prev    der Vorgänger
 	 * @param next    der Nachfolger
 	 */
-	LinkedCollectionElement(final @NotNull E value, final LinkedCollectionElement<@NotNull E> prev, final LinkedCollectionElement<@NotNull E> next) {
+	LinkedCollectionElement(final @NotNull E value, final LinkedCollectionElement<E> prev, final LinkedCollectionElement<E> next) {
 		this._value = value;
 		this._prev = prev;
 		this._next = next;
@@ -94,7 +94,7 @@ final class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @return   das LinkedCollectionElement das der Vorgänger des Elementes ist
 	 */
-	LinkedCollectionElement<@NotNull E> getPrev() {
+	LinkedCollectionElement<E> getPrev() {
 		return _prev;
 	}
 
@@ -103,7 +103,7 @@ final class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @param prev   der Vorgänger des Elements
 	 */
-	void setPrev(final LinkedCollectionElement<@NotNull E> prev) {
+	void setPrev(final LinkedCollectionElement<E> prev) {
 		this._prev = prev;
 	}
 
@@ -112,7 +112,7 @@ final class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @return   das LinkedCollectionElement das der Nachfolger des Elementes ist
 	 */
-	LinkedCollectionElement<@NotNull E> getNext() {
+	LinkedCollectionElement<E> getNext() {
 		return _next;
 	}
 
@@ -121,7 +121,7 @@ final class LinkedCollectionElement<@NotNull E> {
 	 *
 	 * @param next   der Nachfolger des Elements
 	 */
-	void setNext(final LinkedCollectionElement<@NotNull E> next) {
+	void setNext(final LinkedCollectionElement<E> next) {
 		this._next = next;
 	}
 

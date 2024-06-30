@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class LongArrayKey implements Comparable<@NotNull LongArrayKey> {
+public final class LongArrayKey implements Comparable<LongArrayKey> {
 
 	private final @NotNull long[] _keys;
 	private final int _hashcode;

@@ -2516,7 +2516,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final TypeMirror type = unit.getIterableTypeArgument();
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: cannot determine iterable type");
-			final String typeParam = TypeScriptUtils.transpileTypeMirror(type);
+			final String typeParam = TypeScriptUtils.transpileTypeParamTypeMirror(type);
 			sb.append(getIndent()).append("public [Symbol.iterator](): Iterator<").append(typeParam).append("> {").append(System.lineSeparator());
 			sb.append(getIndent()).append("\tconst iter : JavaIterator<").append(typeParam).append("> = this.iterator();").append(System.lineSeparator());
 			sb.append(getIndent()).append("\tconst result : Iterator<").append(typeParam).append("> = {").append(System.lineSeparator());

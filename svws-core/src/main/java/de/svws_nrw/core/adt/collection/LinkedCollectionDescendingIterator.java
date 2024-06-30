@@ -42,13 +42,13 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   Der Inhaltstyp der zum Iterator gehörenden LinkedCollection
  */
-class LinkedCollectionDescendingIterator<@NotNull E> implements Iterator<@NotNull E> {
+class LinkedCollectionDescendingIterator<E> implements Iterator<E> {
 
 	/** Die dem Iterator zugehörige Collection */
-	private final @NotNull LinkedCollection<@NotNull E> _collection;
+	private final @NotNull LinkedCollection<E> _collection;
 
 	/** Der Zeiger auf das aktuelle Element */
-	private LinkedCollectionElement<@NotNull E> _current;
+	private LinkedCollectionElement<E> _current;
 
 	/** Die Anzahl der Modifikationen, die bei der {@link LinkedCollection} zur Zeit des Erzeugen des Iterators
 	 * gemacht wurden. Dieser Wert muss mit dem bei der {@link LinkedCollection} übereinstimmen. Ansonsten
@@ -62,7 +62,7 @@ class LinkedCollectionDescendingIterator<@NotNull E> implements Iterator<@NotNul
 	 *
 	 * @param collection   die zum Iterator zugehörige {@link LinkedCollection}
 	 */
-	LinkedCollectionDescendingIterator(final @NotNull LinkedCollection<@NotNull E> collection) {
+	LinkedCollectionDescendingIterator(final @NotNull LinkedCollection<E> collection) {
 		this._collection = collection;
 		this._expModCount = collection._modCount;
 		this._current = collection._tail;

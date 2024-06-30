@@ -613,12 +613,14 @@ public class TypeNode {
 		return switch (node.getKind()) {
 			case UNBOUNDED_WILDCARD -> "any";
 			case SUPER_WILDCARD -> {
-				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
+				final boolean isNotNull = !plugin.getTranspiler().hasAllowNullAnnotation(node.getBound());
+				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, isNotNull);
 				// TODO Partial is not really correct - try to find a better solution
 				yield "Partial<" + boundNode.transpile(false) + ">";
 			}
 			case EXTENDS_WILDCARD -> {
-				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
+				final boolean isNotNull = !plugin.getTranspiler().hasAllowNullAnnotation(node.getBound());
+				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, isNotNull);
 				yield boundNode.transpile(false);
 			}
 			default -> throw new TranspilerException("Transpiler Error: " + node.getKind() + " is not supported as a wildcard type.");
