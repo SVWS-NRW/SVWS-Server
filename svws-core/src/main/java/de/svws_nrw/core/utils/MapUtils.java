@@ -29,13 +29,12 @@ public final class MapUtils {
 	 *
 	 * @return das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull Set<@NotNull V> getOrCreateHashSet(final @NotNull Map<@NotNull K, @NotNull Set<@NotNull V>> map,
-			final @NotNull K key) {
-		final Set<@NotNull V> set = map.get(key);
+	public static <K, V> @NotNull Set<V> getOrCreateHashSet(final @NotNull Map<K, Set<V>> map, final @NotNull K key) {
+		final Set<V> set = map.get(key);
 		if (set != null)
 			return set;
 
-		final @NotNull HashSet<@NotNull V> setNeu = new HashSet<>();
+		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map.put(key, setNeu);
 		return setNeu;
 	}
@@ -50,13 +49,12 @@ public final class MapUtils {
 	 *
 	 * @return die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull List<@NotNull V> getOrCreateArrayList(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map,
-			final @NotNull K key) {
-		final List<@NotNull V> list = map.get(key);
+	public static <K, V> @NotNull List<V> getOrCreateArrayList(final @NotNull Map<K, List<V>> map, final @NotNull K key) {
+		final List<V> list = map.get(key);
 		if (list != null)
 			return list;
 
-		final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
+		final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 		map.put(key, listNeu);
 		return listNeu;
 	}
@@ -71,14 +69,13 @@ public final class MapUtils {
 	 * @param key    Der Schlüssel.
 	 * @param value  Der Wert, welcher der Liste der Liste hinzugefügt werden soll.
 	 */
-	public static <@NotNull K, @NotNull V> void addToListIfNotExists(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key,
-			final @NotNull V value) {
-		final List<@NotNull V> list = map.get(key);
+	public static <K, V> void addToListIfNotExists(final @NotNull Map<K, List<V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<V> list = map.get(key);
 		if (list != null) {
 			if (!list.contains(value))
 				list.add(value);
 		} else {
-			final List<@NotNull V> listNeu = new ArrayList<>();
+			final List<V> listNeu = new ArrayList<>();
 			listNeu.add(value);
 			map.put(key, listNeu);
 		}
@@ -94,13 +91,12 @@ public final class MapUtils {
 	 * @param key    Der Schlüssel.
 	 * @param value  Der Wert, welcher der Liste der Liste hinzugefügt werden soll.
 	 */
-	public static <@NotNull K, @NotNull V> void addToList(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key,
-			final @NotNull V value) {
-		final List<@NotNull V> list = map.get(key);
+	public static <K, V> void addToList(final @NotNull Map<K, List<V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<V> list = map.get(key);
 		if (list != null) {
 			list.add(value);
 		} else {
-			final List<@NotNull V> listNeu = new ArrayList<>();
+			final List<V> listNeu = new ArrayList<>();
 			listNeu.add(value);
 			map.put(key, listNeu);
 		}
@@ -115,9 +111,8 @@ public final class MapUtils {
 	 * @param key    Der 1. Schlüssel.
 	 * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
 	 */
-	public static <@NotNull K, @NotNull V> void removeFromListAndTrimOrException(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map,
-			final @NotNull K key, final @NotNull V value) {
-		final List<@NotNull V> list = DeveloperNotificationException.ifMapGetIsNull(map, key);
+	public static <K, V> void removeFromListAndTrimOrException(final @NotNull Map<K, List<V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<V> list = DeveloperNotificationException.ifMapGetIsNull(map, key);
 
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
 
@@ -136,8 +131,7 @@ public final class MapUtils {
 	 *
 	 * @return den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull V getOrDefault(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key,
-			final @NotNull V defaultValue) {
+	public static <K, V> @NotNull V getOrDefault(final @NotNull Map<K, V> map, final @NotNull K key, final @NotNull V defaultValue) {
 		final V value = map.get(key);
 		if (value == null)
 			return defaultValue;
@@ -154,8 +148,7 @@ public final class MapUtils {
 	 * @param key    Der Schlüssel.
 	 * @param value  Der Wert, welcher hinzugefügt werden soll, falls es noch keine Zuordnung gibt.
 	 */
-	public static <@NotNull K, @NotNull V> void putNonNullIfNotExists(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key,
-			final @NotNull V value) {
+	public static <K, V> void putNonNullIfNotExists(final @NotNull Map<K, V> map, final @NotNull K key, final @NotNull V value) {
 		if (map.containsKey(key))
 			return;
 		map.put(key, value);

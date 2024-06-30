@@ -17,10 +17,10 @@ import jakarta.validation.constraints.NotNull;
 public class KursManager {
 
 	/** Die Kurse, die im Manager vorhanden sind */
-	private final @NotNull List<@NotNull KursDaten> _kurse = new ArrayList<>();
+	private final @NotNull List<KursDaten> _kurse = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull KursDaten> _map = new HashMap<>();
+	private final @NotNull HashMap<Long, KursDaten> _map = new HashMap<>();
 
 	/**
 	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
@@ -34,7 +34,7 @@ public class KursManager {
 	 *
 	 * @param kurse die Liste mit den Kursen
 	 */
-	public KursManager(final @NotNull List<@NotNull KursDaten> kurse) {
+	public KursManager(final @NotNull List<KursDaten> kurse) {
 		addAll(kurse);
 	}
 
@@ -84,7 +84,7 @@ public class KursManager {
 	 *
 	 * @return true, falls <i>alle</i> Kurse eingefügt wurden, sonst false
 	 */
-	public boolean addAll(final @NotNull Collection<@NotNull KursDaten> kurse) {
+	public boolean addAll(final @NotNull Collection<KursDaten> kurse) {
 		boolean result = true;
 		for (final @NotNull KursDaten kurs : kurse)
 			if (!addInternal(kurs))
@@ -134,7 +134,7 @@ public class KursManager {
 	 *
 	 * @return die interne Liste der Kurse
 	 */
-	public @NotNull List<@NotNull KursDaten> kurse() {
+	public @NotNull List<KursDaten> kurse() {
 		return _kurse;
 	}
 
@@ -152,8 +152,8 @@ public class KursManager {
 	 *
 	 * @return ein Vector mit den Kursen
 	 */
-	public @NotNull List<@NotNull KursDaten> toList() {
-		final @NotNull List<@NotNull KursDaten> result = new ArrayList<>();
+	public @NotNull List<KursDaten> toList() {
+		final @NotNull List<KursDaten> result = new ArrayList<>();
 		for (final @NotNull KursDaten kurs : _kurse)
 			result.add(kurs);
 		return result;

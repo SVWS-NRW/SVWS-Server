@@ -18,22 +18,22 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> der Typ des eindeutigen Schlüsselwertes für ein enthaltenes Objekt
  * @param <V> der Typ der enthaltenen Objekte
  */
-public class AttributMitAuswahl<@NotNull K, @NotNull V> {
+public class AttributMitAuswahl<K, V> {
 
 	/** Die Menge der zulässigen Werte */
-	private @NotNull List<@NotNull V> _values = new ArrayList<>();
+	private @NotNull List<V> _values = new ArrayList<>();
 
 	/** Eine Map mit der Menge der zulässigen Werte */
-	private final @NotNull Map<@NotNull K, @NotNull V> _mapValuesByKey = new HashMap<>();
+	private final @NotNull Map<K, V> _mapValuesByKey = new HashMap<>();
 
 	/** Eine Map mit der Menge der Werte in der Auswahl */
-	private final @NotNull Map<@NotNull K, @NotNull V> _mapAuswahlValuesByKey = new HashMap<>();
+	private final @NotNull Map<K, V> _mapAuswahlValuesByKey = new HashMap<>();
 
 	/** Eine Funktion, um aus einem Wert den zugehörigen Schlüssel zu extrahieren. */
-	private final @NotNull Function<@NotNull V, @NotNull K> _toID;
+	private final @NotNull Function<V, K> _toID;
 
 	/** Ein Comparator für das Sortieren der enthaltenen Objekte */
-	private final @NotNull Comparator<@NotNull V> _comparator;
+	private final @NotNull Comparator<V> _comparator;
 
 	/** Ein Handler für das Ereignis, dass die Auswahl verändert wurde */
 	private final Runnable _eventHandlerAuswahlGeandert;
@@ -50,8 +50,8 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 * @param comparator    eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
 	 * @param eventHandler  ein Runnable, welches aufgerufen wird, wenn der Status der Auswahl sich ändert
 	 */
-	public AttributMitAuswahl(final @NotNull Collection<@NotNull V> values, final @NotNull Function<@NotNull V, @NotNull K> toId,
-			final @NotNull Comparator<@NotNull V> comparator, final Runnable eventHandler) {
+	public AttributMitAuswahl(final @NotNull Collection<V> values, final @NotNull Function<V, K> toId,
+			final @NotNull Comparator<V> comparator, final Runnable eventHandler) {
 		this._toID = toId;
 		this._comparator = comparator;
 		this._values.clear();
@@ -80,7 +80,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return die Liste zulässigen Werte für dieses Attribut zurück.
 	 */
-	public @NotNull List<@NotNull V> list() {
+	public @NotNull List<V> list() {
 		return this._values;
 	}
 
@@ -161,7 +161,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 		final @NotNull K key = _toID.apply(value);
 		if (this._mapValuesByKey.containsKey(key))
 			return false;
-		final @NotNull List<@NotNull V> values = new ArrayList<>();
+		final @NotNull List<V> values = new ArrayList<>();
 		values.addAll(this._values);
 		values.add(value);
 		this._values = values;
@@ -187,7 +187,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @param values  die hinzuzufügenden Werte
 	 */
-	public void addAll(final @NotNull List<@NotNull V> values) {
+	public void addAll(final @NotNull List<V> values) {
 		boolean added = false;
 		for (final @NotNull V value : values)
 			added = added || addInternal(value);
@@ -207,7 +207,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 */
 	private boolean removeInternal(final @NotNull V value) {
 		final @NotNull K key = _toID.apply(value);
-		final @NotNull List<@NotNull V> values = new ArrayList<>();
+		final @NotNull List<V> values = new ArrayList<>();
 		for (final @NotNull V v : this._values) {
 			if (key.equals(_toID.apply(v)))
 				continue;
@@ -246,7 +246,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @param values   die zu entferndende Werte
 	 */
-	public void removeAll(final @NotNull List<@NotNull V> values) {
+	public void removeAll(final @NotNull List<V> values) {
 		boolean removed = false;
 		for (final @NotNull V value : values)
 			removed = removed || removeInternal(value);
@@ -265,7 +265,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
 	 */
-	public @NotNull List<@NotNull V> auswahl() {
+	public @NotNull List<V> auswahl() {
 		return new ArrayList<>(this._mapAuswahlValuesByKey.values());
 	}
 
@@ -276,8 +276,8 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
 	 */
-	public @NotNull List<@NotNull V> auswahlSorted() {
-		@NotNull final List<@NotNull V> list = this.auswahl();
+	public @NotNull List<V> auswahlSorted() {
+		@NotNull final List<V> list = this.auswahl();
 		list.sort(this._comparator);
 		return list;
 	}
@@ -289,7 +289,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @return die Liste der in der Auswahl enthaltenen Schlüssel für dieses Attribut zurück.
 	 */
-	public @NotNull List<@NotNull K> auswahlKeyList() {
+	public @NotNull List<K> auswahlKeyList() {
 		return new ArrayList<>(this._mapAuswahlValuesByKey.keySet());
 	}
 
@@ -461,7 +461,7 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 *
 	 * @param srcAuswahl   Die Auswahl des AttributMitAuswahl, die übernommen wird.
 	 */
-	public void setAuswahl(final @NotNull AttributMitAuswahl<@NotNull K, @NotNull V> srcAuswahl) {
+	public void setAuswahl(final @NotNull AttributMitAuswahl<K, V> srcAuswahl) {
 		for (final @NotNull K key : srcAuswahl.auswahlKeyList())
 			if (this.has(key))
 				this.auswahlAddByKey(key);

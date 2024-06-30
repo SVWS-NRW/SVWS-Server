@@ -26,7 +26,7 @@ public final class StringUtils {
 	 *
 	 * @return einen durch Komma getrennten String aller Inhalte der übergebenen {@link Collection}.
 	 */
-	public static @NotNull String collectionToCommaSeparatedString(final @NotNull Collection<@NotNull String> collection) {
+	public static @NotNull String collectionToCommaSeparatedString(final @NotNull Collection<String> collection) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
 		for (final @NotNull String s : collection)

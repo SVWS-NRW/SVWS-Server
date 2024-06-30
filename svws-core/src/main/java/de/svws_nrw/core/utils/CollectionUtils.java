@@ -17,8 +17,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class CollectionUtils {
 
+
 	private CollectionUtils() {
 	}
+
 
 	/**
 	 * Liefert das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
@@ -30,16 +32,16 @@ public final class CollectionUtils {
 	 *
 	 * @return das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
 	 */
-	public static <@NotNull K, @NotNull V> @NotNull Set<@NotNull V> getOrCreateHashSet(@NotNull final Map<@NotNull K, @NotNull Set<@NotNull V>> map,
-			final @NotNull K key) {
-		final Set<@NotNull V> set = map.get(key);
+	public static <K, V> @NotNull Set<V> getOrCreateHashSet(@NotNull final Map<K, Set<V>> map, final @NotNull K key) {
+		final Set<V> set = map.get(key);
 		if (set != null)
 			return set;
 
-		final @NotNull HashSet<@NotNull V> setNeu = new HashSet<>();
+		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map.put(key, setNeu);
 		return setNeu;
 	}
+
 
 	/**
 	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
@@ -50,14 +52,14 @@ public final class CollectionUtils {
 	 *
 	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
 	 */
-	public static <@NotNull E> @NotNull Set<@NotNull E> toFilteredHashSet(final @NotNull Collection<@NotNull E> values,
-			final @NotNull Predicate<@NotNull E> predicate) {
-		final @NotNull HashSet<@NotNull E> set = new HashSet<>();
+	public static <E> @NotNull Set<E> toFilteredHashSet(final @NotNull Collection<E> values, final @NotNull Predicate<E> predicate) {
+		final @NotNull HashSet<E> set = new HashSet<>();
 		for (final @NotNull E e : values)
 			if (predicate.test(e))
 				set.add(e);
 		return set;
 	}
+
 
 	/**
 	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
@@ -68,9 +70,8 @@ public final class CollectionUtils {
 	 *
 	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
 	 */
-	public static <@NotNull E> @NotNull List<@NotNull E> toFilteredArrayList(final @NotNull Collection<@NotNull E> values,
-			final @NotNull Predicate<@NotNull E> predicate) {
-		final @NotNull ArrayList<@NotNull E> set = new ArrayList<>();
+	public static <E> @NotNull List<E> toFilteredArrayList(final @NotNull Collection<E> values, final @NotNull Predicate<E> predicate) {
+		final @NotNull ArrayList<E> set = new ArrayList<>();
 		for (final @NotNull E e : values)
 			if (predicate.test(e))
 				set.add(e);

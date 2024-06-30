@@ -24,8 +24,8 @@ public final class SetUtils {
 	 *
 	 * @return ein Set, welches mit einem Element gefüllt wurde.
 	 */
-	public static <@NotNull E> @NotNull Set<@NotNull E> create1(final @NotNull E element) {
-		final @NotNull HashSet<@NotNull E> set = new HashSet<>();
+	public static <E> @NotNull Set<E> create1(final @NotNull E element) {
+		final @NotNull HashSet<E> set = new HashSet<>();
 		set.add(element);
 		return set;
 	}
@@ -39,8 +39,8 @@ public final class SetUtils {
 	 *
 	 * @return ein Set, welches mit einem Element gefüllt wurde.
 	 */
-	public static <@NotNull E> @NotNull Set<@NotNull E> create2(final @NotNull E element1, final @NotNull E element2) {
-		final @NotNull HashSet<@NotNull E> set = new HashSet<>();
+	public static <E> @NotNull Set<E> create2(final @NotNull E element1, final @NotNull E element2) {
+		final @NotNull HashSet<E> set = new HashSet<>();
 		set.add(element1);
 		set.add(element2);
 		return set;
@@ -54,8 +54,8 @@ public final class SetUtils {
 	 *
 	 * @return ein Set (HashSet), welches mit den Elementen der Liste gefüllt wurde.
 	 */
-	public static <@NotNull E> @NotNull Set<@NotNull E> createFromList(final @NotNull List<@NotNull E> list) {
-		final @NotNull HashSet<@NotNull E> set = new HashSet<>();
+	public static <E> @NotNull Set<E> createFromList(final @NotNull List<E> list) {
+		final @NotNull HashSet<E> set = new HashSet<>();
 		set.addAll(list);
 		return set;
 	}

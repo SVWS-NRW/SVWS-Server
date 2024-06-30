@@ -18,7 +18,7 @@ public final class BlockungsUtils {
 	}
 
 	/** Ein Comparator zum Sortieren von {@link GostBlockungListeneintrag}, welcher beachtet, dass der Suffix Zahlen enthält. */
-	private static final @NotNull Comparator<@NotNull GostBlockungListeneintrag> _compGostBlockungListeneintrag =
+	private static final @NotNull Comparator<GostBlockungListeneintrag> _compGostBlockungListeneintrag =
 			(final @NotNull GostBlockungListeneintrag a, final @NotNull GostBlockungListeneintrag b) -> {
 				// Zerlege den Namen der Blockung in [Präfix, Suffix]. Der Suffix besteht nur aus Ziffern.
 				final @NotNull String @NotNull [] splitA = extractTrailingNumber(a.name.trim());
@@ -49,7 +49,7 @@ public final class BlockungsUtils {
 	 *
 	 * @param list Die zu sortierende Liste.
 	 */
-	public static void sortGostBlockungListeneintrag(final @NotNull List<@NotNull GostBlockungListeneintrag> list) {
+	public static void sortGostBlockungListeneintrag(final @NotNull List<GostBlockungListeneintrag> list) {
 		list.sort(_compGostBlockungListeneintrag);
 	}
 

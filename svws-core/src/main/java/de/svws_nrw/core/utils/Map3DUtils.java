@@ -32,12 +32,12 @@ public final class Map3DUtils {
      *
      * @return die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
      */
-	public static <@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V>  @NotNull List<@NotNull V> getOrCreateArrayList(final @NotNull HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull List<@NotNull V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final List<@NotNull V> list = map3D.getOrNull(key1, key2, key3);
+	public static <K1, K2, K3, V>  @NotNull List<V> getOrCreateArrayList(final @NotNull HashMap3D<K1, K2, K3, List<V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final List<V> list = map3D.getOrNull(key1, key2, key3);
 		if (list != null)
 			return list;
 
-		final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
+		final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 		map3D.put(key1, key2, key3, listNeu);
 		return listNeu;
 	}
@@ -57,11 +57,11 @@ public final class Map3DUtils {
      *
      * @return die "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
      */
-	public static <@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V>  @NotNull Set<@NotNull V> getOrCreateSet(final @NotNull HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull Set<@NotNull V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Set<@NotNull V> set = map3D.getOrNull(key1, key2, key3);
+	public static <K1, K2, K3, V>  @NotNull Set<V> getOrCreateSet(final @NotNull HashMap3D<K1, K2, K3, Set<V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final Set<V> set = map3D.getOrNull(key1, key2, key3);
 		if (set != null)
 			return set;
-		final @NotNull HashSet<@NotNull V> setNeu = new HashSet<>();
+		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map3D.put(key1, key2, key3, setNeu);
 		return setNeu;
 	}
@@ -81,12 +81,12 @@ public final class Map3DUtils {
      * @param key3   der 3. Schlüssel.
      * @param value  der Wert, welcher der zugeordneten Liste hinzugefügt wird.
      */
-	public static <@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> void addToList(final @NotNull HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull List<@NotNull V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull V value) {
-		final List<@NotNull V> list = map3D.getOrNull(key1, key2, key3);
+	public static <K1, K2, K3, V> void addToList(final @NotNull HashMap3D<K1, K2, K3, List<V>> map3D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull V value) {
+		final List<V> list = map3D.getOrNull(key1, key2, key3);
 		if (list != null) {
 			list.add(value);
 		} else {
-			final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
+			final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 			listNeu.add(value);
 			map3D.put(key1, key2, key3, listNeu);
 		}

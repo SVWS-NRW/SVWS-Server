@@ -23,16 +23,16 @@ import jakarta.validation.constraints.NotNull;
  * @param <TAuswahl>   der Typ der Auswahl-Listen-Objekte
  * @param <TDaten>     der Typ der Datenobjekte für eine Auswahl
  */
-public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull TDaten> {
+public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 
 	/** Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet, sondern für eine Mehrfachauswahl */
-	public final @NotNull AttributMitAuswahl<@NotNull TID, @NotNull TAuswahl> liste;
+	public final @NotNull AttributMitAuswahl<TID, TAuswahl> liste;
 
 	/** Ein Lambda-Ausdruck für das Mapping von einem Auswahl-Objekt auf dessen ID */
-	private final @NotNull Function<@NotNull TAuswahl, @NotNull TID> _listeToId;
+	private final @NotNull Function<TAuswahl, TID> _listeToId;
 
 	/** Ein Lambda-Ausdruck für das Mapping von einem Daten-Objekt auf dessen ID */
-	private final @NotNull Function<@NotNull TDaten, @NotNull TID> _datenToId;
+	private final @NotNull Function<TDaten, TID> _datenToId;
 
 	/** Die Schulform der Schule */
 	protected final Schulform _schulform;
@@ -44,13 +44,12 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	protected final long _schuljahresabschnittSchule;
 
 	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
-	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId =
-			(final @NotNull Schuljahresabschnitt sja) -> sja.id;
+	public final @NotNull AttributMitAuswahl<Long, Schuljahresabschnitt> schuljahresabschnitte;
+	private static final @NotNull Function<Schuljahresabschnitt, Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
 
 
 	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
-	protected List<@NotNull TAuswahl> _filtered = null;
+	protected List<TAuswahl> _filtered = null;
 
 	/** Die Daten, sofern eine Auswahl vorhanden ist. */
 	protected TDaten _daten = null;
@@ -68,7 +67,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	private final @NotNull Runnable _eventHandlerListeChanged = () -> this.onListeChangedInternal();
 
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
-	protected @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order;
+	protected @NotNull List<Pair<String, Boolean>> _order;
 
 	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht. */
 	protected boolean _filterPermitAuswahl;
@@ -91,10 +90,10 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 * @param order                        die Default-Sortierung für die Auswahl-Liste
 	 */
 	protected AuswahlManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull Collection<@NotNull TAuswahl> values, final @NotNull Comparator<@NotNull TAuswahl> listComparator,
-			final @NotNull Function<@NotNull TAuswahl, @NotNull TID> listeToId, final @NotNull Function<@NotNull TDaten, @NotNull TID> datenToId,
-			final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull Collection<TAuswahl> values, final @NotNull Comparator<TAuswahl> listComparator,
+			final @NotNull Function<TAuswahl, TID> listeToId, final @NotNull Function<TDaten, TID> datenToId,
+			final @NotNull List<Pair<String, Boolean>> order) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
 		this.schuljahresabschnitte =
@@ -115,7 +114,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 *
 	 * @return die gefilterte Liste
 	 */
-	public @NotNull List<@NotNull TAuswahl> filtered() {
+	public @NotNull List<TAuswahl> filtered() {
 		if (_filtered != null)
 			return _filtered;
 		_filtered = new ArrayList<>();
@@ -124,7 +123,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 			// Lasse die aktuelle Auswahl immer durch den Filter falls _filterPermitAuswahl gesetzt ist
 			if ((this._filterPermitAuswahl && (aktAuswahl != null) && this.compareAuswahl(aktAuswahl, eintrag) == 0) || checkFilter(eintrag))
 				_filtered.add(eintrag);
-		final @NotNull Comparator<@NotNull TAuswahl> comparator = (final @NotNull TAuswahl a, final @NotNull TAuswahl b) -> this.compareAuswahl(a, b);
+		final @NotNull Comparator<TAuswahl> comparator = (final @NotNull TAuswahl a, final @NotNull TAuswahl b) -> this.compareAuswahl(a, b);
 		_filtered.sort(comparator);
 		return _filtered;
 	}
@@ -212,7 +211,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 *
 	 * @param order   die Sortier-Ordnung
 	 */
-	public void orderSet(final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
+	public void orderSet(final @NotNull List<Pair<String, Boolean>> order) {
 		this._order = order;
 		this._filtered = null;
 	}
@@ -225,7 +224,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 *
 	 * @return   die Sortier-Ordnung
 	 */
-	public final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> orderGet() {
+	public final @NotNull List<Pair<String, Boolean>> orderGet() {
 		return new ArrayList<>(this._order);
 	}
 
@@ -242,7 +241,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		// Prüfe, ob der Feld-Eintrag entfernt werden soll
 		if (order == null) {
 			for (int i = 0; i < this._order.size(); i++) {
-				final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
+				final @NotNull Pair<String, Boolean> eintrag = this._order.get(i);
 				if (eintrag.a.equals(field)) {
 					this._order.remove(eintrag);
 					this._filtered = null;
@@ -253,7 +252,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		}
 		// Prüfe, ob bereits ein Eintrag vorhanden ist und passe diesen ggf an
 		for (int i = 0; i < this._order.size(); i++) {
-			final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
+			final @NotNull Pair<String, Boolean> eintrag = this._order.get(i);
 			if (eintrag.a.equals(field)) {
 				if (eintrag.b.equals(order))
 					return;
@@ -265,7 +264,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 			}
 		}
 		// Füge einen neuen Eintrag vorne in der Liste hinzu
-		final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = new Pair<>(field, order);
+		final @NotNull Pair<String, Boolean> eintrag = new Pair<>(field, order);
 		this._order.add(0, eintrag);
 		this._filtered = null;
 	}
