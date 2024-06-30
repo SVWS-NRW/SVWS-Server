@@ -712,7 +712,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
 			if (u.idKurs == null) {
 				// Klassenunterricht (aggregiere die SuS aus allen Klassen)
-				for (final @NotNull Long idKlasse : u.klassen) {
+				for (final long idKlasse : u.klassen) {
 					final @NotNull List<StundenplanSchueler> susDerKlasse = MapUtils.getOrCreateArrayList(_schuelermenge_by_idKlasse, idKlasse);
 					MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, u.id).addAll(susDerKlasse);
 				}
@@ -912,7 +912,7 @@ public class StundenplanManager {
 				schienenIDs.addAll(klassenunterricht.schienen);
 
 			// Konvertieren und hinzufügen.
-			for (final @NotNull Long idSchiene : schienenIDs) {
+			for (final long idSchiene : schienenIDs) {
 				final @NotNull StundenplanSchiene schiene = DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 				MapUtils.addToList(_schienenmenge_by_idKlasse, klasse.id, schiene);
 			}
@@ -926,18 +926,18 @@ public class StundenplanManager {
 		_kursmenge_by_idKlasse_and_idSchiene = new HashMap2D<>();
 
 		// Hinzufügen
-		for (final @NotNull Long idKlasse : _kursmenge_by_idKlasse.keySet())
+		for (final long idKlasse : _kursmenge_by_idKlasse.keySet())
 			for (final @NotNull StundenplanKurs kurs : MapUtils.getOrCreateArrayList(_kursmenge_by_idKlasse, idKlasse))
 				if (kurs.schienen.isEmpty()) {
 					Map2DUtils.addToList(_kursmenge_by_idKlasse_and_idSchiene, idKlasse, -1L, kurs);
 				} else {
-					for (final @NotNull Long idSchiene : kurs.schienen)
+					for (final long idSchiene : kurs.schienen)
 						Map2DUtils.addToList(_kursmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene, kurs);
 				}
 
 		// Sortieren
-		for (final @NotNull Long idKlasse : _kursmenge_by_idKlasse_and_idSchiene.getKeySet())
-			for (final @NotNull Long idSchiene : _kursmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
+		for (final long idKlasse : _kursmenge_by_idKlasse_and_idSchiene.getKeySet())
+			for (final long idSchiene : _kursmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
 				_kursmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(_compKurs);
 	}
 
@@ -945,25 +945,25 @@ public class StundenplanManager {
 		_klassenunterrichtmenge_by_idKlasse_and_idSchiene = new HashMap2D<>();
 
 		// Hinzufügen
-		for (final @NotNull Long idKlasse : _klassenunterrichtmenge_by_idKlasse.keySet())
+		for (final long idKlasse : _klassenunterrichtmenge_by_idKlasse.keySet())
 			for (final @NotNull StundenplanKlassenunterricht klassenunterricht : MapUtils.getOrCreateArrayList(_klassenunterrichtmenge_by_idKlasse, idKlasse))
 				if (klassenunterricht.schienen.isEmpty()) {
 					Map2DUtils.addToList(_klassenunterrichtmenge_by_idKlasse_and_idSchiene, idKlasse, -1L, klassenunterricht);
 				} else {
-					for (final @NotNull Long idSchiene : klassenunterricht.schienen)
+					for (final long idSchiene : klassenunterricht.schienen)
 						Map2DUtils.addToList(_klassenunterrichtmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene, klassenunterricht);
 				}
 
 		// Sortieren
-		for (final @NotNull Long idKlasse : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySet())
-			for (final @NotNull Long idSchiene : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
+		for (final long idKlasse : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySet())
+			for (final long idSchiene : _klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
 				_klassenunterrichtmenge_by_idKlasse_and_idSchiene.getOrException(idKlasse, idSchiene).sort(_compKlassenunterricht);
 	}
 
 	private void update_schienenmenge_by_idUnterricht() {
 		_schienenmenge_by_idUnterricht = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
-			for (final @NotNull Long idSchiene : u.schienen) {
+			for (final long idSchiene : u.schienen) {
 				final @NotNull StundenplanSchiene schiene = DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 				MapUtils.addToList(_schienenmenge_by_idUnterricht, u.id, schiene);
 			}
@@ -997,7 +997,7 @@ public class StundenplanManager {
 	private void update_jahrgangmenge_by_idKurs() {
 		_jahrgangmenge_by_idKurs = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
-			for (final @NotNull Long idJahrgang : kurs.jahrgaenge) {
+			for (final long idJahrgang : kurs.jahrgaenge) {
 				final @NotNull StundenplanJahrgang jahrgang = DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
 				MapUtils.addToList(_jahrgangmenge_by_idKurs, kurs.id, jahrgang);
 			}
@@ -1008,14 +1008,14 @@ public class StundenplanManager {
 	private void update_klassenunterrichtmenge_by_idSchiene() {
 		_klassenunterrichtmenge_by_idSchiene = new HashMap<>();
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : _klassenunterrichtmenge)
-			for (final @NotNull Long idSchiene : klassenunterricht.schienen)
+			for (final long idSchiene : klassenunterricht.schienen)
 				MapUtils.addToList(_klassenunterrichtmenge_by_idSchiene, idSchiene, klassenunterricht);
 	}
 
 	private void update_kursmenge_by_idSchiene() {
 		_kursmenge_by_idSchiene = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
-			for (final @NotNull Long idSchiene : kurs.schienen)
+			for (final long idSchiene : kurs.schienen)
 				MapUtils.addToList(_kursmenge_by_idSchiene, idSchiene, kurs);
 	}
 
@@ -1164,14 +1164,14 @@ public class StundenplanManager {
 	private void update_klassenmenge_by_idJahrgang() {
 		_klassenmenge_by_idJahrgang = new HashMap<>();
 		for (final @NotNull StundenplanKlasse klasse : _klassenmenge_sortiert)
-			for (final @NotNull Long idJahrgang : klasse.jahrgaenge)
+			for (final long idJahrgang : klasse.jahrgaenge)
 				MapUtils.addToList(_klassenmenge_by_idJahrgang, idJahrgang, klasse);
 	}
 
 	private void update_kursmenge_by_idJahrgang() {
 		_kursmenge_by_idJahrgang = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
-			for (final @NotNull Long idJahrgang : kurs.jahrgaenge)
+			for (final long idJahrgang : kurs.jahrgaenge)
 				MapUtils.addToList(_kursmenge_by_idJahrgang, idJahrgang, kurs);
 	}
 
@@ -1234,7 +1234,7 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_idSchueler_and_wochentag() {
 		_pausenzeitmenge_by_idSchueler_and_wochentag = new HashMap2D<>();
-		for (final @NotNull Long idSchueler : _pausenzeitmenge_by_idSchueler.keySet())
+		for (final long idSchueler : _pausenzeitmenge_by_idSchueler.keySet())
 			for (final @NotNull StundenplanPausenzeit zeit : MapUtils.getOrCreateArrayList(_pausenzeitmenge_by_idSchueler, idSchueler))
 				Map2DUtils.addToList(_pausenzeitmenge_by_idSchueler_and_wochentag, idSchueler, zeit.wochentag, zeit);
 	}
@@ -1248,7 +1248,7 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_idKlasse_and_wochentag() {
 		_pausenzeitmenge_by_idKlasse_and_wochentag = new HashMap2D<>();
-		for (final @NotNull Long idKlasse : _pausenzeitmenge_by_idKlasse.keySet())
+		for (final long idKlasse : _pausenzeitmenge_by_idKlasse.keySet())
 			for (final @NotNull StundenplanPausenzeit pausenzeit : MapUtils.getOrCreateArrayList(_pausenzeitmenge_by_idKlasse, idKlasse))
 				Map2DUtils.addToList(_pausenzeitmenge_by_idKlasse_and_wochentag, idKlasse, pausenzeit.wochentag, pausenzeit);
 	}
@@ -1264,14 +1264,14 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_idLehrer_and_wochentag() {
 		_pausenzeitmenge_by_idLehrer_and_wochentag = new HashMap2D<>();
-		for (final @NotNull Long idLehrer : _pausenzeitmenge_by_idLehrer.keySet())
+		for (final long idLehrer : _pausenzeitmenge_by_idLehrer.keySet())
 			for (final @NotNull StundenplanPausenzeit pausenzeit : MapUtils.getOrCreateArrayList(_pausenzeitmenge_by_idLehrer, idLehrer))
 				Map2DUtils.addToList(_pausenzeitmenge_by_idLehrer_and_wochentag, idLehrer, pausenzeit.wochentag, pausenzeit);
 	}
 
 	private void update_pausenzeitmenge_by_idJahrgang_and_wochentag() {
 		_pausenzeitmenge_by_idJahrgang_and_wochentag = new HashMap2D<>();
-		for (final @NotNull Long idJahrgang : _pausenzeitmenge_by_idJahrgang.keySet())
+		for (final long idJahrgang : _pausenzeitmenge_by_idJahrgang.keySet())
 			for (final @NotNull StundenplanPausenzeit pausenzeit : MapUtils.getOrCreateArrayList(_pausenzeitmenge_by_idJahrgang, idJahrgang))
 				Map2DUtils.addToList(_pausenzeitmenge_by_idJahrgang_and_wochentag, idJahrgang, pausenzeit.wochentag, pausenzeit);
 	}
@@ -1280,7 +1280,7 @@ public class StundenplanManager {
 		_pausenzeitmenge_by_idJahrgang = new HashMap<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
 			for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
-				for (final @NotNull Long idJahrgang : klasse.jahrgaenge)
+				for (final long idJahrgang : klasse.jahrgaenge)
 					MapUtils.addToListIfNotExists(_pausenzeitmenge_by_idJahrgang, idJahrgang, pausenzeit);
 	}
 
@@ -1374,14 +1374,14 @@ public class StundenplanManager {
 	private void update_klassenunterrichtmenge_by_idSchueler() {
 		_klassenunterrichtmenge_by_idSchueler = new HashMap<>();
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : _klassenunterrichtmenge)
-			for (final @NotNull Long idSchueler : klassenunterricht.schueler)
+			for (final long idSchueler : klassenunterricht.schueler)
 				MapUtils.addToList(_klassenunterrichtmenge_by_idSchueler, idSchueler, klassenunterricht);
 	}
 
 	private void update_klassenunterrichtmenge_by_idLehrer() {
 		_klassenunterrichtmenge_by_idLehrer = new HashMap<>();
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : _klassenunterrichtmenge)
-			for (final @NotNull Long idLehrer : klassenunterricht.lehrer)
+			for (final long idLehrer : klassenunterricht.lehrer)
 				MapUtils.addToList(_klassenunterrichtmenge_by_idLehrer, idLehrer, klassenunterricht);
 	}
 
@@ -1393,14 +1393,14 @@ public class StundenplanManager {
 	private void update_kursmenge_by_idSchueler() {
 		_kursmenge_by_idSchueler = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
-			for (final @NotNull Long idSchueler : kurs.schueler)
+			for (final long idSchueler : kurs.schueler)
 				MapUtils.addToList(_kursmenge_by_idSchueler, idSchueler, kurs);
 	}
 
 	private void update_kursmenge_by_idLehrer() {
 		_kursmenge_by_idLehrer = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert)
-			for (final @NotNull Long idLehrer : kurs.lehrer)
+			for (final long idLehrer : kurs.lehrer)
 				MapUtils.addToList(_kursmenge_by_idLehrer, idLehrer, kurs);
 	}
 
@@ -1420,7 +1420,7 @@ public class StundenplanManager {
 	private void update_lehrermenge_by_idUnterricht() {
 		_lehrermenge_by_idUnterricht = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
-			for (final @NotNull Long idLehrer : u.lehrer) {
+			for (final long idLehrer : u.lehrer) {
 				final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, idLehrer);
 				MapUtils.addToList(_lehrermenge_by_idUnterricht, u.id, lehrer);
 			}
@@ -1486,7 +1486,7 @@ public class StundenplanManager {
 	private void update_schuelermenge_by_idKurs() {
 		_schuelermenge_by_idKurs = new HashMap<>();
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
-			for (final @NotNull Long idSchueler : kurs.schueler) {
+			for (final long idSchueler : kurs.schueler) {
 				final @NotNull StundenplanSchueler schueler = DeveloperNotificationException.ifMapGetIsNull(_schueler_by_id, idSchueler);
 				MapUtils.addToList(_schuelermenge_by_idKurs, kurs.id, schueler);
 			}
@@ -1514,14 +1514,14 @@ public class StundenplanManager {
 	private void update_unterrichtmenge_by_idLehrer() {
 		_unterrichtmenge_by_idLehrer = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final @NotNull Long idLehrer : u.lehrer)
+			for (final long idLehrer : u.lehrer)
 				MapUtils.addToList(_unterrichtmenge_by_idLehrer, idLehrer, u);
 	}
 
 	private void update_unterrichtmenge_by_idLehrer_and_idZeitraster() {
 		_unterrichtmenge_by_idLehrer_and_idZeitraster = new HashMap2D<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final @NotNull Long idLehrer : u.lehrer)
+			for (final long idLehrer : u.lehrer)
 				Map2DUtils.addToList(_unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, u.idZeitraster, u);
 	}
 
@@ -1531,7 +1531,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			if (u.idKurs == null) {
 				// Klassenunterricht
-				for (final @NotNull Long idKlasse : u.klassen)
+				for (final long idKlasse : u.klassen)
 					MapUtils.addToList(_unterrichtmenge_by_idKlasse, idKlasse, u);
 			} else {
 				// Kursunterricht
@@ -1546,7 +1546,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			if (u.idKurs == null) {
 				// Klassenunterricht
-				for (final @NotNull Long idKlasse : u.klassen)
+				for (final long idKlasse : u.klassen)
 					Map2DUtils.addToList(_unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster, u);
 			} else {
 				// Kursunterricht
@@ -1557,7 +1557,7 @@ public class StundenplanManager {
 
 	private void update_unterrichtmenge_by_idSchueler_and_idZeitraster() {
 		_unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D<>();
-		for (final @NotNull Long idSchueler : _unterrichtmenge_by_idSchueler.keySet())
+		for (final long idSchueler : _unterrichtmenge_by_idSchueler.keySet())
 			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idSchueler, idSchueler))
 				Map2DUtils.addToList(_unterrichtmenge_by_idSchueler_and_idZeitraster, idSchueler, u.idZeitraster, u);
 	}
@@ -1573,7 +1573,7 @@ public class StundenplanManager {
 		_unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			if (u.idKurs == null)
-				for (final @NotNull Long idKlasse : u.klassen)
+				for (final long idKlasse : u.klassen)
 					Map2DUtils.addToList(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, u.idFach, u);
 	}
 
@@ -1592,14 +1592,14 @@ public class StundenplanManager {
 	private void update_unterrichtmenge_by_idRaum() {
 		_unterrichtmenge_by_idRaum = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final @NotNull Long idRaum : u.raeume)
+			for (final long idRaum : u.raeume)
 				MapUtils.addToList(_unterrichtmenge_by_idRaum, idRaum, u);
 	}
 
 	private void update_unterrichtmenge_by_idRaum_and_idZeitraster() {
 		_unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final @NotNull Long idRaum : u.raeume)
+			for (final long idRaum : u.raeume)
 				Map2DUtils.addToList(_unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster, u);
 	}
 
@@ -1621,7 +1621,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			if (u.idKurs == null) {
 				// Klassenunterricht
-				for (final @NotNull Long idKlasse : u.klassen)
+				for (final long idKlasse : u.klassen)
 					for (final @NotNull StundenplanSchueler s : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKlasse, idKlasse))
 						MapUtils.addToList(_unterrichtmenge_by_idSchueler, s.id, u);
 			} else {
@@ -1636,7 +1636,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			if (u.idKurs == null) {
 				// Klassenunterricht
-				for (final @NotNull Long idKlasse : u.klassen)
+				for (final long idKlasse : u.klassen)
 					for (final @NotNull StundenplanJahrgang jahrgang : MapUtils.getOrCreateArrayList(_jahrgangmenge_by_idKlasse, idKlasse))
 						MapUtils.addToListIfNotExists(_unterrichtmenge_by_idJahrgang, jahrgang.id, u);
 			} else {
@@ -1648,7 +1648,7 @@ public class StundenplanManager {
 
 	private void update_unterrichtmenge_by_idJahrgang_and_idZeitraster() {
 		_unterrichtmenge_by_idJahrgang_and_idZeitraster = new HashMap2D<>();
-		for (final @NotNull Long idJahrgang : _unterrichtmenge_by_idJahrgang.keySet())
+		for (final long idJahrgang : _unterrichtmenge_by_idJahrgang.keySet())
 			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idJahrgang, idJahrgang))
 				Map2DUtils.addToList(_unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, u.idZeitraster, u);
 	}
@@ -1656,7 +1656,7 @@ public class StundenplanManager {
 	private void update_unterrichtmenge_by_idSchiene() {
 		_unterrichtmenge_by_idSchiene = new HashMap<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final @NotNull Long idSchiene : u.schienen)
+			for (final long idSchiene : u.schienen)
 				MapUtils.addToList(_unterrichtmenge_by_idSchiene, idSchiene, u);
 	}
 
@@ -1839,7 +1839,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
 			if (u.idKurs == null) {
 				// Bei Klassenunterricht sind die Klassen in diesem Objekts direkt vorhanden.
-				for (final @NotNull Long idKlasse : u.klassen) {
+				for (final long idKlasse : u.klassen) {
 					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
 					MapUtils.addToListIfNotExists(_klassenmenge_by_idUnterricht, u.id, klasse);
 				}
@@ -2162,9 +2162,9 @@ public class StundenplanManager {
 	private StundenplanJahrgang jahrgangGetMinimumByKlassenIDs(final @NotNull List<Long> klassen) {
 		StundenplanJahrgang min = null;
 
-		for (final @NotNull Long idKlasse : klassen) {
+		for (final long idKlasse : klassen) {
 			final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
-			for (final @NotNull Long idJahrgang : klasse.jahrgaenge) {
+			for (final long idJahrgang : klasse.jahrgaenge) {
 				final @NotNull StundenplanJahrgang jahrgang = DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
 				if ((min == null) || (_compJahrgang.compare(jahrgang, min) < 0))
 					min = jahrgang;
@@ -2644,10 +2644,10 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
 		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
 		// klasse.bezeichnung darf "blank" sein
-		for (final @NotNull Long idJahrgang : klasse.jahrgaenge)
+		for (final long idJahrgang : klasse.jahrgaenge)
 			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, idJahrgang);
 		// Folgende zwei Zeilen nicht mehr nötig, sobald aus DTO entfernt.
-		for (final @NotNull Long idSchueler : klasse.schueler)
+		for (final long idSchueler : klasse.schueler)
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchueler);
 	}
 
@@ -2657,8 +2657,8 @@ public class StundenplanManager {
 		if (a.size() > b.size())
 			return +1;
 		for (int i = 0; i < a.size(); i++) {
-			final @NotNull Long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
-			final @NotNull Long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
+			final long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
+			final long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
 			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
 			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
 			final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
@@ -2806,7 +2806,7 @@ public class StundenplanManager {
 	private void klassenunterrichtCheckAttributes(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
 		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, klassenunterricht.idKlasse);
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, klassenunterricht.idFach);
-		for (final @NotNull Long idSchiene : klassenunterricht.schienen)
+		for (final long idSchiene : klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchiene);
 	}
 
@@ -3091,13 +3091,13 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
 		DeveloperNotificationException.ifSmaller("kurs.wochenstunden", kurs.wochenstunden, 0);
-		for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
+		for (final long idSchieneDesKurses : kurs.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesKurses);
-		for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
+		for (final long idJahrgangDesKurses : kurs.jahrgaenge)
 			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, idJahrgangDesKurses);
-		for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
+		for (final long idSchuelerDesKurses : kurs.schueler)
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchuelerDesKurses);
-		for (final @NotNull Long idLehrerDesKurses : kurs.lehrer)
+		for (final long idLehrerDesKurses : kurs.lehrer)
 			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", _lehrer_by_id, idLehrerDesKurses);
 	}
 
@@ -3452,7 +3452,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
 		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
 		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
-		for (final @NotNull Long idFachDesLehrers : lehrer.faecher)
+		for (final long idFachDesLehrers : lehrer.faecher)
 			DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, idFachDesLehrers);
 	}
 
@@ -3462,8 +3462,8 @@ public class StundenplanManager {
 		if (a.size() > b.size())
 			return +1;
 		for (int i = 0; i < a.size(); i++) {
-			final @NotNull Long aIdLehrer = ListUtils.getNonNullElementAtOrException(a, i);
-			final @NotNull Long bIdLehrer = ListUtils.getNonNullElementAtOrException(b, i);
+			final long aIdLehrer = ListUtils.getNonNullElementAtOrException(a, i);
+			final long bIdLehrer = ListUtils.getNonNullElementAtOrException(b, i);
 			final @NotNull StundenplanLehrer aLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, aIdLehrer);
 			final @NotNull StundenplanLehrer bLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, bIdLehrer);
 			final int cmpLehrer = _compLehrer.compare(aLehrer, bLehrer);
@@ -5390,13 +5390,13 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs == null) && (u.klassen.size() != 1)); // WENN Klassenunterricht, DANN genau 1 Klasse.
 
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, u.idFach);
-		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
+		for (final long idLehrkraftDesUnterrichts : u.lehrer)
 			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", _lehrer_by_id, idLehrkraftDesUnterrichts);
-		for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
+		for (final long idKlasseDesUnterrichts : u.klassen)
 			DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, idKlasseDesUnterrichts);
-		for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
+		for (final long idRaumDesUnterrichts : u.raeume)
 			DeveloperNotificationException.ifMapNotContains("_raum_by_id", _raum_by_id, idRaumDesUnterrichts);
-		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
+		for (final long idSchieneDesUnterrichts : u.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
 	}
 
@@ -5936,7 +5936,7 @@ public class StundenplanManager {
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
 
-		for (final @NotNull Long idKlasse : unterricht.klassen) {
+		for (final long idKlasse : unterricht.klassen) {
 			final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
 			kuerzel.add(klasse.kuerzel);
 		}
@@ -5957,7 +5957,7 @@ public class StundenplanManager {
 
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
-		for (final @NotNull Long idRaum : unterricht.raeume) {
+		for (final long idRaum : unterricht.raeume) {
 			final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, idRaum);
 			kuerzel.add(raum.kuerzel);
 		}
@@ -5978,7 +5978,7 @@ public class StundenplanManager {
 
 		// Klassenkürzel sammeln und sortieren.
 		final @NotNull AVLSet<String> kuerzel = new AVLSet<>();
-		for (final @NotNull Long idSchiene : unterricht.schienen) {
+		for (final long idSchiene : unterricht.schienen) {
 			final @NotNull StundenplanSchiene schiene = DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
 			kuerzel.add(schiene.bezeichnung);
 		}

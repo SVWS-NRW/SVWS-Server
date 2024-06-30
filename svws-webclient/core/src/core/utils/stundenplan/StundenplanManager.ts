@@ -2430,8 +2430,8 @@ export class StundenplanManager extends JavaObject {
 		if (a.size() > b.size())
 			return +1;
 		for (let i : number = 0; i < a.size(); i++) {
-			const aIdKlasse : number = ListUtils.getNonNullElementAtOrException(a, i);
-			const bIdKlasse : number = ListUtils.getNonNullElementAtOrException(b, i);
+			const aIdKlasse : number = ListUtils.getNonNullElementAtOrException(a, i).valueOf();
+			const bIdKlasse : number = ListUtils.getNonNullElementAtOrException(b, i).valueOf();
 			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, aIdKlasse);
 			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, bIdKlasse);
 			const cmpKlasse : number = StundenplanManager._compKlasse.compare(aKlasse, bKlasse);
@@ -3159,8 +3159,8 @@ export class StundenplanManager extends JavaObject {
 		if (a.size() > b.size())
 			return +1;
 		for (let i : number = 0; i < a.size(); i++) {
-			const aIdLehrer : number = ListUtils.getNonNullElementAtOrException(a, i);
-			const bIdLehrer : number = ListUtils.getNonNullElementAtOrException(b, i);
+			const aIdLehrer : number = ListUtils.getNonNullElementAtOrException(a, i).valueOf();
+			const bIdLehrer : number = ListUtils.getNonNullElementAtOrException(b, i).valueOf();
 			const aLehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, aIdLehrer);
 			const bLehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, bIdLehrer);
 			const cmpLehrer : number = StundenplanManager._compLehrer.compare(aLehrer, bLehrer);
