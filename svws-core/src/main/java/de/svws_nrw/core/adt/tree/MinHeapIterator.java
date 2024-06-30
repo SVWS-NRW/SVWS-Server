@@ -41,7 +41,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <T>   Der Inhaltstyp des zum Iterator gehörenden Minimum Heaps
  */
-class MinHeapIterator<@NotNull T> implements Iterator<@NotNull T> {
+class MinHeapIterator<T> implements Iterator<T> {
 
 	/** Referenz auf das Array der Elemente im Minimum Heap. */
 	private final @NotNull T[] _elements;
@@ -50,7 +50,7 @@ class MinHeapIterator<@NotNull T> implements Iterator<@NotNull T> {
 	private int _current;
 
 	/** Die aktuelle Größe des Minimum Heaps, also die Anzahl der enthaltenen Elemente. */
-	private final @NotNull MinHeap<@NotNull T> _heap;
+	private final @NotNull MinHeap<T> _heap;
 
 	/** Die Anzahl der Modifikationen, die bei dem {@link MinHeap} zur Zeit des Erzeugen des
 	 * Iterators gemacht wurden. Dieser Wert muss mit dem bei der {@link MinHeap} übereinstimmen.
@@ -64,7 +64,7 @@ class MinHeapIterator<@NotNull T> implements Iterator<@NotNull T> {
 	 * @param elem   die Elemente des Minimum Heaps
 	 * @param heap   eine Referenz zum Minimum Heap, um auf parallel erfolgende modifizierende Zugriffe reagieren zu können.
 	 */
-	MinHeapIterator(final @NotNull T[] elem, final @NotNull MinHeap<@NotNull T> heap) {
+	MinHeapIterator(final @NotNull T[] elem, final @NotNull MinHeap<T> heap) {
 		_current = -1;
 		_elements = elem;
 		_heap = heap;

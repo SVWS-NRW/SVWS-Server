@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public final class SatSolverSimple1 extends SatSolver {
 
 	/** Eine Kopie aller Klauseln. */
-	private final @NotNull List<@NotNull Integer @NotNull []> _clauses = new ArrayList<>();
+	private final @NotNull List<Integer @NotNull []> _clauses = new ArrayList<>();
 
 	/** Das Array, welches jeder Variablen (1-indiziert) seine Lösung zuordnet. */
 	private @NotNull int[] _solution = new int[0];

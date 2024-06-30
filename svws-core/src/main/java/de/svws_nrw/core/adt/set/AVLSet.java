@@ -18,16 +18,16 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E> Der Typ der Schlüssel-Werte.
  */
-public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
+public final class AVLSet<E> implements NavigableSet<E> {
 
-	private final @NotNull NavigableSet<@NotNull E> _set;
+	private final @NotNull NavigableSet<E> _set;
 
 	/**
 	 * Erzeugt ein leeres Set, welche bei den Schlüsselwerten die natürliche Ordnung des {@link Comparable} -
 	 * Interface nutzt.
 	 */
 	public AVLSet() {
-		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
+		final @NotNull AVLMap<E, E> map = new AVLMap<>();
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 	}
@@ -37,8 +37,8 @@ public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	 *
 	 * @param comparator Die Ordnung für die Schlüssel.
 	 */
-	public AVLSet(final @NotNull Comparator<@NotNull E> comparator) {
-		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>(comparator);
+	public AVLSet(final @NotNull Comparator<E> comparator) {
+		final @NotNull AVLMap<E, E> map = new AVLMap<>(comparator);
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 	}
@@ -48,15 +48,15 @@ public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	 *
 	 * @param set Die Map mit den Daten.
 	 */
-	public AVLSet(final @NotNull SortedSet<@NotNull E> set) {
-		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
+	public AVLSet(final @NotNull SortedSet<E> set) {
+		final @NotNull AVLMap<E, E> map = new AVLMap<>();
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 		_set.addAll(set);
 	}
 
 	@Override
-	public @NotNull Comparator<? super @NotNull E> comparator() {
+	public @NotNull Comparator<? super E> comparator() {
 		return _set.comparator();
 	}
 
@@ -91,7 +91,7 @@ public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
+	public <T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return _set.toArray(a);
 	}
 
@@ -106,22 +106,22 @@ public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<?> c) {
 		return _set.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(final @NotNull Collection<? extends @NotNull E> c) {
+	public boolean addAll(final @NotNull Collection<? extends E> c) {
 		return _set.addAll(c);
 	}
 
 	@Override
-	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<?> c) {
 		return _set.retainAll(c);
 	}
 
 	@Override
-	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		return _set.removeAll(c);
 	}
 
@@ -161,48 +161,48 @@ public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull E> iterator() {
+	public @NotNull Iterator<E> iterator() {
 		return _set.iterator();
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> descendingSet() {
+	public @NotNull NavigableSet<E> descendingSet() {
 		return _set.descendingSet();
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull E> descendingIterator() {
+	public @NotNull Iterator<E> descendingIterator() {
 		return _set.descendingIterator();
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> subSet(final @NotNull E fromElement, final boolean fromInclusive, final @NotNull E toElement,
+	public @NotNull NavigableSet<E> subSet(final @NotNull E fromElement, final boolean fromInclusive, final @NotNull E toElement,
 			final boolean toInclusive) {
 		return _set.subSet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> headSet(final @NotNull E toElement, final boolean inclusive) {
+	public @NotNull NavigableSet<E> headSet(final @NotNull E toElement, final boolean inclusive) {
 		return _set.headSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> tailSet(final @NotNull E fromElement, final boolean inclusive) {
+	public @NotNull NavigableSet<E> tailSet(final @NotNull E fromElement, final boolean inclusive) {
 		return _set.tailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> subSet(final @NotNull E fromElement, final @NotNull E toElement) {
+	public @NotNull SortedSet<E> subSet(final @NotNull E fromElement, final @NotNull E toElement) {
 		return _set.subSet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> headSet(final @NotNull E toElement) {
+	public @NotNull SortedSet<E> headSet(final @NotNull E toElement) {
 		return _set.headSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> tailSet(final @NotNull E fromElement) {
+	public @NotNull SortedSet<E> tailSet(final @NotNull E fromElement) {
 		return _set.tailSet(fromElement);
 	}
 

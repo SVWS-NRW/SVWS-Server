@@ -11,9 +11,9 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull SatOutput> {
+public final class SatWrapper1 implements Function<SatInput, SatOutput> {
 
-	private final @NotNull Function<@NotNull SatInput, @NotNull SatOutput> next;
+	private final @NotNull Function<SatInput, SatOutput> next;
 	private final @NotNull Random rnd = new Random();
 
 	/**
@@ -21,7 +21,7 @@ public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull S
 	 *
 	 * @param next Der nächste Preprocessor oder SatSolver
 	 */
-	public SatWrapper1(final @NotNull Function<@NotNull SatInput, @NotNull SatOutput> next) {
+	public SatWrapper1(final @NotNull Function<SatInput, SatOutput> next) {
 		super();
 		this.next = next;
 	}

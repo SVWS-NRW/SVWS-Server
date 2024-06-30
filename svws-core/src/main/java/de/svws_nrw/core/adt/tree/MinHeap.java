@@ -48,7 +48,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <T> der Inhaltstyp des Minimum-Heaps
  */
-public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
+public final class MinHeap<T> implements Queue<T> {
 
 	/** Die Anzahl der Elemente in diesem Heap. */
 	private int _size = 0;
@@ -58,7 +58,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	private @NotNull T[] _nodes = (T[]) new Object[0];
 
 	/** Ein Objekt zum Vergleichen von Werten. */
-	private final @NotNull Comparator<@NotNull T> _comparator;
+	private final @NotNull Comparator<T> _comparator;
 
 	/** Die initiale Kapazität des Baums */
 	private final int _initialCapacity;
@@ -74,7 +74,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 * @param comparator      das Objekt zum Vergleich von zwei Objekten des Typ T
 	 * @param initialCapacity die initiale Kapazität des Baums
 	 */
-	public MinHeap(final @NotNull Comparator<@NotNull T> comparator, final int initialCapacity) {
+	public MinHeap(final @NotNull Comparator<T> comparator, final int initialCapacity) {
 		if (initialCapacity <= 0)
 			throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.");
 		this._comparator = comparator;
@@ -88,7 +88,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 *
 	 * @param comparator das Objekt zum Vergleich von zwei Objekten des Typ T
 	 */
-	public MinHeap(final @NotNull Comparator<@NotNull T> comparator) {
+	public MinHeap(final @NotNull Comparator<T> comparator) {
 		this._comparator = comparator;
 		this._initialCapacity = 63;
 		this._modCount = 0;
@@ -99,7 +99,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 *
 	 * @param original    Das zu kopierende Original
 	 */
-	public MinHeap(final @NotNull MinHeap<@NotNull T> original) {
+	public MinHeap(final @NotNull MinHeap<T> original) {
 		this._comparator = original._comparator;
 		this._initialCapacity = original._initialCapacity;
 		this._nodes = Arrays.copyOf(original._nodes, original._nodes.length);
@@ -192,7 +192,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull T> c) throws IllegalStateException {
+	public boolean addAll(final Collection<? extends T> c) throws IllegalStateException {
 		if (c == null)
 			return false;
 		if (this == c) {
@@ -292,7 +292,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull U> @NotNull U @NotNull [] toArray(final @NotNull U @NotNull [] a) {
+	public <U> @NotNull U @NotNull [] toArray(final @NotNull U @NotNull [] a) {
 		if (a.length < _size)
 			return (@NotNull U[]) copyNodes();
 		System.arraycopy(_nodes, 0, a, 0, _size);
@@ -301,7 +301,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull T> iterator() {
+	public @NotNull Iterator<T> iterator() {
 		return new MinHeapIterator<>(_nodes, this);
 	}
 
@@ -310,7 +310,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	 *
 	 * @return der Comparator
 	 */
-	public @NotNull Comparator<@NotNull T> comparator() {
+	public @NotNull Comparator<T> comparator() {
 		return this._comparator;
 	}
 
@@ -332,7 +332,7 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 	public @NotNull T @NotNull [] toSortedArray() {
 		if (_size == 0)
 			return (@NotNull T @NotNull []) new Object[0];
-		final @NotNull MinHeap<@NotNull T> copy = new MinHeap<>(this);
+		final @NotNull MinHeap<T> copy = new MinHeap<>(this);
 		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], _size);
 		T current;
 		int i = 0;

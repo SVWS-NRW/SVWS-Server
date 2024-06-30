@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public abstract class SatSolver implements Function<@NotNull SatInput, @NotNull SatOutput> {
+public abstract class SatSolver implements Function<SatInput, SatOutput> {
 
 
 	/** Die maximale Zeit, die der Solver zum Lösen verwenden darf. */
