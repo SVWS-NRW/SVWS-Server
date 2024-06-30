@@ -345,7 +345,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
 		}
 		vorgabenSchuljahr.sort(this._compVorgabe);
-		let listIndex : number = vorgabenSchuljahr.indexOf(vorgabe);
+		const listIndex : number = vorgabenSchuljahr.indexOf(vorgabe);
 		if (listIndex === 0)
 			return null;
 		return vorgabenSchuljahr.get(listIndex - 1);

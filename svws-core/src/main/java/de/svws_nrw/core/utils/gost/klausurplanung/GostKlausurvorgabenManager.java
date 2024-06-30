@@ -30,7 +30,7 @@ public class GostKlausurvorgabenManager {
 
 	private final GostFaecherManager _faecherManager;
 
-	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe =
+	private final @NotNull Comparator<GostKlausurvorgabe> _compVorgabe =
 			(final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
 				if (a.kursart.compareTo(b.kursart) < 0)
 					return +1;
@@ -52,13 +52,13 @@ public class GostKlausurvorgabenManager {
 			};
 
 	// GostKlausurvorgabe
-	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_id = new HashMap<>();
-	private final @NotNull List<@NotNull GostKlausurvorgabe> _vorgabenmenge = new ArrayList<>();
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal =
+	private final @NotNull Map<Long, GostKlausurvorgabe> _vorgabe_by_id = new HashMap<>();
+	private final @NotNull List<GostKlausurvorgabe> _vorgabenmenge = new ArrayList<>();
+	private final @NotNull HashMap3D<Integer, Integer, Integer, List<GostKlausurvorgabe>> _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal =
 			new HashMap3D<>();
-	private final @NotNull HashMap5D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach =
+	private final @NotNull HashMap5D<Integer, Integer, Integer, String, Long, GostKlausurvorgabe> _vorgabe_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach =
 			new HashMap5D<>();
-	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach =
+	private final @NotNull HashMap4D<Integer, Integer, String, Long, List<GostKlausurvorgabe>> _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach =
 			new HashMap4D<>();
 
 
@@ -78,7 +78,7 @@ public class GostKlausurvorgabenManager {
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+	public GostKlausurvorgabenManager(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		_faecherManager = null;
 		initAll(listVorgaben);
 	}
@@ -91,12 +91,12 @@ public class GostKlausurvorgabenManager {
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public GostKlausurvorgabenManager(final @NotNull GostFaecherManager faecherManager, final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+	public GostKlausurvorgabenManager(final @NotNull GostFaecherManager faecherManager, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		_faecherManager = faecherManager;
 		initAll(listVorgaben);
 	}
 
-	private void initAll(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+	private void initAll(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 
 		vorgabeAddAll(listVorgaben);
 
@@ -185,9 +185,9 @@ public class GostKlausurvorgabenManager {
 		vorgabeAddAll(ListUtils.create1(vorgabe));
 	}
 
-	private void vorgabeAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurvorgabe> list) {
+	private void vorgabeAddAllOhneUpdate(final @NotNull List<GostKlausurvorgabe> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull GostKlausurvorgabe vorgabe : list) {
 			vorgabeCheck(vorgabe);
 			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " existiert bereits!",
@@ -207,7 +207,7 @@ public class GostKlausurvorgabenManager {
 	 * @param listVorgaben Die Menge der {@link GostKlausurvorgabe}-Objekte,
 	 *                          welche hinzugefügt werden soll.
 	 */
-	public void vorgabeAddAll(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+	public void vorgabeAddAll(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		vorgabeAddAllOhneUpdate(listVorgaben);
 		update_all();
 	}
@@ -234,7 +234,7 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return eine Liste aller {@link GostKlausurvorgabe}-Objekte.
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeAsList() {
+	public @NotNull List<GostKlausurvorgabe> vorgabeGetMengeAsList() {
 		return _vorgabenmenge;
 	}
 
@@ -275,7 +275,7 @@ public class GostKlausurvorgabenManager {
 	 * @param listVorgaben Die Liste der zu entfernenden
 	 *                          {@link GostKlausurvorgabe}-Objekte.
 	 */
-	public void vorgabeRemoveAll(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+	public void vorgabeRemoveAll(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		for (final @NotNull GostKlausurvorgabe vorgabe : listVorgaben)
 			vorgabeRemoveOhneUpdateById(vorgabe.idVorgabe);
 
@@ -295,18 +295,18 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+	public @NotNull List<GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
 			final int quartal) {
 		if (quartal == 0) {
-			final List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
+			final List<GostKlausurvorgabe> vorgaben = new ArrayList<>();
 			if (_vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.containsKey1AndKey2(abiJahrgang, halbjahr.id))
-				for (final @NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal
+				for (final @NotNull List<GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal
 						.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id)) {
 					vorgaben.addAll(vQuartal);
 				}
 			return vorgaben;
 		}
-		final List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal);
+		final List<GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal);
 		return (vorgaben != null) ? vorgaben : new ArrayList<>();
 	}
 
@@ -339,7 +339,7 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(final int abiJahrgang,
+	public @NotNull List<GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(final int abiJahrgang,
 			final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new ArrayList<>();
@@ -362,9 +362,9 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(final int abiJahrgang,
+	public @NotNull List<GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(final int abiJahrgang,
 			final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursartAllg, final long idFach) {
-		final List<@NotNull GostKlausurvorgabe> list =
+		final List<GostKlausurvorgabe> list =
 				_vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach.getOrNull(abiJahrgang, halbjahr.id, kursartAllg.kuerzel, idFach);
 		return (list != null) ? list : new ArrayList<>();
 	}
@@ -377,16 +377,16 @@ public class GostKlausurvorgabenManager {
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe getPrevious(final @NotNull GostKlausurvorgabe vorgabe) {
-		final List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach
+		final List<GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach
 				.getNonNullOrException(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
 		if ((vorgabe.halbjahr % 2) == 1) {
-			final List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach
+			final List<GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach
 					.getOrNull(vorgabe.abiJahrgang, vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
 			if (vorgabenVorhalbjahr != null)
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
 		}
 		vorgabenSchuljahr.sort(_compVorgabe);
-		int listIndex = vorgabenSchuljahr.indexOf(vorgabe);
+		final int listIndex = vorgabenSchuljahr.indexOf(vorgabe);
 		if (listIndex == 0)
 			return null;
 		return vorgabenSchuljahr.get(listIndex - 1);

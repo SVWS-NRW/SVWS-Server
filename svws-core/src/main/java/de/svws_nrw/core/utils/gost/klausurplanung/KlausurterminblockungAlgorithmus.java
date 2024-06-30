@@ -25,7 +25,7 @@ public class KlausurterminblockungAlgorithmus {
 
 	private static final @NotNull Random _random = new Random();
 
-	private static final @NotNull Comparator<@NotNull GostKursklausurRich> _compGostKursklausurRich =
+	private static final @NotNull Comparator<GostKursklausurRich> _compGostKursklausurRich =
 			(final @NotNull GostKursklausurRich a, final @NotNull GostKursklausurRich b) -> {
 				if (a.halbjahr < b.halbjahr)
 					return -1;
@@ -73,7 +73,7 @@ public class KlausurterminblockungAlgorithmus {
 		return out;
 	}
 
-	private void berechneRekursivQuartalsModus(final @NotNull List<@NotNull GostKursklausurRich> input,
+	private void berechneRekursivQuartalsModus(final @NotNull List<GostKursklausurRich> input,
 			final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
 
 		// Keine Daten vorhanden.
@@ -90,7 +90,7 @@ public class KlausurterminblockungAlgorithmus {
 		input.sort(_compGostKursklausurRich);
 
 		// Blocken nach (Halbjahr, Quartal).
-		final @NotNull List<@NotNull GostKursklausurRich> temp = new ArrayList<>();
+		final @NotNull List<GostKursklausurRich> temp = new ArrayList<>();
 		for (final @NotNull GostKursklausurRich klausur : input) {
 			// Neue Gruppe (Sonderfall) erstellen.
 			if (temp.isEmpty()) {
@@ -120,7 +120,7 @@ public class KlausurterminblockungAlgorithmus {
 
 
 
-	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausurRich> input,
+	private void berechneRekursivLkGkModus(final @NotNull List<GostKursklausurRich> input,
 			final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
 		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste potentiell geblockt werden sollen.
 		final @NotNull KlausurterminblockungModusKursarten modus = KlausurterminblockungModusKursarten.getOrException(config.modusKursarten);
@@ -151,8 +151,8 @@ public class KlausurterminblockungAlgorithmus {
 	 *
 	 * @return die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 */
-	private static @NotNull List<@NotNull GostKursklausurRich> filter(final @NotNull List<@NotNull GostKursklausurRich> input, final boolean istLK) {
-		final @NotNull List<@NotNull GostKursklausurRich> temp = new ArrayList<>();
+	private static @NotNull List<GostKursklausurRich> filter(final @NotNull List<GostKursklausurRich> input, final boolean istLK) {
+		final @NotNull List<GostKursklausurRich> temp = new ArrayList<>();
 
 		for (final GostKursklausurRich gostKursklausur : input)
 			if (gostKursklausur.kursart.equals("LK") == istLK)
@@ -168,7 +168,7 @@ public class KlausurterminblockungAlgorithmus {
 	 * @param config  die Konfiguration der Blockung.
 	 * @param out     die Termin-Klausur-Zuordnung (Ausgabe).
 	 */
-	private void berechne_helper(final @NotNull List<@NotNull GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config,
+	private void berechne_helper(final @NotNull List<GostKursklausurRich> input, final @NotNull GostKlausurterminblockungKonfiguration config,
 			final @NotNull GostKlausurterminblockungErgebnis out) {
 		// Logger +4
 		_logger.log("KlausurterminblockungAlgorithmus");

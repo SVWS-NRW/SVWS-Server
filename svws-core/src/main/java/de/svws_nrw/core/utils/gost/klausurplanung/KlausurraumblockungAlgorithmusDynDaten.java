@@ -26,7 +26,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private static final double MALUS_MOEGLICHST_WENIG_RAEUME = 1000.0;
 	private static final double MALUS_MOEGLICHST_GLEICHVERTEILT_AUF_RAEUME = 1.0;
 
-	private static final @NotNull Comparator<@NotNull GostKlausurraumRich> _compRaeume =
+	private static final @NotNull Comparator<GostKlausurraumRich> _compRaeume =
 			(final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
 				if (o1.groesse < o2.groesse)
 					return -1;
@@ -41,8 +41,8 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 				return 0;
 			};
 
-	private static final @NotNull Comparator<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _compKlausurGruppen =
-			(final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o1, final @NotNull List<@NotNull GostSchuelerklausurTerminRich> o2) -> {
+	private static final @NotNull Comparator<List<GostSchuelerklausurTerminRich>> _compKlausurGruppen =
+			(final @NotNull List<GostSchuelerklausurTerminRich> o1, final @NotNull List<GostSchuelerklausurTerminRich> o2) -> {
 				if (o1.size() < o2.size())
 					return -1;
 				if (o1.size() > o2.size())
@@ -77,7 +77,7 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private final @NotNull int[] _raumZuKlausurstart;               // dynamisch
 
 	private final int _klausurGruppenAnzahl;                                                            // statisch
-	private final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _klausurGruppen; // statisch
+	private final @NotNull List<List<GostSchuelerklausurTerminRich>> _klausurGruppen; // statisch
 	private final @NotNull int[] _klausurGruppenAufsteigend;                                            // statisch
 	private final @NotNull int[] _klausurGruppenAbsteigend;                                             // statisch
 	private final @NotNull int[] _klausurGruppeZuKlausurdauer;                                          // statisch
@@ -135,8 +135,8 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		aktionZustandClear();
 	}
 
-	private static @NotNull GostKlausurraumRich @NotNull [] _erzeugeRaeumeSortiert(final @NotNull List<@NotNull GostKlausurraumRich> raeume) {
-		final @NotNull List<@NotNull GostKlausurraumRich> list = new ArrayList<>(raeume);
+	private static @NotNull GostKlausurraumRich @NotNull [] _erzeugeRaeumeSortiert(final @NotNull List<GostKlausurraumRich> raeume) {
+		final @NotNull List<GostKlausurraumRich> list = new ArrayList<>(raeume);
 		list.sort(_compRaeume);
 
 
@@ -148,17 +148,17 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	}
 
 	private @NotNull GostSchuelerklausurTerminRich _gibErsteKlausurDerGruppe(final int kg) {
-		final @NotNull List<@NotNull GostSchuelerklausurTerminRich> list = ListUtils.getNonNullElementAtOrException(_klausurGruppen, kg);
+		final @NotNull List<GostSchuelerklausurTerminRich> list = ListUtils.getNonNullElementAtOrException(_klausurGruppen, kg);
 		return ListUtils.getNonNullElementAtOrException(list, 0);
 	}
 
-	private @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppenSortiert(
-			final @NotNull List<@NotNull GostSchuelerklausurTerminRich> klausuren) {
-		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTerminRich>> gruppen = new ArrayList<>();
+	private @NotNull List<List<GostSchuelerklausurTerminRich>> _erzeugeKlausurGruppenSortiert(
+			final @NotNull List<GostSchuelerklausurTerminRich> klausuren) {
+		final @NotNull List<List<GostSchuelerklausurTerminRich>> gruppen = new ArrayList<>();
 
 		if (_regel_forciere_selbe_kursklausur_im_selben_raum) {
 			// Gruppiere Klausuren nach "idKursklausur".
-			final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTerminRich>> map = new HashMap<>();
+			final @NotNull HashMap<Long, List<GostSchuelerklausurTerminRich>> map = new HashMap<>();
 			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
 				MapUtils.addToList(map, klausur.idKursklausur, klausur);
 			gruppen.addAll(map.values());

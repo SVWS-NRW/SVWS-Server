@@ -77,7 +77,7 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 		}
 
 		// Wähle eine nächste Klausurgruppe und verteile sie rekursiv.
-		final @NotNull List<@NotNull Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
+		final @NotNull List<Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
 
 		// 1. Fall: Die Gruppe passt noch in einen vorhandenen Termin.
 		for (int terminNr = 0; terminNr < _dynDaten.gibTerminAnzahl(); terminNr++) {

@@ -814,9 +814,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.
 	 *
-	 * @param listSchuelerklausurtermine Die Menge der
-	 *                                   {@link GostSchuelerklausurTermin}-Objekte,
-	 *                                   welche hinzugefügt werden soll.
+	 * @param listSchuelerklausurtermine   die Menge der {@link GostSchuelerklausurTermin}-Objekte, welche hinzugefügt werden sollen.
 	 */
 	public schuelerklausurterminAddAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		this.schuelerklausurterminAddAllOhneUpdate(listSchuelerklausurtermine);
@@ -870,8 +868,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Entfernt ein existierendes {@link GostSchuelerklausurTermin}-Objekt.
 	 *
-	 * @param idSchuelerklausurtermin Die ID des
-	 *                                {@link GostSchuelerklausurTermin}-Objekts.
+	 * @param idSchuelerklausurtermin   die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurterminRemoveById(idSchuelerklausurtermin : number) : void {
 		this.schuelerklausurterminRemoveOhneUpdateById(idSchuelerklausurtermin);
@@ -881,8 +878,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
 	 *
-	 * @param listSchuelerklausurtermine Die Liste der zu entfernenden
-	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
+	 * @param listSchuelerklausurtermine   die Liste der zu entfernenden {@link GostSchuelerklausurTermin}-Objekte.
 	 */
 	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausurtermin of listSchuelerklausurtermine)
@@ -2482,12 +2478,12 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public updateExecute(update : GostKlausurenUpdate) : void {
 		for (const sktId of update.listSchuelerklausurTermineRemoveIdTermin) {
-			const skt : GostSchuelerklausurTermin = this.schuelerklausurterminGetByIdOrException(sktId!);
+			const skt : GostSchuelerklausurTermin = this.schuelerklausurterminGetByIdOrException(sktId);
 			skt.idTermin = null;
 			this.schuelerklausurterminPatchAttributes(skt);
 		}
 		for (const ktId of update.listKlausurtermineNachschreiberZugelassenFalse) {
-			const kt : GostKlausurtermin = this.terminGetByIdOrException(ktId!);
+			const kt : GostKlausurtermin = this.terminGetByIdOrException(ktId);
 			kt.nachschreiberZugelassen = false;
 			this.terminPatchAttributes(kt);
 		}

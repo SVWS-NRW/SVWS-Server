@@ -50,7 +50,7 @@ public final class KlausurblockungSchienenAlgorithmusGreedy6 extends Klausurbloc
 		// reset
 		_dynDaten.aktionKlausurenAusSchienenEntfernen();
 
-		final @NotNull LinkedCollection<@NotNull Integer> setS = new LinkedCollection<>();
+		final @NotNull LinkedCollection<Integer> setS = new LinkedCollection<>();
 
 		while (_dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
 			setS.clear();
