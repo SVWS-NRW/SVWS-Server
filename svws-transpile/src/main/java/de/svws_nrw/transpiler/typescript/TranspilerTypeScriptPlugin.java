@@ -234,7 +234,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final StringBuilder sb = new StringBuilder(node.getName().toString());
 		if (withBounds) {
 			final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
-			final boolean hasNotNullAnnotation = Transpiler.hasNotNullAnnotation(node.getAnnotations(), unit);
+			final boolean hasNotNullAnnotation = !Transpiler.hasAllowNullAnnotation(node.getAnnotations(), unit);
 			if ((node.getBounds() != null) && (!node.getBounds().isEmpty())) {
 				sb.append(" extends ");
 				boolean first = true;
@@ -242,9 +242,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (!first)
 						sb.append(" & ");
 					first = false;
-					boolean boundHasNotNullAnnotation = false;
+					boolean boundHasNotNullAnnotation = true;
 					if ((type instanceof final AnnotatedTypeTree att))
-						boundHasNotNullAnnotation = Transpiler.hasNotNullAnnotation(att.getAnnotations(), unit);
+						boundHasNotNullAnnotation = !Transpiler.hasAllowNullAnnotation(att.getAnnotations(), unit);
 					final TypeNode typeNode = new TypeNode(this, type, false, boundHasNotNullAnnotation);
 					sb.append(typeNode.transpile(false));
 				}
