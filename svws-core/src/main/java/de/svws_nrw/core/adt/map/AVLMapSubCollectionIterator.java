@@ -15,30 +15,30 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-class AVLMapSubCollectionIterator<@NotNull K, @NotNull V> implements Iterator<@NotNull V> {
+class AVLMapSubCollectionIterator<K, V> implements Iterator<V> {
 
 	/**
 	 * Die {@link AVLMapSubMap} auf der dieser Iterator operiert.
 	 */
-	private final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> _sub;
 
 	/**
 	 * Der aktuelle Eintrag. Ein NULL-Wert bedeutet, dass das Element bereits entfernt wurde oder der Iterator auf einer
 	 * ungültigen Position ist (z.B. vor dem ersten Element).
 	 */
-	private AVLMapNode<@NotNull K, @NotNull V> _current; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> _current; // NULL-Wert erlaubt.
 
 	/**
 	 * Der nächste Eintrag. Ein NULL-Wert bedeutet, dass kein nächster Eintrag existiert.
 	 */
-	private AVLMapNode<@NotNull K, @NotNull V> _next; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> _next; // NULL-Wert erlaubt.
 
 	/**
 	 * Erstellt einen neuen VALUES-Iterator, welcher auf der {@link AVLMapSubMap} operiert.
 	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der dieser Iterator operiert.
 	 */
-	AVLMapSubCollectionIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubCollectionIterator(final @NotNull AVLMapSubMap<K, V> sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.bcGetFirstEntryAsNode();

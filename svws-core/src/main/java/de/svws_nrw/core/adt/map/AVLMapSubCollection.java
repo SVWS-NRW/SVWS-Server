@@ -14,19 +14,19 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@NotNull V> {
+public final class AVLMapSubCollection<K, V> implements Collection<V> {
 
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
-	private final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> _sub;
 
 	/**
 	 * Erstellt eine neue Sub-Collection zur übergebenen {@link AVLMapSubMap}.
 	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
-	AVLMapSubCollection(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubCollection(final @NotNull AVLMapSubMap<K, V> sub) {
 		_sub = sub;
 	}
 
@@ -66,7 +66,7 @@ public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collec
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull V> iterator() {
+	public @NotNull Iterator<V> iterator() {
 		return _sub.bcGetSubCollectionIterator();
 	}
 
@@ -76,7 +76,7 @@ public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collec
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
+	public <T> @NotNull T[] toArray(final @NotNull T[] a) {
 		return _sub.bcGetArrayListOfValues().toArray(a);
 	}
 
@@ -91,22 +91,22 @@ public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collec
 	}
 
 	@Override
-	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<?> c) {
 		return _sub.bcContainsAllValues(c);
 	}
 
 	@Override
-	public boolean addAll(final @NotNull Collection<? extends @NotNull V> c) {
+	public boolean addAll(final @NotNull Collection<? extends V> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be added without KEY
 	}
 
 	@Override
-	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be removed without KEY
 	}
 
 	@Override
-	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<?> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be retained without KEY
 	}
 

@@ -19,19 +19,19 @@ import java.util.Map.Entry;
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull Entry<@NotNull K, @NotNull V>> {
+public final class AVLMapSubEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sup-Map operiert.
 	 */
-	private final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> _sub;
 
 	/**
 	 * Erstellt ein neues SubEntrySet auf die übergebene {@link AVLMap}.
 	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
-	AVLMapSubEntrySet(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubEntrySet(final @NotNull AVLMapSubMap<K, V> sub) {
 		_sub = sub;
 	}
 
@@ -56,7 +56,7 @@ public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.
 	}
 
 	@Override
-	public @NotNull Iterator<@NotNull Entry<@NotNull K, @NotNull V>> iterator() {
+	public @NotNull Iterator<Entry<K, V>> iterator() {
 		return _sub.bcGetSubEntrySetIterator();
 	}
 
@@ -66,12 +66,12 @@ public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
+	public <T> @NotNull T[] toArray(final @NotNull T[] a) {
 		return _sub.bcGetArrayListOfEntries().toArray(a);
 	}
 
 	@Override
-	public boolean add(final @NotNull Entry<@NotNull K, @NotNull V> e) {
+	public boolean add(final @NotNull Entry<K, V> e) {
 		return _sub.bcAddEntryReturnBool(e);
 	}
 
@@ -81,22 +81,22 @@ public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.
 	}
 
 	@Override
-	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<?> c) {
 		return _sub.bcContainsAllEntries(c);
 	}
 
 	@Override
-	public boolean addAll(final @NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c) {
+	public boolean addAll(final @NotNull Collection<? extends Entry<K, V>> c) {
 		return _sub.bcAddAllEntries(c);
 	}
 
 	@Override
-	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<?> c) {
 		return _sub.bcRetainAllEntries(c);
 	}
 
 	@Override
-	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<?> c) {
 		return _sub.bcRemoveAllEntries(c);
 	}
 

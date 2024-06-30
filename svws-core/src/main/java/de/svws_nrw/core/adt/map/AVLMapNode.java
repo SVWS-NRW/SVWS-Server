@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ des Schlüssel-Eintrages.
  * @param <V> Der Typ des zugeordneten Wertes des Schlüssel-Eintrages.
  */
-public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @NotNull V> {
+public final class AVLMapNode<K, V> implements Entry<K, V> {
 
 	/**
 	 * Der Schlüsselwert des Baum-Eintrags.
@@ -32,22 +32,22 @@ public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull 
 	/**
 	 * Der Vorgänger-Knoten.
 	 */
-	AVLMapNode<@NotNull K, @NotNull V> _prev = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> _prev = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Der Nachfolger-Knoten.
 	 */
-	AVLMapNode<@NotNull K, @NotNull V> _next = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> _next = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Das linke Kind des Knotens.
 	 */
-	AVLMapNode<@NotNull K, @NotNull V> _childL = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> _childL = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Das rechte Kind des Knotens.
 	 */
-	AVLMapNode<@NotNull K, @NotNull V> _childR = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> _childR = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Die Höhe des Teilbaums dieses Knotens.

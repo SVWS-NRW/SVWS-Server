@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <K> Der Typ der Schlüssel-Werte.
  */
-public final class AVLMapIntervall<@NotNull K> {
+public final class AVLMapIntervall<K> {
 
 	/**
 	 * Ein Dummy-Element für den Schlüsselwert "-Unendlich".

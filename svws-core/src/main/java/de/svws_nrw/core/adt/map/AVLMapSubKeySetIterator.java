@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ für die Schlüsselwerte der {@link AVLMap}.
  * @param <V> Der Typ für die Werte der {@link AVLMap}, die den Schlüsselwerten zugeordnet sind.
  */
-class AVLMapSubKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNull K> {
+class AVLMapSubKeySetIterator<K, V> implements Iterator<K> {
 
 	/**
 	 * Die {@link AVLMap} auf der diese Sup-Map operiert.
 	 */
-	private final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> _sub;
 
 	/**
 	 * Der aktuelle Eintrag. Ein NULL-Wert bedeutet, dass das Element bereits entfernt wurde oder der Iterator auf
 	 * einer ungültigen Position ist (z.B. vor dem ersten Element).
 	 */
-	private AVLMapNode<@NotNull K, @NotNull V> _current; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> _current; // NULL-Wert erlaubt.
 
 	/**
 	 * Der nächste Eintrag.
 	 */
-	private AVLMapNode<@NotNull K, @NotNull V> _next; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> _next; // NULL-Wert erlaubt.
 
 	/**
 	 * Erstellt einen neuen KEY-Iterator für die angegebene {@link AVLMapSubMap} im gültigen Bereich
@@ -38,7 +38,7 @@ class AVLMapSubKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNu
 	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
-	AVLMapSubKeySetIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubKeySetIterator(final @NotNull AVLMapSubMap<K, V> sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.bcGetFirstEntryAsNode();
