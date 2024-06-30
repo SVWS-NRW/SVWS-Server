@@ -17,7 +17,7 @@ public class BenutzergruppenManager {
 	private final @NotNull BenutzergruppeDaten _daten;
 
 	/** Die Menge an Kompetenzen, die dieser Gruppe zugeordnet ist. */
-	private final @NotNull HashSet<@NotNull Long> _setKompetenzen = new HashSet<>();
+	private final @NotNull HashSet<Long> _setKompetenzen = new HashSet<>();
 
 
 	/**
@@ -131,7 +131,7 @@ public class BenutzergruppenManager {
 	 *
 	 * @return true, falls die Gruppe die Kompetenzen besitzt.
 	 */
-	public boolean hatKompetenzen(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
+	public boolean hatKompetenzen(final @NotNull List<BenutzerKompetenz> kompetenzen) {
 		if (this._daten.istAdmin)
 			return true;
 		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
@@ -148,7 +148,7 @@ public class BenutzergruppenManager {
 	 *
 	 * @return true, falls die Gruppe mindestens eine der Kompetenzen besitzt.
 	 */
-	public boolean hatKompetenzenMindestensEine(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
+	public boolean hatKompetenzenMindestensEine(final @NotNull List<BenutzerKompetenz> kompetenzen) {
 		if (this._daten.istAdmin)
 			return true;
 		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)

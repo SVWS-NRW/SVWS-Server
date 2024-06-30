@@ -19,16 +19,16 @@ import jakarta.validation.constraints.NotNull;
 public class GostFachwahlManager {
 
 	/** Die Liste mit den einzelnen Fachwahlen */
-	private final @NotNull ArrayList<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
+	private final @NotNull ArrayList<GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayMap<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>>> mapFachKursart = new HashMap<>();
+	private final @NotNull HashMap<Long, ArrayMap<GostKursart, HashSet<Long>>> mapFachKursart = new HashMap<>();
 
 	/** Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostFachwahl>> mapFach = new HashMap<>();
+	private final @NotNull HashMap<Long, ArrayList<GostFachwahl>> mapFach = new HashMap<>();
 
 	/** Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostFachwahl>> mapSchueler = new HashMap<>();
+	private final @NotNull HashMap<Long, ArrayList<GostFachwahl>> mapSchueler = new HashMap<>();
 
 
 	/**
@@ -60,27 +60,27 @@ public class GostFachwahlManager {
 
 		fachwahlen.add(fachwahl);
 
-		ArrayList<@NotNull GostFachwahl> fwFach = mapFach.get(fachwahl.fachID);
+		ArrayList<GostFachwahl> fwFach = mapFach.get(fachwahl.fachID);
 		if (fwFach == null) {
 			fwFach = new ArrayList<>();
 			mapFach.put(fachwahl.fachID, fwFach);
 		}
 		fwFach.add(fachwahl);
 
-		ArrayList<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(fachwahl.schuelerID);
+		ArrayList<GostFachwahl> fwSchueler = mapSchueler.get(fachwahl.schuelerID);
 		if (fwSchueler == null) {
 			fwSchueler = new ArrayList<>();
 			mapSchueler.put(fachwahl.schuelerID, fwSchueler);
 		}
 		fwSchueler.add(fachwahl);
 
-		ArrayMap<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>> mapKursart = mapFachKursart.get(fachwahl.fachID);
+		ArrayMap<GostKursart, HashSet<Long>> mapKursart = mapFachKursart.get(fachwahl.fachID);
 		if (mapKursart == null) {
 			mapKursart = new ArrayMap<>(GostKursart.values());
 			mapFachKursart.put(fachwahl.fachID, mapKursart);
 		}
 		final GostKursart kursart = GostKursart.fromFachwahlOrException(fachwahl);
-		HashSet<@NotNull Long> schueler = mapKursart.get(kursart);
+		HashSet<Long> schueler = mapKursart.get(kursart);
 		if (schueler == null) {
 			schueler = new HashSet<>();
 			mapKursart.put(kursart, schueler);
@@ -98,8 +98,8 @@ public class GostFachwahlManager {
 	 *
 	 * @return die Liste der Fachwahlen des Faches
 	 */
-	public @NotNull List<@NotNull GostFachwahl> getFachwahlen(final long idFach) {
-		final ArrayList<@NotNull GostFachwahl> fwFach = mapSchueler.get(idFach);
+	public @NotNull List<GostFachwahl> getFachwahlen(final long idFach) {
+		final ArrayList<GostFachwahl> fwFach = mapSchueler.get(idFach);
 		return (fwFach == null) ? new ArrayList<>() : fwFach;
 	}
 
@@ -112,8 +112,8 @@ public class GostFachwahlManager {
 	 *
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
-	public @NotNull List<@NotNull GostFachwahl> getSchuelerFachwahlen(final long idSchueler) {
-		final ArrayList<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
+	public @NotNull List<GostFachwahl> getSchuelerFachwahlen(final long idSchueler) {
+		final ArrayList<GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
 		return (fwSchueler == null) ? new ArrayList<>() : fwSchueler;
 	}
 
@@ -128,10 +128,10 @@ public class GostFachwahlManager {
 	 * @return true, falls die Fachwahl existiert und ansonsten false
 	 */
 	public boolean hatFachwahl(final long idSchueler, final long idFach, final @NotNull GostKursart kursart) {
-		final Map<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>> mapKursart = mapFachKursart.get(idFach);
+		final Map<GostKursart, HashSet<Long>> mapKursart = mapFachKursart.get(idFach);
 		if (mapKursart == null)
 			return false;
-		final HashSet<@NotNull Long> schueler = mapKursart.get(kursart);
+		final HashSet<Long> schueler = mapKursart.get(kursart);
 		if (schueler == null)
 			return false;
 		return schueler.contains(idSchueler);

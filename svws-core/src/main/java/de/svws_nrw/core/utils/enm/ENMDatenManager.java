@@ -32,31 +32,31 @@ public class ENMDatenManager {
 
 
 	/** Temporäre Map für das Befüllen der ENMLehrer-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMLehrer> mapLehrer = new HashMap<>();
+	private final @NotNull Map<Long, ENMLehrer> mapLehrer = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMSchueler-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMSchueler> mapSchueler = new HashMap<>();
+	private final @NotNull Map<Long, ENMSchueler> mapSchueler = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
+	private final @NotNull Map<Long, ENMFach> mapFaecher = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private final @NotNull Map<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
+	private final @NotNull Map<String, ENMFach> mapFaecherByKuerzel = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMJahrgang-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
+	private final @NotNull Map<Long, ENMJahrgang> mapJahrgaenge = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMKlasse-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMKlasse> mapKlassen = new HashMap<>();
+	private final @NotNull Map<Long, ENMKlasse> mapKlassen = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.*/
-	private final @NotNull Map<@NotNull Long, @NotNull ENMTeilleistungsart> mapTeilleistungsarten = new HashMap<>();
+	private final @NotNull Map<Long, ENMTeilleistungsart> mapTeilleistungsarten = new HashMap<>();
 
 	/** Zählt die Id der Lerngruppe hoch. */
 	private long lerngruppenIDZaehler = 1;
 
 	/** Temporäre Map für die Lerngruppen. */
-	private final @NotNull Map<@NotNull String, @NotNull ENMLerngruppe> mapLerngruppen = new HashMap<>();
+	private final @NotNull Map<String, ENMLerngruppe> mapLerngruppen = new HashMap<>();
 
 
 	/**
@@ -144,7 +144,7 @@ public class ENMDatenManager {
 	public void addFoerderschwerpunkte(final @NotNull Schulform schulform) {
 		if (!daten.foerderschwerpunkte.isEmpty())
 			return;
-		final @NotNull List<@NotNull Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
+		final @NotNull List<Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
 		for (int i = 0; i < foerderschwerpunkte.size(); i++) {
 			final Foerderschwerpunkt foerderschwerpunkt = foerderschwerpunkte.get(i);
 			final ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();

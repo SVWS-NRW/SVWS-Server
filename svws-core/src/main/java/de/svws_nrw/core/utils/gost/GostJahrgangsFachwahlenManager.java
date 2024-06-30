@@ -18,24 +18,22 @@ import jakarta.validation.constraints.NotNull;
 public class GostJahrgangsFachwahlenManager {
 
 	/** (Fach-ID, Abifach [1=LK,3,4]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_fachID_abifachID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_fachID_abifachID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Leistungskurs gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_lk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_lk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Grundkurs (oder PJK oder VTF) gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_gk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als schriftlichen Grundkurs gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID =
-			new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als mündlichen Grundkurs (oder PJK oder VTF) gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_gk_muendlich_fachID_halbjahrID_schuelerID =
-			new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_gk_muendlich_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Zusatzkurs gewählt haben. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull Long>> _map2D_zk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_zk_fachID_halbjahrID_schuelerID = new HashMap2D<>();
 
 
 
@@ -62,7 +60,7 @@ public class GostJahrgangsFachwahlenManager {
 					final GostKursart kursart = GostKursart.fromID(fw.kursartID);
 					if (kursart == GostKursart.LK) {
 						// Leistungskurs
-						List<@NotNull Long> schuelerListe = _map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
+						List<Long> schuelerListe = _map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
 						if (schuelerListe == null) {
 							schuelerListe = new ArrayList<>();
 							_map2D_lk_fachID_halbjahrID_schuelerID.put(fw.fachID, halbjahr.id, schuelerListe);
@@ -70,7 +68,7 @@ public class GostJahrgangsFachwahlenManager {
 						schuelerListe.add(fw.schuelerID);
 					} else if ((kursart == GostKursart.GK) || (kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)) {
 						// Grundkurs gesamt
-						List<@NotNull Long> schuelerListe = _map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
+						List<Long> schuelerListe = _map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
 						if (schuelerListe == null) {
 							schuelerListe = new ArrayList<>();
 							_map2D_gk_fachID_halbjahrID_schuelerID.put(fw.fachID, halbjahr.id, schuelerListe);
@@ -95,7 +93,7 @@ public class GostJahrgangsFachwahlenManager {
 						}
 					} else if (kursart == GostKursart.ZK) {
 						// Zusatzkurs
-						List<@NotNull Long> schuelerListe = _map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
+						List<Long> schuelerListe = _map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(fw.fachID, halbjahr.id);
 						if (schuelerListe == null) {
 							schuelerListe = new ArrayList<>();
 							_map2D_zk_fachID_halbjahrID_schuelerID.put(fw.fachID, halbjahr.id, schuelerListe);
@@ -111,7 +109,7 @@ public class GostJahrgangsFachwahlenManager {
 			GostAbiturFach abiFach = GostAbiturFach.LK1;
 			if (kursart == GostKursart.GK)
 				abiFach = fw.istSchriftlich ? GostAbiturFach.AB3 : GostAbiturFach.AB4;
-			List<@NotNull Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
+			List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
 			if (schuelerListe == null) {
 				schuelerListe = new ArrayList<>();
 				_map2D_fachID_abifachID_schuelerID.put(fw.fachID, abiFach.id, schuelerListe);
@@ -129,11 +127,11 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach als Abiturfach des angegebenen Typs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeByFachAndAbifachAsListOrException(final long idFach, final @NotNull GostAbiturFach abifach) {
+	public @NotNull List<Long> schuelerGetMengeByFachAndAbifachAsListOrException(final long idFach, final @NotNull GostAbiturFach abifach) {
 		int idAbifach = abifach.id;
 		if (idAbifach == 2)
 			idAbifach = 1;
-		final List<@NotNull Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(idFach, idAbifach);
+		final List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(idFach, idAbifach);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();
@@ -149,8 +147,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als Leistungskurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeLKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
-		final List<@NotNull Long> schuelerListe = _map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
+	public @NotNull List<Long> schuelerGetMengeLKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		final List<Long> schuelerListe = _map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();
@@ -167,8 +165,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als Grundkurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeGKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
-		final List<@NotNull Long> schuelerListe = _map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
+	public @NotNull List<Long> schuelerGetMengeGKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		final List<Long> schuelerListe = _map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();
@@ -184,9 +182,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als schriftlichen Grundkurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(final long idFach,
-			final @NotNull GostHalbjahr halbjahr) {
-		final List<@NotNull Long> schuelerListe = _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
+	public @NotNull List<Long> schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		final List<Long> schuelerListe = _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();
@@ -203,8 +200,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als mündlichen Grundkurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
-		final List<@NotNull Long> schuelerListe = _map2D_gk_muendlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
+	public @NotNull List<Long> schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		final List<Long> schuelerListe = _map2D_gk_muendlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();
@@ -220,8 +217,8 @@ public class GostJahrgangsFachwahlenManager {
 	 *
 	 * @return die Menge der Schüler, welche das Fach in dem Halbjahr als Zusatzkurs gewählt haben
 	 */
-	public @NotNull List<@NotNull Long> schuelerGetMengeZKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
-		final List<@NotNull Long> schuelerListe = _map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
+	public @NotNull List<Long> schuelerGetMengeZKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
+		final List<Long> schuelerListe = _map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe != null)
 			return schuelerListe;
 		return new ArrayList<>();

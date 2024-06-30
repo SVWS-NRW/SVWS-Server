@@ -16,7 +16,7 @@ public final class FachUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Fächern in Fächerlisten. */
-	public static final @NotNull Comparator<@NotNull FachDaten> comparator = (final @NotNull FachDaten a, final @NotNull FachDaten b) -> {
+	public static final @NotNull Comparator<FachDaten> comparator = (final @NotNull FachDaten a, final @NotNull FachDaten b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;

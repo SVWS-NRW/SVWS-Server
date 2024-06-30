@@ -27,28 +27,28 @@ public class GostFaecherManager {
 
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */
-	private final @NotNull List<@NotNull GostFach> _faecher = new ArrayList<>();
+	private final @NotNull List<GostFach> _faecher = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull GostFach> _map = new HashMap<>();
+	private final @NotNull HashMap<Long, GostFach> _map = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches */
-	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostFach>> _mapByKuerzel = new HashMap<>();
+	private final @NotNull HashMap<String, List<GostFach>> _mapByKuerzel = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels */
-	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostFach>> _mapBySprachkuerzel = new HashMap<>();
+	private final @NotNull HashMap<String, List<GostFach>> _mapBySprachkuerzel = new HashMap<>();
 
 	/** Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen. */
-	private final @NotNull List<@NotNull GostFach> _leitfaecher = new ArrayList<>();
+	private final @NotNull List<GostFach> _leitfaecher = new ArrayList<>();
 
 	/** Die Liste der erforderlichen oder nicht erlaubten Fachkombinationen */
-	private final @NotNull List<@NotNull GostJahrgangFachkombination> _fachkombis = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> _fachkombis = new ArrayList<>();
 
 	/** Die Liste mit den geforderten Fachkombinationen */
-	private final @NotNull List<@NotNull GostJahrgangFachkombination> _fachkombisErforderlich = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> _fachkombisErforderlich = new ArrayList<>();
 
 	/** Die Liste mit den nicht erlaubten Fachkombinationen */
-	private final @NotNull List<@NotNull GostJahrgangFachkombination> _fachkombisVerboten = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> _fachkombisVerboten = new ArrayList<>();
 
 
 	/**
@@ -64,7 +64,7 @@ public class GostFaecherManager {
 	 *
 	 * @param faecher   die Liste mit den Fächern
 	 */
-	public GostFaecherManager(final @NotNull List<@NotNull GostFach> faecher) {
+	public GostFaecherManager(final @NotNull List<GostFach> faecher) {
 		addAll(faecher);
 	}
 
@@ -76,7 +76,7 @@ public class GostFaecherManager {
 	 * @param faecher      die Liste mit den Fächern
 	 * @param fachkombis   die Liste mit den Fächerkombinationen
 	 */
-	public GostFaecherManager(final @NotNull List<@NotNull GostFach> faecher, final @NotNull List<@NotNull GostJahrgangFachkombination> fachkombis) {
+	public GostFaecherManager(final @NotNull List<GostFach> faecher, final @NotNull List<GostJahrgangFachkombination> fachkombis) {
 		addAll(faecher);
 		addFachkombinationenAll(fachkombis);
 	}
@@ -98,14 +98,14 @@ public class GostFaecherManager {
 			return false;
 		_map.put(fach.id, fach);
 		final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		List<@NotNull GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
+		List<GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel == null) {
 			listForKuerzel = new ArrayList<>();
 			_mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
 		if (fach.istFremdsprache && zf.daten.istFremdsprache) {
-			List<@NotNull GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(zf.daten.kuerzel);
+			List<GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(zf.daten.kuerzel);
 			if (listForSprachkuerzel == null) {
 				listForSprachkuerzel = new ArrayList<>();
 				_mapBySprachkuerzel.put(zf.daten.kuerzel, listForSprachkuerzel);
@@ -189,7 +189,7 @@ public class GostFaecherManager {
 	 *
 	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
 	 */
-	public boolean addAll(final @NotNull Collection<@NotNull GostFach> faecher) {
+	public boolean addAll(final @NotNull Collection<GostFach> faecher) {
 		boolean result = true;
 		for (final @NotNull GostFach fach : faecher)
 			if (!addFachInternal(fach))
@@ -220,7 +220,7 @@ public class GostFaecherManager {
 	 *
 	 * @return true, falls <i>alle</i> Fachkombinationen eingefügt wurden, sonst false
 	 */
-	public boolean addFachkombinationenAll(final @NotNull List<@NotNull GostJahrgangFachkombination> fachkombis) {
+	public boolean addFachkombinationenAll(final @NotNull List<GostJahrgangFachkombination> fachkombis) {
 		boolean result = true;
 		for (final @NotNull GostJahrgangFachkombination fachkombi : fachkombis)
 			if (!addFachkombinationInternal(fachkombi))
@@ -262,8 +262,8 @@ public class GostFaecherManager {
 	 *
 	 * @return eine Liste der Fächer, welche das angegebene Statistik-Kürzel haben
 	 */
-	public @NotNull List<@NotNull GostFach> getByKuerzel(final @NotNull String kuerzel) {
-		final List<@NotNull GostFach> faecher = _mapByKuerzel.get(kuerzel);
+	public @NotNull List<GostFach> getByKuerzel(final @NotNull String kuerzel) {
+		final List<GostFach> faecher = _mapByKuerzel.get(kuerzel);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
@@ -275,8 +275,8 @@ public class GostFaecherManager {
 	 *
 	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
 	 */
-	public @NotNull List<@NotNull GostFach> getBySprachkuerzel(final @NotNull String sprache) {
-		final List<@NotNull GostFach> faecher = _mapBySprachkuerzel.get(sprache);
+	public @NotNull List<GostFach> getBySprachkuerzel(final @NotNull String sprache) {
+		final List<GostFach> faecher = _mapBySprachkuerzel.get(sprache);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
@@ -297,7 +297,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste der Fächer
 	 */
-	public @NotNull List<@NotNull GostFach> faecher() {
+	public @NotNull List<GostFach> faecher() {
 		return new ArrayList<>(_faecher);
 	}
 
@@ -306,8 +306,8 @@ public class GostFaecherManager {
 	 *
 	 * @return die Liste der schriftlich möglichen Fächer
 	 */
-	public @NotNull List<@NotNull GostFach> getFaecherSchriftlichMoeglich() {
-		final @NotNull List<@NotNull GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
+	public @NotNull List<GostFach> getFaecherSchriftlichMoeglich() {
+		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : _faecher) {
 			final ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 			if ((zf == ZulaessigesFach.PX) || (zf == ZulaessigesFach.VX) || (zf == ZulaessigesFach.VO) || (zf == ZulaessigesFach.IN))
@@ -322,7 +322,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste mit den Leitfächern
 	 */
-	public @NotNull List<@NotNull GostFach> getLeitfaecher() {
+	public @NotNull List<GostFach> getLeitfaecher() {
 		return _leitfaecher;
 	}
 
@@ -333,8 +333,8 @@ public class GostFaecherManager {
 	 *
 	 * @return die Liste der Fremdsprachen-Kürzel
 	 */
-	public @NotNull List<@NotNull String> getFremdsprachenkuerzel() {
-		final @NotNull List<@NotNull String> result = new ArrayList<>();
+	public @NotNull List<String> getFremdsprachenkuerzel() {
+		final @NotNull List<String> result = new ArrayList<>();
 		result.addAll(_mapBySprachkuerzel.keySet());
 		result.sort((final @NotNull String a, final @NotNull String b) -> a.compareToIgnoreCase(b));
 		return result;
@@ -346,7 +346,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste mit den Fachkombinationen
 	 */
-	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationen() {
+	public @NotNull List<GostJahrgangFachkombination> getFachkombinationen() {
 		return this._fachkombis;
 	}
 
@@ -355,7 +355,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste mit den geforderten Fachkombinationen
 	 */
-	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenErforderlich() {
+	public @NotNull List<GostJahrgangFachkombination> getFachkombinationenErforderlich() {
 		return this._fachkombisErforderlich;
 	}
 
@@ -364,7 +364,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste mit den nicht erlaubten Fachkombinationen
 	 */
-	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenVerboten() {
+	public @NotNull List<GostJahrgangFachkombination> getFachkombinationenVerboten() {
 		return this._fachkombisVerboten;
 	}
 

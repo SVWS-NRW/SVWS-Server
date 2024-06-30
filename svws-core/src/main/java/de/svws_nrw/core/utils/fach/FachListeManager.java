@@ -18,14 +18,14 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Fächer-Listen.
  */
-public final class FachListeManager extends AuswahlManager<@NotNull Long, @NotNull FachDaten, @NotNull FachDaten> {
+public final class FachListeManager extends AuswahlManager<Long, FachDaten, FachDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull FachDaten, @NotNull Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
+	private static final @NotNull Function<FachDaten, Long> _fachToId = (final @NotNull FachDaten f) -> f.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull FachDaten> _mapFachIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap<@NotNull String, @NotNull FachDaten> _mapFachByKuerzel = new HashMap<>();
+	private final @NotNull HashMap2D<Boolean, Long, FachDaten> _mapFachIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap<String, FachDaten> _mapFachByKuerzel = new HashMap<>();
 
 	/** Das Filter-Attribut auf nur sichtbare Fächer */
 	private boolean _filterNurSichtbar = true;
@@ -42,8 +42,8 @@ public final class FachListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * @param faecher       die Liste der Fächer
 	 */
 	public FachListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
-			final @NotNull List<@NotNull FachDaten> faecher) {
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
+			final @NotNull List<FachDaten> faecher) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FachUtils.comparator, _fachToId, _fachToId,
 				Arrays.asList());
 		initFaecher();
@@ -112,7 +112,7 @@ public final class FachListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull FachDaten a, final @NotNull FachDaten b) {
-		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;

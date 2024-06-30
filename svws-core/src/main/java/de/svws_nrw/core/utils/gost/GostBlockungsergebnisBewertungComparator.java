@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Klasse dient der GUI dazu Klassen des Typs {@link GostBlockungsergebnisBewertung} zu vergleichen.<br>
  */
-public final class GostBlockungsergebnisBewertungComparator implements Comparator<@NotNull GostBlockungsergebnisBewertung> {
+public final class GostBlockungsergebnisBewertungComparator implements Comparator<GostBlockungsergebnisBewertung> {
 
 	/**
 	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisBewertung}.

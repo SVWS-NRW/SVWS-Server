@@ -19,7 +19,7 @@ public final class GostAbiturjahrUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Abiturjahrgängen in Abiturjahrgangslisten. */
-	public static final @NotNull Comparator<@NotNull GostJahrgang> comparator = (final @NotNull GostJahrgang a, final @NotNull GostJahrgang b) -> {
+	public static final @NotNull Comparator<GostJahrgang> comparator = (final @NotNull GostJahrgang a, final @NotNull GostJahrgang b) -> {
 		final int cmp = a.abiturjahr - b.abiturjahr;
 		if (cmp != 0)
 			return cmp;

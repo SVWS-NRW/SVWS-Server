@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Klasse dient dazu Objekte des Typs {@link GostBlockungsergebnis} zu sortieren.
  */
-public final class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnis> {
+public final class GostBlockungsergebnisComparator implements Comparator<GostBlockungsergebnis> {
 
 	/**
 	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnis}.

@@ -37,7 +37,8 @@ export class BenutzerManager extends JavaObject {
 	private readonly _mapKompetenzenVonGruppe : JavaMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new ArrayMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>>(BenutzerKompetenz.values());
 
 	/**
-	 * Eine Map, welche zu einer Kompetenzgruppe eine Menge zuordnet, welche alle IDs von Benutzer-Gruppen beinhaltet, von denen der Benutzer Komptenzen in der Kompetenzgruppe erhalten hat.
+	 * Eine Map, welche zu einer Kompetenzgruppe eine Menge zuordnet, welche alle IDs von Benutzer-Gruppen beinhaltet,
+	 *  von denen der Benutzer Komptenzen in der Kompetenzgruppe erhalten hat.
 	 */
 	private readonly _mapKompetenzgruppenVonGruppe : JavaMap<BenutzerKompetenzGruppe, JavaSet<number>> = new ArrayMap<BenutzerKompetenzGruppe, JavaSet<number>>(BenutzerKompetenzGruppe.values());
 
