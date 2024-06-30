@@ -5063,7 +5063,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 */
 	public unterrichtGetMengeByKursIdsAndWochentyp(idsKurs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
-		const result : ArrayList<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+		const result : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const idKurs of idsKurs)
 			result.addAll(this.unterrichtGetMengeByKursIdAndWochentyp(idKurs, wochentyp));
 		return result;

@@ -25,57 +25,57 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Unterrichte-Listen.
  */
-public final class StundenplanUnterrichtListeManager extends AuswahlManager<@NotNull Long, @NotNull StundenplanUnterricht, @NotNull StundenplanUnterricht> {
+public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long, StundenplanUnterricht, StundenplanUnterricht> {
 
 	/** Der StundenplanManager */
 	private final @NotNull StundenplanManager stundenplanManager;
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull StundenplanUnterricht, @NotNull Long> _unterrichtToId = (final @NotNull StundenplanUnterricht s) -> s.id;
+	private static final @NotNull Function<StundenplanUnterricht, Long> _unterrichtToId = (final @NotNull StundenplanUnterricht s) -> s.id;
 
 	/** Das Filter-Attribut für die Lehrer */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanLehrer> lehrer;
-	private static final @NotNull Function<@NotNull StundenplanLehrer, @NotNull Long> _lehrerToId = (final @NotNull StundenplanLehrer l) -> l.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanLehrer> lehrer;
+	private static final @NotNull Function<StundenplanLehrer, Long> _lehrerToId = (final @NotNull StundenplanLehrer l) -> l.id;
 
 	/** Das Filter-Attribut für die Schüler */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanSchueler> schueler;
-	private static final @NotNull Function<@NotNull StundenplanSchueler, @NotNull Long> _schuelerToId = (final @NotNull StundenplanSchueler s) -> s.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanSchueler> schueler;
+	private static final @NotNull Function<StundenplanSchueler, Long> _schuelerToId = (final @NotNull StundenplanSchueler s) -> s.id;
 
 	/** Das Filter-Attribut für die Klassen */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanKlasse> klassen;
-	private static final @NotNull Function<@NotNull StundenplanKlasse, @NotNull Long> _klasseToId = (final @NotNull StundenplanKlasse k) -> k.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanKlasse> klassen;
+	private static final @NotNull Function<StundenplanKlasse, Long> _klasseToId = (final @NotNull StundenplanKlasse k) -> k.id;
 
 	/** Das Filter-Attribut für die Kurse */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanKurs> kurse;
-	private static final @NotNull Function<@NotNull StundenplanKurs, @NotNull Long> _kursToId = (final @NotNull StundenplanKurs k) -> k.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanKurs> kurse;
+	private static final @NotNull Function<StundenplanKurs, Long> _kursToId = (final @NotNull StundenplanKurs k) -> k.id;
 
 	/** Das Filter-Attribut für die Räume */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanRaum> raeume;
-	private static final @NotNull Function<@NotNull StundenplanRaum, @NotNull Long> _raumToId = (final @NotNull StundenplanRaum r) -> r.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanRaum> raeume;
+	private static final @NotNull Function<StundenplanRaum, Long> _raumToId = (final @NotNull StundenplanRaum r) -> r.id;
 
 	/** Das Filter-Attribut für die Schienen */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanSchiene> schienen;
-	private static final @NotNull Function<@NotNull StundenplanSchiene, @NotNull Long> _schieneToId = (final @NotNull StundenplanSchiene s) -> s.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanSchiene> schienen;
+	private static final @NotNull Function<StundenplanSchiene, Long> _schieneToId = (final @NotNull StundenplanSchiene s) -> s.id;
 
 	/** Das Filter-Attribut für die Fächer */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanFach> faecher;
-	private static final @NotNull Function<@NotNull StundenplanFach, @NotNull Long> _fachToId = (final @NotNull StundenplanFach f) -> f.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanFach> faecher;
+	private static final @NotNull Function<StundenplanFach, Long> _fachToId = (final @NotNull StundenplanFach f) -> f.id;
 
 	/** Das Filter-Attribut für die Wochentage */
-	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Wochentag> wochentage;
-	private static final @NotNull Function<@NotNull Wochentag, @NotNull Integer> _wochentagToId = (final @NotNull Wochentag w) -> w.id;
+	public final @NotNull AttributMitAuswahl<Integer, Wochentag> wochentage;
+	private static final @NotNull Function<Wochentag, Integer> _wochentagToId = (final @NotNull Wochentag w) -> w.id;
 
 	/** Das Filter-Attribut für die Zeitraster */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull StundenplanZeitraster> zeitraster;
-	private static final @NotNull Function<@NotNull StundenplanZeitraster, @NotNull Long> _zeitrasterToId = (final @NotNull StundenplanZeitraster z) -> z.id;
+	public final @NotNull AttributMitAuswahl<Long, StundenplanZeitraster> zeitraster;
+	private static final @NotNull Function<StundenplanZeitraster, Long> _zeitrasterToId = (final @NotNull StundenplanZeitraster z) -> z.id;
 
 	/** Das Filter-Attribut für die Stunden */
-	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Integer> stunden;
-	private static final @NotNull Function<@NotNull Integer, @NotNull Integer> _stundeToStunde = (final @NotNull Integer s) -> s;
+	public final @NotNull AttributMitAuswahl<Integer, Integer> stunden;
+	private static final @NotNull Function<Integer, Integer> _stundeToStunde = (final @NotNull Integer s) -> s;
 
 	/** Das Filter-Attribut für die Wochentypen */
-	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull Integer> wochentypen;
-	private static final @NotNull Function<@NotNull Integer, @NotNull Integer> _wochentypToWochentyp = (final @NotNull Integer w) -> w;
+	public final @NotNull AttributMitAuswahl<Integer, Integer> wochentypen;
+	private static final @NotNull Function<Integer, Integer> _wochentypToWochentyp = (final @NotNull Integer w) -> w;
 
 
 	/**
@@ -87,7 +87,7 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in dem sich die Schule aktuell befindet
 	 */
 	public StundenplanUnterrichtListeManager(final Schulform schulform, final @NotNull StundenplanManager stundenplanManager,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
+			final @NotNull List<Schuljahresabschnitt> schuljahresabschnitte,
 			final long schuljahresabschnittSchule) {
 		super(stundenplanManager.getIDSchuljahresabschnitt(), schuljahresabschnittSchule, schuljahresabschnitte, schulform, stundenplanManager.unterrichtGetMengeAsList(), StundenplanUnterrichtUtils.comparator,
 				_unterrichtToId, _unterrichtToId, Arrays.asList());
@@ -98,11 +98,11 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 		this.faecher = new AttributMitAuswahl<>(stundenplanManager.fachGetMengeAsList(), _fachToId, StundenplanUnterrichtUtils.comparatorFaecher, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(stundenplanManager.kursGetMengeAsList(), _kursToId, StundenplanUnterrichtUtils.comparatorKurse, _eventHandlerFilterChanged);
 		this.wochentage = new AttributMitAuswahl<>(Arrays.asList(stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), _wochentagToId, StundenplanUnterrichtUtils.comparatorWochentage, _eventHandlerFilterChanged);
-		final @NotNull List<@NotNull Integer> tmpStunden = new ArrayList<>();
+		final @NotNull List<Integer> tmpStunden = new ArrayList<>();
 		for (final int s : stundenplanManager.zeitrasterGetStundenRange())
 			tmpStunden.add(s);
 		this.stunden = new AttributMitAuswahl<>(tmpStunden, _stundeToStunde, StundenplanUnterrichtUtils.comparatorStunden, _eventHandlerFilterChanged);
-		final @NotNull List<@NotNull Integer> tmpWochentypen = new ArrayList<>();
+		final @NotNull List<Integer> tmpWochentypen = new ArrayList<>();
 		for (int w = 0; w <= stundenplanManager.getWochenTypModell(); w++)
 			tmpWochentypen.add(w);
 		this.wochentypen = new AttributMitAuswahl<>(tmpWochentypen, _wochentypToWochentyp, StundenplanUnterrichtUtils.comparatorWochentypen, _eventHandlerFilterChanged);
@@ -135,12 +135,13 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 	}
 
 
+	@Override
 	protected void onFilterChanged() {
 		// TODO Diese Methode kann genutzt werden, um auf Querbezüge zwischen den Filtern zu reagieren und die Attributemengen ggf. anzupassen
 	}
 
 
-	private static <@NotNull T> boolean checkContains(final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull T> attr, final @NotNull List<@NotNull Long> list) {
+	private static <T> boolean checkContains(final @NotNull AttributMitAuswahl<Long, T> attr, final @NotNull List<Long> list) {
 		if (!attr.auswahlExists())
 			return true;
 		for (final long id : list)
@@ -173,7 +174,7 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<@Not
 			return false;
 		if (!checkContains(this.schienen, eintrag.schienen))
 			return false;
-		// final @NotNull List<@NotNull StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
+		// final @NotNull List<StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
 		// if (!checkContains(this.schueler, listeSchueler))
 		// 	return false;
 		return true;

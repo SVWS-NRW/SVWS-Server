@@ -25,7 +25,7 @@ public final class StundenplanListUtils {
 	 *         ist oder der letzte gültige Plan, falls die Gültigkeit aller Pläne
 	 *         abgelaufen ist.
 	 */
-	public static StundenplanListeEintrag get(final @NotNull List<@NotNull StundenplanListeEintrag> eintraege, final @NotNull String datum) {
+	public static StundenplanListeEintrag get(final @NotNull List<StundenplanListeEintrag> eintraege, final @NotNull String datum) {
 		StundenplanListeEintrag last = null;
 		for (final StundenplanListeEintrag eintrag : eintraege) {
 			if (eintrag.gueltigAb.compareTo(datum) <= 0 && eintrag.gueltigBis.compareTo(datum) >= 0)

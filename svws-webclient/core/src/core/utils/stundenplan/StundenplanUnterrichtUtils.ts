@@ -27,7 +27,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Fächern in Listen.
 	 */
 	public static readonly comparatorFaecher : Comparator<StundenplanFach> = { compare : (a: StundenplanFach, b: StundenplanFach) => {
-		let cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -35,7 +35,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Kurs in Listen.
 	 */
 	public static readonly comparatorKurse : Comparator<StundenplanKurs> = { compare : (a: StundenplanKurs, b: StundenplanKurs) => {
-		let cmp : number = JavaLong.compare(a.id, b.id);
+		const cmp : number = JavaLong.compare(a.id, b.id);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -43,7 +43,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Räumen in Listen.
 	 */
 	public static readonly comparatorRaeume : Comparator<StundenplanRaum> = { compare : (a: StundenplanRaum, b: StundenplanRaum) => {
-		let cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -86,7 +86,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Klassen in Listen.
 	 */
 	public static readonly comparatorKlassen : Comparator<StundenplanKlasse> = { compare : (a: StundenplanKlasse, b: StundenplanKlasse) => {
-		let cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -94,7 +94,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Lehrern in Listen.
 	 */
 	public static readonly comparatorLehrer : Comparator<StundenplanLehrer> = { compare : (a: StundenplanLehrer, b: StundenplanLehrer) => {
-		let cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
@@ -102,7 +102,7 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Schülern in Listen.
 	 */
 	public static readonly comparatorSchueler : Comparator<StundenplanSchueler> = { compare : (a: StundenplanSchueler, b: StundenplanSchueler) => {
-		let cmp : number = JavaString.compareTo(a.nachname, b.nachname);
+		const cmp : number = JavaString.compareTo(a.nachname, b.nachname);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
