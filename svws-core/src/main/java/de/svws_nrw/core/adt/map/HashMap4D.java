@@ -19,10 +19,9 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <V>  Der Typ des zugeordneten Wertes.
  */
-public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotNull V> {
+public class HashMap4D<K1, K2, K3, K4, V> {
 
-	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>>> _map1 =
-			new HashMap<>();
+	private final @NotNull Map<K1, Map<K2, Map<K3, Map<K4, V>>>> _map1 = new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -43,19 +42,19 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull V value) {
-		Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null) {
 			map2 = new HashMap<>();
 			_map1.put(key1, map2);
 		}
 
-		Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null) {
 			map3 = new HashMap<>();
 			map2.put(key2, map3);
 		}
 
-		Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null) {
 			map4 = new HashMap<>();
 			map3.put(key3, map4);
@@ -78,15 +77,15 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @throws NullPointerException falls es den Pfad (key1, key2, key3, key4) nicht gibt.
 	 */
 	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) throws NullPointerException {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 
-		final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		final Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
 
@@ -107,15 +106,15 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return den Wert zum Mapping (key1, key2, key3, key4) oder NULL. <br>
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return null;
 
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null)
 			return null;
 
-		final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		final Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null)
 			return null;
 
@@ -129,7 +128,7 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return die Map zum Mapping key1 oder NULL. <br>
 	 */
-	public Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> getMap2OrNull(final @NotNull K1 key1) {
+	public Map<K2, Map<K3, Map<K4, V>>> getMap2OrNull(final @NotNull K1 key1) {
 		return _map1.get(key1);
 	}
 
@@ -141,8 +140,8 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
 	 */
-	public Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+	public Map<K3, Map<K4, V>> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return null;
 
@@ -158,8 +157,8 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
 	 */
-	public Map<@NotNull K4, @NotNull V> getMap4OrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = getMap3OrNull(key1, key2);
+	public Map<K4, V> getMap4OrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final Map<K3, Map<K4, V>> map3 = getMap3OrNull(key1, key2);
 		if (map3 == null)
 			return null;
 
@@ -201,15 +200,15 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 * @return TRUE, falls für das Quadrupel (key1, key2, key3, key4) ein Mapping existiert.
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return false;
 
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null)
 			return false;
 
-		final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		final Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null)
 			return false;
 
@@ -235,15 +234,15 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 */
 	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 
-		final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		final Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
 
@@ -275,15 +274,15 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 */
 	public void remove(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return;
 
-		final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 		if (map3 == null)
 			return;
 
-		final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+		final Map<K4, V> map4 = map3.get(key3);
 		if (map4 == null)
 			return;
 
@@ -309,7 +308,7 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return das KeySet der SubMap des 1. Schlüssels.
 	 */
-	public @NotNull Set<@NotNull K1> getKeySet() {
+	public @NotNull Set<K1> getKeySet() {
 		return this._map1.keySet();
 	}
 
@@ -318,12 +317,12 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
+	public @NotNull List<V> getNonNullValuesAsList() {
+		final @NotNull ArrayList<V> list = new ArrayList<>();
 
-		for (final @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 : _map1.values())
-			for (final @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
-				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
+		for (final @NotNull Map<K2, Map<K3, Map<K4, V>>> map2 : _map1.values())
+			for (final @NotNull Map<K3, Map<K4, V>> map3 : map2.values())
+				for (final @NotNull Map<K4, V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 
@@ -337,12 +336,12 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesOfMap2AsList(final @NotNull K1 key1) {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+	public @NotNull List<V> getNonNullValuesOfMap2AsList(final @NotNull K1 key1) {
+		final @NotNull ArrayList<V> list = new ArrayList<>();
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
-			for (final @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 : map2.values())
-				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
+			for (final @NotNull Map<K3, Map<K4, V>> map3 : map2.values())
+				for (final @NotNull Map<K4, V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 		}
@@ -358,13 +357,13 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesOfMap3AsList(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+	public @NotNull List<V> getNonNullValuesOfMap3AsList(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final @NotNull ArrayList<V> list = new ArrayList<>();
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
-			final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+			final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 			if (map3 != null)
-				for (final @NotNull Map<@NotNull K4, @NotNull V> map4 : map3.values())
+				for (final @NotNull Map<K4, V> map4 : map3.values())
 					for (final @NotNull V value : map4.values())
 						list.add(value);
 		}
@@ -381,13 +380,13 @@ public class HashMap4D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull K4, @NotN
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesOfMap4AsList(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>>> map2 = _map1.get(key1);
+	public @NotNull List<V> getNonNullValuesOfMap4AsList(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final @NotNull ArrayList<V> list = new ArrayList<>();
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 != null) {
-			final Map<@NotNull K3, @NotNull Map<@NotNull K4, @NotNull V>> map3 = map2.get(key2);
+			final Map<K3, Map<K4, V>> map3 = map2.get(key2);
 			if (map3 != null) {
-				final Map<@NotNull K4, @NotNull V> map4 = map3.get(key3);
+				final Map<K4, V> map4 = map3.get(key3);
 				if (map4 != null)
 					for (final @NotNull V value : map4.values())
 						list.add(value);

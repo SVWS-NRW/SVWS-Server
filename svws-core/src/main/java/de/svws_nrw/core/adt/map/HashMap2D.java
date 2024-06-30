@@ -18,9 +18,9 @@ import jakarta.validation.constraints.NotNull;
  * @param <K2> Der Typ des 2. Schlüsselwertes des Paares(key1, key2).
  * @param <V>  Der Typ des zugeordneten Wertes.
  */
-public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
+public class HashMap2D<K1, K2, V> {
 
-	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull V>> _map = new HashMap<>();
+	private final @NotNull Map<K1, Map<K2, V>> _map = new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -38,7 +38,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) {
-		Map<@NotNull K2, @NotNull V> map2 = _map.get(key1);
+		Map<K2, V> map2 = _map.get(key1);
 		if (map2 == null) {
 			map2 = new HashMap<>();
 			_map.put(key1, map2);
@@ -55,7 +55,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @return den Wert zum Mapping (key1, key2) oder NULL. <br>
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final Map<@NotNull K2, @NotNull V> map2 = _map.get(key1);
+		final Map<K2, V> map2 = _map.get(key1);
 		if (map2 == null)
 			return null;
 		return map2.get(key2);
@@ -73,7 +73,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 */
 	@SuppressWarnings("cast")
 	public @NotNull V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
-		final @NotNull Map<@NotNull K2, @NotNull V> map2 = getSubMapOrException(key1);
+		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		final V value = map2.get(key2);
@@ -107,8 +107,8 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public @NotNull Map<@NotNull K2, @NotNull V> getSubMapOrException(final @NotNull K1 key1) {
-		final Map<@NotNull K2, @NotNull V> map2 = _map.get(key1);
+	public @NotNull Map<K2, V> getSubMapOrException(final @NotNull K1 key1) {
+		final Map<K2, V> map2 = _map.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		return map2;
@@ -121,7 +121,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder NULL.
 	 */
-	public Map<@NotNull K2, @NotNull V> getSubMapOrNull(final @NotNull K1 key1) {
+	public Map<K2, V> getSubMapOrNull(final @NotNull K1 key1) {
 		return _map.get(key1);
 	}
 
@@ -134,7 +134,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @return TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final Map<@NotNull K2, @NotNull V> map2 = _map.get(key1);
+		final Map<K2, V> map2 = _map.get(key1);
 		if (map2 == null)
 			return false;
 		return map2.containsKey(key2);
@@ -168,7 +168,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 */
 	@SuppressWarnings("cast")
 	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final @NotNull Map<@NotNull K2, @NotNull V> map2 = getSubMapOrException(key1);
+		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		final V value = map2.remove(key2);
@@ -186,7 +186,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder null.
 	 */
-	public Map<@NotNull K2, @NotNull V> removeSubMap(final @NotNull K1 key1) {
+	public Map<K2, V> removeSubMap(final @NotNull K1 key1) {
 		return _map.remove(key1);
 	}
 
@@ -197,8 +197,8 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public @NotNull Map<@NotNull K2, @NotNull V> removeSubMapOrException(final @NotNull K1 key1) {
-		final Map<@NotNull K2, @NotNull V> map2 = _map.remove(key1);
+	public @NotNull Map<K2, V> removeSubMapOrException(final @NotNull K1 key1) {
+		final Map<K2, V> map2 = _map.remove(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!");
 		return map2;
@@ -211,7 +211,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return eine Liste aller Values des 1. Keys in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesOfKey1AsList(final @NotNull K1 key1) {
+	public @NotNull List<V> getNonNullValuesOfKey1AsList(final @NotNull K1 key1) {
 		return new ArrayList<>(getSubMapOrException(key1).values());
 	}
 
@@ -220,10 +220,10 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return eine Liste aller Values in dieser Map.
 	 */
-	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
-		final @NotNull ArrayList<@NotNull V> list = new ArrayList<>();
+	public @NotNull List<V> getNonNullValuesAsList() {
+		final @NotNull ArrayList<V> list = new ArrayList<>();
 
-		for (final @NotNull Map<@NotNull K2, @NotNull V> map2 : _map.values())
+		for (final @NotNull Map<K2, V> map2 : _map.values())
 			for (final @NotNull V value : map2.values())
 				list.add(value);
 
@@ -235,7 +235,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return das KeySet der SubMap des 1. Schlüssels.
 	 */
-	public @NotNull Set<@NotNull K1> getKeySet() {
+	public @NotNull Set<K1> getKeySet() {
 		return this._map.keySet();
 	}
 
@@ -246,7 +246,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return das KeySet der SubMap des 1. Schlüssels.
 	 */
-	public @NotNull Set<@NotNull K2> getKeySetOf(final @NotNull K1 key1) {
+	public @NotNull Set<K2> getKeySetOf(final @NotNull K1 key1) {
 		return getSubMapOrException(key1).keySet();
 	}
 
@@ -258,7 +258,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @return die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
 	 */
 	public int getSubMapSizeOrZero(final @NotNull K1 key1) {
-		final Map<@NotNull K2, @NotNull V> map2 = _map.get(key1);
+		final Map<K2, V> map2 = _map.get(key1);
 		if (map2 == null)
 			return 0;
 		return map2.size();
@@ -272,7 +272,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	public int size() {
 		int size = 0;
 
-		for (final @NotNull Map<@NotNull K2, @NotNull V> map2 : _map.values())
+		for (final @NotNull Map<K2, V> map2 : _map.values())
 			size += map2.size();
 
 		return size;
