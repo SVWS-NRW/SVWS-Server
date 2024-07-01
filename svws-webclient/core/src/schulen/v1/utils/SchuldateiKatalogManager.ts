@@ -64,7 +64,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 		}
 		let tmpSetEintraege : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
 		if (tmpSetEintraege === null) {
-			tmpSetEintraege = new HashSet<SchuldateiKatalogeintrag>();
+			tmpSetEintraege = new HashSet();
 			this._mapEintraegeBySchluessel.put(eintrag.schluessel, tmpSetEintraege);
 		}
 		tmpSetEintraege.add(eintrag);
@@ -89,7 +89,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 */
 	public getEintraege(schluessel : string | null) : JavaSet<SchuldateiKatalogeintrag> {
 		const tmp : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(schluessel);
-		return (tmp === null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
+		return (tmp === null) ? new HashSet() : tmp;
 	}
 
 	/**
