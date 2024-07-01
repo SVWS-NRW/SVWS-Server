@@ -1067,8 +1067,7 @@ public enum Herkunftsarten {
 		if ((schulform == null) || (schulform.daten == null))
 			return null;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final HerkunftsartKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
+			for (final @NotNull HerkunftsartKatalogEintragBezeichnung bez : daten.bezeichnungen) {
 				final String sfKuerzel = bez.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return bez.bezeichnung;
@@ -1101,8 +1100,7 @@ public enum Herkunftsarten {
 		if (schulform == null)
 			return result;
 		final @NotNull Herkunftsarten @NotNull [] herkunftsarten = Herkunftsarten.values();
-		for (int i = 0; i < herkunftsarten.length; i++) {
-			final @NotNull Herkunftsarten herkunftsart = herkunftsarten[i];
+		for (final @NotNull @NotNull Herkunftsarten herkunftsart : herkunftsarten) {
 			if (herkunftsart.hasSchulform(schulform))
 				result.add(herkunftsart);
 		}
@@ -1122,8 +1120,8 @@ public enum Herkunftsarten {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+			for (final HerkunftsartKatalogEintragBezeichnung element : daten.bezeichnungen) {
+				final String sfKuerzel = element.schulform;
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}
@@ -1143,8 +1141,8 @@ public enum Herkunftsarten {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+			for (final HerkunftsartKatalogEintragBezeichnung element : daten.bezeichnungen) {
+				final String sfKuerzel = element.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}

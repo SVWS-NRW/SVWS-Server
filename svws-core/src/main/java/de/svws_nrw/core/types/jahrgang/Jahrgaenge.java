@@ -560,8 +560,7 @@ public enum Jahrgaenge {
 		if ((schulform == null) || (schulform.daten == null))
 			return null;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final JahrgangsKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
+			for (final @NotNull JahrgangsKatalogEintragBezeichnung bez : daten.bezeichnungen) {
 				final String sfKuerzel = bez.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return bez.bezeichnung;
@@ -594,8 +593,7 @@ public enum Jahrgaenge {
 		if (schulform == null)
 			return result;
 		final @NotNull Jahrgaenge @NotNull [] jahrgaenge = Jahrgaenge.values();
-		for (int i = 0; i < jahrgaenge.length; i++) {
-			final @NotNull Jahrgaenge jahrgang = jahrgaenge[i];
+		for (final @NotNull @NotNull Jahrgaenge jahrgang : jahrgaenge) {
 			if (jahrgang.hasSchulform(schulform))
 				result.add(jahrgang);
 		}
@@ -629,8 +627,8 @@ public enum Jahrgaenge {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+			for (final JahrgangsKatalogEintragBezeichnung element : daten.bezeichnungen) {
+				final String sfKuerzel = element.schulform;
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}
@@ -650,8 +648,8 @@ public enum Jahrgaenge {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.bezeichnungen != null) {
-			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+			for (final JahrgangsKatalogEintragBezeichnung element : daten.bezeichnungen) {
+				final String sfKuerzel = element.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}

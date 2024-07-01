@@ -65,11 +65,9 @@ public class AbschlussFaecherGruppe {
 			if (!this.contains(kuerzel))
 				return false;
 		}
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher)
 			if (!faecherAbgleich.contains(fach.kuerzel))
 				return false;
-		}
 		return true;
 	}
 
@@ -95,8 +93,7 @@ public class AbschlussFaecherGruppe {
 	public boolean contains(final String kuerzel) {
 		if (kuerzel == null)
 			return false;
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (fach.kuerzel.equals(kuerzel))
 				return true;
 		}
@@ -133,8 +130,7 @@ public class AbschlussFaecherGruppe {
 	 * @return das Fach, sofern eines gefunden wurde, ansonsten false
 	 */
 	public GEAbschlussFach getFach(final @NotNull Predicate<GEAbschlussFach> filter) {
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (filter.test(fach))
 				return fach;
 		}
@@ -169,8 +165,7 @@ public class AbschlussFaecherGruppe {
 	 */
 	public long getFaecherAnzahl(final @NotNull Predicate<GEAbschlussFach> filter) {
 		long count = 0;
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (filter.test(fach))
 				count++;
 		}
@@ -206,8 +201,7 @@ public class AbschlussFaecherGruppe {
 	 */
 	public @NotNull String getKuerzelListe(final @NotNull Predicate<GEAbschlussFach> filter) {
 		final @NotNull StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (filter.test(fach)) {
 				if (sb.length() > 0)
 					sb.append(", ");
@@ -226,8 +220,7 @@ public class AbschlussFaecherGruppe {
 	@Override
 	public @NotNull String toString() {
 		final @NotNull StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (sb.length() > 0)
 				sb.append(", ");
 			@NotNull String diffkursinfo = "";

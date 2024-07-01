@@ -114,10 +114,10 @@ export class GostKursklausurManager extends JavaObject {
 		}
 		const kA : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(a);
 		const kB : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(b);
-		if (this._schuelerMap !== null && kA.idSchueler !== kB.idSchueler) {
+		if ((this._schuelerMap !== null) && (kA.idSchueler !== kB.idSchueler)) {
 			const sA : SchuelerListeEintrag | null = this.getSchuelerMap().get(kA.idSchueler);
 			const sB : SchuelerListeEintrag | null = this.getSchuelerMap().get(kB.idSchueler);
-			if (sA !== null && sB !== null)
+			if ((sA !== null) && (sB !== null))
 				return JavaString.compareTo((sA.nachname + sA.vorname), sB.nachname + sB.vorname);
 		}
 		return JavaLong.compare(a.id, b.id);

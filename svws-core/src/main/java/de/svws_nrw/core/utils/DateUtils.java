@@ -66,18 +66,18 @@ public final class DateUtils {
 		final int tagImMonat = DeveloperNotificationException.ifNotInt(split[2]);
 		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601 + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
 
-		final int schalttage1 = ((jahr - 1) / 4) - ((jahr - 1) / 100) + ((jahr - 1) / 400);
-		final int schalttage2 = (jahr / 4) - (jahr / 100) + (jahr / 400);
+		final int schalttage1 = (((jahr - 1) / 4) - ((jahr - 1) / 100)) + ((jahr - 1) / 400);
+		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		final int tagImJahr = monat_zu_vergangene_tage[schaltjahr][monat] + tagImMonat;
-		final int tagInWoche = (jahr + schalttage1 + tagImJahr + 5) % 7 + 1;
+		final int tagInWoche = ((jahr + schalttage1 + tagImJahr + 5) % 7) + 1;
 
 		final int tagImJahrAmJanuar4 = 4;
-		final int wochentagAmJanuar4 = (jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		final int tagImJahrAmMontagDerKW1 = tagImJahrAmJanuar4 - wochentagAmJanuar4 + 1;
+		final int wochentagAmJanuar4 = ((jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7) + 1;
+		final int tagImJahrAmMontagDerKW1 = (tagImJahrAmJanuar4 - wochentagAmJanuar4) + 1;
 		final int kalenderwochen = gibKalenderwochenOfJahr(jahr);
 		int kalenderwochenjahr = jahr;
-		int kalenderwoche = 1 + (tagImJahr - tagImJahrAmMontagDerKW1) / 7;
+		int kalenderwoche = 1 + ((tagImJahr - tagImJahrAmMontagDerKW1) / 7);
 
 		// Sonderfall: Datum liegt in der KW des Folgejahres.
 		if (kalenderwoche > kalenderwochen) {
@@ -102,10 +102,10 @@ public final class DateUtils {
 	 * @return die Anzahl an Kalenderwochen des Jahres (52 oder 53) nach ISO8601.
 	 */
 	public static int gibKalenderwochenOfJahr(final int jahr) {
-		final int schalttage1 = ((jahr - 1) / 4) - ((jahr - 1) / 100) + ((jahr - 1) / 400);
-		final int schalttage2 = (jahr / 4) - (jahr / 100) + (jahr / 400);
+		final int schalttage1 = (((jahr - 1) / 4) - ((jahr - 1) / 100)) + ((jahr - 1) / 400);
+		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
-		final int wochentagAmJanuar1 = (jahr + schalttage1 + 1 + 5) % 7 + 1;
+		final int wochentagAmJanuar1 = ((jahr + schalttage1 + 1 + 5) % 7) + 1;
 		return (wochentagAmJanuar1 == 4) || ((schaltjahr == 1) && (wochentagAmJanuar1 == 3)) ? 53 : 52;
 	}
 
@@ -117,8 +117,8 @@ public final class DateUtils {
 	 * @return die Anzahl an Tagen des Jahres (365 oder 366).
 	 */
 	public static int gibTageOfJahr(final int jahr) {
-		final int schalttage1 = ((jahr - 1) / 4) - ((jahr - 1) / 100) + ((jahr - 1) / 400);
-		final int schalttage2 = (jahr / 4) - (jahr / 100) + (jahr / 400);
+		final int schalttage1 = (((jahr - 1) / 4) - ((jahr - 1) / 100)) + ((jahr - 1) / 400);
+		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
 	}
@@ -138,10 +138,10 @@ public final class DateUtils {
 		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
 		DeveloperNotificationException.ifTrue("(wochentag < 1) || (wochentag > 7)", (wochentag < 1) || (wochentag > 7));
 		// Der 4. Januar ist immer in der 1. Kalenderwoche
-		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
+		final int schalttage1 = (((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100)) + ((kalenderwochenjahr - 1) / 400);
 		final int tagImJahrAmJanuar4 = 4;
-		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		final int tagImJahr = 7 * kalenderwoche - wochentagAmJanuar4 + wochentag - 3;
+		final int wochentagAmJanuar4 = ((kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7) + 1;
+		final int tagImJahr = (((7 * kalenderwoche) - wochentagAmJanuar4) + wochentag) - 3;
 		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
 	}
 
@@ -291,7 +291,7 @@ public final class DateUtils {
 		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
 		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
 
-		return stunden * 60 + minuten;
+		return (stunden * 60) + minuten;
 	}
 
 	/**
@@ -306,7 +306,7 @@ public final class DateUtils {
 		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten >= 1440)", (minuten < 0) || (minuten >= 1440));
 
 		final int std = minuten / 60;
-		final int min = minuten - std * 60;
+		final int min = minuten - (std * 60);
 
 		final @NotNull String sStd = (std < 10 ? "0" : "") + std;
 		final @NotNull String sMin = (min < 10 ? "0" : "") + min;

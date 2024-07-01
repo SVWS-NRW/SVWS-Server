@@ -219,8 +219,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 		if (schulform === null)
 			return result;
 		const fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();
-		for (let i : number = 0; i < fs.length; i++) {
-			const gliederung : Foerderschwerpunkt = fs[i];
+		for (const gliederung of fs) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -239,8 +238,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -259,8 +257,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -282,8 +279,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Foerderschwerpunkt.KEINER;
 		const schwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(sf);
-		for (let i : number = 0; i < schwerpunkte.size(); i++) {
-			const fs : Foerderschwerpunkt | null = schwerpunkte.get(i);
+		for (const fs of schwerpunkte) {
 			if (JavaString.equalsIgnoreCase((fs.daten.kuerzel), kuerzel))
 				return fs;
 		}

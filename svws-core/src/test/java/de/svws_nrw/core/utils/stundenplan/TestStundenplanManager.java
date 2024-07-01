@@ -57,22 +57,25 @@ public class TestStundenplanManager {
 	static void setup() throws IOException {
 		System.out.println("- Lade die Stundenplan-Definitionen aus den JSON-Resourcen...");
 		testStundenplanDefinitionen = ResourceUtils.json2Classes("de.svws_nrw.core.utils.stundenplan", "", "_Stundenplan", Stundenplan.class);
-		assert (testStundenplanDefinitionen != null) && testStundenplanDefinitionen.size() != 0 : "Fehler beim Laden der Stundenpläne!";
+		assert (testStundenplanDefinitionen != null) && (testStundenplanDefinitionen.size() != 0) : "Fehler beim Laden der Stundenpläne!";
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Stundenplan-Pausenaufsichten aus den JSON-Resourcen...");
-		testStundenplanPausenaufsichten = ResourceUtils.json2Lists("de.svws_nrw.core.utils.stundenplan", "", "_StundenplanPausenaufsichten", StundenplanPausenaufsicht.class);
-		assert (testStundenplanPausenaufsichten != null) && testStundenplanPausenaufsichten.size() != 0 : "Fehler beim Laden der Stundenpläne!";
+		testStundenplanPausenaufsichten =
+				ResourceUtils.json2Lists("de.svws_nrw.core.utils.stundenplan", "", "_StundenplanPausenaufsichten", StundenplanPausenaufsicht.class);
+		assert (testStundenplanPausenaufsichten != null) && (testStundenplanPausenaufsichten.size() != 0) : "Fehler beim Laden der Stundenpläne!";
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Stundenplan-Unterrichte aus den JSON-Resourcen...");
 		testStundenplanUnterrichte = ResourceUtils.json2Lists("de.svws_nrw.core.utils.stundenplan", "", "_StundenplanUnterrichte", StundenplanUnterricht.class);
-		assert (testStundenplanUnterrichte != null) && testStundenplanUnterrichte.size() != 0 : "Fehler beim Laden der Stundenpläne!";
+		assert (testStundenplanUnterrichte != null) && (testStundenplanUnterrichte.size() != 0) : "Fehler beim Laden der Stundenpläne!";
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Stundenplan-Unterrichtsverteilungen aus den JSON-Resourcen...");
-		testStundenplanUnterrichtsverteilungen = ResourceUtils.json2Classes("de.svws_nrw.core.utils.stundenplan", "", "_StundenplanUnterrichtsverteilung", StundenplanUnterrichtsverteilung.class);
-		assert (testStundenplanUnterrichtsverteilungen != null) && testStundenplanUnterrichtsverteilungen.size() != 0 : "Fehler beim Laden der Unterrichtsverteilungen für die Stundenläne!";
+		testStundenplanUnterrichtsverteilungen = ResourceUtils.json2Classes("de.svws_nrw.core.utils.stundenplan", "", "_StundenplanUnterrichtsverteilung",
+				StundenplanUnterrichtsverteilung.class);
+		assert (testStundenplanUnterrichtsverteilungen != null) && (testStundenplanUnterrichtsverteilungen.size() != 0)
+				: "Fehler beim Laden der Unterrichtsverteilungen für die Stundenläne!";
 		System.out.println("  FERTIG!");
 
 		testStundenplanDefinitionen.forEach((praefixStundenplan, stundenplandefinition) -> {

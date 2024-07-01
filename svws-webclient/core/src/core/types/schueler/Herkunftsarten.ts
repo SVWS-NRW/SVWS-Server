@@ -303,8 +303,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		if ((schulform === null) || (schulform.daten === null))
 			return null;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const bez : HerkunftsartKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
+			for (const bez of this.daten.bezeichnungen) {
 				const sfKuerzel : string | null = bez.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return bez.bezeichnung;
@@ -334,8 +333,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		if (schulform === null)
 			return result;
 		const herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();
-		for (let i : number = 0; i < herkunftsarten.length; i++) {
-			const herkunftsart : Herkunftsarten = herkunftsarten[i];
+		for (const herkunftsart of herkunftsarten) {
 			if (herkunftsart.hasSchulform(schulform))
 				result.add(herkunftsart);
 		}
@@ -354,8 +352,8 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+			for (const element of this.daten.bezeichnungen) {
+				const sfKuerzel : string | null = element.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -374,8 +372,8 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+			for (const element of this.daten.bezeichnungen) {
+				const sfKuerzel : string | null = element.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}

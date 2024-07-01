@@ -25,9 +25,9 @@ export class StundenplanListUtils extends JavaObject {
 	public static get(eintraege : List<StundenplanListeEintrag>, datum : string) : StundenplanListeEintrag | null {
 		let last : StundenplanListeEintrag | null = null;
 		for (const eintrag of eintraege) {
-			if (JavaString.compareTo(eintrag.gueltigAb, datum) <= 0 && JavaString.compareTo(eintrag.gueltigBis, datum) >= 0)
+			if ((JavaString.compareTo(eintrag.gueltigAb, datum) <= 0) && (JavaString.compareTo(eintrag.gueltigBis, datum) >= 0))
 				return eintrag;
-			if (last === null || JavaString.compareTo(eintrag.gueltigAb, last.gueltigAb) > 0)
+			if ((last === null) || (JavaString.compareTo(eintrag.gueltigAb, last.gueltigAb) > 0))
 				last = eintrag;
 		}
 		return last;

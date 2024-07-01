@@ -531,8 +531,7 @@ public enum Fachgruppe {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}
@@ -589,8 +588,7 @@ public enum Fachgruppe {
 		if (schulform == null)
 			return faecher;
 		final @NotNull Fachgruppe @NotNull [] fachgruppen = Fachgruppe.values();
-		for (int i = 0; i < fachgruppen.length; i++) {
-			final Fachgruppe fg = fachgruppen[i];
+		for (final @NotNull Fachgruppe fg : fachgruppen) {
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

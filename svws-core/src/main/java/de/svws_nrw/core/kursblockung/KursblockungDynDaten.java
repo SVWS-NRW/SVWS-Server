@@ -617,8 +617,8 @@ public class KursblockungDynDaten {
 
 		// Verteile Kurse verschwunden? --> Fehler
 		int kursSumme = 0;
-		for (int i = 0; i < _fachartArr.length; i++)
-			kursSumme += _fachartArr[i].gibKurseMax();
+		for (final @NotNull KursblockungDynFachart fa : _fachartArr)
+			kursSumme += fa.gibKurseMax();
 		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme != nKurse);
 	}
 
@@ -647,8 +647,8 @@ public class KursblockungDynDaten {
 		final @NotNull int @NotNull [][] bewertungMatrixFachart = new int[nFacharten][nFacharten];
 
 		// Zähle alle Fachart-Paare, die SuS gewählt haben.
-		for (int i = 0; i < susArr.length; i++) {
-			final @NotNull KursblockungDynFachart @NotNull [] fa = susArr[i].gibFacharten();
+		for (final @NotNull KursblockungDynSchueler s : susArr) {
+			final @NotNull KursblockungDynFachart @NotNull [] fa = s.gibFacharten();
 			for (int i1 = 0; i1 < fa.length; i1++) {
 				final int nr1 = fa[i1].gibNr();
 				for (int i2 = i1 + 1; i2 < fa.length; i2++) {
@@ -794,9 +794,9 @@ public class KursblockungDynDaten {
 		// Kopiere Kurse mit Freiheitsgraden.
 		_kursArrFrei = new KursblockungDynKurs[nKursFrei];
 		int j = 0;
-		for (int i = 0; i < _kursArr.length; i++)
-			if (_kursArr[i].gibHatFreiheitsgrade()) {
-				_kursArrFrei[j] = _kursArr[i];
+		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+			if (kurs.gibHatFreiheitsgrade()) {
+				_kursArrFrei[j] = kurs;
 				j++;
 			}
 	}
@@ -1291,9 +1291,9 @@ public class KursblockungDynDaten {
 		}
 
 		_logger.logLn("########## Facharten ##########");
-		for (int i = 0; i < _fachartArr.length; i++) {
-			_logger.logLn("Fachart " + _fachartArr[i] + " --> " + _fachartArr[i].gibKursdifferenz());
-			_fachartArr[i].debug(_schuelerArr);
+		for (final @NotNull KursblockungDynFachart fa : _fachartArr) {
+			_logger.logLn("Fachart " + fa + " --> " + fa.gibKursdifferenz());
+			fa.debug(_schuelerArr);
 		}
 
 		_logger.modifyIndent(-4);
@@ -1442,8 +1442,8 @@ public class KursblockungDynDaten {
 	 * Entfernt alle SuS aus ihren Kursen.
 	 */
 	void aktionSchuelerAusAllenKursenEntfernen() {
-		for (int i = 0; i < _schuelerArr.length; i++)
-			_schuelerArr[i].aktionKurseAlleEntfernen();
+		for (final @NotNull KursblockungDynSchueler s : _schuelerArr)
+			s.aktionKurseAlleEntfernen();
 	}
 
 	/**
@@ -1493,8 +1493,8 @@ public class KursblockungDynDaten {
 
 		// In zufälliger Reihenfolge SuS durchgehen...
 		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
-		for (int pSchueler = 0; pSchueler < perm.length; pSchueler++) {
-			final KursblockungDynSchueler schueler = _schuelerArr[perm[pSchueler]];
+		for (final int p : perm) {
+			final KursblockungDynSchueler schueler = _schuelerArr[p];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			kurslagenVeraenderung |= schueler.aktionKurseVerteilenNachDeinemWunsch();
 		}
@@ -1509,8 +1509,7 @@ public class KursblockungDynDaten {
 	void aktionSchuelerVerteilenMitBipartitemMatching() {
 		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
 
-		for (int p = 0; p < perm.length; p++) {
-			final int i = perm[p];
+		for (final int i : perm) {
 			final KursblockungDynSchueler schueler = _schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
@@ -1525,8 +1524,7 @@ public class KursblockungDynDaten {
 	void aktionSchuelerVerteilenMitGewichtetenBipartitemMatching() {
 		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
 
-		for (int p = 0; p < perm.length; p++) {
-			final int i = perm[p];
+		for (final int i : perm) {
 			final KursblockungDynSchueler schueler = _schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();

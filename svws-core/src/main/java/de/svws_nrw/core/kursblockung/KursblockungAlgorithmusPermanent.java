@@ -160,9 +160,9 @@ public final class KursblockungAlgorithmusPermanent {
 		// Verteilung der SuS (nur die beste Verteilung bleibt im Zustand K).
 		dynDaten.aktionZustandSpeichernK();
 
-		for (int iS = 0; iS < algorithmenS.length; iS++) {
+		for (final @NotNull KursblockungAlgorithmusS algorithmus : algorithmenS) {
 			// Verteilung der SuS
-			algorithmenS[iS].berechne();
+			algorithmus.berechne();
 
 			// Bessere SuS-Verteilung gefunden?
 			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)

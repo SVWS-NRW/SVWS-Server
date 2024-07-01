@@ -170,10 +170,10 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		let zeitProAlgorithmus : number = 10;
 		do {
 			this._logger.log("zeitProAlgorithmus --> " + zeitProAlgorithmus);
-			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++) {
+			for (const algorithmus of algorithmen) {
 				const zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
-				algorithmen[iAlgo].berechne(zeitEndeRunde);
-				this._logger.log(algorithmen[iAlgo].toString()! + " --> " + dynDaten.gibTerminAnzahl());
+				algorithmus.berechne(zeitEndeRunde);
+				this._logger.log(algorithmus.toString()! + " --> " + dynDaten.gibTerminAnzahl());
 			}
 			zeitProAlgorithmus *= 2;
 		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt);

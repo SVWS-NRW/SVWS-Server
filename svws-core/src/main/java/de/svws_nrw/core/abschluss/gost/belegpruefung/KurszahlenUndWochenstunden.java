@@ -120,8 +120,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 		// Zähle nun die einzelnen Kurse und die Wochenstunden...
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
-		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+		for (final @NotNull AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostFach fach = manager.getFach(fachbelegung);
 			if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
 				continue;

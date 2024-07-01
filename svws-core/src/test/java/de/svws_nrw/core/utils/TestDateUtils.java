@@ -21,27 +21,27 @@ import org.junit.jupiter.api.Test;
 class TestDateUtils {
 
 
-    /**
-     * Initialisiert den Test
-     */
-    @BeforeAll
-    static void setup() {
-    	// leer
-    }
+	/**
+	 * Initialisiert den Test
+	 */
+	@BeforeAll
+	static void setup() {
+		// leer
+	}
 
-    /**
-     * Testet die Methode {@link DateUtils#extractFromDateISO8601(String)}
-     * @throws ParseException falls das Datum nicht geparsed werden kann.
-     *
-     */
+	/**
+	 * Testet die Methode {@link DateUtils#extractFromDateISO8601(String)}
+	 * @throws ParseException falls das Datum nicht geparsed werden kann.
+	 *
+	 */
 	@Test
 	@DisplayName("Testet die Methode extractFromDateISO8601")
-    void testExtractFromDateISO8601() throws ParseException {
+	void testExtractFromDateISO8601() throws ParseException {
 		final Calendar cal = new GregorianCalendar(Locale.GERMANY);
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		final String sJahr = StringUtils.padZahl(DateUtils.MIN_GUELTIGES_JAHR, 4);
-		String datumCurrent =  sJahr + "-01-01";
+		String datumCurrent = sJahr + "-01-01";
 
 		cal.setTime(sdf.parse(datumCurrent));
 		while (true) {
@@ -52,7 +52,7 @@ class TestDateUtils {
 
 			final int monat = cal.get(Calendar.MONTH) + 1;
 			final int tagImMonat = cal.get(Calendar.DAY_OF_MONTH);
-			final int tagInWoche = (cal.get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1;
+			final int tagInWoche = ((cal.get(Calendar.DAY_OF_WEEK) + 5) % 7) + 1;
 			final int tagImJahr = cal.get(Calendar.DAY_OF_YEAR);
 			final int kalenderwoche = cal.get(Calendar.WEEK_OF_YEAR);
 			int kalenderwochenjahr = jahr;
@@ -77,16 +77,16 @@ class TestDateUtils {
 			cal.add(Calendar.DATE, +1);
 			datumCurrent = sdf.format(cal.getTime());
 		}
-    }
+	}
 
-	 /**
-     * Testet die Methode {@link DateUtils#extractFromDateISO8601(String)}
-     * @throws ParseException falls das Datum nicht geparsed werden kann.
-     *
-     */
+	/**
+	* Testet die Methode {@link DateUtils#extractFromDateISO8601(String)}
+	* @throws ParseException falls das Datum nicht geparsed werden kann.
+	*
+	*/
 	@Test
 	@DisplayName("Testet die Methode gibDatumDesMontags/SonntagsOfJahrAndKalenderwoche")
-    void testMontagUndFreitagOfKalenderwoche() throws ParseException {
+	void testMontagUndFreitagOfKalenderwoche() throws ParseException {
 		final int jahrMin = DateUtils.MIN_GUELTIGES_JAHR + 1; // Da es Zugriff auf das Vorjahr geben kann.
 		final int jahrMax = DateUtils.MAX_GUELTIGES_JAHR - 1; // Da es Zugriff auf das Folgejahr geben kann.
 

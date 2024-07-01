@@ -61,7 +61,7 @@ export class StringUtils extends JavaObject {
 	public static padZahl(zahl : number, minGroesse : number) : string {
 		const sNumber : string | null = "" + zahl;
 		const sb : StringBuilder | null = new StringBuilder();
-		while (sb.length() + sNumber.length < minGroesse)
+		while ((sb.length() + sNumber.length) < minGroesse)
 			sb.append('0');
 		sb.append(sNumber);
 		return sb.toString();
@@ -77,7 +77,7 @@ export class StringUtils extends JavaObject {
 	 */
 	public static fillWithLeadingZeros(s : string, size : number) : string {
 		const sb : StringBuilder | null = new StringBuilder();
-		while (sb.length() + s.length < size)
+		while ((sb.length() + s.length) < size)
 			sb.append('0');
 		sb.append(s);
 		return sb.toString();

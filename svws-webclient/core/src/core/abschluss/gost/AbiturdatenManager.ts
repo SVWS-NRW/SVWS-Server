@@ -159,10 +159,8 @@ export class AbiturdatenManager extends JavaObject {
 			return;
 		this.initMapFachbereiche();
 		this.belegpruefungen = this.getPruefungen(this.pruefungsArt);
-		for (let i : number = 0; i < this.belegpruefungen.size(); i++) {
-			const belegpruefung : GostBelegpruefung = this.belegpruefungen.get(i);
+		for (const belegpruefung of this.belegpruefungen)
 			belegpruefung.pruefe();
-		}
 		this.belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(this.belegpruefungen);
 		this.belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(this.belegpruefungsfehler);
 	}

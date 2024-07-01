@@ -63,13 +63,13 @@ public final class KursblockungAlgorithmus extends Service<GostBlockungsdatenMan
 		long zeitProK = 100L; // weniger als 100 führt zu unnützen Ergebnissen
 		do {
 			// Jeder Algorithmus-K wird ausprobiert.
-			for (int iK = 0; iK < algorithmenK.length; iK++) {
+			for (final @NotNull KursblockungAlgorithmusK algorithmus : algorithmenK) {
 
 				// Ggf. läuft ein AlgorithmusK auch erneut, falls er schneller als seine Maximalzeit war.
 				final long zeitEndeK = System.currentTimeMillis() + zeitProK;
 				do {
 					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK)
-					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
+					verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
@@ -99,9 +99,9 @@ public final class KursblockungAlgorithmus extends Service<GostBlockungsdatenMan
 		// Verteilung der SuS (nur die beste Verteilung bleibt im Zustand K).
 		dynDaten.aktionZustandSpeichernK();
 
-		for (int iS = 0; iS < algorithmenS.length; iS++) {
+		for (final @NotNull KursblockungAlgorithmusS algorithmus : algorithmenS) {
 			// Verteilung der SuS
-			algorithmenS[iS].berechne();
+			algorithmus.berechne();
 
 			// Bessere SuS-Verteilung gefunden?
 			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)

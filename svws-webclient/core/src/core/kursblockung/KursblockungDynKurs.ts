@@ -155,8 +155,8 @@ export class KursblockungDynKurs extends JavaObject {
 			this.schienenFreiSaveK[i] = this.schienenFrei[i];
 			this.schienenFreiSaveG[i] = this.schienenFrei[i];
 		}
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			this.schienenLage[i].aktionKursHinzufuegen(this);
+		for (const schiene of this.schienenLage)
+			schiene.aktionKursHinzufuegen(this);
 	}
 
 	/**
@@ -274,8 +274,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, falls der Kurs gerade in Schiene pSchiene ist.
 	 */
 	gibIstInSchiene(pSchiene : number) : boolean {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			if (this.schienenLage[i].gibNr() === pSchiene)
+		for (const schiene of this.schienenLage)
+			if (schiene.gibNr() === pSchiene)
 				return true;
 		return false;
 	}
@@ -288,8 +288,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return            TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet.
 	 */
 	gibIstImSchienenIntervall(schieneVon : number, schieneBis : number) : boolean {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			if ((this.schienenLage[i].gibNr() >= schieneVon) && (this.schienenLage[i].gibNr() <= schieneBis))
+		for (const schiene of this.schienenLage)
+			if ((schiene.gibNr() >= schieneVon) && (schiene.gibNr() <= schieneBis))
 				return true;
 		return false;
 	}
@@ -301,8 +301,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf.
 	 */
 	gibIstSchieneFrei(pSchiene : number) : boolean {
-		for (let i : number = 0; i < this.schienenFrei.length; i++)
-			if (this.schienenFrei[i].gibNr() === pSchiene)
+		for (const schiene of this.schienenFrei)
+			if (schiene.gibNr() === pSchiene)
 				return true;
 		return false;
 	}
@@ -561,13 +561,13 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	private aktionSchienenLageHinzufuegen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			this.schienenLage[i].aktionKursHinzufuegen(this);
+		for (const schiene of this.schienenLage)
+			schiene.aktionKursHinzufuegen(this);
 	}
 
 	private aktionSchienenLageEntfernen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			this.schienenLage[i].aktionKursEntfernen(this);
+		for (const schiene of this.schienenLage)
+			schiene.aktionKursEntfernen(this);
 	}
 
 	transpilerCanonicalName(): string {

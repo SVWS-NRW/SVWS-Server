@@ -165,8 +165,7 @@ public class LogConsumerList implements Consumer<LogData> {
 	 */
 	public @NotNull String getText(final @NotNull LogLevel level, final @NotNull String indent) {
 		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < logData.size(); i++) {
-			final LogData data = logData.get(i);
+		for (final @NotNull LogData data : logData) {
 			if (data == null)
 				continue;
 			if (data.getLevel().toInteger() > level.toInteger())

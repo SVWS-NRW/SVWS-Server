@@ -165,7 +165,7 @@ public class BerufskollegBildungsplanManager {
 		for (final @NotNull List<BKBildungsplan> list : lehrplaeneOfIndex) {
 			for (final @NotNull BKBildungsplan bildungsplan : list) {
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
-						&& ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis + bildungsplan.dauer / 2 + 1 >= schuljahr)))
+						&& ((bildungsplan.gueltigBis == null) || ((bildungsplan.gueltigBis + (bildungsplan.dauer / 2) + 1) >= schuljahr)))
 					lehrplaene.add(bildungsplan);
 			}
 		}
@@ -269,7 +269,7 @@ public class BerufskollegBildungsplanManager {
 		if (bildungsplan == null)
 			return null;
 
-		if ((bildungsplan.dauer + 1) / 2 < jahrgang)
+		if (((bildungsplan.dauer + 1) / 2) < jahrgang)
 			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von "
 					+ bildungsplan.dauer + " Monaten!");
 

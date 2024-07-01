@@ -321,17 +321,17 @@ class TestDequeRandom {
 				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
 		final Iterator<Integer> i1 = d1.iterator();
-		for (int i = 0; i < o1.length; i++) {
+		for (final int element : o1) {
 			final Integer value = i1.next();
-			if (!o1[i].equals(value))
-				fail("!o1[i].equals(value) --> " + o1[i] + " != " + value);
+			if (element != value)
+				fail("!o1[i].equals(value) --> " + element + " != " + value);
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
-		for (int i = 0; i < o2.length; i++) {
+		for (final int element : o2) {
 			final Integer value = i2.next();
-			if (!o2[i].equals(value))
-				fail("!o2[i].equals(value) --> " + o2[i] + " != " + value);
+			if (element != value)
+				fail("!o2[i].equals(value) --> " + element + " != " + value);
 		}
 
 	}
@@ -348,17 +348,17 @@ class TestDequeRandom {
 				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
 		final Iterator<Integer> i1 = d1.iterator();
-		for (int i = 0; i < o1.length; i++) {
+		for (final Object element : o1) {
 			final Integer value = i1.next();
-			if (!o1[i].equals(value))
-				fail("!o1[i].equals(value) --> " + o1[i] + " != " + value);
+			if (!element.equals(value))
+				fail("!o1[i].equals(value) --> " + element + " != " + value);
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
-		for (int i = 0; i < o2.length; i++) {
+		for (final Object element : o2) {
 			final Integer value = i2.next();
-			if (!o2[i].equals(value))
-				fail("!o2[i].equals(value) --> " + o2[i] + " != " + value);
+			if (!element.equals(value))
+				fail("!o2[i].equals(value) --> " + element + " != " + value);
 		}
 	}
 

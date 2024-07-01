@@ -51,8 +51,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		this.hatAufgabenfeldII = false;
 		this.hatAufgabenfeldIII = false;
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+		for (const fachbelegung of alleFachbelegungen) {
 			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
 				continue;
@@ -129,8 +128,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	private pruefeMehrfacheAbiturfaecher() : void {
 		const abiFaecher : HashSet<GostAbiturFach> = new HashSet<GostAbiturFach>();
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+		for (const fachbelegung of alleFachbelegungen) {
 			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
 				continue;

@@ -151,8 +151,7 @@ export class AbschlussManager extends JavaObject {
 	 */
 	public static getKuerzel(faecher : List<GEAbschlussFach>) : List<string> {
 		const result : ArrayList<string> = new ArrayList<string>();
-		for (let i : number = 0; i < faecher.size(); i++) {
-			const fach : GEAbschlussFach = faecher.get(i);
+		for (const fach of faecher) {
 			if ((fach.kuerzel === null) || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);

@@ -189,8 +189,7 @@ public enum BilingualeSprache {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}
@@ -247,8 +246,7 @@ public enum BilingualeSprache {
 		if (schulform == null)
 			return faecher;
 		final @NotNull BilingualeSprache @NotNull [] fachgruppen = BilingualeSprache.values();
-		for (int i = 0; i < fachgruppen.length; i++) {
-			final BilingualeSprache fg = fachgruppen[i];
+		for (final @NotNull BilingualeSprache fg : fachgruppen) {
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

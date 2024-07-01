@@ -28,47 +28,72 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class StundenplanManagerDummy {
 
-	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
-		if (a.sortierung < b.sortierung) return -1;
-		if (a.sortierung > b.sortierung) return +1;
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer = (final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanKlasse> _compKlasse = (final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler = (final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
-		if (a.idKlasse < b.idKlasse) return -1;
-		if (a.idKlasse > b.idKlasse) return +1;
-		final int cmpNachname = a.nachname.compareTo(b.nachname);
-		if (cmpNachname != 0) return cmpNachname;
-		final int cmpVorname = a.vorname.compareTo(b.vorname);
-		if (cmpVorname != 0) return cmpVorname;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang = (final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
-	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach =
+			(final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
+				if (a.sortierung < b.sortierung)
+					return -1;
+				if (a.sortierung > b.sortierung)
+					return +1;
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum =
+			(final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer =
+			(final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanKlasse> _compKlasse =
+			(final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler =
+			(final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
+				if (a.idKlasse < b.idKlasse)
+					return -1;
+				if (a.idKlasse > b.idKlasse)
+					return +1;
+				final int cmpNachname = a.nachname.compareTo(b.nachname);
+				if (cmpNachname != 0)
+					return cmpNachname;
+				final int cmpVorname = a.vorname.compareTo(b.vorname);
+				if (cmpVorname != 0)
+					return cmpVorname;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang =
+			(final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
+
+	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich =
+			(final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
+				final int result = a.kuerzel.compareTo(b.kuerzel);
+				if (result != 0)
+					return result;
+				return Long.compare(a.id, b.id);
+			};
 
 	/** Größtmögliche Fach-ID */
 	public static final long FACH_MAX_ID = 60;
@@ -460,11 +485,11 @@ public final class StundenplanManagerDummy {
 		final @NotNull StundenplanJahrgang jahrgang = new StundenplanJahrgang();
 		jahrgang.id = rnd.nextLong(JAHRGANG_MAX_ID);
 		jahrgang.kuerzel = "" + (jahrgang.id + 1);
-		if (jahrgang.id == JAHRGANG_MAX_ID - 1)
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 1))
 			jahrgang.kuerzel = "Q2";
-		if (jahrgang.id == JAHRGANG_MAX_ID - 2)
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 2))
 			jahrgang.kuerzel = "Q1";
-		if (jahrgang.id == JAHRGANG_MAX_ID - 3)
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 3))
 			jahrgang.kuerzel = "EF";
 		jahrgang.bezeichnung = "Bezeichung von " + jahrgang.kuerzel;
 		return jahrgang;
@@ -776,7 +801,8 @@ public final class StundenplanManagerDummy {
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		final @NotNull HashSet<@NotNull String> setOfWochentagStundeNeu = new HashSet<>();
 		for (final @NotNull StundenplanZeitraster z : list) {
-			DeveloperNotificationException.ifTrue("(z.unterrichtstunde < 0) || (z.unterrichtstunde > 29)", (z.unterrichtstunde < 0) || (z.unterrichtstunde > 29));
+			DeveloperNotificationException.ifTrue("(z.unterrichtstunde < 0) || (z.unterrichtstunde > 29)",
+					(z.unterrichtstunde < 0) || (z.unterrichtstunde > 29));
 			if ((z.stundenbeginn != null) && (z.stundenende != null)) {
 				final int beginn = z.stundenbeginn;
 				final int ende = z.stundenende;
@@ -784,8 +810,10 @@ public final class StundenplanManagerDummy {
 			}
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", _zeitrastermap.containsKey(z.id));
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " doppelt in der Liste!", !setOfIDs.add(z.id));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!", !setOfWochentagStundeNeu.add(z.wochentag + ";" + z.unterrichtstunde));
-			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!", !setOfWochentagStundeAlt.add(z.wochentag + ";" + z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!",
+					!setOfWochentagStundeNeu.add(z.wochentag + ";" + z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!",
+					!setOfWochentagStundeAlt.add(z.wochentag + ";" + z.unterrichtstunde));
 		}
 
 		// add

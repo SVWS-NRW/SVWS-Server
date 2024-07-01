@@ -226,8 +226,7 @@ public enum Reformpaedagogik {
 		if (schulform == null)
 			return result;
 		final @NotNull Reformpaedagogik @NotNull [] gliederungen = Reformpaedagogik.values();
-		for (int i = 0; i < gliederungen.length; i++) {
-			final @NotNull Reformpaedagogik gliederung = gliederungen[i];
+		for (final @NotNull Reformpaedagogik gliederung : gliederungen) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -248,8 +247,7 @@ public enum Reformpaedagogik {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}
@@ -270,8 +268,7 @@ public enum Reformpaedagogik {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}

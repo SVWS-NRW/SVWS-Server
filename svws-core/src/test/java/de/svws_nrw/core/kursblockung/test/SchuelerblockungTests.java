@@ -155,8 +155,7 @@ class SchuelerblockungTests {
 		}
 
 		// Wurde wirklich jeder Fachwahl etwas zugeordnet?
-		for (int i = 0; i < fachwahlen.size(); i++) {
-			final @NotNull SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs = fachwahlen.get(i);
+		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs : fachwahlen) {
 			if (fachwahlZuKurs == null) {
 				fail("fachwahl == null");
 				return;

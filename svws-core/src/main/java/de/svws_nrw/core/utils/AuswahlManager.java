@@ -121,7 +121,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 		final TAuswahl aktAuswahl = (this._daten == null) ? null : this.auswahl();
 		for (final @NotNull TAuswahl eintrag : this.liste.list())
 			// Lasse die aktuelle Auswahl immer durch den Filter falls _filterPermitAuswahl gesetzt ist
-			if ((this._filterPermitAuswahl && (aktAuswahl != null) && this.compareAuswahl(aktAuswahl, eintrag) == 0) || checkFilter(eintrag))
+			if ((this._filterPermitAuswahl && (aktAuswahl != null) && (this.compareAuswahl(aktAuswahl, eintrag) == 0)) || checkFilter(eintrag))
 				_filtered.add(eintrag);
 		final @NotNull Comparator<TAuswahl> comparator = (final @NotNull TAuswahl a, final @NotNull TAuswahl b) -> this.compareAuswahl(a, b);
 		_filtered.sort(comparator);

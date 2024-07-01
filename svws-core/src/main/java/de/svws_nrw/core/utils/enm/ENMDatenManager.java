@@ -122,8 +122,7 @@ public class ENMDatenManager {
 		if (!daten.noten.isEmpty())
 			return;
 		final @NotNull Note @NotNull [] noten = Note.values();
-		for (int i = 0; i < noten.length; i++) {
-			final @NotNull Note note = noten[i];
+		for (final @NotNull @NotNull Note note : noten) {
 			final @NotNull ENMNote enmNote = new ENMNote();
 			enmNote.id = note.id;
 			enmNote.kuerzel = note.kuerzel;

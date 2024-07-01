@@ -167,8 +167,7 @@ public final class AbschlussManager {
 	 */
 	public static @NotNull List<String> getKuerzel(final @NotNull List<GEAbschlussFach> faecher) {
 		final @NotNull ArrayList<String> result = new ArrayList<>();
-		for (int i = 0; i < faecher.size(); i++) {
-			final @NotNull GEAbschlussFach fach = faecher.get(i);
+		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if ((fach.kuerzel == null) || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);

@@ -333,8 +333,8 @@ public class KursblockungDynSchueler {
 			// Alle Kurse der Fachart durchgehen und probieren, ob wählbar.
 			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
 			final @NotNull int[] perm2 = KursblockungStatic.gibPermutation(_random, kurse.length);
-			for (int pKurs = 0; pKurs < perm2.length; pKurs++) {
-				final @NotNull KursblockungDynKurs kurs = kurse[perm2[pKurs]];
+			for (final int i : perm2) {
+				final @NotNull KursblockungDynKurs kurs = kurse[i];
 
 				// Überspringt nicht erlaubte Kurse.
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
@@ -379,9 +379,7 @@ public class KursblockungDynSchueler {
 				continue;
 
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar. Es wird genau ein Kurs sein.
-			for (int iKurse = 0; iKurse < kurse.length; iKurse++) {
-				final @NotNull KursblockungDynKurs kurs = kurse[iKurse];
-
+			for (final @NotNull KursblockungDynKurs kurs : kurse) {
 				// Überspringt nicht erlaubte Kurse.
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
 					continue;
@@ -597,9 +595,7 @@ public class KursblockungDynSchueler {
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
 			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-			for (int iKurs = 0; iKurs < kurse.length; iKurs++) {
-				final @NotNull KursblockungDynKurs kurs = kurse[iKurs];
-
+			for (final @NotNull KursblockungDynKurs kurs : kurse) {
 				// Überspringt nicht erlaubte Kurse.
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
 					continue;
@@ -635,8 +631,7 @@ public class KursblockungDynSchueler {
 		_logger.logLn("");
 		_logger.logLn(representation);
 		final HashSet<Integer> setSchienenLage = new HashSet<>();
-		for (int i = 0; i < fachartZuKurs.length; i++) {
-			final KursblockungDynKurs kurs = fachartZuKurs[i];
+		for (final KursblockungDynKurs kurs : fachartZuKurs) {
 			if (kurs == null)
 				continue;
 			_logger.logLn("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));

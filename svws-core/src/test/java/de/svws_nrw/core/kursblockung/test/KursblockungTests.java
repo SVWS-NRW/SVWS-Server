@@ -765,8 +765,8 @@ class KursblockungTests {
 		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
 
 			boolean gefunden = false;
-			for (int j = 0; j < pKursID.length; j++)
-				if (gKurs.id == pKursID[j]) {
+			for (final long idKurs : pKursID)
+				if (gKurs.id == idKurs) {
 					gefunden = true;
 					break;
 				}

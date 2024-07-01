@@ -61,7 +61,7 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 		if (anzahlAbschnitte <= 1) {
 			return "" + abschnitt.schuljahr;
 		} else
-			if (anzahlAbschnitte > 1 && anzahlAbschnitte < 5) {
+			if ((anzahlAbschnitte > 1) && (anzahlAbschnitte < 5)) {
 				return SchuljahresAbschnittsManager.createRepresentationForAnzahlAbschnitte(anzahlAbschnitte)! + abschnitt.abschnitt + " " + abschnitt.schuljahr;
 			} else {
 				return abschnitt.abschnitt + "/" + anzahlAbschnitte + " " + abschnitt.schuljahr;

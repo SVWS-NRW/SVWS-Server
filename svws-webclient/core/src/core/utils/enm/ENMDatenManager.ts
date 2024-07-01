@@ -140,8 +140,7 @@ export class ENMDatenManager extends JavaObject {
 		if (!this.daten.noten.isEmpty())
 			return;
 		const noten : Array<Note> = Note.values();
-		for (let i : number = 0; i < noten.length; i++) {
-			const note : Note = noten[i];
+		for (const note of noten) {
 			const enmNote : ENMNote = new ENMNote();
 			enmNote.id = note.id;
 			enmNote.kuerzel = note.kuerzel;

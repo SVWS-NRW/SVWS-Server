@@ -134,7 +134,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		this._filtered = new ArrayList();
 		const aktAuswahl : TAuswahl | null = (this._daten === null) ? null : this.auswahl();
 		for (const eintrag of this.liste.list())
-			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && this.compareAuswahl(aktAuswahl, eintrag) === 0) || this.checkFilter(eintrag))
+			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && (this.compareAuswahl(aktAuswahl, eintrag) === 0)) || this.checkFilter(eintrag))
 				this._filtered.add(eintrag);
 		const comparator : Comparator<TAuswahl> = { compare : (a: TAuswahl, b: TAuswahl) => this.compareAuswahl(a, b) };
 		this._filtered.sort(comparator);

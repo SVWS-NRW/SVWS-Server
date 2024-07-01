@@ -367,11 +367,11 @@ class TestMinHeap {
 		final Iterator<Integer> iter = heap.iterator();
 		assertNotNull(iter);
 		final Integer[] heapContent = heap.toArray(new Integer[heap.size()]);
-		for (int i = 0; i < heapContent.length; i++) {
+		for (final Integer element : heapContent) {
 			assertTrue(iter.hasNext());
 			final Integer value = iter.next();
 			assertNotNull(value);
-			assertEquals(heapContent[i], value);
+			assertEquals(element, value);
 		}
 		assertFalse(iter.hasNext());
 		assertThrows(NoSuchElementException.class, () -> {

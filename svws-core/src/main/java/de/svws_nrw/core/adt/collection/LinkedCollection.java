@@ -102,9 +102,8 @@ public final class LinkedCollection<E> implements Deque<E> {
 	public boolean contains(final Object obj) {
 		if (this.isEmpty())
 			return false;
-		final @NotNull Iterator<E> iter = this.iterator();
-		while (iter.hasNext())
-			if (iter.next().equals(obj))
+		for (final @NotNull E element : this)
+			if (element.equals(obj))
 				return true;
 		return false;
 	}
@@ -271,10 +270,8 @@ public final class LinkedCollection<E> implements Deque<E> {
 			this.clear();
 			return true;
 		}
-		final @NotNull Iterator<E> iter = this.iterator();
 		final @NotNull LinkedCollection<E> tmp = new LinkedCollection<>();
-		while (iter.hasNext()) {
-			final @NotNull E elem = iter.next();
+		for (final @NotNull E elem : this) {
 			if (!c.contains(elem))
 				tmp.add(elem);
 		}
@@ -308,10 +305,9 @@ public final class LinkedCollection<E> implements Deque<E> {
 		final @NotNull Collection<?> other = (@NotNull Collection<?>) obj;
 		if (this._size != other.size())
 			return false;
-		final @NotNull Iterator<E> iter = this.iterator();
 		final @NotNull Iterator<?> otherIter = other.iterator();
-		while (iter.hasNext()) {
-			if (!iter.next().equals(otherIter.next()))
+		for (final @NotNull E element : this) {
+			if (!element.equals(otherIter.next()))
 				return false;
 		}
 		return true;

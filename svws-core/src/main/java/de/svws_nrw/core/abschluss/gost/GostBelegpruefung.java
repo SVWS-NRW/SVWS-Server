@@ -81,8 +81,7 @@ public abstract class GostBelegpruefung {
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public boolean hatBelegungsfehler() {
-		for (int i = 0; i < belegungsfehler.size(); i++) {
-			final @NotNull GostBelegungsfehler fehler = belegungsfehler.get(i);
+		for (final @NotNull GostBelegungsfehler fehler : belegungsfehler) {
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -117,8 +116,7 @@ public abstract class GostBelegpruefung {
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
 	public static boolean istErfolgreich(final @NotNull List<GostBelegungsfehler> alleFehler) {
-		for (int i = 0; i < alleFehler.size(); i++) {
-			final @NotNull GostBelegungsfehler fehler = alleFehler.get(i);
+		for (final @NotNull GostBelegungsfehler fehler : alleFehler) {
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -136,8 +134,7 @@ public abstract class GostBelegpruefung {
 	 */
 	public static @NotNull List<GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<GostBelegpruefung> pruefungen) {
 		final @NotNull ArrayList<GostBelegungsfehler> fehler = new ArrayList<>();
-		for (int i = 0; i < pruefungen.size(); i++) {
-			final @NotNull GostBelegpruefung pruefung = pruefungen.get(i);
+		for (final @NotNull GostBelegpruefung pruefung : pruefungen) {
 			fehler.addAll(pruefung.getBelegungsfehler());
 		}
 		return fehler;

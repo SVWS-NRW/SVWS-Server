@@ -733,9 +733,7 @@ class TestAVLMapRandom {
 			}
 			case 64 -> { // retainAll
 				final LinkedCollection<Integer> col = new LinkedCollection<>();
-				final Iterator<Integer> iterOfKeys = set1.iterator();
-				while (iterOfKeys.hasNext()) {
-					final Integer i = iterOfKeys.next();
+				for (Integer i : set1) {
 					if (RANDOM.nextDouble() < 0.5) // was bleiben soll
 						col.addLast(i);
 				}
@@ -1182,9 +1180,7 @@ class TestAVLMapRandom {
 			}
 			case 94 -> { // retainAll
 				final LinkedCollection<Entry<Integer, Integer>> col = new LinkedCollection<>();
-				final Iterator<Entry<Integer, Integer>> iterOfEntries = ent1.iterator();
-				while (iterOfEntries.hasNext()) {
-					final Entry<Integer, Integer> e = iterOfEntries.next();
+				for (Entry<Integer, Integer> e : ent1) {
 					if (RANDOM.nextDouble() < 0.5) // was bleiben soll
 						col.addLast(e);
 				}

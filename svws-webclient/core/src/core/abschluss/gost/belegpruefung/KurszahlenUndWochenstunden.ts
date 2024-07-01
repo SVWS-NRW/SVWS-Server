@@ -91,8 +91,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			this.kurszahlenQualifikationsphase.put(kursart, 0);
 		}
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+		for (const fachbelegung of alleFachbelegungen) {
 			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 				continue;

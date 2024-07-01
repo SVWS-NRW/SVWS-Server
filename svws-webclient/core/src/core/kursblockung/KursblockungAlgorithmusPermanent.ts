@@ -134,8 +134,8 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		const dynDaten : KursblockungDynDaten = k.gibDynDaten();
 		const algorithmenS : Array<KursblockungAlgorithmusS> = [new KursblockungAlgorithmusSSchnellW(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSZufaellig(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSMatching(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSMatchingW(this._random, this._logger, dynDaten)];
 		dynDaten.aktionZustandSpeichernK();
-		for (let iS : number = 0; iS < algorithmenS.length; iS++) {
-			algorithmenS[iS].berechne();
+		for (const algorithmus of algorithmenS) {
+			algorithmus.berechne();
 			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
 				dynDaten.aktionZustandSpeichernK();
 		}

@@ -1124,7 +1124,7 @@ public class GostBlockungsdatenManager {
 		// Zugriff ist O(1) durch "regelGetListeOfTyp" und da jede Regel dieses Typs getestet werden muss.
 		for (final @NotNull GostBlockungRegel regel : regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			if (((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2)))  // Schiene im Intervall?
-				&& (regel.parameter.get(0) == kursart))
+					&& (regel.parameter.get(0) == kursart))
 				return true;
 
 		return false;
@@ -1599,7 +1599,7 @@ public class GostBlockungsdatenManager {
 		for (int index = 0; index < _daten.schienen.size(); index++) {
 			final @NotNull GostBlockungSchiene schiene = _daten.schienen.get(index);
 			DeveloperNotificationException.ifTrue(toStringSchiene(schiene.id) + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!",
-				schiene.nummer != (index + 1));
+					schiene.nummer != (index + 1));
 		}
 
 		// (4)

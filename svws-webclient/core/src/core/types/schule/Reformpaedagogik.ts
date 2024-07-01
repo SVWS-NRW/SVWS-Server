@@ -170,8 +170,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();
-		for (let i : number = 0; i < gliederungen.length; i++) {
-			const gliederung : Reformpaedagogik = gliederungen[i];
+		for (const gliederung of gliederungen) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -190,8 +189,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -210,8 +208,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}

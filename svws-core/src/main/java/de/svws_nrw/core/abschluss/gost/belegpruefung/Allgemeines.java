@@ -53,15 +53,13 @@ public final class Allgemeines extends GostBelegpruefung {
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
-		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			if (!manager.istBelegtSeitEF(fachbelegung))
 				addFehler(GostBelegungsfehler.E1BEL_10);
 		}
 
 		// Prüfe, ob alle Fächer nicht-Abiturfächern in Q2.2 mündlich belegt sind. Das 4. Abiturfach wird gesondert geprüft
-		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach != null)
 				continue;

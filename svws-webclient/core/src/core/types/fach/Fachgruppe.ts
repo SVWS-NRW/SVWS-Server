@@ -280,8 +280,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -334,8 +333,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 		if (schulform === null)
 			return faecher;
 		const fachgruppen : Array<Fachgruppe> = Fachgruppe.values();
-		for (let i : number = 0; i < fachgruppen.length; i++) {
-			const fg : Fachgruppe | null = fachgruppen[i];
+		for (const fg of fachgruppen) {
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

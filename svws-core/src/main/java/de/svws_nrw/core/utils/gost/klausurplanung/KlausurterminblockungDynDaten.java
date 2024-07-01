@@ -362,8 +362,8 @@ public class KlausurterminblockungDynDaten {
 		final @NotNull List<List<Integer>> temp = new ArrayList<>();
 
 		final @NotNull int[] perm = ArrayUtils.getIndexPermutation(_klausurGruppen.size(), _random);
-		for (int i = 0; i < perm.length; i++)
-			temp.add(_klausurGruppen.get(perm[i]));
+		for (final int p : perm)
+			temp.add(_klausurGruppen.get(p));
 
 		return temp;
 	}
@@ -373,7 +373,8 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
 	 */
-	@NotNull List<List<Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
+	@NotNull
+	List<List<Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
 		// Kopieren
 		final @NotNull List<List<Integer>> temp = new ArrayList<>();
 		temp.addAll(_klausurGruppenGrad);
@@ -400,7 +401,8 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
 	 */
-	@NotNull List<Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
+	@NotNull
+	List<Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
 		int min = _klausurenAnzahl;
 		List<Integer> gruppeMin = null;
 
@@ -568,7 +570,8 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return das Ergebnis
 	 */
-	@NotNull GostKlausurterminblockungErgebnis gibErzeugeOutput() {
+	@NotNull
+	GostKlausurterminblockungErgebnis gibErzeugeOutput() {
 		final @NotNull GostKlausurterminblockungErgebnis out = new GostKlausurterminblockungErgebnis();
 		for (int i = 0; i < _terminAnzahl; i++)
 			out.termine.add(new @NotNull GostKlausurterminblockungErgebnisTermin());

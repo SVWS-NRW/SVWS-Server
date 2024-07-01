@@ -102,8 +102,7 @@ public class Logger {
 	 * @param data   die Log-Informationen
 	 */
 	private void log(final @NotNull LogData data) {
-		for (int i = 0; i < consumer.size(); i++) {
-			final @NotNull Consumer<LogData> c = consumer.get(i);
+		for (final @NotNull Consumer<LogData> c : consumer) {
 			if (c == null)
 				continue;
 			c.accept(data);

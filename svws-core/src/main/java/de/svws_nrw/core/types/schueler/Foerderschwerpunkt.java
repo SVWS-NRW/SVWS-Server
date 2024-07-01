@@ -386,8 +386,7 @@ public enum Foerderschwerpunkt {
 		if (schulform == null)
 			return result;
 		final @NotNull Foerderschwerpunkt @NotNull [] fs = Foerderschwerpunkt.values();
-		for (int i = 0; i < fs.length; i++) {
-			final @NotNull Foerderschwerpunkt gliederung = fs[i];
+		for (final @NotNull Foerderschwerpunkt gliederung : fs) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -408,8 +407,7 @@ public enum Foerderschwerpunkt {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}
@@ -430,8 +428,7 @@ public enum Foerderschwerpunkt {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}
@@ -456,8 +453,7 @@ public enum Foerderschwerpunkt {
 			return Foerderschwerpunkt.KEINER;
 		// Prüfe, ob der Förderschwerpunkt bei der Schulform existiert
 		final @NotNull List<Foerderschwerpunkt> schwerpunkte = get(sf);
-		for (int i = 0; i < schwerpunkte.size(); i++) {
-			final Foerderschwerpunkt fs = schwerpunkte.get(i);
+		for (final @NotNull Foerderschwerpunkt fs : schwerpunkte) {
 			if ((fs.daten.kuerzel).equalsIgnoreCase(kuerzel))
 				return fs;
 		}

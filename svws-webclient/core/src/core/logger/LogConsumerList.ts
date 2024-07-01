@@ -182,8 +182,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : string = __param1;
 			const sb : StringBuilder | null = new StringBuilder();
-			for (let i : number = 0; i < this.logData.size(); i++) {
-				const data : LogData | null = this.logData.get(i);
+			for (const data of this.logData) {
 				if (data === null)
 					continue;
 				if (data.getLevel().toInteger() > level.toInteger())

@@ -6134,7 +6134,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
-
+	 *
 	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
 	 *
 	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.

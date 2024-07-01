@@ -244,7 +244,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, (raumstunden === null) || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
 		}
 	}
 
@@ -258,7 +258,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum_and_idTermin.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idTermin, (raumstunden === null || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id).add(k);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idTermin, ((raumstunden === null) || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
@@ -266,7 +266,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, (raumstunden === null || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, ((raumstunden === null) || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
@@ -295,7 +295,7 @@ export class GostKlausurraumManager extends JavaObject {
 			for (const krs of krsList) {
 				const kr : GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
 				const krAlt : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausurtermin.put(skrs.idSchuelerklausurtermin, kr);
-				if (krAlt !== null && krAlt as unknown !== kr as unknown)
+				if ((krAlt !== null) && (krAlt as unknown !== kr as unknown))
 					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausurtermin + " ist zwei Klausurräumen zugeordnet.")
 			}
 		}
@@ -1006,7 +1006,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public getGemeinsamerKursklausurstartByKlausurraum(raum : GostKlausurraum) : number | null {
 		let start : number | null = -1;
 		for (const klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
-			if (start !== null && start === -1)
+			if ((start !== null) && (start === -1))
 				start = klausur.startzeit;
 			if (this._kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))
 				return null;
@@ -1022,7 +1022,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public isKlausurenInFremdraeumen() : boolean {
 		for (const skt of this._schuelerklausurterminmenge) {
 			const raum : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausurtermin.get(skt.id);
-			if (raum !== null && raum.idTermin !== this.getKursklausurManager().terminOrExceptionBySchuelerklausurTermin(skt).id)
+			if ((raum !== null) && (raum.idTermin !== this.getKursklausurManager().terminOrExceptionBySchuelerklausurTermin(skt).id))
 				return true;
 		}
 		return false;
@@ -1048,7 +1048,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public stundenplanraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : StundenplanRaum | null {
 		const raum : GostKlausurraum | null = this.klausurraumGetBySchuelerklausurtermin(skt);
-		return raum === null || raum.idStundenplanRaum === null ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+		return (raum === null) || (raum.idStundenplanRaum === null) ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
 	}
 
 	/**

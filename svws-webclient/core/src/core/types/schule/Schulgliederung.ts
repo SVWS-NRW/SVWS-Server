@@ -720,8 +720,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	public static getByBkIndex(index : number) : List<Schulgliederung> {
 		const result : ArrayList<Schulgliederung> = new ArrayList<Schulgliederung>();
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
-		for (let i : number = 0; i < gliederungen.length; i++) {
-			const gliederung : Schulgliederung = gliederungen[i];
+		for (const gliederung of gliederungen) {
 			if ((gliederung.daten.bkIndex !== null) && (gliederung.daten.bkIndex === index))
 				result.add(gliederung);
 		}
@@ -749,8 +748,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
-		for (let i : number = 0; i < gliederungen.length; i++) {
-			const gliederung : Schulgliederung = gliederungen[i];
+		for (const gliederung of gliederungen) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -769,8 +767,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -789,8 +786,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.schulformen.get(i);
+			for (const sfKuerzel of this.daten.schulformen) {
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -839,8 +835,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Schulgliederung.getDefault(sf);
 		const gliederungen : List<Schulgliederung> = Schulgliederung.get(sf);
-		for (let i : number = 0; i < gliederungen.size(); i++) {
-			const sg : Schulgliederung | null = gliederungen.get(i);
+		for (const sg of gliederungen) {
 			if (JavaString.equalsIgnoreCase((sg.daten.kuerzel), kuerzel))
 				return sg;
 		}

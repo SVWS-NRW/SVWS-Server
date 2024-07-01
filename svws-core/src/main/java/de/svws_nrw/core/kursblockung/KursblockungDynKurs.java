@@ -130,8 +130,8 @@ public class KursblockungDynKurs {
 		}
 
 		// Der Schiene hinzufügen
-		for (int i = 0; i < schienenLage.length; i++)
-			schienenLage[i].aktionKursHinzufuegen(this);
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+			schiene.aktionKursHinzufuegen(this);
 	}
 
 	/**
@@ -245,8 +245,8 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, falls der Kurs gerade in Schiene pSchiene ist. */
 	boolean gibIstInSchiene(final int pSchiene) {
-		for (int i = 0; i < schienenLage.length; i++)
-			if (schienenLage[i].gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+			if (schiene.gibNr() == pSchiene)
 				return true;
 
 		return false;
@@ -258,8 +258,8 @@ public class KursblockungDynKurs {
 	 * @param  schieneBis Das Ende des Intervalls (inklusive).
 	 * @return            TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet. */
 	boolean gibIstImSchienenIntervall(final int schieneVon, final int schieneBis) {
-		for (int i = 0; i < schienenLage.length; i++)
-			if ((schienenLage[i].gibNr() >= schieneVon) && (schienenLage[i].gibNr() <= schieneBis))
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+			if ((schiene.gibNr() >= schieneVon) && (schiene.gibNr() <= schieneBis))
 				return true;
 
 		return false;
@@ -271,8 +271,8 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf. */
 	boolean gibIstSchieneFrei(final int pSchiene) {
-		for (int i = 0; i < schienenFrei.length; i++)
-			if (schienenFrei[i].gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenFrei)
+			if (schiene.gibNr() == pSchiene)
 				return true;
 
 		return false;
@@ -564,13 +564,13 @@ public class KursblockungDynKurs {
 	// ########################################
 
 	private void aktionSchienenLageHinzufuegen() {
-		for (int i = 0; i < schienenLage.length; i++)
-			schienenLage[i].aktionKursHinzufuegen(this);
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+			schiene.aktionKursHinzufuegen(this);
 	}
 
 	private void aktionSchienenLageEntfernen() {
-		for (int i = 0; i < schienenLage.length; i++)
-			schienenLage[i].aktionKursEntfernen(this);
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+			schiene.aktionKursEntfernen(this);
 	}
 
 }

@@ -94,7 +94,7 @@ public enum Sprachreferenzniveau {
 
 	/**
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.
-
+	 *
 	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von
 	 *                   {@link SprachreferenzniveauKatalogEintrag} ist
 	 */

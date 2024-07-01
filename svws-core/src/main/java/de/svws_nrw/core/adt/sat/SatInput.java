@@ -1,7 +1,6 @@
 package de.svws_nrw.core.adt.sat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
@@ -400,8 +399,8 @@ public final class SatInput {
 	 */
 	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
 		final @NotNull LinkedCollection<Integer> pList = new LinkedCollection<>();
-		for (int r = 0; r < pData.length; r++)
-			pList.add(pData[r][pCol]);
+		for (final @NotNull int[] element : pData)
+			pList.add(element[pCol]);
 		add_clause_exactly(pList, pAmount);
 	}
 
@@ -443,9 +442,7 @@ public final class SatInput {
 
 		// Forciere TRUE / FALSE in richtiger Anzahl
 		int i = 0;
-		final @NotNull Iterator<Integer> iter = list.iterator();
-		while (iter.hasNext()) {
-			final @NotNull Integer value = iter.next();
+		for (@NotNull Integer value : list) {
 			if (i < amount) {
 				add_clause_1(+value);
 			} else {

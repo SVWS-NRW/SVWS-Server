@@ -152,10 +152,8 @@ public class AbiturdatenManager {
 			return;
 		initMapFachbereiche();
 		belegpruefungen = getPruefungen(pruefungsArt);
-		for (int i = 0; i < belegpruefungen.size(); i++) {
-			final @NotNull GostBelegpruefung belegpruefung = belegpruefungen.get(i);
+		for (final @NotNull GostBelegpruefung belegpruefung : belegpruefungen)
 			belegpruefung.pruefe();
-		}
 		belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(belegpruefungen);
 		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
 	}

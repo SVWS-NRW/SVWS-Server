@@ -71,8 +71,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 
 		// Bestimme die Abiturfächer aus den Belegungsdaten
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
-		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach == null)
 				continue;
@@ -171,8 +170,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 	private void pruefeMehrfacheAbiturfaecher() {
 		final @NotNull HashSet<GostAbiturFach> abiFaecher = new HashSet<>();
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
-		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach == null)
 				continue;

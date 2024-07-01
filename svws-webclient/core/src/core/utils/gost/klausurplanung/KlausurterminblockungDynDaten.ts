@@ -340,8 +340,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private gibKlausurgruppenInZufaelligerReihenfolge() : List<List<number>> {
 		const temp : List<List<number>> = new ArrayList<List<number>>();
 		const perm : Array<number> = ArrayUtils.getIndexPermutation(this._klausurGruppen.size(), this._random);
-		for (let i : number = 0; i < perm.length; i++)
-			temp.add(this._klausurGruppen.get(perm[i]));
+		for (const p of perm)
+			temp.add(this._klausurGruppen.get(p));
 		return temp;
 	}
 

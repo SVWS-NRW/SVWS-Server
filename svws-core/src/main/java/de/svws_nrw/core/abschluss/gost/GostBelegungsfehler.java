@@ -646,8 +646,6 @@ public enum GostBelegungsfehler {
 	public @NotNull String getText(final @NotNull GostBelegpruefungsArt pruefArt) {
 		if (pruefArt.equals(GostBelegpruefungsArt.EF1))
 			return textEF1;
-		if (pruefArt.equals(GostBelegpruefungsArt.GESAMT))
-			return textGESAMT;
 		return textGESAMT;
 	}
 

@@ -196,8 +196,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
 	gibKleinstenKursInSchieneFuerSchueler(pSchiene : number, s : KursblockungDynSchueler) : KursblockungDynKurs | null {
-		for (let i : number = 0; i < this.kursArr.length; i++) {
-			const kurs : KursblockungDynKurs = this.kursArr[i];
+		for (const kurs of this.kursArr) {
 			if (kurs.gibIstErlaubtFuerSchueler(s))
 				for (const c of kurs.gibSchienenLage())
 					if (c === pSchiene)
@@ -350,8 +349,8 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	aktionZufaelligerKursWandertNachSchiene(pSchiene : number) : void {
 		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
-		for (let p : number = 0; p < perm.length; p++) {
-			const kurs : KursblockungDynKurs | null = this.kursArr[perm[p]];
+		for (const i of perm) {
+			const kurs : KursblockungDynKurs | null = this.kursArr[i];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
 				kurs.aktionSetzeInSchiene(pSchiene);
 				return;
@@ -392,8 +391,8 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		for (let i : number = 0; i < this.kursArr.length; i++)
-			this.kursArr[i].debug(schuelerArr);
+		for (const kurs of this.kursArr)
+			kurs.debug(schuelerArr);
 	}
 
 	/**

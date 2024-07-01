@@ -28,9 +28,9 @@ public final class StundenplanListUtils {
 	public static StundenplanListeEintrag get(final @NotNull List<StundenplanListeEintrag> eintraege, final @NotNull String datum) {
 		StundenplanListeEintrag last = null;
 		for (final StundenplanListeEintrag eintrag : eintraege) {
-			if (eintrag.gueltigAb.compareTo(datum) <= 0 && eintrag.gueltigBis.compareTo(datum) >= 0)
+			if ((eintrag.gueltigAb.compareTo(datum) <= 0) && (eintrag.gueltigBis.compareTo(datum) >= 0))
 				return eintrag;
-			if (last == null || eintrag.gueltigAb.compareTo(last.gueltigAb) > 0)
+			if ((last == null) || (eintrag.gueltigAb.compareTo(last.gueltigAb) > 0))
 				last = eintrag;
 		}
 		return last;

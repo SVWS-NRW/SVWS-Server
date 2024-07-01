@@ -205,10 +205,10 @@ public class KlausurterminblockungAlgorithmus {
 			_logger.log("zeitProAlgorithmus --> " + zeitProAlgorithmus);
 
 			// Alle Algorithmus starten (pro Algorithmus ggf. auch mehrfach).
-			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
+			for (final @NotNull KlausurterminblockungAlgorithmusAbstract algorithmus : algorithmen) {
 				final long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
-				algorithmen[iAlgo].berechne(zeitEndeRunde);
-				_logger.log(algorithmen[iAlgo].toString() + " --> " + dynDaten.gibTerminAnzahl());
+				algorithmus.berechne(zeitEndeRunde);
+				_logger.log(algorithmus.toString() + " --> " + dynDaten.gibTerminAnzahl());
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.

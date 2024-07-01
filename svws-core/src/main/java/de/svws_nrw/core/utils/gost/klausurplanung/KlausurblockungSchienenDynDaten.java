@@ -217,7 +217,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein Ausgabe-Objekt: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
-	@NotNull List<List<Long>> gibErzeugeOutput() {
+	@NotNull
+	List<List<Long>> gibErzeugeOutput() {
 
 		final @NotNull List<List<Long>> out = new ArrayList<>();
 		for (int i = 0; i < _schienenAnzahl; i++)
@@ -241,7 +242,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge.
 	 */
-	@NotNull int[] gibErzeugeKlausurenInZufaelligerReihenfolge() {
+	@NotNull
+	int[] gibErzeugeKlausurenInZufaelligerReihenfolge() {
 		final int[] temp = new int[_klausurenAnzahl];
 
 		for (int i = 0; i < _klausurenAnzahl; i++)
@@ -263,7 +265,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
 	 */
-	@NotNull int[] gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage() {
+	@NotNull
+	int[] gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage() {
 		final int[] temp = gibErzeugeKlausurenInZufaelligerReihenfolge();
 
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
@@ -292,7 +295,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
-	@NotNull int[] gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert() {
+	@NotNull
+	int[] gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert() {
 		final int[] temp = Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_klausurenAnzahl);
@@ -313,7 +317,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
-	@NotNull int[] gibErzeugeKlausurenMitHoeheremGradZuerst() {
+	@NotNull
+	int[] gibErzeugeKlausurenMitHoeheremGradZuerst() {
 		return Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 	}
 
@@ -322,7 +327,8 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @return ein Array aller derzeit verwendeten Schienen in zufälliger Reihenfolge.
 	 */
-	@NotNull int[] gibErzeugeSchienenInZufaelligerReihenfolge() {
+	@NotNull
+	int[] gibErzeugeSchienenInZufaelligerReihenfolge() {
 		final int[] temp = new int[_schienenAnzahl];
 
 		for (int i = 0; i < _schienenAnzahl; i++)

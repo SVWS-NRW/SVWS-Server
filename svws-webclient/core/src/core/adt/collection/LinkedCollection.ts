@@ -82,9 +82,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public contains(obj : unknown | null) : boolean {
 		if (this.isEmpty())
 			return false;
-		const iter : JavaIterator<E> = this.iterator();
-		while (iter.hasNext())
-			if (JavaObject.equalsTranspiler(iter.next(), (obj)))
+		for (const element of this)
+			if (JavaObject.equalsTranspiler(element, (obj)))
 				return true;
 		return false;
 	}
@@ -256,10 +255,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			this.clear();
 			return true;
 		}
-		const iter : JavaIterator<E> = this.iterator();
 		const tmp : LinkedCollection<E> = new LinkedCollection<E>();
-		while (iter.hasNext()) {
-			const elem : E = iter.next();
+		for (const elem of this) {
 			if (!c.contains(elem))
 				tmp.add(elem);
 		}
@@ -290,10 +287,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		const other : Collection<any> = cast_java_util_Collection(obj);
 		if (this._size !== other.size())
 			return false;
-		const iter : JavaIterator<E> = this.iterator();
 		const otherIter : JavaIterator<any> = other.iterator();
-		while (iter.hasNext()) {
-			if (!JavaObject.equalsTranspiler(iter.next(), (otherIter.next())))
+		for (const element of this) {
+			if (!JavaObject.equalsTranspiler(element, (otherIter.next())))
 				return false;
 		}
 		return true;

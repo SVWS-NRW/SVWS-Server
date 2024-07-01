@@ -76,9 +76,9 @@ public class KlausurblockungSchienenAlgorithmus {
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
 		do {
 			// Alle Algorithmus starten (pro Algorithmus ggf. auch mehrfach).
-			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
+			for (final @NotNull KlausurblockungSchienenAlgorithmusAbstract algorithmus : algorithmen) {
 				final long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
-				algorithmen[iAlgo].berechne(zeitEndeRunde);
+				algorithmus.berechne(zeitEndeRunde);
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.

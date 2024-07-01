@@ -162,7 +162,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis + Math.trunc(bildungsplan.dauer / 2) + 1 >= schuljahr)))
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || ((bildungsplan.gueltigBis + (Math.trunc(bildungsplan.dauer / 2)) + 1) >= schuljahr)))
 					lehrplaene.add(bildungsplan);
 			}
 		}
@@ -257,7 +257,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const bildungsplan : BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahr(index, schluessel, schuljahr - jahrgang);
 		if (bildungsplan === null)
 			return null;
-		if (Math.trunc((bildungsplan.dauer + 1) / 2) < jahrgang)
+		if ((Math.trunc((bildungsplan.dauer + 1) / 2)) < jahrgang)
 			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von " + bildungsplan.dauer + " Monaten!")
 		return bildungsplan;
 	}

@@ -121,10 +121,10 @@ public class GostKursklausurManager {
 				}
 				final @NotNull GostSchuelerklausur kA = schuelerklausurBySchuelerklausurtermin(a);
 				final @NotNull GostSchuelerklausur kB = schuelerklausurBySchuelerklausurtermin(b);
-				if (_schuelerMap != null && kA.idSchueler != kB.idSchueler) {
+				if ((_schuelerMap != null) && (kA.idSchueler != kB.idSchueler)) {
 					final SchuelerListeEintrag sA = getSchuelerMap().get(kA.idSchueler);
 					final SchuelerListeEintrag sB = getSchuelerMap().get(kB.idSchueler);
-					if (sA != null && sB != null)
+					if ((sA != null) && (sB != null))
 						return (sA.nachname + sA.vorname).compareTo(sB.nachname + sB.vorname);
 				}
 				return Long.compare(a.id, b.id);

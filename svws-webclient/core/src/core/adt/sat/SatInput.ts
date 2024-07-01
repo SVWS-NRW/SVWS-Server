@@ -1,7 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
-import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
@@ -381,8 +380,8 @@ export class SatInput extends JavaObject {
 	 */
 	public add_clause_exactly_in_column(pData : Array<Array<number>>, pCol : number, pAmount : number) : void {
 		const pList : LinkedCollection<number> = new LinkedCollection<number>();
-		for (let r : number = 0; r < pData.length; r++)
-			pList.add(pData[r][pCol]);
+		for (const element of pData)
+			pList.add(element[pCol]);
 		this.add_clause_exactly(pList, pAmount);
 	}
 
@@ -413,9 +412,7 @@ export class SatInput extends JavaObject {
 	private _bitonic_exactly(list : LinkedCollection<number>, amount : number) : void {
 		this._bitonic_sort(list);
 		let i : number = 0;
-		const iter : JavaIterator<number> = list.iterator();
-		while (iter.hasNext()) {
-			const value : number = iter.next();
+		for (let value of list) {
 			if (i < amount) {
 				this.add_clause_1(+value!);
 			} else {

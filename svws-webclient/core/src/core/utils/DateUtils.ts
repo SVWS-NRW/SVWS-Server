@@ -64,17 +64,17 @@ export class DateUtils extends JavaObject {
 		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601! + " ist ungültig!", (monat < 1) || (monat > 12));
 		const tagImMonat : number = DeveloperNotificationException.ifNotInt(split[2]);
 		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601! + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
-		const schalttage1 : number = (Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100)) + (Math.trunc((jahr - 1) / 400));
-		const schalttage2 : number = (Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100)) + (Math.trunc(jahr / 400));
+		const schalttage1 : number = ((Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100))) + (Math.trunc((jahr - 1) / 400));
+		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
 		const tagImJahr : number = DateUtils.monat_zu_vergangene_tage[schaltjahr][monat] + tagImMonat;
-		const tagInWoche : number = (jahr + schalttage1 + tagImJahr + 5) % 7 + 1;
+		const tagInWoche : number = ((jahr + schalttage1 + tagImJahr + 5) % 7) + 1;
 		const tagImJahrAmJanuar4 : number = 4;
-		const wochentagAmJanuar4 : number = (jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		const tagImJahrAmMontagDerKW1 : number = tagImJahrAmJanuar4 - wochentagAmJanuar4 + 1;
+		const wochentagAmJanuar4 : number = ((jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7) + 1;
+		const tagImJahrAmMontagDerKW1 : number = (tagImJahrAmJanuar4 - wochentagAmJanuar4) + 1;
 		const kalenderwochen : number = DateUtils.gibKalenderwochenOfJahr(jahr);
 		let kalenderwochenjahr : number = jahr;
-		let kalenderwoche : number = 1 + Math.trunc((tagImJahr - tagImJahrAmMontagDerKW1) / 7);
+		let kalenderwoche : number = 1 + (Math.trunc((tagImJahr - tagImJahrAmMontagDerKW1) / 7));
 		if (kalenderwoche > kalenderwochen) {
 			kalenderwoche = 1;
 			kalenderwochenjahr++;
@@ -94,10 +94,10 @@ export class DateUtils extends JavaObject {
 	 * @return die Anzahl an Kalenderwochen des Jahres (52 oder 53) nach ISO8601.
 	 */
 	public static gibKalenderwochenOfJahr(jahr : number) : number {
-		const schalttage1 : number = (Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100)) + (Math.trunc((jahr - 1) / 400));
-		const schalttage2 : number = (Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100)) + (Math.trunc(jahr / 400));
+		const schalttage1 : number = ((Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100))) + (Math.trunc((jahr - 1) / 400));
+		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
-		const wochentagAmJanuar1 : number = (jahr + schalttage1 + 1 + 5) % 7 + 1;
+		const wochentagAmJanuar1 : number = ((jahr + schalttage1 + 1 + 5) % 7) + 1;
 		return (wochentagAmJanuar1 === 4) || ((schaltjahr === 1) && (wochentagAmJanuar1 === 3)) ? 53 : 52;
 	}
 
@@ -109,8 +109,8 @@ export class DateUtils extends JavaObject {
 	 * @return die Anzahl an Tagen des Jahres (365 oder 366).
 	 */
 	public static gibTageOfJahr(jahr : number) : number {
-		const schalttage1 : number = (Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100)) + (Math.trunc((jahr - 1) / 400));
-		const schalttage2 : number = (Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100)) + (Math.trunc(jahr / 400));
+		const schalttage1 : number = ((Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100))) + (Math.trunc((jahr - 1) / 400));
+		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
 	}
@@ -129,10 +129,10 @@ export class DateUtils extends JavaObject {
 		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
 		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > DateUtils.gibKalenderwochenOfJahr(kalenderwochenjahr));
 		DeveloperNotificationException.ifTrue("(wochentag < 1) || (wochentag > 7)", (wochentag < 1) || (wochentag > 7));
-		const schalttage1 : number = (Math.trunc((kalenderwochenjahr - 1) / 4)) - (Math.trunc((kalenderwochenjahr - 1) / 100)) + (Math.trunc((kalenderwochenjahr - 1) / 400));
+		const schalttage1 : number = ((Math.trunc((kalenderwochenjahr - 1) / 4)) - (Math.trunc((kalenderwochenjahr - 1) / 100))) + (Math.trunc((kalenderwochenjahr - 1) / 400));
 		const tagImJahrAmJanuar4 : number = 4;
-		const wochentagAmJanuar4 : number = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		const tagImJahr : number = 7 * kalenderwoche - wochentagAmJanuar4 + wochentag - 3;
+		const wochentagAmJanuar4 : number = ((kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7) + 1;
+		const tagImJahr : number = (((7 * kalenderwoche) - wochentagAmJanuar4) + wochentag) - 3;
 		return DateUtils.gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
 	}
 
@@ -265,7 +265,7 @@ export class DateUtils extends JavaObject {
 		const minuten : number = JavaInteger.parseInt(sMinuten);
 		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
 		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
-		return stunden * 60 + minuten;
+		return (stunden * 60) + minuten;
 	}
 
 	/**
@@ -279,7 +279,7 @@ export class DateUtils extends JavaObject {
 	public static gibZeitStringOfMinuten(minuten : number) : string {
 		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten >= 1440)", (minuten < 0) || (minuten >= 1440));
 		const std : number = Math.trunc(minuten / 60);
-		const min : number = minuten - std * 60;
+		const min : number = minuten - (std * 60);
 		const sStd : string = (std < 10 ? "0" : "") + std;
 		const sMin : string = (min < 10 ? "0" : "") + min;
 		return sStd! + ":" + sMin!;

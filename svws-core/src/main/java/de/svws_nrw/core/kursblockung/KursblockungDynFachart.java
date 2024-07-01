@@ -189,8 +189,7 @@ public class KursblockungDynFachart {
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
 	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
-		for (int i = 0; i < kursArr.length; i++) {
-			final @NotNull KursblockungDynKurs kurs = kursArr[i];
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
 			if (kurs.gibIstErlaubtFuerSchueler(s))
 				for (final int c : kurs.gibSchienenLage()) // Suche passende Schiene.
 					if (c == pSchiene)
@@ -357,8 +356,8 @@ public class KursblockungDynFachart {
 	void aktionZufaelligerKursWandertNachSchiene(final int pSchiene) {
 		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, kursArr.length);
 
-		for (int p = 0; p < perm.length; p++) {
-			final KursblockungDynKurs kurs = kursArr[perm[p]];
+		for (final int i : perm) {
+			final KursblockungDynKurs kurs = kursArr[i];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
 				kurs.aktionSetzeInSchiene(pSchiene);
 				return;
@@ -410,8 +409,8 @@ public class KursblockungDynFachart {
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
 	 */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		for (int i = 0; i < kursArr.length; i++)
-			kursArr[i].debug(schuelerArr);
+		for (final @NotNull KursblockungDynKurs kurs : kursArr)
+			kurs.debug(schuelerArr);
 	}
 
 	/**

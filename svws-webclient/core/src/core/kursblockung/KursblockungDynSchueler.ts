@@ -329,8 +329,8 @@ export class KursblockungDynSchueler extends JavaObject {
 				continue;
 			const kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
 			const perm2 : Array<number> = KursblockungStatic.gibPermutation(this._random, kurse.length);
-			for (let pKurs : number = 0; pKurs < perm2.length; pKurs++) {
-				const kurs : KursblockungDynKurs = kurse[perm2[pKurs]];
+			for (const i of perm2) {
+				const kurs : KursblockungDynKurs = kurse[i];
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
 					continue;
 				let waehlbar : boolean = true;
@@ -362,8 +362,7 @@ export class KursblockungDynSchueler extends JavaObject {
 					erlaubt++;
 			if (erlaubt !== 1)
 				continue;
-			for (let iKurse : number = 0; iKurse < kurse.length; iKurse++) {
-				const kurs : KursblockungDynKurs = kurse[iKurse];
+			for (const kurs of kurse) {
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
 					continue;
 				let waehlbar : boolean = true;
@@ -507,8 +506,7 @@ export class KursblockungDynSchueler extends JavaObject {
 				continue;
 			const fachart : KursblockungDynFachart = this.fachartArr[iFachart];
 			const kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
-			for (let iKurs : number = 0; iKurs < kurse.length; iKurs++) {
-				const kurs : KursblockungDynKurs = kurse[iKurs];
+			for (const kurs of kurse) {
 				if (!kurs.gibIstErlaubtFuerSchueler(this))
 					continue;
 				let waehlbar : boolean = true;
@@ -533,8 +531,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this._logger.logLn("");
 		this._logger.logLn(this.representation);
 		const setSchienenLage : HashSet<number> | null = new HashSet<number>();
-		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
-			const kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
+		for (const kurs of this.fachartZuKurs) {
 			if (kurs === null)
 				continue;
 			this._logger.logLn("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!);

@@ -127,8 +127,7 @@ export class Logger extends JavaObject {
 	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
 		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) && (__param1 === undefined) && (__param2 === undefined)) {
 			const data : LogData = cast_de_svws_nrw_core_logger_LogData(__param0);
-			for (let i : number = 0; i < this.consumer.size(); i++) {
-				const c : Consumer<LogData> = this.consumer.get(i);
+			for (const c of this.consumer) {
 				if (c === null)
 					continue;
 				c.accept(data);

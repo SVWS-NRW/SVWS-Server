@@ -268,8 +268,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 		if ((schulform === null) || (schulform.daten === null))
 			return null;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const bez : JahrgangsKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
+			for (const bez of this.daten.bezeichnungen) {
 				const sfKuerzel : string | null = bez.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return bez.bezeichnung;
@@ -299,8 +298,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 		if (schulform === null)
 			return result;
 		const jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();
-		for (let i : number = 0; i < jahrgaenge.length; i++) {
-			const jahrgang : Jahrgaenge = jahrgaenge[i];
+		for (const jahrgang of jahrgaenge) {
 			if (jahrgang.hasSchulform(schulform))
 				result.add(jahrgang);
 		}
@@ -332,8 +330,8 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+			for (const element of this.daten.bezeichnungen) {
+				const sfKuerzel : string | null = element.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -352,8 +350,8 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+			for (const element of this.daten.bezeichnungen) {
+				const sfKuerzel : string | null = element.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}

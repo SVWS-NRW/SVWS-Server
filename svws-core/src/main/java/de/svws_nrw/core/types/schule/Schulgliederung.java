@@ -1617,8 +1617,7 @@ public enum Schulgliederung {
 	public static @NotNull List<Schulgliederung> getByBkIndex(final int index) {
 		final @NotNull ArrayList<Schulgliederung> result = new ArrayList<>();
 		final @NotNull Schulgliederung @NotNull [] gliederungen = Schulgliederung.values();
-		for (int i = 0; i < gliederungen.length; i++) {
-			final @NotNull Schulgliederung gliederung = gliederungen[i];
+		for (final @NotNull Schulgliederung gliederung : gliederungen) {
 			if ((gliederung.daten.bkIndex != null) && (gliederung.daten.bkIndex == index))
 				result.add(gliederung);
 		}
@@ -1650,8 +1649,7 @@ public enum Schulgliederung {
 		if (schulform == null)
 			return result;
 		final @NotNull Schulgliederung @NotNull [] gliederungen = Schulgliederung.values();
-		for (int i = 0; i < gliederungen.length; i++) {
-			final @NotNull Schulgliederung gliederung = gliederungen[i];
+		for (final @NotNull Schulgliederung gliederung : gliederungen) {
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -1672,8 +1670,7 @@ public enum Schulgliederung {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}
@@ -1694,8 +1691,7 @@ public enum Schulgliederung {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
-			for (int i = 0; i < daten.schulformen.size(); i++) {
-				final String sfKuerzel = daten.schulformen.get(i);
+			for (final @NotNull String sfKuerzel : daten.schulformen) {
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}
@@ -1752,8 +1748,7 @@ public enum Schulgliederung {
 			return getDefault(sf);
 		// Prüfe, ob die Gliederung bei der Schulform existiert
 		final @NotNull List<Schulgliederung> gliederungen = get(sf);
-		for (int i = 0; i < gliederungen.size(); i++) {
-			final Schulgliederung sg = gliederungen.get(i);
+		for (final @NotNull Schulgliederung sg : gliederungen) {
 			if ((sg.daten.kuerzel).equalsIgnoreCase(kuerzel))
 				return sg;
 		}

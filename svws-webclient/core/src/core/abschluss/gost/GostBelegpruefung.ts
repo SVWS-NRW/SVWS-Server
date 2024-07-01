@@ -80,8 +80,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public hatBelegungsfehler() : boolean {
-		for (let i : number = 0; i < this.belegungsfehler.size(); i++) {
-			const fehler : GostBelegungsfehler = this.belegungsfehler.get(i);
+		for (const fehler of this.belegungsfehler) {
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -112,8 +111,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
 	public static istErfolgreich(alleFehler : List<GostBelegungsfehler>) : boolean {
-		for (let i : number = 0; i < alleFehler.size(); i++) {
-			const fehler : GostBelegungsfehler = alleFehler.get(i);
+		for (const fehler of alleFehler) {
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -130,8 +128,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public static getBelegungsfehlerAlle(pruefungen : List<GostBelegpruefung>) : List<GostBelegungsfehler> {
 		const fehler : ArrayList<GostBelegungsfehler> = new ArrayList<GostBelegungsfehler>();
-		for (let i : number = 0; i < pruefungen.size(); i++) {
-			const pruefung : GostBelegpruefung = pruefungen.get(i);
+		for (const pruefung of pruefungen) {
 			fehler.addAll(pruefung.getBelegungsfehler());
 		}
 		return fehler;
