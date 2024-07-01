@@ -3,6 +3,7 @@ package de.svws_nrw.core.data.schueler;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -31,7 +32,7 @@ public class SchuelerVermerke {
 
 	/** Der Vermerk als Text. */
 	@Schema(description = "Der Vermerk als Text. ", example = "20.04.2021")
-	public String bemerkung;
+	public @NotNull String bemerkung = "";
 
 	/** Name des Benutzers welcher den Vermerk angelegt hat. */
 	@Schema(description = "Name des Benutzers welcher den Vermerk angelegt hat", example = "12.02.2023")
