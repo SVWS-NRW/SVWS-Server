@@ -81,7 +81,7 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 
 	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitSchulform> schulform = new ArrayList<>();
 
 
 	/**

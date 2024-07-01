@@ -24,7 +24,7 @@ public final class SchuldateiManager {
 	private final @NotNull SchuldateiKataloge _kataloge;
 
 	/** Die Kataloge zu der Schuldatei anhand ihrer Namen */
-	private final @NotNull Map<@NotNull String, @NotNull SchuldateiKatalogManager> _mapKataloge = new HashMap<>();
+	private final @NotNull Map<String, SchuldateiKatalogManager> _mapKataloge = new HashMap<>();
 
 	/** Der Katalog der Arten von Organisationseinheiten*/
 	public final @NotNull SchuldateiKatalogManager katalogOrganisationseinheitarten;
@@ -69,7 +69,7 @@ public final class SchuldateiManager {
 	public final @NotNull SchuldateiKatalogManager katalogAddressarten;
 
 	/** Eine Map mit den Managern für alle Organisationseinheiten, welche den Schulnummern ihrer Organisationseinheiten zugeordnet sind */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitManager> _mapOrganisationseinheitManagerBySchulnummer = new HashMap<>();
+	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitManager> _mapOrganisationseinheitManagerBySchulnummer = new HashMap<>();
 
 
 	/**
@@ -139,7 +139,7 @@ public final class SchuldateiManager {
 	 *
 	 * @return die Liste aller Organisationseinheiten der Schuldatei
 	 */
-	public @NotNull List<@NotNull SchuldateiOrganisationseinheit> getList() {
+	public @NotNull List<SchuldateiOrganisationseinheit> getList() {
 		return this._schuldatei.organisationseinheit;
 	}
 

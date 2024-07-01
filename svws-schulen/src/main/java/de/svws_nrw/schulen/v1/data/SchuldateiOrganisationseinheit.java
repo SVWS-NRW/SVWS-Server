@@ -49,27 +49,27 @@ public class SchuldateiOrganisationseinheit {
 
 	/** Die Grunddaten der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitGrunddaten.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
 
 	/** Die Adressen der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitAdresse.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitAdresse> adressen = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitAdresse> adressen = new ArrayList<>();
 
 	/** Die Merkmale der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitMerkmal.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitMerkmal> merkmal = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitMerkmal> merkmal = new ArrayList<>();
 
 	/** Die Erreichbarkeiten der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitErreichbarkeit.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitErreichbarkeit> erreichbarkeiten = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitErreichbarkeit> erreichbarkeiten = new ArrayList<>();
 
 	/** Die Eigenschaften der Organisationseinheit */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitEigenschaft.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitEigenschaft> oe_eigenschaften = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitEigenschaft> oe_eigenschaften = new ArrayList<>();
 
 	/** Die Gliederungen der Organisationseinheit-Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitGliederung.class))
-	public final @NotNull List<@NotNull SchuldateiOrganisationseinheitGliederung> gliederung = new ArrayList<>();
+	public final @NotNull List<SchuldateiOrganisationseinheitGliederung> gliederung = new ArrayList<>();
 
 
 	/**

@@ -19,16 +19,16 @@ public class SchuldateiKatalogManager {
 	private final @NotNull String _name;
 
 	/** Die Liste aller Katalog-Einträge dieses Katalogs */
-	private final @NotNull List<@NotNull SchuldateiKatalogeintrag> _eintraege = new ArrayList<>();
+	private final @NotNull List<SchuldateiKatalogeintrag> _eintraege = new ArrayList<>();
 
 	/** Eine Map von dem Wert der Katalog-Einträge auf diese */
-	private final @NotNull Map<@NotNull String, @NotNull SchuldateiKatalogeintrag> _mapEintragByWert = new HashMap<>();
+	private final @NotNull Map<String, SchuldateiKatalogeintrag> _mapEintragByWert = new HashMap<>();
 
 	/** Eine Map von dem Wert (als Integer) der Katalog-Einträge auf diese */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiKatalogeintrag> _mapEintragByIntegerWert = new HashMap<>();
+	private final @NotNull Map<Integer, SchuldateiKatalogeintrag> _mapEintragByIntegerWert = new HashMap<>();
 
 	/** Eine Map von dem Schlüssel der Katalog-Einträge auf eine Menge von zugeordneten Katalog-Einträgen */
-	private final @NotNull Map<@NotNull String, @NotNull Set<@NotNull SchuldateiKatalogeintrag>> _mapEintraegeBySchluessel = new HashMap<>();
+	private final @NotNull Map<String, Set<SchuldateiKatalogeintrag>> _mapEintraegeBySchluessel = new HashMap<>();
 
 
 	/**
@@ -60,9 +60,9 @@ public class SchuldateiKatalogManager {
 			// ignoriere den Eintrag
 		}
 		// ... in der Map der Einträge anhand des Schlüssels
-		Set<@NotNull SchuldateiKatalogeintrag> tmpSetEintraege = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
+		Set<SchuldateiKatalogeintrag> tmpSetEintraege = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
 		if (tmpSetEintraege == null) {
-			tmpSetEintraege = new HashSet<@NotNull SchuldateiKatalogeintrag>();
+			tmpSetEintraege = new HashSet<SchuldateiKatalogeintrag>();
 			this._mapEintraegeBySchluessel.put(eintrag.schluessel, tmpSetEintraege);
 		}
 		tmpSetEintraege.add(eintrag);
@@ -87,9 +87,9 @@ public class SchuldateiKatalogManager {
 	 * @return die Liste der Katalog-Eintrag für den Schlüssel existiert der Schlüssel nicht,
 	 *         so wird eine leere Menge zurückgegeben
 	 */
-	public @NotNull Set<@NotNull SchuldateiKatalogeintrag> getEintraege(final String schluessel) {
-		final Set<@NotNull SchuldateiKatalogeintrag> tmp = _mapEintraegeBySchluessel.get(schluessel);
-		return (tmp == null) ? new HashSet<@NotNull SchuldateiKatalogeintrag>() : tmp;
+	public @NotNull Set<SchuldateiKatalogeintrag> getEintraege(final String schluessel) {
+		final Set<SchuldateiKatalogeintrag> tmp = _mapEintraegeBySchluessel.get(schluessel);
+		return (tmp == null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
 	}
 
 

@@ -29,26 +29,26 @@ public class SchuldateiOrganisationseinheitManager {
 	private final @NotNull SchuldateiOrganisationseinheit _organisationseinheit;
 
 	/** Die Manager für die Adressenn anhand ihrer ID */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitAdressManager> _mapAdressManagerByID = new HashMap<>();
+	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitAdressManager> _mapAdressManagerByID = new HashMap<>();
 
 
 	/** Cache: Eine Map der Grunddaten anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitGrunddaten> _mapGrunddatenBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitGrunddaten> _mapGrunddatenBySchuljahr = new HashMap<>();
 
 	/** Cache: Eine Map der Schulform anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulformBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, String> _mapSchulformBySchuljahr = new HashMap<>();
 
 	/** Cache: Eine Map der SchulformASD anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulformASDBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, String> _mapSchulformASDBySchuljahr = new HashMap<>();
 
 	/** Cache: Eine Map der Schulart anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull String> _mapSchulartBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, String> _mapSchulartBySchuljahr = new HashMap<>();
 
 	/** Cache: Eine Map der Adress-Manager anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull SchuldateiOrganisationseinheitAdressManager>> _mapAdressenBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, List<SchuldateiOrganisationseinheitAdressManager>> _mapAdressenBySchuljahr = new HashMap<>();
 
 	/** Cache: Eine Map des Hauptstandortes anhand des Schuljahres */
-	private final @NotNull Map<@NotNull Integer, @NotNull SchuldateiOrganisationseinheitAdressManager> _mapHauptstandortBySchuljahr = new HashMap<>();
+	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitAdressManager> _mapHauptstandortBySchuljahr = new HashMap<>();
 
 
 	/**
@@ -367,7 +367,7 @@ public class SchuldateiOrganisationseinheitManager {
 		if (daten != null)
 			return daten;
 		// Wenn nicht, dann bestimme alle (!) Einträge, welche in den Zeitraum fallen ...
-		final @NotNull List<@NotNull SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
+		final @NotNull List<SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
 		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten eintrag : this._organisationseinheit.grunddaten)
 			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
 				grunddaten.add(eintrag);
@@ -739,9 +739,9 @@ public class SchuldateiOrganisationseinheitManager {
 	 *
 	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
 	 */
-	public @NotNull List<@NotNull SchuldateiOrganisationseinheitAdressManager> getAdressManager(final int schuljahr) throws IllegalArgumentException {
+	public @NotNull List<SchuldateiOrganisationseinheitAdressManager> getAdressManager(final int schuljahr) throws IllegalArgumentException {
 		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
-		List<@NotNull SchuldateiOrganisationseinheitAdressManager> listManager = _mapAdressenBySchuljahr.get(schuljahr);
+		List<SchuldateiOrganisationseinheitAdressManager> listManager = _mapAdressenBySchuljahr.get(schuljahr);
 		if (listManager != null)
 			return listManager;
 		// Wenn nicht, dann bestimme alle Adressen, welche in dem Zeitraum gültig sind ...

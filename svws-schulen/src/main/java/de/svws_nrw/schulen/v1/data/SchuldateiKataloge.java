@@ -19,7 +19,7 @@ public class SchuldateiKataloge {
 
 	/** Die Katalog-Einträge */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiKatalogeintrag.class))
-	public @NotNull List<@NotNull SchuldateiKatalogeintrag> katalog = new ArrayList<>();
+	public @NotNull List<SchuldateiKatalogeintrag> katalog = new ArrayList<>();
 
 
 	/**

@@ -19,7 +19,7 @@ public class Schuldatei {
 
 	/** Die Organisationseinheit des Eintrags */
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheit.class))
-	public @NotNull List<@NotNull SchuldateiOrganisationseinheit> organisationseinheit = new ArrayList<>();
+	public @NotNull List<SchuldateiOrganisationseinheit> organisationseinheit = new ArrayList<>();
 
 
 	/**
