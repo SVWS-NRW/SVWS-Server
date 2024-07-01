@@ -19,10 +19,10 @@ public class GostKlausurenCollectionSkSkt {
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
 
 }

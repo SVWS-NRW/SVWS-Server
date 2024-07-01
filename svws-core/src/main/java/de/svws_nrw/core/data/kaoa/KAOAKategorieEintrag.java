@@ -33,7 +33,7 @@ public class KAOAKategorieEintrag {
 
 	/** Jahrgangsstufen in denen der Eintrag gemacht werden darf */
 	@Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")
-	public @NotNull List<@NotNull String> jahrgaenge = new ArrayList<>();
+	public @NotNull List<String> jahrgaenge = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")
@@ -61,7 +61,7 @@ public class KAOAKategorieEintrag {
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public KAOAKategorieEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung,
-			final @NotNull List<@NotNull Jahrgaenge> jahrgaenge, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Jahrgaenge> jahrgaenge, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

@@ -31,10 +31,10 @@ public class BKBildungsplan {
 
 	/** Die zugehörigen Bündelfächer */
 	@Schema(description = "Die zugehörigen Bündelfächer des Bildungsplans", example = "{1000,2000}")
-	public @NotNull List<@NotNull BKFBFach> fbFaecher = new ArrayList<>();
+	public @NotNull List<BKFBFach> fbFaecher = new ArrayList<>();
 
 	/** Die zugehörige Liste der Lernfelder. */
-	public @NotNull List<@NotNull BKLernfeld> lernfelder = new ArrayList<>();
+	public @NotNull List<BKLernfeld> lernfelder = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",

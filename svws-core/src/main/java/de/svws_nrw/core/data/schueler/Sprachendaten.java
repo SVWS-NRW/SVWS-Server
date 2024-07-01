@@ -19,9 +19,9 @@ public class Sprachendaten {
 	public long schuelerID;
 
 	/** Die Liste der Sprachbelegungen. */
-	public @NotNull List<@NotNull Sprachbelegung> belegungen = new ArrayList<>();
+	public @NotNull List<Sprachbelegung> belegungen = new ArrayList<>();
 
 	/** Die Liste der Sprachpruefungen. */
-	public @NotNull List<@NotNull Sprachpruefung> pruefungen = new ArrayList<>();
+	public @NotNull List<Sprachpruefung> pruefungen = new ArrayList<>();
 
 }

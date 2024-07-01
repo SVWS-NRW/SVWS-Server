@@ -20,19 +20,19 @@ public class GostKlausurenCollectionSkrsKrs {
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostKlausurraum> raeume = new ArrayList<>();
+	public @NotNull List<GostKlausurraum> raeume = new ArrayList<>();
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostKlausurraumstunde> raumstunden = new ArrayList<>();
+	public @NotNull List<GostKlausurraumstunde> raumstunden = new ArrayList<>();
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostKlausurraumstunde> raumstundenGeloescht = new ArrayList<>();
+	public @NotNull List<GostKlausurraumstunde> raumstundenGeloescht = new ArrayList<>();
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> sktRaumstunden = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausurterminraumstunde> sktRaumstunden = new ArrayList<>();
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
@@ -40,7 +40,7 @@ public class GostKlausurenCollectionSkrsKrs {
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull Long> idsSchuelerklausurtermine = new ArrayList<>();
+	public @NotNull List<Long> idsSchuelerklausurtermine = new ArrayList<>();
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")

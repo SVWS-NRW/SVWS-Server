@@ -27,11 +27,11 @@ public class StundenplanKomplett {
 
 	/** Die Unterrichtsdaten des Stundenplans. */
 	@Schema(description = "die Unterrichtsdaten des Stundenplans")
-	public @NotNull List<@NotNull StundenplanUnterricht> unterrichte = new ArrayList<>();
+	public @NotNull List<StundenplanUnterricht> unterrichte = new ArrayList<>();
 
 	/** Die Informationen zu den Pausenaufsichten. */
 	@Schema(description = "die Informationen zu den Pausenaufsichten")
-	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten = new ArrayList<>();
+	public @NotNull List<StundenplanPausenaufsicht> pausenaufsichten = new ArrayList<>();
 
 	/** Die Zusatzinformationen zu der Unterrichtsverteilung. */
 	@Schema(description = "die Zusatzinformationen zu der Unterrichtsverteilung")

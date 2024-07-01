@@ -19,22 +19,22 @@ public class GostKlausurenDataCollection {
 
 	/** Die Liste der Klausurvorgaben. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
+	public @NotNull List<GostKlausurvorgabe> vorgaben = new ArrayList<>();
 
 	/** Die Liste der Kursklausuren. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
+	public @NotNull List<GostKursklausur> kursklausuren = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+	public @NotNull List<GostKlausurtermin> termine = new ArrayList<>();
 
 }

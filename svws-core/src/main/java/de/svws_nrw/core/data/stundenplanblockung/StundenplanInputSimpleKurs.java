@@ -19,23 +19,23 @@ public class StundenplanInputSimpleKurs {
 
 	/** 0 bis n Lehrkräfte werden dem Kurs zugeordnet. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleLehrkraft.class))
-	public @NotNull List<@NotNull StundenplanInputSimpleLehrkraft> lehrkraefte = new ArrayList<>();
+	public @NotNull List<StundenplanInputSimpleLehrkraft> lehrkraefte = new ArrayList<>();
 
 	/** 0 bis n Klassen werden dem Kurs zugeordnet. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKlasse.class))
-	public @NotNull List<@NotNull StundenplanInputSimpleKlasse> klassen = new ArrayList<>();
+	public @NotNull List<StundenplanInputSimpleKlasse> klassen = new ArrayList<>();
 
 	/** 0 oder 1 Fach wird dem Kurs zugeordnet. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleFach.class))
-	public @NotNull List<@NotNull StundenplanInputSimpleFach> faecher = new ArrayList<>();
+	public @NotNull List<StundenplanInputSimpleFach> faecher = new ArrayList<>();
 
 	/** 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleRaum.class))
-	public @NotNull List<@NotNull StundenplanInputSimpleRaum> raeume = new ArrayList<>();
+	public @NotNull List<StundenplanInputSimpleRaum> raeume = new ArrayList<>();
 
 	/** 0 oder 1 Kopplung wird dem Kurs zugeordnet. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKopplung.class))
-	public @NotNull List<@NotNull StundenplanInputSimpleKopplung> kopplungen = new ArrayList<>();
+	public @NotNull List<StundenplanInputSimpleKopplung> kopplungen = new ArrayList<>();
 
 	/** Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden. */
 	public int wochenstunden = -1;

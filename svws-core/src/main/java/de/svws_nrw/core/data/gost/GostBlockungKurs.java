@@ -45,6 +45,6 @@ public class GostBlockungKurs {
 	public int anzahlSchienen = 1;
 
 	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
-	public @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = new ArrayList<>();
+	public @NotNull List<GostBlockungKursLehrer> lehrer = new ArrayList<>();
 
 }

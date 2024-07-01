@@ -58,7 +58,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Kategorien dieses Kontakts
 	 */
-	public kategorien : List<string> | null = new ArrayList<string>();
+	public kategorien : List<string> = new ArrayList<string>();
 
 	/**
 	 *  Die Organisation dieses Kontakts

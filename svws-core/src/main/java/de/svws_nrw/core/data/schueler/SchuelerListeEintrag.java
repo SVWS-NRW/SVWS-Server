@@ -73,6 +73,6 @@ public class SchuelerListeEintrag {
 
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public final @NotNull List<@NotNull Long> kurse = new ArrayList<>();
+	public final @NotNull List<Long> kurse = new ArrayList<>();
 
 }

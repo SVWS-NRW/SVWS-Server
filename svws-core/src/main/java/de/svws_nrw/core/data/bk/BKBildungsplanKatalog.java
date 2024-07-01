@@ -24,6 +24,6 @@ public class BKBildungsplanKatalog {
 
 	/** Die Einträge des Katalogs. */
 	@Schema(description = "die Lehrpläne des Katalogs")
-	public @NotNull List<@NotNull BKBildungsplanKatalogEintrag> lehrplaene = new ArrayList<>();
+	public @NotNull List<BKBildungsplanKatalogEintrag> lehrplaene = new ArrayList<>();
 
 }

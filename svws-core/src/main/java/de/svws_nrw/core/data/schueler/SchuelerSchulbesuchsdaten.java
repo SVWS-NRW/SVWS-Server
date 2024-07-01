@@ -133,7 +133,7 @@ public class SchuelerSchulbesuchsdaten {
 	/** Die Informationen zu den besonderen Merkmalen für die Statistik. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class,
 			description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
-	public @NotNull List<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
+	public @NotNull List<SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
 
 
 	// **** Informationen zu allen bisher besuchten Schulen (Array)
@@ -141,6 +141,6 @@ public class SchuelerSchulbesuchsdaten {
 	/** Die Informationen zu allen bisher besuchten Schulen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class,
 			description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
-	public @NotNull List<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
+	public @NotNull List<SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
 
 }

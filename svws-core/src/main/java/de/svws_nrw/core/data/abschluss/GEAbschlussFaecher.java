@@ -33,6 +33,6 @@ public class GEAbschlussFaecher {
 
 	/** Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen. */
 	@Schema(description = "Die Fachinformationen")
-	public @NotNull List<@NotNull GEAbschlussFach> faecher = new ArrayList<>();
+	public @NotNull List<GEAbschlussFach> faecher = new ArrayList<>();
 
 }

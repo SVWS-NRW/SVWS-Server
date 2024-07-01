@@ -32,34 +32,34 @@ public class StundenplanblockungLerngruppe {
 
 	/** Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLehrkraft.class))
-	public @NotNull List<@NotNull StundenplanblockungLehrkraft> lehrkraefte1 = new ArrayList<>();
+	public @NotNull List<StundenplanblockungLehrkraft> lehrkraefte1 = new ArrayList<>();
 
 	/** Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLehrkraft.class))
-	public @NotNull List<@NotNull StundenplanblockungLehrkraft> lehrkraefte2 = new ArrayList<>();
+	public @NotNull List<StundenplanblockungLehrkraft> lehrkraefte2 = new ArrayList<>();
 
 	/** Alle Klassen, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKlasse.class))
-	public @NotNull List<@NotNull StundenplanblockungKlasse> klassen = new ArrayList<>();
+	public @NotNull List<StundenplanblockungKlasse> klassen = new ArrayList<>();
 
 	/** Alle Fächer, die dieser Lerngruppe zugeordnet sind. In der Regel genau ein Fach.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungFach.class))
-	public @NotNull List<@NotNull StundenplanblockungFach> faecher = new ArrayList<>();
+	public @NotNull List<StundenplanblockungFach> faecher = new ArrayList<>();
 
 	/** Alle Räume, die für diese Lerngruppe primär in Frage kommen.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
-	public @NotNull List<@NotNull StundenplanblockungRaum> raeume1 = new ArrayList<>();
+	public @NotNull List<StundenplanblockungRaum> raeume1 = new ArrayList<>();
 
 	/** Alle Räume, die für diese Lerngruppe sekundär (alternativ) in Frage kommen.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
-	public @NotNull List<@NotNull StundenplanblockungRaum> raeume2 = new ArrayList<>();
+	public @NotNull List<StundenplanblockungRaum> raeume2 = new ArrayList<>();
 
 	/** Alle Kopplungen, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKopplung.class))
-	public @NotNull List<@NotNull StundenplanblockungKopplung> kopplungen = new ArrayList<>();
+	public @NotNull List<StundenplanblockungKopplung> kopplungen = new ArrayList<>();
 
 	/** Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
-	public @NotNull List<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
+	public @NotNull List<StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
 }

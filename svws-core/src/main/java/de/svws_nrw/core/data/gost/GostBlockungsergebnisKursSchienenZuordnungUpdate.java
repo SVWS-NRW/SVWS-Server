@@ -17,10 +17,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostBlockungsergebnisKursSchienenZuordnungUpdate {
 
 	/** Die zu entfernenden Zuordnungen */
-	public @NotNull List<@NotNull GostBlockungsergebnisKursSchienenZuordnung> listEntfernen = new ArrayList<>();
+	public @NotNull List<GostBlockungsergebnisKursSchienenZuordnung> listEntfernen = new ArrayList<>();
 
 	/** Die hinzuzufügenden Zuordnungen */
-	public @NotNull List<@NotNull GostBlockungsergebnisKursSchienenZuordnung> listHinzuzufuegen = new ArrayList<>();
+	public @NotNull List<GostBlockungsergebnisKursSchienenZuordnung> listHinzuzufuegen = new ArrayList<>();
 
 	/** Die Blockungs-Regeln, die dabei angepasst werden sollen. Das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist. */
 	public @NotNull GostBlockungRegelUpdate regelUpdates = new GostBlockungRegelUpdate();

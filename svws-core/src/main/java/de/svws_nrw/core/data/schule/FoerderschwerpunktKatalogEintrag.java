@@ -32,7 +32,7 @@ public class FoerderschwerpunktKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -61,7 +61,7 @@ public class FoerderschwerpunktKatalogEintrag {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public FoerderschwerpunktKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung,
-			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

@@ -42,6 +42,6 @@ public class StundenplanPausenzeit {
 	/** Die IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen! */
 	@ArraySchema(schema = @Schema(implementation = Long.class,
 			description = "Ein Array mit den IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen!"))
-	public @NotNull List<@NotNull Long> klassen = new ArrayList<>();
+	public @NotNull List<Long> klassen = new ArrayList<>();
 
 }

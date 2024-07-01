@@ -18,6 +18,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostJahrgangFachwahlenHalbjahr {
 
 	/** Die Fachwahlen für den Abiturbereich */
-	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
+	public @NotNull List<GostFachwahl> fachwahlen = new ArrayList<>();
 
 }

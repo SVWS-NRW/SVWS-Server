@@ -23,6 +23,6 @@ public class GostBlockungsergebnisSchiene {
 	public long id = -1;
 
 	/** Eine Liste der Kurse, welche dieser Schiene zugeordnet sind. */
-	public final @NotNull List<@NotNull GostBlockungsergebnisKurs> kurse = new ArrayList<>();
+	public final @NotNull List<GostBlockungsergebnisKurs> kurse = new ArrayList<>();
 
 }

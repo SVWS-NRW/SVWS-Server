@@ -51,7 +51,7 @@ public class ENMLerngruppe {
 	/** Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen zu den "
 			+ "IDs der Lehrer, die der Lerngruppe zugeordnet sind."))
-	public @NotNull List<@NotNull Long> lehrerID = new ArrayList<>();
+	public @NotNull List<Long> lehrerID = new ArrayList<>();
 
 	/** Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. */
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")

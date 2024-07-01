@@ -30,6 +30,6 @@ public class StundenplanblockungKopplung {
 
 	/** Alle Stundenelemente, die dieser Kopplung zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
-	public @NotNull List<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
+	public @NotNull List<StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
 }

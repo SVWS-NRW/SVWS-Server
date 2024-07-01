@@ -42,7 +42,7 @@ public class KAOAMerkmalEintrag {
 
 	/** Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf */
 	@Schema(description = "die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf")
-	public @NotNull List<@NotNull String> bkAnlagen = new ArrayList<>();
+	public @NotNull List<String> bkAnlagen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")
@@ -73,7 +73,7 @@ public class KAOAMerkmalEintrag {
 	 */
 	public KAOAMerkmalEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung,
 			final @NotNull KAOAKategorie kategorie, final @NotNull KAOAMerkmaleOptionsarten optionsart,
-			final @NotNull List<@NotNull Schulgliederung> bkAnlagen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulgliederung> bkAnlagen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

@@ -29,7 +29,7 @@ public class BKLernfeld {
 
 	/** Die Bündelfächer, denen das Lernfeld zugeordnet ist.*/
 	@Schema(description = "die zugeordneten Buendelfaecher (meist nur eins).")
-	public @NotNull List<@NotNull String> buendelfaecher = new ArrayList<>();
+	public @NotNull List<String> buendelfaecher = new ArrayList<>();
 
 	/** Das Ausbildungsjahr, in dem das Lernfeld unterrichtet wird.*/
 	@Schema(description = "das Ausbildungsjahr, in dem das Lernfeld unterrichtet wird.")

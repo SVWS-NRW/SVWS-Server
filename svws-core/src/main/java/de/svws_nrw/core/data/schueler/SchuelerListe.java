@@ -28,22 +28,22 @@ public class SchuelerListe {
 
 	/** Die Listen-Einträge für die Schüler */
 	@ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))
-	public final @NotNull List<@NotNull SchuelerListeEintrag> schueler = new ArrayList<>();
+	public final @NotNull List<SchuelerListeEintrag> schueler = new ArrayList<>();
 
 	/** Die Klassen-Daten */
 	@ArraySchema(schema = @Schema(implementation = KlassenDaten.class))
-	public final @NotNull List<@NotNull KlassenDaten> klassen = new ArrayList<>();
+	public final @NotNull List<KlassenDaten> klassen = new ArrayList<>();
 
 	/** Die Kurs-Daten */
 	@ArraySchema(schema = @Schema(implementation = KursDaten.class))
-	public final @NotNull List<@NotNull KursDaten> kurse = new ArrayList<>();
+	public final @NotNull List<KursDaten> kurse = new ArrayList<>();
 
 	/** Die Jahrgangs-Daten */
 	@ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))
-	public final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge = new ArrayList<>();
+	public final @NotNull List<JahrgangsDaten> jahrgaenge = new ArrayList<>();
 
 	/** Die Daten zu den Jahrgängen der Gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostJahrgang.class))
-	public final @NotNull List<@NotNull GostJahrgang> jahrgaengeGost = new ArrayList<>();
+	public final @NotNull List<GostJahrgang> jahrgaengeGost = new ArrayList<>();
 
 }

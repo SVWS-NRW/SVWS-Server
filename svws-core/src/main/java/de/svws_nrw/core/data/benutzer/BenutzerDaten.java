@@ -47,11 +47,11 @@ public class BenutzerDaten {
 
 	/** Die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist. */
 	@Schema(description = "die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist")
-	public @NotNull List<@NotNull BenutzergruppeDaten> gruppen = new ArrayList<>();
+	public @NotNull List<BenutzergruppeDaten> gruppen = new ArrayList<>();
 
 	/** Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
 	@Schema(description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
-	public @NotNull List<@NotNull Long> kompetenzen = new ArrayList<>();
+	public @NotNull List<Long> kompetenzen = new ArrayList<>();
 
 
 }

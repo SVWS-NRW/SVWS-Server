@@ -49,6 +49,6 @@ public class SchildReportingDatenquelle {
 	/** Die Liste der JSON-Attribute für diese Datenquelle. */
 	@ArraySchema(schema = @Schema(implementation = SchildReportingDatenquelleAttribut.class,
 			description = "Die Liste der JSON-Attribute für diese Datenquelle."))
-	public @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute = new ArrayList<>();
+	public @NotNull List<SchildReportingDatenquelleAttribut> attribute = new ArrayList<>();
 
 }

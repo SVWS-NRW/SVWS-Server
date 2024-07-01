@@ -23,6 +23,6 @@ public class AbgangsartKatalog {
 
 	/** Die Einträge des Katalogs. */
 	@Schema(description = "die Einträge des Katalogs")
-	public @NotNull List<@NotNull AbgangsartKatalogEintrag> eintraege = new ArrayList<>();
+	public @NotNull List<AbgangsartKatalogEintrag> eintraege = new ArrayList<>();
 
 }

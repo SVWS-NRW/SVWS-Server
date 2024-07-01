@@ -17,6 +17,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostKlausurterminblockungErgebnis {
 
 	/** Eine Liste der Termine-Ergebnisse */
-	public @NotNull List<@NotNull GostKlausurterminblockungErgebnisTermin> termine = new ArrayList<>();
+	public @NotNull List<GostKlausurterminblockungErgebnisTermin> termine = new ArrayList<>();
 
 }

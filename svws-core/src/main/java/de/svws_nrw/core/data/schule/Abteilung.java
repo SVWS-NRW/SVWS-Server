@@ -52,6 +52,6 @@ public class Abteilung {
 
 	/** Die Zuordnung der Klassen zu der Abteilung. */
 	@ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class, description = "die Zuordnung der Klassen zu der Abteilung."))
-	public final @NotNull List<@NotNull AbteilungKlassenzuordnung> klassen = new ArrayList<>();
+	public final @NotNull List<AbteilungKlassenzuordnung> klassen = new ArrayList<>();
 
 }

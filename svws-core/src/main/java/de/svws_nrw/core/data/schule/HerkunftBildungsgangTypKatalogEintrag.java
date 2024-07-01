@@ -32,7 +32,7 @@ public class HerkunftBildungsgangTypKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB). */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (WB oder BK und SB)")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Die textuelle Beschreibung des Bildungsgangtyps. */
 	@Schema(description = "die textuelle Beschreibung des Bildungsgangtyps", example = "Weiterbildungskolleg: Abendgymnasium")

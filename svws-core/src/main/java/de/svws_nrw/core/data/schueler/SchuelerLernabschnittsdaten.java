@@ -206,6 +206,6 @@ public class SchuelerLernabschnittsdaten {
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class,
 			description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
-	public @NotNull List<@NotNull SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
+	public @NotNull List<SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
 
 }

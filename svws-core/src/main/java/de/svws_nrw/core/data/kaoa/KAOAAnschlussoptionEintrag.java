@@ -33,11 +33,11 @@ public class KAOAAnschlussoptionEintrag {
 
 	/** Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII) */
 	@Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)")
-	public @NotNull List<@NotNull String> stufen = new ArrayList<>();
+	public @NotNull List<String> stufen = new ArrayList<>();
 
 	/** Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden */
 	@Schema(description = "Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden")
-	public @NotNull List<@NotNull String> anzeigeZusatzmerkmal = new ArrayList<>();
+	public @NotNull List<String> anzeigeZusatzmerkmal = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")
@@ -67,7 +67,7 @@ public class KAOAAnschlussoptionEintrag {
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public KAOAAnschlussoptionEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung,
-			final @NotNull List<@NotNull Schulstufe> stufen, final @NotNull List<@NotNull KAOAZusatzmerkmal> anzeigeZusatzmerkmal,
+			final @NotNull List<Schulstufe> stufen, final @NotNull List<KAOAZusatzmerkmal> anzeigeZusatzmerkmal,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

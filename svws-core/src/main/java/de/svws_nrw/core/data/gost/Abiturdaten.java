@@ -50,7 +50,7 @@ public class Abiturdaten {
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
 	@ArraySchema(schema = @Schema(implementation = AbiturFachbelegung.class, description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
-	public final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = new ArrayList<>();
+	public final @NotNull List<AbiturFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
 	@Schema(implementation = Sprachendaten.class,

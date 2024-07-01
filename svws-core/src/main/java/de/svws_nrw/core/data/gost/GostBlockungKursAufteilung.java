@@ -28,10 +28,10 @@ public class GostBlockungKursAufteilung {
 
 	/** Die IDs der Schüler, die dem ersten Kurs zugeordnet bleiben. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Die IDs der Schüler, die dem ersten Kurs zugeordnet bleiben."))
-	public @NotNull List<@NotNull Long> schueler1 = new ArrayList<>();
+	public @NotNull List<Long> schueler1 = new ArrayList<>();
 
 	/** Die IDs der Schüler, die dem zweiten Kurs zugeordnet werden. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Die IDs der Schüler, die dem zweiten Kurs zugeordnet werden."))
-	public @NotNull List<@NotNull Long> schueler2 = new ArrayList<>();
+	public @NotNull List<Long> schueler2 = new ArrayList<>();
 
 }

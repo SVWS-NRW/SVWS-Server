@@ -49,7 +49,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Die Telefonnummern des Kontakts. */
 	@ArraySchema(schema = @Schema(description = "Die Telefonnummern des Kontakts. ", example = "..."))
-	public @NotNull List<@NotNull Telefonnummer> telefonnummern = new ArrayList<>();
+	public @NotNull List<Telefonnummer> telefonnummern = new ArrayList<>();
 
 	/** Die Mailadresse des Kontakts. */
 	@Schema(description = "die Mailadresse des Kontakts", example = "info@schule.de")
@@ -61,7 +61,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Die Kategorien dieses Kontakts */
 	@ArraySchema(schema = @Schema(description = "Die Kategorien dieses Kontakts", example = "..."))
-	public List<String> kategorien = new ArrayList<>();
+	public @NotNull List<String> kategorien = new ArrayList<>();
 
 	/**
 	 * Die Organisation dieses Kontakts

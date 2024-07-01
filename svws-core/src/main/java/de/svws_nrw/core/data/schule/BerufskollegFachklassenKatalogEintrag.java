@@ -27,6 +27,6 @@ public class BerufskollegFachklassenKatalogEintrag {
 
 	/** Die Historie des Katalog-Eintrags. */
 	@Schema(description = "die Historie des Katalog-Eintrags")
-	public @NotNull List<@NotNull BerufskollegFachklassenKatalogDaten> historie = new ArrayList<>();
+	public @NotNull List<BerufskollegFachklassenKatalogDaten> historie = new ArrayList<>();
 
 }

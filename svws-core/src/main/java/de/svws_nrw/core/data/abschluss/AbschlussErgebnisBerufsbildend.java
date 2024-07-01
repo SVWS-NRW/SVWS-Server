@@ -37,6 +37,6 @@ public class AbschlussErgebnisBerufsbildend {
 	/** Der Log der Abschlussberechnung. */
 	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung",
 			example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
-	public List<@NotNull String> log;
+	public List<String> log;
 
 }

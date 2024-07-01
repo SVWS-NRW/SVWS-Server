@@ -21,11 +21,11 @@ public class GostKlausurraumblockungKonfiguration {
 
 	/** Die Liste der angereicherten Schülerklausurtermine. */
 	@Schema(description = "die Liste der zu blockenden Schülerklausurtermine", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausurTerminRich> schuelerklausurtermine = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausurTerminRich> schuelerklausurtermine = new ArrayList<>();
 
 	/** Die Liste der angereicherten Klausurräume. */
 	@Schema(description = "die Liste der GostKlausurräume, in die geblockt werden soll", example = "")
-	public @NotNull List<@NotNull GostKlausurraumRich> raeume = new ArrayList<>();
+	public @NotNull List<GostKlausurraumRich> raeume = new ArrayList<>();
 
 	/** TRUE, dann werden so wenig Räume wie möglich genutzt.
 	 *  Falls {@link #_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume} auch TRUE, dann gilt diese Regel primär.*/

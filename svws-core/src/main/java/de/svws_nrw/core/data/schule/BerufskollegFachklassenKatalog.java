@@ -24,6 +24,6 @@ public class BerufskollegFachklassenKatalog {
 
 	/** Die Teilkataloge in Abhängigkeit vom Index der Fachklassen. */
 	@Schema(description = "die Teilkataloge in Abhängigkeit vom Index der Fachklassen")
-	public @NotNull List<@NotNull BerufskollegFachklassenKatalogIndex> indizes = new ArrayList<>();
+	public @NotNull List<BerufskollegFachklassenKatalogIndex> indizes = new ArrayList<>();
 
 }

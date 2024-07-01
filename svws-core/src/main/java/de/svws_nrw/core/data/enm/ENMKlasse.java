@@ -41,6 +41,6 @@ public class ENMKlasse {
 
 	/** Die IDs der zugeordneten Klassenlehrer. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen der IDs der zugeordneten Klassenlehrer."))
-	public @NotNull List<@NotNull Long> klassenlehrer = new ArrayList<>();
+	public @NotNull List<Long> klassenlehrer = new ArrayList<>();
 
 }

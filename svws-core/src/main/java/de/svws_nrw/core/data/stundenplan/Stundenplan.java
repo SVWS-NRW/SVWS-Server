@@ -44,30 +44,30 @@ public class Stundenplan {
 
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
-	public @NotNull List<@NotNull StundenplanZeitraster> zeitraster = new ArrayList<>();
+	public @NotNull List<StundenplanZeitraster> zeitraster = new ArrayList<>();
 
 	/** Die Liste der Räume, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Räume, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanRaum> raeume = new ArrayList<>();
+	public @NotNull List<StundenplanRaum> raeume = new ArrayList<>();
 
 	/** Die Liste der Schienen, die für den Stundenplan angelegt sind. */
 	@Schema(description = "die Liste der Schienen, die für den Stundenplan angelegt sind")
-	public @NotNull List<@NotNull StundenplanSchiene> schienen = new ArrayList<>();
+	public @NotNull List<StundenplanSchiene> schienen = new ArrayList<>();
 
 	/** Die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen. */
 	@Schema(description = "die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen")
-	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeiten = new ArrayList<>();
+	public @NotNull List<StundenplanPausenzeit> pausenzeiten = new ArrayList<>();
 
 	/** Die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen. */
 	@Schema(description = "die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen")
-	public @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereiche = new ArrayList<>();
+	public @NotNull List<StundenplanAufsichtsbereich> aufsichtsbereiche = new ArrayList<>();
 
 	/** Die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden. */
 	@Schema(description = "die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden")
-	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenZuordnung = new ArrayList<>();
+	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenZuordnung = new ArrayList<>();
 
 	/** Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanJahrgang> jahrgaenge = new ArrayList<>();
+	public @NotNull List<StundenplanJahrgang> jahrgaenge = new ArrayList<>();
 
 }

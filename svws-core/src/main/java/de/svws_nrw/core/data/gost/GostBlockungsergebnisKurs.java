@@ -32,8 +32,8 @@ public class GostBlockungsergebnisKurs {
 	public int anzahlSchienen = -1;
 
 	/** Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind. */
-	public final @NotNull List<@NotNull Long> schueler = new ArrayList<>();
+	public final @NotNull List<Long> schueler = new ArrayList<>();
 
 	/** Die Schienen-IDs, denen der Kurs zugeordnet ist. */
-	public final @NotNull List<@NotNull Long> schienen = new ArrayList<>();
+	public final @NotNull List<Long> schienen = new ArrayList<>();
 }

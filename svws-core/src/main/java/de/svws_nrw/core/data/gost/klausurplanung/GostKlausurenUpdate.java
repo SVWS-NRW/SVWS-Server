@@ -18,9 +18,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostKlausurenUpdate {
 
 	/** Die zu entfernenden Regeln */
-	public @NotNull List<@NotNull Long> listSchuelerklausurTermineRemoveIdTermin = new ArrayList<>();
+	public @NotNull List<Long> listSchuelerklausurTermineRemoveIdTermin = new ArrayList<>();
 
 	/** Die hinzuzufügenden Regeln */
-	public @NotNull List<@NotNull Long> listKlausurtermineNachschreiberZugelassenFalse = new ArrayList<>();
+	public @NotNull List<Long> listKlausurtermineNachschreiberZugelassenFalse = new ArrayList<>();
 
 }

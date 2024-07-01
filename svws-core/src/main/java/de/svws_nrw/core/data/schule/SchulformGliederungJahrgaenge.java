@@ -28,6 +28,6 @@ public class SchulformGliederungJahrgaenge {
 
 	/** Die Liste der Jahrgänge. */
 	@Schema(description = "die Liste der Jahrgänge")
-	public @NotNull List<@NotNull String> jahrgaenge = new ArrayList<>();
+	public @NotNull List<String> jahrgaenge = new ArrayList<>();
 
 }

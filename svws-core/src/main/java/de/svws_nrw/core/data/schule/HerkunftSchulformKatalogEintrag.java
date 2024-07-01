@@ -34,7 +34,7 @@ public class HerkunftSchulformKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Die textuelle Beschreibung der Herkunftsschulform. */
 	@Schema(description = "die textuelle Beschreibung der Herkunftsschulform", example = "Sekundarschule")
@@ -68,7 +68,7 @@ public class HerkunftSchulformKatalogEintrag {
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public HerkunftSchulformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String kuerzelStatistik,
-			final @NotNull List<@NotNull Schulform> schulformen, final @NotNull String beschreibung,
+			final @NotNull List<Schulform> schulformen, final @NotNull String beschreibung,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

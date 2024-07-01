@@ -28,10 +28,10 @@ public class GostBelegpruefungsdaten {
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public @NotNull List<@NotNull GostFach> gostFaecher = new ArrayList<>();
+	public @NotNull List<GostFach> gostFaecher = new ArrayList<>();
 
 	/** Die Informationen zu den nicht zulässigen und geforderten Fächerkombinationen. */
 	@Schema(description = "die Informationen zu den nicht zulässigen und geforderten Fächerkombinationen", implementation = GostJahrgangFachkombination.class)
-	public @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherKombinationen = new ArrayList<>();
+	public @NotNull List<GostJahrgangFachkombination> gostFaecherKombinationen = new ArrayList<>();
 
 }

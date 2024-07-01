@@ -19,6 +19,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchuelerblockungOutput {
 
 	/** Alle Fachwahlen-Zuordnungen. */
-	public @NotNull List<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new ArrayList<>();
+	public @NotNull List<SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new ArrayList<>();
 
 }

@@ -17,6 +17,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostKlausurterminblockungErgebnisTermin {
 
 	/** Eine Liste der, dem Termin zugeordneten, Kurs-Klausur-IDs */
-	public @NotNull List<@NotNull Long> kursklausuren = new ArrayList<>();
+	public @NotNull List<Long> kursklausuren = new ArrayList<>();
 
 }

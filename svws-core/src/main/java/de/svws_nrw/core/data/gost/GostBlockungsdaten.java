@@ -38,21 +38,21 @@ public class GostBlockungsdaten {
 	public boolean istAktiv = false;
 
 	/** Die Definition der Schienen */
-	public @NotNull List<@NotNull GostBlockungSchiene> schienen = new ArrayList<>();
+	public @NotNull List<GostBlockungSchiene> schienen = new ArrayList<>();
 
 	/** Die Definition der Regeln */
-	public @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
+	public @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
 
 	/** Die für die Blockung angelegten Kurse */
-	public @NotNull List<@NotNull GostBlockungKurs> kurse = new ArrayList<>();
+	public @NotNull List<GostBlockungKurs> kurse = new ArrayList<>();
 
 	/** Die SchülerInnen für die Blockung. */
-	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
+	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Die Fachwahlen für die Blockung */
-	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
+	public @NotNull List<GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  */
-	public final @NotNull List<@NotNull GostBlockungsergebnis> ergebnisse = new ArrayList<>();
+	public final @NotNull List<GostBlockungsergebnis> ergebnisse = new ArrayList<>();
 
 }

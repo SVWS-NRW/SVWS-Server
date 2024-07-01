@@ -19,10 +19,10 @@ public class BenutzerConfig {
 
 	/** Die Konfiguration, die dem Benutzer zugeordnet ist. */
 	@Schema(description = "die Konfiguration, die dem Benutzer zugeordnet ist")
-	public @NotNull List<@NotNull BenutzerConfigElement> user = new ArrayList<>();
+	public @NotNull List<BenutzerConfigElement> user = new ArrayList<>();
 
 	/** Die globale Konfiguration, die auch für den Benutzer gilt. */
 	@Schema(description = "die globale Konfiguration, die auch für den Benutzer gilt")
-	public @NotNull List<@NotNull BenutzerConfigElement> global = new ArrayList<>();
+	public @NotNull List<BenutzerConfigElement> global = new ArrayList<>();
 
 }

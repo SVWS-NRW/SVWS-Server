@@ -53,7 +53,7 @@ public class GostLaufbahnplanungDatenSchueler {
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenFachbelegung.class,
 			description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
-	public final @NotNull List<@NotNull GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new ArrayList<>();
+	public final @NotNull List<GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
 	@Schema(implementation = Sprachendaten.class,

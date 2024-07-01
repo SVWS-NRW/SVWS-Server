@@ -21,11 +21,11 @@ public class GostNachschreibterminblockungKonfiguration {
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die Liste der zu blockenden Schülerklausurtermine", example = "")
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die Liste der GostKlausurtermine, in die geblockt werden soll", example = "")
-	public @NotNull List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+	public @NotNull List<GostKlausurtermin> termine = new ArrayList<>();
 
 	/** True, falls NachschreiberInnen der selben Klausur auf den selben Termin geblockt werden sollen. */
 	public boolean _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = false;

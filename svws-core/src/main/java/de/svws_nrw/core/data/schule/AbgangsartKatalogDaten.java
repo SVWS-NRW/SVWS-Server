@@ -27,7 +27,7 @@ public class AbgangsartKatalogDaten {
 
 	/** Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist. */
 	@Schema(description = "die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist")
-	public @NotNull List<@NotNull SchulformGliederungJahrgaenge> zulaessig = new ArrayList<>();
+	public @NotNull List<SchulformGliederungJahrgaenge> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",

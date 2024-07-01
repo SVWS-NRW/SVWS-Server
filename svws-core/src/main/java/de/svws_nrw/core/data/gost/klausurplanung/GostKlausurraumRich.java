@@ -28,7 +28,7 @@ public class GostKlausurraumRich {
 
 	/** Die Liste der angereicherten Schülerklausurtermine. */
 	@Schema(description = "die Liste der zugeordneten Schülerklausurtermin-IDs", example = "")
-	public @NotNull List<@NotNull Long> schuelerklausurterminIDs = new ArrayList<>();
+	public @NotNull List<Long> schuelerklausurterminIDs = new ArrayList<>();
 
 	/**
 	 * Konstruktor zur Erstellung des Rich-Objekts.

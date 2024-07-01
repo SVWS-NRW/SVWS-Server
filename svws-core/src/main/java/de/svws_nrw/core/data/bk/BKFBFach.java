@@ -31,7 +31,7 @@ public class BKFBFach {
 
 	/** Die Fachklassen, in denen das Fach im Bildungsplan steht */
 	@Schema(description = "Die Fachklassen, in denen das Fach im Bildungsplan steht")
-	public @NotNull List<@NotNull BKFachklassenSchluessel> fachklassen = new ArrayList<>();
+	public @NotNull List<BKFachklassenSchluessel> fachklassen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",

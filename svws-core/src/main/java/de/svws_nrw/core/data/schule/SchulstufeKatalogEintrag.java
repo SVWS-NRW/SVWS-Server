@@ -29,7 +29,7 @@ public class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	/** Die Kürzel der Schulformen die bei der Schulstufe vorkommen. */
 	@Schema(description = "die Kürzel der Schulformen die bei der Schulstufe vorkommen")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 
 
@@ -51,7 +51,7 @@ public class SchulstufeKatalogEintrag extends CoreTypeData {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public SchulstufeKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
-			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

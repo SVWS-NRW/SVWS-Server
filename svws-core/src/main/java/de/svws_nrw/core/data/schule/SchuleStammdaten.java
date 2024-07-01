@@ -92,6 +92,6 @@ public class SchuleStammdaten {
 
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */
 	@ArraySchema(schema = @Schema(implementation = Schuljahresabschnitt.class))
-	public final @NotNull List<@NotNull Schuljahresabschnitt> abschnitte = new ArrayList<>();
+	public final @NotNull List<Schuljahresabschnitt> abschnitte = new ArrayList<>();
 
 }

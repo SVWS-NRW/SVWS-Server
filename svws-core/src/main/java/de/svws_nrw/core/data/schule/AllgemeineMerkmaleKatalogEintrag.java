@@ -45,7 +45,7 @@ public class AllgemeineMerkmaleKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -78,7 +78,7 @@ public class AllgemeineMerkmaleKatalogEintrag {
 	 */
 	public AllgemeineMerkmaleKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
 			final boolean beiSchule, final boolean beiSchueler, final String kuerzelASD,
-			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

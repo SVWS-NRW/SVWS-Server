@@ -44,7 +44,7 @@ public class Kalender {
 	 * eine Liste der Einträge des Kalenders
 	 */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Kalenders", example = "..."))
-	public @NotNull List<@NotNull KalenderEintrag> kalenderEintraege = new ArrayList<>();
+	public @NotNull List<KalenderEintrag> kalenderEintraege = new ArrayList<>();
 
 	/** ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat */
 	@Schema(description = "Schreibrecht des angemeldeten Nutzers", example = "true")

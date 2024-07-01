@@ -45,7 +45,7 @@ public class FachgruppenKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x). */
 	@Schema(description = "ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x)", example = "10")
@@ -88,7 +88,7 @@ public class FachgruppenKatalogEintrag {
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public FachgruppenKatalogEintrag(final long id, final Integer nummer, final Integer idSchild, final @NotNull String bezeichnung,
-			final @NotNull String kuerzel, final @NotNull RGBFarbe farbe, final @NotNull List<@NotNull Schulform> schulformen,
+			final @NotNull String kuerzel, final @NotNull RGBFarbe farbe, final @NotNull List<Schulform> schulformen,
 			final @NotNull Integer sortierung, final boolean fuerZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.nummer = nummer;

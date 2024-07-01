@@ -35,6 +35,6 @@ public class StundenplanLehrer {
 
 	/** Die Liste der IDs der Unterrichtsfächer, die der Lehrer unterrichten kann. */
 	@Schema(description = "die Liste der IDs der Unterrichsfächer, die der Lehrer unterrichten kann")
-	public @NotNull List<@NotNull Long> faecher = new ArrayList<>();
+	public @NotNull List<Long> faecher = new ArrayList<>();
 
 }

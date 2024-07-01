@@ -114,6 +114,6 @@ public class LehrerStammdaten {
 
 	/** Die Liste der Schulleitungsfunktionen, welche der Schule Lehrer an der Schule hat oder hatte. */
 	@ArraySchema(schema = @Schema(implementation = Schulleitung.class))
-	public final @NotNull List<@NotNull Schulleitung> leitungsfunktionen = new ArrayList<>();
+	public final @NotNull List<Schulleitung> leitungsfunktionen = new ArrayList<>();
 
 }

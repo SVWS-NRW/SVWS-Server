@@ -45,6 +45,6 @@ public class Adressbuch {
 	 * eine Liste der Einträge des Adressbuchs
 	 */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Adressbuchs", example = "..."))
-	public @NotNull List<@NotNull AdressbuchEintrag> adressbuchEintraege = new ArrayList<>();
+	public @NotNull List<AdressbuchEintrag> adressbuchEintraege = new ArrayList<>();
 
 }

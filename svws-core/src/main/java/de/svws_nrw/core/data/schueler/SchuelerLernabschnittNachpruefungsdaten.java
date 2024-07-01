@@ -20,10 +20,10 @@ public class SchuelerLernabschnittNachpruefungsdaten {
 
 	/** Die Kürzel der möglichen Nachprüfungsfächer. */
 	@ArraySchema(schema = @Schema(implementation = String.class, description = "Ein Array mit den Kürzeln der möglichen Nachprüfungsfächer."))
-	public @NotNull List<@NotNull String> moegliche = new ArrayList<>();
+	public @NotNull List<String> moegliche = new ArrayList<>();
 
 	/** Die angesetzten bzw. durchgeführten Nachprüfungen */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittNachpruefung.class, description = "Die angesetzten bzw. durchgeführten Nachprüfungen."))
-	public @NotNull List<@NotNull SchuelerLernabschnittNachpruefung> pruefungen = new ArrayList<>();
+	public @NotNull List<SchuelerLernabschnittNachpruefung> pruefungen = new ArrayList<>();
 
 }

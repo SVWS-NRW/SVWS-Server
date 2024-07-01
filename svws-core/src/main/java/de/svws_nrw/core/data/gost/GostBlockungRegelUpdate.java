@@ -18,9 +18,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostBlockungRegelUpdate {
 
 	/** Die zu entfernenden Regeln */
-	public @NotNull List<@NotNull GostBlockungRegel> listEntfernen = new ArrayList<>();
+	public @NotNull List<GostBlockungRegel> listEntfernen = new ArrayList<>();
 
 	/** Die hinzuzufügenden Regeln */
-	public @NotNull List<@NotNull GostBlockungRegel> listHinzuzufuegen = new ArrayList<>();
+	public @NotNull List<GostBlockungRegel> listHinzuzufuegen = new ArrayList<>();
 
 }

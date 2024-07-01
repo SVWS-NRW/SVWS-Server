@@ -34,7 +34,7 @@ public class OrganisationsformKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt",
@@ -65,7 +65,7 @@ public class OrganisationsformKatalogEintrag {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public OrganisationsformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung,
-			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

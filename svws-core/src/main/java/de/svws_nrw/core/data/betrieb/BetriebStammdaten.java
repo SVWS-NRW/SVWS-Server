@@ -124,6 +124,6 @@ public class BetriebStammdaten {
 
 	/** Ein Array mit den Ansprechpartnern im Betrieb. */
 	@ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class, description = "Ein Array mit den Ansprechpartnern im Betrieb."))
-	public @NotNull List<@NotNull BetriebAnsprechpartner> ansprechpartner = new ArrayList<>();
+	public @NotNull List<BetriebAnsprechpartner> ansprechpartner = new ArrayList<>();
 
 }

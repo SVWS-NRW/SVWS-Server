@@ -27,7 +27,7 @@ public class HerkunftsartKatalogEintrag {
 
 	/** Die Bezeichnungen bei den jeweils zulässigen Schulformen. */
 	@Schema(description = "die Bezeichnungen bei den jeweils zulässigen Schulformen")
-	public @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen = new ArrayList<>();
+	public @NotNull List<HerkunftsartKatalogEintragBezeichnung> bezeichnungen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -56,7 +56,7 @@ public class HerkunftsartKatalogEintrag {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public HerkunftsartKatalogEintrag(final long id, final @NotNull String kuerzel,
-			final @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen,
+			final @NotNull List<HerkunftsartKatalogEintragBezeichnung> bezeichnungen,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

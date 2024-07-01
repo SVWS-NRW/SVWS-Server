@@ -99,6 +99,6 @@ public class ENMLeistung {
 	/** Die Teilleistungen, sofern welche vordefiniert sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMTeilleistung.class, description = "Ein Array mit den Informationen zu den Teilleistungen, "
 			+ "sofern welche vordefiniert sind."))
-	public @NotNull List<@NotNull ENMTeilleistung> teilleistungen = new ArrayList<>();
+	public @NotNull List<ENMTeilleistung> teilleistungen = new ArrayList<>();
 
 }

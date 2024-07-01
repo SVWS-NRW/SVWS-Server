@@ -18,9 +18,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class StundenplanPausenaufsichtBereichUpdate {
 
 	/** Die zu entfernenden Zuordnungen */
-	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> listEntfernen = new ArrayList<>();
+	public @NotNull List<StundenplanPausenaufsichtBereich> listEntfernen = new ArrayList<>();
 
 	/** Die hinzuzufügenden Zuordnungen */
-	public @NotNull List<@NotNull StundenplanPausenaufsichtBereich> listHinzuzufuegen = new ArrayList<>();
+	public @NotNull List<StundenplanPausenaufsichtBereich> listHinzuzufuegen = new ArrayList<>();
 
 }

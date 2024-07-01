@@ -83,6 +83,6 @@ public class GostJahrgangsdaten {
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public final @NotNull List<@NotNull GostBeratungslehrer> beratungslehrer = new ArrayList<>();
+	public final @NotNull List<GostBeratungslehrer> beratungslehrer = new ArrayList<>();
 
 }

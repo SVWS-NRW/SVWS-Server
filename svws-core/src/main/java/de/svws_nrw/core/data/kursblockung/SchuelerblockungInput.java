@@ -25,14 +25,14 @@ public class SchuelerblockungInput {
 
 	/** Alle Kurse, die zu den Fachwahlen des Schülers passen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputKurs.class))
-	public @NotNull List<@NotNull SchuelerblockungInputKurs> kurse = new ArrayList<>();
+	public @NotNull List<SchuelerblockungInputKurs> kurse = new ArrayList<>();
 
 	/** Alle Fachwahlen des Schülers. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputFachwahl.class))
-	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
+	public @NotNull List<GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Zu jeder Fachwahl eine textuelle Darstellung. */
 	@ArraySchema(schema = @Schema(implementation = String.class))
-	public @NotNull List<@NotNull String> fachwahlenText = new ArrayList<>();
+	public @NotNull List<String> fachwahlenText = new ArrayList<>();
 
 }

@@ -32,7 +32,7 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. */
 	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example = "false")
@@ -66,12 +66,12 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 	/** Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt",
 			example = "BS")
-	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new ArrayList<>();
+	public @NotNull List<String> bkAbschlussBerufsbildend = new ArrayList<>();
 
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt",
 			example = "HA9")
-	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new ArrayList<>();
+	public @NotNull List<String> bkAbschlussAllgemeinbildend = new ArrayList<>();
 
 
 	/**
@@ -106,10 +106,10 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public SchulgliederungKatalogEintrag(final long id, final @NotNull String kuerzel, final boolean istBK,
-			final @NotNull List<@NotNull Schulform> schulformen, final boolean istAuslaufend, final boolean istAusgelaufen,
+			final @NotNull List<Schulform> schulformen, final boolean istAuslaufend, final boolean istAusgelaufen,
 			final @NotNull String beschreibung, final BerufskollegAnlage bkAnlage, final String bkTyp, final Integer bkIndex, final boolean istVZ,
-			final List<@NotNull SchulabschlussBerufsbildend> bkAbschlussBerufsbildend,
-			final List<@NotNull SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend,
+			final List<SchulabschlussBerufsbildend> bkAbschlussBerufsbildend,
+			final List<SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

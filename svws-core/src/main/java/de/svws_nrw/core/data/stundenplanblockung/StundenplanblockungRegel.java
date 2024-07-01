@@ -27,6 +27,6 @@ public class StundenplanblockungRegel {
 	public int typ = -1;
 
 	/** Eine Liste der Regel-Parameter */
-	public @NotNull List<@NotNull Long> parameter = new ArrayList<>();
+	public @NotNull List<Long> parameter = new ArrayList<>();
 
 }

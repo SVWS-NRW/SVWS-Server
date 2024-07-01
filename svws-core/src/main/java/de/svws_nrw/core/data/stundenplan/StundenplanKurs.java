@@ -39,18 +39,18 @@ public class StundenplanKurs {
 
 	/** Die Liste der IDs der {@link StundenplanSchiene}-Objekte, denen der Kurs zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Schienen, denen der Kurs zugeordnet ist")
-	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
+	public @NotNull List<Long> schienen = new ArrayList<>();
 
 	/** Die Liste der IDs der {@link StundenplanJahrgang}-Objekte, denen der Kurs zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Jahrgänge, denen der Kurs zugeordnet ist")
-	public @NotNull List<@NotNull Long> jahrgaenge = new ArrayList<>();
+	public @NotNull List<Long> jahrgaenge = new ArrayList<>();
 
 	/** Die Liste der IDs der {@link StundenplanSchueler}-Objekte, die dem Kurs zugeordnet sind. */
 	@Schema(description = "die Liste der IDs der Schüler, die dem Kurs zugeordnet sind")
-	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
+	public @NotNull List<Long> schueler = new ArrayList<>();
 
 	/** Die Liste der IDs der {@link StundenplanLehrer}-Objekte, die dem Kurs zugeordnet sind. */
 	@Schema(description = "die Liste der IDs der Lehrer, die dem Kurs zugeordnet sind")
-	public @NotNull List<@NotNull Long> lehrer = new ArrayList<>();
+	public @NotNull List<Long> lehrer = new ArrayList<>();
 
 }

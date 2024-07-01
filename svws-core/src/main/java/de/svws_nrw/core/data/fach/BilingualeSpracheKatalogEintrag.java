@@ -30,7 +30,7 @@ public class BilingualeSpracheKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist. */
 	@Schema(description = "die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist.")
-	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
+	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -59,7 +59,7 @@ public class BilingualeSpracheKatalogEintrag {
 	 * @param gueltigBis            das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public BilingualeSpracheKatalogEintrag(final long id, final @NotNull ZulaessigesFach fach,
-			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull List<Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = fach.daten.kuerzel;
 		for (final @NotNull Schulform schulform : schulformen)

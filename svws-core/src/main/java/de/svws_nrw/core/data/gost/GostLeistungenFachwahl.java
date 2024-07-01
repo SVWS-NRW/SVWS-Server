@@ -28,6 +28,6 @@ public class GostLeistungenFachwahl {
 	public boolean istFSNeu = false; // pruefe durch Lesen aus den Leistungsdaten, nur true false keine gültige Belegung in der Sprachenfolge aus den Jahrgaenge vorher vorhanden ist
 
 	/** Die einzelnen Belegungen dieses Faches */
-	public final @NotNull List<@NotNull GostLeistungenFachbelegung> belegungen = new ArrayList<>();
+	public final @NotNull List<GostLeistungenFachbelegung> belegungen = new ArrayList<>();
 
 }

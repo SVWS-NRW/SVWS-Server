@@ -74,17 +74,17 @@ public enum StundenplanblockungRegelTyp {
 	public final String bezeichnung;
 
 	/**Die Typen der Regel-Parameter */
-	private final @NotNull List<@NotNull StundenplanblockungRegelParameterTyp> paramTypes;
+	private final @NotNull List<StundenplanblockungRegelParameterTyp> paramTypes;
 
 	/**Mapping von "Typ --> GostKursblockungRegelTyp". */
-	private static final @NotNull HashMap<@NotNull Integer, StundenplanblockungRegelTyp> _map_id_regel = new HashMap<>();
+	private static final @NotNull HashMap<Integer, StundenplanblockungRegelTyp> _map_id_regel = new HashMap<>();
 
 	/**
 	 * Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 *
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
-	private static @NotNull HashMap<@NotNull Integer, StundenplanblockungRegelTyp> getMap() {
+	private static @NotNull HashMap<Integer, StundenplanblockungRegelTyp> getMap() {
 		if (_map_id_regel.isEmpty())
 			for (final @NotNull StundenplanblockungRegelTyp typ : StundenplanblockungRegelTyp.values())
 				if (_map_id_regel.put(typ.id, typ) != null)
@@ -109,7 +109,7 @@ public enum StundenplanblockungRegelTyp {
 	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
 	StundenplanblockungRegelTyp(final int id, final @NotNull String bezeichnung,
-			final @NotNull List<@NotNull StundenplanblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
+			final @NotNull List<StundenplanblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.paramTypes = paramTypes;

@@ -20,9 +20,9 @@ public class GostKlausurterminblockungDaten {
 	public @NotNull GostKlausurterminblockungKonfiguration konfiguration = new GostKlausurterminblockungKonfiguration();
 
 	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
-	public @NotNull List<@NotNull GostKursklausur> klausuren = new ArrayList<>();
+	public @NotNull List<GostKursklausur> klausuren = new ArrayList<>();
 
 	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
-	public @NotNull List<@NotNull GostKursklausurRich> richKlausuren = new ArrayList<>();
+	public @NotNull List<GostKursklausurRich> richKlausuren = new ArrayList<>();
 
 }

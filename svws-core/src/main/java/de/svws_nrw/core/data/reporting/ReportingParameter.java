@@ -35,7 +35,7 @@ public class ReportingParameter {
 
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
 	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[12,54,123]")
-	public @NotNull List<@NotNull Long> idsHauptdaten = new ArrayList<>();
+	public @NotNull List<Long> idsHauptdaten = new ArrayList<>();
 
 	/** Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll. */
 	@Schema(description = "Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
@@ -43,7 +43,7 @@ public class ReportingParameter {
 
 	/** Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten. */
 	@Schema(description = "Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.", example = "[12,54,123]")
-	public @NotNull List<@NotNull Long> idsDetaildaten = new ArrayList<>();
+	public @NotNull List<Long> idsDetaildaten = new ArrayList<>();
 
 	/** Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll. */
 	@Schema(description = "Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")

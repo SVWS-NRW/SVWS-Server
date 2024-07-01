@@ -71,7 +71,7 @@ public class GostKursklausurRich {
 
 	/** Die Liste der IDs der zugehörigen Schüler. */
 	@Schema(description = "die Liste der IDs der zugehörigen Schüler", example = "[ 5590, 5591, 5592, ... ]")
-	public @NotNull List<@NotNull Long> schuelerIds = new ArrayList<>();
+	public @NotNull List<Long> schuelerIds = new ArrayList<>();
 
 	/** Die textuelle Bemerkung zur Kursklausur, sofern vorhanden. */
 	@Schema(description = "die textuelle Bemerkung zur Kursklausur, sofern vorhanden", example = "Zentrale Vergleichsklausur")

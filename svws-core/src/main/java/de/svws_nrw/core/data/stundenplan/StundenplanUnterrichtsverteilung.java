@@ -23,26 +23,26 @@ public class StundenplanUnterrichtsverteilung {
 
 	/** Die Liste der Lehrer, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Lehrer, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanLehrer> lehrer = new ArrayList<>();
+	public @NotNull List<StundenplanLehrer> lehrer = new ArrayList<>();
 
 	/** Die Liste der Schüler, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Schüler, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanSchueler> schueler = new ArrayList<>();
+	public @NotNull List<StundenplanSchueler> schueler = new ArrayList<>();
 
 	/** Die Liste der Fächer, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Fächer, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanFach> faecher = new ArrayList<>();
+	public @NotNull List<StundenplanFach> faecher = new ArrayList<>();
 
 	/** Die Liste der Klassen, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Klassen, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanKlasse> klassen = new ArrayList<>();
+	public @NotNull List<StundenplanKlasse> klassen = new ArrayList<>();
 
 	/** Die Liste der Kurse, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Kurse, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanKurs> kurse = new ArrayList<>();
+	public @NotNull List<StundenplanKurs> kurse = new ArrayList<>();
 
 	/** Die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterricht = new ArrayList<>();
+	public @NotNull List<StundenplanKlassenunterricht> klassenunterricht = new ArrayList<>();
 
 }

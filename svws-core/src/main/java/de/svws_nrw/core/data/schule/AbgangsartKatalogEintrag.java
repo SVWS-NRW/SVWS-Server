@@ -23,6 +23,6 @@ public class AbgangsartKatalogEintrag {
 
 	/** Die Historie des Katalog-Eintrags. */
 	@Schema(description = "die Historie des Katalog-Eintrags")
-	public @NotNull List<@NotNull AbgangsartKatalogDaten> historie = new ArrayList<>();
+	public @NotNull List<AbgangsartKatalogDaten> historie = new ArrayList<>();
 
 }

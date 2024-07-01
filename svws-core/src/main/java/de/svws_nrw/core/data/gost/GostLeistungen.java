@@ -51,6 +51,6 @@ public class GostLeistungen {
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Die einzelnen Fachwahlen des Schülers. */
-	public final @NotNull List<@NotNull GostLeistungenFachwahl> faecher = new ArrayList<>();
+	public final @NotNull List<GostLeistungenFachwahl> faecher = new ArrayList<>();
 
 }

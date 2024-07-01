@@ -28,11 +28,11 @@ public class AbschlussErgebnis {
 
 	/** Eine Liste der Kuerzel für mögliche Nachprüfungsfächer. */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Kuerzel für mögliche Nachprüfungsfächer.", example = "M"))
-	public List<@NotNull String> npFaecher = null;
+	public List<String> npFaecher = null;
 
 	/** Der Log der Abschlussberechnung. */
 	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung.",
 			example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
-	public List<@NotNull String> log = null;
+	public List<String> log = null;
 
 }

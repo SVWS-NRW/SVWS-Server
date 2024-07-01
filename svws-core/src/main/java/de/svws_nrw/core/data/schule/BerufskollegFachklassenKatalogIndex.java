@@ -28,6 +28,6 @@ public class BerufskollegFachklassenKatalogIndex {
 
 	/** Die Einträge des Katalogs. */
 	@Schema(description = "die Fachklassen des Katalogs")
-	public @NotNull List<@NotNull BerufskollegFachklassenKatalogEintrag> fachklassen = new ArrayList<>();
+	public @NotNull List<BerufskollegFachklassenKatalogEintrag> fachklassen = new ArrayList<>();
 
 }

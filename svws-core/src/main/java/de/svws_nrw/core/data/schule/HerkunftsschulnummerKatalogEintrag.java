@@ -36,7 +36,7 @@ public class HerkunftsschulnummerKatalogEintrag {
 
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.")
-	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new ArrayList<>();
+	public @NotNull List<SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -66,13 +66,13 @@ public class HerkunftsschulnummerKatalogEintrag {
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public HerkunftsschulnummerKatalogEintrag(final long id, final int schulnummer, final @NotNull String bezeichnung,
-			final List<@NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung>> zulaessig,
+			final List<Pair<Schulform, @AllowNull Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.schulnummer = schulnummer;
 		this.bezeichnung = bezeichnung;
 		if (zulaessig != null) {
-			for (final @NotNull Pair<@NotNull Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
+			for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
 				final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
 				final @NotNull Schulform sf = zul.a;
 				if (sf.daten == null)

@@ -27,6 +27,6 @@ public class SchuleAbschnitte {
 
 	/** Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...) */
 	@Schema(description = "Bezeichnungen für die Abschnitte", example = "1. Quartal")
-	public @NotNull List<@NotNull String> bezAbschnitte = new ArrayList<>();
+	public @NotNull List<String> bezAbschnitte = new ArrayList<>();
 
 }

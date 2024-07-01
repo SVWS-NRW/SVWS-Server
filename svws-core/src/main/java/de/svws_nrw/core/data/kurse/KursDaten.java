@@ -32,7 +32,7 @@ public class KursDaten {
 
 	/** Die IDs der Jahrgänge, denen der Kurs zugeordnet ist */
 	@Schema(description = "die IDs der Jahrgänge, denen der Kurs zugeordnet ist")
-	public @NotNull List<@NotNull Long> idJahrgaenge = new ArrayList<>();
+	public @NotNull List<Long> idJahrgaenge = new ArrayList<>();
 
 	/** Die ID des Faches, dem der Kurs zugeordnet ist */
 	@Schema(description = "die ID des Faches, dem der Kurs zugeordnet ist", example = "815")
@@ -55,10 +55,10 @@ public class KursDaten {
 	public boolean istSichtbar;
 
 	/** Die Schüler des Kurses. */
-	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
+	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
-	public @NotNull List<@NotNull Integer> schienen = new ArrayList<>();
+	public @NotNull List<Integer> schienen = new ArrayList<>();
 
 
 	/** Die Wochenstunden des Kurses. */

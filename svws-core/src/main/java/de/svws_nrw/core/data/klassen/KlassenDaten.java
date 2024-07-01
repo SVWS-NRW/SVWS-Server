@@ -49,11 +49,11 @@ public class KlassenDaten {
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public @NotNull List<@NotNull Long> klassenLeitungen = new ArrayList<>();
+	public @NotNull List<Long> klassenLeitungen = new ArrayList<>();
 
 	/** Die Schüler der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Schueler.class))
-	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
+	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Adressmerkmal des Teilstandorts für die Klasse */
 	@Schema(description = "Adressmerkmal des Teilstandorts für die Klasse", example = "A")

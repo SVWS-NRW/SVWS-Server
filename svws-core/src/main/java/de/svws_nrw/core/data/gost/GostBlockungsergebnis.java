@@ -35,7 +35,7 @@ public class GostBlockungsergebnis {
 	public boolean istAktiv = false;
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
-	public final @NotNull List<@NotNull GostBlockungsergebnisSchiene> schienen = new ArrayList<>();
+	public final @NotNull List<GostBlockungsergebnisSchiene> schienen = new ArrayList<>();
 
 	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
 	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();

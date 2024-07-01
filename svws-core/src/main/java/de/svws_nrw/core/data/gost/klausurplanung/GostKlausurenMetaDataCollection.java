@@ -23,19 +23,19 @@ public class GostKlausurenMetaDataCollection {
 
 	/** Die Liste der Klausurvorgaben. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull GostFach> faecher = new ArrayList<>();
+	public @NotNull List<GostFach> faecher = new ArrayList<>();
 
 	/** Die Liste der Kursklausuren. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<@NotNull SchuelerListeEintrag> schueler = new ArrayList<>();
+	public @NotNull List<SchuelerListeEintrag> schueler = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull LehrerListeEintrag> lehrer = new ArrayList<>();
+	public @NotNull List<LehrerListeEintrag> lehrer = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull KursDaten> kurse = new ArrayList<>();
+	public @NotNull List<KursDaten> kurse = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")

@@ -36,6 +36,6 @@ public class ENMFloskelgruppe {
 	/** Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMFloskel.class, description = "Ein Array mit den Informationen "
 			+ "der Floskeln, die dieser Floskelgruppe zugeordnet sind."))
-	public final @NotNull List<@NotNull ENMFloskel> floskeln = new ArrayList<>();
+	public final @NotNull List<ENMFloskel> floskeln = new ArrayList<>();
 
 }
