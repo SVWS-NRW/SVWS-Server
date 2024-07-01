@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -180,7 +179,7 @@ public final class Transpiler extends AbstractProcessor {
 		}
 		final CompilationTask compilationTask = compiler.getTask(null, javaFileManager, diagnostics, options, null, javaFiles);
 		compilationTask.setProcessors(Arrays.asList(this));
-		if (!compilationTask.call()) {
+		if (Boolean.FALSE.equals(compilationTask.call())) {
 			System.out.println("Fehler beim Compilieren des Java-Codes!");
 			// TODO further reactions on compiler errors
 			final List<Diagnostic<? extends JavaFileObject>> diags = diagnostics.getDiagnostics();
@@ -356,21 +355,19 @@ public final class Transpiler extends AbstractProcessor {
 		final VariableTree varNode = node.getVariable();
 		final Tree parent = path.getParentPath().getLeaf();
 		switch (parent) {
-			case final PatternCaseLabelTree pclt -> {
-				if (path.getParentPath().getParentPath().getLeaf() instanceof final CaseTree ct) {
-					Set<Tree> scopes = getTranspilerUnit(path).allLocalVariables.get("" + varNode.getName());
-					if (scopes == null) {
-						scopes = new HashSet<>();
-						getTranspilerUnit(path).allLocalVariables.put("" + varNode.getName(), scopes);
-					}
-					scopes.add(ct);
-					Map<String, VariableTree> vars = getTranspilerUnit(path).allLocalVariablesByScope.get(ct);
-					if (vars == null) {
-						vars = new HashMap<>();
-						getTranspilerUnit(path).allLocalVariablesByScope.put(ct, vars);
-					}
-					vars.put("" + varNode.getName(), varNode);
+			case final PatternCaseLabelTree pclt when path.getParentPath().getParentPath().getLeaf() instanceof final CaseTree ct -> {
+				Set<Tree> scopes = getTranspilerUnit(path).allLocalVariables.get("" + varNode.getName());
+				if (scopes == null) {
+					scopes = new HashSet<>();
+					getTranspilerUnit(path).allLocalVariables.put("" + varNode.getName(), scopes);
 				}
+				scopes.add(ct);
+				Map<String, VariableTree> vars = getTranspilerUnit(path).allLocalVariablesByScope.get(ct);
+				if (vars == null) {
+					vars = new HashMap<>();
+					getTranspilerUnit(path).allLocalVariablesByScope.put(ct, vars);
+				}
+				vars.put("" + varNode.getName(), varNode);
 			}
 			default -> throw new TranspilerException("Transpiler Exception: Unhandled binding pattern tree type - " + node.toString());
 		}
@@ -588,7 +585,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the list of attributes of the type element
 	 */
-	public List<VariableElement> getAttributes(final TypeElement typeElement) {
+	public static List<VariableElement> getAttributes(final TypeElement typeElement) {
 		final List<VariableElement> result = new ArrayList<>();
 		for (final Element e : typeElement.getEnclosedElements()) {
 			if (e instanceof final VariableElement ve) {
@@ -618,7 +615,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the list of attributes of the class tree node
 	 */
-	public List<VariableTree> getAttributes(final ClassTree node) {
+	public static List<VariableTree> getAttributes(final ClassTree node) {
 		return node.getMembers().stream().filter(member -> member.getKind() == Tree.Kind.VARIABLE)
 				.map(VariableTree.class::cast).toList();
 	}
@@ -783,9 +780,7 @@ public final class Transpiler extends AbstractProcessor {
 					|| ((scopesLocalMethods != null) && (scopesLocalMethods.contains(currentNode))))
 				return (currentNode.getKind() == Tree.Kind.CLASS) || (currentNode.getKind() == Tree.Kind.ENUM);
 		}
-		if (tu.allLocalMethodElements.containsKey(node.getName().toString()))
-			return true;
-		return false;
+		return (tu.allLocalMethodElements.containsKey(node.getName().toString()));
 	}
 
 
@@ -1219,7 +1214,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the mapping
 	 */
-	public Map<String, ExpressionTree> getArguments(final AnnotationTree annotation) {
+	public static Map<String, ExpressionTree> getArguments(final AnnotationTree annotation) {
 		final HashMap<String, ExpressionTree> result = new HashMap<>();
 		if (annotation == null)
 			return result;
@@ -1685,13 +1680,6 @@ public final class Transpiler extends AbstractProcessor {
 				interfaces.addAll(ite.getInterfaces());
 			}
 		}
-//		for (TypeMirror interfaceType : te.getInterfaces()) {
-//			Element interfaceElement = typeUtils.asElement(interfaceType);
-//			if (interfaceElement instanceof TypeElement ite) {
-//				if (ite.toString().equals(superFullQualified))
-//					return 1;
-//			} else continue;
-//		}
 		// check all super classes
 		TypeMirror superClass = te.getSuperclass();
 		int i = 2;
@@ -1929,11 +1917,7 @@ public final class Transpiler extends AbstractProcessor {
 				final TranspilerUnit tu = new TranspilerUnit(this, path.getCompilationUnit(), classTree, typeElement);
 				mapUnits.put(path.getCompilationUnit(), tu);
 				final String packageName = tu.getPackageName();
-				HashMap<String, TranspilerUnit> listUnits = mapUnitsByPackage.get(packageName);
-				if (listUnits == null) {
-					listUnits = new HashMap<>();
-					mapUnitsByPackage.put(packageName, listUnits);
-				}
+				final HashMap<String, TranspilerUnit> listUnits = mapUnitsByPackage.computeIfAbsent(packageName, k -> new HashMap<>());
 				listUnits.put(tu.getClassName(), tu);
 				mapClassTreeByQualifiedName.put("" + typeElement.getQualifiedName(), classTree);
 			}
@@ -1947,8 +1931,7 @@ public final class Transpiler extends AbstractProcessor {
 
 			// prepare the transpiler units for transpilation
 			for (final TranspilerUnit unit : mapUnits.values().stream()
-					.sorted((a, b) -> (a.getPackageName() + "." + a.getClassName()).compareTo(b.getPackageName() + "." + b.getClassName()))
-					.collect(Collectors.toList())) {
+					.sorted((a, b) -> (a.getPackageName() + "." + a.getClassName()).compareTo(b.getPackageName() + "." + b.getClassName())).toList()) {
 				System.out.println("  -> Preparing: " + unit.getPackageName() + "." + unit.getClassName());
 				// determine all local attribute and method identifiers of super classes and instantiated interfaces
 				unit.determineInheritedMembers(unit.getElement(), new ArrayList<>());

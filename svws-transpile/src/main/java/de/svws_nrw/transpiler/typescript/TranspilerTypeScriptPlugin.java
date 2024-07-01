@@ -177,8 +177,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	/**
 	 * Create a Type Script transpiler language plugin
 	 *
-	 * @param transpiler   the transpiler that uses this plugin
-	 * @param outputDir    the output directory where all generated files should be placed
+	 * @param transpiler          the transpiler that uses this plugin
+	 * @param outputDir           the output directory where all generated files should be placed
+	 * @param includeTSJavaCore   gibt an, ob auch der Typescript-Code für die grundlegenden Java-Bibliotheken mit eingebunden werden sollen
 	 */
 	public TranspilerTypeScriptPlugin(final Transpiler transpiler, final String outputDir, final boolean includeTSJavaCore) {
 		super(transpiler);
@@ -790,7 +791,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append("}");
 					}
 					case final ConstantCaseLabelTree cclt -> {
-						if ((node.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree swit))) {
+						if ((node.getExpression() instanceof final ParenthesizedTree pt) && (pt.getExpression() instanceof final IdentifierTree swit)) {
 							final VariableTree varNode = transpiler.getDeclaration(swit);
 							final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
 							if (first) {
@@ -1166,15 +1167,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final Tree body = curCase.getBody();
 					sb.append(" {").append(System.lineSeparator());
 					indentC++;
-					if (body instanceof final ExpressionStatementTree est) {
-						sb.append(getIndent()).append(convertExpressionStatement(est)).append(System.lineSeparator());
-					} else if (body instanceof final BlockTree bt) {
-						sb.append(convertBlock(bt, false, null));
-					} else if (body instanceof final ThrowTree tt) {
-						sb.append(getIndent()).append(convertThrow(tt)).append(System.lineSeparator());
-					} else
-						throw new TranspilerException("Transpiler Error: Case of type RULE currently not supported in switch statements for body type %s."
-								.formatted(body.getKind()));
+					switch (body) {
+						case final ExpressionStatementTree est -> sb.append(getIndent()).append(convertExpressionStatement(est)).append(System.lineSeparator());
+						case final BlockTree bt -> sb.append(convertBlock(bt, false, null));
+						case final ThrowTree tt -> sb.append(getIndent()).append(convertThrow(tt)).append(System.lineSeparator());
+						default ->
+							throw new TranspilerException("Transpiler Error: Case of type RULE currently not supported in switch statements for body type %s."
+									.formatted(body.getKind()));
+					}
 					sb.append(getIndent()).append("break;").append(System.lineSeparator());
 					indentC--;
 					sb.append(getIndent()).append("}").append(System.lineSeparator());
@@ -1574,7 +1574,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final String expression = type.toString();
 					return "Java" + expression + "." + identifier + convertMethodInvocationParameters(node.getArguments(), null, null, false);
 				}
-				//if ("intValue".equals(identifier) && (type instanceof ExpressionClassType ect)) {
 				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier))
 						&& (type instanceof final ExpressionClassType ect)) {
 					final String expression = convertExpression(ms.getExpression());
@@ -2367,7 +2366,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append("return ");
 			if (method.getEnclosingElement() instanceof final TypeElement te) {
 				final String ifName = te.getQualifiedName().toString();
-				final String defaultMethodName = ifName.replaceAll("\\.", "_") + "_" + methodName;
+				final String defaultMethodName = ifName.replace(".", "_") + "_" + methodName;
 				sb.append(defaultMethodName);
 				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new ArrayList<>()).add(defaultMethodName);
 			}
@@ -2427,7 +2426,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 
 		// Generate Attributes
-		for (final VariableTree attribute : transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
 			sb.append(convertAttribute(attribute, null));
 			sb.append(System.lineSeparator());
 		}
@@ -2579,7 +2578,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				.append(node.getSimpleName()).append(">();").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
-		for (final VariableTree attribute : transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
 			sb.append(convertAttribute(attribute, "" + node.getSimpleName()));
 			sb.append(System.lineSeparator());
 		}
@@ -2678,7 +2677,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 
 		// Generate Attributes
-		for (final VariableTree attribute : transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
 			sb.append(convertAttribute(attribute, null));
 			sb.append(System.lineSeparator());
 		}
@@ -2933,9 +2932,5 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 	}
-
-	// TODO special handling of String class
-	// TODO special handling of System class
-	// TODO special handling of Arrays class
 
 }
