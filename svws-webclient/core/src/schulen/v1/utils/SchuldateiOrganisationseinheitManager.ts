@@ -71,35 +71,31 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		super();
 		this._managerSchuldatei = managerSchuldatei;
 		this._organisationseinheit = organisationseinheit;
-		this.validate(organisationseinheit);
+		this.validate();
 	}
 
 	/**
-	 * Validiere die Daten der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Daten der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validate(organisationseinheit : SchuldateiOrganisationseinheit) : void {
-		if ((organisationseinheit.oeart !== null) && (!this._managerSchuldatei.katalogOrganisationseinheitarten.hatEintrag(organisationseinheit.oeart)))
-			throw new IllegalArgumentException("Die Art " + organisationseinheit.oeart + " der Organisationseinheit mit der Schulnummer " + organisationseinheit.schulnummer + " hat keinen zugehörigen Katalog-Eintrag.")
-		this.validateGrunddaten(organisationseinheit);
-		this.validateAdressen(organisationseinheit);
-		this.validateMerkmale(organisationseinheit);
-		this.validateErreichbarkeiten(organisationseinheit);
-		this.validateEigenschaften(organisationseinheit);
-		this.validateGliederungen(organisationseinheit);
+	private validate() : void {
+		if ((this._organisationseinheit.oeart !== null) && (!this._managerSchuldatei.katalogOrganisationseinheitarten.hatEintrag(this._organisationseinheit.oeart)))
+			throw new IllegalArgumentException(JavaString.format("Die Art %s der Organisationseinheit mit der Schulnummer %d hat keinen zugehörigen Katalog-Eintrag.", this._organisationseinheit.oeart, this._organisationseinheit.schulnummer))
+		this.validateGrunddaten();
+		this.validateAdressen();
+		this.validateMerkmale();
+		this.validateErreichbarkeiten();
+		this.validateEigenschaften();
+		this.validateGliederungen();
 	}
 
 	/**
-	 * Validiere die Grunddaten der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Grunddaten der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateGrunddaten(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateGrunddaten() : void {
 		for (const grunddaten of this._organisationseinheit.grunddaten) {
 			if (this._organisationseinheit.schulnummer !== grunddaten.schulnummer)
 				throw new IllegalArgumentException("Die Schulnummer " + grunddaten.schulnummer + " bei den Grunddaten passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".")
@@ -162,67 +158,57 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	}
 
 	/**
-	 * Validiere die Adressen der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Adressen der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateAdressen(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateAdressen() : void {
 		for (const adresse of this._organisationseinheit.adressen) {
 			if (this._mapAdressManagerByID.containsKey(adresse.id))
-				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer " + organisationseinheit.schulnummer + " hat Duplikate.")
+				throw new IllegalArgumentException(JavaString.format("Die Addressen bei der Organisationseinheit mit der Schulnummer %d hat Duplikate.", this._organisationseinheit.schulnummer))
 			this._mapAdressManagerByID.put(adresse.id, new SchuldateiOrganisationseinheitAdressManager(this._managerSchuldatei, this, adresse));
 		}
 	}
 
 	/**
-	 * Validiere die Merkmale der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Merkmale der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateMerkmale(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateMerkmale() : void {
 		for (const merkmal of this._organisationseinheit.merkmal) {
 			// empty block
 		}
 	}
 
 	/**
-	 * Validiere die Erreichbarkeiten der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Erreichbarkeiten der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateErreichbarkeiten(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateErreichbarkeiten() : void {
 		for (const erreichbarkeit of this._organisationseinheit.erreichbarkeiten) {
 			// empty block
 		}
 	}
 
 	/**
-	 * Validiere die Eigenschaften der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Eigenschaften der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateEigenschaften(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateEigenschaften() : void {
 		for (const eigenschaft of this._organisationseinheit.oe_eigenschaften) {
 			// empty block
 		}
 	}
 
 	/**
-	 * Validiere die Gliederungen der übergebenen Organisationseinheit
-	 *
-	 * @param organisationseinheit   die Organisationseinheit.
+	 * Validiere die Gliederungen der Organisationseinheit
 	 *
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
-	private validateGliederungen(organisationseinheit : SchuldateiOrganisationseinheit) : void {
+	private validateGliederungen() : void {
 		for (const gliederung of this._organisationseinheit.gliederung) {
 			// empty block
 		}

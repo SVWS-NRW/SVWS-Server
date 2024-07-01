@@ -63,7 +63,7 @@ public class SchuldateiKatalogManager {
 		// ... in der Map der Einträge anhand des Schlüssels
 		Set<SchuldateiKatalogeintrag> tmpSetEintraege = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
 		if (tmpSetEintraege == null) {
-			tmpSetEintraege = new HashSet<>();
+			tmpSetEintraege = new HashSet<SchuldateiKatalogeintrag>();
 			this._mapEintraegeBySchluessel.put(eintrag.schluessel, tmpSetEintraege);
 		}
 		tmpSetEintraege.add(eintrag);
@@ -90,7 +90,7 @@ public class SchuldateiKatalogManager {
 	 */
 	public @NotNull Set<SchuldateiKatalogeintrag> getEintraege(final String schluessel) {
 		final Set<SchuldateiKatalogeintrag> tmp = _mapEintraegeBySchluessel.get(schluessel);
-		return (tmp == null) ? new HashSet<>() : tmp;
+		return (tmp == null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
 	}
 
 
