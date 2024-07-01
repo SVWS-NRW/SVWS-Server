@@ -110,7 +110,7 @@ public final class UntisGPU010 {
 	 *
 	 * @throws IOException falls die CSV-Datei nicht korrekt gelesen werden kann
 	 */
-	public static @NotNull List<@NotNull UntisGPU010> readCSV(final String csvData) throws IOException {
+	public static @NotNull List<UntisGPU010> readCSV(final String csvData) throws IOException {
 		try (MappingIterator<UntisGPU010> it = reader.readValues(csvData)) {
 			return it.readAll();
 		}
@@ -126,7 +126,7 @@ public final class UntisGPU010 {
 	 *
 	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
 	 */
-	public static String writeCSV(final @NotNull List<@NotNull UntisGPU010> dtos) throws IOException {
+	public static String writeCSV(final @NotNull List<UntisGPU010> dtos) throws IOException {
 		final StringWriter sw = new StringWriter();
 		try (SequenceWriter seqw = writer.writeValues(sw).writeAll(dtos)) {
 			return sw.toString();

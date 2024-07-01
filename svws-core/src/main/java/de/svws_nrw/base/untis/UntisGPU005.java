@@ -108,7 +108,7 @@ public final class UntisGPU005 {
 	 *
 	 * @throws IOException falls die CSV-Datei nicht korrekt gelesen werden kann
 	 */
-	public static @NotNull List<@NotNull UntisGPU005> readCSV(final String csvData) throws IOException {
+	public static @NotNull List<UntisGPU005> readCSV(final String csvData) throws IOException {
 		try (MappingIterator<UntisGPU005> it = reader.readValues(csvData)) {
 			return it.readAll();
 		}
