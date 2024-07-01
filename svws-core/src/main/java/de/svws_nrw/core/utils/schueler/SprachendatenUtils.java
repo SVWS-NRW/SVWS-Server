@@ -515,20 +515,15 @@ public final class SprachendatenUtils {
 						&& (belegung.belegungBisAbschnitt != null) && (belegung.belegungBisAbschnitt == 1))))
 			return false;
 
-		int belegtVonJahrgangNumerisch;
-		int belegtBisJahrgangNumerisch;
-		int letzterJahrgangSekI;
-
 		if (belegung.belegungVonJahrgang != null) {
-			belegtVonJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungVonJahrgang);
-			belegtBisJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungBisJahrgang);
+			final int letzterJahrgangSekI = 10;
+			final int belegtVonJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungVonJahrgang);
+			int belegtBisJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungBisJahrgang);
 
-			letzterJahrgangSekI = 10;
 			if ((0 < belegtVonJahrgangNumerisch) && (belegtVonJahrgangNumerisch <= 10)) {
-				if ((belegtBisJahrgangNumerisch == 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI)) {
-					// Bei leerem Ende oder Ende in der Sekundarstufe II wähle als Ende den letzten Sek-I Jahrgang
+				// Bei leerem Ende oder Ende in der Sekundarstufe II wähle als Ende den letzten Sek-I Jahrgang
+				if ((belegtBisJahrgangNumerisch == 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI))
 					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
-				}
 				return (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch) + 1) >= n);
 			}
 		}

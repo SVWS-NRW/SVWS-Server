@@ -409,17 +409,13 @@ export class SprachendatenUtils extends JavaObject {
 		}
 		if ((belegung.belegungBisJahrgang !== null) && ((SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang) <= 8) || (((SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang) === 9) || (SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang) === 10)) && (belegung.belegungBisAbschnitt !== null) && (belegung.belegungBisAbschnitt === 1))))
 			return false;
-		let belegtVonJahrgangNumerisch : number;
-		let belegtBisJahrgangNumerisch : number;
-		let letzterJahrgangSekI : number;
 		if (belegung.belegungVonJahrgang !== null) {
-			belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
-			belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
-			letzterJahrgangSekI = 10;
+			const letzterJahrgangSekI : number = 10;
+			const belegtVonJahrgangNumerisch : number = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
+			let belegtBisJahrgangNumerisch : number = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
 			if ((0 < belegtVonJahrgangNumerisch) && (belegtVonJahrgangNumerisch <= 10)) {
-				if ((belegtBisJahrgangNumerisch === 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI)) {
+				if ((belegtBisJahrgangNumerisch === 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI))
 					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
-				}
 				return (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch) + 1) >= n);
 			}
 		}
