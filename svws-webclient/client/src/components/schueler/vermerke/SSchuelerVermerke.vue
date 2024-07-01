@@ -45,7 +45,7 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import { BenutzerEMailDaten, DateUtils, type SchuelerVermerke } from "@core";
+	import { DateUtils, type SchuelerVermerke } from "@core";
 	import { ref } from "vue";
 
 	const activeVermerk = ref<SchuelerVermerke>();
