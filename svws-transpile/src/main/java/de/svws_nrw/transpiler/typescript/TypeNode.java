@@ -145,7 +145,7 @@ public class TypeNode {
 	 * @return true if this is a primitive type
 	 */
 	public boolean isPrimitive() {
-		return node == null ? typeMirror.getKind().isPrimitive() : (node instanceof PrimitiveTypeTree);
+		return (node == null) ? typeMirror.getKind().isPrimitive() : (node instanceof PrimitiveTypeTree);
 	}
 
 

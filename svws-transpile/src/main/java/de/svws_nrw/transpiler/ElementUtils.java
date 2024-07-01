@@ -172,7 +172,7 @@ public final class ElementUtils {
 		if (!(ve.asType() instanceof DeclaredType))
 			return "" + ve.asType().toString();
 		final var type = getTypeElement(ve);
-		return (type == null) ? "" : "" + type.getSimpleName();
+		return (type == null) ? "" : ("" + type.getSimpleName());
 	}
 
 
@@ -200,7 +200,7 @@ public final class ElementUtils {
 		if (!(ve.asType() instanceof DeclaredType))
 			return "" + ve.asType().toString();
 		final var type = getTypeElement(ve);
-		return (type == null) ? "" : "" + type.getQualifiedName();
+		return (type == null) ? "" : ("" + type.getQualifiedName());
 	}
 
 

@@ -23,7 +23,7 @@ public class Utils {
 	 *
 	 * @return das Ergebnis
 	 */
-	public static int runTask(@NotNull final Function<@NotNull Long, @NotNull Integer> task, final long input) {
+	public static int runTask(final @NotNull Function<@NotNull Long, @NotNull Integer> task, final long input) {
 		return task.apply(input);
 	}
 
@@ -68,8 +68,8 @@ public class Utils {
 	 */
 	public static String switchByType(final @NotNull CoreTypeData data) {
 		return switch (data) {
-			case @NotNull final SchulformKatalogEintrag sfke -> "Schulform: " + sfke.kuerzel;
-			case @NotNull final SchulstufeKatalogEintrag sske -> "Schulstufe: " + sske.kuerzel;
+			case final @NotNull SchulformKatalogEintrag sfke -> "Schulform: " + sfke.kuerzel;
+			case final @NotNull SchulstufeKatalogEintrag sske -> "Schulstufe: " + sske.kuerzel;
 			default -> {
 				yield "None";
 			}

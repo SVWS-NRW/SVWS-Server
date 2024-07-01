@@ -37,7 +37,7 @@ public class ApiResponse {
 		responseCode = determineResponseCode(args);
 		description = determineDescription(args);
 		final AnnotationTree annotationContent = determineContentAnnotation(transpiler, args);
-		content = annotationContent == null ? null : new ApiContent(transpiler, annotationContent);
+		content = (annotationContent == null) ? null : new ApiContent(transpiler, annotationContent);
 	}
 
 	private static int determineResponseCode(final Map<String, ExpressionTree> args) {

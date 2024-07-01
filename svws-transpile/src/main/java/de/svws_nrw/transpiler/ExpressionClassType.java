@@ -158,7 +158,7 @@ public final class ExpressionClassType extends ExpressionType {
 			throw new NullPointerException();
 		Kind kind = Kind.PARAMETERIZED_TYPE;
 		if (elem.getTypeParameters().isEmpty())
-			kind = (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS);
+			kind = ((elem.getKind() == ElementKind.ENUM) ? Kind.ENUM : Kind.CLASS);
 		final ExpressionClassType result = new ExpressionClassType(kind, elem.getSimpleName().toString(), getPackageName(elem.getQualifiedName().toString()));
 		for (final TypeParameterElement tpe : elem.getTypeParameters()) {
 			result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
@@ -432,7 +432,7 @@ public final class ExpressionClassType extends ExpressionType {
 			final ExpressionPrimitiveType thisPrimitive = ExpressionPrimitiveType.getUnboxed(this);
 			if (thisPrimitive == null)
 				return -1;
-			return thisPrimitive.isAssignable(transpiler, otherPrimitive) == -1 ? -1 : 1; // if it is assignable increase by one
+			return (thisPrimitive.isAssignable(transpiler, otherPrimitive) == -1) ? -1 : 1; // if it is assignable increase by one
 		}
 		if (other instanceof final ExpressionClassType otherClass) {
 			return transpiler.checkForSuperclass(otherClass, this);

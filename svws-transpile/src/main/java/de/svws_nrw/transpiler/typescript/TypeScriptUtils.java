@@ -32,7 +32,7 @@ public final class TypeScriptUtils {
 		final boolean hasNotNull = !Transpiler.hasAllowNullAnnotation(type);
 		if (type instanceof final TypeVariable tv) {
 			final String result = tv.asElement().getSimpleName().toString();
-			return hasNotNull ? result : result + " | null";
+			return hasNotNull ? result : (result + " | null");
 		}
 		if (type instanceof final DeclaredType dt) {
 			if ("java.util.Map.Entry".equals(dt.asElement().toString())) {

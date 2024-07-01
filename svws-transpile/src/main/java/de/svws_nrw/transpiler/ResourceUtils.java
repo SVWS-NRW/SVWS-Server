@@ -47,7 +47,7 @@ public class ResourceUtils {
 			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
 				dirStream.forEach(p -> {
 					if (Files.isDirectory(p)) {
-						classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : packagePath + "/" + p.getFileName(),
+						classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : (packagePath + "/" + p.getFileName()),
 								fileextension));
 					} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
 						final String shortFilename = p.getFileName().toString();
@@ -107,12 +107,12 @@ public class ResourceUtils {
 	@SuppressWarnings("resource")
 	public static List<TranspilerResource> getFilesInPackage(final String packageName, final String fileextension) {
 		final List<TranspilerResource> result = new ArrayList<>();
-		Enumeration<URL> res;
+		final Enumeration<URL> res;
 		try {
 			final String packagePath = packageName.replace(".", "/");
 			res = ResourceUtils.class.getClassLoader().getResources(packagePath);
 			while (res.hasMoreElements()) {
-				URI uri;
+				final URI uri;
 				try {
 					uri = res.nextElement().toURI();
 				} catch (@SuppressWarnings("unused") final URISyntaxException e) {

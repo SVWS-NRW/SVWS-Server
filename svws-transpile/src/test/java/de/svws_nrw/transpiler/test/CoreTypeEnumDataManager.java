@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> {
 
 	/** Eine Map mit den Daten der initisierten Core-Types */
-	private static @NotNull Map<@NotNull String, @NotNull CoreTypeEnumDataManager<? extends @NotNull CoreTypeData, ?>> _data = new HashMap<>();
+	private static final @NotNull Map<@NotNull String, @NotNull CoreTypeEnumDataManager<? extends @NotNull CoreTypeData, ?>> _data = new HashMap<>();
 
 	/**
 	 * Fügt für den Core-Type einen Core-Type-Manager hinzu

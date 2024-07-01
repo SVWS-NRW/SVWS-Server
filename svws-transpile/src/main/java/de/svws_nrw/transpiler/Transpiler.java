@@ -1319,7 +1319,7 @@ public final class Transpiler extends AbstractProcessor {
 	 */
 	private Set<Modifier> getModifier(final Tree node) {
 		final Set<Modifier> modifier = allModifier.get(node);
-		return modifier == null ? Collections.emptySet() : modifier;
+		return (modifier == null) ? Collections.emptySet() : modifier;
 	}
 
 
@@ -1616,7 +1616,7 @@ public final class Transpiler extends AbstractProcessor {
 	ExpressionType getAttributeType(final String className, final String memberName) {
 		final TypeElement classElement = getTypeElement(className);
 		for (final Element e : classElement.getEnclosedElements())
-			if (e instanceof final VariableElement ve && (memberName.equals(ve.getSimpleName().toString())))
+			if ((e instanceof final VariableElement ve) && (memberName.equals(ve.getSimpleName().toString())))
 				return ExpressionType.getExpressionType(this, ve.asType());
 		return null;
 	}

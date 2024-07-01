@@ -89,7 +89,7 @@ public final class MethodNode {
 		this.method = method;
 		this.isEnum = (this._class.getKind() == Tree.Kind.ENUM);
 		final String tmpName = this.method.getName().toString();
-		this.name = "<init>".equals(tmpName) ? "constructor" : "" + tmpName;
+		this.name = "<init>".equals(tmpName) ? "constructor" : ("" + tmpName);
 		this.indent = indent;
 		this.comment = formatComment(this.plugin.getTranspiler().getComment(method));
 		this.accessModifier = this.plugin.getTranspiler().getAccessModifier(method);
@@ -139,11 +139,11 @@ public final class MethodNode {
 	private String formatComment(final String comment) {
 		return (comment == null)
 				? ""
-				: indent + "/**" + System.lineSeparator()
+				: (indent + "/**" + System.lineSeparator()
 						+ Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> (indent + " *" + s.stripTrailing()).stripTrailing())
 								.collect(Collectors.joining(System.lineSeparator()))
 						+ System.lineSeparator()
-						+ indent + " */" + System.lineSeparator();
+						+ indent + " */" + System.lineSeparator());
 	}
 
 
@@ -399,7 +399,7 @@ public final class MethodNode {
 		final TreeSet<String> types = new TreeSet<>();
 		for (final MethodNode m : methods) {
 			final VariableNode vNode = m.getParameter(i);
-			final String type = vNode == null ? null : vNode.transpileType();
+			final String type = (vNode == null) ? null : vNode.transpileType();
 			if (type != null) {
 				final String[] tmpTypesSplit = type.split("\\|");
 				int brackets = 0;

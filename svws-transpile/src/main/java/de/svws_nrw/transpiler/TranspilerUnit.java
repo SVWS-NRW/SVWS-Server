@@ -414,7 +414,7 @@ public final class TranspilerUnit {
 			final String[] classNameParts = className.split("\\.");
 			String tmp = null;
 			for (int i = classNameParts.length - 1; i >= 0; i--) {
-				tmp = (tmp == null) ? classNameParts[i] : classNameParts[i] + "." + tmp;
+				tmp = (tmp == null) ? classNameParts[i] : (classNameParts[i] + "." + tmp);
 				final String old = this.importsSuper.put(tmp, packageName);
 				this.importsFullClassnames.put(tmp, className);
 				if (old != null)  // skip inserting type - it is already known from a previous call - avoid problem due to circular dependencies
@@ -656,7 +656,7 @@ public final class TranspilerUnit {
 				final Tree scope = current.getLeaf();
 				if (scopesLocalVariables.contains(scope)) {
 					final VariableTree variable = allLocalVariablesByScope.get(scope).get(nodeName);
-					return ExpressionType.getExpressionType(transpiler, variable.getType() == null ? variable : variable.getType());
+					return ExpressionType.getExpressionType(transpiler, (variable.getType() == null) ? variable : variable.getType());
 				}
 			}
 		}
