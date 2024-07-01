@@ -282,12 +282,17 @@ public final class TranspilerUnit {
 					"NullPointerException",
 					"NumberFormatException",
 					"RuntimeException",
-					"UnsupportedOperationException":
+					"UnsupportedOperationException" -> {
 				imports.put(name, "java.lang");
 				return "java.lang";
-			case "PrintStream":
+			}
+			case "PrintStream" -> {
 				imports.put(name, "java.io");
 				return "java.io";
+			}
+			default -> {
+				// nothing to do
+			}
 		}
 		// check the imports of the compilation unit for an import entry
 		for (final ImportTree importNode : compilationUnit.getImports()) {
@@ -329,15 +334,15 @@ public final class TranspilerUnit {
 		final Tree curNode = curPath.getLeaf();
 		if (curNode instanceof final VariableTree vt) {
 			final Tree vtType = vt.getType();
-			if (vtType != null) {
-				if ((transpiler.getElement(vt) instanceof final VariableElement ve) && (transpiler.getElement(vt.getType()) instanceof final TypeElement te)) {
-					final PackageElement pe = transpiler.getPackageOf(ve);
-					final String packageName = pe.getQualifiedName().toString();
-					final String tmpClassName = te.getSimpleName().toString();
-					imports.put(tmpClassName, packageName);
-					return packageName;
-				}
+			if ((vtType != null) && (transpiler.getElement(vt) instanceof final VariableElement ve)
+					&& (transpiler.getElement(vt.getType()) instanceof final TypeElement te)) {
+				final PackageElement pe = transpiler.getPackageOf(ve);
+				final String packageName = pe.getQualifiedName().toString();
+				final String tmpClassName = te.getSimpleName().toString();
+				imports.put(tmpClassName, packageName);
+				return packageName;
 			}
+
 			final String strType = vt.getType().toString();
 			final int pos = strType.lastIndexOf(".");
 			final String packageName = strType.substring(0, pos);
@@ -389,7 +394,6 @@ public final class TranspilerUnit {
 			default -> {
 				/* do nothing */
 			}
-			//default -> throw new TranspilerException("Unhandled type of kind " + type.getKind());
 		}
 	}
 
@@ -562,13 +566,14 @@ public final class TranspilerUnit {
 				if ((typeParams == null) || (typeArgs == null) || (typeParams.size() != typeArgs.size()))
 					continue;
 				final TypeMirror result = getIterableTypeArgument(te);
-				if ((result == null) && (typeArgs.size() > 0))
+				if ((result == null) && (!typeArgs.isEmpty()))
 					return typeArgs.get(0);
-				String name = null;
-				if (result instanceof final TypeVariable resultType)
-					name = resultType.asElement().getSimpleName().toString();
-				else if (result instanceof final DeclaredType resultType)
-					name = resultType.asElement().getSimpleName().toString();
+				final String name = switch (result) {
+					case final TypeVariable rtv -> rtv.asElement().getSimpleName().toString();
+					case final DeclaredType rdt -> rdt.asElement().getSimpleName().toString();
+					case null -> null;
+					default -> null;
+				};
 				if (name != null) {
 					for (int i = 0; i < te.getTypeParameters().size(); i++) {
 						final TypeParameterElement typeParam = te.getTypeParameters().get(i);

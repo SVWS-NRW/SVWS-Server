@@ -77,7 +77,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	 *
 	 * @return the parameter types
 	 */
-	public List<? extends ExpressionType> getParamTypes() {
+	public List<ExpressionType> getParamTypes() {
 		return paramTypes;
 	}
 
