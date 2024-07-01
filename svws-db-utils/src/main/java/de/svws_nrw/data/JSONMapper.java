@@ -588,7 +588,6 @@ public final class JSONMapper {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> convertToList(final Class<T> dtoClass, final Object listObj, final boolean nullable) throws ApiOperationException {
 		if (listObj == null) {
 			if (nullable)
