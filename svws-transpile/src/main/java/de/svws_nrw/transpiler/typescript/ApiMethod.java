@@ -128,7 +128,7 @@ public final class ApiMethod {
 		final AnnotationTree annotationPath = transpiler.getAnnotation("jakarta.ws.rs.Path", methodTree);
 		if (annotationPath == null)
 			return null;
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationPath);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationPath);
 		final ExpressionTree value = args.get("value");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String path))
 			return path;
@@ -140,7 +140,7 @@ public final class ApiMethod {
 		if (annotationMethodOperation == null)
 			throw new TranspilerException("Transpiler Exception: Missing Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationMethodOperation);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationMethodOperation);
 		final ExpressionTree value = args.get("summary");
 		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing summary value for @Operation annotation on method %s in class %s."
@@ -156,7 +156,7 @@ public final class ApiMethod {
 		if (annotationMethodOperation == null)
 			throw new TranspilerException("Transpiler Exception: Missing Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationMethodOperation);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationMethodOperation);
 		final ExpressionTree value = args.get("description");
 		if (value == null)
 			throw new TranspilerException("Transpiler Exception: Missing description value for @Operation annotation on method %s in class %s."
@@ -180,7 +180,7 @@ public final class ApiMethod {
 		final AnnotationTree annotationTree = transpiler.getAnnotation(annotation, methodTree);
 		if (annotationTree == null)
 			return null;
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationTree);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
 		final ExpressionTree value = args.get("value");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return ApiMimeType.get(str);

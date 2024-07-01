@@ -26,10 +26,10 @@ import com.sun.source.tree.VariableTree;
 public class ApiPathParams {
 
 	/** Ein Vektor mit den benötigten Klassen bei den Typescript-Importen */
-	public final HashMap<String, String> importsRequired = new HashMap<>();
+	public final Map<String, String> importsRequired = new HashMap<>();
 
 	/** Das Mapping zwischen dem Namen eines Pfad-Parameters auf den TS-Typ des Pfad-Parameters */
-	public final ArrayList<Map.Entry<String, String>> params = new ArrayList<>();
+	public final List<Map.Entry<String, String>> params = new ArrayList<>();
 
 	/**
 	 * Erstellt anhand der übergebenen Annotation und mithilfe des übergebenen Transpilers ein
@@ -40,11 +40,10 @@ public class ApiPathParams {
 	 */
 	ApiPathParams(final Transpiler transpiler, final MethodTree method) {
 		// Ermittle die Request-Body Annotation
-		final List<? extends VariableTree> params = method.getParameters();
-		for (final VariableTree param : params) {
+		for (final VariableTree param : method.getParameters()) {
 			final AnnotationTree annotation = transpiler.getAnnotation("jakarta.ws.rs.PathParam", param);
 			if (annotation != null) {
-				final String name = determineValue(transpiler, annotation);
+				final String name = determineValue(annotation);
 				final Tree type = param.getType();
 				if (type instanceof final PrimitiveTypeTree ptt) {
 					switch (ptt.getPrimitiveTypeKind()) {
@@ -67,8 +66,8 @@ public class ApiPathParams {
 		}
 	}
 
-	private static String determineValue(final Transpiler transpiler, final AnnotationTree annotation) {
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
+	private static String determineValue(final AnnotationTree annotation) {
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotation);
 		final ExpressionTree value = args.get("value");
 		if (value == null)
 			throw new TranspilerException("Transpiler Exception: Missing value value for @PathParam annotation.");

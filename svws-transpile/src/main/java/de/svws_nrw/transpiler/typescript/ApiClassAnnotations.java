@@ -57,7 +57,7 @@ public class ApiClassAnnotations {
 		final AnnotationTree annotationTag = transpiler.getAnnotation("io.swagger.v3.oas.annotations.tags.Tag", classTree);
 		if (annotationTag == null)
 			throw new TranspilerException("Transpiler Exception: Missing Tag annotation for class " + classTree.getSimpleName().toString() + ".");
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationTag);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTag);
 		final ExpressionTree name = args.get("name");
 		if (name == null) {
 			throw new TranspilerException("Transpiler Exception: Missing name value for @Tag annotation.");
@@ -72,7 +72,7 @@ public class ApiClassAnnotations {
 		final AnnotationTree annotationPath = transpiler.getAnnotation("jakarta.ws.rs.Path", classTree);
 		if (annotationPath == null)
 			throw new TranspilerException("Transpiler Exception: Missing Path annotation for class " + classTree.getSimpleName().toString() + ".");
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationPath);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationPath);
 		final ExpressionTree value = args.get("value");
 		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing value value for @Path annotation.");
@@ -96,7 +96,7 @@ public class ApiClassAnnotations {
 		final AnnotationTree annotationTree = transpiler.getAnnotation(annotation, classTree);
 		if (annotationTree == null)
 			return null;
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotationTree);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
 		final ExpressionTree value = args.get("value");
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
 			return ApiMimeType.get(str);

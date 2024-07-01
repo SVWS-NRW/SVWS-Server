@@ -46,7 +46,7 @@ public class ApiContent {
 	 * @param annotation   das {@link AnnotationTree} für die {@link io.swagger.v3.oas.annotations.media.Content}-Annotation
 	 */
 	ApiContent(final Transpiler transpiler, final AnnotationTree annotation) {
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotation);
 		mimetype = determineMimetype(args);
 		if (mimetype == ApiMimeType.MULTIPART_FORM_DATA) {
 			datatype = "FormData";
@@ -77,7 +77,7 @@ public class ApiContent {
 			if (value instanceof final AnnotationTree att) {
 				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.ArraySchema", att))
 					throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in Content annotation.");
-				final Map<String, ExpressionTree> arrayArgs = transpiler.getArguments(att);
+				final Map<String, ExpressionTree> arrayArgs = Transpiler.getArguments(att);
 				importsRequired.put("List", "java.util");
 				importsRequired.put("ArrayList", "java.util");
 				tmpArrayElementType = determineImplementationType(transpiler, arrayArgs);
@@ -91,7 +91,7 @@ public class ApiContent {
 			if (value instanceof final AnnotationTree att) {
 				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.Schema", att))
 					throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in Content annotation.");
-				final Map<String, ExpressionTree> schemaArgs = transpiler.getArguments(att);
+				final Map<String, ExpressionTree> schemaArgs = Transpiler.getArguments(att);
 				ExpressionTree expr = schemaArgs.get("implementation");
 				if (expr instanceof final MemberSelectTree mst) {
 					if (!"class".equals(mst.getIdentifier().toString()))

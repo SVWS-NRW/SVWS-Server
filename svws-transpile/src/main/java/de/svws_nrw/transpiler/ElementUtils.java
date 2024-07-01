@@ -457,8 +457,9 @@ public final class ElementUtils {
 		// Ist der Pfad leer so erfolgt keine weitere Auflösung und die Typ-Variablen werden selbst als Ergebnis zurückgegeben
 		if (path.isEmpty()) {
 			final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
-			for (final TypeParameterElement typeParam : elem.getTypeParameters())
-				resolved.put(typeParam.getSimpleName().toString(), typeParam.asType());
+			if (elem != null)
+				for (final TypeParameterElement typeParam : elem.getTypeParameters())
+					resolved.put(typeParam.getSimpleName().toString(), typeParam.asType());
 			return resolved;
 		}
 		// Führe zunächst den rekursiven Aufruf entlang des Pfades aus und benutze das Ergebnis für das Auflösen der typ-Variablen von elem

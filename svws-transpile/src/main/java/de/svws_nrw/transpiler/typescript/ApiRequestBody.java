@@ -60,7 +60,7 @@ public class ApiRequestBody {
 		}
 
 		// Interpretiere die Parameter der Annotation
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotation);
 		description = determineDescription(args);
 		required = determineRequired(args);
 		final AnnotationTree annotationContent = determineContentAnnotation(transpiler, args);

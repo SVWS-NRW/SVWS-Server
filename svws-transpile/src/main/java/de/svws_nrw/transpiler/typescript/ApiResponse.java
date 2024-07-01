@@ -33,7 +33,7 @@ public class ApiResponse {
 	 * @param annotation   das {@link AnnotationTree} für die {@link io.swagger.v3.oas.annotations.responses.ApiResponse}-Annotation
 	 */
 	ApiResponse(final Transpiler transpiler, final AnnotationTree annotation) {
-		final Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotation);
 		responseCode = determineResponseCode(args);
 		description = determineDescription(args);
 		final AnnotationTree annotationContent = determineContentAnnotation(transpiler, args);
