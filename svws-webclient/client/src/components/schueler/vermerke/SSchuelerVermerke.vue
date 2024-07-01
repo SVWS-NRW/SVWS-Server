@@ -68,10 +68,7 @@
 <style lang="postcss" scoped>
 
 	:deep(.svws-title) {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-		width: 100rem;
+		@apply text-ellipsis overflow-hidden whitespace-nowrap w-full;
 	}
 
 	.actionButtonElement {

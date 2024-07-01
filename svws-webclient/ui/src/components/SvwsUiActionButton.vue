@@ -6,7 +6,7 @@
 					<span class="icon" :class="[icon]" />
 				</slot>
 			</div>
-			<div class="flex flex-col">
+			<div class="flex flex-col overflow-x-hidden">
 				<div class="svws-title" :class="{'my-auto': !description}">{{ title }}</div>
 				<div v-if="description" class="svws-description">{{ description }}</div>
 			</div>
