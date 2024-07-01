@@ -7,7 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -119,11 +118,11 @@ public final class UntisGPU015 {
 	 *
 	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
 	 */
+	@SuppressWarnings("resource")
 	public static String writeCSV(final @NotNull List<UntisGPU015> dtos) throws IOException {
 		final StringWriter sw = new StringWriter();
-		try (SequenceWriter seqw = writer.writeValues(sw).writeAll(dtos)) {
-			return sw.toString();
-		}
+		writer.writeValues(sw).writeAll(dtos).close();
+		return sw.toString();
 	}
 
 
