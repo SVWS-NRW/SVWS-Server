@@ -222,7 +222,7 @@ export class BenutzerManager extends JavaObject {
 	 *
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
-	public getBenutzergruppen(kompetenzgruppe : BenutzerKompetenzGruppe) : List<BenutzergruppeDaten> {
+	public getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : List<BenutzergruppeDaten> {
 		const benutzergruppen : JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
 		if (benutzergruppen === null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.")
@@ -244,7 +244,7 @@ export class BenutzerManager extends JavaObject {
 	 * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
 	 */
 	public getBenutzerGruppenStringForKompetenzgruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : string {
-		const gruppen : List<BenutzergruppeDaten> = this.getBenutzergruppen(kompetenzgruppe);
+		const gruppen : List<BenutzergruppeDaten> = this.getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe);
 		const sb : StringBuilder = new StringBuilder("");
 		for (const gruppe of gruppen) {
 			if (!sb.isEmpty())
@@ -277,7 +277,7 @@ export class BenutzerManager extends JavaObject {
 	 *
 	 * @return Gibt die BenutzerGruppen des Benutzers zurück.
 	 */
-	public getBenutzerGruppen() : List<BenutzergruppeDaten> {
+	public getBenutzergruppen() : List<BenutzergruppeDaten> {
 		return this._daten.gruppen;
 	}
 

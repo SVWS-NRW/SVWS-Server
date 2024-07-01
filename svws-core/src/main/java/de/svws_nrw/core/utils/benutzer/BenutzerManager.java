@@ -216,7 +216,7 @@ public class BenutzerManager {
 	 *
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
-	public @NotNull List<BenutzergruppeDaten> getBenutzergruppen(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
+	public @NotNull List<BenutzergruppeDaten> getBenutzergruppenbyKompetenzgruppe(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
 		final Set<Long> benutzergruppen = _mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
 		if (benutzergruppen == null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.");
@@ -239,7 +239,7 @@ public class BenutzerManager {
 	 * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
 	 */
 	public @NotNull String getBenutzerGruppenStringForKompetenzgruppe(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
-		final @NotNull List<BenutzergruppeDaten> gruppen = this.getBenutzergruppen(kompetenzgruppe);
+		final @NotNull List<BenutzergruppeDaten> gruppen = this.getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe);
 		final @NotNull StringBuilder sb = new StringBuilder("");
 		for (final @NotNull BenutzergruppeDaten gruppe : gruppen) {
 			if (!sb.isEmpty())
@@ -273,7 +273,7 @@ public class BenutzerManager {
 	 *
 	 * @return Gibt die BenutzerGruppen des Benutzers zurück.
 	 */
-	public @NotNull List<BenutzergruppeDaten> getBenutzerGruppen() {
+	public @NotNull List<BenutzergruppeDaten> getBenutzergruppen() {
 		return this._daten.gruppen;
 	}
 
