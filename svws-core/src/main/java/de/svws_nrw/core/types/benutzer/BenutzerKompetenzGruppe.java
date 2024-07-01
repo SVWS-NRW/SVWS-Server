@@ -89,7 +89,7 @@ public enum BenutzerKompetenzGruppe {
 
 
 	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz-Gruppe */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenzGruppe> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, BenutzerKompetenzGruppe> _mapID = new HashMap<>();
 
 
 	/**
@@ -108,7 +108,7 @@ public enum BenutzerKompetenzGruppe {
 	 *
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenzGruppe> getMapID() {
+	private static @NotNull HashMap<Long, BenutzerKompetenzGruppe> getMapID() {
 		if (_mapID.size() == 0)
 			for (final BenutzerKompetenzGruppe p : BenutzerKompetenzGruppe.values())
 				_mapID.put(p.daten.id, p);

@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * für Objekt vom Typ LogData. Die über das Interface empfangeben Log-Daten
  * werden in einem Vektor (java.util.ArrayList) gesammelt.
  */
-public class LogConsumerList implements Consumer<@NotNull LogData> {
+public class LogConsumerList implements Consumer<LogData> {
 
 	/** Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht. */
 	public final boolean printTime;
@@ -21,7 +21,7 @@ public class LogConsumerList implements Consumer<@NotNull LogData> {
 	public final boolean printLevel;
 
 	/** Der Vektor mit den gesammelten Log-Informationen. */
-	private final @NotNull ArrayList<@NotNull LogData> logData = new ArrayList<>();
+	private final @NotNull ArrayList<LogData> logData = new ArrayList<>();
 
 
 	/**
@@ -75,7 +75,7 @@ public class LogConsumerList implements Consumer<@NotNull LogData> {
 	 *
 	 * @return der Vektor mit den gesammelten Log-Informationen
 	 */
-	public @NotNull List<@NotNull LogData> getLogData() {
+	public @NotNull List<LogData> getLogData() {
 		return logData;
 	}
 
@@ -100,8 +100,8 @@ public class LogConsumerList implements Consumer<@NotNull LogData> {
 	 *
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-	public List<@NotNull String> getStrings(final @NotNull String indent) {
-		final ArrayList<@NotNull String> result = new ArrayList<>();
+	public List<String> getStrings(final @NotNull String indent) {
+		final ArrayList<String> result = new ArrayList<>();
 		@NotNull String temp = indent;
 		for (int i = 0; i < logData.size(); i++) {
 			final @NotNull LogData data = logData.get(i);

@@ -452,10 +452,10 @@ public enum BenutzerKompetenz {
 
 
 	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, BenutzerKompetenz> _mapID = new HashMap<>();
 
 	/** Eine ArrayMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe*/
-	private static final @NotNull ArrayMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> _mapGruppenZuordnung =
+	private static final @NotNull ArrayMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> _mapGruppenZuordnung =
 			new ArrayMap<>(BenutzerKompetenzGruppe.values());
 
 
@@ -475,7 +475,7 @@ public enum BenutzerKompetenz {
 	 *
 	 * @return die Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> getMapID() {
+	private static @NotNull HashMap<Long, BenutzerKompetenz> getMapID() {
 		if (_mapID.size() == 0)
 			for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
 				_mapID.put(p.daten.id, p);
@@ -488,7 +488,7 @@ public enum BenutzerKompetenz {
 	 *
 	 * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
 	 */
-	private static @NotNull Map<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
+	private static @NotNull Map<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> getMapGruppenZuordnung() {
 		if (_mapGruppenZuordnung.size() == 0) {
 			for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
 				_mapGruppenZuordnung.put(g, new ArrayList<>());
@@ -539,8 +539,8 @@ public enum BenutzerKompetenz {
 	 *
 	 * @return die Liste der Benutzerkompetenzen
 	 */
-	public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzen(final @NotNull BenutzerKompetenzGruppe gruppe) {
-		final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
+	public static @NotNull List<BenutzerKompetenz> getKompetenzen(final @NotNull BenutzerKompetenzGruppe gruppe) {
+		final List<BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
 		if (liste == null)
 			return new ArrayList<>();
 		return liste;
@@ -555,10 +555,10 @@ public enum BenutzerKompetenz {
 	 *
 	 * @return die Liste der Benutzerkompetenzen
 	 */
-	public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzenMitSchulform(final @NotNull BenutzerKompetenzGruppe gruppe,
+	public static @NotNull List<BenutzerKompetenz> getKompetenzenMitSchulform(final @NotNull BenutzerKompetenzGruppe gruppe,
 			final @NotNull Schulform schulform) {
-		final List<@NotNull BenutzerKompetenz> l = new ArrayList<>();
-		final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
+		final List<BenutzerKompetenz> l = new ArrayList<>();
+		final List<BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
 		if (liste == null)
 			return l;
 		for (final BenutzerKompetenz bk : liste) {

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class StundenplanblockungAlgorithmus extends Service<@NotNull StundenplanblockungManager, @NotNull StundenplanblockungManager> {
+public final class StundenplanblockungAlgorithmus extends Service<StundenplanblockungManager, StundenplanblockungManager> {
 
 	@Override
 	public @NotNull StundenplanblockungManager handle(final @NotNull StundenplanblockungManager pInput) {

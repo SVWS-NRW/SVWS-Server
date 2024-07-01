@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  * für Objekt vom Typ LogData. Die über das Interface empfangeben Log-Daten
  * werden auf der Konsole ausgegeben.
  */
-public class LogConsumerConsole implements Consumer<@NotNull LogData> {
+public class LogConsumerConsole implements Consumer<LogData> {
 
 	/** Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht. */
 	public final boolean printTime;

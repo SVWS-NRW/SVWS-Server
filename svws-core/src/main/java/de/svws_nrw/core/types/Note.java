@@ -150,7 +150,7 @@ public enum Note {
 	}
 
 	/** Noten ohne Tendenz als Liste mit 1,2,3,4,5,6 */
-	private static final @NotNull List<@NotNull Note> listNotenOhneTendenz = new ArrayList<>();
+	private static final @NotNull List<Note> listNotenOhneTendenz = new ArrayList<>();
 
 	/**
 	 * Gibt zurück, ob es sich um eine echte Note oder nur um eine "Pseudonote" handelt
@@ -366,7 +366,7 @@ public enum Note {
 	 *
 	 * @return Die Noten von 1 bis 6 als List
 	 */
-	public static @NotNull List<@NotNull Note> getNotenOhneTendenz() {
+	public static @NotNull List<Note> getNotenOhneTendenz() {
 		if (listNotenOhneTendenz.isEmpty()) {
 			listNotenOhneTendenz.add(SEHR_GUT);
 			listNotenOhneTendenz.add(GUT);

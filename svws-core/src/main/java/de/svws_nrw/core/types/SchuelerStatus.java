@@ -41,10 +41,10 @@ public enum SchuelerStatus {
 
 
 	/** Die Zuordnung des Schüler-Status zu der ID */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull SchuelerStatus> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Integer, SchuelerStatus> _mapID = new HashMap<>();
 
 	/** Die Zuordnung des Schüler-Status zu der ID */
-	private static final @NotNull HashMap<@NotNull String, @NotNull SchuelerStatus> _mapBezeichnungen = new HashMap<>();
+	private static final @NotNull HashMap<String, SchuelerStatus> _mapBezeichnungen = new HashMap<>();
 
 
 	/** Die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird. */
@@ -83,7 +83,7 @@ public enum SchuelerStatus {
 	 *
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull SchuelerStatus> getMapID() {
+	private static @NotNull HashMap<Integer, SchuelerStatus> getMapID() {
 		if (_mapID.size() == 0)
 			for (final SchuelerStatus p : SchuelerStatus.values())
 				_mapID.put(p.id, p);
@@ -97,7 +97,7 @@ public enum SchuelerStatus {
 	 *
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull SchuelerStatus> getMapBezeichnungen() {
+	private static @NotNull HashMap<String, SchuelerStatus> getMapBezeichnungen() {
 		if (_mapBezeichnungen.size() == 0)
 			for (final SchuelerStatus p : SchuelerStatus.values())
 				_mapBezeichnungen.put(p.bezeichnung.toUpperCase(), p);

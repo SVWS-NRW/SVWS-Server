@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public class Logger {
 
 	/// Ein interner Vektor zum Speichern der Consumer von Log-Informationen.
-	private final @NotNull ArrayList<@NotNull Consumer<@NotNull LogData>> consumer = new ArrayList<>();
+	private final @NotNull ArrayList<Consumer<LogData>> consumer = new ArrayList<>();
 
 	/// Das Standard-Log-Level, welches für neue Log-Informationen genutzt wird.
 	private @NotNull LogLevel defaultLevel = LogLevel.INFO;
@@ -28,7 +28,7 @@ public class Logger {
 	 *
 	 * @param c   der hinzuzufügende Consumer von Log-Informationen
 	 */
-	public void addConsumer(final @NotNull Consumer<@NotNull LogData> c) {
+	public void addConsumer(final @NotNull Consumer<LogData> c) {
 		consumer.add(c);
 	}
 
@@ -48,7 +48,7 @@ public class Logger {
 	 *
 	 * @param c   der zu entfernende Consumer von Log-Informationen
 	 */
-	public void removeConsumer(final @NotNull Consumer<@NotNull LogData> c) {
+	public void removeConsumer(final @NotNull Consumer<LogData> c) {
 		consumer.remove(c);
 	}
 
@@ -103,7 +103,7 @@ public class Logger {
 	 */
 	private void log(final @NotNull LogData data) {
 		for (int i = 0; i < consumer.size(); i++) {
-			final @NotNull Consumer<@NotNull LogData> c = consumer.get(i);
+			final @NotNull Consumer<LogData> c = consumer.get(i);
 			if (c == null)
 				continue;
 			c.accept(data);
