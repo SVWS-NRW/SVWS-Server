@@ -1518,13 +1518,13 @@ public enum Schulgliederung {
 	public final @NotNull SchulgliederungKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Schulgliederung zu dem Kürzel der Schulgliederung */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Schulgliederung> _schulgliederungenKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Schulgliederung> _schulgliederungenKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Schulgliederung zu der ID der Schulgliederung */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> _schulgliederungenID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Schulgliederung> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Schulgliederung vorkommt */
-	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -1537,7 +1537,7 @@ public enum Schulgliederung {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -1555,7 +1555,7 @@ public enum Schulgliederung {
 	 *
 	 * @return die Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Schulgliederung> getMapSchulgliederungByKuerzel() {
+	private static @NotNull HashMap<String, Schulgliederung> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
 			for (final Schulgliederung s : Schulgliederung.values())
 				_schulgliederungenKuerzel.put(s.daten.kuerzel, s);
@@ -1569,7 +1569,7 @@ public enum Schulgliederung {
 	 *
 	 * @return die Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> getMapSchulgliederungByID() {
+	private static @NotNull HashMap<Long, Schulgliederung> getMapSchulgliederungByID() {
 		if (_schulgliederungenID.size() == 0)
 			for (final Schulgliederung s : Schulgliederung.values()) {
 				for (final SchulgliederungKatalogEintrag k : s.historie)
@@ -1614,8 +1614,8 @@ public enum Schulgliederung {
 	 *
 	 * @return die zugehörigen Schulgliederungen
 	 */
-	public static @NotNull List<@NotNull Schulgliederung> getByBkIndex(final int index) {
-		final @NotNull ArrayList<@NotNull Schulgliederung> result = new ArrayList<>();
+	public static @NotNull List<Schulgliederung> getByBkIndex(final int index) {
+		final @NotNull ArrayList<Schulgliederung> result = new ArrayList<>();
 		final @NotNull Schulgliederung @NotNull [] gliederungen = Schulgliederung.values();
 		for (int i = 0; i < gliederungen.length; i++) {
 			final @NotNull Schulgliederung gliederung = gliederungen[i];
@@ -1632,7 +1632,7 @@ public enum Schulgliederung {
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
-	public @NotNull List<@NotNull Schulform> getSchulformen() {
+	public @NotNull List<Schulform> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -1645,8 +1645,8 @@ public enum Schulgliederung {
 	 *
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
-	public static @NotNull List<@NotNull Schulgliederung> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull Schulgliederung> result = new ArrayList<>();
+	public static @NotNull List<Schulgliederung> get(final Schulform schulform) {
+		final @NotNull ArrayList<Schulgliederung> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Schulgliederung @NotNull [] gliederungen = Schulgliederung.values();
@@ -1751,7 +1751,7 @@ public enum Schulgliederung {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return getDefault(sf);
 		// Prüfe, ob die Gliederung bei der Schulform existiert
-		final @NotNull List<@NotNull Schulgliederung> gliederungen = get(sf);
+		final @NotNull List<Schulgliederung> gliederungen = get(sf);
 		for (int i = 0; i < gliederungen.size(); i++) {
 			final Schulgliederung sg = gliederungen.get(i);
 			if ((sg.daten.kuerzel).equalsIgnoreCase(kuerzel))

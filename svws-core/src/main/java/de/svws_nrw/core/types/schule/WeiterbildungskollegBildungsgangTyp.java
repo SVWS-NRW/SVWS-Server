@@ -36,7 +36,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	public final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Typen von Bildungsgängen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegBildungsgangTyp> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, WeiterbildungskollegBildungsgangTyp> _ebenen = new HashMap<>();
 
 
 	/**
@@ -59,7 +59,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	 *
 	 * @return die Map von den Kürzeln der Typen auf die zugehörigen Typen von Bildungsgängen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegBildungsgangTyp> getMapByKuerzel() {
+	private static @NotNull HashMap<String, WeiterbildungskollegBildungsgangTyp> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final WeiterbildungskollegBildungsgangTyp s : WeiterbildungskollegBildungsgangTyp.values()) {
 				if (s.daten != null)

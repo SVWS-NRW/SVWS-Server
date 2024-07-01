@@ -105,7 +105,7 @@ public enum Pruefungsordnung {
 	public final @NotNull PruefungsordnungKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Verordnungen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Pruefungsordnung> _verordnungen = new HashMap<>();
+	private static final @NotNull HashMap<String, Pruefungsordnung> _verordnungen = new HashMap<>();
 
 
 	/**
@@ -126,7 +126,7 @@ public enum Pruefungsordnung {
 	 *
 	 * @return die Map von den Kürzeln der Prüfungsordnungen auf die zugehörigen Prüfungsordnungen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Pruefungsordnung> getMapPruefungsordnungByKuerzel() {
+	private static @NotNull HashMap<String, Pruefungsordnung> getMapPruefungsordnungByKuerzel() {
 		if (_verordnungen.size() == 0) {
 			for (final Pruefungsordnung s : Pruefungsordnung.values()) {
 				if (s.daten != null)

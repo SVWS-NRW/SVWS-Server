@@ -247,17 +247,17 @@ public enum GostKursblockungRegelTyp {
 	public final String bezeichnung;
 
 	/** Die Typen der Regel-Parameter */
-	private final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes;
+	private final @NotNull List<GostKursblockungRegelParameterTyp> paramTypes;
 
 	/** Mapping von "Typ --> GostKursblockungRegelTyp". */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel = new HashMap<>();
+	private static final @NotNull HashMap<Integer, GostKursblockungRegelTyp> _map_id_regel = new HashMap<>();
 
 	/** Mapping vom "Typ --> GostKursblockungRegelTyp mit einer Kurs-ID als Regel-Parameter-Type" */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel_kursid = new HashMap<>();
+	private static final @NotNull HashMap<Integer, GostKursblockungRegelTyp> _map_id_regel_kursid = new HashMap<>();
 
 
 
-	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMap() {
+	private static @NotNull HashMap<Integer, GostKursblockungRegelTyp> getMap() {
 		if (_map_id_regel.isEmpty())
 			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
 				_map_id_regel.put(gostTyp.typ, gostTyp);
@@ -265,7 +265,7 @@ public enum GostKursblockungRegelTyp {
 	}
 
 
-	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMapKursRegeln() {
+	private static @NotNull HashMap<Integer, GostKursblockungRegelTyp> getMapKursRegeln() {
 		if (_map_id_regel_kursid.isEmpty())
 			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
 				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID))
@@ -279,7 +279,7 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @return Die Menge aller existierender Regeln.
 	 */
-	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getCollection() {
+	public static @NotNull Collection<GostKursblockungRegelTyp> getCollection() {
 		return getMap().values();
 	}
 
@@ -290,7 +290,7 @@ public enum GostKursblockungRegelTyp {
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
 	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
-	GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes)
+	GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<GostKursblockungRegelParameterTyp> paramTypes)
 			throws IllegalArgumentException {
 		this.typ = id;
 		this.bezeichnung = bezeichnung;
@@ -364,7 +364,7 @@ public enum GostKursblockungRegelTyp {
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
 	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel pRegel, final int pSchienenNr) {
-		final @NotNull List<@NotNull Long> param = pRegel.parameter;
+		final @NotNull List<Long> param = pRegel.parameter;
 
 		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		switch (typ) {
@@ -400,7 +400,7 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @return eine Collection mit allen Regel-Typen mit Bezug zu einem konkreten Kurs
 	 */
-	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getKursRegelTypen() {
+	public static @NotNull Collection<GostKursblockungRegelTyp> getKursRegelTypen() {
 		return getMapKursRegeln().values();
 	}
 

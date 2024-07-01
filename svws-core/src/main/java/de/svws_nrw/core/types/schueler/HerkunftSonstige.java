@@ -110,7 +110,7 @@ public enum HerkunftSonstige {
 	public final @NotNull HerkunftSonstigeKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten sonstigen Herkünfte, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, HerkunftSonstige> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, HerkunftSonstige> _ebenen = new HashMap<>();
 
 
 	/**
@@ -133,7 +133,7 @@ public enum HerkunftSonstige {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen sonstigen Herkünfte
 	 */
-	private static @NotNull HashMap<@NotNull String, HerkunftSonstige> getMapByKuerzel() {
+	private static @NotNull HashMap<String, HerkunftSonstige> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final HerkunftSonstige s : HerkunftSonstige.values()) {
 				if (s.daten != null)

@@ -135,7 +135,7 @@ public enum Herkunftsschulnummern {
 	public final @NotNull HerkunftsschulnummerKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Herkunftsschulnummern, zugeordnet zu ihren Schulnummern */
-	private static final @NotNull HashMap<@NotNull Integer, Herkunftsschulnummern> _mapBySchulnummer = new HashMap<>();
+	private static final @NotNull HashMap<Integer, Herkunftsschulnummern> _mapBySchulnummer = new HashMap<>();
 
 
 	/**
@@ -155,7 +155,7 @@ public enum Herkunftsschulnummern {
 	 *
 	 * @return die Map von den Kürzeln der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 */
-	private static @NotNull HashMap<@NotNull Integer, Herkunftsschulnummern> getMapBySchulnummer() {
+	private static @NotNull HashMap<Integer, Herkunftsschulnummern> getMapBySchulnummer() {
 		if (_mapBySchulnummer.size() == 0) {
 			for (final Herkunftsschulnummern s : Herkunftsschulnummern.values()) {
 				if (s.daten != null)

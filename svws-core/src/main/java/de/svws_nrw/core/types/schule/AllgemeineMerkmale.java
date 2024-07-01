@@ -265,7 +265,7 @@ public enum AllgemeineMerkmale {
 	public final @NotNull AllgemeineMerkmaleKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, AllgemeineMerkmale> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, AllgemeineMerkmale> _mapByKuerzel = new HashMap<>();
 
 
 	/**
@@ -288,7 +288,7 @@ public enum AllgemeineMerkmale {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen allgemeinen Merkmale
 	 */
-	private static @NotNull HashMap<@NotNull String, AllgemeineMerkmale> getMapByKuerzel() {
+	private static @NotNull HashMap<String, AllgemeineMerkmale> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final AllgemeineMerkmale s : AllgemeineMerkmale.values()) {
 				if (s.daten != null)

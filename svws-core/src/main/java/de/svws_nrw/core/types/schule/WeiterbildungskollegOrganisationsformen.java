@@ -33,10 +33,10 @@ public enum WeiterbildungskollegOrganisationsformen {
 	public final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull WeiterbildungskollegOrganisationsformen> _mapByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, WeiterbildungskollegOrganisationsformen> _mapByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, WeiterbildungskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
 
 
 	/**
@@ -58,7 +58,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 *
 	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull WeiterbildungskollegOrganisationsformen> getMapByID() {
+	private static @NotNull HashMap<Long, WeiterbildungskollegOrganisationsformen> getMapByID() {
 		if (_mapByID.size() == 0)
 			for (final WeiterbildungskollegOrganisationsformen s : WeiterbildungskollegOrganisationsformen.values())
 				for (final OrganisationsformKatalogEintrag k : s.historie)
@@ -74,7 +74,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegOrganisationsformen> getMapByKuerzel() {
+	private static @NotNull HashMap<String, WeiterbildungskollegOrganisationsformen> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
 			for (final WeiterbildungskollegOrganisationsformen s : WeiterbildungskollegOrganisationsformen.values()) {
 				if (s.daten != null)

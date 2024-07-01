@@ -980,16 +980,16 @@ public enum ZulaessigeKursart {
 	public final @NotNull KursartKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit allen zulässigen Kursarten. Der Zugriff erfolgt dabei über die ID */
-	private static final @NotNull HashMap<@NotNull Long, ZulaessigeKursart> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, ZulaessigeKursart> _mapID = new HashMap<>();
 
 	/** Eine HashMap mit zulässigen Kursarten. Der Zugriff erfolgt dabei über das Kürzel */
-	private static final @NotNull HashMap<@NotNull String, ZulaessigeKursart> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, ZulaessigeKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist */
-	private final @NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
+	private final @NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
 
 	/** Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten */
-	private static final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> _mapByAllgemein = new HashMap<>();
+	private static final @NotNull HashMap<String, List<ZulaessigeKursart>> _mapByAllgemein = new HashMap<>();
 
 
 	/**
@@ -1003,7 +1003,7 @@ public enum ZulaessigeKursart {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
@@ -1023,7 +1023,7 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die Map von den IDs der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, ZulaessigeKursart> getMapByID() {
+	private static @NotNull HashMap<Long, ZulaessigeKursart> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final ZulaessigeKursart s : ZulaessigeKursart.values())
 				if (s.daten != null)
@@ -1038,7 +1038,7 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die Map von den Kürzeln der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static @NotNull HashMap<@NotNull String, ZulaessigeKursart> getMapByKuerzel() {
+	private static @NotNull HashMap<String, ZulaessigeKursart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final ZulaessigeKursart s : ZulaessigeKursart.values())
 				if (s.daten != null)
@@ -1047,12 +1047,12 @@ public enum ZulaessigeKursart {
 	}
 
 
-	private static @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> getMapByAllgemeinemKuerzel() {
+	private static @NotNull HashMap<String, List<ZulaessigeKursart>> getMapByAllgemeinemKuerzel() {
 		if (_mapByAllgemein.size() == 0) {
 			for (final ZulaessigeKursart k : ZulaessigeKursart.values()) {
 				if (k.daten != null) {
 					final @NotNull String allgKursart = (k.daten.kuerzelAllg != null) ? k.daten.kuerzelAllg : "";
-					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(allgKursart);
+					List<ZulaessigeKursart> list = _mapByAllgemein.get(allgKursart);
 					if (list == null) {
 						list = new ArrayList<>();
 						_mapByAllgemein.put(allgKursart, list);
@@ -1060,7 +1060,7 @@ public enum ZulaessigeKursart {
 					list.add(k);
 				}
 				if (k.daten.kuerzelAllg == null) {
-					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(k.daten.kuerzel);
+					List<ZulaessigeKursart> list = _mapByAllgemein.get(k.daten.kuerzel);
 					if (list == null) {
 						list = new ArrayList<>();
 						_mapByAllgemein.put(k.daten.kuerzel, list);
@@ -1100,8 +1100,8 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull ZulaessigeKursart> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull ZulaessigeKursart> kursarten = new ArrayList<>();
+	public static @NotNull List<ZulaessigeKursart> get(final Schulform schulform) {
+		final @NotNull ArrayList<ZulaessigeKursart> kursarten = new ArrayList<>();
 		if (schulform == null)
 			return kursarten;
 		for (final ZulaessigeKursart kursart : ZulaessigeKursart.values())
@@ -1117,7 +1117,7 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
-	public @NotNull List<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> getGliederungen() {
+	public @NotNull List<Pair<Schulform, @AllowNull Schulgliederung>> getGliederungen() {
 		return zulaessig[0];
 	}
 
@@ -1141,18 +1141,18 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
-	public static @NotNull List<@NotNull ZulaessigeKursart> getByAllgemeinerKursart(final @NotNull String allgKursart) {
+	public static @NotNull List<ZulaessigeKursart> getByAllgemeinerKursart(final @NotNull String allgKursart) {
 		if (ZulaessigeKursart.E.daten.kuerzel.equals(allgKursart)) {
-			final @NotNull List<@NotNull ZulaessigeKursart> result = new ArrayList<>();
+			final @NotNull List<ZulaessigeKursart> result = new ArrayList<>();
 			result.add(ZulaessigeKursart.E);
 			return result;
 		}
 		if (ZulaessigeKursart.G.daten.kuerzel.equals(allgKursart)) {
-			final @NotNull List<@NotNull ZulaessigeKursart> result = new ArrayList<>();
+			final @NotNull List<ZulaessigeKursart> result = new ArrayList<>();
 			result.add(ZulaessigeKursart.G);
 			return result;
 		}
-		final List<@NotNull ZulaessigeKursart> result = getMapByAllgemeinemKuerzel().get(allgKursart);
+		final List<ZulaessigeKursart> result = getMapByAllgemeinemKuerzel().get(allgKursart);
 		if (result == null)
 			throw new DeveloperNotificationException("Die allgemeine Kursart " + allgKursart + " existiert nicht.");
 		return result;

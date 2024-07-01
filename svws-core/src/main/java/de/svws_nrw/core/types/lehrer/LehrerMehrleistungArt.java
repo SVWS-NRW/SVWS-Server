@@ -57,10 +57,10 @@ public enum LehrerMehrleistungArt {
 	public final @NotNull LehrerKatalogMehrleistungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Mehrleistungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerMehrleistungArt> _artenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerMehrleistungArt> _artenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Arten von Mehrleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerMehrleistungArt> _artenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerMehrleistungArt> _artenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -81,7 +81,7 @@ public enum LehrerMehrleistungArt {
 	 *
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerMehrleistungArt> getMapArtenByID() {
+	private static @NotNull HashMap<Long, LehrerMehrleistungArt> getMapArtenByID() {
 		if (_artenByID.size() == 0)
 			for (final LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
 				_artenByID.put(g.daten.id, g);
@@ -95,7 +95,7 @@ public enum LehrerMehrleistungArt {
 	 *
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerMehrleistungArt> getMapArtenByKuerzel() {
+	private static @NotNull HashMap<String, LehrerMehrleistungArt> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
 			for (final LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
 				_artenByKuerzel.put(g.daten.kuerzel, g);

@@ -61,7 +61,7 @@ public enum BerufskollegAnlage {
 	public final @NotNull BerufskollegAnlageKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln*/
-	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> _anlagen = new HashMap<>();
+	private static final @NotNull HashMap<String, BerufskollegAnlage> _anlagen = new HashMap<>();
 
 
 	/**
@@ -82,7 +82,7 @@ public enum BerufskollegAnlage {
 	 *
 	 * @return die Map von den Kürzeln der Anlagen auf die zugehörigen Anlagen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> getMapAnlageByKuerzel() {
+	private static @NotNull HashMap<String, BerufskollegAnlage> getMapAnlageByKuerzel() {
 		if (_anlagen.size() == 0) {
 			for (final BerufskollegAnlage s : BerufskollegAnlage.values()) {
 				if (s.daten != null)

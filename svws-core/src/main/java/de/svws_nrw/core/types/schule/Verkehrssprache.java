@@ -2361,10 +2361,10 @@ public enum Verkehrssprache {
 	public final @NotNull VerkehrsspracheKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> _sprachen = new HashMap<>();
+	private static final @NotNull HashMap<String, Verkehrssprache> _sprachen = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren zweistelligen ISO 639-1-Codes */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> _kuerzel2 = new HashMap<>();
+	private static final @NotNull HashMap<String, Verkehrssprache> _kuerzel2 = new HashMap<>();
 
 
 	/**
@@ -2385,7 +2385,7 @@ public enum Verkehrssprache {
 	 *
 	 * @return die Map von den Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel() {
+	private static @NotNull HashMap<String, Verkehrssprache> getMapSpracheByKuerzel() {
 		if (_sprachen.size() == 0) {
 			for (final Verkehrssprache s : Verkehrssprache.values()) {
 				if (s.daten != null)
@@ -2402,7 +2402,7 @@ public enum Verkehrssprache {
 	 *
 	 * @return die Map von den zweistelligen Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel2() {
+	private static @NotNull HashMap<String, Verkehrssprache> getMapSpracheByKuerzel2() {
 		if (_kuerzel2.size() == 0) {
 			for (final Verkehrssprache s : Verkehrssprache.values()) {
 				if ((s.daten != null) && (s.daten.iso2 != null))

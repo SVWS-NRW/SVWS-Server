@@ -461,10 +461,10 @@ public enum LehrerAnrechnungsgrund {
 	public final @NotNull LehrerKatalogAnrechnungsgrundEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Anrechnungsgründen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerAnrechnungsgrund> _gruendeByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerAnrechnungsgrund> _gruendeByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Anrechnungsgründen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerAnrechnungsgrund> _gruendeByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerAnrechnungsgrund> _gruendeByKuerzel = new HashMap<>();
 
 
 	/**
@@ -485,7 +485,7 @@ public enum LehrerAnrechnungsgrund {
 	 *
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerAnrechnungsgrund> getMapGruendeByID() {
+	private static @NotNull HashMap<Long, LehrerAnrechnungsgrund> getMapGruendeByID() {
 		if (_gruendeByID.size() == 0)
 			for (final LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
 				_gruendeByID.put(g.daten.id, g);
@@ -499,7 +499,7 @@ public enum LehrerAnrechnungsgrund {
 	 *
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerAnrechnungsgrund> getMapGruendeByKuerzel() {
+	private static @NotNull HashMap<String, LehrerAnrechnungsgrund> getMapGruendeByKuerzel() {
 		if (_gruendeByKuerzel.size() == 0)
 			for (final LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
 				_gruendeByKuerzel.put(g.daten.kuerzel, g);

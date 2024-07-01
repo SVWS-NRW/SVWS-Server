@@ -75,10 +75,10 @@ public enum KAOAKategorie {
 	public final @NotNull KAOAKategorieEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAKategorie> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, KAOAKategorie> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAKategorie> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, KAOAKategorie> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -98,7 +98,7 @@ public enum KAOAKategorie {
 	 *
 	 * @return die Map von der ID auf die zugehörige Kategorie
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAKategorie> getMapStatusByID() {
+	private static @NotNull HashMap<Long, KAOAKategorie> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAKategorie g : KAOAKategorie.values())
 				_statusByID.put(g.daten.id, g);
@@ -112,7 +112,7 @@ public enum KAOAKategorie {
 	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Kategorie
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOAKategorie> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, KAOAKategorie> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAKategorie g : KAOAKategorie.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

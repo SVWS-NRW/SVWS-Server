@@ -65,7 +65,7 @@ public enum HerkunftBildungsgangsTyp {
 	public final @NotNull HerkunftBildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Bildungsgangtypen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, HerkunftBildungsgangsTyp> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, HerkunftBildungsgangsTyp> _ebenen = new HashMap<>();
 
 
 	/**
@@ -88,7 +88,7 @@ public enum HerkunftBildungsgangsTyp {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Bildungsgangtypen
 	 */
-	private static @NotNull HashMap<@NotNull String, HerkunftBildungsgangsTyp> getMapByKuerzel() {
+	private static @NotNull HashMap<String, HerkunftBildungsgangsTyp> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final HerkunftBildungsgangsTyp s : HerkunftBildungsgangsTyp.values()) {
 				if (s.daten != null)

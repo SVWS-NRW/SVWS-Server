@@ -45,10 +45,10 @@ public enum LehrerFachrichtungAnerkennung {
 	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> _anerkennungenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerFachrichtungAnerkennung> _anerkennungenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerFachrichtungAnerkennung> _anerkennungenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerFachrichtungAnerkennung> _anerkennungenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -69,7 +69,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 *
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> getMapAnerkennungenByID() {
+	private static @NotNull HashMap<Long, LehrerFachrichtungAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
 			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
 				_anerkennungenByID.put(l.daten.id, l);
@@ -83,7 +83,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerFachrichtungAnerkennung> getMapAnerkennungenByKuerzel() {
+	private static @NotNull HashMap<String, LehrerFachrichtungAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
 			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
 				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);

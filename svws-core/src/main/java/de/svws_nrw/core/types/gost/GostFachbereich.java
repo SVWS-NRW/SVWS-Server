@@ -98,20 +98,20 @@ public enum GostFachbereich {
 
 
 	/** Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer */
-	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull Integer> _mapAlleFaecher = new HashMap<@NotNull ZulaessigesFach, @NotNull Integer>();
+	private static final @NotNull Map<ZulaessigesFach, Integer> _mapAlleFaecher = new HashMap<ZulaessigesFach, Integer>();
 
 	/** Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
-	private static final @NotNull List<@NotNull ZulaessigesFach> _listAlleFaecher = new ArrayList<@NotNull ZulaessigesFach>();
+	private static final @NotNull List<ZulaessigesFach> _listAlleFaecher = new ArrayList<ZulaessigesFach>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
-	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach =
+	private static final @NotNull Map<ZulaessigesFach, List<GostFachbereich>> _mapFachbereichByFach =
 			new ArrayMap<>(ZulaessigesFach.values());
 
 
 	/** Eine Liste der Fächern dieses Fachbereichs */
-	private final @NotNull ArrayList<@NotNull ZulaessigesFach> faecher = new ArrayList<>();
+	private final @NotNull ArrayList<ZulaessigesFach> faecher = new ArrayList<>();
 	/** Eine Liste der Fächerkürzel dieses Fachbereichs */
-	private final @NotNull ArrayList<@NotNull String> kuerzel = new ArrayList<>();
+	private final @NotNull ArrayList<String> kuerzel = new ArrayList<>();
 
 
 	/**
@@ -121,7 +121,7 @@ public enum GostFachbereich {
 	 * @param fachbereiche   die Fachbereiche
 	 * @param faecher        die Fächer des Fachbereichs
 	 */
-	GostFachbereich(final List<@NotNull GostFachbereich> fachbereiche, final @NotNull ZulaessigesFach... faecher) {
+	GostFachbereich(final List<GostFachbereich> fachbereiche, final @NotNull ZulaessigesFach... faecher) {
 		if (fachbereiche != null) {
 			for (final GostFachbereich fb : fachbereiche) {
 				for (final ZulaessigesFach fach : fb.faecher) {
@@ -143,11 +143,11 @@ public enum GostFachbereich {
 	 *
 	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
 	 */
-	private static @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> getMapFachbereichByFach() {
+	private static @NotNull Map<ZulaessigesFach, List<GostFachbereich>> getMapFachbereichByFach() {
 		if (_mapFachbereichByFach.size() == 0) {
 			for (final @NotNull GostFachbereich fb : GostFachbereich.values()) {
 				for (final ZulaessigesFach fach : fb.faecher) {
-					List<@NotNull GostFachbereich> listFachbereichByFach = _mapFachbereichByFach.get(fach);
+					List<GostFachbereich> listFachbereichByFach = _mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach == null) {
 						listFachbereichByFach = new ArrayList<>();
 						_mapFachbereichByFach.put(fach, listFachbereichByFach);
@@ -165,7 +165,7 @@ public enum GostFachbereich {
 	 *
 	 * @return die Liste der Fächer des Fachbereichs
 	 */
-	public @NotNull List<@NotNull ZulaessigesFach> getFaecher() {
+	public @NotNull List<ZulaessigesFach> getFaecher() {
 		return this.faecher;
 	}
 
@@ -205,11 +205,11 @@ public enum GostFachbereich {
 	 *
 	 * @return die zugehörigen Fachbereiche
 	 */
-	public static @NotNull List<@NotNull GostFachbereich> getBereiche(final GostFach fach) {
+	public static @NotNull List<GostFachbereich> getBereiche(final GostFach fach) {
 		if (fach == null)
 			return new ArrayList<>();
 		final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		final List<@NotNull GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
+		final List<GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
 		if (bereiche != null)
 			return bereiche;
 		return new ArrayList<>();
@@ -223,9 +223,9 @@ public enum GostFachbereich {
 	 *
 	 * @return die Menge der Fächer
 	 */
-	public static @NotNull Map<@NotNull ZulaessigesFach, @NotNull Integer> getAlleFaecher() {
+	public static @NotNull Map<ZulaessigesFach, Integer> getAlleFaecher() {
 		if (_mapAlleFaecher.isEmpty()) {
-			final @NotNull List<@NotNull ZulaessigesFach> alleFaecher = getAlleFaecherSortiert();
+			final @NotNull List<ZulaessigesFach> alleFaecher = getAlleFaecherSortiert();
 			for (int i = 0; i < alleFaecher.size(); i++) {
 				final @NotNull ZulaessigesFach fach = alleFaecher.get(i);
 				_mapAlleFaecher.put(fach, i);
@@ -318,7 +318,7 @@ public enum GostFachbereich {
 	 *
 	 * @return die Liste der Fächer
 	 */
-	public static @NotNull List<@NotNull ZulaessigesFach> getAlleFaecherSortiert() {
+	public static @NotNull List<ZulaessigesFach> getAlleFaecherSortiert() {
 		if (_listAlleFaecher.isEmpty()) {
 			_listAlleFaecher.addAll(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH.getFaecher());
 			_listAlleFaecher.addAll(GostFachbereich.GESCHICHTE.getFaecher());

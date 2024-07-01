@@ -147,10 +147,10 @@ public enum BerufskollegOrganisationsformen {
 	public final @NotNull OrganisationsformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull BerufskollegOrganisationsformen> _mapByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, BerufskollegOrganisationsformen> _mapByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, BerufskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
 
 
 	/**
@@ -172,7 +172,7 @@ public enum BerufskollegOrganisationsformen {
 	 *
 	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull BerufskollegOrganisationsformen> getMapByID() {
+	private static @NotNull HashMap<Long, BerufskollegOrganisationsformen> getMapByID() {
 		if (_mapByID.size() == 0)
 			for (final BerufskollegOrganisationsformen s : BerufskollegOrganisationsformen.values())
 				for (final OrganisationsformKatalogEintrag k : s.historie)
@@ -188,7 +188,7 @@ public enum BerufskollegOrganisationsformen {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegOrganisationsformen> getMapByKuerzel() {
+	private static @NotNull HashMap<String, BerufskollegOrganisationsformen> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
 			for (final BerufskollegOrganisationsformen s : BerufskollegOrganisationsformen.values()) {
 				if (s.daten != null)

@@ -35,7 +35,7 @@ public enum KlausurterminblockungModusKursarten {
 
 
 	/** Eine Map mit der Zuordnung zu der ID */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusKursarten> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Integer, KlausurterminblockungModusKursarten> _mapID = new HashMap<>();
 
 
 	/**
@@ -56,7 +56,7 @@ public enum KlausurterminblockungModusKursarten {
 	 *
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusKursarten> getMapByID() {
+	private static @NotNull HashMap<Integer, KlausurterminblockungModusKursarten> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final @NotNull KlausurterminblockungModusKursarten e : KlausurterminblockungModusKursarten.values())
 				_mapID.put(e.id, e);

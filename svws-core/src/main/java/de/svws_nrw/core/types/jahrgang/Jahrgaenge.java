@@ -457,16 +457,16 @@ public enum Jahrgaenge {
 	public final @NotNull JahrgangsKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs */
-	private static final @NotNull HashMap<@NotNull String, Jahrgaenge> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Jahrgaenge> _mapKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung des Jahrgangs zu der ID des Jahrgangs */
-	private static final @NotNull HashMap<@NotNull Long, Jahrgaenge> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Jahrgaenge> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<@NotNull String> @NotNull [] bezeichnungen;
+	private final @NotNull ArrayList<String> @NotNull [] bezeichnungen;
 
 
 	/**
@@ -480,8 +480,8 @@ public enum Jahrgaenge {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
-		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.bezeichnungen = (@NotNull ArrayList<String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			this.bezeichnungen[i] = new ArrayList<>();
@@ -501,7 +501,7 @@ public enum Jahrgaenge {
 	 *
 	 * @return die Map von den Kürzel der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static @NotNull HashMap<@NotNull String, Jahrgaenge> getMapJahrgangByKuerzel() {
+	private static @NotNull HashMap<String, Jahrgaenge> getMapJahrgangByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final Jahrgaenge j : Jahrgaenge.values())
 				_mapKuerzel.put(j.daten.kuerzel, j);
@@ -515,7 +515,7 @@ public enum Jahrgaenge {
 	 *
 	 * @return die Map von den IDs der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static @NotNull HashMap<@NotNull Long, Jahrgaenge> getMapJahrgangByID() {
+	private static @NotNull HashMap<Long, Jahrgaenge> getMapJahrgangByID() {
 		if (_mapID.size() == 0)
 			for (final Jahrgaenge j : Jahrgaenge.values()) {
 				for (final JahrgangsKatalogEintrag k : j.historie)
@@ -577,7 +577,7 @@ public enum Jahrgaenge {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public @NotNull List<@NotNull Schulform> getSchulformen() {
+	public @NotNull List<Schulform> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -589,8 +589,8 @@ public enum Jahrgaenge {
 	 *
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
-	public static @NotNull List<@NotNull Jahrgaenge> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull Jahrgaenge> result = new ArrayList<>();
+	public static @NotNull List<Jahrgaenge> get(final Schulform schulform) {
+		final @NotNull ArrayList<Jahrgaenge> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Jahrgaenge @NotNull [] jahrgaenge = Jahrgaenge.values();

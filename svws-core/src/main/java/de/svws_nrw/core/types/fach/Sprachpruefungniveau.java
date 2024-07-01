@@ -57,10 +57,10 @@ public enum Sprachpruefungniveau {
 	public final @NotNull SprachpruefungsniveauKatalogEintrag @NotNull [] historie;
 
 	/** Die Zuordnung der Sprachreferenzniveaus zu ihren IDs */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull Sprachpruefungniveau> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Integer, Sprachpruefungniveau> _mapID = new HashMap<>();
 
 	/** Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Sprachpruefungniveau> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Sprachpruefungniveau> _mapKuerzel = new HashMap<>();
 
 
 
@@ -82,7 +82,7 @@ public enum Sprachpruefungniveau {
 	 *
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull Sprachpruefungniveau> getMapByID() {
+	private static @NotNull HashMap<Integer, Sprachpruefungniveau> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
 				_mapID.put(l.daten.id, l);
@@ -96,7 +96,7 @@ public enum Sprachpruefungniveau {
 	 *
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Sprachpruefungniveau> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Sprachpruefungniveau> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
 				_mapKuerzel.put(l.daten.kuerzel, l);

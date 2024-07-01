@@ -101,10 +101,10 @@ public enum KAOABerufsfeld {
 	public final @NotNull KAOABerufsfeldEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOABerufsfeld> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, KAOABerufsfeld> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOABerufsfeld> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, KAOABerufsfeld> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -124,7 +124,7 @@ public enum KAOABerufsfeld {
 	 *
 	 * @return die Map von der ID auf das zugehörige Berufsfeld
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOABerufsfeld> getMapStatusByID() {
+	private static @NotNull HashMap<Long, KAOABerufsfeld> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOABerufsfeld g : KAOABerufsfeld.values())
 				_statusByID.put(g.daten.id, g);
@@ -138,7 +138,7 @@ public enum KAOABerufsfeld {
 	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Berufsfeld
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOABerufsfeld> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, KAOABerufsfeld> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOABerufsfeld g : KAOABerufsfeld.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

@@ -46,7 +46,7 @@ public enum BerufskollegBildungsgangTyp {
 	public final @NotNull BildungsgangTypKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegBildungsgangTyp> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, BerufskollegBildungsgangTyp> _ebenen = new HashMap<>();
 
 
 	/**
@@ -69,7 +69,7 @@ public enum BerufskollegBildungsgangTyp {
 	 *
 	 * @return die Map von den Kürzeln der Typen auf die zugehörigen Berufsschultypen von Bildungsgängen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegBildungsgangTyp> getMapByKuerzel() {
+	private static @NotNull HashMap<String, BerufskollegBildungsgangTyp> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final BerufskollegBildungsgangTyp s : BerufskollegBildungsgangTyp.values()) {
 				if (s.daten != null)

@@ -59,7 +59,7 @@ public enum Uebergangsempfehlung {
 	public final @NotNull UebergangsempfehlungKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, Uebergangsempfehlung> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Uebergangsempfehlung> _mapKuerzel = new HashMap<>();
 
 
 	/**
@@ -80,7 +80,7 @@ public enum Uebergangsempfehlung {
 	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
-	private static @NotNull HashMap<@NotNull String, Uebergangsempfehlung> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Uebergangsempfehlung> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
 			for (final Uebergangsempfehlung s : Uebergangsempfehlung.values()) {
 				if (s.daten != null)

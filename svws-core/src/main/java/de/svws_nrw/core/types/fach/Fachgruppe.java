@@ -431,16 +431,16 @@ public enum Fachgruppe {
 	public final @NotNull FachgruppenKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> _mapEintragByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, FachgruppenKatalogEintrag> _mapEintragByID = new HashMap<>();
 
 	/** Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> _mapByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Fachgruppe> _mapByID = new HashMap<>();
 
 	/** Eine Map, welche dem Kürzel der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Fachgruppe> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Fachgruppe vorkommt */
-	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -454,7 +454,7 @@ public enum Fachgruppe {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -472,7 +472,7 @@ public enum Fachgruppe {
 	 *
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> getMapEintragByID() {
+	private static @NotNull HashMap<Long, FachgruppenKatalogEintrag> getMapEintragByID() {
 		if (_mapEintragByID.size() == 0)
 			for (final Fachgruppe g : Fachgruppe.values())
 				for (final FachgruppenKatalogEintrag k : g.historie)
@@ -487,7 +487,7 @@ public enum Fachgruppe {
 	 *
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> getMapByID() {
+	private static @NotNull HashMap<Long, Fachgruppe> getMapByID() {
 		if (_mapByID.size() == 0)
 			for (final Fachgruppe g : Fachgruppe.values())
 				_mapByID.put(g.daten.id, g);
@@ -501,7 +501,7 @@ public enum Fachgruppe {
 	 *
 	 * @return die Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Fachgruppe> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0)
 			for (final Fachgruppe g : Fachgruppe.values())
 				_mapByKuerzel.put(g.daten.kuerzel, g);
@@ -514,7 +514,7 @@ public enum Fachgruppe {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public @NotNull List<@NotNull Schulform> getSchulformen() {
+	public @NotNull List<Schulform> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -584,8 +584,8 @@ public enum Fachgruppe {
 	 *
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull Fachgruppe> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull Fachgruppe> faecher = new ArrayList<>();
+	public static @NotNull List<Fachgruppe> get(final Schulform schulform) {
+		final @NotNull ArrayList<Fachgruppe> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
 		final @NotNull Fachgruppe @NotNull [] fachgruppen = Fachgruppe.values();

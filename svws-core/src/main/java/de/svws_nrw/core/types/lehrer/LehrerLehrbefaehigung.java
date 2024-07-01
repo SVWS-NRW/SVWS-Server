@@ -578,10 +578,10 @@ public enum LehrerLehrbefaehigung {
 	public final @NotNull LehrerKatalogLehrbefaehigungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Lehrbefähigungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigung> _lehrbefaehigungenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerLehrbefaehigung> _lehrbefaehigungenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerLehrbefaehigung> _lehrbefaehigungenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerLehrbefaehigung> _lehrbefaehigungenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -602,7 +602,7 @@ public enum LehrerLehrbefaehigung {
 	 *
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigung> getMapLehrbefaehigungByID() {
+	private static @NotNull HashMap<Long, LehrerLehrbefaehigung> getMapLehrbefaehigungByID() {
 		if (_lehrbefaehigungenByID.size() == 0)
 			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
 				_lehrbefaehigungenByID.put(l.daten.id, l);
@@ -616,7 +616,7 @@ public enum LehrerLehrbefaehigung {
 	 *
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerLehrbefaehigung> getMapLehrbefaehigungByKuerzel() {
+	private static @NotNull HashMap<String, LehrerLehrbefaehigung> getMapLehrbefaehigungByKuerzel() {
 		if (_lehrbefaehigungenByKuerzel.size() == 0)
 			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
 				_lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);

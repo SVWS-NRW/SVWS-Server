@@ -91,10 +91,10 @@ public enum SchulabschlussBerufsbildend {
 	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */
-	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, SchulabschlussBerufsbildend> _mapByKuerzel = new HashMap<>();
 
 	/** Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden */
-	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> _mapByKuerzelStatistik = new HashMap<>();
+	private static final @NotNull HashMap<String, SchulabschlussBerufsbildend> _mapByKuerzelStatistik = new HashMap<>();
 
 
 	/**
@@ -115,7 +115,7 @@ public enum SchulabschlussBerufsbildend {
 	 *
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzel() {
+	private static @NotNull HashMap<String, SchulabschlussBerufsbildend> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
 				if (s.daten != null)
@@ -144,7 +144,7 @@ public enum SchulabschlussBerufsbildend {
 	 *
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzelStatistik() {
+	private static @NotNull HashMap<String, SchulabschlussBerufsbildend> getMapByKuerzelStatistik() {
 		if (_mapByKuerzelStatistik.size() == 0) {
 			for (final SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
 				if (s.daten != null)

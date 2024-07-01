@@ -582,10 +582,10 @@ public enum LehrerFachrichtung {
 	public final @NotNull LehrerKatalogFachrichtungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Fachrichtungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerFachrichtung> _fachrichtungenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerFachrichtung> _fachrichtungenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Fachrichtungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerFachrichtung> _fachrichtungenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerFachrichtung> _fachrichtungenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -606,7 +606,7 @@ public enum LehrerFachrichtung {
 	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerFachrichtung> getMapFachrichtungByID() {
+	private static @NotNull HashMap<Long, LehrerFachrichtung> getMapFachrichtungByID() {
 		if (_fachrichtungenByID.size() == 0)
 			for (final LehrerFachrichtung g : LehrerFachrichtung.values())
 				_fachrichtungenByID.put(g.daten.id, g);
@@ -620,7 +620,7 @@ public enum LehrerFachrichtung {
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerFachrichtung> getMapFachrichtungByKuerzel() {
+	private static @NotNull HashMap<String, LehrerFachrichtung> getMapFachrichtungByKuerzel() {
 		if (_fachrichtungenByKuerzel.size() == 0)
 			for (final LehrerFachrichtung g : LehrerFachrichtung.values())
 				_fachrichtungenByKuerzel.put(g.daten.kuerzel, g);

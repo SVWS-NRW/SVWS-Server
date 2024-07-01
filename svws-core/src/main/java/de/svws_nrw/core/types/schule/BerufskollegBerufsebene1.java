@@ -111,7 +111,7 @@ public enum BerufskollegBerufsebene1 {
 	public final @NotNull BerufskollegBerufsebeneKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Berufsebenen der Ebene 1, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene1> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, BerufskollegBerufsebene1> _ebenen = new HashMap<>();
 
 
 	/**
@@ -132,7 +132,7 @@ public enum BerufskollegBerufsebene1 {
 	 *
 	 * @return die Map von den Kürzeln der Berufsebene auf die zugehörigen Berufsebene
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene1> getMapBerufsebenenByKuerzel() {
+	private static @NotNull HashMap<String, BerufskollegBerufsebene1> getMapBerufsebenenByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final BerufskollegBerufsebene1 s : BerufskollegBerufsebene1.values()) {
 				if (s.daten != null)

@@ -75,10 +75,10 @@ public enum LehrerRechtsverhaeltnis {
 	public final @NotNull LehrerKatalogRechtsverhaeltnisEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerRechtsverhaeltnis> _rechtsverhaeltnisByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerRechtsverhaeltnis> _rechtsverhaeltnisByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerRechtsverhaeltnis> _rechtsverhaeltnisByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerRechtsverhaeltnis> _rechtsverhaeltnisByKuerzel = new HashMap<>();
 
 
 	/**
@@ -99,7 +99,7 @@ public enum LehrerRechtsverhaeltnis {
 	 *
 	 * @return die Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByID() {
+	private static @NotNull HashMap<Long, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByID() {
 		if (_rechtsverhaeltnisByID.size() == 0)
 			for (final LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
 				_rechtsverhaeltnisByID.put(l.daten.id, l);
@@ -113,7 +113,7 @@ public enum LehrerRechtsverhaeltnis {
 	 *
 	 * @return die Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByKuerzel() {
+	private static @NotNull HashMap<String, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByKuerzel() {
 		if (_rechtsverhaeltnisByKuerzel.size() == 0)
 			for (final LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
 				_rechtsverhaeltnisByKuerzel.put(l.daten.kuerzel, l);

@@ -76,13 +76,13 @@ public enum Religion {
 	public final @NotNull ReligionKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Religionen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Religion> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Religion> _mapByKuerzel = new HashMap<>();
 
 	/** Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull ReligionKatalogEintrag> _mapEintragById = new HashMap<>();
+	private static final @NotNull HashMap<Long, ReligionKatalogEintrag> _mapEintragById = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Religionen, zugeordnet zu den IDs der Historieneinträgen */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull Religion> _mapById = new HashMap<>();
+	private static final @NotNull HashMap<Long, Religion> _mapById = new HashMap<>();
 
 
 
@@ -106,7 +106,7 @@ public enum Religion {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Religion> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Religion> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final @NotNull Religion s : Religion.values()) {
 				if (s.daten != null)
@@ -124,7 +124,7 @@ public enum Religion {
 	 *
 	 * @return die Map von den IDs der Religion-Katalog-Einträge auf die zugehörigen Religionen
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Religion> getMapById() {
+	private static @NotNull HashMap<Long, Religion> getMapById() {
 		if (_mapById.size() == 0) {
 			for (final @NotNull Religion s : Religion.values()) {
 				for (final @NotNull ReligionKatalogEintrag e : s.historie)
@@ -141,7 +141,7 @@ public enum Religion {
 	 *
 	 * @return die Map von den Kürzels der Religion-Katalog-Einträge auf die zugehörigen Religion-Katalog-Einträge
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull ReligionKatalogEintrag> getMapEintragById() {
+	private static @NotNull HashMap<Long, ReligionKatalogEintrag> getMapEintragById() {
 		if (_mapEintragById.size() == 0) {
 			for (final Religion s : Religion.values()) {
 				for (final @NotNull ReligionKatalogEintrag e : s.historie)

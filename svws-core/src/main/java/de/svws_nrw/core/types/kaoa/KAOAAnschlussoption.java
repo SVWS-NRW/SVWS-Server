@@ -421,10 +421,10 @@ public enum KAOAAnschlussoption {
 	public final @NotNull KAOAAnschlussoptionEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoption> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, KAOAAnschlussoption> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoption> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, KAOAAnschlussoption> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -444,7 +444,7 @@ public enum KAOAAnschlussoption {
 	 *
 	 * @return die Map von der ID auf die zugehörige Anschlussoption
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoption> getMapStatusByID() {
+	private static @NotNull HashMap<Long, KAOAAnschlussoption> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAAnschlussoption g : KAOAAnschlussoption.values())
 				_statusByID.put(g.daten.id, g);
@@ -458,7 +458,7 @@ public enum KAOAAnschlussoption {
 	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Anschlussoption
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoption> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, KAOAAnschlussoption> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAAnschlussoption g : KAOAAnschlussoption.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

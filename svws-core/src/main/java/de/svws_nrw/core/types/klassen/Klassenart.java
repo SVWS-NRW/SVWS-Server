@@ -139,13 +139,13 @@ public enum Klassenart {
 	public final @NotNull KlassenartKatalogEintrag @NotNull [] historie;
 
 	/** Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull Klassenart> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Klassenart> _mapID = new HashMap<>();
 
 	/** Eine HashMap mit zulässigen Klassenarten. Der Zugriff erfolgt dabei über das Kürzel */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
-	private final @NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
+	private final @NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull [] zulaessig;
 
 
 	/**
@@ -158,7 +158,7 @@ public enum Klassenart {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<Pair<Schulform, @AllowNull Schulgliederung>> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
@@ -178,7 +178,7 @@ public enum Klassenart {
 	 *
 	 * @return die Map von den IDs auf die zugehörigen Klassenarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Klassenart> getMapByID() {
+	private static @NotNull HashMap<Long, Klassenart> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final Klassenart s : Klassenart.values())
 				if (s.daten != null)
@@ -193,7 +193,7 @@ public enum Klassenart {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Klassenarten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Klassenart> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Klassenart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final Klassenart s : Klassenart.values())
 				if (s.daten != null)
@@ -229,8 +229,8 @@ public enum Klassenart {
 	 *
 	 * @return die zulässigen Klassenarten in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull Klassenart> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull Klassenart> kursarten = new ArrayList<>();
+	public static @NotNull List<Klassenart> get(final Schulform schulform) {
+		final @NotNull ArrayList<Klassenart> kursarten = new ArrayList<>();
 		if (schulform == null)
 			return kursarten;
 		for (final @NotNull Klassenart kursart : Klassenart.values())
@@ -263,7 +263,7 @@ public enum Klassenart {
 	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
-	public @NotNull List<@NotNull Pair<Schulform, @AllowNull Schulgliederung>> getGliederungen() {
+	public @NotNull List<Pair<Schulform, @AllowNull Schulgliederung>> getGliederungen() {
 		return zulaessig[0];
 	}
 

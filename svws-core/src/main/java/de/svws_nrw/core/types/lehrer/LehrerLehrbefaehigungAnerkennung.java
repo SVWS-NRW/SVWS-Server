@@ -45,10 +45,10 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	public final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigungAnerkennung> _anerkennungenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerLehrbefaehigungAnerkennung> _anerkennungenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerLehrbefaehigungAnerkennung> _anerkennungenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerLehrbefaehigungAnerkennung> _anerkennungenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -69,7 +69,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 *
 	 * @return die Map von den IDs der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByID() {
+	private static @NotNull HashMap<Long, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
 			for (final LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
 				_anerkennungenByID.put(l.daten.id, l);
@@ -83,7 +83,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 *
 	 * @return die Map von den Kürzeln der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByKuerzel() {
+	private static @NotNull HashMap<String, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
 			for (final LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
 				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);

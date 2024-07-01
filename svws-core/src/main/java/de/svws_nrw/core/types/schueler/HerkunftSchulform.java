@@ -204,7 +204,7 @@ public enum HerkunftSchulform {
 	public final @NotNull HerkunftSchulformKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, HerkunftSchulform> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, HerkunftSchulform> _ebenen = new HashMap<>();
 
 
 	/**
@@ -227,7 +227,7 @@ public enum HerkunftSchulform {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsschulformen
 	 */
-	private static @NotNull HashMap<@NotNull String, HerkunftSchulform> getMapByKuerzel() {
+	private static @NotNull HashMap<String, HerkunftSchulform> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final HerkunftSchulform s : HerkunftSchulform.values()) {
 				if (s.daten != null)

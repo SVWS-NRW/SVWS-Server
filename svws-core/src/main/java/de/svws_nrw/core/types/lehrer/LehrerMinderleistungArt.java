@@ -118,10 +118,10 @@ public enum LehrerMinderleistungArt {
 	public final @NotNull LehrerKatalogMinderleistungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> _artenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerMinderleistungArt> _artenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerMinderleistungArt> _artenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerMinderleistungArt> _artenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -142,7 +142,7 @@ public enum LehrerMinderleistungArt {
 	 *
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> getMapArtenByID() {
+	private static @NotNull HashMap<Long, LehrerMinderleistungArt> getMapArtenByID() {
 		if (_artenByID.size() == 0)
 			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
 				_artenByID.put(g.daten.id, g);
@@ -156,7 +156,7 @@ public enum LehrerMinderleistungArt {
 	 *
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerMinderleistungArt> getMapArtenByKuerzel() {
+	private static @NotNull HashMap<String, LehrerMinderleistungArt> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
 			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
 				_artenByKuerzel.put(g.daten.kuerzel, g);

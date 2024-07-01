@@ -45,7 +45,7 @@ public enum Kindergartenbesuch {
 	public final @NotNull KindergartenbesuchKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull Long, Kindergartenbesuch> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<Long, Kindergartenbesuch> _mapKuerzel = new HashMap<>();
 
 
 	/**
@@ -66,7 +66,7 @@ public enum Kindergartenbesuch {
 	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
-	private static @NotNull HashMap<@NotNull Long, Kindergartenbesuch> getMapByKuerzel() {
+	private static @NotNull HashMap<Long, Kindergartenbesuch> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
 			for (final Kindergartenbesuch s : Kindergartenbesuch.values()) {
 				if (s.daten != null)

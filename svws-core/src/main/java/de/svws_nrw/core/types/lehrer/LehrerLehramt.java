@@ -261,10 +261,10 @@ public enum LehrerLehramt {
 	public final @NotNull LehrerKatalogLehramtEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Lehrämtern, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerLehramt> _aemterByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerLehramt> _aemterByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Lehrämtern, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerLehramt> _aemterByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerLehramt> _aemterByKuerzel = new HashMap<>();
 
 
 	/**
@@ -285,7 +285,7 @@ public enum LehrerLehramt {
 	 *
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerLehramt> getMapLehraemterByID() {
+	private static @NotNull HashMap<Long, LehrerLehramt> getMapLehraemterByID() {
 		if (_aemterByID.size() == 0)
 			for (final LehrerLehramt l : LehrerLehramt.values())
 				_aemterByID.put(l.daten.id, l);
@@ -299,7 +299,7 @@ public enum LehrerLehramt {
 	 *
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerLehramt> getMapLehraemterByKuerzel() {
+	private static @NotNull HashMap<String, LehrerLehramt> getMapLehraemterByKuerzel() {
 		if (_aemterByKuerzel.size() == 0)
 			for (final LehrerLehramt l : LehrerLehramt.values())
 				_aemterByKuerzel.put(l.daten.kuerzel, l);

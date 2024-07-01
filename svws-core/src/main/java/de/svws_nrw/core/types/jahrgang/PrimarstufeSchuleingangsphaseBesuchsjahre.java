@@ -42,10 +42,10 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 	public final @NotNull PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Besuchsjahre zu dem Kürzel der Besuchsjahre */
-	private static final @NotNull HashMap<@NotNull String, PrimarstufeSchuleingangsphaseBesuchsjahre> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, PrimarstufeSchuleingangsphaseBesuchsjahre> _mapKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Besuchsjahre zu der ID der Besuchsjahre */
-	private static final @NotNull HashMap<@NotNull Long, PrimarstufeSchuleingangsphaseBesuchsjahre> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, PrimarstufeSchuleingangsphaseBesuchsjahre> _mapID = new HashMap<>();
 
 
 	/**
@@ -65,7 +65,7 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 	 *
 	 * @return die Map von den Kürzel der Besuchsjahre auf die zugehörigen Besuchsjahre
 	 */
-	private static @NotNull HashMap<@NotNull String, PrimarstufeSchuleingangsphaseBesuchsjahre> getMapJahrgangByKuerzel() {
+	private static @NotNull HashMap<String, PrimarstufeSchuleingangsphaseBesuchsjahre> getMapJahrgangByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final PrimarstufeSchuleingangsphaseBesuchsjahre j : PrimarstufeSchuleingangsphaseBesuchsjahre.values())
 				_mapKuerzel.put(j.daten.kuerzel, j);
@@ -79,7 +79,7 @@ public enum PrimarstufeSchuleingangsphaseBesuchsjahre {
 	 *
 	 * @return die Map von den IDs der Besuchsjahre auf die zugehörigen Besuchsjahre
 	 */
-	private static @NotNull HashMap<@NotNull Long, PrimarstufeSchuleingangsphaseBesuchsjahre> getMapJahrgangByID() {
+	private static @NotNull HashMap<Long, PrimarstufeSchuleingangsphaseBesuchsjahre> getMapJahrgangByID() {
 		if (_mapID.size() == 0)
 			for (final PrimarstufeSchuleingangsphaseBesuchsjahre j : PrimarstufeSchuleingangsphaseBesuchsjahre.values()) {
 				for (final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag k : j.historie)

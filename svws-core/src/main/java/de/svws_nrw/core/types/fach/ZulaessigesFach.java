@@ -5103,7 +5103,7 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull ZulaessigesFach> get(final Schulform schulform) {
+	public static @NotNull List<ZulaessigesFach> get(final Schulform schulform) {
 		final @NotNull ArrayList<ZulaessigesFach> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;

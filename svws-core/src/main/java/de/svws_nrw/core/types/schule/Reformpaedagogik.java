@@ -116,13 +116,13 @@ public enum Reformpaedagogik {
 	public final @NotNull ReformpaedagogikKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> _schulgliederungenKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Reformpaedagogik> _schulgliederungenKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Reformpädagogik zu der ID der Reformpädagogik */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> _schulgliederungenID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private final @NotNull ArrayList<@NotNull Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 
 	/**
@@ -135,7 +135,7 @@ public enum Reformpaedagogik {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -153,7 +153,7 @@ public enum Reformpaedagogik {
 	 *
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> getMapSchulgliederungByKuerzel() {
+	private static @NotNull HashMap<String, Reformpaedagogik> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
 			for (final Reformpaedagogik r : Reformpaedagogik.values())
 				_schulgliederungenKuerzel.put(r.daten.kuerzel, r);
@@ -167,7 +167,7 @@ public enum Reformpaedagogik {
 	 *
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> getMapSchulgliederungByID() {
+	private static @NotNull HashMap<Long, Reformpaedagogik> getMapSchulgliederungByID() {
 		if (_schulgliederungenID.size() == 0)
 			for (final Reformpaedagogik r : Reformpaedagogik.values()) {
 				for (final ReformpaedagogikKatalogEintrag k : r.historie)
@@ -209,7 +209,7 @@ public enum Reformpaedagogik {
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
-	public @NotNull List<@NotNull Schulform> getSchulformen() {
+	public @NotNull List<Schulform> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -221,8 +221,8 @@ public enum Reformpaedagogik {
 	 *
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
-	public static @NotNull List<@NotNull Reformpaedagogik> get(final Schulform schulform) {
-		final @NotNull ArrayList<@NotNull Reformpaedagogik> result = new ArrayList<>();
+	public static @NotNull List<Reformpaedagogik> get(final Schulform schulform) {
+		final @NotNull ArrayList<Reformpaedagogik> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Reformpaedagogik @NotNull [] gliederungen = Reformpaedagogik.values();

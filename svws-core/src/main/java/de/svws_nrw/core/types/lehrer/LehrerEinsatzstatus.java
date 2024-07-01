@@ -41,10 +41,10 @@ public enum LehrerEinsatzstatus {
 	public final @NotNull LehrerKatalogEinsatzstatusEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerEinsatzstatus> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerEinsatzstatus> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einsatzstatus, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerEinsatzstatus> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerEinsatzstatus> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -65,7 +65,7 @@ public enum LehrerEinsatzstatus {
 	 *
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerEinsatzstatus> getMapStatusByID() {
+	private static @NotNull HashMap<Long, LehrerEinsatzstatus> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
 				_statusByID.put(g.daten.id, g);
@@ -79,7 +79,7 @@ public enum LehrerEinsatzstatus {
 	 *
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerEinsatzstatus> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, LehrerEinsatzstatus> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

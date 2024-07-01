@@ -963,16 +963,16 @@ public enum Herkunftsarten {
 	public final @NotNull HerkunftsartKatalogEintrag @NotNull [] historie;
 
 	/** Eine Map mit der Zuordnung der Herkunftsart zu dem Kürzel der Herkunftsart */
-	private static final @NotNull HashMap<@NotNull String, Herkunftsarten> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Herkunftsarten> _mapKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Herkunftsart zu der ID der Herkunftsart */
-	private static final @NotNull HashMap<@NotNull Long, Herkunftsarten> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Long, Herkunftsarten> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
 	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<@NotNull String> @NotNull [] bezeichnungen;
+	private final @NotNull ArrayList<String> @NotNull [] bezeichnungen;
 
 
 	/**
@@ -987,7 +987,7 @@ public enum Herkunftsarten {
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
 		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
-		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.bezeichnungen = (@NotNull ArrayList<String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			this.bezeichnungen[i] = new ArrayList<>();
@@ -1007,7 +1007,7 @@ public enum Herkunftsarten {
 	 *
 	 * @return die Map von den Kürzeln der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
-	private static @NotNull HashMap<@NotNull String, Herkunftsarten> getMapHerkunftsartByKuerzel() {
+	private static @NotNull HashMap<String, Herkunftsarten> getMapHerkunftsartByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final Herkunftsarten j : Herkunftsarten.values())
 				if (!_mapKuerzel.containsKey(j.daten.kuerzel))
@@ -1022,7 +1022,7 @@ public enum Herkunftsarten {
 	 *
 	 * @return die Map von den IDs der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, Herkunftsarten> getMapHerkunftsartByID() {
+	private static @NotNull HashMap<Long, Herkunftsarten> getMapHerkunftsartByID() {
 		if (_mapID.size() == 0)
 			for (final Herkunftsarten j : Herkunftsarten.values()) {
 				for (final HerkunftsartKatalogEintrag k : j.historie)

@@ -1163,13 +1163,13 @@ public enum Nationalitaeten {
 	public final @NotNull NationalitaetenKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapISO3 = new HashMap<>();
+	private static final @NotNull HashMap<String, Nationalitaeten> _mapISO3 = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapISO2 = new HashMap<>();
+	private static final @NotNull HashMap<String, Nationalitaeten> _mapISO2 = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu DESTATIS-Code */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapDESTATIS = new HashMap<>();
+	private static final @NotNull HashMap<String, Nationalitaeten> _mapDESTATIS = new HashMap<>();
 
 
 
@@ -1191,7 +1191,7 @@ public enum Nationalitaeten {
 	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO3() {
+	private static @NotNull HashMap<String, Nationalitaeten> getMapISO3() {
 		if (_mapISO3.size() == 0) {
 			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)
@@ -1208,7 +1208,7 @@ public enum Nationalitaeten {
 	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO2() {
+	private static @NotNull HashMap<String, Nationalitaeten> getMapISO2() {
 		if (_mapISO2.size() == 0) {
 			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)
@@ -1225,7 +1225,7 @@ public enum Nationalitaeten {
 	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapDESTATIS() {
+	private static @NotNull HashMap<String, Nationalitaeten> getMapDESTATIS() {
 		if (_mapDESTATIS.size() == 0) {
 			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)

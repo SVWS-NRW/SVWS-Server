@@ -31,10 +31,10 @@ public enum LehrerLeitungsfunktion {
 	public final @NotNull LehrerKatalogLeitungsfunktionenEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, LehrerLeitungsfunktion> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerLeitungsfunktion> _mapByKuerzel = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren IDs */
-	private static final @NotNull HashMap<@NotNull Long, LehrerLeitungsfunktion> _mapByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerLeitungsfunktion> _mapByID = new HashMap<>();
 
 
 	/**
@@ -55,7 +55,7 @@ public enum LehrerLeitungsfunktion {
 	 *
 	 * @return die Map von den Kürzeln der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerLeitungsfunktion> getMapByKuerzel() {
+	private static @NotNull HashMap<String, LehrerLeitungsfunktion> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
 				if (s.daten != null)
@@ -72,7 +72,7 @@ public enum LehrerLeitungsfunktion {
 	 *
 	 * @return die Map von den IDs der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerLeitungsfunktion> getMapByID() {
+	private static @NotNull HashMap<Long, LehrerLeitungsfunktion> getMapByID() {
 		if (_mapByID.size() == 0) {
 			for (final LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
 				if (s.daten != null)

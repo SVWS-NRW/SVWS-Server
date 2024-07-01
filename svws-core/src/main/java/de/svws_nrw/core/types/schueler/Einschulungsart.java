@@ -55,7 +55,7 @@ public enum Einschulungsart {
 	public final @NotNull EinschulungsartKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, Einschulungsart> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, Einschulungsart> _ebenen = new HashMap<>();
 
 
 	/**
@@ -77,7 +77,7 @@ public enum Einschulungsart {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
-	private static @NotNull HashMap<@NotNull String, Einschulungsart> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Einschulungsart> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final Einschulungsart s : Einschulungsart.values()) {
 				if (s.daten != null)

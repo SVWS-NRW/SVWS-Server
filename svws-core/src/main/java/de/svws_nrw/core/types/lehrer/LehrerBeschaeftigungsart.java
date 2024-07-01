@@ -96,10 +96,10 @@ public enum LehrerBeschaeftigungsart {
 	public final @NotNull LehrerKatalogBeschaeftigungsartEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, LehrerBeschaeftigungsart> _artenByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, LehrerBeschaeftigungsart> _artenByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, LehrerBeschaeftigungsart> _artenByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, LehrerBeschaeftigungsart> _artenByKuerzel = new HashMap<>();
 
 
 	/**
@@ -120,7 +120,7 @@ public enum LehrerBeschaeftigungsart {
 	 *
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, LehrerBeschaeftigungsart> getMapArtenByID() {
+	private static @NotNull HashMap<Long, LehrerBeschaeftigungsart> getMapArtenByID() {
 		if (_artenByID.size() == 0)
 			for (final LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
 				_artenByID.put(l.daten.id, l);
@@ -134,7 +134,7 @@ public enum LehrerBeschaeftigungsart {
 	 *
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static @NotNull HashMap<@NotNull String, LehrerBeschaeftigungsart> getMapArtenByKuerzel() {
+	private static @NotNull HashMap<String, LehrerBeschaeftigungsart> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
 			for (final LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
 				_artenByKuerzel.put(l.daten.kuerzel, l);

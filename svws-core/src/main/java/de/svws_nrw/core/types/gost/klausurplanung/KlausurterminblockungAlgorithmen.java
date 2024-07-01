@@ -32,7 +32,7 @@ public enum KlausurterminblockungAlgorithmen {
 
 
 	/** Eine Map mit der Zuordnung zu der ID */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungAlgorithmen> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Integer, KlausurterminblockungAlgorithmen> _mapID = new HashMap<>();
 
 
 	/**
@@ -53,7 +53,7 @@ public enum KlausurterminblockungAlgorithmen {
 	 *
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungAlgorithmen> getMapByID() {
+	private static @NotNull HashMap<Integer, KlausurterminblockungAlgorithmen> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final @NotNull KlausurterminblockungAlgorithmen e : KlausurterminblockungAlgorithmen.values())
 				_mapID.put(e.id, e);

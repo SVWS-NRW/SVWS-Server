@@ -149,10 +149,10 @@ public enum KAOAEbene4 {
 	public final @NotNull KAOAEbene4Eintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAEbene4> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, KAOAEbene4> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAEbene4> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, KAOAEbene4> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -172,7 +172,7 @@ public enum KAOAEbene4 {
 	 *
 	 * @return die Map von der ID auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAEbene4> getMapStatusByID() {
+	private static @NotNull HashMap<Long, KAOAEbene4> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAEbene4 g : KAOAEbene4.values())
 				_statusByID.put(g.daten.id, g);
@@ -186,7 +186,7 @@ public enum KAOAEbene4 {
 	 *
 	 * @return die Map von dem Kürzel auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOAEbene4> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, KAOAEbene4> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAEbene4 g : KAOAEbene4.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

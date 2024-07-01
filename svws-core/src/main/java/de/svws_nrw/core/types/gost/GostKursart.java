@@ -49,10 +49,10 @@ public enum GostKursart {
 	private static final long FACHART_ID_FAKTOR = 1000L;
 
 	/** Die Zuordnung der Kursarten zu dem Kürzel der Kursart */
-	private static final @NotNull HashMap<@NotNull String, @NotNull GostKursart> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, GostKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart */
-	private static final @NotNull Map<@NotNull ZulaessigeKursart, @NotNull GostKursart> _mapZulKursart = new ArrayMap<>(ZulaessigeKursart.values());
+	private static final @NotNull Map<ZulaessigeKursart, GostKursart> _mapZulKursart = new ArrayMap<>(ZulaessigeKursart.values());
 
 	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe*/
 	public final @NotNull int id;
@@ -64,7 +64,7 @@ public enum GostKursart {
 	public final @NotNull String beschreibung;
 
 	/** Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören */
-	private final @NotNull List<@NotNull ZulaessigeKursart> kursarten;
+	private final @NotNull List<ZulaessigeKursart> kursarten;
 
 
 	/**
@@ -76,7 +76,7 @@ public enum GostKursart {
 	 * @param kursarten      die zulässigen Kursarten, die dieser Kursart der gymnasialen Oberstufe zugeordnet sind
 	 */
 	GostKursart(final @NotNull int id, final @NotNull String kuerzel, final @NotNull String beschreibung,
-			final @NotNull List<@NotNull ZulaessigeKursart> kursarten) {
+			final @NotNull List<ZulaessigeKursart> kursarten) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
@@ -140,7 +140,7 @@ public enum GostKursart {
 	 *
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull GostKursart> getMapByKuerzel() {
+	private static @NotNull HashMap<String, GostKursart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final @NotNull GostKursart k : GostKursart.values())
 				_mapKuerzel.put(k.kuerzel, k);
@@ -154,7 +154,7 @@ public enum GostKursart {
 	 *
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
-	private static @NotNull Map<@NotNull ZulaessigeKursart, @NotNull GostKursart> getMapByZulKursart() {
+	private static @NotNull Map<ZulaessigeKursart, GostKursart> getMapByZulKursart() {
 		if (_mapZulKursart.size() == 0)
 			for (final @NotNull GostKursart k : GostKursart.values())
 				for (final @NotNull ZulaessigeKursart zulKursart : k.kursarten)
@@ -168,7 +168,7 @@ public enum GostKursart {
 	 *
 	 * @return die Liste der zulässigen Kursarten
 	 */
-	public @NotNull List<@NotNull ZulaessigeKursart> getKursarten() {
+	public @NotNull List<ZulaessigeKursart> getKursarten() {
 		return kursarten;
 	}
 

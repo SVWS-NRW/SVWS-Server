@@ -261,10 +261,10 @@ public enum KAOAMerkmal {
 	public final @NotNull KAOAMerkmalEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAMerkmal> _statusByID = new HashMap<>();
+	private static final @NotNull HashMap<Long, KAOAMerkmal> _statusByID = new HashMap<>();
 
 	/** Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull KAOAMerkmal> _statusByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, KAOAMerkmal> _statusByKuerzel = new HashMap<>();
 
 
 	/**
@@ -284,7 +284,7 @@ public enum KAOAMerkmal {
 	 *
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAMerkmal> getMapStatusByID() {
+	private static @NotNull HashMap<Long, KAOAMerkmal> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAMerkmal g : KAOAMerkmal.values())
 				_statusByID.put(g.daten.id, g);
@@ -298,7 +298,7 @@ public enum KAOAMerkmal {
 	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull KAOAMerkmal> getMapStatusByKuerzel() {
+	private static @NotNull HashMap<String, KAOAMerkmal> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAMerkmal g : KAOAMerkmal.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);

@@ -86,7 +86,7 @@ public enum Schulstufe {
 	public final @NotNull SchulstufeKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, @NotNull Schulstufe> _mapByKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Schulstufe> _mapByKuerzel = new HashMap<>();
 
 
 	/**
@@ -107,7 +107,7 @@ public enum Schulstufe {
 	 *
 	 * @return die Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull Schulstufe> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Schulstufe> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final Schulstufe s : Schulstufe.values()) {
 				if (s.daten != null)

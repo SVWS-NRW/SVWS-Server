@@ -269,7 +269,7 @@ public enum HerkunftBildungsgang {
 	public final @NotNull HerkunftBildungsgangKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Herkunftsbildungsgängen, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, HerkunftBildungsgang> _ebenen = new HashMap<>();
+	private static final @NotNull HashMap<String, HerkunftBildungsgang> _ebenen = new HashMap<>();
 
 
 	/**
@@ -292,7 +292,7 @@ public enum HerkunftBildungsgang {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsbildungsgänge
 	 */
-	private static @NotNull HashMap<@NotNull String, HerkunftBildungsgang> getMapByKuerzel() {
+	private static @NotNull HashMap<String, HerkunftBildungsgang> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
 			for (final HerkunftBildungsgang s : HerkunftBildungsgang.values()) {
 				if (s.daten != null)

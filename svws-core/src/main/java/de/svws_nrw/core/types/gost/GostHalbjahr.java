@@ -36,13 +36,13 @@ public enum GostHalbjahr {
 
 
 	/** Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt. */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<Integer, GostHalbjahr> _mapID = new HashMap<>();
 
 	/** Eine Zuordnung der Halbjahre zu dem Kürzel. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, GostHalbjahr> _mapKuerzel = new HashMap<>();
 
 	/** Eine Zuordnung der Halbjahre zu dem alten Kürzel. */
-	private static final @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> _mapKuerzelAlt = new HashMap<>();
+	private static final @NotNull HashMap<String, GostHalbjahr> _mapKuerzelAlt = new HashMap<>();
 
 
 	/** Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe */
@@ -96,7 +96,7 @@ public enum GostHalbjahr {
 	 *
 	 * @return die Map von den IDs auf das Gost-Halbjahr
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> getMapByID() {
+	private static @NotNull HashMap<Integer, GostHalbjahr> getMapByID() {
 		if (_mapID.size() == 0)
 			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapID.put(h.id, h);
@@ -110,7 +110,7 @@ public enum GostHalbjahr {
 	 *
 	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzel() {
+	private static @NotNull HashMap<String, GostHalbjahr> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapKuerzel.put(h.kuerzel, h);
@@ -124,7 +124,7 @@ public enum GostHalbjahr {
 	 *
 	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
 	 */
-	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzelAlt() {
+	private static @NotNull HashMap<String, GostHalbjahr> getMapByKuerzelAlt() {
 		if (_mapKuerzelAlt.size() == 0)
 			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapKuerzelAlt.put(h.kuerzelAlt, h);
@@ -454,7 +454,7 @@ public enum GostHalbjahr {
 	public static boolean pruefeQualifikationsphase(final @NotNull GostHalbjahr... halbjahre) {
 		if ((halbjahre == null) || (halbjahre.length != 4))
 			return false;
-		final @NotNull List<@NotNull GostHalbjahr> list = Arrays.asList(halbjahre);
+		final @NotNull List<GostHalbjahr> list = Arrays.asList(halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
 	}
 

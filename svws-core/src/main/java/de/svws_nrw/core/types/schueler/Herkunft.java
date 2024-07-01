@@ -249,7 +249,7 @@ public enum Herkunft {
 	public final @NotNull HerkunftKatalogEintrag @NotNull [] historie;
 
 	/** Eine Hashmap mit allen definierten Herkünften, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, Herkunft> _kuerzel = new HashMap<>();
+	private static final @NotNull HashMap<String, Herkunft> _kuerzel = new HashMap<>();
 
 
 	/**
@@ -347,7 +347,7 @@ public enum Herkunft {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkünfte
 	 */
-	private static @NotNull HashMap<@NotNull String, Herkunft> getMapByKuerzel() {
+	private static @NotNull HashMap<String, Herkunft> getMapByKuerzel() {
 		if (_kuerzel.size() == 0) {
 			for (final Herkunft h : Herkunft.values()) {
 				if (h.daten != null)

@@ -121,13 +121,13 @@ public enum Schulform {
 	public final @NotNull SchulformKatalogEintrag @NotNull [] historie;
 
 	/** Ein ArrayList mit allen definierten Schulformen */
-	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformen = new HashMap<>();
+	private static final @NotNull HashMap<String, Schulform> _schulformen = new HashMap<>();
 
 	/** Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. */
-	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformenNummer = new HashMap<>();
+	private static final @NotNull HashMap<String, Schulform> _schulformenNummer = new HashMap<>();
 
 	/** Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind. */
-	private static final @NotNull HashMap<@NotNull Long, SchulformKatalogEintrag> _mapEintragById = new HashMap<>();
+	private static final @NotNull HashMap<Long, SchulformKatalogEintrag> _mapEintragById = new HashMap<>();
 
 
 	/**
@@ -148,7 +148,7 @@ public enum Schulform {
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByKuerzel() {
+	private static @NotNull HashMap<String, Schulform> getMapSchulformenByKuerzel() {
 		if (_schulformen.size() == 0) {
 			for (final Schulform s : Schulform.values()) {
 				if (s.daten != null)
@@ -165,7 +165,7 @@ public enum Schulform {
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByNummer() {
+	private static @NotNull HashMap<String, Schulform> getMapSchulformenByNummer() {
 		if (_schulformenNummer.size() == 0)
 			for (final Schulform s : Schulform.values())
 				if ((s.daten != null) && (s.daten.nummer != null))
@@ -180,7 +180,7 @@ public enum Schulform {
 	 *
 	 * @return die Map von den Kürzels der Schulform-Katalog-Einträge auf die zugehörigen Schulform-Katalog-Einträge
 	 */
-	private static @NotNull HashMap<@NotNull Long, SchulformKatalogEintrag> getMapEintragById() {
+	private static @NotNull HashMap<Long, SchulformKatalogEintrag> getMapEintragById() {
 		if (_mapEintragById.size() == 0) {
 			for (final Schulform s : Schulform.values()) {
 				for (final SchulformKatalogEintrag e : s.historie)
@@ -234,8 +234,8 @@ public enum Schulform {
 	 *
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
-	public static @NotNull List<@NotNull Schulform> get() {
-		final @NotNull ArrayList<@NotNull Schulform> result = new ArrayList<>();
+	public static @NotNull List<Schulform> get() {
+		final @NotNull ArrayList<Schulform> result = new ArrayList<>();
 		for (final @NotNull Schulform sf : Schulform.values())
 			if ((sf.daten != null) && (sf.daten.nummer != null))
 				result.add(sf);
@@ -247,8 +247,8 @@ public enum Schulform {
 	 *
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
-	public static @NotNull List<@NotNull Schulform> getMitGymOb() {
-		final @NotNull ArrayList<@NotNull Schulform> result = new ArrayList<>();
+	public static @NotNull List<Schulform> getMitGymOb() {
+		final @NotNull ArrayList<Schulform> result = new ArrayList<>();
 		for (final @NotNull Schulform sf : Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);
