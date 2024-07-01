@@ -30,7 +30,7 @@ public class SchuelerblockungDynDaten {
 	// Diese Attribute werden einmalig pro Blockung initialisiert.
 	private final int nFachwahlen;
 	private final int nSchienen;
-	private final @NotNull ArrayList<@NotNull ArrayList<@NotNull SchuelerblockungInputKurs>> _fachwahlZuKurse;
+	private final @NotNull ArrayList<ArrayList<SchuelerblockungInputKurs>> _fachwahlZuKurse;
 	private final @NotNull boolean[] _fachwahlZuHatMultikurse;
 	private final @NotNull long[] _fachwahlZuFachID;
 	private final @NotNull int[] _fachwahlZuKursartID;
@@ -169,7 +169,7 @@ public class SchuelerblockungDynDaten {
 			_fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 
 			// Kurse dieser Fachwahl sammeln...
-			final ArrayList<@NotNull SchuelerblockungInputKurs> kurse = new ArrayList<>();
+			final ArrayList<SchuelerblockungInputKurs> kurse = new ArrayList<>();
 			boolean hatFixiertenKurs = false;
 			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
@@ -330,7 +330,7 @@ public class SchuelerblockungDynDaten {
 			}
 	}
 
-	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull ArrayList<@NotNull SchuelerblockungInputKurs> pKurse,
+	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull ArrayList<SchuelerblockungInputKurs> pKurse,
 			final int pSchiene) {
 		final long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;

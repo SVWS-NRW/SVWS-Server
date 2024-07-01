@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull ArrayList<@NotNull GostBlockungsergebnisManager>> {
+public final class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, ArrayList<GostBlockungsergebnisManager>> {
 
 	private final @NotNull Random _random = new Random();
 
@@ -38,7 +38,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 		final long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
 
 		// Vorbereitung der Rückgabe an die GUI.
-		final @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new ArrayList<>();
+		final @NotNull ArrayList<GostBlockungsergebnisManager> kursblockungOutputs = new ArrayList<>();
 
 		final @NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
@@ -90,7 +90,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 
 	private static void verwendeAlgorithmusK(final @NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, final long zeitEndeK,
 			final @NotNull KursblockungDynDaten dynDaten, final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
-			final @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> outputs, final @NotNull GostBlockungsdatenManager pInput) {
+			final @NotNull ArrayList<GostBlockungsergebnisManager> outputs, final @NotNull GostBlockungsdatenManager pInput) {
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);

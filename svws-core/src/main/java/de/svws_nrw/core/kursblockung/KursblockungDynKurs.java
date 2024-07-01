@@ -405,7 +405,7 @@ public class KursblockungDynKurs {
 	/** Setzt die Lage des Kurses auf die in der Liste übergebenen Schienen.
 	 *
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll. */
-	void aktionVerteileAufSchienen(final @NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
+	void aktionVerteileAufSchienen(final @NotNull LinkedCollection<Integer> pSchienenWahl) {
 
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
 			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];

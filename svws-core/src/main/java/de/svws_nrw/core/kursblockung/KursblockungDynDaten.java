@@ -49,7 +49,7 @@ public class KursblockungDynDaten {
 	private final @NotNull Logger _logger;
 
 	/** Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert. */
-	private final @NotNull Map<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _regelMap;
+	private final @NotNull Map<GostKursblockungRegelTyp, List<GostBlockungRegel>> _regelMap;
 
 	/** Die maximale Blockungszeit in Millisekunden. */
 	private final long _maxTimeMillis;
@@ -64,19 +64,19 @@ public class KursblockungDynDaten {
 	private @NotNull KursblockungDynKurs @NotNull [] _kursArrFrei;
 
 	/** Map für schnellen Zugriff auf die Kurse über ihre ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull KursblockungDynKurs> _kursMap;
+	private final @NotNull HashMap<Long, KursblockungDynKurs> _kursMap;
 
 	/** Alle Facharten. Fachart meint Fach + Kursart, z.B. "D;GK". */
 	private @NotNull KursblockungDynFachart @NotNull [] _fachartArr;
 
 	/** Map für schnellen Zugriff auf die Facharten über FachID und KursartID. */
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull KursblockungDynFachart> _fachartMap2D;
+	private final @NotNull HashMap2D<Long, Integer, KursblockungDynFachart> _fachartMap2D;
 
 	/** Alle SuS. */
 	private @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr;
 
 	/** Map für schnellen Zugriff auf die SuS über ihre ID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull KursblockungDynSchueler> _schuelerMap;
+	private final @NotNull HashMap<Long, KursblockungDynSchueler> _schuelerMap;
 
 	/** Das Statistik-Objekt speichert die aktuellen Nichtwahlen, Kursdifferenzen und weitere Daten. */
 	private final @NotNull KursblockungDynStatistik _statistik;
@@ -204,7 +204,7 @@ public class KursblockungDynDaten {
 
 		// #################### KursblockungInputKursart ####################
 
-		final @NotNull HashSet<@NotNull Integer> setKursarten = new HashSet<>();
+		final @NotNull HashSet<Integer> setKursarten = new HashSet<>();
 		for (final @NotNull GostKursart iKursart : GostKursart.values()) {
 			DeveloperNotificationException.ifNull("iKursart", iKursart);
 			DeveloperNotificationException.ifInvalidID("iKursart.id", iKursart.id);
@@ -213,7 +213,7 @@ public class KursblockungDynDaten {
 
 		// #################### KursblockungInputFach ####################
 
-		final @NotNull HashSet<@NotNull Long> setFaecher = new HashSet<>();
+		final @NotNull HashSet<Long> setFaecher = new HashSet<>();
 		for (final @NotNull GostFach iFach : input.faecherManager().faecher()) {
 			DeveloperNotificationException.ifNull("iFach", iFach);
 			DeveloperNotificationException.ifInvalidID("iFach.id", iFach.id);
@@ -222,7 +222,7 @@ public class KursblockungDynDaten {
 
 		// #################### KursblockungInputKurs ####################
 
-		final @NotNull HashSet<@NotNull Long> setKurse = new HashSet<>();
+		final @NotNull HashSet<Long> setKurse = new HashSet<>();
 		for (final @NotNull GostBlockungKurs iKurs : input.daten().kurse) {
 			DeveloperNotificationException.ifNull("iKurs", iKurs);
 			DeveloperNotificationException.ifInvalidID("iKurs.id", iKurs.id);
@@ -232,7 +232,7 @@ public class KursblockungDynDaten {
 		}
 
 		// #################### Schueler ####################
-		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
+		final @NotNull HashSet<Long> setSchueler = new HashSet<>();
 		for (final @NotNull Schueler gSchueler : input.daten().schueler)
 			DeveloperNotificationException.ifSetAddsDuplicate("setSchueler", setSchueler, gSchueler.id);
 
@@ -322,7 +322,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Integer> setKursarten,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length != 3);
@@ -336,7 +336,7 @@ public class KursblockungDynDaten {
 				!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp2(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp2(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_FIXIERE_IN_SCHIENE daten.length=" + length + ", statt 2!", length != 2);
@@ -349,7 +349,7 @@ public class KursblockungDynDaten {
 				!((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp3(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp3(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_SPERRE_IN_SCHIENE daten.length=" + length + ", statt 2!", length != 2);
@@ -362,8 +362,8 @@ public class KursblockungDynDaten {
 				!((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp4(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
-			final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp4(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+			final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_FIXIEREN_IN_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -374,8 +374,8 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
-			final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+			final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -386,7 +386,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Integer> setKursarten,
+	private static void schritt01FehlerBeiReferenzen_Regeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length != 3);
@@ -400,7 +400,7 @@ public class KursblockungDynDaten {
 				!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -414,7 +414,7 @@ public class KursblockungDynDaten {
 				kursID1 == kursID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!", length != 2);
 
@@ -428,7 +428,7 @@ public class KursblockungDynDaten {
 				kursID1 == kursID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 2!", length != 2);
 
@@ -445,8 +445,8 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length != 0);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
-			final @NotNull HashSet<@NotNull Long> setFaecher) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+			final @NotNull HashSet<Long> setFaecher) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length != 3);
 
@@ -459,8 +459,8 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,
-			final @NotNull HashSet<@NotNull Long> setFaecher) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+			final @NotNull HashSet<Long> setFaecher) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length != 3);
 
@@ -473,7 +473,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length != 2);
 
@@ -483,7 +483,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length != 2);
 
@@ -493,7 +493,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_MAXIMALE_SCHUELERANZAHL daten.length=" + length + ", statt 2!", length != 2);
 
@@ -505,7 +505,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater("anzahlSus", anzahlSus, 100);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp16(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp16(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("SCHUELER_IGNORIEREN daten.length=" + length + ", statt 1!", length != 1);
 
@@ -513,7 +513,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp17(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp17(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=" + length + ", statt 1!", length != 1);
 
@@ -521,8 +521,8 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setFaecher,
-			final @NotNull HashSet<@NotNull Integer> setKursarten) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setFaecher,
+			final @NotNull HashSet<Integer> setKursarten) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=" + length + ", statt 3!", length != 3);
 
@@ -537,7 +537,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
 	}
 
-	private void fehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {
+	private void fehlerBeiRegelGruppierung(final @NotNull List<GostBlockungRegel> pRegeln) {
 		// Regeln nach ID in Listen gruppieren.
 		final HashSet<Long> regelDatabaseIDs = new HashSet<>();
 		for (final GostBlockungRegel iRegel : pRegeln) {
@@ -550,7 +550,7 @@ public class KursblockungDynDaten {
 	}
 
 	private void fehlerBeiSchuelerErstellung(final @NotNull GostBlockungsdatenManager input) {
-		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
+		final @NotNull HashSet<Long> setSchueler = new HashSet<>();
 
 		// Schüler sammeln.
 		for (final @NotNull Schueler gSchueler : input.daten().schueler)
@@ -625,7 +625,7 @@ public class KursblockungDynDaten {
 	private void fehlerBeiSchuelerFachwahlenErstellung(final @NotNull GostBlockungsdatenManager input,
 			final @NotNull KursblockungDynSchueler @NotNull [] susArr) {
 		// Schüler-ID --> Liste der Facharten
-		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull KursblockungDynFachart>> mapSchuelerFA = new HashMap<>();
+		final @NotNull HashMap<Long, List<KursblockungDynFachart>> mapSchuelerFA = new HashMap<>();
 
 		// Fachart der Schüler-Liste hinzufügen.
 		for (final @NotNull GostFachwahl iFachwahl : input.daten().fachwahlen) {
@@ -635,7 +635,7 @@ public class KursblockungDynDaten {
 
 		// Pro Schüler Fachart-Array setzen
 		for (final @NotNull KursblockungDynSchueler schueler : susArr) {
-			final @NotNull List<@NotNull KursblockungDynFachart> listFA = MapUtils.getOrCreateArrayList(mapSchuelerFA, schueler.gibDatenbankID());
+			final @NotNull List<KursblockungDynFachart> listFA = MapUtils.getOrCreateArrayList(mapSchuelerFA, schueler.gibDatenbankID());
 			final @NotNull KursblockungDynFachart @NotNull [] arrFA = listFA.toArray(new KursblockungDynFachart[0]);
 			schueler.aktionSetzeFachartenUndIDs(arrFA);
 		}
@@ -713,10 +713,10 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", kurs.anzahlSchienen, _schienenArr.length);
 
 		// Alle Schienen, in denen der Kurs gerade ist. Anfangs leer.
-		final @NotNull List<@NotNull KursblockungDynSchiene> schieneLage = new ArrayList<>();
+		final @NotNull List<KursblockungDynSchiene> schieneLage = new ArrayList<>();
 
 		// 'Frei' beinhaltet zunächst alle Schienen permutiert.
-		final @NotNull List<@NotNull KursblockungDynSchiene> schieneFrei = ListUtils.getCopyAsArrayListPermuted(_schienenArr, _random);
+		final @NotNull List<KursblockungDynSchiene> schieneFrei = ListUtils.getCopyAsArrayListPermuted(_schienenArr, _random);
 
 		// Regel 1: Entferne alle Schienen, die durch die Kursart gesperrt sind.
 		for (final @NotNull GostBlockungRegel regel1 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
@@ -805,7 +805,7 @@ public class KursblockungDynDaten {
 		final int nFacharten = _fachartArr.length;
 
 		// Map: Fachart-Nummer --> Liste der Kurse
-		final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull KursblockungDynKurs>> mapFachartList = new HashMap<>();
+		final @NotNull HashMap<Integer, List<KursblockungDynKurs>> mapFachartList = new HashMap<>();
 		for (int i = 0; i < nFacharten; i++)
 			mapFachartList.put(i, new ArrayList<>());
 
@@ -817,7 +817,7 @@ public class KursblockungDynDaten {
 
 		// Pro Fachart: Liste zu Array konvertieren und übergeben.
 		for (int fachartNr = 0; fachartNr < nFacharten; fachartNr++) {
-			final List<@NotNull KursblockungDynKurs> list = DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr);
+			final List<KursblockungDynKurs> list = DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr);
 			final @NotNull KursblockungDynKurs @NotNull [] tmpKursArr = list.toArray(new KursblockungDynKurs[0]);
 			_fachartArr[fachartNr].aktionSetKurse(tmpKursArr);
 		}
@@ -826,7 +826,7 @@ public class KursblockungDynDaten {
 
 	private void fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
-		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> mapSchuelerZuFixierungen = new HashMap<>();
+		final @NotNull HashMap<Long, List<Long>> mapSchuelerZuFixierungen = new HashMap<>();
 		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			final long schuelerID = regel4.parameter.get(0);
 			final long kursID = regel4.parameter.get(1);
@@ -843,7 +843,7 @@ public class KursblockungDynDaten {
 
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS (Spezialfall - Pro Schüler: Alle Kurspaar-Fixierungen Kurs-Kurs-Zusammen verbieten))
 		for (final long idSchueler : mapSchuelerZuFixierungen.keySet()) {
-			final @NotNull List<@NotNull Long> listKursIDs = MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, idSchueler);
+			final @NotNull List<Long> listKursIDs = MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, idSchueler);
 			// Alle (sortierten) Kurs-Paarungen durchgehen und KURS_VERBIETEN_MIT_KURS definieren.
 			for (int index2 = 1; index2 < listKursIDs.size(); index2++)
 				for (int index1 = 0; index1 < index2; index1++) {
@@ -899,14 +899,14 @@ public class KursblockungDynDaten {
 	}
 
 	private void fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(final @NotNull GostBlockungsdatenManager pInput) {
-		final List<@NotNull GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		final List<GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10.isEmpty())
 			return;
 
 		DeveloperNotificationException.ifGreater("Liste of regelnTyp10", regelnTyp10.size(), 1);
 
 		// Sammle zunächst alle potentiellen Kurse.
-		final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
+		final @NotNull ArrayList<GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
 		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
 			if (!gKurs.lehrer.isEmpty())
 				vKurseMitLehrkraft.add(gKurs);
@@ -1047,8 +1047,8 @@ public class KursblockungDynDaten {
 		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen =
-				new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
+		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen =
+				new HashSet<GostBlockungsergebnisKursSchienenZuordnung>();
 
 		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
 			for (final int schienenNr : dynKurs.gibSchienenLage()) {
@@ -1062,8 +1062,8 @@ public class KursblockungDynDaten {
 		out.kursSchienenUpdateExecute(uKursSchienen);
 
 		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen =
-				new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen =
+				new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 
 		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
 			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
@@ -1185,7 +1185,7 @@ public class KursblockungDynDaten {
 	@NotNull
 	KursblockungDynSchueler @NotNull [] gibSchuelerArray(final boolean pNurMultiKurse) {
 		if (pNurMultiKurse) {
-			final @NotNull LinkedCollection<@NotNull KursblockungDynSchueler> list = new LinkedCollection<>();
+			final @NotNull LinkedCollection<KursblockungDynSchueler> list = new LinkedCollection<>();
 			for (final KursblockungDynSchueler schueler : _schuelerArr)
 				if (schueler.gibHatMultikurs())
 					list.addLast(schueler);

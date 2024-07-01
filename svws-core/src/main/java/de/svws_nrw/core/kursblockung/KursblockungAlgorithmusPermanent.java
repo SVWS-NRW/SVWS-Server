@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public final class KursblockungAlgorithmusPermanent {
+
 	private static final long MILLIS_START = 1000;
 	// private static final long MILLIS_INCREMENT = 1000 --> lineares Wachstum doch nicht so gut.
 	private static final int TOP_ERGEBNISSE = 10;
@@ -25,7 +26,7 @@ public final class KursblockungAlgorithmusPermanent {
 	private final @NotNull Logger _logger = new Logger();
 
 	/** Die TOP-Ergebnisse werden als {@link KursblockungDynDaten}-Objekt gespeichert, da diese sortierbar sind. */
-	private final @NotNull ArrayList<@NotNull KursblockungDynDaten> _top;
+	private final @NotNull ArrayList<KursblockungDynDaten> _top;
 
 	/** Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig. */
 	private final @NotNull KursblockungAlgorithmusPermanentK @NotNull [] algorithmenK;
@@ -182,9 +183,9 @@ public final class KursblockungAlgorithmusPermanent {
 	 *
 	 * @return die Liste der aktuellen Top-Blockungsergebnisse.
 	 */
-	public @NotNull List<@NotNull GostBlockungsergebnisManager> getBlockungsergebnisse() {
+	public @NotNull List<GostBlockungsergebnisManager> getBlockungsergebnisse() {
 		// Konvertiere "KursblockungDynDaten" zu "GostBlockungsergebnisManager".
-		final @NotNull List<@NotNull GostBlockungsergebnisManager> list = new ArrayList<>();
+		final @NotNull List<GostBlockungsergebnisManager> list = new ArrayList<>();
 
 		for (int i = 0; i < _top.size(); i++)
 			list.add(_top.get(i).gibErzeugtesKursblockungOutput(_input, i));

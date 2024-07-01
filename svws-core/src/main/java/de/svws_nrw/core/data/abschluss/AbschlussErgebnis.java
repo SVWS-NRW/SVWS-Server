@@ -6,7 +6,6 @@ import de.svws_nrw.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Die Klasse enthält das Ergebnis einer Abschlussberechnung für einen

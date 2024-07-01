@@ -22,7 +22,7 @@ public class KursblockungDynSchiene {
 	private final @NotNull Logger logger;
 
 	/** Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull KursblockungDynKurs> kursMap;
+	private final @NotNull HashMap<Long, KursblockungDynKurs> kursMap;
 
 	/** Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert. */
 	private final @NotNull KursblockungDynStatistik statistik;
