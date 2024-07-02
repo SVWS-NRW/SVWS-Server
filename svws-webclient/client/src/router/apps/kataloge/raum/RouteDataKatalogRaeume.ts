@@ -1,4 +1,5 @@
-import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum, UserNotificationException, DeveloperNotificationException } from "@core";
+import type { Raum } from "@core";
+import { ArrayList, UserNotificationException, DeveloperNotificationException, RaumListeManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -8,13 +9,11 @@ import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
-	auswahl: Raum | undefined;
-	stundenplanManager: StundenplanManager | undefined;
+	raumListeManager: RaumListeManager;
 }
 
 const defaultState = <RouteStateKatalogRaeume> {
-	auswahl: undefined,
-	stundenplanManager: undefined,
+	raumListeManager: new RaumListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeKatalogRaumDaten,
 };
 
@@ -24,29 +23,29 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		super(defaultState);
 	}
 
-	get auswahl(): Raum | undefined {
-		return this._state.value.auswahl;
-	}
-
-	get stundenplanManager(): StundenplanManager {
-		if (this._state.value.stundenplanManager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
-		return this._state.value.stundenplanManager;
+	get raumListeManager(): RaumListeManager {
+		return this._state.value.raumListeManager;
 	}
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getRaeume(api.schema);
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		const stundenplanKomplett = new StundenplanKomplett();
-		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
-		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
-		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
-		stundenplanManager.raumAddAll(listKatalogeintraege);
-		this.setPatchedDefaultState({ auswahl, stundenplanManager })
+		const raumListeManager = new RaumListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, listKatalogeintraege);
+		this.setPatchedDefaultState({ raumListeManager })
 	}
 
-	setEintrag = async (auswahl: Raum) => {
-		this.setPatchedState({ auswahl })
+	setEintrag = async (raum: Raum | null) => {
+		if ((raum === null) && (!this.raumListeManager.hasDaten()))
+			return;
+		const raumListeManager = this.raumListeManager;
+		if ((raum === null) || (raumListeManager.liste.list().isEmpty())) {
+			raumListeManager.setDaten(null);
+			this.setPatchedState({ raumListeManager });
+			return;
+		}
+		if ((raum !== null) && (raumListeManager.hasDaten() && (raum.id === raumListeManager.auswahl().id)))
+			return;
+		raumListeManager.setDaten(raum);
+		this.setPatchedState({ raumListeManager });
 	}
 
 	gotoEintrag = async (eintrag: Raum) => {
@@ -54,40 +53,40 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
-		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
+		if (!eintrag.kuerzel || this.raumListeManager.getByKuerzelOrNull(eintrag.kuerzel) !== null)
 			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
-		const stundenplanManager = this.stundenplanManager;
-		stundenplanManager.raumAdd(raum);
-		this.setPatchedState({stundenplanManager});
+		this.raumListeManager.liste.add(raum);
+		this.setPatchedState({ raumListeManager: this.raumListeManager });
 		await this.gotoEintrag(raum);
 	}
 
 	deleteEintraege = async (eintraege: Iterable<Raum>) => {
-		const stundenplanManager = this.stundenplanManager;
+		const raumListeManager = this.raumListeManager;
 		const listID = new ArrayList<number>();
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
 		if (listID.isEmpty())
 			return;
 		const raeume = await api.server.deleteRaeume(listID, api.schema);
-		stundenplanManager.raumRemoveAll(raeume);
-		const list = stundenplanManager.raumGetMengeAsList();
-		const auswahl  = list.isEmpty() ? undefined : list.get(0);
-		this.setPatchedState({auswahl, stundenplanManager});
+		raumListeManager.liste.removeAll(raeume);
+		this.setPatchedState({ raumListeManager });
 	}
 
 	patch = async (eintrag : Partial<Raum>) => {
-		if (this.auswahl === undefined)
+		const idRaum = this.raumListeManager.auswahlID();
+		if (idRaum === null)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode wurden keine gültigen Daten geladen.");
 		if (eintrag.groesse && eintrag.groesse < 1)
 			throw new DeveloperNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
-		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
-		const auswahl = this.auswahl;
-		Object.assign(auswahl, eintrag);
-		this.stundenplanManager.raumPatchAttributes(auswahl);
-		this.commit();
+		const raumListeManager = this.raumListeManager;
+		await api.server.patchRaum(eintrag, api.schema, idRaum);
+		const alt = raumListeManager.auswahl();
+		const neu = Object.assign(raumListeManager.daten(), eintrag);
+		raumListeManager.liste.remove(alt);
+		raumListeManager.liste.add(neu);
+		this.setPatchedState({ raumListeManager });
 	}
 
 	setKatalogRaeumeImportJSON = api.call(async (formData: FormData) => {
@@ -97,15 +96,16 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const json = await jsonFile.text();
 		const raeume: Partial<Raum>[] = JSON.parse(json);
 		const list = new ArrayList<Partial<Raum>>();
+		const raumListeManager = this.raumListeManager;
 		for (const item of raeume)
-			if (item.kuerzel && !this.stundenplanManager.raumExistsByKuerzel(item.kuerzel)) {
+			if (item.kuerzel && raumListeManager.getByKuerzelOrNull(item.kuerzel) !== null) {
 				delete item.id;
 				list.add(item);
 			}
 		if (list.isEmpty())
 			return;
 		const res = await api.server.addRaeume(list, api.schema);
-		this.stundenplanManager.raumAddAll(res);
-		this.setPatchedState({stundenplanManager: this.stundenplanManager});
+		raumListeManager.liste.addAll(res);
+		this.setPatchedState({ raumListeManager });
 	})
 }

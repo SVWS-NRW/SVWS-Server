@@ -1,13 +1,18 @@
 <template>
 	<template v-if="auswahl">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ auswahl.id }}
-				</svws-ui-badge>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID: {{ auswahl.id }}
+						</svws-ui-badge>
+					</h2>
+				</div>
 			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
@@ -19,8 +24,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { RaeumeAppProps } from "./SRaeumeAppProps";
 
 	const props = defineProps<RaeumeAppProps>();
+	const auswahl = computed(() => props.raumListeManager().auswahlID() !== null && props.raumListeManager().auswahl());
 
 </script>

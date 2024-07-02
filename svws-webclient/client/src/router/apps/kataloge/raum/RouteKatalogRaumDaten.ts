@@ -20,18 +20,18 @@ export class RouteKatalogRaumDaten extends RouteNode<any, RouteKatalogRaeume> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogRaeume.data.auswahl === undefined)
+		if (routeKatalogRaeume.data.raumListeManager.auswahlID() === null)
 			return routeKatalogRaeume.getRoute(undefined)
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): RaumDatenProps {
 		return {
 			patch: routeKatalogRaeume.data.patch,
-			auswahl: routeKatalogRaeume.data.auswahl,
+			auswahl: routeKatalogRaeume.data.raumListeManager.auswahl(),
 		};
 	}
 

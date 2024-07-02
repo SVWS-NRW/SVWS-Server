@@ -11,14 +11,14 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns="columns"
+			<svws-ui-table :clicked @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns
 				clickable selectable v-model="selected" :filter-open="true">
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag">
+					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag>
 						<svws-ui-button type="icon" @click="openModal()">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -38,7 +38,7 @@
 	const props = defineProps<ReligionenAuswahlProps>();
 	const selected = ref<ReligionEintrag[]>([]);
 
-	const auswahl = computed<ReligionEintrag | undefined>(() => {
+	const clicked = computed<ReligionEintrag | undefined>(() => {
 		const manager = props.religionListeManager();
 		return manager.hasDaten() ? manager.auswahl() : undefined;
 	});

@@ -221,6 +221,7 @@
 	import { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
 	import { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
+	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
@@ -350,8 +351,25 @@
 			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		if (props.mode === 'klasse')
 			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
-		if (props.mode === 'fach')
-			return props.manager().unterrichtGetMengeByFachId(props.id);
+		if (props.mode === 'fach') {
+			const unterricht = props.manager().unterrichtGetMengeAsList()
+			const list: List<StundenplanUnterricht> = new ArrayList();
+			const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+			for (const u of unterricht)
+				if ((u.idFach === props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
+					list.add(u);
+			return list;
+		}
+		// return props.manager().unterrichtGetMengeByFachId(props.id);
+		if (props.mode === 'raum') {
+			const unterricht = props.manager().unterrichtGetMengeAsList()
+			const list: List<StundenplanUnterricht> = new ArrayList();
+			const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+			for (const u of unterricht)
+				if (u.raeume.contains(props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
+					list.add(u);
+			return list;
+		}
 		throw new DeveloperNotificationException("function getUnterricht: Unbekannter Mode " + props.mode);
 	})
 

@@ -1,8 +1,8 @@
-import type { Raum  } from "@core";
+import type { RaumListeManager  } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface RaeumeAppProps {
-	auswahl: Raum | undefined;
+	raumListeManager: () => RaumListeManager;
 	setTab: (value: AuswahlChildData) => Promise<void>;
 	tab: AuswahlChildData;
 	tabs: AuswahlChildData[];

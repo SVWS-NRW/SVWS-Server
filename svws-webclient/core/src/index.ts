@@ -680,6 +680,8 @@ export { KursListeManager } from './core/utils/kurse/KursListeManager';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
+export { RaumListeManager } from './core/utils/raum/RaumListeManager';
+export { RaumUtils } from './core/utils/raum/RaumUtils';
 export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
 export { ReligionUtils } from './core/utils/religion/ReligionUtils';
 export { SchuelerKAoAManager } from './core/utils/schueler/SchuelerKAoAManager';

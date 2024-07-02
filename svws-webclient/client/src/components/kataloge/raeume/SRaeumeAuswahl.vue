@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items :columns selectable v-model="selected">
+				<svws-ui-table :clicked clickable @update:clicked="gotoEintrag" :items="raumListeManager().filtered()" :columns selectable v-model="selected">
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 						<svws-ui-button type="transparent" title="Räume exportieren" @click="export_raeume" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
@@ -35,9 +35,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
 	import { Raum } from "@core";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<RaeumeAuswahlProps>();
 	const selected = ref<Raum[]>([]);
@@ -48,7 +48,10 @@
 		{ key: "groesse", label: "Größe", sortable: true },
 	];
 
-	const items = computed(() => props.stundenplanManager().raumGetMengeAsList());
+	const clicked = computed<Raum | undefined>(() => {
+		const manager = props.raumListeManager();
+		return manager.hasDaten() ? manager.auswahl() : undefined;
+	});
 
 	async function doDeleteEintraege() {
 		await props.deleteEintraege(selected.value);

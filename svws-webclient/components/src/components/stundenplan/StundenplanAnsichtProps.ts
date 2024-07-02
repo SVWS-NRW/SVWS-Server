@@ -14,7 +14,7 @@ export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | Stundenp
 export type StundenplanAnsichtDropZone = StundenplanZeitraster | StundenplanPausenzeit | undefined;
 
 export interface StundenplanAnsichtProps {
-	mode?: 'schueler' | 'lehrer' | 'klasse' | 'fach' | 'planung';
+	mode?: 'schueler' | 'lehrer' | 'klasse' | 'fach' | 'raum' | 'planung';
 	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';
 	showZeitachse?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;
