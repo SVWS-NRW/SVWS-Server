@@ -424,8 +424,52 @@
 					<td class="bo-black pad-4">
 						<table  class="fixed-layout-100 marg-0 pad-0">
 							<tr>
-								<td style="width: 100%; height: 268mm" class="ta-ct">
-									Hier stehen später die Sprachen und Unterschriften!
+								<td style="width: 100%; height: 5mm" class="ta-lt f-bold">
+									Fremdsprachen<sup>8)</sup>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table class="fixed-layout-100 marg-0 pad-0">
+										<colgroup>
+											<col style="width: 46%" />
+											<col style="width: 18%" />
+											<col style="width: 18%" />
+											<col style="width: 18%" />
+										</colgroup>
+										<tr>
+											<td class="pad-1122 f-bold ta-lm bo-black">Fach</td>
+											<td colspan="2" class="pad-1122 f-bold ta-cm bo-black">Jahrgangsstufe</td>
+											<td class="pad-1122 ta-cm f-bold bo-black">GeR</td>
+										</tr>
+										<th:block th:each="sprachbelegung : ${schueler.sprachbelegungen()}">
+											<tr>
+												<td class="pad-1122 ta-lm bo-black" th:text="${(sprachbelegung.statistikfach().fach() != null) ? sprachbelegung.statistikfach().fach().bezeichnungZeugnis() : sprachbelegung.statistikfach().bezeichnung()}">Fachbezeichnung</td>
+												<td class="pad-1122 ta-cm bo-black" th:text="${(sprachbelegung.belegungVonJahrgang() == null || sprachbelegung.belegungVonJahrgang().isEmpty()) ? '--' : 'von ' + sprachbelegung.belegungVonJahrgang() + ((sprachbelegung.belegungVonAbschnitt() == null || sprachbelegung.belegungVonAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">05.1</td>
+												<td class="pad-1122 ta-cm bo-black" th:text="${(sprachbelegung.belegungBisJahrgang() == null || sprachbelegung.belegungBisJahrgang().isEmpty()) ? '--' : 'bis ' + sprachbelegung.belegungBisJahrgang() + ((sprachbelegung.belegungBisAbschnitt() == null || sprachbelegung.belegungBisAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">Q2.2</td>
+												<td class="pad-1122 ta-cm bo-black" th:text="${(sprachbelegung.referenzniveau() == null) ? '--' : sprachbelegung.referenzniveau().daten.kuerzel}">B2/C1</td>
+											</tr>
+										</th:block>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Für die modernen Fremdsprachen schließt dieses Zeugnis Kompetenzen des Gemeinsamen europäischen Referenzrahmens für Sprachen (GeR) ein.<sup>9)</sup>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Dieses Zeugnis schließt das Latinum/Graecum/Hebraicum gemäß „Vereinbarung über das Latinum und das Graecum“ (Beschluss der Kultusministerkonferenz vom 22.09.2005) ein.
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Das Zeugnis schließt Lateinkenntnisse im Umfang eines Kleinen Latinums (BASS 13 - 32 Nr. 3.2) ein.<sup>10)</sup>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 150mm;">
 								</td>
 							</tr>
 						</table>

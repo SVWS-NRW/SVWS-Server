@@ -4,20 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
+import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
+import de.svws_nrw.module.reporting.proxytypes.schueler.sprachen.ProxyReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
+import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.ArrayList;
@@ -96,6 +100,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.religionabmeldung,
 			schuelerStammdaten.religionanmeldung,
 			null,
+			null,
 			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
 			SchuelerStatus.fromID(schuelerStammdaten.status),
@@ -112,9 +117,13 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.zuzugsjahr);
 
 		this.reportingRepository = reportingRepository;
+
 		super.setReligion(this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID));
 		super.setWohnortname(super.wohnort() != null ? super.wohnort().ortsname : "");
 		super.setWohnortsteilname(super.wohnortsteil() != null ? super.wohnortsteil().ortsteil : "");
+
+		final List<Sprachbelegung> sprachbelegungen = new DataSchuelerSprachbelegung(reportingRepository.conn(), super.id()).getListSprachbelegungen();
+		super.setSprachbelegungen(sprachbelegungen.stream().map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList());
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapSchuelerStammdaten().putIfAbsent(super.id(), schuelerStammdaten);

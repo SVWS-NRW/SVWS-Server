@@ -12,6 +12,7 @@ import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
+import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +142,9 @@ public class ReportingSchueler {
 	/** Die Religion des Schülers. */
 	private ReligionEintrag religion;
 
+	/** Daten aller Sprachbelegungen. */
+	private List<ReportingSchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
+
 	/** Die erste Staatsangehörigkeit des Schülers. */
 	private Nationalitaeten staatsangehoerigkeit1;
 
@@ -224,6 +228,7 @@ public class ReportingSchueler {
 	 * @param religionabmeldung Das Datum der Religionsabmeldung des Schülers.
 	 * @param religionanmeldung Das Datum der Religionsanmeldung des Schülers.
 	 * @param religion Die Religion des Schülers.
+	 * @param sprachbelegungen Daten aller Sprachbelegungen.
 	 * @param staatsangehoerigkeit1 Die erste Staatsangehörigkeit des Schülers.
 	 * @param staatsangehoerigkeit2 Die zweite Staatsangehörigkeit des Schülers.
 	 * @param status Der Status des Schülers.
@@ -239,7 +244,7 @@ public class ReportingSchueler {
 	 * @param wohnortsteilname Der Name des Ortsteils des Wohnorts des Schülers.
 	 * @param zuzugsjahr Das Zuzugsjahr des Schülers.
 	 */
-	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
+	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final List<ReportingSchuelerSprachbelegung> sprachbelegungen, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;
@@ -278,6 +283,7 @@ public class ReportingSchueler {
 		this.religionabmeldung = religionabmeldung;
 		this.religionanmeldung = religionanmeldung;
 		this.religion = religion;
+		this.sprachbelegungen = sprachbelegungen;
 		this.staatsangehoerigkeit1 = staatsangehoerigkeit1;
 		this.staatsangehoerigkeit2 = staatsangehoerigkeit2;
 		this.status = status;
@@ -933,6 +939,22 @@ public class ReportingSchueler {
 	 */
 	public void setReligion(final ReligionEintrag religion) {
 		this.religion = religion;
+	}
+
+	/**
+	 * Daten aller Sprachbelegungen.
+	 * @return Inhalt des Feldes sprachbelegungen
+	 */
+	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
+		return sprachbelegungen;
+	}
+
+	/**
+	 * Daten aller Sprachbelegungen werden gesetzt.
+	 * @param sprachbelegungen Neuer Wert für das Feld sprachbelegungen
+	 */
+	public void setSprachbelegungen(final List<ReportingSchuelerSprachbelegung> sprachbelegungen) {
+		this.sprachbelegungen = sprachbelegungen;
 	}
 
 	/**

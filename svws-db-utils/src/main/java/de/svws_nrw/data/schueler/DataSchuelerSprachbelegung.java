@@ -1,12 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -23,6 +16,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 
 /**
@@ -88,8 +89,22 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+	/**
+	 * Gibt eine Liste der Sprachbelegungen des Schülers zurück
+	 * @return Liste der Sprachbelegungen des Schülers
+	 */
+	public List<Sprachbelegung> getListSprachbelegungen() {
+		List<Sprachbelegung> result = new ArrayList<>();
+
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (schueler != null)
+			result =  conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler).stream().map(dtoMapper).toList();
+
+		return result;
+	}
+
 	private DTOSchuelerSprachenfolge getDTO(final @NotNull String kuerzel) throws ApiOperationException {
-		if ((kuerzel == null) || (kuerzel.isBlank()))
+		if (kuerzel.isBlank())
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein gültiges Kürzel übergeben.");
 		// Überprüfe, ob die Schüler-ID gültig ist.
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);

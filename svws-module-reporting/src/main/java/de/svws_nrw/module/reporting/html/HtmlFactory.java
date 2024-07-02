@@ -131,10 +131,6 @@ public final class HtmlFactory {
 		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 		mapHtmlContexts.put("Schule", htmlContextSchule);
 
-//		logger.logLn("Erzeuge Datenkontext Druckparameter");
-//		final HtmlContextDruckparameter htmlContextDruckparameter = new HtmlContextDruckparameter(reportingParameter);
-//		mapHtmlContexts.put("Druckparameter", htmlContextDruckparameter);
-
 		// Betrachte die Html-Template-Definition und erzeuge damit die korrekten Contexts der Hauptdaten
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
 			case "SCHUELER" :

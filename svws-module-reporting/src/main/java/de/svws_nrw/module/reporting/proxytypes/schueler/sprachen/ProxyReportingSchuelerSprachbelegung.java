@@ -1,14 +1,14 @@
-package de.svws_nrw.module.reporting.proxytypes.fach;
+package de.svws_nrw.module.reporting.proxytypes.schueler.sprachen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingStatistikFach;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
 /**
- *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Fach und erweitert die Klasse {@link ReportingFach}.</p>
+ *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerSprachbelegung und erweitert die Klasse {@link ReportingSchuelerSprachbelegung}.</p>
  *
  *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
  *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
@@ -27,54 +27,35 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
  * 			Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingFach extends ReportingFach {
+public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprachbelegung {
 
 	/** Repository für die Reporting */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
 
-
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis der Daten eines Fach- und GostFach-Objektes.
+	 * Erstellt ein neues Reporting-Objekt auf Basis der Daten aus der Datenbank.
 	 * @param reportingRepository Repository für die Reporting.
-	 * @param fachDaten Fach-Daten-Objekt
-	 * @param fachGostDaten GostFach-Daten-Objekt
+	 * @param sprachbelegung Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
-	public ProxyReportingFach(final ReportingRepository reportingRepository, final FachDaten fachDaten, final GostFach fachGostDaten) {
-		super(fachDaten.aufgabenfeld,
-			fachDaten.aufZeugnis,
-			fachDaten.bezeichnung,
-			fachDaten.bezeichnungUeberweisungszeugnis,
-			fachDaten.bezeichnungZeugnis,
-			fachDaten.bilingualeSprache,
-			null,
-			fachDaten.holeAusAltenLernabschnitten,
-			fachDaten.id,
-			fachDaten.istFHRFach,
-			false,
-			false,
-			fachDaten.istOberstufenFach,
-			fachDaten.istNachpruefungErlaubt,
-			fachDaten.istPruefungsordnungsRelevant,
-			fachDaten.istSchriftlichBA,
-			fachDaten.istSchriftlichZK,
-			fachDaten.istSichtbar,
-			fachDaten.kuerzel,
-			fachDaten.maxZeichenInFachbemerkungen,
-			fachDaten.sortierung,
-			null);
+	public ProxyReportingSchuelerSprachbelegung(final ReportingRepository reportingRepository, final Sprachbelegung sprachbelegung) {
+		super(sprachbelegung.belegungBisAbschnitt,
+				sprachbelegung.belegungBisJahrgang,
+				sprachbelegung.belegungVonAbschnitt,
+				sprachbelegung.belegungVonJahrgang,
+				sprachbelegung.hatGraecum,
+				sprachbelegung.hatHebraicum,
+				sprachbelegung.hatKleinesLatinum,
+				sprachbelegung.hatLatinum,
+				null,
+				sprachbelegung.reihenfolge,
+				sprachbelegung.sprache,
+				null
+		);
 		this.reportingRepository = reportingRepository;
-
-		if (fachDaten.kuerzelStatistik != null && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.setStatistikfach(new ProxyReportingStatistikFach(reportingRepository, ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik)));
-			super.setFachgruppe(super.statistikfach().fachgruppe());
-		}
-
-		if (fachGostDaten != null) {
-			this.setIstFremdsprache(fachGostDaten.istFremdsprache);
-			this.setIstFremdSpracheNeuEinsetzend(fachGostDaten.istFremdSpracheNeuEinsetzend);
-		}
+		super.setReferenzniveau(Sprachreferenzniveau.getByKuerzel(sprachbelegung.referenzniveau));
+		super.setStatistikfach(new ProxyReportingStatistikFach(reportingRepository, sprachbelegung.sprache));
 	}
 
 

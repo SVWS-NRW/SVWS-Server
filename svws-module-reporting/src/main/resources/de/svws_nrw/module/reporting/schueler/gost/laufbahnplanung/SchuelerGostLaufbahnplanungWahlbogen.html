@@ -53,7 +53,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(Parameter.detailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().getHMTLFarbeRGB()} + ';'">
+					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(Parameter.detailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().htmlFarbeRGB()} + ';'">
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.fach().kuerzel()}"><b>D</b></td>
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.fach().bezeichnung()}"><b>Deutsch</b></td>
 						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn()}">
