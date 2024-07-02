@@ -3,6 +3,7 @@ package svws.gradle.java
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import groovy.xml.XmlParser
 
 /**
  * Dieses Plugin führt projektspezifische Einstellungen
@@ -29,6 +30,36 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 			}
 			project.ext.setProperty(prefsFile, key, value)
 		}
+
+		project.ext.setEclipsePreferenceFormatter = { File prefsFile, File formatterProfile ->
+			if (!prefsFile.exists()) {
+				prefsFile.parentFile.mkdirs()
+				prefsFile.write("eclipse.preferences.version=1\n")
+			}
+			def profiles = new XmlParser().parse(formatterProfile)
+			profiles.children()[0].each {
+				def settings = (Node) it
+				def key = settings.attributes().id
+				def value = settings.attributes().value
+				project.ext.setProperty(prefsFile, key, value)
+			}
+		}
+	}
+
+	void addSetEclipseUiPreferenceMethod(){
+		project.ext.setEclipseUiPreference = { File prefsFile, File cleanupProfile ->
+			if (!prefsFile.exists()) {
+				prefsFile.parentFile.mkdirs()
+				prefsFile.createNewFile()
+			}
+			def profiles = new XmlParser().parse(cleanupProfile)
+			profiles.children()[0].each {
+				def settings = (Node) it
+				def key = settings.attributes().id
+				def value = settings.attributes().value
+				project.ext.setProperty(prefsFile, key, value)
+			}
+		}
 	}
 
 	void configureEclipse(){
@@ -37,6 +68,8 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 				project.logger.info('Info: Aktualisiere Eclipse-Konfiguration für Projekt ' + gp.name);
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
+				project.ext.setEclipseUiPreference(project.file('.settings/org.eclipse.jdt.ui.prefs'), project.getRootProject().file('config/eclipse/Eclipse_cleanup.xml'))
+				project.ext.setEclipsePreferenceFormatter(project.file('.settings/org.eclipse.jdt.core.prefs'), project.getRootProject().file('config/eclipse/Eclipse_formatter.xml'))
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.inheritNullAnnotations', 'disabled')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.missingNonNullByDefaultAnnotation', 'ignore')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.nonnull', 'de.svws_nrw.base.annotations.NonNull')
@@ -153,6 +186,7 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 
 		this.addSetPropertyMethod()
 		this.addSetEclipsePreferenceMethod()
+		this.addSetEclipseUiPreferenceMethod()
 
 		this.configureEclipse()
 	}
