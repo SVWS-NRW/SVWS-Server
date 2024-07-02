@@ -1,16 +1,19 @@
 <template>
 	<template v-if="fach !== undefined">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ fach.bezeichnung }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ fach.id }}
-				</svws-ui-badge>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<span>{{ fach.bezeichnung }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID: {{ fach.id }}
+						</svws-ui-badge>
+					</h2>
+					<span class="svws-subline">{{ fach.kuerzel }}</span>
+				</div>
 			</div>
-			<div>
-				<span class="opacity-40">{{ fach.kuerzel }}</span>
-			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
@@ -24,7 +27,7 @@
 
 	import { computed } from "vue";
 	import type { FaecherAppProps } from "./SFaecherAppProps";
-	import { type FachDaten } from "@core";
+	import type { FachDaten } from "@core";
 
 	const props = defineProps<FaecherAppProps>();
 

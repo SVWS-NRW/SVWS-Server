@@ -1,4 +1,5 @@
-import { ArrayList, DeveloperNotificationException, FachListeManager, type FachDaten  } from "@core";
+import type { FachDaten } from "@core";
+import { ArrayList, DeveloperNotificationException, FachListeManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -6,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogFachDaten } from "./RouteKatalogFachDaten";
 import { routeKatalogFaecher } from "./RouteKatalogFaecher";
+import { routeApp } from "../../RouteApp";
 
 interface RouteStateKatalogFaecher extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
@@ -57,7 +59,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 			if (auswahl !== null)
 				fachListeManager.setDaten(auswahl);
 		}
-		return {fachListeManager, idSchuljahresabschnitt};
+		return { fachListeManager, idSchuljahresabschnitt };
 	}
 
 	public async ladeListe(idSchuljahresabschnitt: number) {
@@ -89,7 +91,9 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 	}
 
 	gotoEintrag = async (eintrag: FachDaten) => {
-		await RouteManager.doRoute(routeKatalogFaecher.getRoute(eintrag.id));
+		const redirect_name: string = (routeKatalogFaecher.selectedChild === undefined) ? routeKatalogFachDaten.name : routeKatalogFaecher.selectedChild.name;
+		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
+		// await RouteManager.doRoute(routeKatalogFaecher.getRoute(eintrag.id));
 	}
 
 	patch = async (data : Partial<FachDaten>) => {

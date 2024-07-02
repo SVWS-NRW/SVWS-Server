@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -16,6 +15,7 @@ import type { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppP
 import type { FaecherAuswahlProps } from "~/components/kataloge/faecher/SFaecherAuswahlProps";
 import { RouteDataKatalogFaecher } from "./RouteDataKatalogFaecher";
 import { routeError } from "~/router/error/RouteError";
+import { routeFachStundenplan } from "./stundenplan/RouteFachStundenplan";
 
 const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
@@ -29,7 +29,8 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 		super.text = "Fächer";
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogFachDaten
+			routeKatalogFachDaten,
+			routeFachStundenplan,
 		];
 		super.defaultChild = routeKatalogFachDaten;
 	}
@@ -67,6 +68,8 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 			}
 			return this.getRoute();
 		}
+		if (to.name === this.name)
+			return this.getChildRoute(this.data.fachListeManager.daten().id, from);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
@@ -78,6 +81,14 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
+
+	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
+		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
+			return { name: routeFachStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
+		const redirect_name: string = (this.selectedChild === undefined) ? routeKatalogFachDaten.name : this.selectedChild.name;
+		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	}
+
 
 	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
 		return {
