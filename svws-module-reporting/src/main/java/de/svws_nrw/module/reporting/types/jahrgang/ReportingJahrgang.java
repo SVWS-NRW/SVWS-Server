@@ -69,7 +69,9 @@ public class ReportingJahrgang {
 	 * @param schueler Liste der Schüler des Jahrgangs.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
-	public ReportingJahrgang(final String bezeichnung, final Long gueltigBis, final Long gueltigVon, final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler, final int sortierung) {
+	public ReportingJahrgang(final String bezeichnung, final Long gueltigBis, final Long gueltigVon, final ReportingJahrgang folgejahrgang, final long id,
+			final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel, final String kuerzelSchulgliederung,
+			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler, final int sortierung) {
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;

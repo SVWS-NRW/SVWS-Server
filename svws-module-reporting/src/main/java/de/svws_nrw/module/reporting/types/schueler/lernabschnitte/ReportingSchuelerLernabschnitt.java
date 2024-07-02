@@ -268,7 +268,22 @@ public class ReportingSchuelerLernabschnitt {
 	 * @param zeugnisBemerkungText Der Text für allgemeine Zeugnisbemerkungen.
 	 * @param zeugnisLELSText Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 */
-	public ReportingSchuelerLernabschnitt(final String abschluss, final Integer abschlussart, final String abschlussBerufsbildend, final Integer anzahlSchulbesuchsjahre, final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz, final String datumZeugnis, final int fehlstundenGesamt, final Integer fehlstundenGrenzwert, final int fehlstundenUnentschuldigt, final FoerderschwerpunktEintrag foerderschwerpunkt1, final FoerderschwerpunktEintrag foerderschwerpunkt2, final String foerderschwerpunktText, final ReportingKlasse folgeklasse, final boolean hatAOSF, final boolean hatAutismus, final boolean hatSchwerbehinderungsNachweis, final boolean hatZieldifferentenUnterricht, final ReportingJahrgang jahrgang, final long id, final Long idFachklasse, final Long idFoerderschwerpunkt1, final Long idFoerderschwerpunkt2, final Long idFolgeklasse, final Long idJahrgang, final Long idKlasse, final long idSchueler, final long idSchuljahresabschnitt, final Long idSchwerpunkt, final Long idSonderpaedagoge, final Long idTutor, final boolean istAbschlussPrognose, final boolean istFachpraktischerAnteilAusreichend, final boolean istGewertet, final boolean istWiederholung, final ReportingKlasse klasse, final String klassenart, final List<SchuelerLeistungsdaten> leistungsdaten, final SchuelerLernabschnittNachpruefungsdaten nachpruefungen, final String noteDurchschnitt, final Integer noteLernbereichGSbzwAL, final Integer noteLernbereichNW, final String organisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler, final String schulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge, final String textErgebnisPruefungsalgorithmus, final ReportingLehrer tutor, final String uebergangsempfehlungText, final String versetzungsentscheidungText, final String versetzungsvermerkKuerzel, final int wechselNr, final String zeugnisart, final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText) {
+	public ReportingSchuelerLernabschnitt(final String abschluss, final Integer abschlussart, final String abschlussBerufsbildend,
+			final Integer anzahlSchulbesuchsjahre, final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz,
+			final String datumZeugnis, final int fehlstundenGesamt, final Integer fehlstundenGrenzwert, final int fehlstundenUnentschuldigt,
+			final FoerderschwerpunktEintrag foerderschwerpunkt1, final FoerderschwerpunktEintrag foerderschwerpunkt2, final String foerderschwerpunktText,
+			final ReportingKlasse folgeklasse, final boolean hatAOSF, final boolean hatAutismus, final boolean hatSchwerbehinderungsNachweis,
+			final boolean hatZieldifferentenUnterricht, final ReportingJahrgang jahrgang, final long id, final Long idFachklasse,
+			final Long idFoerderschwerpunkt1, final Long idFoerderschwerpunkt2, final Long idFolgeklasse, final Long idJahrgang, final Long idKlasse,
+			final long idSchueler, final long idSchuljahresabschnitt, final Long idSchwerpunkt, final Long idSonderpaedagoge, final Long idTutor,
+			final boolean istAbschlussPrognose, final boolean istFachpraktischerAnteilAusreichend, final boolean istGewertet, final boolean istWiederholung,
+			final ReportingKlasse klasse, final String klassenart, final List<SchuelerLeistungsdaten> leistungsdaten,
+			final SchuelerLernabschnittNachpruefungsdaten nachpruefungen, final String noteDurchschnitt, final Integer noteLernbereichGSbzwAL,
+			final Integer noteLernbereichNW, final String organisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler,
+			final String schulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
+			final String textErgebnisPruefungsalgorithmus, final ReportingLehrer tutor, final String uebergangsempfehlungText,
+			final String versetzungsentscheidungText, final String versetzungsvermerkKuerzel, final int wechselNr, final String zeugnisart,
+			final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText) {
 		this.abschluss = abschluss;
 		this.abschlussart = abschlussart;
 		this.abschlussBerufsbildend = abschlussBerufsbildend;

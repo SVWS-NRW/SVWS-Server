@@ -77,7 +77,11 @@ public class ReportingGostAbiturFachbelegung {
 	 * @param halbjahresbelegungen Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs
 	 * @param letzteKursart Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
 	 */
-	public ReportingGostAbiturFachbelegung(final Integer abiturFach, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSumme, final Boolean block2MuendlichePruefungAbweichung, final Boolean block2MuendlichePruefungBestehen, final Boolean block2MuendlichePruefungFreiwillig, final Note block2MuendlichePruefungNote, final Integer block2MuendlichePruefungReihenfolge, final ReportingLehrer block2Pruefer, final Note block2PruefungNote, final Integer block2Punkte, final Integer block2PunkteZwischenstand, final ReportingFach fach, final ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen, final String letzteKursart) {
+	public ReportingGostAbiturFachbelegung(final Integer abiturFach, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSumme,
+			final Boolean block2MuendlichePruefungAbweichung, final Boolean block2MuendlichePruefungBestehen, final Boolean block2MuendlichePruefungFreiwillig,
+			final Note block2MuendlichePruefungNote, final Integer block2MuendlichePruefungReihenfolge, final ReportingLehrer block2Pruefer,
+			final Note block2PruefungNote, final Integer block2Punkte, final Integer block2PunkteZwischenstand, final ReportingFach fach,
+			final ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen, final String letzteKursart) {
 		this.abiturFach = abiturFach;
 		this.block1NotenpunkteDurchschnitt = block1NotenpunkteDurchschnitt;
 		this.block1PunktSumme = block1PunktSumme;

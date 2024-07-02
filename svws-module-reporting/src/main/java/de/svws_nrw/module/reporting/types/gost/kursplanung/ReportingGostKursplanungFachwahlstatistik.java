@@ -59,7 +59,9 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * @param wahlenLK Die Gesamtzahl der Wahlen als Leistungskurs.
 	 * @param wahlenZK Die Anzahl der Wahlen als Zusatzkurs.
 	 */
-	public ReportingGostKursplanungFachwahlstatistik(final int differenzKursgroessenGK, final int differenzKursgroessenLK, final int differenzKursgroessenZK, final ReportingFach fach, final int wahlenAB3, final int wahlenAB4, final int wahlenGK, final int wahlenGKMuendlich, final int wahlenGKSchriftlich, final int wahlenLK, final int wahlenZK) {
+	public ReportingGostKursplanungFachwahlstatistik(final int differenzKursgroessenGK, final int differenzKursgroessenLK, final int differenzKursgroessenZK,
+			final ReportingFach fach, final int wahlenAB3, final int wahlenAB4, final int wahlenGK, final int wahlenGKMuendlich, final int wahlenGKSchriftlich,
+			final int wahlenLK, final int wahlenZK) {
 		this.differenzKursgroessenGK = differenzKursgroessenGK;
 		this.differenzKursgroessenLK = differenzKursgroessenLK;
 		this.differenzKursgroessenZK = differenzKursgroessenZK;

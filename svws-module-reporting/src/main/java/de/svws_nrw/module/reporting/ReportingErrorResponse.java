@@ -40,7 +40,7 @@ public final class ReportingErrorResponse {
 		this.logger = logger;
 		this.log = log;
 
-		if (logger == null || log == null) {
+		if ((logger == null) || (log == null)) {
 			this.logger = new Logger();
 			this.log = new LogConsumerList();
 			this.logger.addConsumer(this.log);
@@ -67,13 +67,13 @@ public final class ReportingErrorResponse {
 			for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
 				String message = cause.getMessage();
 				// Entferne das html-Template, falls es in der Message enthalten ist.
-				if (exception instanceof TemplateProcessingException && !htmlTemplate.isEmpty())
+				if ((exception instanceof TemplateProcessingException) && !htmlTemplate.isEmpty())
 					message = message.replace("(template: \"" + htmlTemplate + "\"", "(");
 				logger.logLn(4, message);
 			}
 
 			// Hänge das html-Template als weiteren Eintrag hinten an, wenn ein Fehler bei der Template-Verarbeitung aufgetreten ist.
-			if (exception instanceof TemplateProcessingException && !htmlTemplate.isEmpty()) {
+			if ((exception instanceof TemplateProcessingException) && !htmlTemplate.isEmpty()) {
 				logger.logLn(0, "");
 				logger.logLn(0, "###  Verwendetes html-Template  #################");
 				logger.logLn(0, htmlTemplate);

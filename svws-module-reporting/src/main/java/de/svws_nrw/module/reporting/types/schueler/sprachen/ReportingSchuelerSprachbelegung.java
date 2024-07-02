@@ -64,7 +64,9 @@ public class ReportingSchuelerSprachbelegung {
 	 * @param sprache Das einstellige Sprachkürzel des Faches der Sprache
 	 * @param statistikfach Das Statistik-Fach zur Sprache
 	 */
-	public ReportingSchuelerSprachbelegung(final Integer belegungBisAbschnitt, final String belegungBisJahrgang, final Integer belegungVonAbschnitt, final String belegungVonJahrgang, final boolean hatGraecum, final boolean hatHebraicum, final boolean hatKleinesLatinum, final boolean hatLatinum, final Sprachreferenzniveau referenzniveau, final Integer reihenfolge, final String sprache, final ReportingStatistikFach statistikfach) {
+	public ReportingSchuelerSprachbelegung(final Integer belegungBisAbschnitt, final String belegungBisJahrgang, final Integer belegungVonAbschnitt,
+			final String belegungVonJahrgang, final boolean hatGraecum, final boolean hatHebraicum, final boolean hatKleinesLatinum, final boolean hatLatinum,
+			final Sprachreferenzniveau referenzniveau, final Integer reihenfolge, final String sprache, final ReportingStatistikFach statistikfach) {
 		this.belegungBisAbschnitt = belegungBisAbschnitt;
 		this.belegungBisJahrgang = belegungBisJahrgang;
 		this.belegungVonAbschnitt = belegungVonAbschnitt;
@@ -87,7 +89,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 * @return Inhalt des Feldes belegungBisJahrgang
 	 */
-	public  String belegungBisJahrgang() {
+	public String belegungBisJahrgang() {
 		return belegungBisJahrgang;
 	}
 
@@ -95,7 +97,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde, wird gesetzt
 	 * @param belegungBisJahrgang Neuer Wert für das Feld belegungBisJahrgang wird gesetzt.
 	 */
-	public void setBelegungBisJahrgang(final  String belegungBisJahrgang) {
+	public void setBelegungBisJahrgang(final String belegungBisJahrgang) {
 		this.belegungBisJahrgang = belegungBisJahrgang;
 	}
 
@@ -103,7 +105,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 * @return Inhalt des Feldes belegungBisAbschnitt
 	 */
-	public  Integer belegungBisAbschnitt() {
+	public Integer belegungBisAbschnitt() {
 		return belegungBisAbschnitt;
 	}
 
@@ -111,7 +113,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde, wird gesetzt.
 	 * @param belegungBisAbschnitt Neuer Wert für das Feld belegungBisAbschnitt
 	 */
-	public void setBelegungBisAbschnitt(final  Integer belegungBisAbschnitt) {
+	public void setBelegungBisAbschnitt(final Integer belegungBisAbschnitt) {
 		this.belegungBisAbschnitt = belegungBisAbschnitt;
 	}
 
@@ -119,7 +121,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
 	 * @return Inhalt des Feldes belegungVonJahrgang
 	 */
-	public  String belegungVonJahrgang() {
+	public String belegungVonJahrgang() {
 		return belegungVonJahrgang;
 	}
 
@@ -127,7 +129,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde wird gesetzt.
 	 * @param belegungVonJahrgang Neuer Wert für das Feld belegungVonJahrgang
 	 */
-	public void setBelegungVonJahrgang(final  String belegungVonJahrgang) {
+	public void setBelegungVonJahrgang(final String belegungVonJahrgang) {
 		this.belegungVonJahrgang = belegungVonJahrgang;
 	}
 
@@ -135,7 +137,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde
 	 * @return Inhalt des Feldes belegungVonAbschnitt
 	 */
-	public  Integer belegungVonAbschnitt() {
+	public Integer belegungVonAbschnitt() {
 		return belegungVonAbschnitt;
 	}
 
@@ -143,7 +145,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde wird gesetzt.
 	 * @param belegungVonAbschnitt Neuer Wert für das Feld belegungVonAbschnitt
 	 */
-	public void setBelegungVonAbschnitt(final  Integer belegungVonAbschnitt) {
+	public void setBelegungVonAbschnitt(final Integer belegungVonAbschnitt) {
 		this.belegungVonAbschnitt = belegungVonAbschnitt;
 	}
 
@@ -151,7 +153,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatKleinesLatinum
 	 */
-	public  boolean hatKleinesLatinum() {
+	public boolean hatKleinesLatinum() {
 		return hatKleinesLatinum;
 	}
 
@@ -159,7 +161,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht wird gesetzt.
 	 * @param hatKleinesLatinum Neuer Wert für das Feld hatKleinesLatinum
 	 */
-	public void setHatKleinesLatinum(final  boolean hatKleinesLatinum) {
+	public void setHatKleinesLatinum(final boolean hatKleinesLatinum) {
 		this.hatKleinesLatinum = hatKleinesLatinum;
 	}
 
@@ -167,7 +169,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Latinum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatLatinum
 	 */
-	public  boolean hatLatinum() {
+	public boolean hatLatinum() {
 		return hatLatinum;
 	}
 
@@ -175,7 +177,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Latinum erreicht wurde oder nicht wird gesetzt.
 	 * @param hatLatinum Neuer Wert für das Feld hatLatinum
 	 */
-	public void setHatLatinum(final  boolean hatLatinum) {
+	public void setHatLatinum(final boolean hatLatinum) {
 		this.hatLatinum = hatLatinum;
 	}
 
@@ -183,7 +185,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Graecum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatGraecum
 	 */
-	public  boolean hatGraecum() {
+	public boolean hatGraecum() {
 		return hatGraecum;
 	}
 
@@ -191,7 +193,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Graecum erreicht wurde oder nicht wird gesetzt.
 	 * @param hatGraecum Neuer Wert für das Feld hatGraecum
 	 */
-	public void setHatGraecum(final  boolean hatGraecum) {
+	public void setHatGraecum(final boolean hatGraecum) {
 		this.hatGraecum = hatGraecum;
 	}
 
@@ -199,7 +201,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatHebraicum
 	 */
-	public  boolean hatHebraicum() {
+	public boolean hatHebraicum() {
 		return hatHebraicum;
 	}
 
@@ -207,7 +209,7 @@ public class ReportingSchuelerSprachbelegung {
 	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht wird gesetzt.
 	 * @param hatHebraicum Neuer Wert für das Feld hatHebraicum
 	 */
-	public void setHatHebraicum(final  boolean hatHebraicum) {
+	public void setHatHebraicum(final boolean hatHebraicum) {
 		this.hatHebraicum = hatHebraicum;
 	}
 

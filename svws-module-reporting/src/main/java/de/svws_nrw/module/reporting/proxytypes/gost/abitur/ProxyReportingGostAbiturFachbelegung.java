@@ -46,20 +46,20 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 	 */
 	public ProxyReportingGostAbiturFachbelegung(final ReportingRepository reportingRepository, final AbiturFachbelegung abiturFachbelegung) {
 		super(abiturFachbelegung.abiturFach,
-			abiturFachbelegung.block1NotenpunkteDurchschnitt,
-			abiturFachbelegung.block1PunktSumme,
-			abiturFachbelegung.block2MuendlichePruefungAbweichung,
-			abiturFachbelegung.block2MuendlichePruefungBestehen,
-			abiturFachbelegung.block2MuendlichePruefungFreiwillig,
-			null,
-			abiturFachbelegung.block2MuendlichePruefungReihenfolge,
-			null,
-			null,
-			abiturFachbelegung.block2Punkte,
-			abiturFachbelegung.block2PunkteZwischenstand,
-			null,
-			null,
-			abiturFachbelegung.letzteKursart);
+				abiturFachbelegung.block1NotenpunkteDurchschnitt,
+				abiturFachbelegung.block1PunktSumme,
+				abiturFachbelegung.block2MuendlichePruefungAbweichung,
+				abiturFachbelegung.block2MuendlichePruefungBestehen,
+				abiturFachbelegung.block2MuendlichePruefungFreiwillig,
+				null,
+				abiturFachbelegung.block2MuendlichePruefungReihenfolge,
+				null,
+				null,
+				abiturFachbelegung.block2Punkte,
+				abiturFachbelegung.block2PunkteZwischenstand,
+				null,
+				null,
+				abiturFachbelegung.letzteKursart);
 		this.reportingRepository = reportingRepository;
 
 		super.setBlock2PruefungNote(Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung));
@@ -67,19 +67,19 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 
 		if (abiturFachbelegung.block2Pruefer != null) {
 			super.setBlock2Pruefer(
-				new ProxyReportingLehrer(
-					this.reportingRepository,
-					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
-						try {
-							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer);
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new LehrerStammdaten();
-						}
-					})));
+					new ProxyReportingLehrer(
+							this.reportingRepository,
+							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
+								try {
+									return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer);
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new LehrerStammdaten();
+								}
+							})));
 		}
 
-	 	super.setFach(this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID));
+		super.setFach(this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID));
 
 		final ReportingGostAbiturFachbelegungHalbjahr[] belegungenHJ = new ReportingGostAbiturFachbelegungHalbjahr[6];
 		for (int i = 0; i < 6; i++) {

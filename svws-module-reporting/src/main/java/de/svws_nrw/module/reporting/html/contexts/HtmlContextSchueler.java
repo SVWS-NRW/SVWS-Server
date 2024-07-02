@@ -45,8 +45,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
-        this.reportingRepository = reportingRepository;
-        erzeugeContextFromSchueler(reportingSchueler);
+		this.reportingRepository = reportingRepository;
+		erzeugeContextFromSchueler(reportingSchueler);
 	}
 
 	/**
@@ -71,14 +71,14 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 */
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
 
-		if (reportingSchueler == null || reportingSchueler.isEmpty())
+		if ((reportingSchueler == null) || reportingSchueler.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler übergeben.");
 
 		// Sortiere die übergebene Liste der Schüler
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 		reportingSchueler.sort(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-			.thenComparing(ReportingSchueler::vorname, colGerman)
-			.thenComparing(ReportingSchueler::id));
+				.thenComparing(ReportingSchueler::vorname, colGerman)
+				.thenComparing(ReportingSchueler::id));
 
 		schueler = new ArrayList<>();
 		schueler.addAll(reportingSchueler);

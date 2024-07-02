@@ -59,72 +59,72 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
-        super(schuelerLernabschnittsdaten.abschluss,
-            schuelerLernabschnittsdaten.abschlussart,
-            schuelerLernabschnittsdaten.abschlussBerufsbildend,
-            schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
-            schuelerLernabschnittsdaten.bilingualerZweig,
-            schuelerLernabschnittsdaten.datumAnfang,
-            schuelerLernabschnittsdaten.datumEnde,
-            schuelerLernabschnittsdaten.datumKonferenz,
-            schuelerLernabschnittsdaten.datumZeugnis,
-            schuelerLernabschnittsdaten.fehlstundenGesamt,
-            schuelerLernabschnittsdaten.fehlstundenGrenzwert,
-            schuelerLernabschnittsdaten.fehlstundenUnentschuldigt,
-			null,
-			null,
-            schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt,
-			null,
-            schuelerLernabschnittsdaten.hatAOSF,
-            schuelerLernabschnittsdaten.hatAutismus,
-            schuelerLernabschnittsdaten.hatSchwerbehinderungsNachweis,
-            schuelerLernabschnittsdaten.hatZieldifferentenUnterricht,
-			null,
-            schuelerLernabschnittsdaten.id,
-            schuelerLernabschnittsdaten.fachklasseID,
-            schuelerLernabschnittsdaten.foerderschwerpunkt1ID,
-            schuelerLernabschnittsdaten.foerderschwerpunkt2ID,
-            schuelerLernabschnittsdaten.folgeklassenID,
-            schuelerLernabschnittsdaten.jahrgangID,
-            schuelerLernabschnittsdaten.klassenID,
-            schuelerLernabschnittsdaten.schuelerID,
-            schuelerLernabschnittsdaten.schuljahresabschnitt,
-            schuelerLernabschnittsdaten.schwerpunktID,
-            schuelerLernabschnittsdaten.sonderpaedagogeID,
-            schuelerLernabschnittsdaten.tutorID,
-            schuelerLernabschnittsdaten.istAbschlussPrognose,
-            schuelerLernabschnittsdaten.istFachpraktischerAnteilAusreichend,
-            schuelerLernabschnittsdaten.istGewertet,
-            schuelerLernabschnittsdaten.istWiederholung,
-			null,
-            schuelerLernabschnittsdaten.Klassenart,
-			null,
-            null,
-            schuelerLernabschnittsdaten.noteDurchschnitt,
-            schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
-            schuelerLernabschnittsdaten.noteLernbereichNW,
-            schuelerLernabschnittsdaten.organisationsform,
-            schuelerLernabschnittsdaten.pruefungsOrdnung,
-            null,
-            schuelerLernabschnittsdaten.schulgliederung,
-            null,
-            null,
-			schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus,
-            null,
-            schuelerLernabschnittsdaten.bemerkungen.uebergangESF,
-            schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung,
-            schuelerLernabschnittsdaten.versetzungsvermerk,
-            schuelerLernabschnittsdaten.wechselNr,
-            schuelerLernabschnittsdaten.zeugnisart,
-            schuelerLernabschnittsdaten.bemerkungen.zeugnisASV,
-            schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE,
-            schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein,
-            schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
+		super(schuelerLernabschnittsdaten.abschluss,
+				schuelerLernabschnittsdaten.abschlussart,
+				schuelerLernabschnittsdaten.abschlussBerufsbildend,
+				schuelerLernabschnittsdaten.anzahlSchulbesuchsjahre,
+				schuelerLernabschnittsdaten.bilingualerZweig,
+				schuelerLernabschnittsdaten.datumAnfang,
+				schuelerLernabschnittsdaten.datumEnde,
+				schuelerLernabschnittsdaten.datumKonferenz,
+				schuelerLernabschnittsdaten.datumZeugnis,
+				schuelerLernabschnittsdaten.fehlstundenGesamt,
+				schuelerLernabschnittsdaten.fehlstundenGrenzwert,
+				schuelerLernabschnittsdaten.fehlstundenUnentschuldigt,
+				null,
+				null,
+				schuelerLernabschnittsdaten.bemerkungen.foerderschwerpunkt,
+				null,
+				schuelerLernabschnittsdaten.hatAOSF,
+				schuelerLernabschnittsdaten.hatAutismus,
+				schuelerLernabschnittsdaten.hatSchwerbehinderungsNachweis,
+				schuelerLernabschnittsdaten.hatZieldifferentenUnterricht,
+				null,
+				schuelerLernabschnittsdaten.id,
+				schuelerLernabschnittsdaten.fachklasseID,
+				schuelerLernabschnittsdaten.foerderschwerpunkt1ID,
+				schuelerLernabschnittsdaten.foerderschwerpunkt2ID,
+				schuelerLernabschnittsdaten.folgeklassenID,
+				schuelerLernabschnittsdaten.jahrgangID,
+				schuelerLernabschnittsdaten.klassenID,
+				schuelerLernabschnittsdaten.schuelerID,
+				schuelerLernabschnittsdaten.schuljahresabschnitt,
+				schuelerLernabschnittsdaten.schwerpunktID,
+				schuelerLernabschnittsdaten.sonderpaedagogeID,
+				schuelerLernabschnittsdaten.tutorID,
+				schuelerLernabschnittsdaten.istAbschlussPrognose,
+				schuelerLernabschnittsdaten.istFachpraktischerAnteilAusreichend,
+				schuelerLernabschnittsdaten.istGewertet,
+				schuelerLernabschnittsdaten.istWiederholung,
+				null,
+				schuelerLernabschnittsdaten.Klassenart,
+				null,
+				null,
+				schuelerLernabschnittsdaten.noteDurchschnitt,
+				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
+				schuelerLernabschnittsdaten.noteLernbereichNW,
+				schuelerLernabschnittsdaten.organisationsform,
+				schuelerLernabschnittsdaten.pruefungsOrdnung,
+				null,
+				schuelerLernabschnittsdaten.schulgliederung,
+				null,
+				null,
+				schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus,
+				null,
+				schuelerLernabschnittsdaten.bemerkungen.uebergangESF,
+				schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung,
+				schuelerLernabschnittsdaten.versetzungsvermerk,
+				schuelerLernabschnittsdaten.wechselNr,
+				schuelerLernabschnittsdaten.zeugnisart,
+				schuelerLernabschnittsdaten.bemerkungen.zeugnisASV,
+				schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE,
+				schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein,
+				schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
 
 		this.reportingRepository = reportingRepository;
 		super.setFoerderschwerpunkt1(this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID));
 		super.setFoerderschwerpunkt2(this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID));
-    }
+	}
 
 
 	/**
@@ -142,18 +142,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse folgeklasse() {
-		if (super.folgeklasse() == null && super.idFolgeklasse() != null && super.idFolgeklasse() >= 0) {
+		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
 			super.setFolgeklasse(
-				new ProxyReportingKlasse(
-					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
-						try {
-							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new KlassenDaten();
-						}
-					})));
+					new ProxyReportingKlasse(
+							reportingRepository,
+							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
+								try {
+									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new KlassenDaten();
+								}
+							})));
 		}
 		return super.folgeklasse();
 	}
@@ -164,18 +164,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingJahrgang jahrgang() {
-		if (super.jahrgang() == null && super.idJahrgang() != null && super.idJahrgang() >= 0) {
+		if ((super.jahrgang() == null) && (super.idJahrgang() != null) && (super.idJahrgang() >= 0)) {
 			super.setJahrgang(
-				new ProxyReportingJahrgang(
-					reportingRepository,
-					reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
-						try {
-							return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new JahrgangsDaten();
-						}
-					})));
+					new ProxyReportingJahrgang(
+							reportingRepository,
+							reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
+								try {
+									return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new JahrgangsDaten();
+								}
+							})));
 		}
 		return super.jahrgang();
 	}
@@ -186,18 +186,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse klasse() {
-		if (super.klasse() == null && super.idKlasse() != null && super.idKlasse() >= 0) {
+		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
 			super.setKlasse(
-				new ProxyReportingKlasse(
-					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
-						try {
-							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new KlassenDaten();
-						}
-					})));
+					new ProxyReportingKlasse(
+							reportingRepository,
+							reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
+								try {
+									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new KlassenDaten();
+								}
+							})));
 		}
 		return super.klasse();
 	}
@@ -212,18 +212,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingSchueler schueler() {
-		if (super.schueler() == null && super.idSchueler() >= 0) {
+		if ((super.schueler() == null) && (super.idSchueler() >= 0)) {
 			super.setSchueler(
-				new ProxyReportingSchueler(
-					reportingRepository,
-					reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
-						try {
-							return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new SchuelerStammdaten();
-						}
-					})));
+					new ProxyReportingSchueler(
+							reportingRepository,
+							reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
+								try {
+									return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new SchuelerStammdaten();
+								}
+							})));
 		}
 		return super.schueler();
 	}
@@ -234,9 +234,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		if (super.schuljahresabschnitt() == null && super.idSchuljahresabschnitt()  >= 0) {
+		if ((super.schuljahresabschnitt() == null) && (super.idSchuljahresabschnitt() >= 0)) {
 			super.setSchuljahresabschnitt(
-				new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt())));
+					new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt())));
 		}
 		return super.schuljahresabschnitt();
 	}
@@ -248,18 +248,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingLehrer sonderpaedagoge() {
-		if (super.sonderpaedagoge() == null && super.idSonderpaedagoge() != null  &&  super.idSonderpaedagoge() >= 0) {
+		if ((super.sonderpaedagoge() == null) && (super.idSonderpaedagoge() != null) && (super.idSonderpaedagoge() >= 0)) {
 			super.setSonderpaedagoge(
-				new ProxyReportingLehrer(
-					reportingRepository,
-					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
-						try {
-							return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new LehrerStammdaten();
-						}
-					})));
+					new ProxyReportingLehrer(
+							reportingRepository,
+							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
+								try {
+									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new LehrerStammdaten();
+								}
+							})));
 		}
 		return super.sonderpaedagoge();
 	}
@@ -270,18 +270,18 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingLehrer tutor() {
-		if (super.tutor() == null && super.idTutor() >= 0) {
+		if ((super.tutor() == null) && (super.idTutor() >= 0)) {
 			super.setTutor(
-				new ProxyReportingLehrer(
-					reportingRepository,
-					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
-						try {
-							return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
-						} catch (final ApiOperationException e) {
-							e.printStackTrace();
-							return new LehrerStammdaten();
-						}
-					})));
+					new ProxyReportingLehrer(
+							reportingRepository,
+							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
+								try {
+									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
+								} catch (final ApiOperationException e) {
+									e.printStackTrace();
+									return new LehrerStammdaten();
+								}
+							})));
 		}
 		return super.tutor();
 	}

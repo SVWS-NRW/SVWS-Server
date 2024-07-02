@@ -41,32 +41,33 @@ public class ProxyReportingSchule extends ReportingSchule {
 	 */
 	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
 		super(null,
-			reportingRepository.schulstammdaten().anzJGS_Jahr,
-			reportingRepository.schulstammdaten().schuleAbschnitte.anzahlAbschnitte,
-			reportingRepository.schulstammdaten().bezeichnung1,
-			reportingRepository.schulstammdaten().bezeichnung2,
-			reportingRepository.schulstammdaten().bezeichnung3,
-			reportingRepository.schulstammdaten().schuleAbschnitte.abschnittBez,
-			reportingRepository.schulstammdaten().schuleAbschnitte.bezAbschnitte,
-			reportingRepository.schulstammdaten().dauerUnterrichtseinheit,
-			reportingRepository.schulstammdaten().email,
-			reportingRepository.schulstammdaten().fax,
-			reportingRepository.schulstammdaten().hausnummer,
-			reportingRepository.schulstammdaten().hausnummerZusatz,
-			reportingRepository.schulstammdaten().ort,
-			reportingRepository.schulstammdaten().plz,
-			null,
-			reportingRepository.schulstammdaten().schulform,
-			null,
-			reportingRepository.schulstammdaten().schulNr,
-			reportingRepository.schulstammdaten().strassenname,
-			reportingRepository.schulstammdaten().telefon,
-			reportingRepository.schulstammdaten().webAdresse);
+				reportingRepository.schulstammdaten().anzJGS_Jahr,
+				reportingRepository.schulstammdaten().schuleAbschnitte.anzahlAbschnitte,
+				reportingRepository.schulstammdaten().bezeichnung1,
+				reportingRepository.schulstammdaten().bezeichnung2,
+				reportingRepository.schulstammdaten().bezeichnung3,
+				reportingRepository.schulstammdaten().schuleAbschnitte.abschnittBez,
+				reportingRepository.schulstammdaten().schuleAbschnitte.bezAbschnitte,
+				reportingRepository.schulstammdaten().dauerUnterrichtseinheit,
+				reportingRepository.schulstammdaten().email,
+				reportingRepository.schulstammdaten().fax,
+				reportingRepository.schulstammdaten().hausnummer,
+				reportingRepository.schulstammdaten().hausnummerZusatz,
+				reportingRepository.schulstammdaten().ort,
+				reportingRepository.schulstammdaten().plz,
+				null,
+				reportingRepository.schulstammdaten().schulform,
+				null,
+				reportingRepository.schulstammdaten().schulNr,
+				reportingRepository.schulstammdaten().strassenname,
+				reportingRepository.schulstammdaten().telefon,
+				reportingRepository.schulstammdaten().webAdresse);
 
-		    this.reportingRepository = reportingRepository;
-			super.setSchullogo(new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64());
-			super.setSchuljahresabschnitte(this.reportingRepository.mapSchuljahresabschnitte().values().stream().map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList());
-			super.setAktuellerSchuljahresabschnitt(new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt()));
+		this.reportingRepository = reportingRepository;
+		super.setSchullogo(new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64());
+		super.setSchuljahresabschnitte(this.reportingRepository.mapSchuljahresabschnitte().values().stream()
+				.map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList());
+		super.setAktuellerSchuljahresabschnitt(new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt()));
 	}
 
 

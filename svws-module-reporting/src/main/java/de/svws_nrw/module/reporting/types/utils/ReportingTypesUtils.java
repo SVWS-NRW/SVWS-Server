@@ -27,7 +27,7 @@ public final class ReportingTypesUtils {
 		Die folgende Übertragung der Felder ist nur dann sicher möglich, wenn das Quellobjekt auf eine
 		übergeordnete Klasse des Zielobjektes ist. Prüfe dies zunächst. Andernfalls wird die Methode abgebrochen.
 		*/
-		if (Quellobjekt == null || Zielobjekt == null)
+		if ((Quellobjekt == null) || (Zielobjekt == null))
 			return;
 
 		final Class<?> klasseQuelle = Quellobjekt.getClass();
@@ -41,7 +41,7 @@ public final class ReportingTypesUtils {
 			ob darin die Klasse des Quellobjektes enthalten ist.
 			*/
 			Class<?> klassePruefung = klasseZiel;
-			while (!istQuelleSuperklasseVonZiel && klassePruefung != null && klassePruefung != Object.class) {
+			while (!istQuelleSuperklasseVonZiel && (klassePruefung != null) && (klassePruefung != Object.class)) {
 				klassePruefung = klassePruefung.getSuperclass();
 				istQuelleSuperklasseVonZiel = (klassePruefung == klasseQuelle);
 			}

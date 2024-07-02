@@ -45,38 +45,39 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	 */
 	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
 		super(abiturdaten.abiturjahr,
-			abiturdaten.besondereLernleistung,
-			null,
-			abiturdaten.besondereLernleistungThema,
-			abiturdaten.bewertetesHalbjahr,
-			abiturdaten.bilingualeSprache,
-			abiturdaten.block1AnzahlKurse,
-			abiturdaten.block1DefiziteGesamt,
-			abiturdaten.block1DefiziteLK,
-			abiturdaten.block1FehlstundenGesamt,
-			abiturdaten.block1FehlstundenUnentschuldigt,
-			abiturdaten.block1NotenpunkteDurchschnitt,
-			abiturdaten.block1PunktSummeGK,
-			abiturdaten.block1PunktSummeLK,
-			abiturdaten.block1PunktSummeNormiert,
-			abiturdaten.block1Zulassung,
-			abiturdaten.block2DefiziteGesamt,
-			abiturdaten.block2DefiziteLK,
-			abiturdaten.block2PunktSumme,
-			new ArrayList<>(),
-			abiturdaten.freiwilligerRuecktritt,
-			abiturdaten.gesamtPunkte,
-			abiturdaten.gesamtPunkteVerbesserung,
-			abiturdaten.gesamtPunkteVerschlechterung,
-			abiturdaten.note,
-			abiturdaten.projektKursThema,
-			abiturdaten.pruefungBestanden,
-			abiturdaten.schuljahrAbitur);
+				abiturdaten.besondereLernleistung,
+				null,
+				abiturdaten.besondereLernleistungThema,
+				abiturdaten.bewertetesHalbjahr,
+				abiturdaten.bilingualeSprache,
+				abiturdaten.block1AnzahlKurse,
+				abiturdaten.block1DefiziteGesamt,
+				abiturdaten.block1DefiziteLK,
+				abiturdaten.block1FehlstundenGesamt,
+				abiturdaten.block1FehlstundenUnentschuldigt,
+				abiturdaten.block1NotenpunkteDurchschnitt,
+				abiturdaten.block1PunktSummeGK,
+				abiturdaten.block1PunktSummeLK,
+				abiturdaten.block1PunktSummeNormiert,
+				abiturdaten.block1Zulassung,
+				abiturdaten.block2DefiziteGesamt,
+				abiturdaten.block2DefiziteLK,
+				abiturdaten.block2PunktSumme,
+				new ArrayList<>(),
+				abiturdaten.freiwilligerRuecktritt,
+				abiturdaten.gesamtPunkte,
+				abiturdaten.gesamtPunkteVerbesserung,
+				abiturdaten.gesamtPunkteVerschlechterung,
+				abiturdaten.note,
+				abiturdaten.projektKursThema,
+				abiturdaten.pruefungBestanden,
+				abiturdaten.schuljahrAbitur);
 		this.reportingRepository = reportingRepository;
 
 		super.setBesondereLernleistungNote(Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel));
 
-		super.fachbelegungen().addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, f)).toList());
+		super.fachbelegungen()
+				.addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, f)).toList());
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}

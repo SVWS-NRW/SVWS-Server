@@ -49,7 +49,10 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 	 * @param kurse						Eine Liste vom Typ Kurse, die alle Kurse der Schiene und deren Daten enthält.
 	 * @param nummer					Die Nummer der Schiene.
 	 */
-	public ProxyReportingGostKursplanungSchiene(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final String bezeichnung, final boolean hatKollisionen, final Long id, final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen, final List<ReportingGostKursplanungKurs> kurse, final int nummer) {
+	public ProxyReportingGostKursplanungSchiene(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis,
+			final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final String bezeichnung, final boolean hatKollisionen, final Long id,
+			final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen, final List<ReportingGostKursplanungKurs> kurse,
+			final int nummer) {
 		super(anzahlDummy, anzahlExterne, anzahlSchueler, bezeichnung, hatKollisionen, id, idsKurseMitKollisionen, idsSchuelerMitKollisionen, kurse, nummer);
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
@@ -62,11 +65,11 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 	 */
 	@Override
 	public List<ReportingGostKursplanungKurs> kurse() {
-		if (super.kurse() == null || super.kurse().isEmpty()) {
+		if ((super.kurse() == null) || super.kurse().isEmpty()) {
 			super.kurse().addAll(reportingGostKursplanungBlockungsergebnis.kurse()
-				.stream()
-				.filter(k -> k.schienen().stream().anyMatch(s -> s.id() == this.id()))
-				.toList());
+					.stream()
+					.filter(k -> k.schienen().stream().anyMatch(s -> s.id() == this.id()))
+					.toList());
 		}
 		return super.kurse();
 	}

@@ -66,14 +66,14 @@ public final class ReportingFactory {
 	public Response createReportResponse() {
 
 		try {
-            return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
-                case ReportingAusgabeformat.HTML ->	new HtmlFactory(conn, reportingParameter, logger, log).createHtmlResponse();
-                case ReportingAusgabeformat.PDF ->	{
-						final HtmlFactory htmlFactory = new HtmlFactory(conn, reportingParameter, logger, log);
-						yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingParameter, logger, log).createPdfResponse();
-					}
-                case null -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein bekanntes Ausgabeformat übergeben.");
-            };
+			return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
+				case ReportingAusgabeformat.HTML -> new HtmlFactory(conn, reportingParameter, logger, log).createHtmlResponse();
+				case ReportingAusgabeformat.PDF -> {
+					final HtmlFactory htmlFactory = new HtmlFactory(conn, reportingParameter, logger, log);
+					yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingParameter, logger, log).createPdfResponse();
+				}
+				case null -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein bekanntes Ausgabeformat übergeben.");
+			};
 		} catch (final Exception e) {
 			return new ReportingErrorResponse(e, logger, log).getResponse();
 		}

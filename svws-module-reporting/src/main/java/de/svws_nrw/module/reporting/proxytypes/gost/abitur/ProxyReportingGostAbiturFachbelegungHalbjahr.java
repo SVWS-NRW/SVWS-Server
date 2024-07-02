@@ -43,25 +43,25 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param abiturFachbelegungHalbjahr Daten-Objekt der Halbjahresfachbelegungen aus der Datenbank
 	 */
-	public ProxyReportingGostAbiturFachbelegungHalbjahr(final ReportingRepository reportingRepository, final AbiturFachbelegungHalbjahr abiturFachbelegungHalbjahr) {
+	public ProxyReportingGostAbiturFachbelegungHalbjahr(final ReportingRepository reportingRepository,
+			final AbiturFachbelegungHalbjahr abiturFachbelegungHalbjahr) {
 		super(abiturFachbelegungHalbjahr.biliSprache,
-			abiturFachbelegungHalbjahr.block1gewertet,
-			abiturFachbelegungHalbjahr.block1kursAufZeugnis,
-			abiturFachbelegungHalbjahr.fehlstundenGesamt,
-			abiturFachbelegungHalbjahr.fehlstundenUnentschuldigt,
-			abiturFachbelegungHalbjahr.halbjahrKuerzel,
-			abiturFachbelegungHalbjahr.schriftlich,
-			abiturFachbelegungHalbjahr.kursartKuerzel,
-			null,
-			null,
-			abiturFachbelegungHalbjahr.wochenstunden);
+				abiturFachbelegungHalbjahr.block1gewertet,
+				abiturFachbelegungHalbjahr.block1kursAufZeugnis,
+				abiturFachbelegungHalbjahr.fehlstundenGesamt,
+				abiturFachbelegungHalbjahr.fehlstundenUnentschuldigt,
+				abiturFachbelegungHalbjahr.halbjahrKuerzel,
+				abiturFachbelegungHalbjahr.schriftlich,
+				abiturFachbelegungHalbjahr.kursartKuerzel,
+				null,
+				null,
+				abiturFachbelegungHalbjahr.wochenstunden);
 		this.reportingRepository = reportingRepository;
 
 		super.setNote(Note.fromKuerzel(abiturFachbelegungHalbjahr.notenkuerzel));
 
 		if (abiturFachbelegungHalbjahr.lehrer != null) {
-			super.setLehrer(
-				new ProxyReportingLehrer(
+			super.setLehrer(new ProxyReportingLehrer(
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
 						try {

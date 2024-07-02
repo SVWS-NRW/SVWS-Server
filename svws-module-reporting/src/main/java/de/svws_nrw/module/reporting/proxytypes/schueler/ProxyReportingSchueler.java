@@ -63,58 +63,58 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	public ProxyReportingSchueler(final ReportingRepository reportingRepository, final SchuelerStammdaten schuelerStammdaten) {
 		super(null,
-			schuelerStammdaten.anmeldedatum,
-			schuelerStammdaten.aufnahmedatum,
-			null,
-			schuelerStammdaten.druckeKonfessionAufZeugnisse,
-			schuelerStammdaten.emailPrivat,
-			schuelerStammdaten.emailSchule,
-			schuelerStammdaten.erhaeltMeisterBAFOEG,
-			schuelerStammdaten.erhaeltSchuelerBAFOEG,
-			schuelerStammdaten.externeSchulNr,
-			schuelerStammdaten.fahrschuelerArtID,
-			schuelerStammdaten.foto,
-			schuelerStammdaten.geburtsdatum,
-			schuelerStammdaten.geburtsland,
-			schuelerStammdaten.geburtslandMutter,
-			schuelerStammdaten.geburtslandVater,
-			schuelerStammdaten.geburtsname,
-			schuelerStammdaten.geburtsort,
-			Geschlecht.fromValue(schuelerStammdaten.geschlecht),
-			null,
-			new ArrayList<>(),
-			null,
-			schuelerStammdaten.haltestelleID,
-			schuelerStammdaten.hatMasernimpfnachweis,
-			schuelerStammdaten.hatMigrationshintergrund,
-			schuelerStammdaten.hausnummer,
-			schuelerStammdaten.hausnummerZusatz,
-			schuelerStammdaten.id,
-			schuelerStammdaten.istBerufsschulpflichtErfuellt,
-			schuelerStammdaten.istDuplikat,
-			schuelerStammdaten.istSchulpflichtErfuellt,
-			schuelerStammdaten.istVolljaehrig,
-			schuelerStammdaten.keineAuskunftAnDritte,
-			new ArrayList<>(),
-			schuelerStammdaten.nachname,
-			schuelerStammdaten.religionabmeldung,
-			schuelerStammdaten.religionanmeldung,
-			null,
-			null,
-			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
-			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
-			SchuelerStatus.fromID(schuelerStammdaten.status),
-			schuelerStammdaten.strassenname,
-			schuelerStammdaten.telefon,
-			schuelerStammdaten.telefonMobil,
-			schuelerStammdaten.verkehrspracheFamilie,
-			schuelerStammdaten.vorname,
-			schuelerStammdaten.alleVornamen,
-			schuelerStammdaten.wohnortID != null ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
-			"",
-			schuelerStammdaten.ortsteilID != null ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
-			"",
-			schuelerStammdaten.zuzugsjahr);
+				schuelerStammdaten.anmeldedatum,
+				schuelerStammdaten.aufnahmedatum,
+				null,
+				schuelerStammdaten.druckeKonfessionAufZeugnisse,
+				schuelerStammdaten.emailPrivat,
+				schuelerStammdaten.emailSchule,
+				schuelerStammdaten.erhaeltMeisterBAFOEG,
+				schuelerStammdaten.erhaeltSchuelerBAFOEG,
+				schuelerStammdaten.externeSchulNr,
+				schuelerStammdaten.fahrschuelerArtID,
+				schuelerStammdaten.foto,
+				schuelerStammdaten.geburtsdatum,
+				schuelerStammdaten.geburtsland,
+				schuelerStammdaten.geburtslandMutter,
+				schuelerStammdaten.geburtslandVater,
+				schuelerStammdaten.geburtsname,
+				schuelerStammdaten.geburtsort,
+				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
+				null,
+				new ArrayList<>(),
+				null,
+				schuelerStammdaten.haltestelleID,
+				schuelerStammdaten.hatMasernimpfnachweis,
+				schuelerStammdaten.hatMigrationshintergrund,
+				schuelerStammdaten.hausnummer,
+				schuelerStammdaten.hausnummerZusatz,
+				schuelerStammdaten.id,
+				schuelerStammdaten.istBerufsschulpflichtErfuellt,
+				schuelerStammdaten.istDuplikat,
+				schuelerStammdaten.istSchulpflichtErfuellt,
+				schuelerStammdaten.istVolljaehrig,
+				schuelerStammdaten.keineAuskunftAnDritte,
+				new ArrayList<>(),
+				schuelerStammdaten.nachname,
+				schuelerStammdaten.religionabmeldung,
+				schuelerStammdaten.religionanmeldung,
+				null,
+				null,
+				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
+				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
+				SchuelerStatus.fromID(schuelerStammdaten.status),
+				schuelerStammdaten.strassenname,
+				schuelerStammdaten.telefon,
+				schuelerStammdaten.telefonMobil,
+				schuelerStammdaten.verkehrspracheFamilie,
+				schuelerStammdaten.vorname,
+				schuelerStammdaten.alleVornamen,
+				schuelerStammdaten.wohnortID != null ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
+				"",
+				schuelerStammdaten.ortsteilID != null ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
+				"",
+				schuelerStammdaten.zuzugsjahr);
 
 		this.reportingRepository = reportingRepository;
 
@@ -123,7 +123,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		super.setWohnortsteilname(super.wohnortsteil() != null ? super.wohnortsteil().ortsteil : "");
 
 		final List<Sprachbelegung> sprachbelegungen = new DataSchuelerSprachbelegung(reportingRepository.conn(), super.id()).getListSprachbelegungen();
-		super.setSprachbelegungen(sprachbelegungen.stream().map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList());
+		super.setSprachbelegungen(sprachbelegungen.stream()
+				.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList());
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapSchuelerStammdaten().putIfAbsent(super.id(), schuelerStammdaten);
@@ -149,16 +150,17 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
 		if (super.aktuellerLernabschnitt() == null) {
 			if (this.reportingRepository.mapAktuelleLernabschnittsdaten().containsKey(this.id())) {
-				super.setAktuellerLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id())));
+				super.setAktuellerLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository,
+						this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id())));
 			} else {
 				if (!lernabschnitte().isEmpty()) {
 					if (lernabschnitte().size() == 1) {
 						super.setAktuellerLernabschnitt(lernabschnitte().getFirst());
 					} else {
 						super.setAktuellerLernabschnitt(lernabschnitte().stream()
-							.filter(a -> a.wechselNr() == 0)
-							.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
-							.getFirst());
+								.filter(a -> a.wechselNr() == 0)
+								.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
+								.getFirst());
 					}
 				}
 			}
@@ -174,16 +176,17 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
 		if (super.auswahlLernabschnitt() == null) {
 			if (this.reportingRepository.mapAuswahlLernabschnittsdaten().containsKey(this.id())) {
-				super.setAuswahlLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, this.reportingRepository.mapAuswahlLernabschnittsdaten().get(this.id())));
+				super.setAuswahlLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository,
+						this.reportingRepository.mapAuswahlLernabschnittsdaten().get(this.id())));
 			} else {
 				if (!lernabschnitte().isEmpty()) {
 					if (lernabschnitte().size() == 1) {
 						super.setAuswahlLernabschnitt(lernabschnitte().getFirst());
 					} else {
 						super.setAuswahlLernabschnitt(lernabschnitte().stream()
-							.filter(a -> a.wechselNr() == 0)
-							.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList()
-							.getFirst());
+								.filter(a -> a.wechselNr() == 0)
+								.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList()
+								.getFirst());
 					}
 				}
 			}
@@ -202,13 +205,15 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingSchuelerGostAbitur gostAbitur() throws ApiOperationException {
 		if (super.gostAbitur() == null) {
 			if (this.reportingRepository.mapGostSchuelerAbiturdaten().containsKey(this.id())) {
-				super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id())));
+				super.setGostAbitur(
+						new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id())));
 			} else {
 				try {
 					final Abiturdaten abiturdaten = DBUtilsGostAbitur.getAbiturdaten(this.reportingRepository.conn(), this.id());
 					super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten));
 				} catch (final ApiOperationException aoe) {
-					throw new ApiOperationException(Status.NOT_FOUND, aoe, "Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
+					throw new ApiOperationException(Status.NOT_FOUND, aoe,
+							"Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
 				}
 			}
 		}
@@ -242,7 +247,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		if (super.lernabschnitte().isEmpty()) {
 			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new ArrayList<>();
 			try {
-				schuelerLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true));
+				schuelerLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
+						.getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true));
 			} catch (final ApiOperationException e) {
 				e.printStackTrace();
 			}
@@ -253,32 +259,33 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				return super.lernabschnitte();
 			}
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
-				.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
-				.sorted(Comparator
-					.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
-					.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
-					.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
-				.toList());
+					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
+					.sorted(Comparator
+							.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
+							.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
+							.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
+					.toList());
 			// Aktuellen Lernabschnitt in der Map im Repository speichern. Gibt es nur einen Abschnitt, dann wird dieser gespeichert, andernfalls der mit WechselNr. 0 im aktuellen Schuljahresabschnitt.
 			if (schuelerLernabschnittsdaten.size() == 1) {
 				this.reportingRepository.mapAktuelleLernabschnittsdaten()
-					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
-				if (reportingRepository.reportingParameter().idSchuljahresabschnitt == reportingRepository.mapAktuelleLernabschnittsdaten().get(super.id()).schuljahresabschnitt)
-					this.reportingRepository.mapAuswahlLernabschnittsdaten()
 						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
+				if (reportingRepository.reportingParameter().idSchuljahresabschnitt == reportingRepository.mapAktuelleLernabschnittsdaten()
+						.get(super.id()).schuljahresabschnitt)
+					this.reportingRepository.mapAuswahlLernabschnittsdaten()
+							.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
 			} else {
 				this.reportingRepository.mapAktuelleLernabschnittsdaten()
-					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
-						.filter(a -> a.wechselNr == 0)
-						.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
-						.toList()
-						.getFirst());
+						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
+								.filter(a -> a.wechselNr == 0)
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
+								.toList()
+								.getFirst());
 				this.reportingRepository.mapAuswahlLernabschnittsdaten()
-					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
-						.filter(a -> a.wechselNr == 0)
-						.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id)
-						.toList()
-						.getFirst());
+						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
+								.filter(a -> a.wechselNr == 0)
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id)
+								.toList()
+								.getFirst());
 			}
 		}
 		return super.lernabschnitte();

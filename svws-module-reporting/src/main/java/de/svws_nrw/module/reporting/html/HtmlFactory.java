@@ -66,7 +66,8 @@ public final class HtmlFactory {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlFactory(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log) throws ApiOperationException {
+	public HtmlFactory(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
+			throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
@@ -101,10 +102,11 @@ public final class HtmlFactory {
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
 		this.logger.logLn("Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
 		if (!conn.getUser().pruefeKompetenz(new HashSet<>(htmlTemplateDefinition.getBenutzerKompetenzen())))
-			throw new ApiOperationException(Status.FORBIDDEN, "Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 
 		// Validiere Hauptdaten-Angabe
-		if (reportingParameter.idsHauptdaten == null || reportingParameter.idsHauptdaten.isEmpty())
+		if ((reportingParameter.idsHauptdaten == null) || reportingParameter.idsHauptdaten.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Daten zum Drucken übergeben.");
 
 		// Setze Werte nach Validierung, falls null.
@@ -133,17 +135,22 @@ public final class HtmlFactory {
 
 		// Betrachte die Html-Template-Definition und erzeuge damit die korrekten Contexts der Hauptdaten
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
-			case "SCHUELER" :
+			case "SCHUELER":
 				// Schüler-Context ist Hauptdatenquelle
-				logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s.".formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
-				reportingValidierung.validiereSchuelerDaten(reportingRepository, reportingParameter.idsHauptdaten, htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"), htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
+				logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s."
+						.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				reportingValidierung.validiereSchuelerDaten(reportingRepository, reportingParameter.idsHauptdaten,
+						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"),
+						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
 				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
 				mapHtmlContexts.put("Schueler", htmlContextSchueler);
 				break;
-			case "GOST_KURSPLANUNG" :
+			case "GOST_KURSPLANUNG":
 				// GOSt-Kursplanung-Blockungsergebnis-Context ist Hauptdatenquelle
-				logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s.".formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
-				final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, reportingRepository);
+				logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s."
+						.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
+				final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung =
+						new HtmlContextGostKursplanungBlockungsergebnis(conn, reportingRepository);
 				mapHtmlContexts.put("Blockungsergebnis", htmlContextBlockung);
 				break;
 			default:
@@ -176,7 +183,7 @@ public final class HtmlFactory {
 		try {
 			final List<HtmlBuilder> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
-				if (!reportingParameter.einzelausgabeHauptdaten || htmlBuilders.size() == 1) {
+				if (!reportingParameter.einzelausgabeHauptdaten || (htmlBuilders.size() == 1)) {
 					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlBuilders.getFirst().getDateiname(), StandardCharsets.UTF_8);
 					return Response.ok(htmlBuilders.getFirst().getHtml(), "text/html").header("Content-Disposition", "attachment; " + encodedFilename).build();
 				}
@@ -213,7 +220,8 @@ public final class HtmlFactory {
 
 			// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
 			logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
-			htmlBuilders.add(new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(), dateiname));
+			htmlBuilders.add(
+					new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(), dateiname));
 		} else if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
 			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
 			logger.logLn("Erzeuge einzelne Kontexte für jeden Schüler, da einzelne Dateien angefordert wurden.");
@@ -228,7 +236,8 @@ public final class HtmlFactory {
 
 				// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
 				logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
-				htmlBuilders.add(new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(), dateiname));
+				htmlBuilders.add(new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
+						dateiname));
 			}
 		}
 
@@ -252,11 +261,14 @@ public final class HtmlFactory {
 		String dateiname = htmlTemplateDefinition.getDateiname();
 
 		if (!htmlTemplateDefinition.getDateinamensvorlage().isEmpty() && !htmlTemplateDefinition.getDateinamensvorlage().isBlank()) {
-			final HtmlBuilder htmlBuilder = new HtmlBuilder(htmlTemplateDefinition.getDateinamensvorlage(), mapHtmlContexts.values().stream().toList(), dateiname);
+			final HtmlBuilder htmlBuilder =
+					new HtmlBuilder(htmlTemplateDefinition.getDateinamensvorlage(), mapHtmlContexts.values().stream().toList(), dateiname);
 			final String html = htmlBuilder.getHtml();
 
-			if (html == null || html.isEmpty() || html.isBlank() || !html.contains("<p>") || !html.contains("</p>") || (html.indexOf("<p>") + 3) >= html.indexOf("</p>"))
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Dateiname konnte nicht gemäß des angegebenen Musters aus den Daten generiert werden.");
+			if ((html == null) || html.isEmpty() || html.isBlank() || !html.contains("<p>") || !html.contains("</p>")
+					|| ((html.indexOf("<p>") + 3) >= html.indexOf("</p>")))
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Der Dateiname konnte nicht gemäß des angegebenen Musters aus den Daten generiert werden.");
 
 			dateiname = html.substring(html.indexOf("<p>") + 3, html.indexOf("</p>"));
 		}
@@ -286,7 +298,7 @@ public final class HtmlFactory {
 		try {
 			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-					for (final HtmlBuilder htmlBuilder: htmlBuilders) {
+					for (final HtmlBuilder htmlBuilder : htmlBuilders) {
 						zos.putNextEntry(new ZipEntry(htmlBuilder.getDateinameMitEndung()));
 						zos.write(htmlBuilder.getHtmlByteArray());
 						zos.closeEntry();

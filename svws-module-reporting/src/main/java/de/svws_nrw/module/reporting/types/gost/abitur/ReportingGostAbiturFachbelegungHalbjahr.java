@@ -58,7 +58,9 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 	 * @param note Die erteilte Note.
 	 * @param wochenstunden Die Wochenstundenzahl, mir der das Fach belegt wurde
 	 */
-	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis, final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich, final String kursartKuerzel, final ReportingLehrer lehrer, final Note note, final int wochenstunden) {
+	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis,
+			final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich,
+			final String kursartKuerzel, final ReportingLehrer lehrer, final Note note, final int wochenstunden) {
 		this.bilingualeSprache = bilingualeSprache;
 		this.block1gewertet = block1gewertet;
 		this.block1kursAufZeugnis = block1kursAufZeugnis;

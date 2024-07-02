@@ -27,7 +27,8 @@ public class ProxyReportingGostLaufbahnplanungErgebnismeldung extends ReportingG
 	 * @param kategorie 	Kategorie der Meldung, bspw. Fehler oder Hinweis.
 	 * @param meldung		Text zur Meldung für den Benutzer
 	 */
-	public ProxyReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie, final String meldung) {
+	public ProxyReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie,
+			final String meldung) {
 		super(code, kategorie, meldung);
 	}
 }

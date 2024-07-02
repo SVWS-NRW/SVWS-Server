@@ -27,80 +27,85 @@ public enum HtmlTemplateDefinition {
 
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN(
-		ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN,
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html",
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css",
-		"GOSt-Blockungsergebnis-Kurs-Schueler",
-		"""
-                <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
-        """,
-		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+			ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN,
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html",
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css",
+			"GOSt-Blockungsergebnis-Kurs-Schueler",
+			"""
+			        <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: GOSt - Kursplanung - Schüler - Kurse */
 	GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN(
-		ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN,
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html",
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css",
-		"GOSt-Blockungsergebnis-Schueler-Kurse",
-		"""
-                <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
-        """,
-		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+			ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN,
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html",
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css",
+			"GOSt-Blockungsergebnis-Schueler-Kurse",
+			"""
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: GOSt - Kursplanung - Schüler - Schienen-Kurse */
 	GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN(
-		ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN,
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html",
-		"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css",
-		"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
-		"""
-                <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
-        """,
-		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+			ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN,
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html",
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css",
+			"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
+			"""
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: Schüler - GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) */
 	SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12(
-		ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12,
-		"de/svws_nrw/module/reporting/schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.html",
-		"de/svws_nrw/module/reporting/schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.css",
-		"APO-GOSt-Anlage12",
-		"""
-                <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
-                <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-                    <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
-                    <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
-                </th:block>
-        """,
-		Arrays.asList(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)),
+			ReportingReportvorlage.SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12,
+			"de/svws_nrw/module/reporting/schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.html",
+			"de/svws_nrw/module/reporting/schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12.css",
+			"APO-GOSt-Anlage12",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: Schüler - GOSt - Laufbahnplanung - Ergebnisübersicht */
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT(
-		ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT,
-		"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html",
-		"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.css",
-		"GOSt-Laufbahnplanung-Pruefungsergebnisse",
-		"""
-                <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Pruefungsergebnisse"</p>
-                <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-                    <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '')}"></p>
-                </th:block>
-        """,
-		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+			ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT,
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html",
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.css",
+			"GOSt-Laufbahnplanung-Pruefungsergebnisse",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Pruefungsergebnisse"</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
 	/** Report-Vorlage: Schüler - GOSt - Laufbahnplanung - Wahlbogen */
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN(
-		ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN,
-		"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.html",
-		"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css",
-		"GOSt-Laufbahnplanung-Wahlboegen",
-        """
-                <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Wahlboegen"</p>
-                <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-                    <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
-                    <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
-                </th:block>
-        """,
-		Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN));
+			ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN,
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.html",
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css",
+			"GOSt-Laufbahnplanung-Wahlboegen",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Wahlboegen"</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN));
 
 
 
@@ -133,7 +138,8 @@ public enum HtmlTemplateDefinition {
 	 * @param dateinamensvorlage Die Vorlage für dynamische Generierung des Dateinamens ohne Dateiendung. Sie ist in der Form eines thymeleaf-html-Templates anzulegen.
 	 * @param benutzerKompetenzen Die List mit Benutzerkompetenzen gemäß {@link BenutzerKompetenz}, die zur Nutzung des Templates erforderlich sind.
 	 */
-	HtmlTemplateDefinition(final ReportingReportvorlage reportingReportvorlage, final String pfadHtmlTemplate, final String pfadCss, final String dateiname, final String dateinamensvorlage, final List<BenutzerKompetenz> benutzerKompetenzen) {
+	HtmlTemplateDefinition(final ReportingReportvorlage reportingReportvorlage, final String pfadHtmlTemplate, final String pfadCss, final String dateiname,
+			final String dateinamensvorlage, final List<BenutzerKompetenz> benutzerKompetenzen) {
 		this.reportingReportvorlage = reportingReportvorlage;
 		this.pfadHtmlTemplate = pfadHtmlTemplate;
 		this.pfadCss = pfadCss;
@@ -182,17 +188,17 @@ public enum HtmlTemplateDefinition {
 	 */
 	public String getDateinamensvorlage() {
 		return """
-        <html lang="de" xmlns:th="http://www.thymeleaf.org">
-            <head>
-                <meta charset="utf-8" />
-                <meta name="viewport" content="width=device-width" />
-                <title>Dateinamensdefinition</title>
-            </head>
-            <body>
-                %s
-            </body>
-        </html>
-        """.formatted(this.dateinamensvorlage);
+		<html lang="de" xmlns:th="http://www.thymeleaf.org">
+		    <head>
+		        <meta charset="utf-8" />
+		        <meta name="viewport" content="width=device-width" />
+		        <title>Dateinamensdefinition</title>
+		    </head>
+		    <body>
+		        %s
+		    </body>
+		</html>
+		""".formatted(this.dateinamensvorlage);
 	}
 
 	/**

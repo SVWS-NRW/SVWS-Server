@@ -110,7 +110,11 @@ public class ReportingLehrer {
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Lehrers.
 	 * @param wohnortsteilname Ggf. der Ortsteilname des Wohnortes des Lehrers.
 	 */
-	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailDienstlich, final String emailPrivat, final String foto, final String geburtsdatum, final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel, final String nachname, final String personalTyp, final Nationalitaeten staatsangehoerigkeit, final String strassenname, final String telefon, final String telefonMobil, final String titel, final String vorname, final OrtKatalogEintrag wohnort, final String wohnortname,  final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname) {
+	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailDienstlich, final String emailPrivat, final String foto,
+			final String geburtsdatum, final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel,
+			final String nachname, final String personalTyp, final Nationalitaeten staatsangehoerigkeit, final String strassenname, final String telefon,
+			final String telefonMobil, final String titel, final String vorname, final OrtKatalogEintrag wohnort, final String wohnortname,
+			final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname) {
 		this.amtsbezeichnung = amtsbezeichnung;
 		this.anrede = anrede;
 		this.emailDienstlich = emailDienstlich;
@@ -156,12 +160,12 @@ public class ReportingLehrer {
 	 */
 	public String unterschriftfeld(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
 		return ("%s %s %s%s")
-			.formatted(
-				titel,
-				mitVornameKurz ? vorname.charAt(0) + "." : vorname,
-				nachname,
-				mitAmtsbezeichnung ? ", " + amtsbezeichnung : "")
-			.trim().translateEscapes();
+				.formatted(
+						titel,
+						mitVornameKurz ? vorname.charAt(0) + "." : vorname,
+						nachname,
+						mitAmtsbezeichnung ? ", " + amtsbezeichnung : "")
+				.trim().translateEscapes();
 	}
 
 	/**

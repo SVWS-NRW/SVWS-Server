@@ -98,7 +98,7 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (schueler != null)
-			result =  conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler).stream().map(dtoMapper).toList();
+			result = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler).stream().map(dtoMapper).toList();
 
 		return result;
 	}

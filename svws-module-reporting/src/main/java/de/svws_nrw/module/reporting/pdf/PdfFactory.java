@@ -52,19 +52,20 @@ public final class PdfFactory {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log) throws ApiOperationException {
+	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
+			throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
 
-		if (logger == null || log == null) {
+		if ((logger == null) || (log == null)) {
 			this.logger = new Logger();
 			this.log = new LogConsumerList();
 			this.logger.addConsumer(this.log);
 		}
 
 		// Validiere die htmlBuilders
-		if (htmlBuilders == null || htmlBuilders.isEmpty())
+		if ((htmlBuilders == null) || htmlBuilders.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Html-Dateiinhalte sind nicht vorhanden.");
 
 		this.htmlBuilders = htmlBuilders;
@@ -96,7 +97,7 @@ public final class PdfFactory {
 		try {
 			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
 			if (!pdfBuilders.isEmpty()) {
-				if (!reportingParameter.einzelausgabeHauptdaten || pdfBuilders.size() == 1) {
+				if (!reportingParameter.einzelausgabeHauptdaten || (pdfBuilders.size() == 1)) {
 					return pdfBuilders.getFirst().getPdfResponse();
 				}
 				final byte[] zipData = createZIP(pdfBuilders);

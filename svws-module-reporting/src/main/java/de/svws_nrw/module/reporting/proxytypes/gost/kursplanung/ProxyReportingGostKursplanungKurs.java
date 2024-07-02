@@ -59,8 +59,13 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
-	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
-		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach, gostHalbjahr, gostKursart, id, lehrkraefte, schienen, schueler);
+	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12,
+			final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler,
+			final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr,
+			final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen,
+			final List<ReportingSchueler> schueler) {
+		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach, gostHalbjahr,
+				gostKursart, id, lehrkraefte, schienen, schueler);
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
 
@@ -72,11 +77,11 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 */
 	@Override
 	public List<ReportingGostKursplanungSchiene> schienen() {
-		if (super.schienen() == null || super.schienen().isEmpty()) {
+		if ((super.schienen() == null) || super.schienen().isEmpty()) {
 			super.schienen().addAll(reportingGostKursplanungBlockungsergebnis.schienen()
-				.stream()
-				.filter(s -> s.kurse().stream().anyMatch(k -> k.id() == this.id()))
-				.toList());
+					.stream()
+					.filter(s -> s.kurse().stream().anyMatch(k -> k.id() == this.id()))
+					.toList());
 		}
 		return super.schienen();
 	}
@@ -87,13 +92,13 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 */
 	@Override
 	public List<ReportingSchueler> schueler() {
-		if (super.schueler() == null || super.schueler().isEmpty()) {
+		if ((super.schueler() == null) || super.schueler().isEmpty()) {
 			super.schueler().addAll(reportingGostKursplanungBlockungsergebnis.schueler()
-				.stream()
+					.stream()
 					.filter(s -> s.gostKursplanungKursbelegungen()
-						.stream()
-						.anyMatch(k -> k.kurs().id() == this.id()))
-				.toList());
+							.stream()
+							.anyMatch(k -> k.kurs().id() == this.id()))
+					.toList());
 		}
 		return super.schueler();
 	}

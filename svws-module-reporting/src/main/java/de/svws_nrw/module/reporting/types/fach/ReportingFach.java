@@ -103,7 +103,12 @@ public class ReportingFach {
 	 * @param sortierung Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 * @param statistikfach Das Statistik-Fach des Faches
 	 */
-	public ReportingFach(final String aufgabenfeld, final boolean aufZeugnis, final String bezeichnung, final String bezeichnungUeberweisungszeugnis, final String bezeichnungZeugnis, final String bilingualeSprache, final Fachgruppe fachgruppe, final boolean holeAusAltenLernabschnitten, final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach, final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK, final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierung, final ReportingStatistikFach statistikfach) {
+	public ReportingFach(final String aufgabenfeld, final boolean aufZeugnis, final String bezeichnung, final String bezeichnungUeberweisungszeugnis,
+			final String bezeichnungZeugnis, final String bilingualeSprache, final Fachgruppe fachgruppe, final boolean holeAusAltenLernabschnitten,
+			final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach,
+			final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK,
+			final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierung,
+			final ReportingStatistikFach statistikfach) {
 		this.aufgabenfeld = aufgabenfeld;
 		this.aufZeugnis = aufZeugnis;
 		this.bezeichnung = bezeichnung;
@@ -137,7 +142,8 @@ public class ReportingFach {
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
-		return GostFachbereich.compareFach(ZulaessigesFach.getByKuerzelASD(fach1.statistikfach().kuerzelASD()), ZulaessigesFach.getByKuerzelASD(fach2.statistikfach().kuerzelASD()));
+		return GostFachbereich.compareFach(ZulaessigesFach.getByKuerzelASD(fach1.statistikfach().kuerzelASD()),
+				ZulaessigesFach.getByKuerzelASD(fach2.statistikfach().kuerzelASD()));
 	}
 
 

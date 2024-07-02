@@ -7,7 +7,7 @@ import org.thymeleaf.context.Context;
  */
 public abstract class HtmlContext {
 
-    private Context context;
+	private Context context;
 
 	/**
 	 * Erstellt einen neuen Thymeleaf-Daten-Context
@@ -15,20 +15,20 @@ public abstract class HtmlContext {
 	protected HtmlContext() {
 	}
 
-    /**
+	/**
 	 * Rückgabe des Thymeleaf-Daten-Context
-     * @return Gibt einen Thymeleaf-Daten-Context zurück.
-     */
-    public Context getContext() {
-        return context;
-    }
+	 * @return Gibt einen Thymeleaf-Daten-Context zurück.
+	 */
+	public Context getContext() {
+		return context;
+	}
 
-    /**
-     * Setzen des Thymeleaf-Daten-Context
+	/**
+	 * Setzen des Thymeleaf-Daten-Context
 	 * @param context Thymeleaf-Daten-Context mit den Daten.
-     */
-    public void setContext(final Context context) {
-        this.context = context;
-    }
+	 */
+	public void setContext(final Context context) {
+		this.context = context;
+	}
 
 }

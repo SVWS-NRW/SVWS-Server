@@ -81,8 +81,10 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) throws ApiOperationException {
-		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler)
+			throws ApiOperationException {
+		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0,
+				0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		this.reportingRepository = reportingRepository;
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind an die aus initSchuelerGostLaufbahnplanung.
@@ -93,14 +95,15 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		super.setAbiturjahr(abiturdaten.abiturjahr);
 
 		// Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
-		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> {
-			try {
-				return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
-			} catch (final ApiOperationException e) {
-				e.printStackTrace();
-				return new GostLaufbahnplanungBeratungsdaten();
-			}
-		});
+		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten =
+				this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> {
+					try {
+						return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
+					} catch (final ApiOperationException e) {
+						e.printStackTrace();
+						return new GostLaufbahnplanungBeratungsdaten();
+					}
+				});
 		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> {
 			try {
 				return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
@@ -111,7 +114,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		});
 		if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
 			final GostFaecherManager tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
-			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(), super.abiturjahr()));
+			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(),
+					super.abiturjahr()));
 			this.reportingRepository.mapGostAbiturjahrgangFaecher().put(super.abiturjahr(), tempGostFaecherManager);
 		}
 		final GostFaecherManager gostFaecherManager = this.reportingRepository.mapGostAbiturjahrgangFaecher().get(super.abiturjahr());
@@ -125,11 +129,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		super.setBeratungsbogenText(gostJahrgangsdaten.textBeratungsbogen);
 		super.setEmailText(gostJahrgangsdaten.textMailversand);
 
-		super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.' + this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
+		super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+				+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
 		super.setAktuelleKlasse(reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel());
 		eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
 
-		super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.' + reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
+		super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+				+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
 		super.setAuswahlKlasse(reportingSchueler.auswahlLernabschnitt().klasse().kuerzel());
 		eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
 
@@ -161,8 +167,10 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		super.setWochenstundenDurchschnittEF((super.wochenstundenEF1() + super.wochenstundenEF2()) / 2.0);
 		super.setWochenstundenDurchschnittQ1((super.wochenstundenQ11() + super.wochenstundenQ12()) / 2.0);
 		super.setWochenstundenDurchschnittQ2((super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0);
-		super.setWochenstundenDurchschnittQPh((super.wochenstundenQ11() + super.wochenstundenQ12() + super.wochenstundenQ21() + super.wochenstundenQ22()) / 4.00);
-		super.setWochenstundenGesamt((super.wochenstundenEF1() + super.wochenstundenEF2() + super.wochenstundenQ11() + super.wochenstundenQ12() + super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0);
+		super.setWochenstundenDurchschnittQPh((super.wochenstundenQ11() + super.wochenstundenQ12() + super.wochenstundenQ21() + super.wochenstundenQ22())
+				/ 4.00);
+		super.setWochenstundenGesamt((super.wochenstundenEF1() + super.wochenstundenEF2() + super.wochenstundenQ11() + super.wochenstundenQ12()
+				+ super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0);
 
 		// ##### Fachwahlliste erstellen ###############
 		super.setFachwahlen(getListFachwahlen(abiturdaten, this.reportingRepository.mapGostAbiturjahrgangFaecher().get(abiturdaten.abiturjahr)));
@@ -172,10 +180,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
 			final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 			if (art == GostBelegungsfehlerArt.HINWEIS) {
-				final ReportingGostLaufbahnplanungErgebnismeldung laufbahnplanungHinweis = new ProxyReportingGostLaufbahnplanungErgebnismeldung(f.code, ReportingGostLaufbahnplanungErgebnismeldungKategorie.HINWEIS, f.beschreibung);
+				final ReportingGostLaufbahnplanungErgebnismeldung laufbahnplanungHinweis = new ProxyReportingGostLaufbahnplanungErgebnismeldung(f.code,
+						ReportingGostLaufbahnplanungErgebnismeldungKategorie.HINWEIS, f.beschreibung);
 				super.hinweise().add(laufbahnplanungHinweis);
 			} else {
-				final ReportingGostLaufbahnplanungErgebnismeldung laufbahnplanungFehler = new ProxyReportingGostLaufbahnplanungErgebnismeldung(f.code, ReportingGostLaufbahnplanungErgebnismeldungKategorie.FEHLER, f.beschreibung);
+				final ReportingGostLaufbahnplanungErgebnismeldung laufbahnplanungFehler = new ProxyReportingGostLaufbahnplanungErgebnismeldung(f.code,
+						ReportingGostLaufbahnplanungErgebnismeldungKategorie.FEHLER, f.beschreibung);
 				super.fehler().add(laufbahnplanungFehler);
 			}
 		}
@@ -248,22 +258,21 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
 			super.setLetzteBeratungLehrkraft(new ProxyReportingLehrer(
-				this.reportingRepository,
-				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
-					try {
-						return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
-					} catch (final ApiOperationException e) {
-						e.printStackTrace();
-						return new LehrerStammdaten();
-					}
-				})));
+					this.reportingRepository,
+					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
+						try {
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new LehrerStammdaten();
+						}
+					})));
 		}
 		// Beratungslehrkräfte der Stufe bestimmen aus den GOSt-Daten der Jahrgangsstufe
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
 		if (!beratungslehrer.isEmpty()) {
 			for (final GostBeratungslehrer lehrkraft : beratungslehrer) {
-				super.beratungslehrkraefte().add(
-					new ProxyReportingLehrer(
+				super.beratungslehrkraefte().add(new ProxyReportingLehrer(
 						this.reportingRepository,
 						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> {
 							try {
@@ -286,7 +295,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param sprachbelegungen 		Sprachbelegungen des Schülers aus der Sprachenfolge
 	 * @param sprachpruefungen 		Sprachprüfungen des Schülers
 	 */
-	private void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final ProxyReportingGostLaufbahnplanungFachwahl laufbahnplanungFach, final GostFach fach, final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
+	private void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final ProxyReportingGostLaufbahnplanungFachwahl laufbahnplanungFach, final GostFach fach,
+			final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
 
 		if (!fach.istFremdsprache)
 			return;
@@ -300,10 +310,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 			if (sprachbelegung != null) {
 				if (((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-					&& ((zfach.daten.abJahrgang == null)
-					|| zfach.daten.abJahrgang.isEmpty()
-					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
+						&& ((zfach.daten.abJahrgang == null)
+								|| zfach.daten.abJahrgang.isEmpty()
+								|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
+										&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+								|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
+										&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
 					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
 					laufbahnplanungFach.setFachIstFortfuehrbareFremdspracheInGOSt(true);
 					laufbahnplanungFach.setJahrgangFremdsprachenbeginn(sprachbelegung.belegungVonJahrgang);
@@ -354,14 +366,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
 			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
-				"",
-				"", "",
-				"", "", "", "",
-				reportingRepository.mapReportingFaecher().get(fach.id),
-				false,
-				false,
-				"",
-				""
+					"",
+					"", "",
+					"", "", "", "",
+					reportingRepository.mapReportingFaecher().get(fach.id),
+					false,
+					false,
+					"",
+					""
 			);
 
 			eintragFremdspracheInLaufbahnplanungFachErgaenzen(fachwahl, fach, abiturdaten, sprachbelegungen, sprachpruefungen);

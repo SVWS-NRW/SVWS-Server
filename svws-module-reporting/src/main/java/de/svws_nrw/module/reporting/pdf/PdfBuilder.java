@@ -135,10 +135,18 @@ public class PdfBuilder {
 			final PdfRendererBuilder builder = new PdfRendererBuilder();
 			final String baseURI = Objects.requireNonNull(PDDocument.class.getClassLoader().getResource(ressourcenDateipfad)).toString();
 
-			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Regular.ttf"), "liberation");
-			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Bold.ttf"), "liberation", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
-			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Italic.ttf"), "liberation", 400, BaseRendererBuilder.FontStyle.ITALIC, true);
-			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-BoldItalic.ttf"), "liberation", 700, BaseRendererBuilder.FontStyle.ITALIC, true);
+			builder.useFont(
+					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Regular.ttf"),
+					"liberation");
+			builder.useFont(
+					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Bold.ttf"),
+					"liberation", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
+			builder.useFont(
+					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Italic.ttf"),
+					"liberation", 400, BaseRendererBuilder.FontStyle.ITALIC, true);
+			builder.useFont(
+					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-BoldItalic.ttf"),
+					"liberation", 700, BaseRendererBuilder.FontStyle.ITALIC, true);
 
 			builder.useFastMode();
 			builder.usePDDocument(doc);

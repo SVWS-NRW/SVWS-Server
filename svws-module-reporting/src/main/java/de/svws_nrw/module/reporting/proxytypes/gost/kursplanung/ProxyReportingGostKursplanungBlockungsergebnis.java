@@ -68,7 +68,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-    /** Ergebnismanager des Blockunsgergebnisses. */
+	/** Ergebnismanager des Blockunsgergebnisses. */
 	@JsonIgnore
 	private final GostBlockungsergebnisManager ergebnisManager;
 
@@ -86,7 +86,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 		// Initialisiere das Blockungsergebnis und dessen Manager.
 		final GostBlockungsergebnis blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), id);
-        final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
+		final GostBlockungsdatenManager datenManager =
+				DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
 		ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
 
 		// Sortierungen definieren.
@@ -121,34 +122,34 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		// Füge die neu erzeugten Reporting-Objekte der Schüler der internen Map hinzu, um auf die Schüler im Folgenden direkt zugreifen zu können.
 		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
 		mapBlockungsergebnisSchuelermenge.putAll(schuelerStammdaten
-			.stream()
-			.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
-				reportingRepository,
-				s))
-			.toList()
-			.stream()
-			.collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
+				.stream()
+				.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
+						reportingRepository,
+						s))
+				.toList()
+				.stream()
+				.collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 
 		// Liste der Schienen aus der Blockung einlesen und diese einer internen Map hinzufügen. Dabei werden Schienen ohne Kurse nicht berücksichtigt.
 		final HashMap<Long, ReportingGostKursplanungSchiene> mapBlockungsergebnisSchienenmenge = new HashMap<>();
 		mapBlockungsergebnisSchienenmenge.putAll(datenManager.schieneGetListe()
-			.stream()
-			.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
-			.map(s -> (ReportingGostKursplanungSchiene) new ProxyReportingGostKursplanungSchiene(
-				this,
-				ergebnisManager.getOfSchieneAnzahlSchuelerDummy(s.id),
-				ergebnisManager.getOfSchieneAnzahlSchuelerExterne(s.id),
-				ergebnisManager.getOfSchieneAnzahlSchueler(s.id),
-				s.bezeichnung,
-				ergebnisManager.getOfSchieneHatKollision(s.id),
-				s.id,
-				ergebnisManager.getOfSchieneKursmengeMitKollisionen(s.id).stream().map(k -> k.id).toList(),
-				ergebnisManager.getOfSchieneSchuelermengeMitKollisionen(s.id).stream().toList(),
-				new ArrayList<>(),
-				s.nummer))
-			.toList()
-			.stream()
-			.collect(Collectors.toMap(ReportingGostKursplanungSchiene::id, s -> s)));
+				.stream()
+				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
+				.map(s -> (ReportingGostKursplanungSchiene) new ProxyReportingGostKursplanungSchiene(
+						this,
+						ergebnisManager.getOfSchieneAnzahlSchuelerDummy(s.id),
+						ergebnisManager.getOfSchieneAnzahlSchuelerExterne(s.id),
+						ergebnisManager.getOfSchieneAnzahlSchueler(s.id),
+						s.bezeichnung,
+						ergebnisManager.getOfSchieneHatKollision(s.id),
+						s.id,
+						ergebnisManager.getOfSchieneKursmengeMitKollisionen(s.id).stream().map(k -> k.id).toList(),
+						ergebnisManager.getOfSchieneSchuelermengeMitKollisionen(s.id).stream().toList(),
+						new ArrayList<>(),
+						s.nummer))
+				.toList()
+				.stream()
+				.collect(Collectors.toMap(ReportingGostKursplanungSchiene::id, s -> s)));
 
 		// Liste der Kurse aus der Blockung einlesen.
 		// Dabei werden auch die Kursbelegungen der Schüler und die Kurse bei den Schienen ergänzt.
@@ -156,19 +157,19 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// Liste der Kurslehrer erzeugen.
 			List<ReportingLehrer> kursLehrer = new ArrayList<>();
 			if (!datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty())
-				 kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
-					.stream()
-					.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
-						reportingRepository,
-						reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
-							try {
-								return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id);
-							} catch (final ApiOperationException e) {
-								e.printStackTrace();
-								return new LehrerStammdaten();
-							}
-						})))
-					.toList();
+				kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
+						.stream()
+						.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
+								reportingRepository,
+								reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
+									try {
+										return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id);
+									} catch (final ApiOperationException e) {
+										e.printStackTrace();
+										return new LehrerStammdaten();
+									}
+								})))
+						.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
 			// Darin fehlen die Kurschüler. Diese werden später durch das ProxyKursobjekt nachgeladen (lazy-loading), in dem dort
@@ -176,30 +177,30 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// Zudem fehlen in den Schienen der Schienenliste dieses Kurses die anderen Kurse der Schiene. Auch diese
 			// werden später nachgeladen, in dem das ProxySchienenobjekt alle Kurse durchläuft und deren Schienenzugehörigkeit auswertet.
 			final ReportingGostKursplanungKurs reportingGostKursplanungKurs = new ProxyReportingGostKursplanungKurs(
-				this,
-				ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerAbitur3(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
-				datenManager.kursGetName(kurs.id),
-				reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
-				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
-				GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),
-				kurs.id,
-				kursLehrer,
-				ergebnisManager.getOfKursSchienenmenge(kurs.id).stream().map(s -> mapBlockungsergebnisSchienenmenge.get(s.id)).toList(),
-				new ArrayList<>());
+					this,
+					ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerAbitur3(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
+					datenManager.kursGetName(kurs.id),
+					reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
+					GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
+					GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),
+					kurs.id,
+					kursLehrer,
+					ergebnisManager.getOfKursSchienenmenge(kurs.id).stream().map(s -> mapBlockungsergebnisSchienenmenge.get(s.id)).toList(),
+					new ArrayList<>());
 
 			// Ergänze bei den Schülern die Kursbelegung mit dem neuen Kurs (ohne die Mitschüler des Kurses).
 			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
 				mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
-					.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
-						Objects.toString(ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).abiturfach, ""),
-						ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).istSchriftlich,
-						reportingGostKursplanungKurs));
+						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
+								Objects.toString(ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).abiturfach, ""),
+								ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).istSchriftlich,
+								reportingGostKursplanungKurs));
 			}
 
 			// Füge den neuen Kurs in die Liste der Kurse der entsprechenden Schienen ein.
@@ -211,19 +212,19 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 		// Erstelle eine Liste von Schienen aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
 		datenManager.schieneGetListe()
-			.stream()
-			.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
-			.toList()
-			.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
+				.stream()
+				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
+				.toList()
+				.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
 
 		// Erstelle eine alphabetisch sortierte Liste der Schülermenge aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
 		super.schueler().addAll(mapBlockungsergebnisSchuelermenge.values()
-			.stream()
-			.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
-				.thenComparing(ReportingSchueler::vorname, colGerman)
-				.thenComparing(ReportingSchueler::vornamen, colGerman)
-				.thenComparing(ReportingSchueler::id))
-			.toList());
+				.stream()
+				.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
+						.thenComparing(ReportingSchueler::vorname, colGerman)
+						.thenComparing(ReportingSchueler::vornamen, colGerman)
+						.thenComparing(ReportingSchueler::id))
+				.toList());
 	}
 
 
@@ -245,17 +246,19 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 */
 	@Override
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
-		if (super.fachwahlstatistik() == null || super.fachwahlstatistik().isEmpty()) {
+		if ((super.fachwahlstatistik() == null) || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
+			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen =
+					new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
 			try {
 				final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
 				if ((gostFachwahlenStatistik != null) && (!gostFachwahlenStatistik.isEmpty())) {
 					mapFachwahlStatistik.putAll(
-						gostFachwahlenStatistik.stream().collect(
-							Collectors.toMap(
-								f -> f.id,
-								f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
+							gostFachwahlenStatistik.stream().collect(
+									Collectors.toMap(
+											f -> f.id,
+											f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
+													this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
 				}
 			} catch (final ApiOperationException e) {
 				e.printStackTrace();
@@ -264,4 +267,5 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		}
 		return super.fachwahlstatistik();
 	}
+
 }

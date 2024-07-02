@@ -135,7 +135,13 @@ public class ReportingKlasse {
 	 * @param verwendungAnkreuzkompetenzen Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
 	 * @param vorgaengerklasse Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
 	 */
-	public ReportingKlasse(final boolean beginnSommersemester, final String beschreibung, final ReportingKlasse folgeklasse, final long id, final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform, final Long idFachklasse, final Long idFolgeklasse, final Long idJahrgang, final long idKlassenart, final List<Long> idsKlassenleitungen, final List<Long> idsSchueler, final long idSchulgliederung, final long idSchuljahresabschnitt, final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final boolean istSichtbar, final ReportingJahrgang jahrgang, final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse, final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler, final int sortierung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
+	public ReportingKlasse(final boolean beginnSommersemester, final String beschreibung, final ReportingKlasse folgeklasse, final long id,
+			final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform, final Long idFachklasse, final Long idFolgeklasse,
+			final Long idJahrgang, final long idKlassenart, final List<Long> idsKlassenleitungen, final List<Long> idsSchueler, final long idSchulgliederung,
+			final long idSchuljahresabschnitt, final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final boolean istSichtbar,
+			final ReportingJahrgang jahrgang, final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse,
+			final String kuerzelVorgaengerklasse, final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler,
+			final int sortierung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
 		this.beginnSommersemester = beginnSommersemester;
 		this.beschreibung = beschreibung;
 		this.folgeklasse = folgeklasse;
@@ -335,7 +341,7 @@ public class ReportingKlasse {
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
 	 * @return Inhalt des Feldes idsKlassenleitungen
 	 */
-	public  List<Long> idsKlassenleitungen() {
+	public List<Long> idsKlassenleitungen() {
 		return idsKlassenleitungen;
 	}
 
@@ -343,7 +349,7 @@ public class ReportingKlasse {
 	 * Die Liste der IDs der Klassenleitungen der Klasse wird gesetzt.
 	 * @param idsKlassenleitungen Neuer Wert für das Feld idsKlassenleitungen
 	 */
-	public void setIdsKlassenleitungen(final  List<Long> idsKlassenleitungen) {
+	public void setIdsKlassenleitungen(final List<Long> idsKlassenleitungen) {
 		this.idsKlassenleitungen = idsKlassenleitungen;
 	}
 
@@ -351,7 +357,7 @@ public class ReportingKlasse {
 	 * Die Liste der IDs der Schüler der Klasse.
 	 * @return Inhalt des Feldes idsSchueler
 	 */
-	public  List<Long> idsSchueler() {
+	public List<Long> idsSchueler() {
 		return idsSchueler;
 	}
 
@@ -359,7 +365,7 @@ public class ReportingKlasse {
 	 * Die Liste der IDs der Schüler der Klasse wird gesetzt.
 	 * @param idsSchueler Neuer Wert für das Feld idsSchueler
 	 */
-	public void setIdsSchueler(final  List<Long> idsSchueler) {
+	public void setIdsSchueler(final List<Long> idsSchueler) {
 		this.idsSchueler = idsSchueler;
 	}
 
@@ -447,7 +453,7 @@ public class ReportingKlasse {
 	 * Der Jahrgang, dem die Klasse zugeordnet ist.
 	 * @return Inhalt des Feldes jahrgang
 	 */
-	public  ReportingJahrgang jahrgang() {
+	public ReportingJahrgang jahrgang() {
 		return jahrgang;
 	}
 
@@ -455,7 +461,7 @@ public class ReportingKlasse {
 	 * Der Jahrgang, dem die Klasse zugeordnet ist, wird gesetzt.
 	 * @param jahrgang Neuer Wert für das Feld jahrgang
 	 */
-	public void setJahrgang(final  ReportingJahrgang jahrgang) {
+	public void setJahrgang(final ReportingJahrgang jahrgang) {
 		this.jahrgang = jahrgang;
 	}
 
@@ -463,7 +469,7 @@ public class ReportingKlasse {
 	 * Die Liste der Klassenleitungen der Klasse.
 	 * @return Inhalt des Feldes klassenleitungen
 	 */
-	public  List<ReportingLehrer> klassenleitungen() {
+	public List<ReportingLehrer> klassenleitungen() {
 		return klassenleitungen;
 	}
 
@@ -471,7 +477,7 @@ public class ReportingKlasse {
 	 * Die Liste der Klassenleitungen der Klasse wird gesetzt.
 	 * @param klassenleitungen Neuer Wert für das Feld klassenleitungen
 	 */
-	public void setKlassenleitungen(final  List<ReportingLehrer> klassenleitungen) {
+	public void setKlassenleitungen(final List<ReportingLehrer> klassenleitungen) {
 		this.klassenleitungen = klassenleitungen;
 	}
 
@@ -559,7 +565,7 @@ public class ReportingKlasse {
 	 * Die Liste der Schüler der Klasse.
 	 * @return Inhalt des Feldes schueler
 	 */
-	public  List<ReportingSchueler> schueler() {
+	public List<ReportingSchueler> schueler() {
 		return schueler;
 	}
 
@@ -567,7 +573,7 @@ public class ReportingKlasse {
 	 * Die Liste der Schüler der Klasse wird gesetzt.
 	 * @param schueler Neuer Wert für das Feld schueler
 	 */
-	public void setSchueler(final  List<ReportingSchueler> schueler) {
+	public void setSchueler(final List<ReportingSchueler> schueler) {
 		this.schueler = schueler;
 	}
 

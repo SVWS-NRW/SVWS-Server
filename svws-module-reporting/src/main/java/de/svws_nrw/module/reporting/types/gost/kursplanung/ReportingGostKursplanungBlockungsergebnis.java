@@ -74,7 +74,10 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * @param schienen Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
 	 * @param schueler Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
 	 */
-	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung, final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene,
+			final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung,
+			final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id,
+			final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
 		this.abiturjahr = abiturjahr;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
@@ -115,7 +118,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 
 
-    // ##### Getter und Setter #####
+	// ##### Getter und Setter #####
 
 	/**
 	 * Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet

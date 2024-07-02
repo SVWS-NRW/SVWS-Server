@@ -43,30 +43,30 @@ public class ProxyReportingFach extends ReportingFach {
 	 */
 	public ProxyReportingFach(final ReportingRepository reportingRepository, final FachDaten fachDaten, final GostFach fachGostDaten) {
 		super(fachDaten.aufgabenfeld,
-			fachDaten.aufZeugnis,
-			fachDaten.bezeichnung,
-			fachDaten.bezeichnungUeberweisungszeugnis,
-			fachDaten.bezeichnungZeugnis,
-			fachDaten.bilingualeSprache,
-			null,
-			fachDaten.holeAusAltenLernabschnitten,
-			fachDaten.id,
-			fachDaten.istFHRFach,
-			false,
-			false,
-			fachDaten.istOberstufenFach,
-			fachDaten.istNachpruefungErlaubt,
-			fachDaten.istPruefungsordnungsRelevant,
-			fachDaten.istSchriftlichBA,
-			fachDaten.istSchriftlichZK,
-			fachDaten.istSichtbar,
-			fachDaten.kuerzel,
-			fachDaten.maxZeichenInFachbemerkungen,
-			fachDaten.sortierung,
-			null);
+				fachDaten.aufZeugnis,
+				fachDaten.bezeichnung,
+				fachDaten.bezeichnungUeberweisungszeugnis,
+				fachDaten.bezeichnungZeugnis,
+				fachDaten.bilingualeSprache,
+				null,
+				fachDaten.holeAusAltenLernabschnitten,
+				fachDaten.id,
+				fachDaten.istFHRFach,
+				false,
+				false,
+				fachDaten.istOberstufenFach,
+				fachDaten.istNachpruefungErlaubt,
+				fachDaten.istPruefungsordnungsRelevant,
+				fachDaten.istSchriftlichBA,
+				fachDaten.istSchriftlichZK,
+				fachDaten.istSichtbar,
+				fachDaten.kuerzel,
+				fachDaten.maxZeichenInFachbemerkungen,
+				fachDaten.sortierung,
+				null);
 		this.reportingRepository = reportingRepository;
 
-		if (fachDaten.kuerzelStatistik != null && !fachDaten.kuerzelStatistik.isEmpty()) {
+		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
 			super.setStatistikfach(new ProxyReportingStatistikFach(reportingRepository, ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik)));
 			super.setFachgruppe(super.statistikfach().fachgruppe());
 		}

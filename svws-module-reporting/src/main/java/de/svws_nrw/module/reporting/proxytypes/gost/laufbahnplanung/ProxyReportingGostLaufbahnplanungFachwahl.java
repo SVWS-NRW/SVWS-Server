@@ -36,7 +36,10 @@ public class ProxyReportingGostLaufbahnplanungFachwahl extends ReportingGostLauf
 	 * @param jahrgangFremdsprachenbeginn				Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung.
 	 * @param positionFremdsprachenfolge				Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk.
 	 */
-	public ProxyReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11, final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt, final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
-		super(abiturfach, belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22, fach, fachIstBelegtInGOSt, fachIstFortfuehrbareFremdspracheInGOSt, jahrgangFremdsprachenbeginn, positionFremdsprachenfolge);
+	public ProxyReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11,
+			final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt,
+			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
+		super(abiturfach, belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22, fach, fachIstBelegtInGOSt,
+				fachIstFortfuehrbareFremdspracheInGOSt, jahrgangFremdsprachenbeginn, positionFremdsprachenfolge);
 	}
 }

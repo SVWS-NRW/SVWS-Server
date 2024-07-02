@@ -42,7 +42,8 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 		if (conn == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Datenbankverbindung ungültig.");
 
-		if (reportingRepository.reportingParameter().idsHauptdaten == null || reportingRepository.reportingParameter().idsHauptdaten.isEmpty() || reportingRepository.reportingParameter().idsHauptdaten.getFirst() == null)
+		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()
+				|| (reportingRepository.reportingParameter().idsHauptdaten.getFirst() == null))
 			throw new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben.");
 
 		final Long idBlockungsergebnis = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
@@ -54,7 +55,8 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 			throw new ApiOperationException(Status.NOT_FOUND, e, "Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
-		final ReportingGostKursplanungBlockungsergebnis blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, idBlockungsergebnis);
+		final ReportingGostKursplanungBlockungsergebnis blockungsergebnis =
+				new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, idBlockungsergebnis);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

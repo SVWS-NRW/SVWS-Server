@@ -63,7 +63,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				zulaessigesFach.daten.nurSII);
 		this.reportingRepository = reportingRepository;
 		// Prüfe, ob es im Fachkatalog des Reporting-Repositories der Schule ein Fach gibt, dessen Kürzel identisch ist mir dem ASD-Kürzel dieses Statistikfaches.
-		List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream().filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
+		final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
+				.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
 		if (faecher.size() == 1) {
 			super.setFach(faecher.getFirst());
 		}
@@ -95,8 +96,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				false);
 		this.reportingRepository = reportingRepository;
 
-		if (kuerzelStatistik != null && !kuerzelStatistik.isEmpty()) {
-			ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(kuerzelStatistik);
+		if ((kuerzelStatistik != null) && !kuerzelStatistik.isEmpty()) {
+			final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(kuerzelStatistik);
 			super.setAbJahrgang(zulaessigesFach.daten.abJahrgang);
 			super.setAufgabenfeld(zulaessigesFach.daten.aufgabenfeld);
 			super.setBezeichnung(zulaessigesFach.daten.bezeichnung);
@@ -115,7 +116,8 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 			super.setKuerzelASD(zulaessigesFach.daten.kuerzelASD);
 			super.setNurSII(zulaessigesFach.daten.nurSII);
 			// Prüfe, ob es im Fachkatalog des Reporting-Repositories der Schule ein Fach gibt, dessen Kürzel identisch ist mir dem ASD-Kürzel dieses Statistikfaches.
-			List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream().filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
+			final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
+					.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
 			if (faecher.size() == 1) {
 				super.setFach(faecher.getFirst());
 			}

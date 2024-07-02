@@ -33,30 +33,33 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
 public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGostKursplanungFachwahlstatistik {
 
 
-    /**
+	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param reportingRepository Repository für die Reporting
 	 * @param gostHalbjahr Das GostHalbjahr, für die die fachwahlstatistik erstellt wird.
 	 * @param gostStatistikFachwahl Wahlstatistik für ein Fach der GOSt über alle Halbjahre.
 	 * @param ergebnisManager Der Manager des Blockungsergebnisses aus der Kursplanung, zu dem die Fachwahlstatistik gehört.
 	 */
-	public ProxyReportingGostKursplanungFachwahlstatistik(final ReportingRepository reportingRepository, final GostHalbjahr gostHalbjahr, final GostStatistikFachwahl gostStatistikFachwahl, final GostBlockungsergebnisManager ergebnisManager) {
+	public ProxyReportingGostKursplanungFachwahlstatistik(final ReportingRepository reportingRepository, final GostHalbjahr gostHalbjahr,
+			final GostStatistikFachwahl gostStatistikFachwahl, final GostBlockungsergebnisManager ergebnisManager) {
 		super(0,
-			0,
-			0,
-			null,
-			gostStatistikFachwahl.wahlenAB3,
-			gostStatistikFachwahl.wahlenAB4,
-			gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK,
-			gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKMuendlich,
-			gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKSchriftlich,
-			gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenLK,
-			gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenZK);
+				0,
+				0,
+				null,
+				gostStatistikFachwahl.wahlenAB3,
+				gostStatistikFachwahl.wahlenAB4,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKMuendlich,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKSchriftlich,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenLK,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenZK);
 
 		final ReportingFach reportingFach = reportingRepository.mapReportingFaecher().get(gostStatistikFachwahl.id);
 		super.setFach(reportingFach);
 
-		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id) + ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id) + ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id));
+		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id)
+				+ ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id)
+				+ ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id));
 		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id));
 		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.ZK.id));
 	}

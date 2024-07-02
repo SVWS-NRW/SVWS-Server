@@ -55,7 +55,9 @@ public class ReportingGostKursplanungSchiene {
 	 * @param kurse						Eine Liste vom Typ Kurse, die alle Kurse der Schiene und deren Daten enthält.
 	 * @param nummer					Die Nummer der Schiene.
 	 */
-	public ReportingGostKursplanungSchiene(final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final String bezeichnung, final boolean hatKollisionen, final long id, final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen, final List<ReportingGostKursplanungKurs> kurse, final int nummer) {
+	public ReportingGostKursplanungSchiene(final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final String bezeichnung,
+			final boolean hatKollisionen, final long id, final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen,
+			final List<ReportingGostKursplanungKurs> kurse, final int nummer) {
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
 		this.anzahlSchueler = anzahlSchueler;

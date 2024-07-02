@@ -37,11 +37,11 @@ public class ConvertExpressionHelper {
 	 * @return					Das übergebene Datum im deutschen Format.
 	 */
 	public String toDateDE(final String dateISO8601) {
-		if (dateISO8601 == null || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty())
 			return "";
 		try {
 			return DateUtils.gibDatumGermanFormat(dateISO8601);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			return "";
 		}
 	}
@@ -52,11 +52,11 @@ public class ConvertExpressionHelper {
 	 * @return					Das übergebene Datum im deutschen Format mit ausgeschriebenem Monat.
 	 */
 	public String toDateDELong(final String dateISO8601) {
-		if (dateISO8601 == null || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty())
 			return "";
 		try {
 			return DateUtils.gibDatumGermanFormatAusgeschrieben(dateISO8601);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			return "";
 		}
 	}

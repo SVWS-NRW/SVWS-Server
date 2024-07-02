@@ -35,7 +35,8 @@ public class ReportingValidierung {
 	 *
 	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public void validiereSchuelerDaten(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostDaten, final boolean mitAbiturDaten, final boolean cacheDaten) throws ApiOperationException {
+	public void validiereSchuelerDaten(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostDaten,
+			final boolean mitAbiturDaten, final boolean cacheDaten) throws ApiOperationException {
 
 		// Grunddaten prüfen.
 		final DBEntityManager conn = reportingRepository.conn();
@@ -43,11 +44,12 @@ public class ReportingValidierung {
 		if (conn == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenbankverbindung übergeben.");
 
-		if (idsSchueler == null || idsSchueler.isEmpty())
+		if ((idsSchueler == null) || idsSchueler.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler-IDs übergeben.");
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
-		final Map<Long, SchuelerStammdaten> mapSchueler = DataSchuelerStammdaten.getListStammdaten(conn, idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
+		final Map<Long, SchuelerStammdaten> mapSchueler =
+				DataSchuelerStammdaten.getListStammdaten(conn, idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
 		for (final Long sID : idsSchueler)
 			if (mapSchueler.get(sID) == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden ungültige Schüler-IDs übergeben.");
@@ -62,7 +64,8 @@ public class ReportingValidierung {
 				throw new ApiOperationException(Status.NOT_FOUND, aoe, "Keine Schule oder Schule ohne GOSt gefunden.");
 			}
 
-			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsSchueler));
+			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten =
+					new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsSchueler));
 
 			for (final Long sID : idsSchueler)
 				if (mapGostBeratungsdaten.get(sID) == null)
@@ -86,7 +89,8 @@ public class ReportingValidierung {
 				try {
 					mapGostSchuelerAbiturdaten.put(sID, DBUtilsGostAbitur.getAbiturdaten(conn, sID));
 				} catch (final ApiOperationException aoe) {
-					throw new ApiOperationException(Status.NOT_FOUND, aoe, "Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+					throw new ApiOperationException(Status.NOT_FOUND, aoe,
+							"Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
 				}
 			}
 
@@ -96,7 +100,10 @@ public class ReportingValidierung {
 		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
 		if (cacheDaten) {
 			reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
-			reportingRepository.mapAktuelleLernabschnittsdaten().putAll(new DataSchuelerLernabschnittsdaten(conn).getListFromSchuelerIDsUndSchuljahresabschnittID(idsSchueler, reportingRepository.aktuellerSchuljahresabschnitt().id, false).stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
+			reportingRepository.mapAktuelleLernabschnittsdaten()
+					.putAll(new DataSchuelerLernabschnittsdaten(conn)
+							.getListFromSchuelerIDsUndSchuljahresabschnittID(idsSchueler, reportingRepository.aktuellerSchuljahresabschnitt().id, false)
+							.stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
 		}
 	}
 

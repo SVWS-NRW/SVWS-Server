@@ -26,7 +26,8 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 	 * @param kategorie 	Kategorie der Meldung, bspw. Fehler oder Hinweis.
 	 * @param meldung		Text zur Meldung für den Benutzer
 	 */
-	public ReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie, final String meldung) {
+	public ReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie,
+			final String meldung) {
 		this.code = code;
 		this.kategorie = kategorie;
 		this.meldung = meldung;

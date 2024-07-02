@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ReportingSchuelerGostLaufbahnplanung {
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung stattfindet */
-    private int abiturjahr;
+	private int abiturjahr;
 
 	/** Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn */
 	private String aktuelleKlasse;
@@ -67,7 +67,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	private String letzterRuecklaufDatum;
 
 	/** Kommentar der Schule zur Laufbahn */
-    private String kommentar;
+	private String kommentar;
 
 	/** Kursanzahl in der EF.1 */
 	private int kursanzahlEF1;
@@ -169,7 +169,16 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 * @param wochenstundenDurchschnittQPh Wochenstundendurchschnitt in der Qualifikationsphase
 	 * @param wochenstundenGesamt Wochenstundensumme der gesamten Laufbahn
 	 */
-	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr, final String auswahlKlasse, final String auswahlGOStHalbjahr, final String beratungsbogenText, final List<ReportingLehrer> beratungslehrkraefte, final String emailText, final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen, final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler, final String folgeAktuellesGOStHalbjahr, final String folgeAuswahlGOStHalbjahr, final List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise, final String letzteBeratungDatum, final ReportingLehrer letzteBeratungLehrkraft, final String letzterRuecklaufDatum, final String kommentar, final int kursanzahlEF1, final int kursanzahlEF2, final int kursanzahlQ11, final int kursanzahlQ12, final int kursanzahlQ21, final int kursanzahlQ22, final int kursanzahlQPh, final String pruefungsordnung, final int wochenstundenEF1, final int wochenstundenEF2, final int wochenstundenQ11, final int wochenstundenQ12, final int wochenstundenQ21, final int wochenstundenQ22, final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2, final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
+	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr,
+			final String auswahlKlasse, final String auswahlGOStHalbjahr, final String beratungsbogenText, final List<ReportingLehrer> beratungslehrkraefte,
+			final String emailText, final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen, final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler,
+			final String folgeAktuellesGOStHalbjahr, final String folgeAuswahlGOStHalbjahr, final List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise,
+			final String letzteBeratungDatum, final ReportingLehrer letzteBeratungLehrkraft, final String letzterRuecklaufDatum, final String kommentar,
+			final int kursanzahlEF1, final int kursanzahlEF2, final int kursanzahlQ11, final int kursanzahlQ12, final int kursanzahlQ21,
+			final int kursanzahlQ22, final int kursanzahlQPh, final String pruefungsordnung, final int wochenstundenEF1, final int wochenstundenEF2,
+			final int wochenstundenQ11, final int wochenstundenQ12, final int wochenstundenQ21, final int wochenstundenQ22,
+			final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2,
+			final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
 		this.abiturjahr = abiturjahr;
 		this.aktuellesGOStHalbjahr = aktuellesGOStHalbjahr;
 		this.aktuelleKlasse = aktuelleKlasse;
@@ -221,8 +230,9 @@ public class ReportingSchuelerGostLaufbahnplanung {
 		// Ausgabe der Informationen (Zeit und Person) der letzten Beratung zusammenstellen, je nachdem, welche Informationen hinterlegt sind.
 		String letzteBeratung = "Die letzte Beratung wurde durchgeführt";
 		boolean hatLetzteBeratung = false;
-		if (letzteBeratungDatum != null && !letzteBeratungDatum.isBlank() && !letzteBeratungDatum.isEmpty()) {
-			letzteBeratung = letzteBeratung + " am " + LocalDate.parse(letzteBeratungDatum, DateTimeFormatter.ofPattern("yyyy-MM-dd")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		if ((letzteBeratungDatum != null) && !letzteBeratungDatum.isBlank() && !letzteBeratungDatum.isEmpty()) {
+			letzteBeratung = letzteBeratung + " am "
+					+ LocalDate.parse(letzteBeratungDatum, DateTimeFormatter.ofPattern("yyyy-MM-dd")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			hatLetzteBeratung = true;
 		}
 		if (letzteBeratungLehrkraft != null) {
@@ -249,9 +259,9 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 */
 	public String unterschriftfeldBeratungslehrkraefteMehrzeiligHtml(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
 		return beratungslehrkraefte.stream()
-			.map(l -> l.unterschriftfeld(mitVornameKurz, mitAmtsbezeichnung))
-			.collect(Collectors.joining("<br/>"))
-			.trim();
+				.map(l -> l.unterschriftfeld(mitVornameKurz, mitAmtsbezeichnung))
+				.collect(Collectors.joining("<br/>"))
+				.trim();
 	}
 
 

@@ -145,12 +145,15 @@ public class ReportingRepository {
 
 		// Ermittle grundlegende Daten zur Schule und deren Katalogen.
 		mapSchuljahresabschnitte = new DataSchuljahresabschnitte(this.conn).getAbschnitte().stream().collect(Collectors.toMap(a -> a.id, a -> a));
-		aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt).toList().getFirst();
+		aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt)
+				.toList().getFirst();
 
-		if (this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id || this.reportingParameter.idSchuljahresabschnitt < 0 || this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
+		if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id) || (this.reportingParameter.idSchuljahresabschnitt < 0)
+				|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
 			auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		else
-			auswahlSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().getFirst();
+			auswahlSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt)
+					.toList().getFirst();
 
 		katalogFoerderschwerpunkte = new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 		katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
@@ -158,9 +161,11 @@ public class ReportingRepository {
 		katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 
 		mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
-		mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream().collect(Collectors.toMap(k -> k.id, k -> k));
+		mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream()
+				.collect(Collectors.toMap(k -> k.id, k -> k));
 		if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
-			mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream().collect(Collectors.toMap(k -> k.id, k -> k)));
+			mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream()
+					.collect(Collectors.toMap(k -> k.id, k -> k)));
 
 		// TODO: Die Map der Lehrer noch mit den aktuell aktiven Lehrern füllen.
 		mapLehrerStammdaten = new HashMap<>();
@@ -169,10 +174,7 @@ public class ReportingRepository {
 		final Map<Long, FachDaten> mapFaecherDaten = new DataFachdaten(this.conn).getFaecherdaten();
 		final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten();
 		for (final FachDaten fach : mapFaecherDaten.values()) {
-			mapReportingFaecher.put(
-				fach.id,
-				new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id))
-			);
+			mapReportingFaecher.put(fach.id, new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id)));
 		}
 
 	}

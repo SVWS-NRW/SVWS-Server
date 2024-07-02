@@ -147,7 +147,14 @@ public class ReportingSchuelerGostAbitur {
 	 * @param pruefungBestanden Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 * @param schuljahrAbitur Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 */
-	public ReportingSchuelerGostAbitur(final int abiturjahr, final String besondereLernleistung, final Note besondereLernleistungNote, final String besondereLernleistungThema, final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt, final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK, final Integer block1PunktSummeNormiert, final Boolean block1Zulassung, final Integer block2DefiziteGesamt, final Integer block2DefiziteLK, final Integer block2PunktSumme, final List<ReportingGostAbiturFachbelegung> fachbelegungen, final boolean freiwilligerRuecktritt, final Integer gesamtPunkte, final Integer gesamtPunkteVerbesserung, final Integer gesamtPunkteVerschlechterung, final String note, final String projektkursThema, final Boolean pruefungBestanden, final int schuljahrAbitur) {
+	public ReportingSchuelerGostAbitur(final int abiturjahr, final String besondereLernleistung, final Note besondereLernleistungNote,
+			final String besondereLernleistungThema, final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse,
+			final Integer block1DefiziteGesamt, final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt,
+			final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK,
+			final Integer block1PunktSummeNormiert, final Boolean block1Zulassung, final Integer block2DefiziteGesamt, final Integer block2DefiziteLK,
+			final Integer block2PunktSumme, final List<ReportingGostAbiturFachbelegung> fachbelegungen, final boolean freiwilligerRuecktritt,
+			final Integer gesamtPunkte, final Integer gesamtPunkteVerbesserung, final Integer gesamtPunkteVerschlechterung, final String note,
+			final String projektkursThema, final Boolean pruefungBestanden, final int schuljahrAbitur) {
 		this.abiturjahr = abiturjahr;
 		this.besondereLernleistung = besondereLernleistung;
 		this.besondereLernleistungNote = besondereLernleistungNote;
@@ -190,9 +197,9 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean projektkursVorhanden() {
 		return !this.fachbelegungen.stream()
-			.filter(f -> (f != null && "PX".equals(f.fach().fachgruppe().daten.kuerzel)))
-			.toList()
-			.isEmpty();
+				.filter(f -> ((f != null) && "PX".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.toList()
+				.isEmpty();
 	}
 
 	/**
@@ -202,9 +209,9 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean religionVorhanden() {
 		return !this.fachbelegungen.stream()
-			.filter(f -> (f != null && "RE".equals(f.fach().fachgruppe().daten.kuerzel)))
-			.toList()
-			.isEmpty();
+				.filter(f -> ((f != null) && "RE".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.toList()
+				.isEmpty();
 	}
 
 	/**
@@ -213,13 +220,14 @@ public class ReportingSchuelerGostAbitur {
 	 */
 	@JsonIgnore
 	public boolean vertiefungskursVorhanden() {
-		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse = this.fachbelegungen.stream().filter(f -> "VX".equals(f.fach().fachgruppe().daten.kuerzel)).toList();
+		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse =
+				this.fachbelegungen.stream().filter(f -> "VX".equals(f.fach().fachgruppe().daten.kuerzel)).toList();
 		if (listVertiefungskurse.isEmpty())
 			return false;
 
 		for (final ReportingGostAbiturFachbelegung vertiefung : listVertiefungskurse) {
 			for (int i = 0; i < 6; i++) {
-				if (vertiefung.halbjahresbelegungen()[i] != null && 'Q' == vertiefung.halbjahresbelegungen()[i].halbjahrKuerzel().charAt(0))
+				if ((vertiefung.halbjahresbelegungen()[i] != null) && ('Q' == vertiefung.halbjahresbelegungen()[i].halbjahrKuerzel().charAt(0)))
 					return true;
 			}
 		}
@@ -311,6 +319,7 @@ public class ReportingSchuelerGostAbitur {
 
 		this.bewertetesHalbjahr = bewertetesHalbjahr;
 	}
+
 	/**
 	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt.
 	 * @return Inhalt des Feldes bilingualeSprache

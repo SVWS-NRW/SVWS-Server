@@ -104,7 +104,12 @@ public class ReportingSchule {
 	 * @param telefon Die Telefonnummer der Schule.
 	 * @param webAdresse Die Adresse der Homepage der Schule (Domain-Name)
 	 */
-	public ReportingSchule(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt, final long anzahlJahrgangsstufenProJahr, final long anzahlSchuljahresabschnitteProJahr, final String bezeichnung1, final String bezeichnung2, final String bezeichnung3, final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit, final String email, final String fax, final String hausnummer, final String hausnummerZusatz, final String ort, final String plz, final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final String schulform, final String schullogo, final long schulnummer, final String strassenname, final String telefon, final String webAdresse) {
+	public ReportingSchule(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt, final long anzahlJahrgangsstufenProJahr,
+			final long anzahlSchuljahresabschnitteProJahr, final String bezeichnung1, final String bezeichnung2, final String bezeichnung3,
+			final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit,
+			final String email, final String fax, final String hausnummer, final String hausnummerZusatz, final String ort, final String plz,
+			final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final String schulform, final String schullogo, final long schulnummer,
+			final String strassenname, final String telefon, final String webAdresse) {
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.anzahlJahrgangsstufenProJahr = anzahlJahrgangsstufenProJahr;
 		this.anzahlSchuljahresabschnitteProJahr = anzahlSchuljahresabschnitteProJahr;
@@ -155,9 +160,9 @@ public class ReportingSchule {
 	 */
 	public String bezeichnungSchuleMehrzeilig() {
 		return String.format("%s%s%s".formatted(
-			(bezeichnung1 != null && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
-			(bezeichnung2 != null && !bezeichnung2.isEmpty()) ? "%n" + bezeichnung2.trim() : "",
-			(bezeichnung3 != null && !bezeichnung3.isEmpty()) ? "%n" + bezeichnung3.trim() : ""));
+				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
+				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? "%n" + bezeichnung2.trim() : "",
+				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? "%n" + bezeichnung3.trim() : ""));
 	}
 
 	/**
@@ -166,9 +171,9 @@ public class ReportingSchule {
 	 */
 	public String bezeichnungSchuleMehrzeiligHtml() {
 		return "%s%s%s".formatted(
-			(bezeichnung1 != null && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
-			(bezeichnung2 != null && !bezeichnung2.isEmpty()) ? "<br/>" + bezeichnung2.trim() : "",
-			(bezeichnung3 != null && !bezeichnung3.isEmpty()) ? "<br/>" + bezeichnung3.trim() : "");
+				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
+				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? "<br/>" + bezeichnung2.trim() : "",
+				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? "<br/>" + bezeichnung3.trim() : "");
 	}
 
 
