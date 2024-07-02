@@ -205,7 +205,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public getBenutzerGruppenString(kompetenz : BenutzerKompetenz) : string {
 		const gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
-		const sb : StringBuilder = new StringBuilder("");
+		const sb : StringBuilder = new StringBuilder();
 		for (const gruppe of gruppen) {
 			if (!sb.isEmpty())
 				sb.append(", ");
@@ -245,7 +245,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public getBenutzerGruppenStringForKompetenzgruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : string {
 		const gruppen : List<BenutzergruppeDaten> = this.getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe);
-		const sb : StringBuilder = new StringBuilder("");
+		const sb : StringBuilder = new StringBuilder();
 		for (const gruppe of gruppen) {
 			if (!sb.isEmpty())
 				sb.append(", ");

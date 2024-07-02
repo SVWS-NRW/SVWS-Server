@@ -551,7 +551,7 @@ public class GostKursklausurManager {
 	 */
 	public void kursklausurMengePatchAttributes(final @NotNull List<GostKursklausur> kursklausurMenge) {
 
-		for (@NotNull final GostKursklausur kursklausur : kursklausurMenge)
+		for (final @NotNull GostKursklausur kursklausur : kursklausurMenge)
 			kursklausurPatchAttributesOhneUpdate(kursklausur);
 
 		update_all();
@@ -993,7 +993,7 @@ public class GostKursklausurManager {
 		final @NotNull List<GostKlausurtermin> ergebnis = new ArrayList<>();
 		if (!_terminmenge_by_datum_and_abijahr.containsKey1(datum))
 			return ergebnis;
-		for (@NotNull final List<GostKlausurtermin> termine : _terminmenge_by_datum_and_abijahr
+		for (final @NotNull List<GostKlausurtermin> termine : _terminmenge_by_datum_and_abijahr
 				.getNonNullValuesOfKey1AsList(datum))
 			ergebnis.addAll(termine);
 		return ergebnis;
@@ -1600,7 +1600,7 @@ public class GostKursklausurManager {
 			final List<GostSchuelerklausurTermin> menge2) {
 		final @NotNull Map<Long, GostSchuelerklausurTermin> map1 = new HashMap<>();
 		if (menge1 != null)
-			for (@NotNull final GostSchuelerklausurTermin termin1 : menge1)
+			for (final @NotNull GostSchuelerklausurTermin termin1 : menge1)
 //		DeveloperNotificationException.ifMapPutOverwrites(map1,
 //			schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 				map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
@@ -2288,8 +2288,8 @@ public class GostKursklausurManager {
 			final Map<Integer, Map<Long, List<GostSchuelerklausurTermin>>> skts =
 					_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap3OrNull(abiJahrgang, halbjahr.id);
 			if (skts != null)
-				for (@NotNull final Entry<Integer, Map<Long, List<GostSchuelerklausurTermin>>> entry : skts.entrySet())
-					for (@NotNull final Entry<Long, List<GostSchuelerklausurTermin>> entry2 : entry.getValue().entrySet())
+				for (final @NotNull Entry<Integer, Map<Long, List<GostSchuelerklausurTermin>>> entry : skts.entrySet())
+					for (final @NotNull Entry<Long, List<GostSchuelerklausurTermin>> entry2 : entry.getValue().entrySet())
 						if (entry2.getKey() != -1)
 							ergebnis.addAll(entry2.getValue());
 		}

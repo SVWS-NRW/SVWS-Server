@@ -76,7 +76,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 			return "Q1";
 		if (restlicheJahre === 3)
 			return "EF";
-		const sekIJahre : number = gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 9 : 10;
+		const sekIJahre : number = (gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 9 : 10;
 		if (restlicheJahre >= sekIJahre)
 			return null;
 		let strJG : string | null = "" + (sekIJahre - (restlicheJahre - 4));

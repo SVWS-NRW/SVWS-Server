@@ -277,7 +277,7 @@ public class AttributMitAuswahl<K, V> {
 	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
 	 */
 	public @NotNull List<V> auswahlSorted() {
-		@NotNull final List<V> list = this.auswahl();
+		final @NotNull List<V> list = this.auswahl();
 		list.sort(this._comparator);
 		return list;
 	}

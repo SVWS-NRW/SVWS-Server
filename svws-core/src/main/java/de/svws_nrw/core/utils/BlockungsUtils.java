@@ -34,8 +34,8 @@ public final class BlockungsUtils {
 				// Sortiere nach dem Zahlen-Suffix.
 				final int sizeA = splitA[1].length();
 				final int sizeB = splitB[1].length();
-				final @NotNull String suffixA = sizeA >= sizeB ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
-				final @NotNull String suffixB = sizeB >= sizeA ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
+				final @NotNull String suffixA = (sizeA >= sizeB) ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
+				final @NotNull String suffixB = (sizeB >= sizeA) ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
 				final int cmpSuffix = suffixA.compareTo(suffixB);
 				if (cmpSuffix != 0)
 					return cmpSuffix;
@@ -71,7 +71,7 @@ public final class BlockungsUtils {
 		if (value2orNull == null)
 			return value1;
 		final int value2 = value2orNull;
-		return value1 <= value2 ? value1 : value2;
+		return (value1 <= value2) ? value1 : value2;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public final class BlockungsUtils {
 		if (value2orNull == null)
 			return value1;
 		final int value2 = value2orNull;
-		return value1 >= value2 ? value1 : value2;
+		return (value1 >= value2) ? value1 : value2;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public final class BlockungsUtils {
 			return b;
 		if (b == null)
 			return a;
-		return a <= b ? a : b;
+		return (a <= b) ? a : b;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public final class BlockungsUtils {
 			return b;
 		if (b == null)
 			return a;
-		return a >= b ? a : b;
+		return (a >= b) ? a : b;
 	}
 
 }

@@ -56,15 +56,15 @@ public final class JahrgangsUtils {
 			switch (jahrgang) {
 				// DEFAULT (***) wird hier als G8 interpretiert, Ausnahme Jahrgang 10
 				case "05":
-					return gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT) ? 8 : 9;
+					return (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT)) ? 8 : 9;
 				case "06":
-					return gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT) ? 7 : 8;
+					return (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT)) ? 7 : 8;
 				case "07":
-					return gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT) ? 6 : 7;
+					return (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT)) ? 6 : 7;
 				case "08":
-					return gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT) ? 5 : 6;
+					return (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT)) ? 5 : 6;
 				case "09":
-					return gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT) ? 4 : 5;
+					return (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT)) ? 4 : 5;
 				// Jahrgangsstufe 10 gibt es am GY nur im G9, d. h. DEFAULT (***) kann dort immer als G9 interpretiert werden
 				case "10":
 					return gliederung.istG8() ? null : 4;

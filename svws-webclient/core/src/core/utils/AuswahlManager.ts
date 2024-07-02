@@ -342,7 +342,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die ID oder null
 	 */
 	public auswahlID() : TID | null {
-		return this._daten === null ? null : this._datenToId.apply(this._daten);
+		return (this._daten === null) ? null : this._datenToId.apply(this._daten);
 	}
 
 	/**

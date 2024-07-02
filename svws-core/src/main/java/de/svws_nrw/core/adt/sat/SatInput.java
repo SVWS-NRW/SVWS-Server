@@ -442,7 +442,7 @@ public final class SatInput {
 
 		// Forciere TRUE / FALSE in richtiger Anzahl
 		int i = 0;
-		for (@NotNull Integer value : list) {
+		for (final @NotNull Integer value : list) {
 			if (i < amount) {
 				add_clause_1(+value);
 			} else {

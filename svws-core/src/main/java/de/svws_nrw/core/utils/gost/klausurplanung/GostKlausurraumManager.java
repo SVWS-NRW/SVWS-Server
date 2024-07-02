@@ -133,7 +133,7 @@ public class GostKlausurraumManager {
 
 		raumAddAllOhneUpdate(listRaum);
 		raumstundeAddAllOhneUpdate(listRaumstunde);
-		for (@NotNull final Long skt : listSchuelerklausurterminIds)
+		for (final @NotNull Long skt : listSchuelerklausurterminIds)
 			schuelerklausurAddOhneUpdate(_kursklausurManager.schuelerklausurterminGetByIdOrException(skt));
 		schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 
@@ -229,7 +229,8 @@ public class GostKlausurraumManager {
 		_schuelerklausurterminmenge_by_idRaum.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge) {
 			final List<GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idRaum, (raumstunden == null) || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum)
+			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idRaum,
+					((raumstunden == null) || raumstunden.isEmpty()) ? -1L : raumstunden.get(0).idRaum)
 					.add(k);
 		}
 	}
@@ -870,7 +871,7 @@ public class GostKlausurraumManager {
 	 */
 	public @NotNull List<GostKlausurraumstunde> klausurraumstundeGetMengeByRaumid(final long idRaum) {
 		final List<GostKlausurraumstunde> stunden = _raumstundenmenge_by_idRaum.get(idRaum);
-		return stunden != null ? stunden : new ArrayList<>();
+		return (stunden != null) ? stunden : new ArrayList<>();
 	}
 
 	/**
@@ -966,7 +967,7 @@ public class GostKlausurraumManager {
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurHauptterminOhneRaumGetMenge() {
 		final List<GostSchuelerklausurTermin> schuelerklausuren =
 				_schuelerklausurterminmenge_by_idRaum_and_idTermin.getOrNull(-1L, getHauptTermin().id);
-		return schuelerklausuren == null ? new ArrayList<>() : schuelerklausuren;
+		return (schuelerklausuren == null) ? new ArrayList<>() : schuelerklausuren;
 	}
 
 	/**
@@ -1074,7 +1075,7 @@ public class GostKlausurraumManager {
 			if (_kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))
 				return null;
 		}
-		return start == null ? _termin.startzeit : start;
+		return (start == null) ? _termin.startzeit : start;
 	}
 
 //	/**
@@ -1123,7 +1124,7 @@ public class GostKlausurraumManager {
 	 */
 	public StundenplanRaum stundenplanraumGetBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
 		final GostKlausurraum raum = klausurraumGetBySchuelerklausurtermin(skt);
-		return (raum == null) || (raum.idStundenplanRaum == null) ? null : getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+		return ((raum == null) || (raum.idStundenplanRaum == null)) ? null : getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
 	}
 
 	/**
@@ -1133,7 +1134,7 @@ public class GostKlausurraumManager {
 	 */
 	public int anzahlTermine() {
 		return _schuelerklausurterminmenge_by_idTermin.containsKey(_termin.id) ? _schuelerklausurterminmenge_by_idTermin.size()
-				: _schuelerklausurterminmenge_by_idTermin.size() + 1;
+				: (_schuelerklausurterminmenge_by_idTermin.size() + 1);
 	}
 
 	/**
@@ -1159,7 +1160,7 @@ public class GostKlausurraumManager {
 	 * @return Wahrheitswert
 	 */
 	public boolean isSchuelerklausurenInRaum(final boolean fremdTermine) {
-		for (@NotNull final GostSchuelerklausurTermin termin : schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
+		for (final @NotNull GostSchuelerklausurTermin termin : schuelerklausurtermineZuVerteilenGetMenge(fremdTermine))
 			if (_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(termin.id))
 				return true;
 		return false;
@@ -1174,7 +1175,7 @@ public class GostKlausurraumManager {
 	 */
 	public @NotNull List<GostKlausurraum> raeumeVerfuegbarGetMenge(final boolean fremdTermine) {
 		final List<GostKlausurraum> raeume = fremdTermine ? _raummenge : _raummenge_by_idTermin.get(getHauptTermin().id);
-		return raeume == null ? new ArrayList<>() : raeume;
+		return (raeume == null) ? new ArrayList<>() : raeume;
 	}
 
 	/**

@@ -237,7 +237,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	 * @param field   das Feld
 	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
 	 */
-	public void orderUpdate(@NotNull final String field, final Boolean order) {
+	public void orderUpdate(final @NotNull String field, final Boolean order) {
 		// Prüfe, ob der Feld-Eintrag entfernt werden soll
 		if (order == null) {
 			for (int i = 0; i < this._order.size(); i++) {
@@ -356,7 +356,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	 * @return die ID oder null
 	 */
 	public TID auswahlID() {
-		return this._daten == null ? null : this._datenToId.apply(this._daten);
+		return (this._daten == null) ? null : this._datenToId.apply(this._daten);
 	}
 
 

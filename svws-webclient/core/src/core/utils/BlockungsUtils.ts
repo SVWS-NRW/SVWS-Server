@@ -22,8 +22,8 @@ export class BlockungsUtils extends JavaObject {
 			return cmpPrefix;
 		const sizeA : number = splitA[1].length;
 		const sizeB : number = splitB[1].length;
-		const suffixA : string = sizeA >= sizeB ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
-		const suffixB : string = sizeB >= sizeA ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
+		const suffixA : string = (sizeA >= sizeB) ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
+		const suffixB : string = (sizeB >= sizeA) ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
 		const cmpSuffix : number = JavaString.compareTo(suffixA, suffixB);
 		if (cmpSuffix !== 0)
 			return cmpSuffix;
@@ -63,7 +63,7 @@ export class BlockungsUtils extends JavaObject {
 		if (value2orNull === null)
 			return value1;
 		const value2 : number = value2orNull.valueOf();
-		return value1 <= value2 ? value1 : value2;
+		return (value1 <= value2) ? value1 : value2;
 	}
 
 	/**
@@ -78,7 +78,7 @@ export class BlockungsUtils extends JavaObject {
 		if (value2orNull === null)
 			return value1;
 		const value2 : number = value2orNull.valueOf();
-		return value1 >= value2 ? value1 : value2;
+		return (value1 >= value2) ? value1 : value2;
 	}
 
 	/**
@@ -94,7 +94,7 @@ export class BlockungsUtils extends JavaObject {
 			return b;
 		if (b === null)
 			return a;
-		return a <= b ? a : b;
+		return (a <= b) ? a : b;
 	}
 
 	/**
@@ -110,7 +110,7 @@ export class BlockungsUtils extends JavaObject {
 			return b;
 		if (b === null)
 			return a;
-		return a >= b ? a : b;
+		return (a >= b) ? a : b;
 	}
 
 	transpilerCanonicalName(): string {

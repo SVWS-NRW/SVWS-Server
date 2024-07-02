@@ -733,7 +733,7 @@ class TestAVLMapRandom {
 			}
 			case 64 -> { // retainAll
 				final LinkedCollection<Integer> col = new LinkedCollection<>();
-				for (Integer i : set1) {
+				for (final Integer i : set1) {
 					if (RANDOM.nextDouble() < 0.5) // was bleiben soll
 						col.addLast(i);
 				}
@@ -1180,7 +1180,7 @@ class TestAVLMapRandom {
 			}
 			case 94 -> { // retainAll
 				final LinkedCollection<Entry<Integer, Integer>> col = new LinkedCollection<>();
-				for (Entry<Integer, Integer> e : ent1) {
+				for (final Entry<Integer, Integer> e : ent1) {
 					if (RANDOM.nextDouble() < 0.5) // was bleiben soll
 						col.addLast(e);
 				}

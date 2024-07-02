@@ -32,7 +32,7 @@ public final class CollectionUtils {
 	 *
 	 * @return das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
 	 */
-	public static <K, V> @NotNull Set<V> getOrCreateHashSet(@NotNull final Map<K, Set<V>> map, final @NotNull K key) {
+	public static <K, V> @NotNull Set<V> getOrCreateHashSet(final @NotNull Map<K, Set<V>> map, final @NotNull K key) {
 		final Set<V> set = map.get(key);
 		if (set != null)
 			return set;

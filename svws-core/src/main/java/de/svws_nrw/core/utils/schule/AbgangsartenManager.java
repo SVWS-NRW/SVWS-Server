@@ -142,7 +142,7 @@ public class AbgangsartenManager {
 	 */
 	public String getKuerzel(final long id) {
 		final AbgangsartKatalogEintrag eintrag = this._mapByID.get(id);
-		return eintrag == null ? null : eintrag.kuerzel;
+		return (eintrag == null) ? null : eintrag.kuerzel;
 	}
 
 
@@ -174,7 +174,7 @@ public class AbgangsartenManager {
 	public static SchulabschlussAllgemeinbildend getAbschlussAllgemeinbildend(final @NotNull AbgangsartKatalogEintrag abschlussart) {
 		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
-		final @NotNull String kuerzelAbschluss = abschlussart.kuerzel.length() == 1 ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
+		final @NotNull String kuerzelAbschluss = (abschlussart.kuerzel.length() == 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.getByKuerzelStatistik(kuerzelAbschluss);
 	}
 

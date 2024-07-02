@@ -296,7 +296,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Kursmenge pro Schiene sortieren.
-		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
+		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
 			final @NotNull List<GostBlockungsergebnisKurs> kursmenge = schiene.kurse;
 			if (_fachartmenge_sortierung == 1) {
 				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
@@ -414,7 +414,7 @@ public class GostBlockungsergebnisManager {
 		// ... wenn ein Schüler ignoriert werden soll, dann bewerte nicht zugeordnete Kurse als zugeordnet.
 		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
 			final long idSchueler = regel.parameter.get(0);
-			for (@NotNull final GostFachwahl gFachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler))
+			for (final @NotNull GostFachwahl gFachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler))
 				if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) == null)
 					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		}
@@ -2397,7 +2397,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 */
 	private boolean getOfSchuelerErfuelltKriterien(final long idSchueler, final long idKurs, final long idFach, final int idKursart, final int konfliktTyp,
-			@NotNull final String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
+			final @NotNull String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
 
 		if ((konfliktTyp == 1) && (!getOfSchuelerHatKollision(idSchueler)))
 			return false;
@@ -5854,7 +5854,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull Set<GostBlockungsergebnisSchiene> getMengeDerSchienenMitKollisionen() {
 		return CollectionUtils.toFilteredHashSet(_schienenID_to_schiene.values(),
-				(@NotNull final GostBlockungsergebnisSchiene s) -> getOfSchieneHatKollision(s.id));
+				(final @NotNull GostBlockungsergebnisSchiene s) -> getOfSchieneHatKollision(s.id));
 	}
 
 	/**

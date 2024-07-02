@@ -143,8 +143,8 @@ public class StundenplanManager {
 					return -1;
 				if (a.wochentag > b.wochentag)
 					return +1;
-				final int beginnA = a.beginn == null ? -1 : a.beginn;
-				final int beginnB = b.beginn == null ? -1 : b.beginn;
+				final int beginnA = (a.beginn == null) ? -1 : a.beginn;
+				final int beginnB = (b.beginn == null) ? -1 : b.beginn;
 				if (beginnA < beginnB)
 					return -1;
 				if (beginnA > beginnB)
@@ -520,7 +520,7 @@ public class StundenplanManager {
 		// ... andernfalls, einen Default-Wert nehmen --> Letzter Tag im Schuljahr --> = 31.7.XXXX
 		final int jahrAb = infoVon[0];
 		final int monatAb = infoVon[1];
-		return (monatAb <= 7 ? jahrAb : jahrAb + 1) + "-07-31";
+		return ((monatAb <= 7) ? jahrAb : (jahrAb + 1)) + "-07-31";
 	}
 
 	private void initAll(final @NotNull List<StundenplanKalenderwochenzuordnung> listKWZ,
@@ -730,8 +730,8 @@ public class StundenplanManager {
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
 		_pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert) {
-			final long beginn = pausenzeit.beginn == null ? -1 : pausenzeit.beginn;
-			final long ende = pausenzeit.ende == null ? -1 : pausenzeit.ende;
+			final long beginn = (pausenzeit.beginn == null) ? -1 : pausenzeit.beginn;
+			final long ende = (pausenzeit.ende == null) ? -1 : pausenzeit.ende;
 			final @NotNull LongArrayKey key = new LongArrayKey(new long[] { pausenzeit.wochentag, beginn, ende });
 			_pausenzeit_by_tag_and_beginn_and_ende.put(key, pausenzeit);
 		}
@@ -868,7 +868,7 @@ public class StundenplanManager {
 					final @NotNull Integer ende = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 					final @NotNull Integer beginn = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
 					final int minuten = ende - beginn;
-					summe_minuten += (u.wochentyp == 0) ? minuten * faktor : minuten;
+					summe_minuten += (u.wochentyp == 0) ? (minuten * faktor) : minuten;
 				}
 
 				final double wochenminuten = summe_minuten / faktor;
@@ -888,7 +888,7 @@ public class StundenplanManager {
 				final @NotNull Integer ende = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 				final @NotNull Integer beginn = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
 				final int minuten = ende - beginn;
-				summe_minuten += (u.wochentyp == 0) ? minuten * faktor : minuten;
+				summe_minuten += (u.wochentyp == 0) ? (minuten * faktor) : minuten;
 			}
 
 			final double wochenminuten = summe_minuten / faktor;
@@ -2502,7 +2502,7 @@ public class StundenplanManager {
 
 		// Default: Der Wert berechnet sich modulo der Kalenderwoche.
 		final int wochentyp = kalenderwoche % _stundenplanWochenTypModell;
-		return wochentyp == 0 ? _stundenplanWochenTypModell : wochentyp; // 0 wird zu stundenplanWochenTypModell rotiert!
+		return (wochentyp == 0) ? _stundenplanWochenTypModell : wochentyp; // 0 wird zu stundenplanWochenTypModell rotiert!
 	}
 
 	/**
@@ -3902,7 +3902,7 @@ public class StundenplanManager {
 		update_all();
 	}
 
-	private void pausenaufsichtRemoveAllOhneUpdate(@NotNull final Set<Long> setPausenaufsichtId) {
+	private void pausenaufsichtRemoveAllOhneUpdate(final @NotNull Set<Long> setPausenaufsichtId) {
 		for (final long idPausenaufsicht : setPausenaufsichtId)
 			DeveloperNotificationException.ifMapRemoveFailes(_pausenaufsicht_by_id, idPausenaufsicht);
 	}
@@ -4192,8 +4192,8 @@ public class StundenplanManager {
 	 * @return TRUE, falls ein {@link StundenplanPausenzeit}-Objekt mit (Tag, Beginn, Ende) existiert.
 	 */
 	public boolean pausenzeitExistsByWochentagAndBeginnAndEnde(final int wochentag, final Integer beginnOrNull, final Integer endeOrNull) {
-		final long beginn = beginnOrNull == null ? -1 : beginnOrNull;
-		final long ende = endeOrNull == null ? -1 : endeOrNull;
+		final long beginn = (beginnOrNull == null) ? -1 : beginnOrNull;
+		final long ende = (endeOrNull == null) ? -1 : endeOrNull;
 		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 		return _pausenzeit_by_tag_and_beginn_and_ende.containsKey(key);
 	}
@@ -4377,7 +4377,7 @@ public class StundenplanManager {
 	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public int pausenzeitGetMinutenMin() {
-		return _pausenzeitMinutenMin == null ? 480 : _pausenzeitMinutenMin;
+		return (_pausenzeitMinutenMin == null) ? 480 : _pausenzeitMinutenMin;
 	}
 
 	/**
@@ -4387,7 +4387,7 @@ public class StundenplanManager {
 	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public int pausenzeitGetMinutenMax() {
-		return _pausenzeitMinutenMax == null ? 480 : _pausenzeitMinutenMax;
+		return (_pausenzeitMinutenMax == null) ? 480 : _pausenzeitMinutenMax;
 	}
 
 	/**
@@ -4449,7 +4449,7 @@ public class StundenplanManager {
 	 */
 	public int pausenzeitUndZeitrasterGetMinutenMin() {
 		final Integer min = BlockungsUtils.minII(_pausenzeitMinutenMin, _zeitrasterMinutenMin);
-		return min == null ? 480 : min;
+		return (min == null) ? 480 : min;
 	}
 
 	/**
@@ -4460,7 +4460,7 @@ public class StundenplanManager {
 	 */
 	public int pausenzeitUndZeitrasterGetMinutenMinOhneLeere() {
 		final Integer min = BlockungsUtils.minII(_pausenzeitMinutenMinOhneLeere, _zeitrasterMinutenMinOhneLeere);
-		return min == null ? 480 : min;
+		return (min == null) ? 480 : min;
 	}
 
 	/**
@@ -4471,7 +4471,7 @@ public class StundenplanManager {
 	 */
 	public int pausenzeitUndZeitrasterGetMinutenMax() {
 		final Integer max = BlockungsUtils.maxII(_pausenzeitMinutenMax, _zeitrasterMinutenMax);
-		return max == null ? 480 : max;
+		return (max == null) ? 480 : max;
 	}
 
 	/**
@@ -4482,7 +4482,7 @@ public class StundenplanManager {
 	 */
 	public int pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() {
 		final Integer max = BlockungsUtils.maxII(_pausenzeitMinutenMaxOhneLeere, _zeitrasterMinutenMaxOhneLeere);
-		return max == null ? 480 : max;
+		return (max == null) ? 480 : max;
 	}
 
 	/**
@@ -5999,11 +5999,11 @@ public class StundenplanManager {
 		String sKl = unterrichtGetByIDStringOfKlassen(idUnterricht);
 		String sRa = unterrichtGetByIDStringOfRaeume(idUnterricht);
 		String sSc = unterrichtGetByIDStringOfSchienen(idUnterricht);
-		sLe = sLe.isEmpty() ? "" : ", " + sLe;
-		sFa = sFa.isEmpty() ? "" : ", " + sFa;
-		sKl = sKl.isEmpty() ? "" : ", " + sKl;
-		sRa = sRa.isEmpty() ? "" : ", " + sRa;
-		sSc = sSc.isEmpty() ? "" : ", " + sSc;
+		sLe = sLe.isEmpty() ? "" : (", " + sLe);
+		sFa = sFa.isEmpty() ? "" : (", " + sFa);
+		sKl = sKl.isEmpty() ? "" : (", " + sKl);
+		sRa = sRa.isEmpty() ? "" : (", " + sRa);
+		sSc = sSc.isEmpty() ? "" : (", " + sSc);
 		return idUnterricht + sLe + sFa + sKl + sRa + sSc;
 	}
 
@@ -6060,7 +6060,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull String unterrichtGetByIDLehrerFirstAsStringOrEmpty(final long idUnterricht) {
 		final StundenplanLehrer lehrkraft = unterrichtGetByIDLehrerFirstOrNull(idUnterricht);
-		return lehrkraft == null ? "" : lehrkraft.kuerzel;
+		return (lehrkraft == null) ? "" : lehrkraft.kuerzel;
 	}
 
 	/**

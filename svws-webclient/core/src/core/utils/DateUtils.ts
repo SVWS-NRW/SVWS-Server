@@ -98,7 +98,7 @@ export class DateUtils extends JavaObject {
 		const schalttage2 : number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
 		const wochentagAmJanuar1 : number = ((jahr + schalttage1 + 1 + 5) % 7) + 1;
-		return (wochentagAmJanuar1 === 4) || ((schaltjahr === 1) && (wochentagAmJanuar1 === 3)) ? 53 : 52;
+		return ((wochentagAmJanuar1 === 4) || ((schaltjahr === 1) && (wochentagAmJanuar1 === 3))) ? 53 : 52;
 	}
 
 	/**
@@ -355,7 +355,7 @@ export class DateUtils extends JavaObject {
 	 */
 	public static getHalbjahrFromDateISO8601(datumISO8601 : string) : number {
 		const iso8601 : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
-		return (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		return ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 	}
 
 	/**
@@ -372,7 +372,7 @@ export class DateUtils extends JavaObject {
 		const iso8601 : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
 		const result : Array<number> | null = Array(2).fill(0);
 		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
-		result[1] = (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		result[1] = ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 		return result;
 	}
 

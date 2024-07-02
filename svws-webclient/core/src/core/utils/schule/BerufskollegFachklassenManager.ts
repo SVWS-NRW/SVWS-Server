@@ -205,7 +205,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	public getKuerzel(id : number) : string | null {
 		const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
 		const index : number | null = this._mapIndexByEintrag.get(eintrag);
-		return (eintrag === null) || (index === null) ? null : "" + index! + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
+		return ((eintrag === null) || (index === null)) ? null : ("" + index! + "-" + eintrag.schluessel + "-" + eintrag.schluessel2);
 	}
 
 	/**

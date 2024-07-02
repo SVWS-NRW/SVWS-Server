@@ -129,8 +129,8 @@ export class StundenplanManager extends JavaObject {
 			return -1;
 		if (a.wochentag > b.wochentag)
 			return +1;
-		const beginnA : number = a.beginn === null ? -1 : a.beginn;
-		const beginnB : number = b.beginn === null ? -1 : b.beginn;
+		const beginnA : number = (a.beginn === null) ? -1 : a.beginn;
+		const beginnB : number = (b.beginn === null) ? -1 : b.beginn;
 		if (beginnA < beginnB)
 			return -1;
 		if (beginnA > beginnB)
@@ -582,7 +582,7 @@ export class StundenplanManager extends JavaObject {
 		}
 		const jahrAb : number = infoVon[0];
 		const monatAb : number = infoVon[1];
-		return (monatAb <= 7 ? jahrAb : jahrAb + 1) + "-07-31";
+		return ((monatAb <= 7) ? jahrAb : (jahrAb + 1)) + "-07-31";
 	}
 
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listKlassenunterricht : List<StundenplanKlassenunterricht>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
@@ -754,8 +754,8 @@ export class StundenplanManager extends JavaObject {
 	private update_pausenzeit_by_tag_and_beginn_and_ende() : void {
 		this._pausenzeit_by_tag_and_beginn_and_ende = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert) {
-			const beginn : number = pausenzeit.beginn === null ? -1 : pausenzeit.beginn;
-			const ende : number = pausenzeit.ende === null ? -1 : pausenzeit.ende;
+			const beginn : number = (pausenzeit.beginn === null) ? -1 : pausenzeit.beginn;
+			const ende : number = (pausenzeit.ende === null) ? -1 : pausenzeit.ende;
 			const key : LongArrayKey = new LongArrayKey([pausenzeit.wochentag, beginn, ende]);
 			this._pausenzeit_by_tag_and_beginn_and_ende.put(key, pausenzeit);
 		}
@@ -860,7 +860,7 @@ export class StundenplanManager extends JavaObject {
 					const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 					const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
 					const minuten : number = ende! - beginn!;
-					summe_minuten += (u.wochentyp === 0) ? minuten * faktor : minuten;
+					summe_minuten += (u.wochentyp === 0) ? (minuten * faktor) : minuten;
 				}
 				const wochenminuten : number = summe_minuten / faktor;
 				this._wertWochenminuten_by_idKlasse_und_idFach.put(klasse.id, fach.id, wochenminuten);
@@ -877,7 +877,7 @@ export class StundenplanManager extends JavaObject {
 				const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 				const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
 				const minuten : number = ende! - beginn!;
-				summe_minuten += (u.wochentyp === 0) ? minuten * faktor : minuten;
+				summe_minuten += (u.wochentyp === 0) ? (minuten * faktor) : minuten;
 			}
 			const wochenminuten : number = summe_minuten / faktor;
 			this._wertWochenminuten_by_idKurs.put(kurs.id, wochenminuten);
@@ -2296,7 +2296,7 @@ export class StundenplanManager extends JavaObject {
 		if (z !== null)
 			return z.wochentyp;
 		const wochentyp : number = kalenderwoche % this._stundenplanWochenTypModell;
-		return wochentyp === 0 ? this._stundenplanWochenTypModell : wochentyp;
+		return (wochentyp === 0) ? this._stundenplanWochenTypModell : wochentyp;
 	}
 
 	/**
@@ -3798,8 +3798,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls ein {@link StundenplanPausenzeit}-Objekt mit (Tag, Beginn, Ende) existiert.
 	 */
 	public pausenzeitExistsByWochentagAndBeginnAndEnde(wochentag : number, beginnOrNull : number | null, endeOrNull : number | null) : boolean {
-		const beginn : number = beginnOrNull === null ? -1 : beginnOrNull;
-		const ende : number = endeOrNull === null ? -1 : endeOrNull;
+		const beginn : number = (beginnOrNull === null) ? -1 : beginnOrNull;
+		const ende : number = (endeOrNull === null) ? -1 : endeOrNull;
 		const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
 		return this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key);
 	}
@@ -3983,7 +3983,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitGetMinutenMin() : number {
-		return this._pausenzeitMinutenMin === null ? 480 : this._pausenzeitMinutenMin;
+		return (this._pausenzeitMinutenMin === null) ? 480 : this._pausenzeitMinutenMin;
 	}
 
 	/**
@@ -3993,7 +3993,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitGetMinutenMax() : number {
-		return this._pausenzeitMinutenMax === null ? 480 : this._pausenzeitMinutenMax;
+		return (this._pausenzeitMinutenMax === null) ? 480 : this._pausenzeitMinutenMax;
 	}
 
 	/**
@@ -4055,7 +4055,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMin() : number {
 		const min : number | null = BlockungsUtils.minII(this._pausenzeitMinutenMin, this._zeitrasterMinutenMin);
-		return min === null ? 480 : min;
+		return (min === null) ? 480 : min;
 	}
 
 	/**
@@ -4066,7 +4066,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMinOhneLeere() : number {
 		const min : number | null = BlockungsUtils.minII(this._pausenzeitMinutenMinOhneLeere, this._zeitrasterMinutenMinOhneLeere);
-		return min === null ? 480 : min;
+		return (min === null) ? 480 : min;
 	}
 
 	/**
@@ -4077,7 +4077,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMax() : number {
 		const max : number | null = BlockungsUtils.maxII(this._pausenzeitMinutenMax, this._zeitrasterMinutenMax);
-		return max === null ? 480 : max;
+		return (max === null) ? 480 : max;
 	}
 
 	/**
@@ -4088,7 +4088,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() : number {
 		const max : number | null = BlockungsUtils.maxII(this._pausenzeitMinutenMaxOhneLeere, this._zeitrasterMinutenMaxOhneLeere);
-		return max === null ? 480 : max;
+		return (max === null) ? 480 : max;
 	}
 
 	/**
@@ -5418,11 +5418,11 @@ export class StundenplanManager extends JavaObject {
 		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
 		let sRa : string | null = this.unterrichtGetByIDStringOfRaeume(idUnterricht);
 		let sSc : string | null = this.unterrichtGetByIDStringOfSchienen(idUnterricht);
-		sLe = JavaString.isEmpty(sLe) ? "" : ", " + sLe!;
-		sFa = JavaString.isEmpty(sFa) ? "" : ", " + sFa!;
-		sKl = JavaString.isEmpty(sKl) ? "" : ", " + sKl!;
-		sRa = JavaString.isEmpty(sRa) ? "" : ", " + sRa!;
-		sSc = JavaString.isEmpty(sSc) ? "" : ", " + sSc!;
+		sLe = JavaString.isEmpty(sLe) ? "" : (", " + sLe!);
+		sFa = JavaString.isEmpty(sFa) ? "" : (", " + sFa!);
+		sKl = JavaString.isEmpty(sKl) ? "" : (", " + sKl!);
+		sRa = JavaString.isEmpty(sRa) ? "" : (", " + sRa!);
+		sSc = JavaString.isEmpty(sSc) ? "" : (", " + sSc!);
 		return idUnterricht + sLe! + sFa! + sKl! + sRa! + sSc!;
 	}
 
@@ -5477,7 +5477,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht : number) : string {
 		const lehrkraft : StundenplanLehrer | null = this.unterrichtGetByIDLehrerFirstOrNull(idUnterricht);
-		return lehrkraft === null ? "" : lehrkraft.kuerzel;
+		return (lehrkraft === null) ? "" : lehrkraft.kuerzel;
 	}
 
 	/**

@@ -106,7 +106,7 @@ public final class DateUtils {
 		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		final int wochentagAmJanuar1 = ((jahr + schalttage1 + 1 + 5) % 7) + 1;
-		return (wochentagAmJanuar1 == 4) || ((schaltjahr == 1) && (wochentagAmJanuar1 == 3)) ? 53 : 52;
+		return ((wochentagAmJanuar1 == 4) || ((schaltjahr == 1) && (wochentagAmJanuar1 == 3))) ? 53 : 52;
 	}
 
 	/**
@@ -385,7 +385,7 @@ public final class DateUtils {
 	 */
 	public static int getHalbjahrFromDateISO8601(final @NotNull String datumISO8601) {
 		final int[] iso8601 = extractFromDateISO8601(datumISO8601);
-		return (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		return ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 	}
 
 
@@ -403,7 +403,7 @@ public final class DateUtils {
 		final int[] iso8601 = extractFromDateISO8601(datumISO8601);
 		final int[] result = new int[2];
 		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
-		result[1] = (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		result[1] = ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 		return result;
 	}
 

@@ -103,7 +103,7 @@ public class KlausurterminblockungDynDaten {
 		final @NotNull List<List<Integer>> kopie = new ArrayList<>(_klausurGruppen);
 
 		_klausurGruppen.clear();
-		for (@NotNull final List<Integer> gruppe : kopie) {
+		for (final @NotNull List<Integer> gruppe : kopie) {
 			if (gruppe.isEmpty())
 				_logger.log(LogLevel.ERROR, "Es wurde eine leere Klausurgruppe gefunden!");
 

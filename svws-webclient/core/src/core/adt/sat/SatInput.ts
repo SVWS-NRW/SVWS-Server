@@ -412,7 +412,7 @@ export class SatInput extends JavaObject {
 	private _bitonic_exactly(list : LinkedCollection<number>, amount : number) : void {
 		this._bitonic_sort(list);
 		let i : number = 0;
-		for (let value of list) {
+		for (const value of list) {
 			if (i < amount) {
 				this.add_clause_1(+value!);
 			} else {

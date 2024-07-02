@@ -46,7 +46,7 @@ public final class StringUtils {
 	 * @return die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
 	 */
 	public static @NotNull String numberToLetterIndex0(final int number) {
-		return (number < 0) || (number > 25) ? "" : buchstaben[number];
+		return ((number < 0) || (number > 25)) ? "" : buchstaben[number];
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class StringUtils {
 	 * @return die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
 	 */
 	public static @NotNull String numberToLetterIndex1(final int number) {
-		return (number < 1) || (number > 26) ? "" : buchstaben[number - 1];
+		return ((number < 1) || (number > 26)) ? "" : buchstaben[number - 1];
 	}
 
 	/**

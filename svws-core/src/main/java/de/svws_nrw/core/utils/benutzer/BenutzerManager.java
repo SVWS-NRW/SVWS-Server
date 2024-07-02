@@ -198,7 +198,7 @@ public class BenutzerManager {
 	 */
 	public @NotNull String getBenutzerGruppenString(final @NotNull BenutzerKompetenz kompetenz) {
 		final @NotNull List<BenutzergruppeDaten> gruppen = this.getGruppen(kompetenz);
-		final @NotNull StringBuilder sb = new StringBuilder("");
+		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull BenutzergruppeDaten gruppe : gruppen) {
 			if (!sb.isEmpty())
 				sb.append(", ");
@@ -240,7 +240,7 @@ public class BenutzerManager {
 	 */
 	public @NotNull String getBenutzerGruppenStringForKompetenzgruppe(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
 		final @NotNull List<BenutzergruppeDaten> gruppen = this.getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe);
-		final @NotNull StringBuilder sb = new StringBuilder("");
+		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull BenutzergruppeDaten gruppe : gruppen) {
 			if (!sb.isEmpty())
 				sb.append(", ");

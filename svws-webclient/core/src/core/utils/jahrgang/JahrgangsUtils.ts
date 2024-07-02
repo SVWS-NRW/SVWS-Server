@@ -51,19 +51,19 @@ export class JahrgangsUtils extends JavaObject {
 		if (schulform as unknown === Schulform.GY as unknown) {
 			switch (jahrgang) {
 				case "05": {
-					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 8 : 9;
+					return (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 8 : 9;
 				}
 				case "06": {
-					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 7 : 8;
+					return (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 7 : 8;
 				}
 				case "07": {
-					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 6 : 7;
+					return (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 6 : 7;
 				}
 				case "08": {
-					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 5 : 6;
+					return (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 5 : 6;
 				}
 				case "09": {
-					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 4 : 5;
+					return (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 4 : 5;
 				}
 				case "10": {
 					return gliederung.istG8() ? null : 4;

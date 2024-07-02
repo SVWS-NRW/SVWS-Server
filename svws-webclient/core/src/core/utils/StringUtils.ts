@@ -36,7 +36,7 @@ export class StringUtils extends JavaObject {
 	 * @return die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
 	 */
 	public static numberToLetterIndex0(number : number) : string {
-		return (number < 0) || (number > 25) ? "" : StringUtils.buchstaben[number];
+		return ((number < 0) || (number > 25)) ? "" : StringUtils.buchstaben[number];
 	}
 
 	/**
@@ -47,7 +47,7 @@ export class StringUtils extends JavaObject {
 	 * @return die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
 	 */
 	public static numberToLetterIndex1(number : number) : string {
-		return (number < 1) || (number > 26) ? "" : StringUtils.buchstaben[number - 1];
+		return ((number < 1) || (number > 26)) ? "" : StringUtils.buchstaben[number - 1];
 	}
 
 	/**

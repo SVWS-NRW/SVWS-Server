@@ -753,8 +753,8 @@ public final class StundenplanManagerDummy {
 		zeitraster.id = rnd.nextLong(ZEITRASTER_MAX_ID);
 		zeitraster.wochentag = zeitrasterGetRandomWochentag(rnd).id;
 		zeitraster.unterrichtstunde = rnd.nextInt(30) + 1; // 0 ... 29
-		zeitraster.stundenbeginn = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
-		zeitraster.stundenende = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
+		zeitraster.stundenbeginn = (rnd.nextDouble() < 0.1) ? null : rnd.nextInt(24 * 60);
+		zeitraster.stundenende = (rnd.nextDouble() < 0.1) ? null : rnd.nextInt(24 * 60);
 		return zeitraster;
 	}
 

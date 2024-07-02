@@ -244,7 +244,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, (raumstunden === null) || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, ((raumstunden === null) || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum).add(k);
 		}
 	}
 
@@ -809,7 +809,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public klausurraumstundeGetMengeByRaumid(idRaum : number) : List<GostKlausurraumstunde> {
 		const stunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idRaum.get(idRaum);
-		return stunden !== null ? stunden : new ArrayList();
+		return (stunden !== null) ? stunden : new ArrayList();
 	}
 
 	/**
@@ -903,7 +903,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public schuelerklausurHauptterminOhneRaumGetMenge() : List<GostSchuelerklausurTermin> {
 		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idRaum_and_idTermin.getOrNull(-1, this.getHauptTermin().id);
-		return schuelerklausuren === null ? new ArrayList() : schuelerklausuren;
+		return (schuelerklausuren === null) ? new ArrayList() : schuelerklausuren;
 	}
 
 	/**
@@ -1011,7 +1011,7 @@ export class GostKlausurraumManager extends JavaObject {
 			if (this._kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))
 				return null;
 		}
-		return start === null ? this._termin.startzeit : start;
+		return (start === null) ? this._termin.startzeit : start;
 	}
 
 	/**
@@ -1048,7 +1048,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public stundenplanraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : StundenplanRaum | null {
 		const raum : GostKlausurraum | null = this.klausurraumGetBySchuelerklausurtermin(skt);
-		return (raum === null) || (raum.idStundenplanRaum === null) ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+		return ((raum === null) || (raum.idStundenplanRaum === null)) ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
 	}
 
 	/**
@@ -1057,7 +1057,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return die Anzahl
 	 */
 	public anzahlTermine() : number {
-		return this._schuelerklausurterminmenge_by_idTermin.containsKey(this._termin.id) ? this._schuelerklausurterminmenge_by_idTermin.size() : this._schuelerklausurterminmenge_by_idTermin.size() + 1;
+		return this._schuelerklausurterminmenge_by_idTermin.containsKey(this._termin.id) ? this._schuelerklausurterminmenge_by_idTermin.size() : (this._schuelerklausurterminmenge_by_idTermin.size() + 1);
 	}
 
 	/**
@@ -1098,7 +1098,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public raeumeVerfuegbarGetMenge(fremdTermine : boolean) : List<GostKlausurraum> {
 		const raeume : List<GostKlausurraum> | null = fremdTermine ? this._raummenge : this._raummenge_by_idTermin.get(this.getHauptTermin().id);
-		return raeume === null ? new ArrayList() : raeume;
+		return (raeume === null) ? new ArrayList() : raeume;
 	}
 
 	/**

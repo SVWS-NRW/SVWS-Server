@@ -185,7 +185,7 @@ public class BerufskollegFachklassenManager {
 	public String getKuerzel(final long id) {
 		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByID.get(id);
 		final Integer index = this._mapIndexByEintrag.get(eintrag);
-		return (eintrag == null) || (index == null) ? null : "" + index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
+		return ((eintrag == null) || (index == null)) ? null : ("" + index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2);
 	}
 
 

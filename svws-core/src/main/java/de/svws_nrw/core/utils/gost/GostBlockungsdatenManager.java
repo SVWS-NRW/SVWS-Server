@@ -2033,7 +2033,7 @@ public class GostBlockungsdatenManager {
 			DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
 
 			// _map_schuelerID_fachwahlen
-			@NotNull final List<GostFachwahl> fachwahlenDesSchuelers = MapUtils.getOrCreateArrayList(_map_idSchueler_fachwahlen, fachwahl.schuelerID);
+			final @NotNull List<GostFachwahl> fachwahlenDesSchuelers = MapUtils.getOrCreateArrayList(_map_idSchueler_fachwahlen, fachwahl.schuelerID);
 			fachwahlenDesSchuelers.add(fachwahl);
 			fachwahlenDesSchuelers.sort(_compFachwahlen);
 
