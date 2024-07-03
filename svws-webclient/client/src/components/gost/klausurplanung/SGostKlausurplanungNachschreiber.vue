@@ -105,17 +105,17 @@
 					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
 						:class="undefined"
-						:k-man="kMan"
-						:drag-data="dragData"
-						:on-drag="onDrag"
-						:on-drop="onDrop"
-						:draggable="draggable"
+						:k-man
+						:drag-data
+						:on-drag
+						:on-drop
+						:draggable
 						:termin-selected="terminSelected?.id===termin.id"
 						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
-						:loesche-klausurtermine="loescheKlausurtermine"
-						:patch-klausurtermin="patchKlausurtermin"
-						:klausur-css-classes="klausurCssClasses"
-						:patch-klausur="patchKlausur"
+						:loesche-klausurtermine
+						:patch-klausurtermin
+						:klausur-css-classes
+						:patch-klausur
 						:update-klausurblockung
 						:show-schuelerklausuren="true" />
 				</template>
@@ -197,16 +197,19 @@
 	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
 
 	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
-		if (dragData.value === undefined)
-			return {};
-		if (klausur instanceof GostKursklausur)
+		if (klausur instanceof GostKursklausur && dragData.value !== undefined)
 			return {
 				"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur(props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur), klausur),
 			}
-		else if (klausur instanceof GostSchuelerklausurTermin)
+		else if (klausur instanceof GostSchuelerklausurTermin && dragData.value !== undefined)
 			return {
 				"bg-red-500": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur).idSchueler,
 			}
+		else if (klausur instanceof GostSchuelerklausurTermin && termin !== undefined) {
+			return {
+				"bg-red-200": props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(termin, klausur) > 0,
+			}
+		}
 	};
 
 	const isMounted = ref(false);

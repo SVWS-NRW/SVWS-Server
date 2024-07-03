@@ -1472,17 +1472,17 @@ public class GostKursklausurManager {
 	return quartal;
     }
 
-    /**
-     * Liefert die Anzahl der Schülerklausuren zu einem bestimmten Klausurtermin.
-     *
-     * @param idTermin die ID des Klausurtermins
-     *
-     * @return die Anzahl der Schülerklausuren des Termins.
-     */
-    public int schuelerklausurAnzahlGetByTerminid(final long idTermin) {
-	final List<GostSchuelerklausurTermin> skts = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
-	return (skts == null) ? 0 : skts.size();
-    }
+//    /**
+//     * Liefert die Anzahl der Schülerklausuren zu einem bestimmten Klausurtermin.
+//     *
+//     * @param idTermin die ID des Klausurtermins
+//     *
+//     * @return die Anzahl der Schülerklausuren des Termins.
+//     */
+//    public int schuelerklausurAnzahlGetByTerminid(final long idTermin) {
+//	final List<GostSchuelerklausurTermin> skts = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
+//	return (skts == null) ? 0 : skts.size();
+//    }
 
     /**
      * Liefert die minimale Startzeit des Klausurtermins in Minuten
@@ -1616,9 +1616,13 @@ public class GostKursklausurManager {
      */
     private @NotNull Map<GostSchuelerklausurTermin, GostSchuelerklausurTermin> berechneKonflikteSchuelerklausurtermine(
 	    final List<GostSchuelerklausurTermin> menge1, final List<GostSchuelerklausurTermin> menge2) {
+	if ((menge1 == null) || (menge2 == null))
+	    return new HashMap<>();
+	final List<GostSchuelerklausurTermin> menge1Copy = new ArrayList<>(menge1);
+	menge1Copy.removeAll(menge2);
 	final @NotNull Map<Long, GostSchuelerklausurTermin> map1 = new HashMap<>();
 	if (menge1 != null)
-	    for (final @NotNull GostSchuelerklausurTermin termin1 : menge1)
+	    for (final @NotNull GostSchuelerklausurTermin termin1 : menge1Copy)
 //		DeveloperNotificationException.ifMapPutOverwrites(map1,
 //			schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 		map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
@@ -2224,6 +2228,25 @@ public class GostKursklausurManager {
     }
 
     /**
+     * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin.
+     *
+     * @param idTermin die ID des Klausurtermins
+     *
+     * @return die Liste von Schülerklausur-Terminen
+     */
+    public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminaktuellGetMengeByTerminid(
+	    final long idTermin) {
+	List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+	if (_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.containsKey1(idTermin)) {
+	    final List<List<GostSchuelerklausurTermin>> lists = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
+		    .getNonNullValuesOfKey1AsList(idTermin);
+	    for (List<GostSchuelerklausurTermin> list : lists)
+		ergebnis.addAll(list);
+	}
+	return ergebnis;
+    }
+
+    /**
      * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin zurück.
      *
      * @param idTermin die ID des Klausurtermins
@@ -2743,8 +2766,10 @@ public class GostKursklausurManager {
      *
      * @return die Schülerklausurtermine-Einträge
      */
-    public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByKursklausur(final long idKursklausur) {
-	final List<GostSchuelerklausurTermin> ergebnis = _schuelerklausurterminmenge_by_idKursklausur.get(idKursklausur);
+    public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByKursklausur(
+	    final long idKursklausur) {
+	final List<GostSchuelerklausurTermin> ergebnis = _schuelerklausurterminmenge_by_idKursklausur
+		.get(idKursklausur);
 	if (ergebnis == null)
 	    return new ArrayList<>();
 	ergebnis.sort(_compSchuelerklausurTermin);
@@ -2758,9 +2783,10 @@ public class GostKursklausurManager {
      *
      * @return der Schülerlisten-Eintrag
      */
-    public @NotNull SchuelerListeEintrag schuelerlisteeintragGetBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
-	return DeveloperNotificationException.ifMapGetIsNull(getSchuelerMap(), schuelerklausurBySchuelerklausurtermin(skt).idSchueler);
+    public @NotNull SchuelerListeEintrag schuelerlisteeintragGetBySchuelerklausurtermin(
+	    final @NotNull GostSchuelerklausurTermin skt) {
+	return DeveloperNotificationException.ifMapGetIsNull(getSchuelerMap(),
+		schuelerklausurBySchuelerklausurtermin(skt).idSchueler);
     }
-
 
 }

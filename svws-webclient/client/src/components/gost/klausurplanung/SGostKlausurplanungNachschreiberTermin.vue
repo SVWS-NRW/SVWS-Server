@@ -1,14 +1,14 @@
 <template>
 	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
-			:k-man="kMan"
+			:k-man
 			:termin-selected="terminSelected || false"
-			:draggable="draggable"
-			:on-drag="onDrag"
+			:draggable
+			:on-drag
 			:show-kursschiene="true"
-			:klausur-css-classes="klausurCssClasses"
-			:patch-klausur="patchKlausur"
-			:show-schuelerklausuren="showSchuelerklausuren">
+			:klausur-css-classes
+			:patch-klausur
+			:show-schuelerklausuren>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
@@ -38,7 +38,8 @@
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurenCollectionSkrsKrs, GostKlausurenUpdate} from "@core";
-	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
+	import { GostKursklausur} from "@core";
+	import { type GostKursklausurManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{

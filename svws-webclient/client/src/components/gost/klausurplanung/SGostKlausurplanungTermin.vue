@@ -21,7 +21,7 @@
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
+							<span>{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -85,7 +85,7 @@
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
-										<svws-ui-tooltip :hover="false">
+										<svws-ui-tooltip :hover="false" :indicator="false">
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
 											</template>
@@ -123,7 +123,7 @@
 					</div>-->
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
-							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
+							<span class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler, </span>
 							<span>bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Min</span>
 						</div>
 						<slot name="loeschen" />
