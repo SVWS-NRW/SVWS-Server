@@ -52,17 +52,33 @@
 				<template #cell(idKurs)="{ rowData }">
 					<div class="svws-ui-badge" :style="{'--background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
-				<template #cell(lehrer)="{ value }">
-					<svws-ui-multi-select :model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless />
+				<template #cell(lehrer)="{ rowData, value }">
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"
+						:model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless />
+					<button v-else @click="setFocusMultiselect({ type: 'lehrer', id: rowData.id })" class="w-full h-full text-left">
+						{{ modelValueLehrer(value).map(i => i.kuerzel ?? '---').join(', ') }}
+					</button>
 				</template>
-				<template #cell(klassen)="{ value }">
-					<svws-ui-multi-select :model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+				<template #cell(klassen)="{ rowData, value }">
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })"
+						:model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+					<button v-else @click="setFocusMultiselect({ type: 'klassen', id: rowData.id })" class="w-full h-full text-left">
+						{{ modelValueKlassen(value).map(i => i.kuerzel ?? '---').join(', ') }}
+					</button>
 				</template>
-				<template #cell(raeume)="{ value }">
-					<svws-ui-multi-select :model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+				<template #cell(raeume)="{ rowData, value }">
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })"
+						:model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+					<button v-else @click="setFocusMultiselect({ type: 'raeume', id: rowData.id })" class="w-full h-full text-left">
+						{{ modelValueRaeume(value).map(i => i.kuerzel ?? '---').join(', ') }}
+					</button>
 				</template>
-				<template #cell(schienen)="{ value }">
-					<svws-ui-multi-select :model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
+				<template #cell(schienen)="{ rowData, value }">
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })"
+						:model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
+					<button v-else @click="setFocusMultiselect({ type: 'schienen', id: rowData.id })" class="w-full h-full text-left">
+						{{ modelValueSchienen(value).map(i => i.nummer ?? '---').join(', ') }}
+					</button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -71,12 +87,24 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach } from "@core";
 	import { ZulaessigesFach } from "@core";
 
 	type Selected = { wochentag?: Wochentag, stunde?: number, wochentyp?: number, zeitraster?: StundenplanZeitraster };
+
+	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
+
+	const focusMultiselect = ref<FokusType>({ type: null, id : null });
+
+	function setFocusMultiselect(fokusType : FokusType) : void {
+		focusMultiselect.value = fokusType;
+	}
+
+	function checkFocusMultiselect(fokusType : FokusType) : boolean {
+		return (focusMultiselect.value.type === fokusType.type) && (focusMultiselect.value.id === fokusType.id);
+	}
 
 	const props = defineProps<StundenplanUnterrichteProps>();
 
