@@ -9,6 +9,9 @@ icon: 'carbon:bookmark'
 # Changelog
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
+## ab 0.8.16
+* Das Multiselect bekommt die Prop `autofocus`. Wird das übergeben, dann öffnet sich automatisch das Auswahlmenü. Wird z.B. bei Stundenplan-Unterichte verwendet
+* Das MS sendet auch ein `blur`-Event, damit man beim Verlassen z.B. auch das MS wieder entfernen kann. Ebenso bei den Unterrichten zu finden.
 ## ab 0.8.11
 * Die Table-Komponente kennt nun auch zwei weitere Slots: `row` und `rowSelectable` und `rowCustom`. Dies gibt nun die jeweiligen Rows zurück und sollte statt `body` verwendet werden.
 	** `row` ist bereits in ein `tr` gewrappt und liefert nur die `td`.

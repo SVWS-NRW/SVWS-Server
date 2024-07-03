@@ -53,34 +53,46 @@
 					<div class="svws-ui-badge" :style="{'--background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
 				<template #cell(lehrer)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })" autofocus @blur="setFocusMultiselect({type: null, id: null})"
 						:model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'lehrer', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueLehrer(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+						<span v-if="value.size() > 0" class="decoration-dotted underline">
+							{{ modelValueLehrer(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+						</span>
+						<span v-else class="underline decoration-dotted">&nbsp;&nbsp;&nbsp;</span>
 					</button>
 				</template>
 				<template #cell(klassen)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })"
-						:model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
-					<button v-else @click="setFocusMultiselect({ type: 'klassen', id: rowData.id })" class="w-full h-full text-left">
-						<span v-if="value.length > 0">
-							{{ modelValueKlassen(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
-						</span>
-						<span v-else class="opacity-50">&mdash;</span>
-					</button>
+					<template v-if="rowData.idKurs === null">
+						<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })" autofocus
+							:model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+						<button v-else @click="setFocusMultiselect({ type: 'klassen', id: rowData.id })" class="w-full h-full text-left">
+							<span v-if="value.size() > 0" class="decoration-dotted underline">
+								{{ modelValueKlassen(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+							</span>
+							<span v-else class="underline decoration-dotted">&nbsp;&nbsp;&nbsp;</span>
+						</button>
+					</template>
+					<span v-else class="opacity-50 pointer-events-none">&mdash;</span>
 				</template>
 				<template #cell(raeume)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })"
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })" autofocus
 						:model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'raeume', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueRaeume(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+						<span v-if="value.size() > 0" class="decoration-dotted underline">
+							{{ modelValueRaeume(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+						</span>
+						<span v-else class="underline decoration-dotted">&nbsp;&nbsp;&nbsp;</span>
 					</button>
 				</template>
 				<template #cell(schienen)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })"
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })" autofocus
 						:model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'schienen', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueSchienen(value).map(i => i.nummer ?? '&mdash;').join(', ') }}
+						<span v-if="value.size() > 0" class="decoration-dotted underline">
+							{{ modelValueSchienen(value).map(i => i.nummer ?? '&mdash;').join(', ') }}
+						</span>
+						<span v-else class="underline decoration-dotted">&nbsp;&nbsp;&nbsp;</span>
 					</button>
 				</template>
 			</svws-ui-table>
@@ -94,8 +106,6 @@
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach } from "@core";
 	import { ZulaessigesFach } from "@core";
-
-	type Selected = { wochentag?: Wochentag, stunde?: number, wochentyp?: number, zeitraster?: StundenplanZeitraster };
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -113,7 +123,7 @@
 
 	const wochentage = [null, 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
-	const columns = [{key: 'idZeitraster', label: 'Stunde'}, {key: 'wochentyp', label: 'Wochentyp'}, {key: 'idKurs', label: 'Kurs oder Fach'}, {key: 'lehrer', label: 'Lehrer'}, {key: 'klassen', label: 'Klassen'}, {key: 'raeume', label: 'Räume'}, {key: 'schienen', label: 'Schienen'}];
+	const columns = [{key: 'idZeitraster', label: 'Stunde'}, {key: 'wochentyp', label: 'Wochentyp'}, {key: 'idKurs', label: 'Kurs oder Fach', span: 2}, {key: 'lehrer', label: 'Lehrer'}, {key: 'klassen', label: 'Klassen'}, {key: 'raeume', label: 'Räume'}, {key: 'schienen', label: 'Schienen'}];
 
 	function getBgColor(kuerzel: string | null) {
 		return ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);

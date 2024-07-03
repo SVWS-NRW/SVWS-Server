@@ -54,7 +54,7 @@
 <script setup lang="ts" generic="Item">
 
 	import type { ComputedRef, Ref } from "vue";
-	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw } from "vue";
+	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw, onMounted, onUnmounted } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
@@ -77,6 +77,7 @@
 		useNull?: boolean;
 		headless?: boolean;
 		required?: boolean;
+		autofocus?: boolean;
 	}>(), {
 		label: '',
 		title: '',
@@ -92,6 +93,7 @@
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", items: Item[]): void;
+		(e: "blur"): void;
 	}>();
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
@@ -104,6 +106,13 @@
 	const hasFocus = ref(false);
 	const searchText = ref("");
 
+	onMounted(() => {
+		if (props.autofocus === true) {
+			onInputFocus();
+			toggleListBox();
+		}
+	});
+
 	function onInputFocus() {
 		hasFocus.value = true;
 	}
@@ -111,6 +120,7 @@
 	function onInputBlur() {
 		hasFocus.value = false;
 		closeListbox();
+		emit('blur');
 	}
 
 	const dynModelValue = computed<string>(() => {
