@@ -208,11 +208,12 @@ public final class SvwsServer {
 	 * @param name               der eindeutige Name der dem Connector zugeordnet wird.
 	 * @param keyStorePath       der Pfad zum Java-Key-Store für TLS-Verbindungen
 	 * @param keyStorePassword   das Kennwort für den Java-Key-Store
+	 * @param keyAlias           der Alias für das zu verwendende Zertifikat
 	 *
 	 * @return der konfigurierte ServerConnector
 	 */
 	private ServerConnector getHttpServerConnector(final boolean disableTLS, final boolean preferHTTPv1_1, final int port,
-			final String name, final String keyStorePath, final String keyStorePassword) {
+			final String name, final String keyStorePath, final String keyStorePassword, final String keyAlias) {
 		// HTTP Configuration
 		final HttpConfiguration http_config = new HttpConfiguration();
 		if (!disableTLS) {
@@ -232,6 +233,7 @@ public final class SvwsServer {
 		sslContextFactory.setKeyManagerPassword(keyStorePassword);
 		sslContextFactory.setTrustStorePath(keyStorePath + "/keystore");
 		sslContextFactory.setTrustStorePassword(keyStorePassword);
+		sslContextFactory.setCertAlias(keyAlias);
 		sslContextFactory.setIncludeProtocols("TLSv1.3", "TLSv1.2");
 		sslContextFactory.setIncludeCipherSuites("TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256",
 				"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -281,7 +283,8 @@ public final class SvwsServer {
 				config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS(),
 				"Server",
 				config.getTLSKeystorePath(),
-				config.getTLSKeystorePassword()
+				config.getTLSKeystorePassword(),
+				config.getTLSKeyAlias()
 		));
 		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess())
 			server.addConnector(getHttpServerConnector(
@@ -290,7 +293,8 @@ public final class SvwsServer {
 					config.getPortHTTPPrivilegedAccess(),
 					"Privileged",
 					config.getTLSKeystorePath(),
-					config.getTLSKeystorePassword()
+					config.getTLSKeystorePassword(),
+					config.getTLSKeyAlias()
 			));
 	}
 

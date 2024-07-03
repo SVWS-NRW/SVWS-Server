@@ -64,6 +64,27 @@ export class ApiPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setConfigPrivateKeyCertificateBase64 für den Zugriff auf die URL https://{hostname}/api/privileged/config/privatekey_cert_base64/{alias}
+	 *
+	 * Importiert den Private-Key und das Zertifikat im Base 64-Formate für die TLS-Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Import des privaten Schlüssels und des Zertifikats war erfolgreich.
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten.
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die TLS-Zertifikatsinformationen zu setzen.
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} alias - der Pfad-Parameter alias
+	 */
+	public async setConfigPrivateKeyCertificateBase64(data : FormData, alias : string) : Promise<void> {
+		const path = "/api/privileged/config/privatekey_cert_base64/{alias}"
+			.replace(/{alias\s*(:[^{}]+({[^{}]+})*)?}/g, alias);
+		await super.postMultipart(path, data);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode removeSchemaFromConfig für den Zugriff auf die URL https://{hostname}/api/privileged/config/schema/{schema}/remove
 	 *
 	 * Entfernt das bestehende Schema mit dem angegebenen Namen aus der SVWS-Konfiguration, falls es existiert und der angemeldete Benutzer die benötigten Rechte besitzt.

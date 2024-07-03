@@ -1,5 +1,7 @@
 package de.svws_nrw.api.privileged;
 
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -9,6 +11,7 @@ import de.svws_nrw.db.utils.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -91,7 +94,8 @@ public class APIPrivilegedConfig {
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
 			if ((schemanameConfig == null) || (!config.setDefaultschema(schemanameConfig)))
-				throw new ApiOperationException(Status.NOT_FOUND, "Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
 			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();
 		},
@@ -166,13 +170,42 @@ public class APIPrivilegedConfig {
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
 			if (schemanameConfig == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
 			config.removeSchema(schemanameConfig);
 			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();
 		},
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Importiert den Private-Key und das Zertifikat im Base 64-Formate für die TLS-Konfiguration
+	 * des SVWS-Server.
+	 *
+	 * @param alias       der Keystore-Alias unter welcher der Schlüssel und das Zertifikat abgelegt werden
+	 * @param multipart   der private Schlüssel und das vom privaten Schlüssel erstellte Zertifikat
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Rückmeldung, ob die Operation erfolgreich war
+	 */
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Path("/config/privatekey_cert_base64/{alias}")
+	@Operation(summary = "Importiert den Private-Key und das Zertifikat im Base 64-Formate für die TLS-Konfiguration.",
+			description = "Importiert den Private-Key und das Zertifikat im Base 64-Formate für die TLS-Konfiguration.")
+	@ApiResponse(responseCode = "204", description = "Der Import des privaten Schlüssels und des Zertifikats war erfolgreich.")
+	@ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Import aufgetreten.")
+	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die TLS-Zertifikatsinformationen zu setzen.")
+	public Response setConfigPrivateKeyCertificateBase64(@PathParam("alias") final String alias, @RequestBody(description = "Die LuPO-Datei", required = true,
+			content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final PrivateKeyCertificateMultipartBody multipart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+			SVWSKonfiguration.setPrivateKeyCertificateBase64(alias, multipart.key, multipart.certificate);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 }
