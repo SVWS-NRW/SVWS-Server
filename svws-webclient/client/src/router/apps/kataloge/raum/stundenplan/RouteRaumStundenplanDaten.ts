@@ -14,7 +14,7 @@ export class RouteRaumStundenplanDaten extends RouteNode<any, RouteRaumStundenpl
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];
@@ -37,7 +37,7 @@ export class RouteRaumStundenplanDaten extends RouteNode<any, RouteRaumStundenpl
 			kwjahr = parseInt(tmpKW[0]);
 			kw = parseInt(tmpKW[1]);
 		}
-		// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.
+		// Prüfe, ob ein Raum ausgewählt ist. Wenn nicht dann wechsele in die Raum-Route zurück.
 		if (idRaum === undefined)
 			return routeKatalogRaeume.getRoute(undefined);
 			// Prüfe, ob die Stundenplan-ID definiert ist, wenn nicht, dann versuche einen zu laden

@@ -19,7 +19,7 @@ export class RouteRaumStundenplan extends RouteNode<RouteDataRaumStundenplan, Ro
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.stundenplan", "stundenplan", SRaumStundenplan, new RouteDataRaumStundenplan());
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [

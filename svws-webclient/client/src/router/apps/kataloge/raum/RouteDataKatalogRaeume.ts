@@ -7,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
+import { routeApp } from "../../RouteApp";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	raumListeManager: RaumListeManager;
@@ -33,7 +34,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		this.setPatchedDefaultState({ raumListeManager })
 	}
 
-	setEintrag = async (raum: Raum | null) => {
+	setEintrag = (raum: Raum | null) => {
 		if ((raum === null) && (!this.raumListeManager.hasDaten()))
 			return;
 		const raumListeManager = this.raumListeManager;
@@ -49,7 +50,8 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	gotoEintrag = async (eintrag: Raum) => {
-		await RouteManager.doRoute(routeKatalogRaeume.getRoute(eintrag.id));
+		const redirect_name: string = (routeKatalogRaeume.selectedChild === undefined) ? routeKatalogRaumDaten.name : routeKatalogRaeume.selectedChild.name;
+		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {

@@ -20,7 +20,7 @@ export class RouteKatalogRaumDaten extends RouteNode<any, RouteKatalogRaeume> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogRaeume.data.raumListeManager.auswahlID() === null)
+		if (routeKatalogRaeume.data.raumListeManager.hasDaten() === false)
 			return routeKatalogRaeume.getRoute(undefined)
 	}
 

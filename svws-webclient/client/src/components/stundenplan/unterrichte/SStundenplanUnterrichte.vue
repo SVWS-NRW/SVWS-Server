@@ -56,28 +56,31 @@
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"
 						:model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'lehrer', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueLehrer(value).map(i => i.kuerzel ?? '---').join(', ') }}
+						{{ modelValueLehrer(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
 					</button>
 				</template>
 				<template #cell(klassen)="{ rowData, value }">
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })"
 						:model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'klassen', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueKlassen(value).map(i => i.kuerzel ?? '---').join(', ') }}
+						<span v-if="value.length > 0">
+							{{ modelValueKlassen(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
+						</span>
+						<span v-else class="opacity-50">&mdash;</span>
 					</button>
 				</template>
 				<template #cell(raeume)="{ rowData, value }">
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })"
 						:model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'raeume', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueRaeume(value).map(i => i.kuerzel ?? '---').join(', ') }}
+						{{ modelValueRaeume(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
 					</button>
 				</template>
 				<template #cell(schienen)="{ rowData, value }">
 					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })"
 						:model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
 					<button v-else @click="setFocusMultiselect({ type: 'schienen', id: rowData.id })" class="w-full h-full text-left">
-						{{ modelValueSchienen(value).map(i => i.nummer ?? '---').join(', ') }}
+						{{ modelValueSchienen(value).map(i => i.nummer ?? '&mdash;').join(', ') }}
 					</button>
 				</template>
 			</svws-ui-table>

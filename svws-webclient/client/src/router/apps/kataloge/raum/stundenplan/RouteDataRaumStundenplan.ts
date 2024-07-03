@@ -1,4 +1,4 @@
-import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanPausenaufsicht} from "@core";
+import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanPausenaufsicht } from "@core";
 import { StundenplanManager, DeveloperNotificationException, ArrayList} from "@core";
 
 import { api } from "~/router/Api";

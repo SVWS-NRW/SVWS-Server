@@ -39,7 +39,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (isEntering)
-			this.data.ladeListe();
+			await this.data.ladeListe();
 		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
 		if (idSchuljahresabschnitt instanceof Error)
 			return routeError.getRoute(idSchuljahresabschnitt);
@@ -49,11 +49,10 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 		if (id instanceof Error)
 			return routeError.getRoute(id);
 		const eintrag = (id !== undefined) ? this.data.raumListeManager.liste.get(id) : null;
-		await this.data.setEintrag(eintrag);
+		this.data.setEintrag(eintrag);
 		if (!this.data.raumListeManager.hasDaten()) {
 			if (id === undefined) {
-				const listFiltered = this.data.raumListeManager.filtered();
-				if (listFiltered.isEmpty())
+				if (this.data.raumListeManager.filtered().isEmpty())
 					return;
 				return this.getRoute(this.data.raumListeManager.filtered().get(0).id);
 			}

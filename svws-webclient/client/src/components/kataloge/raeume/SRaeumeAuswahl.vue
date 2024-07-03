@@ -49,8 +49,7 @@
 	];
 
 	const clicked = computed<Raum | undefined>(() => {
-		const manager = props.raumListeManager();
-		return manager.hasDaten() ? manager.auswahl() : undefined;
+		return props.raumListeManager().hasDaten() ? props.raumListeManager().auswahl() : undefined;
 	});
 
 	async function doDeleteEintraege() {

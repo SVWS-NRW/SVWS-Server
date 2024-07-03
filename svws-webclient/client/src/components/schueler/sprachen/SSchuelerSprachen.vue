@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<svws-ui-content-card title="Sprachenfolge" class="">
+		<svws-ui-content-card title="Sprachenfolge">
 			<div v-if="verfuegbareSprachen.length" class="w-1/4">
 				<svws-ui-select title="Eine neue Sprache hinzufügen" removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)" :items="verfuegbareSprachen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachen" />
 			</div>
@@ -50,7 +50,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht" class="col-span-full">
+		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
 			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4">
 				<svws-ui-select title="Eine neue Sprachprüfung hinzufügen" removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)" :items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
 			</div>
@@ -79,7 +79,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Sprachprüfungen – Festestellungsprüfungen" class="col-span-full">
+		<svws-ui-content-card title="Sprachprüfungen – Festestellungsprüfungen">
 			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4">
 				<svws-ui-select title="Eine neue Sprachprüfung hinzufügen" removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
 			</div>
