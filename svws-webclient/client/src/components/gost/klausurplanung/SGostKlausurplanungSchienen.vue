@@ -88,17 +88,19 @@
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
 						:class="dropOverCssClasses(termin)"
-						:k-man="kMan"
+						:k-man
 						:drag-data="() => dragData"
 						@dragover="terminSelected=termin"
-						:on-drag="onDrag"
-						:on-drop="onDrop"
-						:draggable="draggable"
+						:on-drag
+						:on-drop
+						:draggable
 						:termin-selected="terminSelected?.id===termin.id"
 						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
-						:loesche-klausurtermine="loescheKlausurtermine"
-						:patch-klausurtermin="patchKlausurtermin"
-						:klausur-css-classes="klausurCssClasses" />
+						:loesche-klausurtermine
+						:patch-klausurtermin
+						:klausur-css-classes
+						:create-schuelerklausur-termin
+						:patch-klausur />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />

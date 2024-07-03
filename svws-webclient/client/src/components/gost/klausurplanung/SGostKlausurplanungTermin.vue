@@ -85,7 +85,12 @@
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
-										<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+										<svws-ui-tooltip :hover="false">
+											<template #content>
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
+											</template>
+											<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 									<div class="svws-ui-td flex" role="cell">
@@ -106,11 +111,12 @@
 					</slot>
 					<slot name="schuelerklausuren" v-if="showSchuelerklausuren && schuelerklausurtermine().size()">
 						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="schuelerklausurtermine()"
-							:k-man="kMan"
-							:on-drag="onDrag"
-							:draggable="draggable"
-							:patch-klausur="patchKlausur"
-							:klausur-css-classes="klausurCssClasses" />
+							:k-man
+							:termin
+							:on-drag
+							:draggable
+							:patch-klausur
+							:klausur-css-classes />
 					</slot>
 					<!--<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
@@ -158,6 +164,7 @@
 		showSchuelerklausuren?: boolean;
 		showKursklausurenNachschreiber?: boolean;
 		showKlausurenSelbesDatum?: boolean;
+		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 		inTooltip?: boolean;
 	}>(), {
@@ -167,6 +174,7 @@
 		//onDrop: undefined,
 		quartalsauswahl: undefined,
 		showSchuelerklausuren: false,
+		createSchuelerklausurTermin: undefined,
 		patchKlausur: undefined,
 		showKlausurenSelbesDatum: false,
 		showKursklausurenNachschreiber: false,

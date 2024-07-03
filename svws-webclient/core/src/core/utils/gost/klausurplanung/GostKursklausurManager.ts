@@ -163,6 +163,8 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
+	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
+
 	private readonly _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
 	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>>();
@@ -302,6 +304,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_schuelerklausurmenge_by_idKursklausur();
 		this.update_schuelerklausurterminmenge_by_idSchuelerklausur();
 		this.update_schuelerklausurterminmenge_by_idTermin();
+		this.update_schuelerklausurterminmenge_by_idKursklausur();
 		this.update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur();
 		this.update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		this.update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
@@ -405,6 +408,14 @@ export class GostKursklausurManager extends JavaObject {
 				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, this.kursklausurBySchuelerklausurTermin(skt).idTermin).add(skt);
 			else
 				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
+		}
+	}
+
+	private update_schuelerklausurterminmenge_by_idKursklausur() : void {
+		this._schuelerklausurterminmenge_by_idKursklausur.clear();
+		for (const skt of this._schuelerklausurterminmenge) {
+			if (skt.folgeNr === 0)
+				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, this.schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
 		}
 	}
 
@@ -814,7 +825,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.
 	 *
-	 * @param listSchuelerklausurtermine   die Menge der {@link GostSchuelerklausurTermin}-Objekte, welche hinzugefügt werden sollen.
+	 * @param listSchuelerklausurtermine die Menge der
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte,
+	 *                                   welche hinzugefügt werden sollen.
 	 */
 	public schuelerklausurterminAddAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		this.schuelerklausurterminAddAllOhneUpdate(listSchuelerklausurtermine);
@@ -868,7 +881,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Entfernt ein existierendes {@link GostSchuelerklausurTermin}-Objekt.
 	 *
-	 * @param idSchuelerklausurtermin   die ID des {@link GostSchuelerklausurTermin}-Objekts.
+	 * @param idSchuelerklausurtermin die ID des
+	 *                                {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurterminRemoveById(idSchuelerklausurtermin : number) : void {
 		this.schuelerklausurterminRemoveOhneUpdateById(idSchuelerklausurtermin);
@@ -878,7 +892,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
 	 *
-	 * @param listSchuelerklausurtermine   die Liste der zu entfernenden {@link GostSchuelerklausurTermin}-Objekte.
+	 * @param listSchuelerklausurtermine die Liste der zu entfernenden
+	 *                                   {@link GostSchuelerklausurTermin}-Objekte.
 	 */
 	public schuelerklausurterminRemoveAll(listSchuelerklausurtermine : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausurtermin of listSchuelerklausurtermine)
@@ -2487,6 +2502,52 @@ export class GostKursklausurManager extends JavaObject {
 			kt.nachschreiberZugelassen = false;
 			this.terminPatchAttributes(kt);
 		}
+	}
+
+	/**
+	 * Prüft, ob ein Schüler an einem Klausurtermin gesetzt ist.
+	 *
+	 * @param idSchueler die ID des zu prüfenden Schülers
+	 * @param idTermin   die ID des zu prüfenden Termins
+	 *
+	 * @return true, wenn der Schüler an dem Termin eine Klausurschreibt, sonst
+	 *         false
+	 */
+	public schuelerSchreibtKlausurtermin(idSchueler : number, idTermin : number) : boolean {
+		const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		if (skts === null)
+			return false;
+		for (const skt of skts)
+			if (this.schuelerklausurBySchuelerklausurtermin(skt).idSchueler === idSchueler && this.istAktuellerSchuelerklausurtermin(skt))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert zu einer Kursklausur die Schülerklausurtermine der Schüler, die den
+	 * Kurs schriftlich belegt haben
+	 *
+	 * @param idKursklausur die ID der Kursklausur
+	 *
+	 * @return die Schülerklausurtermine-Einträge
+	 */
+	public schuelerklausurterminGetMengeByKursklausur(idKursklausur : number) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idKursklausur.get(idKursklausur);
+		if (ergebnis === null)
+			return new ArrayList();
+		ergebnis.sort(this._compSchuelerklausurTermin);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert zu einem Schülerklausurtermin den Schülerlisten-Eintrag
+	 *
+	 * @param skt der Schülerklausurtermin
+	 *
+	 * @return der Schülerlisten-Eintrag
+	 */
+	public schuelerlisteeintragGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : SchuelerListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this.getSchuelerMap(), this.schuelerklausurBySchuelerklausurtermin(skt).idSchueler);
 	}
 
 	transpilerCanonicalName(): string {

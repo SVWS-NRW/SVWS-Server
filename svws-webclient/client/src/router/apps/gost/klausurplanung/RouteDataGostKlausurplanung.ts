@@ -505,6 +505,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.stop();
 	}
 
+	createSchuelerklausurTermin = async (id: number) => {
+		api.status.start();
+		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(api.schema, id);
+		this.kursklausurmanager.schuelerklausurterminAdd(skNeu);
+		this.commit();
+		api.status.stop();
+	}
+
 	gotoVorgaben = async () => {
 		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}

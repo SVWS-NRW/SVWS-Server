@@ -39,6 +39,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
+			createSchuelerklausurTermin: routeGostKlausurplanung.data.createSchuelerklausurTermin,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,

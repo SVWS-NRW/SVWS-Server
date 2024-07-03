@@ -7,13 +7,15 @@
 			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
-			:k-man="kMan"
+			:k-man
 			:termin-selected="terminSelected || false"
-			:draggable="draggable"
-			:on-drag="onDrag"
+			:draggable
+			:on-drag
 			:show-kursschiene="true"
-			:klausur-css-classes="klausurCssClasses"
-			:show-schuelerklausuren="showSchuelerklausuren">
+			:klausur-css-classes
+			:show-schuelerklausuren
+			:patch-klausur
+			:create-schuelerklausur-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
@@ -42,6 +44,7 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { GostKlausurenCollectionSkrsKrs} from "@core";
 	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
@@ -55,6 +58,8 @@
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		draggable: (data: GostKlausurplanungDragData) => boolean;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
 	}>(), {

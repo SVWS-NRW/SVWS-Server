@@ -15,7 +15,7 @@
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row"
-				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, undefined)]">
+				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
 					<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
@@ -57,6 +57,7 @@
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKursklausurManager;
+		termin?: GostKlausurtermin | undefined;
 		schuelerklausuren: List<GostSchuelerklausurTermin>;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
@@ -65,6 +66,7 @@
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 	}>(), {
+		termin: undefined,
 		onDrag: undefined,
 		draggable: () => false,
 		onDrop: undefined,
