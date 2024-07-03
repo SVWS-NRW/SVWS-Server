@@ -284,7 +284,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 			throws ApiOperationException {
 		final List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
 		listSktsManager.addAll(config.schuelerklausurtermine);
-		listSktsManager.addAll(DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuTerminIds(conn, config.termine.stream().map(t -> t.id).toList()));
+		listSktsManager.addAll(DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuTerminIds(conn, config.termine.stream().map(t -> t.id).toList(), true));
 
 		final List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSktsManager);
 		final List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);

@@ -222,20 +222,26 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @param conn    x
 	 * @param terminIds die Liste der GostSchuelerklausurterminen
+	 * @param includeAbwesend inkludiert auch GostSchuelerklausurtermine, die als abwesend gemeldet sind
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds)
+	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds, final boolean includeAbwesend)
 			throws ApiOperationException {
 		if (terminIds.isEmpty())
 			return new ArrayList<>();
 		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
 		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-		final String skFilter = kkSkIds.isEmpty() ? ""
-				: " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0 AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0))";
+		String skFilter = "";
+		if (!kkSkIds.isEmpty()) {
+		    skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
+		    if (!includeAbwesend)
+			skFilter += "AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+		    skFilter += ")";
+		}
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
 				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
@@ -243,6 +249,22 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 			query.setParameter("skIds", kkSkIds);
 		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
 		return DTOMapper.mapList(skts, DataGostKlausurenSchuelerklausurTermin.dtoMapper);
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * GostSchuelerklausur-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param terminIds die Liste der GostSchuelerklausurterminen
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds)
+			throws ApiOperationException {
+		return getSchuelerKlausurenZuTerminIds(conn, terminIds, false);
 	}
 
 }
