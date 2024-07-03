@@ -162,9 +162,9 @@ public class ReportingLehrer {
 		return ("%s %s %s%s")
 				.formatted(
 						titel,
-						mitVornameKurz ? vorname.charAt(0) + "." : vorname,
+						mitVornameKurz ? (vorname.charAt(0) + ".") : vorname,
 						nachname,
-						mitAmtsbezeichnung ? ", " + amtsbezeichnung : "")
+						mitAmtsbezeichnung ? (", " + amtsbezeichnung) : "")
 				.trim().translateEscapes();
 	}
 

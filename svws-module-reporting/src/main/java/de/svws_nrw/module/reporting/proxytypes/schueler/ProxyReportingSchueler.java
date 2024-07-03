@@ -110,17 +110,17 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.verkehrspracheFamilie,
 				schuelerStammdaten.vorname,
 				schuelerStammdaten.alleVornamen,
-				schuelerStammdaten.wohnortID != null ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
+				(schuelerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(schuelerStammdaten.wohnortID) : null,
 				"",
-				schuelerStammdaten.ortsteilID != null ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
+				(schuelerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(schuelerStammdaten.ortsteilID) : null,
 				"",
 				schuelerStammdaten.zuzugsjahr);
 
 		this.reportingRepository = reportingRepository;
 
 		super.setReligion(this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID));
-		super.setWohnortname(super.wohnort() != null ? super.wohnort().ortsname : "");
-		super.setWohnortsteilname(super.wohnortsteil() != null ? super.wohnortsteil().ortsteil : "");
+		super.setWohnortname((super.wohnort() != null) ? super.wohnort().ortsname : "");
+		super.setWohnortsteilname((super.wohnortsteil() != null) ? super.wohnortsteil().ortsteil : "");
 
 		final List<Sprachbelegung> sprachbelegungen = new DataSchuelerSprachbelegung(reportingRepository.conn(), super.id()).getListSprachbelegungen();
 		super.setSprachbelegungen(sprachbelegungen.stream()

@@ -161,8 +161,8 @@ public class ReportingSchule {
 	public String bezeichnungSchuleMehrzeilig() {
 		return String.format("%s%s%s".formatted(
 				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
-				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? "%n" + bezeichnung2.trim() : "",
-				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? "%n" + bezeichnung3.trim() : ""));
+				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? ("%n" + bezeichnung2.trim()) : "",
+				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? ("%n" + bezeichnung3.trim()) : ""));
 	}
 
 	/**
@@ -172,8 +172,8 @@ public class ReportingSchule {
 	public String bezeichnungSchuleMehrzeiligHtml() {
 		return "%s%s%s".formatted(
 				((bezeichnung1 != null) && !bezeichnung1.isEmpty()) ? bezeichnung1.trim() : "",
-				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? "<br/>" + bezeichnung2.trim() : "",
-				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? "<br/>" + bezeichnung3.trim() : "");
+				((bezeichnung2 != null) && !bezeichnung2.isEmpty()) ? ("<br/>" + bezeichnung2.trim()) : "",
+				((bezeichnung3 != null) && !bezeichnung3.isEmpty()) ? ("<br/>" + bezeichnung3.trim()) : "");
 	}
 
 

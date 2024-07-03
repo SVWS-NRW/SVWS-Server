@@ -239,7 +239,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 			letzteBeratung = letzteBeratung + " von " + letzteBeratungLehrkraft.unterschriftfeld();
 			hatLetzteBeratung = true;
 		}
-		letzteBeratung = Boolean.TRUE.equals(hatLetzteBeratung) ? letzteBeratung + "." : "";
+		letzteBeratung = Boolean.TRUE.equals(hatLetzteBeratung) ? (letzteBeratung + ".") : "";
 		return letzteBeratung;
 	}
 

@@ -61,14 +61,14 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				lehrerStammdaten.telefonMobil,
 				lehrerStammdaten.titel,
 				lehrerStammdaten.vorname,
-				lehrerStammdaten.wohnortID != null ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
+				(lehrerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
 				"",
-				lehrerStammdaten.ortsteilID != null ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null,
+				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null,
 				"");
 
 		this.reportingRepository = reportingRepository;
-		super.setWohnortname(super.wohnort() != null ? super.wohnort().ortsname : "");
-		super.setWohnortsteilname(super.wohnortsteil() != null ? super.wohnortsteil().ortsteil : "");
+		super.setWohnortname((super.wohnort() != null) ? super.wohnort().ortsname : "");
+		super.setWohnortsteilname((super.wohnortsteil() != null) ? super.wohnortsteil().ortsteil : "");
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);
