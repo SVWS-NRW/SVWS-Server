@@ -24,7 +24,6 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermineJahrgaenge;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
@@ -274,7 +273,6 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostKlausurenSchuelerklausurenTermine.class.getSimpleName(), DTOGostKlausurenSchuelerklausurenTermine.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class.getSimpleName(), DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenTermine.class.getSimpleName(), DTOGostKlausurenTermine.class);
-             mapDTOName2DTOClass.put(DTOGostKlausurenTermineJahrgaenge.class.getSimpleName(), DTOGostKlausurenTermineJahrgaenge.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenVorgaben.class.getSimpleName(), DTOGostKlausurenVorgaben.class);
              mapDTOName2DTOClass.put(DTOGostBlockung.class.getSimpleName(), DTOGostBlockung.class);
              mapDTOName2DTOClass.put(DTOGostBlockungKurs.class.getSimpleName(), DTOGostBlockungKurs.class);
@@ -527,7 +525,6 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Klausuren_Schuelerklausuren_Termine", DTOGostKlausurenSchuelerklausurenTermine.class);
              mapTablename2DTOClass.put("Gost_Klausuren_SchuelerklausurenTermine_Raumstunden", DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class);
              mapTablename2DTOClass.put("Gost_Klausuren_Termine", DTOGostKlausurenTermine.class);
-             mapTablename2DTOClass.put("Gost_Klausuren_Termine_Jahrgaenge", DTOGostKlausurenTermineJahrgaenge.class);
              mapTablename2DTOClass.put("Gost_Klausuren_Vorgaben", DTOGostKlausurenVorgaben.class);
              mapTablename2DTOClass.put("Gost_Blockung", DTOGostBlockung.class);
              mapTablename2DTOClass.put("Gost_Blockung_Kurse", DTOGostBlockungKurs.class);

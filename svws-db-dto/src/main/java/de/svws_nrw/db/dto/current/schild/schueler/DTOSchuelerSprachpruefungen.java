@@ -39,7 +39,7 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachpruefungen")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "ErsetzteSprache", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
 public final class DTOSchuelerSprachpruefungen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -89,12 +89,6 @@ public final class DTOSchuelerSprachpruefungen {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Pruefungsdatum */
 	public static final String QUERY_LIST_BY_PRUEFUNGSDATUM = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ErsetzteSprache */
-	public static final String QUERY_BY_ERSETZTESPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ErsetzteSprache */
-	public static final String QUERY_LIST_BY_ERSETZTESPRACHE = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes IstHSUPruefung */
 	public static final String QUERY_BY_ISTHSUPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung = ?1";
@@ -177,11 +171,6 @@ public final class DTOSchuelerSprachpruefungen {
 	@Column(name = "Pruefungsdatum")
 	@JsonProperty
 	public String Pruefungsdatum;
-
-	/** Atomares Sprachkürzel aus StatKue_SVWS_ZulaessigeFaecher für die ersetzte Sprache */
-	@Column(name = "ErsetzteSprache")
-	@JsonProperty
-	public String ErsetzteSprache;
 
 	/** Gibt an, dass die Prüfung eine Prüfung in der Herkunftssprache ist (BASS 13-61 Nr. 2). Entspricht dem Eintrag P in Schild 2 */
 	@Column(name = "IstHSUPruefung")
@@ -298,7 +287,7 @@ public final class DTOSchuelerSprachpruefungen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerSprachpruefungen(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", ASDJahrgang=" + this.ASDJahrgang + ", Anspruchsniveau=" + this.Anspruchsniveau + ", Pruefungsdatum=" + this.Pruefungsdatum + ", ErsetzteSprache=" + this.ErsetzteSprache + ", IstHSUPruefung=" + this.IstHSUPruefung + ", IstFeststellungspruefung=" + this.IstFeststellungspruefung + ", KannErstePflichtfremdspracheErsetzen=" + this.KannErstePflichtfremdspracheErsetzen + ", KannZweitePflichtfremdspracheErsetzen=" + this.KannZweitePflichtfremdspracheErsetzen + ", KannWahlpflichtfremdspracheErsetzen=" + this.KannWahlpflichtfremdspracheErsetzen + ", KannBelegungAlsFortgefuehrteSpracheErlauben=" + this.KannBelegungAlsFortgefuehrteSpracheErlauben + ", Referenzniveau=" + this.Referenzniveau + ", NotePruefung=" + this.NotePruefung + ")";
+		return "DTOSchuelerSprachpruefungen(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", ASDJahrgang=" + this.ASDJahrgang + ", Anspruchsniveau=" + this.Anspruchsniveau + ", Pruefungsdatum=" + this.Pruefungsdatum + ", IstHSUPruefung=" + this.IstHSUPruefung + ", IstFeststellungspruefung=" + this.IstFeststellungspruefung + ", KannErstePflichtfremdspracheErsetzen=" + this.KannErstePflichtfremdspracheErsetzen + ", KannZweitePflichtfremdspracheErsetzen=" + this.KannZweitePflichtfremdspracheErsetzen + ", KannWahlpflichtfremdspracheErsetzen=" + this.KannWahlpflichtfremdspracheErsetzen + ", KannBelegungAlsFortgefuehrteSpracheErlauben=" + this.KannBelegungAlsFortgefuehrteSpracheErlauben + ", Referenzniveau=" + this.Referenzniveau + ", NotePruefung=" + this.NotePruefung + ")";
 	}
 
 }

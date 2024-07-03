@@ -238,7 +238,6 @@
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine</class>
-        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermineJahrgaenge</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs</class>

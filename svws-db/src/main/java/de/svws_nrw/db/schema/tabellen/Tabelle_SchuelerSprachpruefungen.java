@@ -51,7 +51,8 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ErsetzteSprache */
 	public SchemaTabelleSpalte col_ErsetzteSprache = add("ErsetzteSprache", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-			.setJavaComment("Atomares Sprachkürzel aus StatKue_SVWS_ZulaessigeFaecher für die ersetzte Sprache");
+			.setJavaComment("Atomares Sprachkürzel aus StatKue_SVWS_ZulaessigeFaecher für die ersetzte Sprache")
+			.setVeraltet(SchemaRevisionen.REV_19);
 
 	/** Die Definition der Tabellenspalte IstHSUPruefung */
 	public SchemaTabelleSpalte col_IstHSUPruefung = add("IstHSUPruefung", SchemaDatentypen.INT, false)

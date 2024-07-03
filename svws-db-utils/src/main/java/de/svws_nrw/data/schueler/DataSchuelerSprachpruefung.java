@@ -54,7 +54,6 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		daten.jahrgang = dto.ASDJahrgang;
 		daten.anspruchsniveauId = (dto.Anspruchsniveau == null) ? null : dto.Anspruchsniveau.daten.id;
 		daten.pruefungsdatum = dto.Pruefungsdatum;
-		daten.ersetzteSprache = dto.ErsetzteSprache;
 		daten.istHSUPruefung = (dto.IstHSUPruefung != null) && dto.IstHSUPruefung;
 		daten.istFeststellungspruefung = (dto.IstFeststellungspruefung != null) && dto.IstFeststellungspruefung;
 		daten.kannErstePflichtfremdspracheErsetzen = (dto.KannErstePflichtfremdspracheErsetzen != null) && dto.KannErstePflichtfremdspracheErsetzen;
@@ -149,7 +148,6 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 				}
 			}),
 			Map.entry("pruefungsdatum", (conn, dto, value, map) -> dto.Pruefungsdatum = JSONMapper.convertToString(value, true, false, null)),
-			Map.entry("ersetzteSprache", (conn, dto, value, map) -> dto.ErsetzteSprache = JSONMapper.convertToString(value, true, false, 2)),
 			Map.entry("istHSUPruefung", (conn, dto, value, map) -> dto.IstHSUPruefung = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("istFeststellungspruefung", (conn, dto, value, map) -> dto.IstFeststellungspruefung = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("kannErstePflichtfremdspracheErsetzen",

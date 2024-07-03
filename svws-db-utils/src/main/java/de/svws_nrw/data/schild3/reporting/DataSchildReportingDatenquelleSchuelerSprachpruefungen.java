@@ -56,7 +56,6 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen
 						schuelerSprachpruefung.jahrgang = dtoSP.ASDJahrgang;
 						schuelerSprachpruefung.pruefungsdatum = dtoSP.Pruefungsdatum;
 						schuelerSprachpruefung.anspruchsniveau = dtoSP.Anspruchsniveau.daten.kuerzel;
-						schuelerSprachpruefung.ersetzteSprache = dtoSP.ErsetzteSprache;
 						schuelerSprachpruefung.istHSUPruefung = dtoSP.IstHSUPruefung;
 						schuelerSprachpruefung.istFeststellungspruefung = dtoSP.IstFeststellungspruefung;
 						schuelerSprachpruefung.kannErstePflichtfremdspracheErsetzen = dtoSP.KannErstePflichtfremdspracheErsetzen;
