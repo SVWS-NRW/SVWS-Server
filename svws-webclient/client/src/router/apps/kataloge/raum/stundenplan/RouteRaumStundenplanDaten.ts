@@ -64,7 +64,7 @@ export class RouteRaumStundenplanDaten extends RouteNode<any, RouteRaumStundenpl
 
 	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
 		return {
-			mode: 'fach',
+			mode: 'raum',
 			modePausenaufsichten: 'aus',
 			id: routeRaumStundenplan.data.idRaumStundenplan,
 			ignoreEmpty: routeRaumStundenplan.data.ganzerStundenplan,

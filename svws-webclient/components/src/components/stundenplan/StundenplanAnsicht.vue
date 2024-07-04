@@ -4,12 +4,12 @@
 		<div class="svws-ui-stundenplan--head">
 			<span class="icon i-ri-time-line svws-time-icon print:hidden" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
-			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0, 'font-bold text-headline-md pb-0.5': wochentyp() !== 0}">
+			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
 			</div>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentage[wochentag.id] }} </div>
+				<div> {{ wochentag.beschreibung }} </div>
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -78,30 +78,31 @@
 							<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 							<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, 0).value" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1}"
+								:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1 && (mode === 'schueler' || mode === 'lehrer')}"
 								:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 								:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
-								<div class="font-bold flex place-items-center group" :class="`${mode === 'lehrer' ? 'col-span-3' : 'col-span-2'}`" title="Unterricht">
-									<span class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+								<div class="font-bold flex place-items-center group" :class="{'col-span-2': !['fach' ].includes(mode)}" title="Unterricht">
+									<span v-if="draggable" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 									<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 								</div>
+								<div v-if="mode !== 'schueler'">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+								<div v-if="mode !== 'raum'" title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 							</div>
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0).value]" :key="schiene.id">
 							<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id).value, $event)" @dragend="onDrag(undefined)" :draggable>
 								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}">
-									<span class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+									<span v-if="draggable" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 									<span>{{ schiene.bezeichnung }}</span>
 								</div>
 								<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, schiene.id).value" :key="unterricht.id"
 									class="svws-ui-stundenplan--unterricht"
 									:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1}"
 									:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
-									:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
+									:draggable="false" @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 									<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
-										<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+										<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 										<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 									</div>
 									<div title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
@@ -120,15 +121,16 @@
 										</template>
 										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, 0).value" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht"
-											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, 0).value.size() === 1, 'svws-compact': !wochentyp(), 'cursor-grab': draggable}"
+											:class="{'flex-grow': (getUnterricht(wochentag, stunde, wt, 0).value.size() === 1) && (mode === 'schueler' || mode === 'lehrer'), 'svws-compact': !wochentyp(), 'cursor-grab': draggable}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
-												<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+												<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 												<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 											</div>
+											<div v-if="mode !== 'schueler'">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 											<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-											<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+											<div v-if="mode !== 'raum'" title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 										</div>
 									</template>
 									<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, wt).value]" :key="schiene.id">
@@ -141,11 +143,11 @@
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.id).value" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
-												:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, wt, schiene.id).value.size() === 1, 'svws-compact': !wochentyp()} "
+												:class="{'cursor-grab': draggable, 'flex-grow': (getUnterricht(wochentag, stunde, wt, schiene.id).value.size() === 1), 'svws-compact': !wochentyp()} "
 												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 												:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 												<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
-													<span class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
+													<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 													<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 												</div>
 												<div title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
@@ -222,8 +224,6 @@
 	import { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-
-	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		mode: 'schueler',
@@ -302,6 +302,12 @@
 				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNBySchuelerIdWochentagAndStunde(props.id, wochentag, stunde);
 			case 'lehrer':
 				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByLehrerIdWochentagAndStunde(props.id, wochentag, stunde);
+			case 'fach':
+				//TODO
+				return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(props.id, wochentag, stunde);
+			case 'raum':
+				//TODO
+				return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByRaumIdWochentagAndStunde(props.id, wochentag, stunde);
 			default:
 				return false;
 		}
@@ -360,7 +366,6 @@
 					list.add(u);
 			return list;
 		}
-		// return props.manager().unterrichtGetMengeByFachId(props.id);
 		if (props.mode === 'raum') {
 			const unterricht = props.manager().unterrichtGetMengeAsList()
 			const list: List<StundenplanUnterricht> = new ArrayList();
@@ -581,7 +586,7 @@
 		@apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
 
 		.svws-multiple {
-			@apply grid h-full grid-flow-col -m-1 flex-grow;
+			@apply grid h-full grid-flow-col flex-grow;
 			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 		}
 

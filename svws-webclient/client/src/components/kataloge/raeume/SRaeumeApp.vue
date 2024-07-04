@@ -4,11 +4,12 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
+						<span class="inline-block mr-3">{{ auswahl.beschreibung }}</span>
 						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 							ID: {{ auswahl.id }}
 						</svws-ui-badge>
 					</h2>
+					<span class="svws-subline">{{ auswahl.kuerzel }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
