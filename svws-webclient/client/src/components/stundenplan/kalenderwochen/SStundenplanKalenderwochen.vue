@@ -8,22 +8,16 @@
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div class="page--content-flex-column">
-			Anzahl Zuordnungen:
-			<span v-for="wt of stundenplanManager().getWochenTypModell()" :key="wt"> {{ stundenplanManager().stundenplanGetWochenTypAsString(wt) }}: {{ stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size() }}</span>
-			<div class="flex gap-1">
-				<div v-for="kw, i of stundenplanManager().kalenderwochenzuordnungGetMengeAsList()" :key="i" class="border flex flex-row p-2 cursor-pointer" @click="nextWochentyp(kw)">
-					<div>{{ stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw) }}</div>
-					<div class="font-bold size-6">{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(kw.wochentyp) }}</div>
-				</div>
-			</div>
+		<svws-ui-table :items="zuordnungen" :columns="colsZuordnungen" clickable @update:clicked="toggleWochentyp" />
+		<div>
+			<svws-ui-table :items="summen" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { onMounted, ref } from "vue";
+	import { onMounted, ref, computed } from "vue";
 	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
 	import { ArrayList } from "@core";
@@ -42,24 +36,41 @@
 		await props.patchKalenderwochenzuordnungen(kalenderwochenZuordnung);
 	}
 
+	async function toggleWochentyp(value: { zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }) {
+		await nextWochentyp(value.zuordnung);
+	}
+
 	const modus = ref<boolean>(true);
-
-
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
+	const summen = computed<Array<{ wochentyp: string, anzahl: number }>>(() => {
+		const result : Array<{ wochentyp: string, anzahl: number }> = [];
+		for (let wt = 1; wt <= props.stundenplanManager().getWochenTypModell(); wt++) {
+			result.push({
+				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsString(wt),
+				anzahl: props.stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size()
+			});
+		}
+		return result;
+	});
+
+	const colsZuordnungen = [
+		{ key: "kalenderwoche", label: "Kalenderwoche", span: 2 },
+		{ key: "wochentyp", label: "Wochentyp", span: 1 },
+	]
+
+	const zuordnungen = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }>>(() => {
+		const result : Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }> = [];
+		for (const zuordnung of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList()) {
+			result.push({
+				zuordnung: zuordnung,
+				kalenderwoche: props.stundenplanManager().kalenderwochenzuordnungGetWocheAsString(zuordnung),
+				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsStringKurz(zuordnung.wochentyp)
+			});
+		}
+		return result;
+	});
 
 </script>
-
-<style lang="postcss" scoped>
-
-	.page--content {
-		@apply overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 flex flex-row
-	}
-
-	.page--content-flex-column {
-		@apply h-full overflow-y-auto w-full flex flex-col gap-8
-	}
-
-</style>
