@@ -54,6 +54,11 @@ class Api {
 		return this.conn.hasRootPrivileges;
 	}
 
+	// Gibt zurück, ob der angemeldete Benutzer der in der SVWS-Server-Konfiguration eingetragene Server-Admin ist oder nicht
+	get isServerAdmin() : boolean {
+		return this.conn.isServerAdmin;
+	}
+
 	/** Gibt die Version des SVWS-Servers zurück */
 	get version(): string {
 		return version;

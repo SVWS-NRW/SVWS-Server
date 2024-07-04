@@ -16,6 +16,7 @@ import { routeLogin } from "~/router/login/RouteLogin";
 import SApp from "~/components/SApp.vue";
 import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
 import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
+import { routeConfig } from "./config/RouteConfig";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -29,9 +30,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchema,
 			routeSchemagruppe,
 			routeSchemaNeu,
+			routeConfig
 		];
 		super.menu = [
 			routeSchema,
+			routeConfig,
 		];
 		super.defaultChild = routeSchema;
 	}
@@ -56,6 +59,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return {
 			logout: routeLogin.logout,
 			username: api.username,
+			isServerAdmin: api.isServerAdmin,
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),

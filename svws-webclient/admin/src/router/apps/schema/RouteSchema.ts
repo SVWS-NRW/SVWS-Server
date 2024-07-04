@@ -45,7 +45,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 				return this.getChildRoute(this.data.auswahl.name);
 			return;
 		}
-		const schemaNeu = this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
+		const schemaNeu = (to_params.schema === null) ? undefined : this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
 		await this.data.setSchema(schemaNeu);
 		if (to.name === this.name)
 			return this.getChildRoute(to_params.schema);
@@ -58,6 +58,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// Aufräumen der Quelldaten für Migrationen aus RouteData, damit diese beim Abmelden nicht erhalten bleiben!
 		this.data.resetMigrationQuellinformationen();
+		this.data.setSchema(undefined);
 	}
 
 	public getRoute(schema?: string) : RouteLocationRaw {

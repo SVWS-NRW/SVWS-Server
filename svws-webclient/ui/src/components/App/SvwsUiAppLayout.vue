@@ -51,7 +51,7 @@
 				</svws-ui-menu>
 			</template>
 		</div>
-		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
+		<div v-if="($slots.secondaryMenu && !fullwidthContent && !noSecondaryMenu) || skeleton" class="app--sidebar">
 			<div class="s-toggle" v-if="!skeleton" :class="sidebarExpanded ? '' : 'mt-8'">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
@@ -110,9 +110,11 @@
 	const props = withDefaults(defineProps<{
 		skeleton?: boolean;
 		fullwidthContent?: boolean;
+		noSecondaryMenu?: boolean;
 	}>(), {
 		skeleton: false,
-		fullwidthContent: false
+		fullwidthContent: false,
+		noSecondaryMenu: false
 	});
 
 	const sidebarExpanded = ref<boolean>(true);

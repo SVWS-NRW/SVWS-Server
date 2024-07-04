@@ -28,8 +28,11 @@ export class ApiConnection {
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
 
-	// Gibt an, ob es sich um einen Benutzer mit Rechten auf root hat oder nicht
+	// Gibt an, ob es sich um einen Benutzer mit priviligierten Rechten auf der Datenbank handelt oder nicht
 	protected _hasRootPrivileges: boolean = false;
+
+	// Gibt an, ob es sich um den Datenbank-Benutzer handelt, der priviligiert ist, um auch die SVWS-Server-Konfiguration zu bearbeiten
+	protected _isServerAdmin: boolean = false;
 
 
 	// Gibt die Server-API zurück.
@@ -62,9 +65,14 @@ export class ApiConnection {
 		return this._username;
 	}
 
-	// Gibt zurück, ob der angemeldete Benutzer root-Privilegien besitzt oder nicht
+	// Gibt zurück, ob der angemeldete Benutzer root-Privilegien auf der Datenbank besitzt oder nicht
 	get hasRootPrivileges() : boolean {
 		return this._hasRootPrivileges;
+	}
+
+	// Gibt zurück, ob der angemeldete Benutzer der in der SVWS-Server-Konfiguration eingetragene Server-Admin ist oder nicht
+	get isServerAdmin() : boolean {
+		return this._isServerAdmin;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
@@ -149,6 +157,11 @@ export class ApiConnection {
 			} catch (error) {
 				this._hasRootPrivileges = false;
 			}
+			try {
+				this._isServerAdmin = await api_priv.isPrivilegedUser() ?? false;
+			} catch (error) {
+				this._isServerAdmin = false;
+			}
 			this._schema_api_privileged = api_priv;
 			this._username = username;
 			this._password = password;
@@ -157,11 +170,12 @@ export class ApiConnection {
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			return true;
 		} catch (error) {
-			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
+			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkrete Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
 			this._serverMode.value = ServerMode.STABLE;
 			this._api = undefined;
 			this._schema_api_privileged = undefined;
+			this._isServerAdmin = false;
 			return false;
 		}
 	}
@@ -175,6 +189,7 @@ export class ApiConnection {
 		this._password = "";
 		this._api = undefined;
 		this._schema_api_privileged = undefined;
+		this._isServerAdmin = false;
 	}
 
 }
