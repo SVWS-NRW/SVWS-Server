@@ -32,6 +32,7 @@ public enum Schulgliederung {
 					Schulform.H,
 					Schulform.PS,
 					Schulform.R,
+					Schulform.S,
 					Schulform.SG,
 					Schulform.SK,
 					Schulform.SR,
