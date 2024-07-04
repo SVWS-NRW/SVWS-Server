@@ -23,7 +23,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	 *  Schulgliederung DEFAULT:
 	 *    Standard für diese Schulform
 	 */
-	public static readonly DEFAULT : Schulgliederung = new Schulgliederung("DEFAULT", 0, [new SchulgliederungKatalogEintrag(0, "***", false, Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), false, false, "Standard für diese Schulform", null, null, null, false, null, null, null, null)]);
+	public static readonly DEFAULT : Schulgliederung = new Schulgliederung("DEFAULT", 0, [new SchulgliederungKatalogEintrag(0, "***", false, Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), false, false, "Standard für diese Schulform", null, null, null, false, null, null, null, null)]);
 
 	/**
 	 *  Schulgliederung A01:
