@@ -9,7 +9,7 @@
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="stundenplanUnterrichtListeManager().kurse.list()" :item-text="kurs => kurs.bezeichnung" :item-filter="findKurs" />
 					<svws-ui-multi-select v-model="filterWochentypen" title="Wochentyp" :items="stundenplanUnterrichtListeManager().wochentypen.list()" :item-text="stundenplanManager().stundenplanGetWochenTypAsStringKurz" />
 					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="stundenplanUnterrichtListeManager().faecher.list()" :item-text="fach => fach.bezeichnung" />
-					<svws-ui-multi-select v-model="filterSchienen" title="Schiene" :items="stundenplanUnterrichtListeManager().schienen.list()" :item-text="schiene => stundenplanManager().schieneGetByIdOrException(schiene.id).nummer.toString()" />
+					<svws-ui-multi-select v-model="filterSchienen" title="Schiene" :items="stundenplanUnterrichtListeManager().schienen.list()" :item-text="schiene => `${stundenplanManager().schieneGetByIdOrException(schiene.id).nummer.toString()}: ${stundenplanManager().jahrgangGetByIdOrException(schiene.idJahrgang).kuerzel}`" />
 				</template>
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
