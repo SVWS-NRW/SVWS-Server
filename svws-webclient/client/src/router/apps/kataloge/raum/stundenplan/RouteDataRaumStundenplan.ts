@@ -65,7 +65,7 @@ export class RouteDataRaumStundenplan extends RouteData<RouteStateRaumDataStunde
 
 	get idRaumStundenplan(): number {
 		const raumkuerzel = routeKatalogRaeume.data.raumListeManager.daten().kuerzel;
-		const raum = this.manager.raumGetByKuerzelOrNull();
+		const raum = this.manager.raumGetByKuerzelOrNull(raumkuerzel);
 		return (raum === null) ? -1 : raum.id;
 	}
 
