@@ -38,7 +38,7 @@
 							<template v-else>
 								<span class="opacity-50 inline-flex items-center gap-1">
 									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
-									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+									<svws-ui-button v-if="!hideButtonRaeumePlanen" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 								</span>
 							</template>
 						</slot>
@@ -164,6 +164,7 @@
 		showSchuelerklausuren?: boolean;
 		showKursklausurenNachschreiber?: boolean;
 		showKlausurenSelbesDatum?: boolean;
+		hideButtonRaeumePlanen?: boolean;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 		inTooltip?: boolean;
@@ -178,6 +179,7 @@
 		patchKlausur: undefined,
 		showKlausurenSelbesDatum: false,
 		showKursklausurenNachschreiber: false,
+		hideButtonRaeumePlanen: false,
 		inTooltip: false,
 	});
 

@@ -78,7 +78,14 @@
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
-			<svws-ui-content-card v-if="multijahrgang()" :has-background="true" :title="'Jahrgangsübergreifende Planung' + (!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true) ? ' aktiviert, da jahrgangsgemischte Termine existieren.' : '')">
+			<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
+				<template #title>
+					<span class="leading-tight text-headline-md gap-1">
+						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-error px-4" />
+						<span>Jahrgangsübergreifende Planung</span>
+						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
+					</span>
+				</template>
 				<ul>
 					<li class="flex font-bold">
 						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
@@ -245,7 +252,7 @@
 		@apply h-full py-0 auto-rows-auto;
 
 		.content-card {
-			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
+			@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
 			scrollbar-gutter: stable;
 		}
 	}

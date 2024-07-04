@@ -48,7 +48,14 @@
 				<!--<span>{{ kMan().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
 			</div>
 		</template>
-		<svws-ui-content-card v-if="multijahrgang()" :has-background="true" :title="'Jahrgangsübergreifende Planung' + (!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen() ? ' aktiviert, da jahrgangsgemischte Räume existieren.' : '')">
+		<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
+			<template #title>
+				<span class="leading-tight text-headline-md gap-1">
+					<span v-if="(!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen())" class="icon i-ri-alert-fill icon-error px-4" />
+					<span>Jahrgangsübergreifende Planung</span>
+					<span v-if="(!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen())"> aktiviert, da jahrgangsgemischte Räume existieren</span>
+				</span>
+			</template>
 			<ul>
 				<li class="flex font-bold">
 					<span>{{ raummanager().anzahlBenoetigtePlaetzeAlleKlausuren(false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
@@ -80,6 +87,7 @@
 				:k-man="kMan"
 				:drag-data="dragData"
 				:on-drag="onDrag"
+				:multijahrgang
 				:on-drop="onDrop" />
 			<!-- </template>
 			<template v-else>
@@ -163,3 +171,19 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+
+.svws-ui-tab-content {
+	@apply overflow-y-hidden items-start;
+
+	.page--content {
+		@apply h-full py-0 auto-rows-auto;
+
+		.content-card {
+			@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
+			scrollbar-gutter: stable;
+		}
+	}
+}
+</style>

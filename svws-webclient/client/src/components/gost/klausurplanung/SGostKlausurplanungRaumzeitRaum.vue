@@ -3,7 +3,7 @@
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
-			'border-red-500': raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse,
+			'border-red-500': raumHatFehler(),
 			'bg-red-200': raum.idTermin !== raummanager().getHauptTermin().id, // TODO Priorität und warum überhaupt???
 		}">
 		<div class="flex h-full flex-col p-3">
@@ -14,15 +14,17 @@
 					class="flex-grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null }, raummanager())"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-					:items="raeumeVerfuegbar"
-					:class="raum.idStundenplanRaum === null ? 'bg-yellow-300 rounded' : ''" />
-				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
-					<svws-ui-tooltip>
+					:items="raeumeVerfuegbar" />
+				<span class="inline-flex items-center flex-shrink-0  -my-1">
+					<svws-ui-tooltip class="text-error font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
-							Derzeitige Raumbelegung überschreitet die Raumkapazität
+							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
+							<template v-else-if="anzahlSuS() > props.stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
 						</template>
 						<span class="icon icon-error i-ri-alert-fill" />
 					</svws-ui-tooltip>
+					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
+					<svws-ui-button v-if="multijahrgang()" :disabled="raum.idTermin === raummanager().getHauptTermin().id" type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(termin().abijahr, termin().halbjahr, termin().id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang}}</svws-ui-button>
 				</span>
 			</div>
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
@@ -81,6 +83,9 @@
 	import { GostKursklausur, GostHalbjahr } from '@core';
 	import { computed } from 'vue';
 	import { DateUtils} from "@core";
+	import { RouteManager } from '~/router/RouteManager';
+	import { routeGostKlausurplanungRaumzeit } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit';
+
 
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
@@ -93,12 +98,17 @@
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
+		multijahrgang: () => boolean;
 		// terminStartzeit?: string;
 	}>();
+
+	const raumHatFehler = () => props.raum.idStundenplanRaum && anzahlSuS() > props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum).groesse || props.raum.idStundenplanRaum === null;
 
 	const klausurenImRaum = () => props.raummanager().kursklausurGetMengeByRaumid(props.raum.id);
 
 	const anzahlSuS = () => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id).size();
+
+	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
 
 	const anzahlRaumstunden = computed(() => {
 		return props.raummanager().klausurraumstundeGetMengeByRaumid(props.raum.id).size();
