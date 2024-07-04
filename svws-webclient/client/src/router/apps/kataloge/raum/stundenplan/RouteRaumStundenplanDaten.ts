@@ -66,7 +66,7 @@ export class RouteRaumStundenplanDaten extends RouteNode<any, RouteRaumStundenpl
 		return {
 			mode: 'fach',
 			modePausenaufsichten: 'aus',
-			id: routeKatalogRaeume.data.raumListeManager.daten().id,
+			id: routeRaumStundenplan.data.idRaumStundenplan,
 			ignoreEmpty: routeRaumStundenplan.data.ganzerStundenplan,
 			manager: () => routeRaumStundenplan.data.manager,
 			wochentyp: () => routeRaumStundenplan.data.wochentyp,

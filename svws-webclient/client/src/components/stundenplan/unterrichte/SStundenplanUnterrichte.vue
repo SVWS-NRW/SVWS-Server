@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content page--content--full gap-2">
 		<svws-ui-content-card title="Übersicht aller Unterrichte im Zeitraster" class="page--content-flex-column">
-			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true">
+			<svws-ui-table :items="[]" :no-data="false" has-background :filterReset :filter-open="true" :filtered>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="stundenplanUnterrichtListeManager().schueler.list()" :item-text="schueler => `${schueler.nachname}, ${schueler.vorname}`" :item-filter="findSchueler" />
 					<svws-ui-multi-select v-model="filterLehrer" title="Lehrer" :items="stundenplanUnterrichtListeManager().lehrer.list()" :item-text="lehrer => `${lehrer.nachname}, ${lehrer.vorname}`" :item-filter="findLehrer" />
@@ -53,8 +53,10 @@
 					<div class="svws-ui-badge" :style="{'--background-color': getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}">{{ rowData.idKurs ? stundenplanManager().kursGetByIdOrException(rowData.idKurs).bezeichnung : stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</div>
 				</template>
 				<template #cell(lehrer)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })" autofocus @blur="setFocusMultiselect({type: null, id: null})"
-						:model-value="modelValueLehrer(value)" title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless />
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'lehrer', id: rowData.id })"
+						:model-value="modelValueLehrer(value)" @update:model-value="lehrer => patchLehrer(lehrer, rowData)"
+						autofocus @blur="setFocusMultiselect({type: null, id: null})" :item-text="i => i.kuerzel" :item-filter="findLehrer" headless
+						title="Fachlehrer" :items="stundenplanManager().lehrerGetMengeAsList()" />
 					<button v-else @click="setFocusMultiselect({ type: 'lehrer', id: rowData.id })" class="w-full h-full text-left">
 						<span v-if="value.size() > 0" class="decoration-dotted underline">
 							{{ modelValueLehrer(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
@@ -64,8 +66,10 @@
 				</template>
 				<template #cell(klassen)="{ rowData, value }">
 					<template v-if="rowData.idKurs === null">
-						<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })" autofocus
-							:model-value="modelValueKlassen(value)" title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+						<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'klassen', id: rowData.id })"
+							:model-value="modelValueKlassen(value)" @update:model-value="klassen => patchKlassen(klassen, rowData)"
+							autofocus @blur="setFocusMultiselect({type: null, id: null})" :item-text="i => i.kuerzel" :item-filter="find" headless
+							title="Klassen" :items="stundenplanManager().klasseGetMengeAsList()" />
 						<button v-else @click="setFocusMultiselect({ type: 'klassen', id: rowData.id })" class="w-full h-full text-left">
 							<span v-if="value.size() > 0" class="decoration-dotted underline">
 								{{ modelValueKlassen(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
@@ -76,8 +80,10 @@
 					<span v-else class="opacity-50 pointer-events-none">&mdash;</span>
 				</template>
 				<template #cell(raeume)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })" autofocus
-						:model-value="modelValueRaeume(value)" title="Räume" :items="stundenplanManager().raumGetMengeAsList()" :item-text="i => i.kuerzel" :item-filter="find" headless />
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'raeume', id: rowData.id })"
+						:model-value="modelValueRaeume(value)" @update:model-value="raeume => patchRaeume(raeume, rowData)"
+						autofocus @blur="setFocusMultiselect({type: null, id: null})" :item-text="i => i.kuerzel" :item-filter="find" headless
+						title="Räume" :items="stundenplanManager().raumGetMengeAsList()" />
 					<button v-else @click="setFocusMultiselect({ type: 'raeume', id: rowData.id })" class="w-full h-full text-left">
 						<span v-if="value.size() > 0" class="decoration-dotted underline">
 							{{ modelValueRaeume(value).map(i => i.kuerzel ?? '&mdash;').join(', ') }}
@@ -86,8 +92,10 @@
 					</button>
 				</template>
 				<template #cell(schienen)="{ rowData, value }">
-					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })" autofocus
-						:model-value="modelValueSchienen(value)" title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" :item-text="i => i.nummer.toString()" headless />
+					<svws-ui-multi-select v-if="checkFocusMultiselect({ type: 'schienen', id: rowData.id })"
+						:model-value="modelValueSchienen(value)" @update:model-value="schienen => patchSchienen(schienen, rowData)"
+						autofocus @blur="setFocusMultiselect({type: null, id: null})" :item-text="i => i.nummer.toString()" headless
+						title="Schienen" :items="stundenplanManager().schieneGetMengeAsList()" />
 					<button v-else @click="setFocusMultiselect({ type: 'schienen', id: rowData.id })" class="w-full h-full text-left">
 						<span v-if="value.size() > 0" class="decoration-dotted underline">
 							{{ modelValueSchienen(value).map(i => i.nummer ?? '&mdash;').join(', ') }}
@@ -104,8 +112,8 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
-	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach } from "@core";
-	import { ZulaessigesFach } from "@core";
+	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
+	import { ArrayList, ListUtils, ZulaessigesFach } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -128,6 +136,35 @@
 	function getBgColor(kuerzel: string | null) {
 		return ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
 	}
+
+	const filtered = computed(() => {
+		return props.stundenplanUnterrichtListeManager().faecher.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().kurse.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().klassen.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().wochentage.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().stunden.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().lehrer.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().raeume.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().schienen.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().schueler.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().wochentypen.auswahlExists();
+	})
+
+	async function filterReset() {
+		props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
+		props.stundenplanUnterrichtListeManager().faecher.auswahlClear();
+		props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
+		props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
+		props.stundenplanUnterrichtListeManager().wochentage.auswahlClear();
+		props.stundenplanUnterrichtListeManager().stunden.auswahlClear();
+		props.stundenplanUnterrichtListeManager().lehrer.auswahlClear();
+		props.stundenplanUnterrichtListeManager().raeume.auswahlClear();
+		props.stundenplanUnterrichtListeManager().schienen.auswahlClear();
+		props.stundenplanUnterrichtListeManager().schueler.auswahlClear();
+		props.stundenplanUnterrichtListeManager().wochentypen.auswahlClear();
+		void props.setFilter();
+	}
+
 
 	const filterSchueler = computed<StundenplanSchueler[]>({
 		get: () => [...props.stundenplanUnterrichtListeManager().schueler.auswahl()],
@@ -214,12 +251,6 @@
 		void props.setFilter();
 	}
 
-	async function filterReset() {
-		props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
-		props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
-	}
-
-
 	function modelValueLehrer(list: List<number>) {
 		const res: StundenplanLehrer[] = [];
 		for (const l of list)
@@ -227,11 +258,28 @@
 		return res;
 	}
 
+	function patchLehrer(lehrer: StundenplanLehrer[], unterricht: StundenplanUnterricht) {
+		const list = new ArrayList<number>();
+		unterricht.lehrer.clear();
+		for (const l of lehrer)
+			unterricht.lehrer.add(l.id);
+		void props.patchUnterricht(ListUtils.create1(unterricht));
+	}
+
+
 	function modelValueKlassen(list: List<number>) {
 		const res: StundenplanKlasse[] = [];
 		for (const k of list)
 			res.push(props.stundenplanManager().klasseGetByIdOrException(k));
 		return res;
+	}
+
+	function patchKlassen(klassen: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht)  {
+		const list = new ArrayList<number>();
+		unterricht.klassen.clear();
+		for (const k of klassen)
+			unterricht.klassen.add(k.id);
+		void props.patchUnterricht(ListUtils.create1(unterricht));
 	}
 
 	function modelValueRaeume(list: List<number>) {
@@ -241,12 +289,29 @@
 		return res;
 	}
 
+	function patchRaeume(raeume: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht) {
+		const list = new ArrayList<number>();
+		unterricht.raeume.clear();
+		for (const r of raeume)
+			unterricht.raeume.add(r.id);
+		void props.patchUnterricht(ListUtils.create1(unterricht));
+	}
+
 	function modelValueSchienen(list: List<number>) {
 		const res: StundenplanSchiene[] = [];
 		for (const s of list)
 			res.push(props.stundenplanManager().schieneGetByIdOrException(s));
 		return res;
 	}
+
+	function patchSchienen(schienen: StundenplanSchiene[], unterricht: StundenplanUnterricht) {
+		const list = new ArrayList<number>();
+		unterricht.schienen.clear();
+		for (const s of schienen)
+			unterricht.schienen. add(s.id);
+		void props.patchUnterricht(ListUtils.create1(unterricht));
+	}
+
 
 	function find(items: Iterable<StundenplanKlasse | StundenplanRaum>, search: string) {
 		const list = [];

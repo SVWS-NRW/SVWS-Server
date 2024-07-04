@@ -54,7 +54,7 @@
 <script setup lang="ts" generic="Item">
 
 	import type { ComputedRef, Ref } from "vue";
-	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw, onMounted, onUnmounted } from "vue";
+	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw, onMounted } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
@@ -137,34 +137,43 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const data = shallowRef<Item[]>(props.modelValue);
+	const data = shallowRef<Set<Item>>(new Set(props.modelValue));
 
-	watch(() => props.modelValue, (value) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value) => updateData(new Set(value)), { immediate: false });
 
-	function updateData(value: Item[]) {
+	function updateData(value: Set<Item>) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
 			return;
-		const a = ((data.value === null) || (data.value === undefined)) ? [] : data.value;
-		const b = ((value === null) || (value === undefined)) ? [] : value;
-		if ((a.length === b.length) && (a.every((v, i) => v === b[i])))
-			return;
+		const a = ((data.value === null) || (data.value === undefined)) ? new Set<Item>() : data.value;
+		const b = ((value === null) || (value === undefined)) ? new Set<Item>() : value;
+		if (a.size === b.size) {
+			let diff : boolean = false;
+			for (const e of a) {
+				if (!b.has(e)) {
+					diff = true;
+					break;
+				}
+			}
+			if (!diff)
+				return;
+		}
 		data.value = b;
-		emit("update:modelValue", data.value);
+		emit("update:modelValue", [...data.value]);
 	}
 
 	const selectedItem = computed<Item | null | undefined>({
-		get: () => data.value[0],
+		get: () => data.value.entries().next().value,
 		set: (item) => {
 			if (item !== null && item !== undefined)
 				if (selectedItemList.value.has(item))
 					selectedItemList.value.delete(item);
 				else
 					selectedItemList.value.add(item);
-			updateData([...selectedItemList.value]);
+			updateData(new Set<Item>(selectedItemList.value));
 		}
 	});
 
-	const selectedItemList = computed(() => new Set(toRaw(data.value)));
+	const selectedItemList = computed(() => new Set(data.value));
 
 	function hasSelected(): boolean {
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
@@ -297,7 +306,7 @@
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-	const content = computed<Item[]>(() => data.value);
+	const content = computed<Item[]>(() => [...data.value]);
 
 	defineExpose<{
 		content: ComputedRef<Item[]>,

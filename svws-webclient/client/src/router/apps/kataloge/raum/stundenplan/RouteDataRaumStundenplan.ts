@@ -63,6 +63,12 @@ export class RouteDataRaumStundenplan extends RouteData<RouteStateRaumDataStunde
 		return api.config.getValue("kataloge.raeume.stundenplan.ganzerStundenplan") === 'true';
 	}
 
+	get idRaumStundenplan(): number {
+		const raumkuerzel = routeKatalogRaeume.data.raumListeManager.daten().kuerzel;
+		const raum = this.manager.raumGetByKuerzelOrNull();
+		return (raum === null) ? -1 : raum.id;
+	}
+
 	setGanzerStundenplan = async (value: boolean) => {
 		await api.config.setValue("kataloge.raeume.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}

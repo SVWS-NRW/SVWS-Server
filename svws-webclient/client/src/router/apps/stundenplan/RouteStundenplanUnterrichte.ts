@@ -30,6 +30,7 @@ export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			stundenplanUnterrichtListeManager: () => routeStundenplan.data.stundenplanUnterrichtListeManager,
 			setFilter: routeStundenplan.data.setFilter,
+			patchUnterricht: routeStundenplan.data.patchUnterricht,
 		};
 	}
 
