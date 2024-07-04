@@ -239,7 +239,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		if (!kkSkIds.isEmpty()) {
 		    skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
 		    if (!includeAbwesend)
-			skFilter += "AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+			skFilter += " AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
 		    skFilter += ")";
 		}
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
