@@ -4199,6 +4199,31 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzelRaum   das Kürzel des angefragten-Objektes.
+	 *
+	 * @return das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt.
+	 */
+	public raumGetByKuerzelOrException(kuerzelRaum : string) : StundenplanRaum {
+		return DeveloperNotificationException.ifMapGetIsNull(this._raum_by_kuerzel, kuerzelRaum);
+	}
+
+	/**
+	 * Liefert das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt oder null, wenn kein
+	 * Raum für das Kürzel vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzelRaum   das Kürzel des angefragten-Objektes.
+	 *
+	 * @return das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt oder null
+	 */
+	public raumGetByKuerzelOrNull(kuerzelRaum : string) : StundenplanRaum | null {
+		return this._raum_by_kuerzel.get(kuerzelRaum);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
 	 * <br>Laufzeit: O(1)
 	 *
