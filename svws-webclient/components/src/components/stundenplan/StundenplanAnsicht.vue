@@ -91,8 +91,9 @@
 							</div>
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0).value]" :key="schiene.id">
-							<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id).value, $event)" @dragend="onDrag(undefined)" :draggable>
-								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}">
+							<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
+								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold pt-1 pb-2 print:mb-0 flex place-items-center group ml-2.5" :class="{'cursor-grab': draggable}"
+									:draggable @dragstart.stop="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id).value, $event)" @dragend.stop="onDrag(undefined)">
 									<span v-if="draggable" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 									<span>{{ schiene.bezeichnung }}</span>
 								</div>
@@ -100,7 +101,7 @@
 									class="svws-ui-stundenplan--unterricht"
 									:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1}"
 									:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
-									:draggable="false" @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
+									:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 									<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
 										<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 										<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
@@ -137,8 +138,9 @@
 										<template v-if="getUnterricht(wochentag, stunde, wt, schiene.id).value.size() > 0">
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 										</template>
-										<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id).value, $event)" @dragend="onDrag(undefined)" :draggable>
-											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}">
+										<div :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
+											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': draggable}"
+												:draggable @dragstart.stop="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id).value, $event)" @dragend.stop="onDrag(undefined)">
 												{{ schiene.bezeichnung }}
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.id).value" :key="unterricht.id"
@@ -473,9 +475,13 @@
 				break;
 			}
 		}
+		// Prüfe, ob der Unterricht in das gleiche Zeitraster-Element gelegt werden soll...
 		if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde)) {
-			// Wenn kein Wochentyp-Modell vorhanden ist, dann darf kein Unterricht doppelt in ein Zeitraster-Element gelegt werden
-			if (!hatWochentypen.value || (wt === uwt))
+			// ... wenn kein Wochentyp-Modell vorhanden ist, dann darf kein Unterricht doppelt plaziert werden
+			if (!hatWochentypen.value)
+				return false;
+			// ... wenn ein Wochentyp-Modell verwendet wird, dann muss der Wochentyp verändert werden
+			if (wt === uwt)
 				return false;
 		}
 		return true;
