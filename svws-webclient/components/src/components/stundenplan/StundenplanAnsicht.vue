@@ -78,8 +78,9 @@
 							<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 							<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, 0).value" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1 && (mode === 'schueler' || mode === 'lehrer')}"
-								:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+								:class="{ 'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1 && (mode === 'schueler' || mode === 'lehrer'),
+									'border-black': isDraggedType(unterricht), 'border-dashed': isDraggedType(unterricht) }"
+								:style="`background-color: ${isDraggedType(unterricht) ? 'red' : getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 								:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div class="font-bold flex place-items-center group" :class="{'col-span-2': !['fach' ].includes(mode)}" title="Unterricht">
 									<span v-if="draggable" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
@@ -99,8 +100,9 @@
 								</div>
 								<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, schiene.id).value" :key="unterricht.id"
 									class="svws-ui-stundenplan--unterricht"
-									:class="{'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1}"
-									:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+									:class="{ 'cursor-grab': draggable, 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).value.size() === 1,
+										'border-black': isDraggedType(unterricht), 'border-dashed': isDraggedType(unterricht) }"
+									:style="`background-color: ${isDraggedType(unterricht) ? 'red' : getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 									:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 									<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
 										<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
@@ -122,8 +124,9 @@
 										</template>
 										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, 0).value" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht"
-											:class="{'flex-grow': (getUnterricht(wochentag, stunde, wt, 0).value.size() === 1) && (mode === 'schueler' || mode === 'lehrer'), 'svws-compact': !wochentyp(), 'cursor-grab': draggable}"
-											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
+											:class="{'cursor-grab': draggable, 'flex-grow': (getUnterricht(wochentag, stunde, wt, 0).value.size() === 1) && (mode === 'schueler' || mode === 'lehrer'), 'svws-compact': !wochentyp(),
+												'border-black': isDraggedType(unterricht), 'border-dashed': isDraggedType(unterricht) }"
+											:style="`background-color: ${isDraggedType(unterricht) ? 'red' : getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
 												<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
@@ -145,8 +148,9 @@
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.id).value" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht"
-												:class="{'cursor-grab': draggable, 'flex-grow': (getUnterricht(wochentag, stunde, wt, schiene.id).value.size() === 1), 'svws-compact': !wochentyp()} "
-												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
+												:class="{ 'cursor-grab': draggable, 'flex-grow': (getUnterricht(wochentag, stunde, wt, schiene.id).value.size() === 1), 'svws-compact': !wochentyp(),
+													'border-black': isDraggedType(unterricht), 'border-dashed': isDraggedType(unterricht) } "
+												:style="`background-color: ${isDraggedType(unterricht) ? 'red' : getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 												:draggable @dragstart.stop="onDrag(unterricht)" @dragend.stop="onDrag(undefined)">
 												<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
 													<span v-if="draggable" class="icon i-ri-draggable inline-block -ml-1 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
@@ -633,6 +637,48 @@
 		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanSchiene'))
 			return isDropZoneZeitrasterSchiene(cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene(data), wochentag, stunde, wt);
 		return true;
+	}
+
+	function hatUnterrichtGemeinsamerTyp(a: StundenplanUnterricht, b: StundenplanUnterricht) {
+		if (a.id === b.id)
+			return true;
+		if (a.idKurs !== null)
+			return (a.idKurs === b.idKurs);
+		if (a.idFach !== b.idFach)
+			return false;
+		for (const k of a.klassen)
+			if (b.klassen.contains(k))
+				return true;
+		return false;
+	}
+
+	function isDraggedType(unterricht: StundenplanUnterricht) {
+		const data = toRaw(props.dragData());
+		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
+			return false;
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht')) {
+			const ku = cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht(data);
+			return (unterricht.idFach === ku.idFach) && (unterricht.klassen.contains(ku.idKlasse));
+		}
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKurs'))
+			return (unterricht.idKurs === cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs(data).id);
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanUnterricht'))
+			return hatUnterrichtGemeinsamerTyp(unterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht(data));
+		if (data.isTranspiledInstanceOf('java.util.List')) {
+			const unterrichte = cast_java_util_ArrayList<StundenplanUnterricht>(data);
+			for (const u of unterrichte)
+				if (hatUnterrichtGemeinsamerTyp(unterricht, u))
+					return true;
+			return false;
+		}
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanSchiene')) {
+			const schiene = cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene(data);
+			for (const idSchiene of unterricht.schienen)
+				if (schiene.id === idSchiene)
+					return true;
+			return false;
+		}
+		return false;
 	}
 
 	/**
