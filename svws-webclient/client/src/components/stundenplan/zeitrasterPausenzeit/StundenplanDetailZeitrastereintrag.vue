@@ -15,6 +15,9 @@
 						<span class="svws-ui-badge">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}</span>
 					</div>
 					<div class="svws-ui-td" role="cell">
+						<span v-for="jahrgang in stundenplanManager().jahrgangGetMengeByUnterrichtIdAsList(rowData.id)" :key="jahrgang.id" class="line-clamp-1 break-all leading-tight -my-0.5">{{ jahrgang.kuerzel }}</span>
+					</div>
+					<div class="svws-ui-td" role="cell">
 						<span v-for="klasse in rowData.klassen" :key="klasse" class="line-clamp-1 break-all leading-tight -my-0.5">{{ stundenplanManager().klasseGetByIdOrException(klasse).kuerzel }}</span>
 					</div>
 					<div class="svws-ui-td" role="cell">
@@ -27,9 +30,10 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
+
+	import { ref } from "vue";
 	import type { StundenplanManager } from "@core";
-	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils, ArrayList } from "@core";
+	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
@@ -40,7 +44,12 @@
 
 	const ueberschneidung = ref<boolean>(false);
 
-	const columns = [{ key: 'idFach', label: 'Unterricht' }, { key: 'klassen', label: 'Klassen' }, { key: 'raeume', label: 'Räume'}];
+	const columns = [
+		{ key: 'idFach', label: 'Unterricht' },
+		{ key: 'jahrgang', label: 'Jahrgang' },
+		{ key: 'klassen', label: 'Klassen' },
+		{ key: 'raeume', label: 'Räume'}
+	];
 
 	function getBgColor(fach: string): string {
 		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
@@ -77,6 +86,5 @@
 		else
 			ueberschneidung.value = true;
 	}
-
 
 </script>

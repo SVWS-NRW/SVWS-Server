@@ -1,49 +1,50 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
-import type { JavaSet } from '../../../java/util/JavaSet';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
-import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
 import { DateUtils } from '../../../core/utils/DateUtils';
 import type { Comparator } from '../../../java/util/Comparator';
-import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanKlassenunterricht } from '../../../core/data/stundenplan/StundenplanKlassenunterricht';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
-import { StringUtils } from '../../../core/utils/StringUtils';
-import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
-import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../java/util/HashSet';
 import { StundenplanPausenaufsichtBereich } from '../../../core/data/stundenplan/StundenplanPausenaufsichtBereich';
-import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { SetUtils } from '../../../core/utils/SetUtils';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { MapUtils } from '../../../core/utils/MapUtils';
-import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
-import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
-import { Exception } from '../../../java/lang/Exception';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
-import { BlockungsUtils } from '../../../core/utils/BlockungsUtils';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
-import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import type { Collection } from '../../../java/util/Collection';
 import { Wochentag } from '../../../core/types/Wochentag';
-import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { StundenplanKomplett, cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett } from '../../../core/data/stundenplan/StundenplanKomplett';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { LongArrayKey } from '../../../core/adt/LongArrayKey';
+import { Map3DUtils } from '../../../core/utils/Map3DUtils';
+import { StringUtils } from '../../../core/utils/StringUtils';
+import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
+import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
+import { HashMap3D } from '../../../core/adt/map/HashMap3D';
+import { AVLSet } from '../../../core/adt/set/AVLSet';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
+import { Exception } from '../../../java/lang/Exception';
+import { BlockungsUtils } from '../../../core/utils/BlockungsUtils';
+import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
+import { ListUtils } from '../../../core/utils/ListUtils';
 
 export class StundenplanManager extends JavaObject {
 
@@ -2022,6 +2023,54 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public jahrgangGetMengeAsList() : List<StundenplanJahrgang> {
 		return this._jahrgangmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für den Kurs mit der angegebenen ID.
+	 *
+	 * @param idKurs   die ID des Kurses
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public jahrgangGetMengeByKursIdAsList(idKurs : number) : List<StundenplanJahrgang> {
+		const result : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>();
+		const kurs : StundenplanKurs = this.kursGetByIdOrException(idKurs);
+		for (const idJahrgang of kurs.jahrgaenge)
+			result.add(this.jahrgangGetByIdOrException(idJahrgang));
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für die übergene Menge an Klassen-IDs.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public jahrgangGetMengeByKlassenIdsAsList(idsKlassen : Collection<number>) : List<StundenplanJahrgang> {
+		const set : JavaSet<StundenplanJahrgang> = new HashSet<StundenplanJahrgang>();
+		for (const idKlasse of idsKlassen) {
+			const klasse : StundenplanKlasse = this.klasseGetByIdOrException(idKlasse);
+			for (const idJahrgang of klasse.jahrgaenge)
+				set.add(this.jahrgangGetByIdOrException(idJahrgang));
+		}
+		const result : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>(set);
+		result.sort(StundenplanManager._compJahrgang);
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für den Unterricht mit der angegebenen ID.
+	 *
+	 * @param idUnterricht   die ID des Unterrichts
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public jahrgangGetMengeByUnterrichtIdAsList(idUnterricht : number) : List<StundenplanJahrgang> {
+		const unterricht : StundenplanUnterricht = this.unterrichtGetByIdOrException(idUnterricht);
+		if (unterricht.idKurs !== null)
+			return this.jahrgangGetMengeByKursIdAsList(unterricht.idKurs);
+		return this.jahrgangGetMengeByKlassenIdsAsList(unterricht.klassen);
 	}
 
 	/**

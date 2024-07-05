@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.stundenplan;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2182,6 +2183,54 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<StundenplanJahrgang> jahrgangGetMengeAsList() {
 		return _jahrgangmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für den Kurs mit der angegebenen ID.
+	 *
+	 * @param idKurs   die ID des Kurses
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public @NotNull List<StundenplanJahrgang> jahrgangGetMengeByKursIdAsList(final long idKurs) {
+		final @NotNull List<StundenplanJahrgang> result = new ArrayList<>();
+		final @NotNull StundenplanKurs kurs = kursGetByIdOrException(idKurs);
+		for (final long idJahrgang : kurs.jahrgaenge)
+			result.add(jahrgangGetByIdOrException(idJahrgang));
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für die übergene Menge an Klassen-IDs.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public @NotNull List<StundenplanJahrgang> jahrgangGetMengeByKlassenIdsAsList(final @NotNull Collection<Long> idsKlassen) {
+		final @NotNull Set<StundenplanJahrgang> set = new HashSet<>();
+		for (final long idKlasse : idsKlassen) {
+			final @NotNull StundenplanKlasse klasse = klasseGetByIdOrException(idKlasse);
+			for (final long idJahrgang : klasse.jahrgaenge)
+				set.add(jahrgangGetByIdOrException(idJahrgang));
+		}
+		final @NotNull List<StundenplanJahrgang> result = new ArrayList<>(set);
+		result.sort(_compJahrgang);
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanJahrgang}-Objekte für den Unterricht mit der angegebenen ID.
+	 *
+	 * @param idUnterricht   die ID des Unterrichts
+	 *
+	 * @return eine Liste der {@link StundenplanJahrgang}-Objekte.
+	 */
+	public @NotNull List<StundenplanJahrgang> jahrgangGetMengeByUnterrichtIdAsList(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht unterricht = unterrichtGetByIdOrException(idUnterricht);
+		if (unterricht.idKurs != null)
+			return this.jahrgangGetMengeByKursIdAsList(unterricht.idKurs);
+		return jahrgangGetMengeByKlassenIdsAsList(unterricht.klassen);
 	}
 
 	/**

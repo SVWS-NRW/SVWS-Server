@@ -9,14 +9,14 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns>
+		<svws-ui-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="getColumns()">
 			<template #cell(id)="{ rowData }">
 				{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 			</template>
 			<template #cell(bereiche)="{ value }">
 				<template v-for="bereich in value">{{ stundenplanManager().aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).kuerzel }} &nbsp;</template>
 			</template>
-			<template #cell(wochentyp)="{ value }">
+			<template #cell(wochentyp)="{ value }" v-if="hatWochentypen">
 				<span v-if="value === 0" class="opacity-25">—</span>
 				<template v-else>{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(value) }}</template>
 			</template>
@@ -25,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+
+	import { computed } from "vue";
 	import type { LehrerListeEintrag, List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit } from "@core";
 	import { DateUtils, Wochentag } from "@core";
 
@@ -37,11 +39,17 @@
 		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	}>();
 
-	const columns = [
-		{ key: "id", label: "Aufsicht" },
-		{ key: 'bereiche', label: "Bereich", span: 1 },
-		{ key: 'wochentyp', label: "Typ", tooltip: "Wochentyp", span: 0.5 }
-	];
+	const hatWochentypen = computed<boolean>(() => (props.stundenplanManager().getWochenTypModell() > 0));
+
+	function getColumns() {
+		const cols = [
+			{ key: "id", label: "Aufsicht" },
+			{ key: 'bereiche', label: "Bereich", span: 1 }
+		];
+		if (hatWochentypen.value)
+			cols.push({ key: 'wochentyp', label: "Wochentyp", span: 0.5 });
+		return cols;
+	}
 
 	async function patchBeginn(event: string | number) {
 		if (typeof event === 'number')
