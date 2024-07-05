@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page--content select-none">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<svws-ui-button @click="modus = !modus" title="Modus wechseln" type="transparent">
@@ -20,7 +20,7 @@
 	import { onMounted, ref, computed } from "vue";
 	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
-	import { ArrayList } from "@core";
+	import { ArrayList, DateUtils } from "@core";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
 
@@ -57,16 +57,20 @@
 	});
 
 	const colsZuordnungen = [
-		{ key: "kalenderwoche", label: "Kalenderwoche", span: 2 },
+		{ key: "kalenderwoche", label: "Kalenderwoche", span: 1 },
+		{ key: "montag", label: "Montag", span: 1 },
+		{ key: "sonntag", label: "Sonntag", span: 1 },
 		{ key: "wochentyp", label: "Wochentyp", span: 1 },
 	]
 
-	const zuordnungen = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }>>(() => {
-		const result : Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }> = [];
+	const zuordnungen = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }>>(() => {
+		const result : Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }> = [];
 		for (const zuordnung of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList()) {
 			result.push({
 				zuordnung: zuordnung,
-				kalenderwoche: props.stundenplanManager().kalenderwochenzuordnungGetWocheAsString(zuordnung),
+				kalenderwoche: zuordnung.kw,
+				montag: DateUtils.gibDatumGermanFormat(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(zuordnung.jahr, zuordnung.kw)),
+				sonntag: DateUtils.gibDatumGermanFormat(DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(zuordnung.jahr, zuordnung.kw)),
 				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsStringKurz(zuordnung.wochentyp)
 			});
 		}
