@@ -59,13 +59,13 @@
 							class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
 							:class="isDragOverPosition(wochentag, stunde).value ? ['opacity-100']:['opacity-0']">
 							<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:font-bold"
-								:class="{'bg-success/50': dragOverPos.wochentyp === 0}">
+								:class="{ 'bg-success/50': dragOverPos.wochentyp === 0, 'opacity-0': !isDropZoneZeitraster(wochentag, stunde, 0) }">
 								Jede Woche
 							</div>
-							<div v-if="manager().getWochenTypModell() > 0" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
+							<div v-if="hatWochentypen" class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
 								<template v-for="wt, wtIndex in manager().getWochenTypModell()" :key="wtIndex">
 									<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:border-black hover:font-bold"
-										:class="{'bg-success/50': wtIndex+1 === dragOverPos.wochentyp}">
+										:class="{ 'bg-success/50': wtIndex + 1 === dragOverPos.wochentyp, 'opacity-0': !isDropZoneZeitraster(wochentag, stunde, wtIndex + 1) }">
 										<span class="w-20">{{ manager().stundenplanGetWochenTypAsString(wtIndex+1) }}</span>
 									</div>
 								</template>
