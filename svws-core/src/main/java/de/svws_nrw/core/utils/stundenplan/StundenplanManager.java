@@ -2841,6 +2841,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das {@link StundenplanKlassenunterricht}-Objekt der Klasse mit einem bestimmten Fach.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param idFach     Die Datenbank-ID der Faches
+	 *
+	 * @return das {@link StundenplanKlassenunterricht}-Objekte der Klasse mit einem bestimmten Fach.
+	 */
+	public @NotNull StundenplanKlassenunterricht klassenunterrichtGetByKlasseIdAndFachIdOrException(final long idKlasse, final long idFach) {
+		return _klassenunterricht_by_idKlasse_and_idFach.getOrException(idKlasse, idFach);
+	}
+
+	/**
 	 * Liefert TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
 	 *
 	 * @param klassenunterricht  Der {@link StundenplanKlassenunterricht}, welcher gesetzt oder verschoben werden soll.

@@ -212,20 +212,24 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed, ref, toRaw } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-	import { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
+	import type { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
 	import { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
+	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-	import { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
+	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
+	import type { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+	import { ArrayList, cast_java_util_ArrayList } from "../../../../core/src/java/util/ArrayList";
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		mode: 'schueler',
@@ -360,13 +364,14 @@
 		throw new DeveloperNotificationException("function getSchienen: Unbekannter Mode " + props.mode);
 	})
 
-	const getUnterricht = (wochentag: Wochentag, stunde: number, wochentyp: number, schiene: number) => computed<List<StundenplanUnterricht>>(() => {
+	const getUnterricht = (wochentag: Wochentag, stunde: number, wochentyp: number, schiene: number | null) => computed<List<StundenplanUnterricht>>(() => {
 		if (props.mode === 'schueler')
 			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		if (props.mode === 'lehrer')
 			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		if (props.mode === 'klasse')
-			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
+			return (schiene === null) ? props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false)
+				: props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
 		if (props.mode === 'fach') {
 			const unterricht = props.manager().unterrichtGetMengeAsList()
 			const list: List<StundenplanUnterricht> = new ArrayList();
@@ -468,23 +473,120 @@
 		props.onDrop(zone, wochentyp);
 	}
 
-	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, wt : number) : boolean {
-		const data = props.dragData();
-		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
-			return false;
-		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht) || (data instanceof StundenplanSchiene))
-			return true;
+	/**
+	 * Prüfe, ob der Kurs bereits in einem Unterricht bei dem Zeitraster existiert. Ist dies der
+	 * Fall, so wird geprüft, ob dieser bei dem angegebenen Wochentyp noch eingefügt werden darf.
+	 *
+	 * @param kurs        der Kurs
+	 * @param wochentag   der Wochentag für das Zeitraster-Element
+	 * @param stunde      die Stunde für das Zeitraster-Element
+	 * @param wt          der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitrasterKurs(kurs: StundenplanKurs, wochentag: Wochentag, stunde: number, wt : number) : boolean {
+		// Prüfe, ob der Kurs in einem der Unterrichte vorkommt. In diesem Fall ist ein Drop hier nicht erlaubt
+		for (let w = 0; w < props.manager().getWochenTypModell() + 1; w++) {
+			if (hatWochentypen.value && (wt !== 0) && ((w !== 0) && (w !== wt)))
+				continue;
+			for (const unterricht of getUnterricht(wochentag, stunde, w, null).value)
+				if (unterricht.idKurs === kurs.id)
+					return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Prüfe, ob der Klassenunterricht bereits in einem Unterricht bei dem Zeitraster existiert. Ist dies der
+	 * Fall, so wird geprüft, ob dieser bei dem angegebenen Wochentyp noch eingefügt werden darf.
+	 *
+	 * @param kurs        der Kurs
+	 * @param wochentag   der Wochentag für das Zeitraster-Element
+	 * @param stunde      die Stunde für das Zeitraster-Element
+	 * @param wt          der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitrasterKlassenunterricht(klassenunterricht: StundenplanKlassenunterricht, wochentag: Wochentag, stunde: number, wt : number) : boolean {
+		// Prüfe, ob der Klassenunterricht in einem der Unterrichte vorkommt. In diesem Fall ist ein Drop hier nicht erlaubt
+		for (let w = 0; w < props.manager().getWochenTypModell() + 1; w++) {
+			if (hatWochentypen.value && (wt !== 0) && ((w !== 0) && (w !== wt)))
+				continue;
+			for (const unterricht of getUnterricht(wochentag, stunde, w, null).value) {
+				if (unterricht.idKurs !== null)
+					continue;
+				for (const idKlasse of unterricht.klassen) {
+					const ku = props.manager().klassenunterrichtGetByKlasseIdAndFachIdOrException(idKlasse, unterricht.idFach);
+					if ((klassenunterricht.idKlasse === ku.idKlasse) && (klassenunterricht.idFach === ku.idFach))
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Prüfe, ob die Schiene bei einem der Kurse bereits in einem Unterricht bei dem Zeitraster existiert.
+	 * Ist dies der Fall, so wird geprüft, ob dieser bei dem angegebenen Wochentyp noch eingefügt werden darf.
+	 *
+	 * @param schiene     die Schiene
+	 * @param wochentag   der Wochentag für das Zeitraster-Element
+	 * @param stunde      die Stunde für das Zeitraster-Element
+	 * @param wt          der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitrasterSchiene(schiene: StundenplanSchiene, wochentag: Wochentag, stunde: number, wt : number) : boolean {
+		// Prüfe, ob die Schiene in einem der Unterrichte vorkommt. In diesem Fall ist ein Drop hier nicht erlaubt
+		for (let w = 0; w < props.manager().getWochenTypModell() + 1; w++) {
+			if (hatWochentypen.value && (wt !== 0) && ((w !== 0) && (w !== wt)))
+				continue;
+			for (const unterricht of getUnterricht(wochentag, stunde, w, null).value)
+				if (unterricht.schienen.contains(schiene.id))
+					return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Prüfe, ob der Kurs- oder Klassenunterricht bereits in einem Unterricht bei dem Zeitraster existiert.
+	 * Ist dies der Fall, so wird geprüft, ob dieser bei dem angegebenen Wochentyp noch eingefügt werden darf.
+	 *
+	 * @param unterricht  das Unterrichtsobjekt mit Bezug zu dem Kurs- oder Klassenunterricht
+	 * @param wochentag   der Wochentag für das Zeitraster-Element
+	 * @param stunde      die Stunde für das Zeitraster-Element
+	 * @param wt          der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitrasterUnterricht(unterricht: StundenplanUnterricht, wochentag: Wochentag, stunde: number, wt : number) : boolean {
+		const z = props.manager().zeitrasterGetByIdOrException(unterricht.idZeitraster);
+		const uwt = unterricht.wochentyp;
+		// Prüfe, ob der Unterricht in das gleiche Zeitraster-Element gelegt werden soll...
+		if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde)) {
+			// ... wenn kein Wochentyp-Modell vorhanden ist, dann darf kein Unterricht doppelt plaziert werden
+			if (!hatWochentypen.value)
+				return false;
+			// ... wenn ein Wochentyp-Modell verwendet wird, dann muss der Wochentyp verändert werden
+			if (wt === uwt)
+				return false;
+		} else {
+			// Prüfe, ob es sich um Kurs oder Klassenunterricht handelt und überprüfe die Dropzone anhand der Art des Unterrichts
+			if (unterricht.idKurs === null)
+				return isDropZoneZeitrasterKlassenunterricht(props.manager().klassenunterrichtGetByKlasseIdAndFachIdOrException(unterricht.klassen.get(0), unterricht.idFach), wochentag, stunde, wt);
+			return isDropZoneZeitrasterKurs(props.manager().kursGetByIdOrException(unterricht.idKurs), wochentag, stunde, wt);
+		}
+		return true;
+	}
+
+	/**
+	 * Prüfe, ob einer der Kurs- oder Klassenunterrichte bereits in einem Unterricht bei dem Zeitraster existiert.
+	 * Ist dies der Fall, so wird geprüft, ob dieser bei dem angegebenen Wochentyp noch eingefügt werden darf.
+	 *
+	 * @param unterrichte   die Unterrichtsobjekte mit Bezug zu den Kurs- oder Klassenunterrichten
+	 * @param wochentag     der Wochentag für das Zeitraster-Element
+	 * @param stunde        die Stunde für das Zeitraster-Element
+	 * @param wt            der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitrasterUnterrichtListe(unterrichte: List<StundenplanUnterricht>, wochentag: Wochentag, stunde: number, wt : number) : boolean {
 		let z = new StundenplanZeitraster();
 		let uwt = 0;
-		if (data instanceof StundenplanUnterricht) {
-			z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-			uwt = data.wochentyp;
-		} else {
-			for (const d of data) {
-				z = props.manager().zeitrasterGetByIdOrException(d.idZeitraster);
-				uwt = d.wochentyp;
-				break;
-			}
+		for (const unterricht of unterrichte) {
+			z = props.manager().zeitrasterGetByIdOrException(unterricht.idZeitraster);
+			uwt = unterricht.wochentyp;
+			break;
 		}
 		// Prüfe, ob der Unterricht in das gleiche Zeitraster-Element gelegt werden soll...
 		if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde)) {
@@ -494,10 +596,52 @@
 			// ... wenn ein Wochentyp-Modell verwendet wird, dann muss der Wochentyp verändert werden
 			if (wt === uwt)
 				return false;
+		} else {
+			for (const unterricht of unterrichte) {
+				// Prüfe, ob es sich um Kurs oder Klassenunterricht handelt und überprüfe die Dropzone anhand der Art des Unterrichts
+				if ((unterricht.idKurs === null) && !isDropZoneZeitrasterKlassenunterricht(props.manager().klassenunterrichtGetByKlasseIdAndFachIdOrException(unterricht.klassen.get(0), unterricht.idFach), wochentag, stunde, wt))
+					return false;
+				if ((unterricht.idKurs !== null) && !isDropZoneZeitrasterKurs(props.manager().kursGetByIdOrException(unterricht.idKurs), wochentag, stunde, wt))
+					return false;
+			}
 		}
 		return true;
 	}
 
+
+	/**
+	 * Prüfe, ob die aktuelle Daten eines Drag&Drop-Vorgangs einen Bezug zu einem Unterricht bei dem Zeitraster haben,
+	 * welcher ein Drop verhindert. Bei der Entscheidung wird der Wochentyp miteinbezogen.
+	 *
+	 * @param wochentag     der Wochentag für das Zeitraster-Element
+	 * @param stunde        die Stunde für das Zeitraster-Element
+	 * @param wt            der zu prüfende Wochentyp
+	 */
+	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, wt : number) : boolean {
+		const data = toRaw(props.dragData());
+		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
+			return false;
+		// Prüfe, ob das drag-Objekt die Plazierung in einem Zeitraster-Element und einem Wochentyp erlaubt
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht'))
+			return isDropZoneZeitrasterKlassenunterricht(cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht(data), wochentag, stunde, wt);
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKurs'))
+			return isDropZoneZeitrasterKurs(cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs(data), wochentag, stunde, wt);
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanUnterricht'))
+			return isDropZoneZeitrasterUnterricht(cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht(data), wochentag, stunde, wt);
+		if (data.isTranspiledInstanceOf('java.util.List'))
+			return isDropZoneZeitrasterUnterrichtListe(cast_java_util_ArrayList<StundenplanUnterricht>(data), wochentag, stunde, wt);
+		if (data.isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanSchiene'))
+			return isDropZoneZeitrasterSchiene(cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene(data), wochentag, stunde, wt);
+		return true;
+	}
+
+	/**
+	 * Aktualisiert infolge eine Drag-Events die aktuelle Position im Zeitraster der Stundenplans.
+	 *
+	 * @param event      das Drag-Event
+	 * @param wochentag  der Wochentag, über dem sich der Mouse-Pointer befindet
+	 * @param stunde     die Stunde, über der sich der Mouse-Pointer befindet
+	 */
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
 		const container : HTMLDivElement | null = event.currentTarget instanceof HTMLDivElement ? event.currentTarget as HTMLDivElement : null;
 		if (container === null)
