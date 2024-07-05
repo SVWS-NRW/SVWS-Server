@@ -52,10 +52,10 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde relative" :style="posZeitraster(wochentag, stunde)"
-						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
+						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @dragleave="resetDragOverPosition"
+						@drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
 						<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
 						<div v-if="(dragData !== undefined) && (dragData() !== undefined) && ((hatWochentypen) || (!hatWochentypen && isDropZoneZeitraster(wochentag, stunde, 0)))"
-							@dragleave="dragOverPos.wochentyp = undefined"
 							class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
 							:class="isDragOverPosition(wochentag, stunde).value ? ['opacity-100']:['opacity-0']">
 							<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:font-bold"
