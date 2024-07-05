@@ -163,6 +163,9 @@ public final class OAuth2Client {
 		if (statusCode == 401)
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten"
 					+ " überprüft werden.");
+		if (statusCode == 500)
+			throw new ApiOperationException(Status.UNAUTHORIZED, "Verbindung zu dem OAuth2-Server ergab 500 (Internal Server Error). Die Client Credentials sollten"
+					+ " überprüft werden. Hier liegt ein interner Fehler im OAuth2-Server vor.");
 		if ((statusCode != 200) && (statusCode != 201))
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server fehlgeschlagen: " + statusCode);
 		// ... und validiere im Erfolgsfall die HTTP-Response
