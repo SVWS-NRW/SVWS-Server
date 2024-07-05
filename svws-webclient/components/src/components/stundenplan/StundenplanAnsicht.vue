@@ -52,7 +52,7 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde relative" :style="posZeitraster(wochentag, stunde)"
-						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
+						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
 						<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
 						<div v-if="(dragData !== undefined) && (dragData() !== undefined) && ((hatWochentypen) || (!hatWochentypen && isDropZoneZeitraster(wochentag, stunde, 0)))"
 							@dragleave="dragOverPos.wochentyp = undefined"
@@ -167,7 +167,7 @@
 					<!--TODO: Pausenzeiten, wenn Zeitachse deaktiviert ist-->
 					<!-- TODO Modi 'normal', 'kurz, 'tooltip' -->
 					<template v-for="pause in getPausenzeitenWochentag(wochentag).value" :key="pause">
-						<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
+						<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDropInternal(pause)">
 							<template v-if="modePausenaufsichten === 'normal'">
 								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause).value" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
 									:class="{'svws-lehrkraft': mode === 'lehrer', 'cursor-grab': draggable}"
@@ -248,6 +248,12 @@
 		stunde: undefined,
 		wochentyp: undefined,
 	});
+
+	function resetDragOverPosition() {
+		dragOverPos.value.wochentag = undefined;
+		dragOverPos.value.stunde = undefined;
+		dragOverPos.value.wochentyp = undefined;
+	}
 
 	function updateDragOverPosition(event: DragEvent, wochentag : Wochentag, stunde : number, wochentyp : number | undefined) {
 		if (dragOverPos.value.wochentag !== wochentag)
@@ -456,6 +462,11 @@
 	}
 
 	const draggable = computed<boolean>(() => props.useDragAndDrop);
+
+	function onDropInternal(zone: StundenplanAnsichtDropZone, wochentyp?: number) {
+		resetDragOverPosition();
+		props.onDrop(zone, wochentyp);
+	}
 
 	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, wt : number) : boolean {
 		const data = props.dragData();
