@@ -54,7 +54,7 @@
 					<div class="svws-ui-stundenplan--stunde relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
 						<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
-						<div v-if="(dragData !== undefined) && (dragData() !== undefined)"
+						<div v-if="(dragData !== undefined) && (dragData() !== undefined) && ((hatWochentypen) || (!hatWochentypen && isDropZoneZeitraster(wochentag, stunde, 0)))"
 							@dragleave="dragOverPos.wochentyp = undefined"
 							class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
 							:class="isDragOverPosition(wochentag, stunde).value ? ['opacity-100']:['opacity-0']">
@@ -260,6 +260,8 @@
 
 	const getWochentyp = computed(()=> props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
 
+	const hatWochentypen = computed<boolean>(() => (props.manager().getWochenTypModell() > 0));
+
 	const beginn = computed(() => {
 		if (props.ignoreEmpty)
 			return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
@@ -453,7 +455,7 @@
 
 	const draggable = computed<boolean>(() => props.useDragAndDrop);
 
-	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, hatWt : boolean, wt : number) : boolean {
+	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number, wt : number) : boolean {
 		const data = props.dragData();
 		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
 			return false;
@@ -471,7 +473,12 @@
 				break;
 			}
 		}
-		return (!((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde) && (!hatWt || (wt === uwt))));
+		if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde)) {
+			// Wenn kein Wochentyp-Modell vorhanden ist, dann darf kein Unterricht doppelt in ein Zeitraster-Element gelegt werden
+			if (!hatWochentypen.value || (wt === uwt))
+				return false;
+		}
+		return true;
 	}
 
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
@@ -481,11 +488,10 @@
 		const rect = container.getBoundingClientRect();
 		const mouseRelX = (event.clientX - rect.x) / rect.width;
 		const mouseRelY = (event.clientY - rect.y) / rect.height;
-		const hatWt = props.manager().getWochenTypModell() > 0;
 		const calcWt = Math.trunc(mouseRelX * props.manager().getWochenTypModell()) + 1;
-		const wt = hatWt && (mouseRelY > 0.5) ? calcWt : 0;
+		const wt = hatWochentypen.value && (mouseRelY > 0.5) ? calcWt : 0;
 		updateDragOverPosition(event, wochentag, stunde, wt);
-		if (isDropZoneZeitraster(wochentag, stunde, hatWt, wt))
+		if (isDropZoneZeitraster(wochentag, stunde, wt))
 			event.preventDefault();
 	}
 
