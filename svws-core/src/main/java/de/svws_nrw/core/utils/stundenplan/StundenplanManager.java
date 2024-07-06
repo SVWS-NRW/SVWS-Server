@@ -361,12 +361,13 @@ public class StundenplanManager {
 	private @NotNull HashMap<Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idUnterricht = new HashMap<>();  // u --> Partner von u (inklusive u selbst)
 	private @NotNull HashMap<Integer, List<StundenplanUnterricht>> _unterrichtmenge_by_wochentyp = new HashMap<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idZeitraster = new HashMap2D<>();
-	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idLehrer_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang_and_idZeitraster = new HashMap2D<>();
 	private @NotNull HashMap2D<Long, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D<>();
-	private @NotNull HashMap2D<Long, Integer, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
+	private @NotNull HashMap2D<Long, Integer, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp = new HashMap2D<>();
+	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_fach = new HashMap3D<>();
+	private @NotNull HashMap3D<Long, Integer, Long, List<StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_wochentyp_raum = new HashMap3D<>();
 	private boolean _unterrichtHatMultiWochen = false;
 	private @NotNull List<List<StundenplanUnterricht>> _unterrichtsgruppenMergeable = new ArrayList<>();
 
@@ -627,7 +628,6 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idLehrer();                                             // _unterrichtmenge
 		update_unterrichtmenge_by_idLehrer_and_idZeitraster();                            // _unterrichtmenge
 		update_unterrichtmenge_by_idRaum();                                               // _unterrichtmenge
-		update_unterrichtmenge_by_idRaum_and_idZeitraster();                              // _unterrichtmenge
 		update_unterrichtmenge_by_idFach();                                               // _unterrichtmenge
 		update_unterrichtmenge_by_wochentyp();                                            // _unterrichtmenge
 		update_zeitraster_by_wochentag_and_stunde();                                      // _zeitrastermenge
@@ -663,6 +663,8 @@ public class StundenplanManager {
 		update_kursmenge_verwendet_sortiert();                                               // _kursmenge_sortiert, _unterrichtmenge_by_idKurs
 		update_fachmenge_verwendet_sortiert();                                               // _fachmenge_sortiert, _unterrichtmenge_by_idFach
 		update_schuelermenge_by_idUnterricht();                                              // _unterrichtmenge, _schuelermenge_by_idKlasse, _schuelermenge_by_idKurs
+		update_unterrichtmenge_by_idZeitraster_wochentyp_fach();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
+		update_unterrichtmenge_by_idZeitraster_wochentyp_raum();                             // _unterrichtmenge_by_idZeitraster_and_wochentyp
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();                                  // _pausenzeitmenge_by_idKlasse
@@ -680,6 +682,7 @@ public class StundenplanManager {
 		// 4. Ordnung
 		update_klassenmenge_verwendet_sortiert();                                            // _klassenmenge_sortiert, _unterrichtmenge_by_idKlasse
 	}
+
 
 
 	private void update_lehrermenge_verwendet_sortiert() {
@@ -726,6 +729,26 @@ public class StundenplanManager {
 			// Sortiere die SuS-Liste des Unterrichts.
 			MapUtils.getOrCreateArrayList(_schuelermenge_by_idUnterricht, u.id).sort(_compSchueler);
 		}
+	}
+
+	private void update_unterrichtmenge_by_idZeitraster_wochentyp_fach() {
+		_unterrichtmenge_by_idZeitraster_wochentyp_fach = new HashMap3D<>();
+
+		for (final long idZ : _unterrichtmenge_by_idZeitraster_wochentyp.getKeySet())
+			for (final int wt : _unterrichtmenge_by_idZeitraster_wochentyp.getKeySetOf(idZ))
+				for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, idZ, wt))
+					if (u.idFach >= 0)
+						Map3DUtils.addToList(_unterrichtmenge_by_idZeitraster_wochentyp_fach, idZ, wt, u.idFach, u);
+	}
+
+	private void update_unterrichtmenge_by_idZeitraster_wochentyp_raum() {
+		_unterrichtmenge_by_idZeitraster_wochentyp_raum = new HashMap3D<>();
+
+		for (final long idZ : _unterrichtmenge_by_idZeitraster_wochentyp.getKeySet())
+			for (final int wt : _unterrichtmenge_by_idZeitraster_wochentyp.getKeySetOf(idZ))
+				for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, idZ, wt))
+					for (final long idR : u.raeume)
+						Map3DUtils.addToList(_unterrichtmenge_by_idZeitraster_wochentyp_raum, idZ, wt, idR, u);
 	}
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
@@ -1585,9 +1608,9 @@ public class StundenplanManager {
 	}
 
 	private void update_unterrichtmenge_by_idZeitraster_and_wochentyp() {
-		_unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
+		_unterrichtmenge_by_idZeitraster_wochentyp = new HashMap2D<>();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			Map2DUtils.addToList(_unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, u.wochentyp, u);
+			Map2DUtils.addToList(_unterrichtmenge_by_idZeitraster_wochentyp, u.idZeitraster, u.wochentyp, u);
 	}
 
 	private void update_unterrichtmenge_by_idRaum() {
@@ -1595,13 +1618,6 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			for (final long idRaum : u.raeume)
 				MapUtils.addToList(_unterrichtmenge_by_idRaum, idRaum, u);
-	}
-
-	private void update_unterrichtmenge_by_idRaum_and_idZeitraster() {
-		_unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D<>();
-		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			for (final long idRaum : u.raeume)
-				Map2DUtils.addToList(_unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster, u);
 	}
 
 	private void update_unterrichtmenge_by_idFach() {
@@ -4057,7 +4073,6 @@ public class StundenplanManager {
 
 	private void pausenaufsichtbereichCheckAttributes(final @NotNull StundenplanPausenaufsichtBereich pausenaufsichtbereich) {
 		DeveloperNotificationException.ifInvalidID("pausenaufsichtbereich.id", pausenaufsichtbereich.id);
-		// DeveloperNotificationException.ifMapNotContains("_map_idPausenaufsicht_zu_pausenaufsicht", _pausenaufsicht_by_id, pausenaufsichtbereich.idPausenaufsicht);
 		DeveloperNotificationException.ifMapNotContains("_map_idAufsichtsbereich_zu_aufsichtsbereich", _aufsichtsbereich_by_id,
 				pausenaufsichtbereich.idAufsichtsbereich);
 		DeveloperNotificationException.ifTrue("(pab.wochentyp > 0) && (pab.wochentyp > stundenplanWochenTypModell)",
@@ -5727,7 +5742,7 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 */
 	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(final long idZeitraster, final int wochentyp) {
-		return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, wochentyp);
+		return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, wochentyp);
 	}
 
 	/**
@@ -5764,7 +5779,7 @@ public class StundenplanManager {
 			final int stunde, final int wochentyp) {
 		final StundenplanZeitraster zeitraster = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		if (zeitraster != null)
-			return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
+			return Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, zeitraster.id, wochentyp);
 		return new ArrayList<>();
 	}
 
@@ -5980,6 +5995,90 @@ public class StundenplanManager {
 
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang,
 				wochentag, stunde, wochentyp, inklWoche0))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Faches am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idFach        Die ID des {@link StundenplanFach}-Objektes.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Faches am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByFachIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idFach,
+			final int wochentag,
+			final int stunde,
+			final int wochentyp,
+			final long idSchiene,
+			final boolean inklWoche0) {
+
+		final @NotNull List<StundenplanUnterricht> list = new ArrayList<>();
+
+		// Kein Zeitraster?
+		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		if (z == null)
+			return list;
+
+		//  Unterrichte des Wochentyps 0 hinzufügen.
+		if ((inklWoche0) && (wochentyp != 0))
+			for (final @NotNull StundenplanUnterricht u : Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_fach, z.id, 0, idFach))
+				if (unterrichtHatSchiene(u, idSchiene))
+					list.add(u);
+
+		//  Unterrichte des Wochentyps hinzufügen.
+		for (final @NotNull StundenplanUnterricht u : Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_fach, z.id, wochentyp, idFach))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Raumes am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idRaum        Die ID des {@link StundenplanRaum}-Objektes.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Raumes am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByRaumIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(
+			final long idRaum,
+			final int wochentag,
+			final int stunde,
+			final int wochentyp,
+			final long idSchiene,
+			final boolean inklWoche0) {
+
+		final @NotNull List<StundenplanUnterricht> list = new ArrayList<>();
+
+		// Kein Zeitraster?
+		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		if (z == null)
+			return list;
+
+		//  Unterrichte des Wochentyps 0 hinzufügen.
+		if ((inklWoche0) && (wochentyp != 0))
+			for (final @NotNull StundenplanUnterricht u : Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, 0, idRaum))
+				if (unterrichtHatSchiene(u, idSchiene))
+					list.add(u);
+
+		//  Unterrichte des Wochentyps hinzufügen.
+		for (final @NotNull StundenplanUnterricht u : Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, wochentyp, idRaum))
 			if (unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
 
@@ -6855,7 +6954,7 @@ public class StundenplanManager {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 
 		if (z != null)
-			return !Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, z.id, wochentyp).isEmpty();
+			return !Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, z.id, wochentyp).isEmpty();
 
 		return false;
 	}
@@ -6956,7 +7055,7 @@ public class StundenplanManager {
 	 * @return TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
 	 */
 	public boolean zeitrasterHatUnterrichtMitWochentyp0(final long idZeitraster) {
-		return !Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, 0).isEmpty();
+		return !Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, 0).isEmpty();
 	}
 
 	/**
@@ -7033,7 +7132,7 @@ public class StundenplanManager {
 	 */
 	public boolean zeitrasterHatUnterrichtMitWochentyp1BisN(final long idZeitraster) {
 		for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
-			if (!Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, wochentyp).isEmpty())
+			if (!Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, wochentyp).isEmpty())
 				return true;
 		return false;
 	}
@@ -7050,6 +7149,7 @@ public class StundenplanManager {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		return (z != null) && zeitrasterHatUnterrichtMitWochentyp1BisN(z.id);
 	}
+
 
 	/**
 	 * Liefert TRUE, falls die Klasse am "wochentag, stunde" Unterricht mit einem Wochentyp von 1 bis N hat.
@@ -7126,6 +7226,46 @@ public class StundenplanManager {
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, z.id))
 				if (u.wochentyp >= 1)
+					return true;
+
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht des Faches im Zeitraster mit einem Wochentyp 1 bis N gibt.
+	 *
+	 * @param idFach     Die ID des {@link StundenplanFach}-Objektes.
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht des Faches im Zeitraster mit einem Wochentyp 1 bis N gibt.
+	 */
+	public boolean zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(final long idFach, final @NotNull Wochentag wochentag, final int stunde) {
+		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+
+		if (z != null)
+			for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+				if (!Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_fach, z.id, wochentyp, idFach).isEmpty())
+					return true;
+
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht des Raumes im Zeitraster mit einem Wochentyp 1 bis N gibt.
+	 *
+	 * @param idRaum     Die ID des {@link StundenplanRaum}-Objektes.
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht des Raumes im Zeitraster mit einem Wochentyp 1 bis N gibt.
+	 */
+	public boolean zeitrasterHatUnterrichtMitWochentyp1BisNByRaumIdWochentagAndStunde(final long idRaum, final @NotNull Wochentag wochentag, final int stunde) {
+		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+
+		if (z != null)
+			for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++)
+				if (!Map3DUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, wochentyp, idRaum).isEmpty())
 					return true;
 
 		return false;
