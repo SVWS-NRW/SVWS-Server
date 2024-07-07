@@ -94,12 +94,12 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
+	public <T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return getEntryList().toArray(a);
 	}
 
 	@Override
-	public boolean add(final @NotNull Entry<@NotNull K, @NotNull V> e) {
+	public boolean add(final Entry<K, V> e) {
 		if (e == null)
 			return false;
 		_map.put(e.getKey(), e.getValue());

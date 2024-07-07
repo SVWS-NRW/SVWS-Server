@@ -282,10 +282,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * @throws DeveloperNotificationException falls das Mapping(K1, K2) nicht existiert.
 	 */
 	public static ifMap2DRemoveFailes<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : V {
-		const value : V | null = map.removeOrException(key1, key2);
-		if (value === null)
-			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
-		return value;
+		return map.removeOrException(key1, key2);
 	}
 
 	/**

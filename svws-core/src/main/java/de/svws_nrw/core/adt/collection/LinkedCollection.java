@@ -292,7 +292,7 @@ public final class LinkedCollection<E> implements Deque<E> {
 	public int hashCode() {
 		int hashCode = 1;
 		for (final @NotNull E e : this)
-			hashCode = (31 * hashCode) + ((e == null) ? 0 : e.hashCode());
+			hashCode = (31 * hashCode) + e.hashCode();
 		return hashCode;
 	}
 

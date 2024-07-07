@@ -275,7 +275,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public hashCode() : number {
 		let hashCode : number = 1;
 		for (const e of this)
-			hashCode = (31 * hashCode) + ((e === null) ? 0 : JavaObject.getTranspilerHashCode(e));
+			hashCode = (31 * hashCode) + JavaObject.getTranspilerHashCode(e);
 		return hashCode;
 	}
 

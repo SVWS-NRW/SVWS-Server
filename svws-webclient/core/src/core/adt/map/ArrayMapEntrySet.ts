@@ -96,7 +96,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		} else throw new Error('invalid method overload');
 	}
 
-	public add(e : JavaMapEntry<K, V>) : boolean {
+	public add(e : JavaMapEntry<K, V> | null) : boolean {
 		if (e === null)
 			return false;
 		this._map.put(e.getKey(), e.getValue());

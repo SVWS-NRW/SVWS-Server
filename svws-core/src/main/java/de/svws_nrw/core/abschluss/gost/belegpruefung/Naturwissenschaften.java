@@ -63,11 +63,11 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 		// Zähle die durchgehend belegbaren Belegungen
 		List<AbiturFachbelegung> fachbelegungen = manager.filterDurchgehendBelegbar(_naturwissenschaften);
 		fachbelegungen = manager.filterBelegungen(fachbelegungen, GostHalbjahr.EF1);
-		_anzahlDurchgehend = (fachbelegungen == null) ? 0 : fachbelegungen.size();
+		_anzahlDurchgehend = fachbelegungen.size();
 
 		// und nun die schriftlich belegten durchgehend belegbaren Belegungen
 		fachbelegungen = manager.filterBelegungenMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
-		_anzahlDurchgehendSchriftlich = (fachbelegungen == null) ? 0 : fachbelegungen.size();
+		_anzahlDurchgehendSchriftlich = fachbelegungen.size();
 	}
 
 

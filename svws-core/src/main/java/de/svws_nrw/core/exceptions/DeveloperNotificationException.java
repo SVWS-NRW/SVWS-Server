@@ -315,10 +315,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static <K1, K2, V> @NotNull V ifMap2DRemoveFailes(final @NotNull HashMap2D<K1, K2, V> map,
 			final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
-		final V value = map.removeOrException(key1, key2);
-		if (value == null)
-			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!");
-		return value;
+		return map.removeOrException(key1, key2);
 	}
 
 
