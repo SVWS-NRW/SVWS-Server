@@ -15,7 +15,7 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.daten", "daten", SStundenplanDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Stundenplan";
+		super.text = "Grunddaten";
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
