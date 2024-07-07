@@ -33,11 +33,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public put(key1 : K1, key2 : K2, key3 : K3, key4 : K4, key5 : K5, value : V) : void {
-		let map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null) {
-			map2 = new HashMap4D();
-			this._map.put(key1, map2);
-		}
+		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.computeIfAbsent(key1, { apply : (k: K1 | null) => new HashMap4D() });
+		if (map2 === null)
+			throw new NullPointerException()
 		map2.put(key2, key3, key4, key5, value);
 	}
 

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -27,11 +28,9 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public put(key1 : K1, key2 : K2, value : V) : void {
-		let map2 : JavaMap<K2, V> | null = this._map.get(key1);
-		if (map2 === null) {
-			map2 = new HashMap();
-			this._map.put(key1, map2);
-		}
+		const map2 : JavaMap<K2, V> | null = this._map.computeIfAbsent(key1, { apply : (k: K1 | null) => new HashMap() });
+		if (map2 === null)
+			throw new NullPointerException()
 		map2.put(key2, value);
 	}
 
@@ -66,25 +65,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		const value : V | null = map2.get(key2);
 		if (value === null)
-			return value as unknown as V;
-		return value;
-	}
-
-	/**
-	 * Liefert den Nicht-Null-Wert zum Mapping (key1, key2).<br>
-	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird eine Exception geworfen.<br>
-	 * Falls der zugeordnete Wert NULL ist, wird eine Exception geworfen.
-	 *
-	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
-	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
-	 *
-	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
-	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
-	 */
-	public getNonNullOrException2(key1 : K1, key2 : K2) : V {
-		const value : V = this.getOrException(key1, key2);
-		if (value === null)
-			throw new DeveloperNotificationException("value is NULL!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		return value;
 	}
 
@@ -162,7 +143,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		if (map2.isEmpty())
 			this._map.remove(key1);
 		if (value === null)
-			return value as unknown as V;
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		return value;
 	}
 

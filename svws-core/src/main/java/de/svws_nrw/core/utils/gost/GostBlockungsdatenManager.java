@@ -1341,7 +1341,7 @@ public class GostBlockungsdatenManager {
 		final GostBlockungRegel regelKursKeep = regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID1keep);
 		final GostBlockungRegel regelKursDelete = regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID2delete);
 
-		if (regelKursDelete != null)
+		if (regelKursDelete != null) {
 			if (regelKursKeep != null) {
 				// Die Ziel-Regel wird mit der Summe überschrieben.
 				// Die Quell-Regel wird später gelöscht.
@@ -1354,6 +1354,7 @@ public class GostBlockungsdatenManager {
 				regelKursDelete.parameter.set(0, idKursID1keep);
 				_map_multikey_regeln.put(regelToMultikey(regelKursDelete), regelKursDelete);
 			}
+		}
 
 		// (3) Dann wird erst der Kurs komplett gelöscht.
 		kurseRemoveByID(SetUtils.create1(idKursID2delete));
@@ -1548,7 +1549,8 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
 	public boolean schieneGetIsRemoveAllowed(final long idSchiene) throws DeveloperNotificationException {
-		return (schieneGet(idSchiene) != null) && getIstBlockungsVorlage();
+		schieneGet(idSchiene);
+		return getIstBlockungsVorlage();
 	}
 
 	/**
@@ -1665,7 +1667,6 @@ public class GostBlockungsdatenManager {
 			sb.append(toStringRegel(regel.id) + " existiert bereits mit den Parametern: ");
 			for (int i = 0; i < regel.parameter.size(); i++)
 				sb.append("[" + (i == 0 ? "" : ", ") + regel.parameter.get(i) + "]");
-			System.out.println("WARNUNG: " + sb.toString());
 		}
 	}
 

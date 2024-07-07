@@ -2036,10 +2036,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von Schülerklausur-Terminen
 	 */
 	public schuelerklausurterminaktuellGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
-		let ergebnis : List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>();
+		const ergebnis : List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>();
 		if (this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.containsKey1(idTermin)) {
 			const lists : List<List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getNonNullValuesOfKey1AsList(idTermin);
-			for (let list of lists)
+			for (const list of lists)
 				ergebnis.addAll(list);
 		}
 		return ergebnis;

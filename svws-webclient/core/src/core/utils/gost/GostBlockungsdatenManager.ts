@@ -1308,7 +1308,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die ID=" + idKursID2delete + " des Quell-Kurses gibt es nicht!", !this._map_idKurs_kurs.containsKey(idKursID2delete));
 		const regelKursKeep : GostBlockungRegel | null = this.regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID1keep);
 		const regelKursDelete : GostBlockungRegel | null = this.regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID2delete);
-		if (regelKursDelete !== null)
+		if (regelKursDelete !== null) {
 			if (regelKursKeep !== null) {
 				const summe : number = regelKursDelete.parameter.get(1) + regelKursKeep.parameter.get(1);
 				regelKursKeep.parameter.set(1, summe);
@@ -1317,6 +1317,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				regelKursDelete.parameter.set(0, idKursID1keep);
 				this._map_multikey_regeln.put(GostBlockungsdatenManager.regelToMultikey(regelKursDelete), regelKursDelete);
 			}
+		}
 		this.kurseRemoveByID(SetUtils.create1(idKursID2delete));
 	}
 
@@ -1492,7 +1493,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
 	public schieneGetIsRemoveAllowed(idSchiene : number) : boolean {
-		return (this.schieneGet(idSchiene) !== null) && this.getIstBlockungsVorlage();
+		this.schieneGet(idSchiene);
+		return this.getIstBlockungsVorlage();
 	}
 
 	/**
@@ -1594,7 +1596,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			sb.append(this.toStringRegel(regel.id)! + " existiert bereits mit den Parametern: ");
 			for (let i : number = 0; i < regel.parameter.size(); i++)
 				sb.append("[" + (i === 0 ? "" : ", ") + regel.parameter.get(i) + "]");
-			console.log(JSON.stringify("WARNUNG: " + sb.toString()!));
 		}
 	}
 

@@ -25,9 +25,7 @@ public final class StundenplanUnterrichtUtils {
 
 	/** Ein Default-Comparator für den Vergleich von Unterrichten in Unterrichtelisten. */
 	public static final @NotNull Comparator<StundenplanUnterricht> comparator =
-			(final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
-				return Long.compare(a.id, b.id);
-			};
+			(final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> Long.compare(a.id, b.id);
 
 	/** Ein Default-Comparator für den Vergleich von Fächern in Listen. */
 	public static final @NotNull Comparator<StundenplanFach> comparatorFaecher =
@@ -52,33 +50,23 @@ public final class StundenplanUnterrichtUtils {
 
 	/** Ein Default-Comparator für den Vergleich von Räumen in Listen. */
 	public static final @NotNull Comparator<StundenplanSchiene> comparatorSchienen =
-			(final @NotNull StundenplanSchiene a, final @NotNull StundenplanSchiene b) -> {
-				return Long.compare(a.nummer, b.nummer);
-			};
+			(final @NotNull StundenplanSchiene a, final @NotNull StundenplanSchiene b) -> Long.compare(a.nummer, b.nummer);
 
 	/** Ein Default-Comparator für den Vergleich von Wochentagen in Listen. */
 	public static final @NotNull Comparator<Wochentag> comparatorWochentage =
-			(final @NotNull Wochentag a, final @NotNull Wochentag b) -> {
-				return Long.compare(a.id, b.id);
-			};
+			(final @NotNull Wochentag a, final @NotNull Wochentag b) -> Long.compare(a.id, b.id);
 
 	/** Ein Default-Comparator für den Vergleich von Zeitrastern in Listen. */
 	public static final @NotNull Comparator<StundenplanZeitraster> comparatorZeitraster =
-			(final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
-				return Long.compare(a.id, b.id);
-			};
+			(final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> Long.compare(a.id, b.id);
 
 	/** Ein Default-Comparator für den Vergleich von Stunden in Listen. */
 	public static final @NotNull Comparator<Integer> comparatorStunden =
-			(final @NotNull Integer a, final @NotNull Integer b) -> {
-				return Long.compare(a, b);
-			};
+			(final @NotNull Integer a, final @NotNull Integer b) -> Long.compare(a, b);
 
 	/** Ein Default-Comparator für den Vergleich von Wochentypen in Listen. */
 	public static final @NotNull Comparator<Integer> comparatorWochentypen =
-			(final @NotNull Integer a, final @NotNull Integer b) -> {
-				return Long.compare(a, b);
-			};
+			(final @NotNull Integer a, final @NotNull Integer b) -> Long.compare(a, b);
 
 	/** Ein Default-Comparator für den Vergleich von Klassen in Listen. */
 	public static final @NotNull Comparator<StundenplanKlasse> comparatorKlassen =

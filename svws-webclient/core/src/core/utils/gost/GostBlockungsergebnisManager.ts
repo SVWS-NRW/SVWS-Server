@@ -461,8 +461,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			const entries = this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
 			for (const e of entries) {
-				if (e.getValue() !== null)
-					continue;
 				if (wahlkonflikte < 10) {
 					const idFach : number = e.getKey().valueOf();
 					const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
@@ -475,9 +473,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
 			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
-				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();
-				if (set === null)
-					continue;
+				const set : JavaSet<GostBlockungsergebnisKurs> = e.getValue();
 				if (set.size() <= 1)
 					continue;
 				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
@@ -1960,7 +1956,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
 	private getOfSchuelerNeuzuordnungMitFixierung(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
-		console.log(JSON.stringify("getOfSchuelerNeuzuordnung " + idSchueler + ", " + fixiereBelegteKurse));
 		const input : SchuelerblockungInput = new SchuelerblockungInput();
 		input.schienen = this._parent.schieneGetAnzahl();
 		for (const fachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler)) {
@@ -2302,7 +2297,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1 : number, idSchueler2 : number, idFach : number) : boolean {
 		const kurs1 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler1, idFach);
 		const kurs2 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler2, idFach);
-		return ((kurs1 === null) || (kurs2 === null)) ? false : (kurs1.id === kurs2.id);
+		return ((kurs1 !== null) && (kurs2 !== null)) && (kurs1.id === kurs2.id);
 	}
 
 	/**

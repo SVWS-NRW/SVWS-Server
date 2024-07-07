@@ -31,16 +31,12 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public put(key1 : K1, key2 : K2, key3 : K3, value : V) : void {
-		let map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
-		if (map2 === null) {
-			map2 = new HashMap();
-			this._map1.put(key1, map2);
-		}
-		let map3 : JavaMap<K3, V> | null = map2.get(key2);
-		if (map3 === null) {
-			map3 = new HashMap();
-			map2.put(key2, map3);
-		}
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.computeIfAbsent(key1, { apply : (k: K1 | null) => new HashMap() });
+		if (map2 === null)
+			throw new NullPointerException()
+		const map3 : JavaMap<K3, V> | null = map2.computeIfAbsent(key2, { apply : (k: K2 | null) => new HashMap() });
+		if (map3 === null)
+			throw new NullPointerException()
 		map3.put(key3, value);
 	}
 

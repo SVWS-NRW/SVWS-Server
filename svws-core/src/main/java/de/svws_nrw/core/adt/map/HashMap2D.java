@@ -38,11 +38,9 @@ public class HashMap2D<K1, K2, V> {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) {
-		Map<K2, V> map2 = _map.get(key1);
-		if (map2 == null) {
-			map2 = new HashMap<>();
-			_map.put(key1, map2);
-		}
+		final Map<K2, V> map2 = _map.computeIfAbsent(key1, k -> new HashMap<>());
+		if (map2 == null)
+			throw new NullPointerException();
 		map2.put(key2, value);
 	}
 
@@ -71,32 +69,13 @@ public class HashMap2D<K1, K2, V> {
 	 * @return Den Wert zum Mapping (key1, key2).
 	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
-	@SuppressWarnings("cast")
 	public @NotNull V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
 		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		final V value = map2.get(key2);
 		if (value == null)
-			return (@NotNull V) value;
-		return value;
-	}
-
-	/**
-	 * Liefert den Nicht-Null-Wert zum Mapping (key1, key2).<br>
-	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird eine Exception geworfen.<br>
-	 * Falls der zugeordnete Wert NULL ist, wird eine Exception geworfen.
-	 *
-	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
-	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
-	 *
-	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
-	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
-	 */
-	public @NotNull V getNonNullOrException2(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
-		final @NotNull V value = getOrException(key1, key2);
-		if (value == null)
-			throw new DeveloperNotificationException("value is NULL!");
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		return value;
 	}
 
@@ -166,7 +145,6 @@ public class HashMap2D<K1, K2, V> {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	@SuppressWarnings("cast")
 	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
@@ -175,7 +153,7 @@ public class HashMap2D<K1, K2, V> {
 		if (map2.isEmpty())   // Wenn map2 durch das Löschen leer wurde, dann entferne den key1 (trim).
 			_map.remove(key1);
 		if (value == null)
-			return (@NotNull V) value;
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		return value;
 	}
 

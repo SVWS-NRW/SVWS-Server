@@ -42,24 +42,15 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull V value) {
-		Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
-		if (map2 == null) {
-			map2 = new HashMap<>();
-			_map1.put(key1, map2);
-		}
-
-		Map<K3, Map<K4, V>> map3 = map2.get(key2);
-		if (map3 == null) {
-			map3 = new HashMap<>();
-			map2.put(key2, map3);
-		}
-
-		Map<K4, V> map4 = map3.get(key3);
-		if (map4 == null) {
-			map4 = new HashMap<>();
-			map3.put(key3, map4);
-		}
-
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.computeIfAbsent(key1, k -> new HashMap<>());
+		if (map2 == null)
+			throw new NullPointerException();
+		final Map<K3, Map<K4, V>> map3 = map2.computeIfAbsent(key2, k -> new HashMap<>());
+		if (map3 == null)
+			throw new NullPointerException();
+		final Map<K4, V> map4 = map3.computeIfAbsent(key3, k -> new HashMap<>());
+		if (map4 == null)
+			throw new NullPointerException();
 		map4.put(key4, value);
 	}
 

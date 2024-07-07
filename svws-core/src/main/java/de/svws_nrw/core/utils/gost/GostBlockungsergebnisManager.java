@@ -438,9 +438,6 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			final var entries = _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
 			for (final @NotNull Entry<Long, GostBlockungsergebnisKurs> e : entries) {
-				if (e.getValue() != null)
-					continue;
-
 				if (wahlkonflikte < 10) {
 					final long idFach = e.getKey();
 					final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
@@ -457,14 +454,10 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet())
 			for (final @NotNull Entry<Long, Set<GostBlockungsergebnisKurs>> e : _schuelerID_schienenID_to_kurseSet
 					.getSubMapOrException(idSchueler).entrySet()) {
-				final Set<GostBlockungsergebnisKurs> set = e.getValue();
-				if (set == null)
-					continue;
+				final @NotNull Set<GostBlockungsergebnisKurs> set = e.getValue();
 				if (set.size() <= 1)
 					continue;
-
 				final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(set);
-
 				if (wahlkonflikte < 10) {
 					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in " + _parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
 					for (int i = 0; i < list.size(); i++)
@@ -473,7 +466,6 @@ public class GostBlockungsergebnisManager {
 				} else {
 					wahlkonflikte_ignored++;
 				}
-
 				wahlkonflikte += list.size() - 1;
 			}
 
@@ -2100,7 +2092,6 @@ public class GostBlockungsergebnisManager {
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
 	private @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnungMitFixierung(final long idSchueler, final boolean fixiereBelegteKurse) {
-		System.out.println("getOfSchuelerNeuzuordnung " + idSchueler + ", " + fixiereBelegteKurse);
 		// SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS
 		// SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
 		// SCHUELER_ZUSAMMEN_MIT_SCHUELER, SCHUELER_VERBIETEN_MIT_SCHUELER
@@ -2488,7 +2479,7 @@ public class GostBlockungsergebnisManager {
 	public boolean getOfSchuelerIstZusammenMitSchuelerInFach(final long idSchueler1, final long idSchueler2, final long idFach) {
 		final GostBlockungsergebnisKurs kurs1 = _schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler1, idFach);
 		final GostBlockungsergebnisKurs kurs2 = _schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler2, idFach);
-		return ((kurs1 == null) || (kurs2 == null)) ? false : (kurs1.id == kurs2.id);
+		return ((kurs1 != null) && (kurs2 != null)) && (kurs1.id == kurs2.id);
 	}
 
 	// #########################################################################
