@@ -228,8 +228,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds, final boolean includeAbwesend)
-			throws ApiOperationException {
+	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds,
+			final boolean includeAbwesend) throws ApiOperationException {
 		if (terminIds.isEmpty())
 			return new ArrayList<>();
 		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
@@ -237,10 +237,11 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
 		String skFilter = "";
 		if (!kkSkIds.isEmpty()) {
-		    skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
-		    if (!includeAbwesend)
-			skFilter += " AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
-		    skFilter += ")";
+			skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
+			if (!includeAbwesend)
+				skFilter +=
+						" AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+			skFilter += ")";
 		}
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
 				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
