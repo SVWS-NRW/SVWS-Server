@@ -1,5 +1,9 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
@@ -23,10 +27,6 @@ import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.Reportin
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schüler und erweitert die Klasse {@link ReportingSchueler}.</p>
@@ -154,14 +154,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 						this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id())));
 			} else {
 				if (!lernabschnitte().isEmpty()) {
-					if (lernabschnitte().size() == 1) {
-						super.setAktuellerLernabschnitt(lernabschnitte().getFirst());
-					} else {
-						super.setAktuellerLernabschnitt(lernabschnitte().stream()
-								.filter(a -> a.wechselNr() == 0)
-								.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
-								.getFirst());
-					}
+					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
+							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+					if (!tmpListAbschnitte.isEmpty())
+						super.setAktuellerLernabschnitt(tmpListAbschnitte.getFirst());
 				}
 			}
 		}
@@ -180,14 +177,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 						this.reportingRepository.mapAuswahlLernabschnittsdaten().get(this.id())));
 			} else {
 				if (!lernabschnitte().isEmpty()) {
-					if (lernabschnitte().size() == 1) {
-						super.setAuswahlLernabschnitt(lernabschnitte().getFirst());
-					} else {
-						super.setAuswahlLernabschnitt(lernabschnitte().stream()
-								.filter(a -> a.wechselNr() == 0)
-								.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList()
-								.getFirst());
-					}
+					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
+							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+					if (!tmpListAbschnitte.isEmpty())
+						super.setAuswahlLernabschnitt(tmpListAbschnitte.getFirst());
 				}
 			}
 		}
@@ -274,18 +268,16 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					this.reportingRepository.mapAuswahlLernabschnittsdaten()
 							.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
 			} else {
-				this.reportingRepository.mapAktuelleLernabschnittsdaten()
-						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
-								.filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
-								.toList()
-								.getFirst());
-				this.reportingRepository.mapAuswahlLernabschnittsdaten()
-						.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
-								.filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id)
-								.toList()
-								.getFirst());
+				final List<SchuelerLernabschnittsdaten> tmpListAktuell =
+						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+				final List<SchuelerLernabschnittsdaten> tmpListAuswahl =
+						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+				if (!tmpListAktuell.isEmpty())
+					this.reportingRepository.mapAktuelleLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAktuell.getFirst());
+				if (!tmpListAuswahl.isEmpty())
+					this.reportingRepository.mapAuswahlLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAuswahl.getFirst());
 			}
 		}
 		return super.lernabschnitte();

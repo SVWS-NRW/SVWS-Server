@@ -1,5 +1,11 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
@@ -38,12 +44,6 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung und erweitert die Klasse {@link ReportingSchuelerGostLaufbahnplanung}.</p>
@@ -122,22 +122,29 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// ##### Grunddaten und Summen setzen ###############
-		final var aktuellerLernabschnitt = reportingSchueler.aktuellerLernabschnitt();
-		super.setPruefungsordnung(aktuellerLernabschnitt.pruefungsOrdnung());
-		if (!super.pruefungsordnung().toLowerCase().contains("gost"))
+		if (reportingSchueler.aktuellerLernabschnitt() != null) {
+			super.setPruefungsordnung(reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung());
+			if (!super.pruefungsordnung().toLowerCase().contains("gost"))
+				super.setPruefungsordnung("APO-GOSt");
+		} else {
 			super.setPruefungsordnung("APO-GOSt");
+		}
 		super.setBeratungsbogenText(gostJahrgangsdaten.textBeratungsbogen);
 		super.setEmailText(gostJahrgangsdaten.textMailversand);
 
-		super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-				+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
-		super.setAktuelleKlasse(reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel());
-		eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
+		if (reportingSchueler.aktuellerLernabschnitt() != null) {
+			super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
+			super.setAktuelleKlasse(reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel());
+			eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
+		}
 
-		super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-				+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
-		super.setAuswahlKlasse(reportingSchueler.auswahlLernabschnitt().klasse().kuerzel());
-		eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
+		if (reportingSchueler.auswahlLernabschnitt() != null) {
+			super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
+			super.setAuswahlKlasse(reportingSchueler.auswahlLernabschnitt().klasse().kuerzel());
+			eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
+		}
 
 		eintragBeratungslehrkraefteErgaenzen(schuelerBeratungsdaten, gostJahrgangsdaten);
 		super.setLetzterRuecklaufDatum(schuelerBeratungsdaten.ruecklaufdatum);
@@ -319,7 +326,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
 					laufbahnplanungFach.setFachIstFortfuehrbareFremdspracheInGOSt(true);
 					laufbahnplanungFach.setJahrgangFremdsprachenbeginn(sprachbelegung.belegungVonJahrgang);
-					laufbahnplanungFach.setPositionFremdsprachenfolge(sprachbelegung.reihenfolge.toString());
+					if (sprachbelegung.reihenfolge != null)
+						laufbahnplanungFach.setPositionFremdsprachenfolge(sprachbelegung.reihenfolge.toString());
 				}
 			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
 				laufbahnplanungFach.setFachIstFortfuehrbareFremdspracheInGOSt(true);

@@ -1,10 +1,10 @@
 package de.svws_nrw.module.reporting.html;
 
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
-
 import java.util.Arrays;
 import java.util.List;
+
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 
 /**
  * Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers.
@@ -100,7 +100,7 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Wahlboegen"</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyy-MM-dd_HH-mm')}"></p>
 			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
 			        </th:block>
 			""",
