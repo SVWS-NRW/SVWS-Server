@@ -1,8 +1,8 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Sprachenfolge">
-			<div v-if="verfuegbareSprachen.length" class="w-1/4">
-				<svws-ui-select title="Eine neue Sprache hinzufügen" removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)" :items="verfuegbareSprachen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachen" />
+			<div v-if="verfuegbareSprachen.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)" :items="verfuegbareSprachen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachen" />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
 				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
@@ -51,8 +51,8 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
-			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4">
-				<svws-ui-select title="Eine neue Sprachprüfung hinzufügen" removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)" :items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
+			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)" :items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" selectable v-model="auswahlPrHSU">
 				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
@@ -80,8 +80,8 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Festestellungsprüfungen">
-			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4">
-				<svws-ui-select title="Eine neue Sprachprüfung hinzufügen" removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
+			<div v-if="verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" selectable v-model="auswahlPrFP">
 				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
