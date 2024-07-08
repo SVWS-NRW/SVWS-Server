@@ -2,6 +2,8 @@ plugins {
 	id 'svws.gradle.node.plugin'
 }
 
+sourcesJar.dependsOn project(':svws-openapi').tasks.assembleTranspiled
+
 task assembleCore(type: NpmRun) {
 	dependsOn rootProject.npmPrepare, project(':svws-openapi').tasks.assemble
 	group "build"
