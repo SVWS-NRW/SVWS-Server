@@ -35,7 +35,7 @@ public class ApiContent {
 	private String tmpArrayElementType = null;
 
 	/** Ein Vektor mit den benötigten Klassen bei den Typescript-Importen */
-	public final HashMap<String, String> importsRequired = new HashMap<>();
+	public final Map<String, String> importsRequired = new HashMap<>();
 
 
 	/**

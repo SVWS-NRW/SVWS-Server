@@ -136,7 +136,7 @@ public class VCalendar {
 		if (this.serialized != null) {
 			return serialized;
 		}
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		new Property(BEGIN_PROPERTY_KEY, VCALENDAR_VALUE).serialize(sb);
 		new Property("VERSION", "2.0").serialize(sb);
 		if (this.timezone != null) {

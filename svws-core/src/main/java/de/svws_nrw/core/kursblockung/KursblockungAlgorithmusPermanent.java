@@ -86,7 +86,7 @@ public final class KursblockungAlgorithmusPermanent {
 		_zeitRest -= (System.currentTimeMillis() - zeitStart);
 
 		// Neustart aller Algorithmen, falls nur noch weniger als 100 Millisekunden zur Verfügung stehen.
-		return (_zeitRest <= 100) ? _neustart() : false;
+		return (_zeitRest <= 100) && _neustart();
 	}
 
 	/**

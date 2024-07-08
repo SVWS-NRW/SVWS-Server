@@ -59,7 +59,7 @@ public final class DataSchulen extends DataManager<Long> {
 		daten.email = e.Email;
 		daten.schulleiter = e.Schulleiter;
 		daten.sortierung = (e.Sortierung == null) ? 32000 : e.Sortierung;
-		daten.istSichtbar = (e.Sichtbar == null) ? true : e.Sichtbar;
+		daten.istSichtbar = (e.Sichtbar == null) || e.Sichtbar;
 		return daten;
 	};
 

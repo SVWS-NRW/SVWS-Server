@@ -119,7 +119,7 @@ class RRuleTest {
 	 * @return die Stringrepräsentation der Regel
 	 */
 	private static String getSerializedRRule(final RRule r) {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		r.serialize(sb);
 		return sb.toString();
 	}

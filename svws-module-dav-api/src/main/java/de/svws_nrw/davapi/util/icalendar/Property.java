@@ -48,7 +48,7 @@ public final class Property implements IProperty {
 	}
 
 	@Override
-	public void serialize(final StringBuffer sb) {
+	public void serialize(final StringBuilder sb) {
 		sb.append(key);
 		sb.append(COLON_CHAR);
 		sb.append(value);

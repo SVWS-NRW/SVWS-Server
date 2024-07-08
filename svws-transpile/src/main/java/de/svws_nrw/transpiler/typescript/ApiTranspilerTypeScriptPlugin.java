@@ -117,19 +117,19 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 
 			// Generiere den Konstruktor
 			fileData += """
-					    \t/**
-					    \t *
-					    \t * Erstellt eine neue API mit der übergebenen Konfiguration.
-					    \t *
-					    \t * @param {string} url - die URL des Servers: Alle Pfadangaben sind relativ zu dieser URL
-					    \t * @param {string} username - der Benutzername für den API-Zugriff
-					    \t * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
-					    \t */
-					    \tpublic constructor(url : string, username : string, password : string) {
-					    \t\tsuper(url, username, password);
-					    \t}
+						\t/**
+						\t *
+						\t * Erstellt eine neue API mit der übergebenen Konfiguration.
+						\t *
+						\t * @param {string} url - die URL des Servers: Alle Pfadangaben sind relativ zu dieser URL
+						\t * @param {string} username - der Benutzername für den API-Zugriff
+						\t * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
+						\t */
+						\tpublic constructor(url : string, username : string, password : string) {
+						\t\tsuper(url, username, password);
+						\t}
 
-					    """;
+						""";
 
 			// Generiere den Code für die API-Methoden
 			for (final ApiMethod apiMethod : apiMethods) {

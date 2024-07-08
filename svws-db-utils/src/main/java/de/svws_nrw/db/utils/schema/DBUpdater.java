@@ -1,8 +1,6 @@
 package de.svws_nrw.db.utils.schema;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
@@ -460,9 +458,7 @@ public class DBUpdater {
 	 */
 	private boolean dropColumns(final DBEntityManager conn, final long veraltet) {
 		logger.log("- Verwerfe: ");
-		final List<SchemaTabelle> tabs = new ArrayList<>(Schema.getTabellen(veraltet - 1));
-		Collections.reverse(tabs);
-		final List<SchemaTabelleSpalte> cols = tabs.stream()
+		final List<SchemaTabelleSpalte> cols = Schema.getTabellen(veraltet - 1).reversed().stream()
 				.filter(tab -> tab.veraltet().revision != veraltet)
 				.flatMap(tab -> tab.getSpalten().stream())
 				.filter(col -> col.veraltet().revision == veraltet)

@@ -85,7 +85,7 @@ public class VEvent {
 	 *
 	 * @param sb der StringBuilder
 	 */
-	public void serialize(final StringBuffer sb) {
+	public void serialize(final StringBuilder sb) {
 		new Property(VCalendar.BEGIN_PROPERTY_KEY, VEVENT_VALUE).serialize(sb);
 		for (final IProperty p : properties) {
 			p.serialize(sb);

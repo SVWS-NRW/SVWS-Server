@@ -85,7 +85,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		for (let iK : number = 0; (iK < this.algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
 			this.algorithmenK[iK].next(zeitStart + (Math.trunc((zeitFuerBerechnung * (iK + 1)) / this.algorithmenK.length)));
 		this._zeitRest -= (System.currentTimeMillis() - zeitStart);
-		return (this._zeitRest <= 100) ? this._neustart() : false;
+		return (this._zeitRest <= 100) && this._neustart();
 	}
 
 	/**

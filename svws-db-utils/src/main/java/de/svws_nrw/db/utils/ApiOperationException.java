@@ -14,7 +14,7 @@ public class ApiOperationException extends Exception {
 	private static final long serialVersionUID = -7737733085773788685L;
 
 	/** Der HTTP-Status-Code */
-	private Status status;
+	private final Status status;
 
 	/** Der zu serialisierende Body der Exception */
 	private final Object body;
@@ -85,15 +85,6 @@ public class ApiOperationException extends Exception {
 		this.mimeType = mimeType;
 	}
 
-
-	/**
-	 * Aktualisiert den Status für die HTTP-Response
-	 *
-	 * @param status   der Status der HTTP-Response
-	 */
-	public void updateStatus(final @NotNull Status status) {
-		this.status = status;
-	}
 
 	/**
 	 * Gibt den HTTP-Response-Code dieser Exception zurück.

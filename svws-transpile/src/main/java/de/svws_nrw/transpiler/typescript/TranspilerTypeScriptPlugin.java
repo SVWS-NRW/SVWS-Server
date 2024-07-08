@@ -1629,7 +1629,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if ((paramType instanceof final ExpressionClassType ect) && (ect.isNumberType()))
 						return "Array(" + this.convertExpression(param) + ".valueOf()).fill(null)";
 					if (paramType instanceof final ExpressionArrayType eat)
-						throw new TranspilerException("Transpiler Error: Array.newInstance not yet supported for multidimensional arrays");
+						throw new TranspilerException(
+								"Transpiler Error: Array.newInstance (Kind %s) not yet supported for multidimensional arrays".formatted(eat.getKind()));
 					throw new TranspilerException("Transpiler Error: Array.newInstance with unsupported parameter types");
 				}
 			}
@@ -1732,7 +1733,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		pruefeBezeichner(node.getName().toString());
 
 		// convert to typescrypt code
-		final TypeNode typeNode = new TypeNode(this, node.getType(), true, forceNotNull ? true : transpiler.hasNotNullAnnotation(node));
+		final TypeNode typeNode = new TypeNode(this, node.getType(), true, forceNotNull || transpiler.hasNotNullAnnotation(node));
 		return comment + getIndent() + "%s%s%s%s : %s%s;%s".formatted(
 				"".equals(accessModifier) ? "" : accessModifier + " ",
 				transpiler.hasStaticModifier(node) ? "static " : "",
@@ -2349,7 +2350,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			transpileDefaultMethodImplementationsAddImports(unit, resolved.values());
 			for (final TypeParameterElement tpe : method.getTypeParameters()) {
 				// TODO add the type parameters to resolved and transpile them (see TODO below)
-				throw new TranspilerException("Transpiler Error: Methods with type parameters are not yet supported here");
+				throw new TranspilerException("Transpiler Error: Methods with type parameters (Kind %s) are not yet supported here".formatted(tpe.getKind()));
 			}
 			final String methodName = method.getSimpleName().toString();
 			transpileDefaultMethodParamsAddImports(unit, method.getParameters());

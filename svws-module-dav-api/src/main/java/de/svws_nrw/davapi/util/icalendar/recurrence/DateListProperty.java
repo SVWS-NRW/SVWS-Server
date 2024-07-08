@@ -47,7 +47,7 @@ public final class DateListProperty implements IProperty {
 	}
 
 	@Override
-	public void serialize(final StringBuffer sb) {
+	public void serialize(final StringBuilder sb) {
 		sb.append(this.getKey());
 		sb.append(COLON_CHAR);
 		sb.append(this.getValue());

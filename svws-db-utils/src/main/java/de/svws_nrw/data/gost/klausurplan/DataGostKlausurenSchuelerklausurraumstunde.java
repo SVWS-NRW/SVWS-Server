@@ -450,19 +450,20 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts, final boolean includeSelbesDatum) throws ApiOperationException {
-	    final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
-	    if (idSkts.isEmpty())
-		return retCollection;
+	public GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts, final boolean includeSelbesDatum)
+			throws ApiOperationException {
+		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
+		if (idSkts.isEmpty())
+			return retCollection;
 
 		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idSkts);
 		retCollection.idsSchuelerklausurtermine = idSkts;
 		if (includeSelbesDatum) {
-        		final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
-        		final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);
-        		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, termineSelbesDatum.stream().map(t -> t.id).toList());
+			final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
+			final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);
+			retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, termineSelbesDatum.stream().map(t -> t.id).toList());
 		} else {
-		    retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
+			retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
 		}
 		if (retCollection.raeume.isEmpty())
 			return retCollection;

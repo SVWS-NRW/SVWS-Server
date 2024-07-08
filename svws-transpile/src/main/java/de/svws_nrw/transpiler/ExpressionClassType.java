@@ -1,8 +1,8 @@
 package de.svws_nrw.transpiler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -348,7 +348,7 @@ public final class ExpressionClassType extends ExpressionType {
 	 *
 	 * @return true on success and false if not all type variables could be resolved
 	 */
-	public boolean resolveTypeVariables(final HashMap<String, ExpressionType> knownTypeVars) {
+	public boolean resolveTypeVariables(final Map<String, ExpressionType> knownTypeVars) {
 		// TODO improvement: allow mixed generic parameters with type variables and fixed types
 		// TODO improvement: replace type variables recursively - see comment in Transpiler
 		if (typeVariables.isEmpty())

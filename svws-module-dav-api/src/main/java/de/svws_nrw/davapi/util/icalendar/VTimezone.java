@@ -76,7 +76,7 @@ public class VTimezone {
 	 *
 	 * @param sb der Stringbuffer
 	 */
-	public void serialize(final StringBuffer sb) {
+	public void serialize(final StringBuilder sb) {
 		new Property(VCalendar.BEGIN_PROPERTY_KEY, TIMEZONE_BEGIN_VALUE).serialize(sb);
 		for (final IProperty p : this.properties) {
 			p.serialize(sb);

@@ -71,5 +71,5 @@ public interface IProperty {
 	 *
 	 * @param sb der Stringbuffer
 	 */
-	void serialize(StringBuffer sb);
+	void serialize(StringBuilder sb);
 }

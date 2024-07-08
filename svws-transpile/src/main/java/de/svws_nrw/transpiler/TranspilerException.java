@@ -20,4 +20,15 @@ public class TranspilerException extends RuntimeException {
 		super(message);
 	}
 
+	/**
+	 * Create a new transpiler error exception with the specified message
+	 *
+	 * @param message   the message of the transpiler error
+	 * @param cause     the cause for this exception
+	 */
+	public TranspilerException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
+
+
 }

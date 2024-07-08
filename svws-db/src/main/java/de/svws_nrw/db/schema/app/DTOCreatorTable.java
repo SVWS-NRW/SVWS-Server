@@ -28,7 +28,7 @@ public final class DTOCreatorTable {
 	private static final Logger logger = new Logger();
 
 	/** Enthält alle definierten Objekt dieser Klasse */
-	public static final List<DTOCreatorTable> all = new ArrayList<>();
+	protected static final List<DTOCreatorTable> all = new ArrayList<>();
 
 
 	/** Die Tabelle für die der Java-Code erzeugt werden soll */
