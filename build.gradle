@@ -30,7 +30,7 @@ if (file(".git/HEAD").exists()) {
 					String[] tokens = it.split(" ");
 					if ((tokens.length == 2) && (tokens[1].trim().equals(gitHEADRefParts[1].trim())))
 						gitHASH = tokens[0].trim()
-				} 
+				}
 			}
 		}
 	}
@@ -63,6 +63,7 @@ allprojects {
     apply plugin: 'svws.gradle.javalib.plugin'
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
 	apply plugin: 'svws.gradle.svwseclipse.plugin'
+	apply plugin: 'svws.gradle.svwsintellij.plugin'
 	apply plugin: 'org.sonarqube'
 	apply plugin: 'checkstyle'
 	// TODO Support JPMS-Modules
@@ -117,7 +118,7 @@ allprojects {
 		extendedDefault {
 			extendsFrom configurations.default
 			canBeResolved = true
-		} 
+		}
 	}
 
 	task printDependencies {
@@ -219,6 +220,11 @@ task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
 	description 'Publish ins Sonatype Staging, im Anschluss Release nach Maven Central und Schließen des Staging. Danach Release zu anderen Repositories'
 }
 
+task initIntellij() {
+	group "ide"
+	SvwsIntelliJPlugin
+}
+
 
 nexusPublishing {
     repositories {
@@ -247,6 +253,7 @@ task allJavadoc(type: Javadoc) {
 
 import com.github.jk1.license.render.*
 import com.github.jk1.license.importer.*
+import svws.gradle.java.SvwsIntelliJPlugin
 
 licenseReport {
     // Set output directory for the report data.

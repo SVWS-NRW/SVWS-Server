@@ -68,8 +68,8 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 				project.logger.info('Info: Aktualisiere Eclipse-Konfiguration für Projekt ' + gp.name);
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
-				project.ext.setEclipseUiPreference(project.file('.settings/org.eclipse.jdt.ui.prefs'), project.getRootProject().file('config/eclipse/Eclipse_cleanup.xml'))
-				project.ext.setEclipsePreferenceFormatter(project.file('.settings/org.eclipse.jdt.core.prefs'), project.getRootProject().file('config/eclipse/Eclipse_formatter.xml'))
+				project.ext.setEclipseUiPreference(project.file('.settings/org.eclipse.jdt.ui.prefs'), project.getRootProject().file('config/eclipse/Eclipse_Cleanup.xml'))
+				project.ext.setEclipsePreferenceFormatter(project.file('.settings/org.eclipse.jdt.core.prefs'), project.getRootProject().file('config/eclipse/Eclipse_Formatter.xml'))
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.inheritNullAnnotations', 'disabled')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.missingNonNullByDefaultAnnotation', 'ignore')
 				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.annotation.nonnull', 'de.svws_nrw.base.annotations.NonNull')
