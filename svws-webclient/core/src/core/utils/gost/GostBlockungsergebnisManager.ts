@@ -4911,12 +4911,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
-			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
-				this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
-		this.stateRevalidateEverything();
+			this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
 		for (const z of update.listHinzuzufuegen)
-			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
-				this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+			this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();

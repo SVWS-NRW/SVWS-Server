@@ -5651,15 +5651,14 @@ public class GostBlockungsergebnisManager {
 
 		// SuS entfernen.
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listEntfernen)
-			if (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)) // vorsichtshalber!
-				stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+			stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
 
-		stateRevalidateEverything(); // Revalidierung nötig, da sonst Kurs-Schüler-Zuordnung nicht aktuell!
+		// An dieser Stelle darf kein "stateRevalidateEverything".
+
 
 		// SuS hinzufügen
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listHinzuzufuegen)
-			if (!getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)) // vorsichtshalber!
-				stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+			stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
 
 		// Regeln hinzufügen.
 		if (_parent.getIstBlockungsVorlage())
