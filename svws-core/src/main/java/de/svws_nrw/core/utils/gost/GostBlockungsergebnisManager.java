@@ -1279,7 +1279,7 @@ public class GostBlockungsergebnisManager {
 	 * Entfernt den Kurs aus der Schiene.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene Die Datenbank-ID der Schiene.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 */
 	private void stateKursSchieneEntfernenOhneRegelvalidierung(final long idKurs, final long idSchiene) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
@@ -5711,7 +5711,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu verschieben.
 	 *
 	 * <br>(1) Wenn der Kurs nicht in der Quell-Schiene ist, passiert nichts.
 	 * <br>(2) Wenn der Kurs bereits in der Ziel-Schiene ist, passiert nichts.
@@ -5722,10 +5722,13 @@ public class GostBlockungsergebnisManager {
 	 * @param idSchieneQuelle  Die Quell-Schiene, aus der der Kurs entfernt wird.
 	 * @param idSchieneZiel    Die Ziel-Schiene, zu welcher der Kurs hinzugefügt wird.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu verschieben.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(final long idKurs,
-			final long idSchieneQuelle, final long idSchieneZiel) {
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(
+			final long idKurs,
+			final long idSchieneQuelle,
+			final long idSchieneZiel) {
+
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate u = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
 
 		// (1)
@@ -5756,15 +5759,13 @@ public class GostBlockungsergebnisManager {
 
 		// Kurse aus Schienen entfernen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listEntfernen)
-			if (getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene)) // vorsichtshalber!
-				stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+			stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 
-		stateRevalidateEverything(); // Revalidierung nötig, da sonst Kurs-Schienen-Zuordnung nicht aktuell!
+		// An dieser Stelle darf kein "stateRevalidateEverything", da sonst SuS aus den Kurses entfernt werden.
 
 		// Kurse in Schienen setzen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listHinzuzufuegen)
-			if (!getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene)) // vorsichtshalber!
-				stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+			stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 
 		// Regeln hinzufügen.
 		if (_parent.getIstBlockungsVorlage())

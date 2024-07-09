@@ -1171,7 +1171,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Entfernt den Kurs aus der Schiene.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene Die Datenbank-ID der Schiene.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 */
 	private stateKursSchieneEntfernenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
@@ -4957,7 +4957,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu verschieben.
 	 *
 	 * <br>(1) Wenn der Kurs nicht in der Quell-Schiene ist, passiert nichts.
 	 * <br>(2) Wenn der Kurs bereits in der Ziel-Schiene ist, passiert nichts.
@@ -4968,7 +4968,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param idSchieneQuelle  Die Quell-Schiene, aus der der Kurs entfernt wird.
 	 * @param idSchieneZiel    Die Ziel-Schiene, zu welcher der Kurs hinzugefügt wird.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu verschieben.
 	 */
 	public kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(idKurs : number, idSchieneQuelle : number, idSchieneZiel : number) : GostBlockungsergebnisKursSchienenZuordnungUpdate {
 		const u : GostBlockungsergebnisKursSchienenZuordnungUpdate = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
@@ -4992,12 +4992,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
-			if (this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
-				this.stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
-		this.stateRevalidateEverything();
+			this.stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 		for (const z of update.listHinzuzufuegen)
-			if (!this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
-				this.stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+			this.stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();
