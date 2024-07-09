@@ -48,7 +48,7 @@
 				<template v-if="kalenderwoche.value">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
 						:manager="stundenplanmanager" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
-						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge>
+						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge :kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kalenderwoche.value || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kalenderwoche.value)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
@@ -89,7 +89,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`" @mouseenter="kursklausurMouseOver = klausur" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionByKursklausur(klausur).datum !== null ? kMan().terminOrExceptionByKursklausur(klausur).datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kalenderwoche.value, zeitrasterSelected!)) }}</span>									</span>
 								</div>
@@ -121,7 +121,7 @@
 							<li v-for="konflikt in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
+									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`" @mouseenter="kursklausurMouseOver = klausur" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionByKursklausur(klausur).datum !== null ? kMan().terminOrExceptionByKursklausur(klausur).datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kalenderwoche.value, zeitrasterSelected!)) }}</span>
 									</span>
@@ -146,6 +146,7 @@
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 	const showMoreKonflikte = ref(false);
 	const showMoreWarnungen = ref(false);
+	const kursklausurMouseOver = ref<GostKursklausur | undefined>(undefined);
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	//const kwAuswahl = ref<StundenplanKalenderwochenzuordnung>(props.stundenplanmanager().kalenderwochenzuordnungGetByDatum(new Date().toISOString()));

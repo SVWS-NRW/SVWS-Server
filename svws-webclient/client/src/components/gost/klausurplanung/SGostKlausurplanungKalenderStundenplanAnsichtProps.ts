@@ -1,4 +1,4 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 import type { WritableComputedRef } from "vue";
@@ -22,4 +22,5 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster) => void;
 	zeigeAlleJahrgaenge: () => boolean;
+	kursklausurMouseOver: () => GostKursklausur | undefined;
 }

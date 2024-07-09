@@ -86,11 +86,13 @@
 							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
-							<div class="bg-white/40 dark:bg-black border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
-								:class="dragData !== undefined ? 'bg-light border-black/20 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
+							<div class="bg-white/40 dark:bg-black bg-highlight border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
+								:class="{
+									'bg-light border-black/20 dark:border-white/25': dragData !== undefined,
+									'shadow border-black/10 dark:border-white/10': dragData === undefined,
+								}">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
-								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: getBgColors(termin)}" />
-								<!-- TODO: EF/Q1/Q2 statt termin.abijahr anzeigen -->
+								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
