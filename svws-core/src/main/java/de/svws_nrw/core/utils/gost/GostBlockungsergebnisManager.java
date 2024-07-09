@@ -676,7 +676,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
-		System.out.println("----------- update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet -------");
 		// Leeren und hinzufügen.
 		_kursID_to_schuelerIDSet = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
@@ -688,7 +687,7 @@ public class GostBlockungsergebnisManager {
 			if (!_kursID_to_schuelerIDSet.containsKey(idKurs))
 				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, idKurs);
 
-		// Ungültige Fachwahlen in eine andere Map verschieben.
+		// Ungültige Fachwahlen in eine andere Map kopieren (Änderung: Früher wurden diese verschoben)
 		_schuelerID_to_ungueltigeKurseSet = new HashMap<>();
 		for (final long idKurs : _kursID_to_schuelerIDSet.keySet()) {
 			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs);
@@ -696,14 +695,10 @@ public class GostBlockungsergebnisManager {
 
 			for (final long idSchueler : new HashSet<>(schuelerIDset))
 				if (!_parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
-					schuelerIDset.remove(idSchueler);
 					MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
-					System.out.println(_parent.toStringSchuelerSimple(idSchueler) + " ungültig in  " + _parent.toStringKursSimple(eKurs.id));
-					// _schuelerID_to_ungueltigeKurseSet darf nur Schüler mit ungültigen Fachwahlen enthalten!
 				}
 		}
 
-		// TODO BAR ungültige Kurswahlen, da es die selbe Fachart ist.
 	}
 
 	private void update_1_kursID_to_dummySuS() {
@@ -1334,34 +1329,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
-	 * <br>Hinweis: Siehe auch {@link #getErgebnisInklusiveUngueltigerWahlen()}.
-	 *
-	 * @return das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
-	 */
-	public @NotNull GostBlockungsergebnis getErgebnis() {
-		return _ergebnis;
-	}
-
-
-	/**
 	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
-	 * <br>Hinweis: Siehe auch {@link #getErgebnis()}.
 	 *
 	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 */
-	public @NotNull GostBlockungsergebnis getErgebnisInklusiveUngueltigerWahlen() {
-		final @NotNull GostBlockungsergebnis copy = deepCopyErgebnis(_ergebnis);
-
-		// Ungültige Zuordnungen hinzufügen
-		for (final @NotNull Entry<Long, Set<GostBlockungsergebnisKurs>> entry : _schuelerID_to_ungueltigeKurseSet.entrySet())
-			for (final @NotNull GostBlockungsergebnisKurs kurs1 : entry.getValue())
-				for (final @NotNull GostBlockungsergebnisSchiene schiene : copy.schienen)
-					for (final @NotNull GostBlockungsergebnisKurs kurs2 : schiene.kurse)
-						if (kurs1.id == kurs2.id)
-							kurs2.schueler.add(entry.getKey());
-
-		return copy;
+	public @NotNull GostBlockungsergebnis getErgebnis() {
+		return deepCopyErgebnis(_ergebnis);
 	}
 
 	/**
@@ -2074,18 +2047,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 *
-	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
-	 */
-	public boolean getOfSchuelerOfKursIstZugeordnet(final long idSchueler, final long idKurs) {
-		return DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs).contains(idSchueler);
-	}
-
-	/**
 	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 *
 	 * @param idSchueler           Die Datenbank-ID des Schülers.
@@ -2117,7 +2078,7 @@ public class GostBlockungsergebnisManager {
 				kursS.kursart = kursE.kursart;
 				kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
 				kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
-						|| (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+						|| (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)); // TODO BAR richtiges getOfSchuelerOfKursIstZugeordnet?
 				DeveloperNotificationException.ifTrue(
 						_parent.toStringKurs(idKurs) + " von " + _parent.toStringSchueler(idSchueler) + " ist gesperrt und fixiert zugleich!",
 						kursS.istGesperrt && kursS.istFixiert);
@@ -2163,6 +2124,34 @@ public class GostBlockungsergebnisManager {
 		}
 
 		return u;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
+	 */
+	public boolean getOfSchuelerOfKursIstZugeordnet(final long idSchueler, final long idKurs) {
+		return MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, idKurs).contains(idSchueler);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
+	 */
+	public boolean getOfSchuelerOfKursIstUngueltig(final long idSchueler, final long idKurs) {
+		for (final @NotNull GostBlockungsergebnisKurs kurs :  MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler))
+			if (kurs.id == idKurs)
+				return true;
+
+		return false;
 	}
 
 	/**
@@ -2411,8 +2400,9 @@ public class GostBlockungsergebnisManager {
 		if (idKurs >= 0) {
 			if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
+
 			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
-			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
+			if (!getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
 				return false;
 		}
 
@@ -5503,6 +5493,7 @@ public class GostBlockungsergebnisManager {
 			// (1)
 			if (!getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listHinzuzufuegen.add(z);
+
 			// (2)
 			for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
 				if ((kurs1.id != kurs2.id) && (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, kurs2.id)))
@@ -5577,6 +5568,8 @@ public class GostBlockungsergebnisManager {
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(
 			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		System.out.println("kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE --> " + kursSchuelerZuordnungen.size());
 
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
 			// (1)

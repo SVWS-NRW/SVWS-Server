@@ -29,9 +29,9 @@ public enum GostSchriftlichkeit {
 	}
 
 	/**
-	 * Liefert TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 * Liefert TRUE, falls schriftlich, FALSE falls mündlich, andernfalls eine Exception.
 	 *
-	 * @return TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 * @return TRUE, falls schriftlich, FALSE falls mündlich, andernfalls eine Exception.
 	 */
 	public boolean getIstSchriftlichOrException() {
 		return DeveloperNotificationException.ifNull("Schriftlichkeit sollte nicht NULL sein!", istSchriftlich);

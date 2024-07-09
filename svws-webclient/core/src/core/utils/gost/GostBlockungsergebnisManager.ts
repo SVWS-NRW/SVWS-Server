@@ -670,7 +670,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(ergebnisOld : GostBlockungsergebnis) : void {
-		console.log(JSON.stringify("----------- update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet -------"));
 		this._kursID_to_schuelerIDSet = new HashMap();
 		for (const eSchiene of ergebnisOld.schienen)
 			for (const eKurs of eSchiene.kurse)
@@ -684,9 +683,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const schuelerIDset : JavaSet<number> = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs);
 			for (const idSchueler of new HashSet(schuelerIDset))
 				if (!this._parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
-					schuelerIDset.remove(idSchueler);
 					MapUtils.getOrCreateHashSet(this._schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
-					console.log(JSON.stringify(this._parent.toStringSchuelerSimple(idSchueler)! + " ungültig in  " + this._parent.toStringKursSimple(eKurs.id)!));
 				}
 		}
 	}
@@ -1218,30 +1215,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
-	 * <br>Hinweis: Siehe auch {@link #getErgebnisInklusiveUngueltigerWahlen()}.
-	 *
-	 * @return das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
-	 */
-	public getErgebnis() : GostBlockungsergebnis {
-		return this._ergebnis;
-	}
-
-	/**
 	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
-	 * <br>Hinweis: Siehe auch {@link #getErgebnis()}.
 	 *
 	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 */
-	public getErgebnisInklusiveUngueltigerWahlen() : GostBlockungsergebnis {
-		const copy : GostBlockungsergebnis = GostBlockungsergebnisManager.deepCopyErgebnis(this._ergebnis);
-		for (const entry of this._schuelerID_to_ungueltigeKurseSet.entrySet())
-			for (const kurs1 of entry.getValue())
-				for (const schiene of copy.schienen)
-					for (const kurs2 of schiene.kurse)
-						if (kurs1.id === kurs2.id)
-							kurs2.schueler.add(entry.getKey());
-		return copy;
+	public getErgebnis() : GostBlockungsergebnis {
+		return GostBlockungsergebnisManager.deepCopyErgebnis(this._ergebnis);
 	}
 
 	/**
@@ -1938,18 +1917,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 *
-	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
-	 */
-	public getOfSchuelerOfKursIstZugeordnet(idSchueler : number, idKurs : number) : boolean {
-		return DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs).contains(idSchueler);
-	}
-
-	/**
 	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 *
 	 * @param idSchueler           Die Datenbank-ID des Schülers.
@@ -2005,6 +1972,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 		}
 		return u;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
+	 */
+	public getOfSchuelerOfKursIstZugeordnet(idSchueler : number, idKurs : number) : boolean {
+		return MapUtils.getOrCreateHashSet(this._kursID_to_schuelerIDSet, idKurs).contains(idSchueler);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
+	 */
+	public getOfSchuelerOfKursIstUngueltig(idSchueler : number, idKurs : number) : boolean {
+		for (const kurs of MapUtils.getOrCreateHashSet(this._schuelerID_to_ungueltigeKurseSet, idSchueler))
+			if (kurs.id === idKurs)
+				return true;
+		return false;
 	}
 
 	/**
@@ -2240,7 +2234,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (idKurs >= 0) {
 			if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
-			if ((schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
+			if (!this.getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
 				return false;
 		}
 		if (idFach >= 0) {
@@ -4855,6 +4849,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung>) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		console.log(JSON.stringify("kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE --> " + kursSchuelerZuordnungen.size()));
 		for (const z of kursSchuelerZuordnungen) {
 			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listEntfernen.add(z);

@@ -185,6 +185,8 @@
 	const getAbiturfach = (idKurs: number) => computed<number | null>(() => {
 		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs))
 			return null;
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstUngueltig(idSchueler.value, idKurs))
+			return null;
 		const fachwahl = props.getErgebnismanager().getOfSchuelerOfKursFachwahl(idSchueler.value, idKurs);
 		return fachwahl.abiturfach;
 	});

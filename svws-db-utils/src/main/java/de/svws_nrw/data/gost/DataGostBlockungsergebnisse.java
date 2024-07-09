@@ -144,7 +144,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			manager.kursSchuelerUpdateExecute(uKursSchueler);
 
 			// Erzeuge das Ergebnis.
-			final GostBlockungsergebnis ergebnis = manager.getErgebnisInklusiveUngueltigerWahlen();
+			final GostBlockungsergebnis ergebnis = manager.getErgebnis();
 			ergebnis.istAktiv = (erg.IstAktiv != null) && erg.IstAktiv;
 			datenManager.daten().ergebnisse.add(ergebnis);
 		}
@@ -152,7 +152,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt den dazugeörigen Ergebnis-Manager
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt den dazugehörigen Ergebnis-Manager
 	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param ergebnis        das Datenbank-DTO des Blockungsergebnisses
@@ -210,7 +210,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			final @NotNull GostBlockungsdatenManager datenManager) throws ApiOperationException {
 		// Erzeuge das Ergebnis.
 		final GostBlockungsergebnisManager manager = getErgebnismanager(conn, ergebnis, datenManager);
-		final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();
+		final GostBlockungsergebnis daten = manager.getErgebnis();
 		daten.istAktiv = (ergebnis.IstAktiv != null) && ergebnis.IstAktiv;
 		return daten;
 	}
@@ -792,7 +792,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Aktiviert das Blockungsergebnis in dem angegebenen Manager in dem angegebenen Schuljahrabschnitt.
+	 * Aktiviert das Blockungsergebnis in dem angegebenen Manager in dem angegebenen Schuljahresabschnitt.
 	 *
 	 * Hierfür muss bereits geprüft sein, ob nicht bereits eine Blockung in diesem Abschnitt aktiv ist!
 	 *
@@ -1017,7 +1017,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 	/**
 	 * Synchronisiert das Blockungsergebnis in dem angegebenen Manager mit den persistierten Daten
-	 * in dem angegebenen Schuljahrabschnitt.
+	 * in dem angegebenen Schuljahresabschnitt.
 	 *
 	 * Hierfür muss bereits geprüft sein, ob eine persistierte Blockung in diesem Abschnitt vorliegt!
 	 *

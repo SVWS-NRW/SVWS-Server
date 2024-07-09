@@ -37,9 +37,9 @@ export class GostSchriftlichkeit extends JavaEnum<GostSchriftlichkeit> {
 	}
 
 	/**
-	 * Liefert TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 * Liefert TRUE, falls schriftlich, FALSE falls mündlich, andernfalls eine Exception.
 	 *
-	 * @return TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 * @return TRUE, falls schriftlich, FALSE falls mündlich, andernfalls eine Exception.
 	 */
 	public getIstSchriftlichOrException() : boolean {
 		return DeveloperNotificationException.ifNull("Schriftlichkeit sollte nicht NULL sein!", this.istSchriftlich)!;
