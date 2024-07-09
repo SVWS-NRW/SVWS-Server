@@ -161,7 +161,8 @@
 		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostKursklausur>>> | null = null;
 		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined)
 			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, props.stundenplanmanager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
-		konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(props.kalenderwoche.value.kw, threshold, thresholdOnly).entrySet();
+		else
+			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(props.kalenderwoche.value.kw, props.jahrgangsdaten.abiturjahr, threshold, thresholdOnly).entrySet();
 		return konflikte.toArray() as JavaMapEntry<number, JavaSet<GostKursklausur>>[];
 	}
 
@@ -233,6 +234,8 @@
 			props.terminSelected.value = data;
 			if (data === undefined)
 				zeitrasterSelected.value = undefined;
+		} else if (data === undefined) {
+			props.terminSelected.value = undefined;
 		}
 	};
 

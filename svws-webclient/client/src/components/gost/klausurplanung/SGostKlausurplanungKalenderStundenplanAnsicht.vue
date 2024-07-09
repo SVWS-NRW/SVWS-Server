@@ -121,7 +121,6 @@
 	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
-	import { routeGost } from "~/router/apps/gost/RouteGost";
 	import { routeApp } from "~/router/apps/RouteApp";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];

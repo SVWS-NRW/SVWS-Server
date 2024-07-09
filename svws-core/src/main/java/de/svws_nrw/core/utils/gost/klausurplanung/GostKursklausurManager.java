@@ -140,7 +140,7 @@ public class GostKursklausurManager {
 			new HashMap4D<>();
 	private final @NotNull HashMap4D<Long, Integer, Integer, Integer, GostKursklausur> _kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal =
 			new HashMap4D<>();
-	private final @NotNull HashMap2D<Integer, Long, List<GostKursklausur>> _kursklausurmenge_by_kw_and_schuelerId = new HashMap2D<>();
+	private final @NotNull HashMap3D<Integer, Integer, Long, List<GostKursklausur>> _kursklausurmenge_by_kw_and_abijahr_and_schuelerId = new HashMap3D<>();
 	private final @NotNull HashMap2D<Long, Long, List<GostKursklausur>> _kursklausurmenge_by_terminId_and_schuelerId = new HashMap2D<>();
 
 	// GostKlausurtermin
@@ -308,7 +308,7 @@ public class GostKursklausurManager {
 		update_kursklausurmenge_by_terminId_and_schuelerId();
 
 //		update_schuelerIds_by_idTermin(); // benötigt _kursklausurmenge_by_idTermin
-		update_kursklausurmenge_by_kw_and_schuelerId(); // benötigt _kursklausurmenge_by_idTermin
+		update_kursklausurmenge_by_kw_and_abijahr_and_schuelerId(); // benötigt _kursklausurmenge_by_idTermin
 
 		update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal(); // benötigt
 		// _schuelerklausurterminmenge_by_idSchuelerklausur
@@ -374,8 +374,8 @@ public class GostKursklausurManager {
 		}
 	}
 
-	private void update_kursklausurmenge_by_kw_and_schuelerId() {
-		_kursklausurmenge_by_kw_and_schuelerId.clear();
+	private void update_kursklausurmenge_by_kw_and_abijahr_and_schuelerId() {
+		_kursklausurmenge_by_kw_and_abijahr_and_schuelerId.clear();
 		for (final @NotNull GostKlausurtermin t : _terminmenge) {
 			if (t.datum == null)
 				continue;
@@ -383,8 +383,9 @@ public class GostKursklausurManager {
 			final List<GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(t.id);
 			if (klausuren != null)
 				for (final @NotNull GostKursklausur kk : klausuren) {
+					final @NotNull GostKlausurvorgabe v = vorgabeByKursklausur(kk);
 					for (final @NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausurid(kk.id))
-						Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sk.idSchueler)
+						Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_abijahr_and_schuelerId, kw, v.abiJahrgang, sk.idSchueler)
 								.add(kk);
 				}
 		}
@@ -1842,8 +1843,8 @@ public class GostKursklausurManager {
 		if (termin.datum == null)
 			return ergebnis;
 		final int kw = DateUtils.gibKwDesDatumsISO8601(termin.datum);
-		final Map<Long, List<GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId
-				.getSubMapOrNull(kw);
+		final Map<Long, List<GostKursklausur>> kursklausurmenge_by_schuelerId =
+				_kursklausurmenge_by_kw_and_abijahr_and_schuelerId.getMap3OrNull(kw, termin.abijahr);
 		if (kursklausurmenge_by_schuelerId == null)
 			return ergebnis;
 		for (final @NotNull Entry<Long, List<GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
@@ -1904,16 +1905,16 @@ public class GostKursklausurManager {
 			final @NotNull GostKlausurtermin termin, final @NotNull String datum, final int threshold,
 			final boolean thresholdOnly) {
 		final int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold,
+		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(kwDatum, termin.abijahr, termin, threshold,
 				thresholdOnly);
 	}
 
-	private @NotNull Map<Long, HashSet<GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(
-			final int kw, final GostKlausurtermin termin, final int threshold, final boolean thresholdOnly) {
+	private @NotNull Map<Long, HashSet<GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(
+			final int kw, final int abijahr, final GostKlausurtermin termin, final int threshold, final boolean thresholdOnly) {
 		final @NotNull Map<Long, HashSet<GostKursklausur>> ergebnis = new HashMap<>();
 
-		final Map<Long, List<GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId
-				.getSubMapOrNull(kw);
+		final Map<Long, List<GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_abijahr_and_schuelerId
+				.getMap3OrNull(kw, abijahr);
 		if (kursklausurmenge_by_schuelerId == null)
 			return ergebnis;
 
@@ -1939,6 +1940,7 @@ public class GostKursklausurManager {
 	 * definiert
 	 *
 	 * @param kw            der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param abijahr       das Abiturjahr der möglichen Konflikt-Schüler
 	 * @param threshold     der Schwellwert (z.B. 3), der erreicht sein muss, damit
 	 *                      die Klausuren in die Map aufgenommen werden
 	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die
@@ -1946,9 +1948,9 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<Long, HashSet<GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(
-			final int kw, final int threshold, final boolean thresholdOnly) {
-		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold, thresholdOnly);
+	public @NotNull Map<Long, HashSet<GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(
+			final int kw, final int abijahr, final int threshold, final boolean thresholdOnly) {
+		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(kw, abijahr, null, threshold, thresholdOnly);
 	}
 
 	/**

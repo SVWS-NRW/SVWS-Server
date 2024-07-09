@@ -24,7 +24,10 @@
 						<span class="icon icon-error i-ri-alert-fill" />
 					</svws-ui-tooltip>
 					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
-					<svws-ui-button v-if="multijahrgang()" :disabled="raum.idTermin === raummanager().getHauptTermin().id" type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(termin().abijahr, termin().halbjahr, termin().id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang}}</svws-ui-button>
+					<template v-if="multijahrgang()">
+						<span class="border rounded-md p-1 text-button" v-if="raum.idTermin === raummanager().getHauptTermin().id">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
+						<svws-ui-button v-else type="secondary" class="p-1" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(termin().abijahr, termin().halbjahr, termin().id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</svws-ui-button>
+					</template>
 				</span>
 			</div>
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">

@@ -137,7 +137,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal : HashMap4D<number, number, number, number, GostKursklausur> = new HashMap4D<number, number, number, number, GostKursklausur>();
 
-	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D<number, number, List<GostKursklausur>>();
+	private readonly _kursklausurmenge_by_kw_and_abijahr_and_schuelerId : HashMap3D<number, number, number, List<GostKursklausur>> = new HashMap3D<number, number, number, List<GostKursklausur>>();
 
 	private readonly _kursklausurmenge_by_terminId_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D<number, number, List<GostKursklausur>>();
 
@@ -311,7 +311,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_terminmenge_by_halbjahr_and_quartal();
 		this.update_terminmenge_by_datum();
 		this.update_kursklausurmenge_by_terminId_and_schuelerId();
-		this.update_kursklausurmenge_by_kw_and_schuelerId();
+		this.update_kursklausurmenge_by_kw_and_abijahr_and_schuelerId();
 		this.update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal();
 	}
 
@@ -370,8 +370,8 @@ export class GostKursklausurManager extends JavaObject {
 		}
 	}
 
-	private update_kursklausurmenge_by_kw_and_schuelerId() : void {
-		this._kursklausurmenge_by_kw_and_schuelerId.clear();
+	private update_kursklausurmenge_by_kw_and_abijahr_and_schuelerId() : void {
+		this._kursklausurmenge_by_kw_and_abijahr_and_schuelerId.clear();
 		for (const t of this._terminmenge) {
 			if (t.datum === null)
 				continue;
@@ -379,8 +379,9 @@ export class GostKursklausurManager extends JavaObject {
 			const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
 			if (klausuren !== null)
 				for (const kk of klausuren) {
+					const v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
 					for (const sk of this.schuelerklausurGetMengeByKursklausurid(kk.id))
-						Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sk.idSchueler).add(kk);
+						Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_abijahr_and_schuelerId, kw, v.abiJahrgang, sk.idSchueler).add(kk);
 				}
 		}
 	}
@@ -1666,7 +1667,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (termin.datum === null)
 			return ergebnis;
 		const kw : number = DateUtils.gibKwDesDatumsISO8601(termin.datum);
-		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_abijahr_and_schuelerId.getMap3OrNull(kw, termin.abijahr);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const entry of kursklausurmenge_by_schuelerId.entrySet()) {
@@ -1724,12 +1725,12 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
 		const kwDatum : number = DateUtils.gibKwDesDatumsISO8601(datum);
-		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold, thresholdOnly);
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(kwDatum, termin.abijahr, termin, threshold, thresholdOnly);
 	}
 
-	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
+	private klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(kw : number, abijahr : number, termin : GostKlausurtermin | null, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
 		const ergebnis : JavaMap<number, HashSet<GostKursklausur>> = new HashMap<number, HashSet<GostKursklausur>>();
-		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur>> | null = this._kursklausurmenge_by_kw_and_abijahr_and_schuelerId.getMap3OrNull(kw, abijahr);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (const entry of kursklausurmenge_by_schuelerId.entrySet()) {
@@ -1753,6 +1754,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * definiert
 	 *
 	 * @param kw            der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param abijahr       das Abiturjahr der möglichen Konflikt-Schüler
 	 * @param threshold     der Schwellwert (z.B. 3), der erreicht sein muss, damit
 	 *                      die Klausuren in die Map aufgenommen werden
 	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die
@@ -1760,8 +1762,8 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
-		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold, thresholdOnly);
+	public klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(kw : number, abijahr : number, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndTerminAndThreshold(kw, abijahr, null, threshold, thresholdOnly);
 	}
 
 	/**

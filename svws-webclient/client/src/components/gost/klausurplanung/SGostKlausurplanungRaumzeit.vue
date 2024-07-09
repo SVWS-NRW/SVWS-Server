@@ -36,7 +36,7 @@
 							:klausur-css-classes="calculatCssClassesKlausur"
 							:compact-with-date="raummanager() === undefined || raummanager()!.getHauptTermin().id !== termin.id"
 							:show-kursklausuren-nachschreiber="true"
-							:hideButtonRaeumePlanen="true">
+							:hide-button-raeume-planen="true">
 							<template #main v-if="raummanager() === undefined || raummanager()!.getHauptTermin().id !== termin.id"><template /></template>
 						</s-gost-klausurplanung-termin>
 					</li>
