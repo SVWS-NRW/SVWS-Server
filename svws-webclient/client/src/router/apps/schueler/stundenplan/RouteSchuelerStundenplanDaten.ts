@@ -6,14 +6,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 
-import { StundenplanAnsicht } from "@comp";
-import type { StundenplanAnsichtProps } from "@comp";
+import { StundenplanAnsichtSchueler } from "@comp";
+import type { StundenplanAnsichtSchuelerProps } from "@comp";
 import { routeApp } from "../../RouteApp";
 
 export class RouteSchuelerStundenplanDaten extends RouteNode<any, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsichtSchueler);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -64,9 +64,8 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<any, RouteSchuelerS
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, idStundenplan, wochentyp, kw: tmpKW }};
 	}
 
-	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
+	public getProps(to: RouteLocationNormalized): StundenplanAnsichtSchuelerProps {
 		return {
-			mode: 'schueler',
 			id: routeSchueler.data.schuelerListeManager.daten().id,
 			ignoreEmpty: routeSchuelerStundenplan.data.ganzerStundenplan,
 			manager: () => routeSchuelerStundenplan.data.manager,

@@ -13,11 +13,7 @@ export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | Stundenp
 
 export type StundenplanAnsichtDropZone = StundenplanZeitraster | StundenplanPausenzeit | undefined;
 
-export interface StundenplanAnsichtProps {
-	showSchienen?: boolean;
-	hidePausenaufsicht?: boolean;
-	textPausenzeit?: string;
-	growUnterricht?: boolean;
+export interface StundenplanAnsichtSchuelerProps {
 	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';
 	showZeitachse?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;
@@ -30,10 +26,4 @@ export interface StundenplanAnsichtProps {
 	dragData?: () => StundenplanAnsichtDragData;
 	onDrag?: (data: StundenplanAnsichtDragData, event?: DragEvent) => void;
 	onDrop?: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => void;
-	getPausenzeiten: () => List<StundenplanPausenzeit>;
-	zeitrasterHatUnterrichtMitWochentyp: (wochentag: number, stunde: number) => boolean;
-	getSchienen: (wochentag: number, stunde: number, wochentyp: number) => List<StundenplanSchiene>;
-	getUnterricht: (wochentag: number, stunde: number, wochentyp: number, schiene: number | null) => List<StundenplanUnterricht>;
-	getPausenzeitenWochentag: (wochentag: number) => List<StundenplanPausenzeit>;
-	getPausenaufsichtenPausenzeit: (idPausenzeit: number) => List<StundenplanPausenaufsicht>;
 }

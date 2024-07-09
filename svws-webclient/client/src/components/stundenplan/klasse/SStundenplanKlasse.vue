@@ -129,7 +129,7 @@
 				</svws-ui-table>
 			</div>
 			<!-- Das Zeitraster des Stundenplans, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
+			<stundenplan-ansicht-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
 				use-drag-and-drop :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" />
 		</template>
 	</div>
@@ -142,18 +142,18 @@
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
 	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene } from "@core";
-	import { ref, computed, onMounted } from "vue";
+	import { computed, onMounted, shallowRef } from "vue";
 	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
 	const props = defineProps<StundenplanKlasseProps>();
 
-	const isMounted = ref(false);
+	const isMounted = shallowRef(false);
 	onMounted(() => isMounted.value = true);
 
-	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
-	const wochentypAnzeige = ref<number>(0);
-	const doppelstundenModus = ref<boolean>(false);
-	const schienSortierung = ref<boolean>(true);
+	const _klasse = shallowRef<StundenplanKlasse | undefined>(undefined);
+	const wochentypAnzeige = shallowRef<number>(0);
+	const doppelstundenModus = shallowRef<boolean>(false);
+	const schienSortierung = shallowRef<boolean>(true);
 
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
@@ -180,7 +180,7 @@
 		return result;
 	}
 
-	const dragData = ref<StundenplanAnsichtDragData>(undefined);
+	const dragData = shallowRef<StundenplanAnsichtDragData>(undefined);
 
 	function onDrag(data: StundenplanAnsichtDragData, event?: DragEvent) {
 		dragData.value = data;
