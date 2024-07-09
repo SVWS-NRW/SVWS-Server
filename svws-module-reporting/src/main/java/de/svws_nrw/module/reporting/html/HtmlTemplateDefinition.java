@@ -32,7 +32,19 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css",
 			"GOSt-Blockungsergebnis-Kurs-Schueler",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+
+	/** Report-Vorlage: GOSt - Kursplanung - Kurse - Statistikwerten */
+	GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN(
+			ReportingReportvorlage.GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN,
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKurseMitStatistikwerten.html",
+			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKurseMitStatistikwerten.css",
+			"GOSt-Blockungsergebnis-Kurse-Statistikwerte",
+			"""
+			        <p th:text="${'GOSt-Blockungsergebnis-Kurse-Statistikwerte_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -44,7 +56,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css",
 			"GOSt-Blockungsergebnis-Schueler-Kurse",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -56,7 +68,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css",
 			"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abitur_' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -70,8 +82,8 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
-			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)),
@@ -85,7 +97,7 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Pruefungsergebnisse"</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '')}"></p>
+			            <p th:if="${iterState.first}" th:text="${'GOSt-Laufbahnplanung-Pruefungsergebnisse_Abi' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '')}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
@@ -100,8 +112,8 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:if="${Schueler.isEmpty()}">GOSt-Laufbahnplanung-Wahlboegen"</p>
 			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
-			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyy-MM-dd_HH-mm')}"></p>
-			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Gost-Laufbahnplanung-Wahlbogen_Abitur_' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'GOSt-Laufbahnwahl_Abi' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'GOSt-Laufbahnwahl_Abi' + schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '')}"></p>
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,

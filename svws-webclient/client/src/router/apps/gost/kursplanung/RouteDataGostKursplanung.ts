@@ -801,6 +801,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingParameter, api.schema);
+			case "Kurse mit Statistikwerten":
+				for (const kurs of this.kursAuswahl.value)
+					list.add(kurs);
+				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN.getBezeichnung();
+				reportingParameter.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kurse-Schienen-Zuordnung":
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				return await api.server.pdfReport(reportingParameter, api.schema);

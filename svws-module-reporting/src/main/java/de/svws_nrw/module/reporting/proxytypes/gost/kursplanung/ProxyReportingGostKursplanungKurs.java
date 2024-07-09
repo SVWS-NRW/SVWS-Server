@@ -4,6 +4,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungFachwahlstatistik;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungSchiene;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -52,6 +53,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param anzahlSchuelerSchriftlich	Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben..
 	 * @param bezeichnung				Bezeichnung des Kurses.
 	 * @param fach 						Das Fach des Kurses.
+	 * @param fachwahlstatistik			Die Fachwahl-Statistik zum Fach und zum GOSt-Halbjahr des Kurses
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
@@ -61,15 +63,29 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 */
 	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12,
 			final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler,
-			final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr,
+			final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach,
+			final ReportingGostKursplanungFachwahlstatistik fachwahlstatistik, final GostHalbjahr gostHalbjahr,
 			final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen,
 			final List<ReportingSchueler> schueler) {
-		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach, gostHalbjahr,
+		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach,
+				fachwahlstatistik, gostHalbjahr,
 				gostKursart, id, lehrkraefte, schienen, schueler);
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
 
 
+
+	/**
+	 * Die Fachwahl-Statistik zum Fach und zum GOSt-Halbjahr des Kurses
+	 * @return Fachwahl-Statistik des Faches des Kurses
+	 */
+	@Override
+	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
+		if (super.fachwahlstatistik() == null) {
+			super.setFachwahlstatistik(this.reportingGostKursplanungBlockungsergebnis.fachwahlstatistik().get(this.fach().id()));
+		}
+		return super.fachwahlstatistik();
+	}
 
 	/**
 	 * Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.

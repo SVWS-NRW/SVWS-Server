@@ -16,29 +16,34 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN", 0, "GostKursplanung-KursMitKursschuelern");
 
 	/**
+	 * Report-Vorlage: GOSt - Kursplanung - Kurse-Statistikwerte
+	 */
+	public static readonly GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN", 1, "GostKursplanung-KurseMitStatistikwerten");
+
+	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN", 1, "GostKursplanung-SchuelerMitKursen");
+	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN", 2, "GostKursplanung-SchuelerMitKursen");
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 2, "GostKursplanung-SchuelerMitSchienenKursen");
+	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 3, "GostKursplanung-SchuelerMitSchienenKursen");
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis)
 	 */
-	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 3, "Schueler-GostAbiturApoAnlage12");
+	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 4, "Schueler-GostAbiturApoAnlage12");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 4, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 5, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 5, "Schueler-GostLaufbahnplanungWahlbogen");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 6, "Schueler-GostLaufbahnplanungWahlbogen");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage

@@ -42,25 +42,62 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 	 */
 	public ProxyReportingGostKursplanungFachwahlstatistik(final ReportingRepository reportingRepository, final GostHalbjahr gostHalbjahr,
 			final GostStatistikFachwahl gostStatistikFachwahl, final GostBlockungsergebnisManager ergebnisManager) {
-		super(0,
-				0,
-				0,
+		super(-1,
+				-1,
+				-1,
+				-1,
+				-1,
 				null,
-				gostStatistikFachwahl.wahlenAB3,
-				gostStatistikFachwahl.wahlenAB4,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenLK,
 				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK,
 				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKMuendlich,
 				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGKSchriftlich,
-				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenLK,
-				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenZK);
+				gostStatistikFachwahl.wahlenAB3,
+				gostStatistikFachwahl.wahlenAB4,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenZK,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK,
+				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK);
+		// Hinweis: Die Klasse gostStatistikFachwahl unterscheidet bei der Anzahl der Wahlen nicht zwischen GK, PJK, VTF. Es gibt nur die wahlenGK.
 
 		final ReportingFach reportingFach = reportingRepository.mapReportingFaecher().get(gostStatistikFachwahl.id);
 		super.setFach(reportingFach);
 
-		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id)
-				+ ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id)
-				+ ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id));
-		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id));
-		super.setDifferenzKursgroessenGK(ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.ZK.id));
+		int kursgroessendifferenzLK = -1;
+		int kursgroessendifferenzGK = -1;
+		int kursgroessendifferenzZK = -1;
+		int kursgroessendifferenzPJK = -1;
+		int kursgroessendifferenzVTF = -1;
+
+		try {
+			kursgroessendifferenzLK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id);
+		} catch (final Exception ignored) {
+			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
+		}
+		try {
+			kursgroessendifferenzGK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id);
+		} catch (final Exception ignored) {
+			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
+		}
+		try {
+			kursgroessendifferenzZK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.ZK.id);
+		} catch (final Exception ignored) {
+			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
+		}
+		try {
+			kursgroessendifferenzPJK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id);
+		} catch (final Exception ignored) {
+			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
+		}
+		try {
+			kursgroessendifferenzVTF = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id);
+		} catch (final Exception ignored) {
+			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
+		}
+
+		super.setDifferenzKursgroessenLK(kursgroessendifferenzLK);
+		super.setDifferenzKursgroessenGK(kursgroessendifferenzGK);
+		super.setDifferenzKursgroessenZK(kursgroessendifferenzZK);
+		super.setDifferenzKursgroessenPJK(kursgroessendifferenzPJK);
+		super.setDifferenzKursgroessenVTF(kursgroessendifferenzVTF);
 	}
 }

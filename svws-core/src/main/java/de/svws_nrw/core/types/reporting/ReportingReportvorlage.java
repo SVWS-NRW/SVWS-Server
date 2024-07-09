@@ -21,6 +21,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN("GostKursplanung-KursMitKursschuelern"),
 
+	/** Report-Vorlage: GOSt - Kursplanung - Kurse-Statistikwerte */
+	GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN("GostKursplanung-KurseMitStatistikwerten"),
+
 	/** Report-Vorlage: GOSt - Kursplanung - Schüler-Kurse */
 	GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN("GostKursplanung-SchuelerMitKursen"),
 

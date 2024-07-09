@@ -44,6 +44,9 @@ public class ReportingGostKursplanungKurs {
 	/** Das Fach des Kurses */
 	private ReportingFach fach;
 
+	/** Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses */
+	private ReportingGostKursplanungFachwahlstatistik fachwahlstatistik;
+
 	/** Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis. */
 	private GostHalbjahr gostHalbjahr;
 
@@ -75,6 +78,7 @@ public class ReportingGostKursplanungKurs {
 	 * @param anzahlSchueler			Anzahl der Schülerinnen und Schüler im Kurs.
 	 * @param bezeichnung				Bezeichnung des Kurses.
 	 * @param fach			 			Das Fach des Kurses.
+	 * @param fachwahlstatistik			Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
@@ -83,7 +87,8 @@ public class ReportingGostKursplanungKurs {
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
 	public ReportingGostKursplanungKurs(final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne,
-			final int anzahlSchueler, final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr,
+			final int anzahlSchueler, final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach,
+			final ReportingGostKursplanungFachwahlstatistik fachwahlstatistik, final GostHalbjahr gostHalbjahr,
 			final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen,
 			final List<ReportingSchueler> schueler) {
 		this.anzahlAB12 = anzahlAB12;
@@ -95,6 +100,7 @@ public class ReportingGostKursplanungKurs {
 		this.anzahlSchuelerSchriftlich = anzahlSchuelerSchriftlich;
 		this.bezeichnung = bezeichnung;
 		this.fach = fach;
+		this.fachwahlstatistik = fachwahlstatistik;
 		this.gostHalbjahr = gostHalbjahr;
 		this.gostKursart = gostKursart;
 		this.id = id;
@@ -115,7 +121,13 @@ public class ReportingGostKursplanungKurs {
 		return this.lehrkraefte.stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
-
+	/**
+	 * Auflistung der Schienen des Kurses als kommaseparierte Liste der Schienennummern.
+	 * @return Kommaseparierte Liste der Schienen
+	 */
+	public String schienenAuflistung() {
+		return this.schienen.stream().map(s -> String.valueOf(s.nummer())).collect(Collectors.joining(","));
+	}
 
 
 	// ##### Getter und Setter #####
@@ -262,6 +274,22 @@ public class ReportingGostKursplanungKurs {
 	 */
 	public void setFach(final ReportingFach fach) {
 		this.fach = fach;
+	}
+
+	/**
+	 * Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses
+	 * @return Inhalt des Feldes fachwahlstatistik
+	 */
+	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
+		return fachwahlstatistik;
+	}
+
+	/**
+	 * Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses wird gesetzt.
+	 * @param fachwahlstatistik Neuer Wert für das Feld fachwahlstatistik
+	 */
+	public void setFachwahlstatistik(final ReportingGostKursplanungFachwahlstatistik fachwahlstatistik) {
+		this.fachwahlstatistik = fachwahlstatistik;
 	}
 
 	/**

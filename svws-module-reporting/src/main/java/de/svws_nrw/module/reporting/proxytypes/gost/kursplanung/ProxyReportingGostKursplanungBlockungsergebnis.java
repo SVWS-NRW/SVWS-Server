@@ -187,6 +187,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 					datenManager.kursGetName(kurs.id),
 					reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
+					null,
 					GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
 					GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),
 					kurs.id,
