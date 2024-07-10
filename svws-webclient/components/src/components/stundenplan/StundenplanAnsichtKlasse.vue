@@ -1,8 +1,9 @@
 <template>
-	<stundenplan-ansicht show-schienen :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty" :id="id"
+	<stundenplan-ansicht show-schienen :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
 		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
 		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
-		:get-pausenzeiten="getPausenzeiten" :get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
+		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
+		:get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
 		:on-drag="onDrag" :on-drop="onDrop">
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold col-span-2 flex place-items-center group" title="Unterricht">
@@ -36,14 +37,6 @@
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
 
-	function getPausenzeiten() {
-		return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
-	}
-
-	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
-		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByKlasseIdWochentagAndStunde(props.id, wochentag, stunde);
-	}
-
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		return props.manager().schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
 	}
@@ -52,6 +45,18 @@
 		if (schiene === null)
 			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
 		return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, schiene, false);
+	}
+
+	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
+		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByKlasseIdWochentagAndStunde(props.id, wochentag, stunde);
+	}
+
+	function getPausenzeiten() {
+		return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
+	}
+
+	function schneidenPausenzeitenZeitraster(wochentag: number): boolean {
+		return false;
 	}
 
 	function getPausenzeitenWochentag(wochentag: number) : List<StundenplanPausenzeit> {

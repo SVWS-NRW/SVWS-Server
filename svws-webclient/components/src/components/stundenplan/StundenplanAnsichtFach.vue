@@ -1,8 +1,9 @@
 <template>
-	<stundenplan-ansicht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty" :id="id"
+	<stundenplan-ansicht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
 		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
 		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
-		:get-pausenzeiten="getPausenzeiten" :get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
+		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
+		:get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
 		:on-drag="onDrag" :on-drop="onDrop">
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group" title="Unterricht">
@@ -40,15 +41,6 @@
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
 
-	function getPausenzeiten() : List<StundenplanPausenzeit> {
-		throw new DeveloperNotificationException("Die Anzeige von Pausenzeiten wird bei der Fachansicht nicht unterstützt.");
-	}
-
-	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
-		//TODO
-		return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(props.id, wochentag, stunde);
-	}
-
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		throw new DeveloperNotificationException("Die Anzeige von Schienen wird beim der Fachansicht nicht unterstützt.");
 	}
@@ -61,6 +53,19 @@
 			if ((u.idFach === props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
 				list.add(u);
 		return list;
+	}
+
+	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
+		//TODO
+		return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(props.id, wochentag, stunde);
+	}
+
+	function getPausenzeiten() : List<StundenplanPausenzeit> {
+		throw new DeveloperNotificationException("Die Anzeige von Pausenzeiten wird bei der Fachansicht nicht unterstützt.");
+	}
+
+	function schneidenPausenzeitenZeitraster(wochentag: number): boolean {
+		return false;
 	}
 
 	function getPausenzeitenWochentag(wochentag: number) : List<StundenplanPausenzeit> {

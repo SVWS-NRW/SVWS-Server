@@ -1,8 +1,9 @@
 <template>
-	<stundenplan-ansicht text-pausenzeit="Aufsicht" hide-pausenaufsicht grow-unterricht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty" :id="id"
+	<stundenplan-ansicht text-pausenzeit="Aufsicht" hide-pausenaufsicht grow-unterricht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
 		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
 		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
-		:get-pausenzeiten="getPausenzeiten" :get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
+		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
+		:get-pausenzeiten-wochentag="getPausenzeitenWochentag" :get-pausenaufsichten-pausenzeit="getPausenaufsichtenPausenzeit"
 		:on-drag="onDrag" :on-drop="onDrop">
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group col-span-2" title="Unterricht">
@@ -37,20 +38,24 @@
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
 
-	function getPausenzeiten() : List<StundenplanPausenzeit> {
-		return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
-	}
-
-	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
-		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByLehrerIdWochentagAndStunde(props.id, wochentag, stunde);
-	}
-
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		return props.manager().schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
 	}
 
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null) : List<StundenplanUnterricht> {
 		return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
+	}
+
+	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
+		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByLehrerIdWochentagAndStunde(props.id, wochentag, stunde);
+	}
+
+	function getPausenzeiten() : List<StundenplanPausenzeit> {
+		return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
+	}
+
+	function schneidenPausenzeitenZeitraster(wochentag: number): boolean {
+		return false;
 	}
 
 	function getPausenzeitenWochentag(wochentag: number) : List<StundenplanPausenzeit> {

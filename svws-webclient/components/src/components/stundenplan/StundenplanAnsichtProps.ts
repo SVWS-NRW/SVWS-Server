@@ -22,7 +22,6 @@ export interface StundenplanAnsichtProps {
 	showZeitachse?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;
 	ignoreEmpty?: boolean;
-	id: number,
 	manager: () => StundenplanManager;
 	wochentyp: () => number;
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
@@ -30,10 +29,11 @@ export interface StundenplanAnsichtProps {
 	dragData?: () => StundenplanAnsichtDragData;
 	onDrag?: (data: StundenplanAnsichtDragData, event?: DragEvent) => void;
 	onDrop?: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => void;
-	getPausenzeiten: () => List<StundenplanPausenzeit>;
-	zeitrasterHatUnterrichtMitWochentyp: (wochentag: number, stunde: number) => boolean;
 	getSchienen: (wochentag: number, stunde: number, wochentyp: number) => List<StundenplanSchiene>;
 	getUnterricht: (wochentag: number, stunde: number, wochentyp: number, schiene: number | null) => List<StundenplanUnterricht>;
+	zeitrasterHatUnterrichtMitWochentyp: (wochentag: number, stunde: number) => boolean;
+	getPausenzeiten: () => List<StundenplanPausenzeit>;
+	schneidenPausenzeitenZeitraster: (wochentag: number) => boolean;
 	getPausenzeitenWochentag: (wochentag: number) => List<StundenplanPausenzeit>;
 	getPausenaufsichtenPausenzeit: (idPausenzeit: number) => List<StundenplanPausenaufsicht>;
 }
