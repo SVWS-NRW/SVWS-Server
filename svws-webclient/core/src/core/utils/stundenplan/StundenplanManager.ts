@@ -348,6 +348,16 @@ export class StundenplanManager extends JavaObject {
 
 	private _pausenzeitmenge_by_idJahrgang_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D<number, number, List<StundenplanPausenzeit>>();
 
+	private _pausenzeitHatSchnittMitZeitraster_by_wochentag : HashMap<number, boolean> = new HashMap<number, boolean>();
+
+	private _pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+
+	private _pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+
+	private _pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+
+	private _pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+
 	private _pausenzeitMinutenMin : number | null = null;
 
 	private _pausenzeitMinutenMax : number | null = null;
@@ -716,6 +726,83 @@ export class StundenplanManager extends JavaObject {
 		this.update_kursmenge_by_idKlasse_and_idSchiene();
 		this.update_lehrermenge_by_idPausenzeit_and_idAufsichtsbereich_and_Wochentyp();
 		this.update_klassenmenge_verwendet_sortiert();
+		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse();
+		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer();
+		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler();
+		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang();
+		this.update_pausenzeitHatSchnittMitZeitraster_by_wochentag();
+	}
+
+	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag() : void {
+		this._pausenzeitHatSchnittMitZeitraster_by_wochentag = new HashMap();
+		for (const wochentag of this._pausenzeitmenge_by_wochentag.keySet()) {
+			const listP : List<StundenplanPausenzeit> | null = MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_wochentag, wochentag);
+			const listZ : List<StundenplanZeitraster> | null = MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentag);
+			const schnitt : boolean = this.hatSchnitt(listP, listZ);
+			this._pausenzeitHatSchnittMitZeitraster_by_wochentag.put(wochentag, schnitt);
+		}
+	}
+
+	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang() : void {
+		this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang = new HashMap2D();
+		for (const idJahrgang of this._pausenzeitmenge_by_idJahrgang_and_wochentag.getKeySet())
+			for (const wochentag of this._pausenzeitmenge_by_idJahrgang_and_wochentag.getKeySetOf(idJahrgang)) {
+				const listP : List<StundenplanPausenzeit> | null = Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idJahrgang_and_wochentag, idJahrgang, wochentag);
+				const listZ : List<StundenplanZeitraster> | null = MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentag);
+				const schnitt : boolean = this.hatSchnitt(listP, listZ);
+				this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang.put(wochentag, idJahrgang, schnitt);
+			}
+	}
+
+	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler() : void {
+		this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler = new HashMap2D();
+		for (const idSchueler of this._pausenzeitmenge_by_idSchueler_and_wochentag.getKeySet())
+			for (const wochentag of this._pausenzeitmenge_by_idSchueler_and_wochentag.getKeySetOf(idSchueler)) {
+				const listP : List<StundenplanPausenzeit> | null = Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler_and_wochentag, idSchueler, wochentag);
+				const listZ : List<StundenplanZeitraster> | null = MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentag);
+				const schnitt : boolean = this.hatSchnitt(listP, listZ);
+				this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler.put(wochentag, idSchueler, schnitt);
+			}
+	}
+
+	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer() : void {
+		this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer = new HashMap2D();
+		for (const idLehrer of this._pausenzeitmenge_by_idLehrer_and_wochentag.getKeySet())
+			for (const wochentag of this._pausenzeitmenge_by_idLehrer_and_wochentag.getKeySetOf(idLehrer)) {
+				const listP : List<StundenplanPausenzeit> | null = Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer_and_wochentag, idLehrer, wochentag);
+				const listZ : List<StundenplanZeitraster> | null = MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentag);
+				const schnitt : boolean = this.hatSchnitt(listP, listZ);
+				this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer.put(wochentag, idLehrer, schnitt);
+			}
+	}
+
+	private update_pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse() : void {
+		this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse = new HashMap2D();
+		for (const idKlasse of this._pausenzeitmenge_by_idKlasse_and_wochentag.getKeySet())
+			for (const wochentag of this._pausenzeitmenge_by_idKlasse_and_wochentag.getKeySetOf(idKlasse)) {
+				const listP : List<StundenplanPausenzeit> | null = Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse_and_wochentag, idKlasse, wochentag);
+				const listZ : List<StundenplanZeitraster> | null = MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentag);
+				const schnitt : boolean = this.hatSchnitt(listP, listZ);
+				this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse.put(wochentag, idKlasse, schnitt);
+			}
+	}
+
+	private hatSchnitt(pausenzeiten : List<StundenplanPausenzeit>, zeitraster : List<StundenplanZeitraster>) : boolean {
+		for (const p of pausenzeiten) {
+			if (p.beginn === null)
+				continue;
+			if (p.ende === null)
+				continue;
+			for (const z of zeitraster) {
+				if (z.stundenbeginn === null)
+					continue;
+				if (z.stundenende === null)
+					continue;
+				if (this.zeitrasterGetSchneidenSich(p.beginn, p.ende, z.stundenbeginn, z.stundenende))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	private update_lehrermenge_verwendet_sortiert() : void {
@@ -3877,6 +3964,65 @@ export class StundenplanManager extends JavaObject {
 		const ende : number = (endeOrNull === null) ? -1 : endeOrNull;
 		const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
 		return this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key);
+	}
+
+	/**
+	 * Liefert TRUE, falls es an dem Wochentag eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 *
+	 * @param wochentag  Die ID des {@link Wochentag}-Objekts.
+	 *
+	 * @return TRUE, falls es an dem Wochentag eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 */
+	public pausenzeitHatSchnittMitZeitrasterByWochentag(wochentag : number) : boolean {
+		return MapUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag, wochentag, false)!;
+	}
+
+	/**
+	 * Liefert TRUE, falls es an dem Wochentag bei der Klasse eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 *
+	 * @param wochentag  Die ID des {@link Wochentag}-Objekts.
+	 * @param idKlasse   Die ID des {@link StundenplanKlasse}-Objekts.
+	 *
+	 * @return TRUE, falls es an dem Wochentag bei der Klasse eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 */
+	public pausenzeitHatSchnittMitZeitrasterByWochentagAndKlassenId(wochentag : number, idKlasse : number) : boolean {
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse, wochentag, idKlasse, false)!;
+	}
+
+	/**
+	 * Liefert TRUE, falls es an dem Wochentag bei dem Schueler eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 *
+	 * @param wochentag   Die ID des {@link Wochentag}-Objekts.
+	 * @param idSchueler  Die ID des {@link StundenplanSchueler}-Objekts.
+	 *
+	 * @return TRUE, falls es an dem Wochentag bei dem Schueler eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 */
+	public pausenzeitHatSchnittMitZeitrasterByWochentagAndSchuelerId(wochentag : number, idSchueler : number) : boolean {
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler, wochentag, idSchueler, false)!;
+	}
+
+	/**
+	 * Liefert TRUE, falls es an dem Wochentag bei der Lehrkraft eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 *
+	 * @param wochentag  Die ID des {@link Wochentag}-Objekts.
+	 * @param idLehrer   Die ID des {@link StundenplanLehrer}-Objekts.
+	 *
+	 * @return TRUE, falls es an dem Wochentag bei der Lehrkraft eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 */
+	public pausenzeitHatSchnittMitZeitrasterByWochentagAndLehrerId(wochentag : number, idLehrer : number) : boolean {
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer, wochentag, idLehrer, false)!;
+	}
+
+	/**
+	 * Liefert TRUE, falls es an dem Wochentag bei dem Jahrgang eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 *
+	 * @param wochentag   Die ID des {@link Wochentag}-Objekts.
+	 * @param idJahrgang  Die ID des {@link StundenplanJahrgang}-Objekts.
+	 *
+	 * @return TRUE, falls es an dem Wochentag bei dem Jahrgang eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
+	 */
+	public pausenzeitHatSchnittMitZeitrasterByWochentagAndJahrgangId(wochentag : number, idJahrgang : number) : boolean {
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang, wochentag, idJahrgang, false)!;
 	}
 
 	/**

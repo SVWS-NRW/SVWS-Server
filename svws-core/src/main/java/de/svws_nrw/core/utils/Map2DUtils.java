@@ -66,6 +66,31 @@ public final class Map2DUtils {
 	}
 
 	/**
+	 * Liefert den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+	 *
+	 * @param <K1>         Der Typ des 1. Schlüssels.
+	 * @param <K2>         Der Typ des 2. Schlüssels.
+	 * @param <V>          Der Typ der Objekte in der Map.
+	 * @param map2D        Die Map, welche (K1, K2) auf V abbildet.
+	 * @param key1         Der 1. Schlüssel.
+	 * @param key2         Der 2. Schlüssel.
+	 * @param defaultValue Der Default Wert, falls kein Mapping existiert.
+	 *
+	 * @return den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+	 */
+	public static <K1, K2, V> @NotNull V getOrDefault(
+			final @NotNull HashMap2D<K1, K2, V> map2D,
+			final @NotNull K1 key1,
+			final @NotNull K2 key2,
+			final @NotNull V defaultValue) {
+
+		final V value = map2D.getOrNull(key1, key2);
+		if (value == null)
+			return defaultValue;
+		return value;
+	}
+
+	/**
 	 * Fügt der dem Schlüssel (K1, K2) zugeordneten Liste den Wert V hinzu.
 	 * Erzeugt eine Liste, falls noch keine existiert.
 	 *
