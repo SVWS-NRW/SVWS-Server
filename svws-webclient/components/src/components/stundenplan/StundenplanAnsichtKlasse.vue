@@ -56,7 +56,7 @@
 	}
 
 	function schneidenPausenzeitenZeitraster(wochentag: number): boolean {
-		return false;
+		return props.manager().pausenzeitHatSchnittMitZeitrasterByWochentagAndKlassenId(wochentag, props.id);
 	}
 
 	function getPausenzeitenWochentag(wochentag: number) : List<StundenplanPausenzeit> {
