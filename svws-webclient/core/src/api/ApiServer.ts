@@ -23,6 +23,7 @@ import { BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpr
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
+import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
@@ -10848,6 +10849,174 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<Aufsichtsbereich>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getEinwilligungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten
+	 *
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Einwilligungsarten unter Angabe der ID, der Bezeichnung sowie des Schlüssels, einer Sortierreihenfolge und des zugehörigen Personentyps (Schüler, Lehrer, Erzieher). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Einwilligungsart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getEinwilligungsarten(schema : string) : Promise<List<Einwilligungsart>> {
+		const path = "/db/{schema}/schule/einwilligungsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Einwilligungsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligungsart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
+	 *
+	 * Liest die Daten der Einwilligungsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Einwilligungsart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Einwilligungsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
+	 *   Code 404: Keine Einwilligungsart mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der Einwilligungsart
+	 */
+	public async getEinwilligungsart(schema : string, id : number) : Promise<Einwilligungsart> {
+		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Einwilligungsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
+	 *
+	 * Passt die Einwilligungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Einwilligungsart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Einwilligungsart-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Einwilligungsart-Daten zu ändern.
+	 *   Code 404: Keine Einwilligungsart mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Einwilligungsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchEinwilligungsart(data : Partial<Einwilligungsart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Einwilligungsart.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
+	 *
+	 * Entfernt eine Einwilligungsart der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einwilligungsart wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Einwilligungsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Einwilligungsart nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Einwilligungsart wurde erfolgreich entfernt.
+	 */
+	public async deleteEinwilligungsart(schema : string, id : number) : Promise<Einwilligungsart> {
+		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Einwilligungsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteEinwilligungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/delete/multiple
+	 *
+	 * Entfernt mehrere Einwilligungsarten der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einwilligungsarten wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Einwilligungsart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Einwilligungsarten nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Einwilligungsarten wurden erfolgreich entfernt.
+	 */
+	public async deleteEinwilligungsarten(data : List<number>, schema : string) : Promise<List<Einwilligungsart>> {
+		const path = "/db/{schema}/schule/einwilligungsarten/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Einwilligungsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligungsart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/new
+	 *
+	 * Erstellt eine neue Einwilligungsart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Einwilligungsart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Einwilligungsart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Einwilligungsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Einwilligungsart anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Einwilligungsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Einwilligungsart wurde erfolgreich angelegt.
+	 */
+	public async createEinwilligungsart(data : Partial<Einwilligungsart>, schema : string) : Promise<Einwilligungsart> {
+		const path = "/db/{schema}/schule/einwilligungsarten/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Einwilligungsart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Einwilligungsart.transpilerFromJSON(text);
 	}
 
 

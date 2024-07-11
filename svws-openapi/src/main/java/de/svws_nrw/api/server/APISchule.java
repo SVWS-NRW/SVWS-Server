@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.EinschulungsartKatalogEintrag;
+import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
@@ -54,6 +55,7 @@ import de.svws_nrw.data.schule.DataKatalogBerufskollegAnlagen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegBerufsebenen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegFachklassen;
 import de.svws_nrw.data.schule.DataKatalogEinschulungsarten;
+import de.svws_nrw.data.schule.DataKatalogEinwilligungsarten;
 import de.svws_nrw.data.schule.DataKatalogFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogHerkunftsschulnummern;
 import de.svws_nrw.data.schule.DataKatalogKindergartenbesuch;
@@ -1010,6 +1012,175 @@ public class APISchule {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Einwilligungsarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Einwilligungsarten
+	 */
+	@GET
+	@Path("/einwilligungsarten")
+	@Operation(summary = "Gibt eine Übersicht aller Einwilligungsarten im Katalog zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhanden Einwilligungsarten unter Angabe der ID, der Bezeichnung sowie des Schlüssels, "
+					+ "einer Sortierreihenfolge und des zugehörigen Personentyps (Schüler, Lehrer, Erzieher). "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+					+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Einwilligungsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getListAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Einwilligungsart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Einwilligungsart
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten zur Einwilligungsart
+	 */
+	@GET
+	@Path("/einwilligungsarten/{id : \\d+}")
+	@Operation(summary = "Liefert zu der ID der Einwilligungsart die zugehörigen Daten.",
+			description = "Liest die Daten der Einwilligungsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
+					+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Einwilligungsart",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Einwilligungsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Einwilligungsart mit der angegebenen ID gefunden")
+	public Response getEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Einwilligungsart.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Einwilligungsart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Einwilligungsart
+	 */
+	@POST
+	@Path("/einwilligungsarten/new")
+	@Operation(summary = "Erstellt eine neue Einwilligungsart und gibt sie zurück.",
+			description = "Erstellt eine neue Einwilligungsart und gibt sie zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Einwilligungsart besitzt.")
+	@ApiResponse(responseCode = "201", description = "Einwilligungsart wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Einwilligungsart anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createEinwilligungsart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der initiale Patch für die neue Einwilligungsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).addAsResponse(is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Einwilligungsart im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Einwilligungsart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/einwilligungsarten/{id : \\d+}")
+	@Operation(summary = "Passt die zu der ID der Einwilligungsart zugehörigen Stammdaten an.",
+			description = "Passt die Einwilligungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Einwilligungsart besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Einwilligungsart-Daten integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Einwilligungsart-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Einwilligungsart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Einwilligungsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).patchAsResponse(id, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen einer Einwilligungsart der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id           die ID der Einwilligungsart
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Einwilligungsart
+	 */
+	@DELETE
+	@Path("/einwilligungsarten/{id : \\d+}")
+	@Operation(summary = "Entfernt eine Einwilligungsart der Schule.",
+			description = "Entfernt eine Einwilligungsart der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Einwilligungsart wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Einwilligungsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Einwilligungsart nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Einwilligungsarten der Schule.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           die IDs der Einwilligungsarten
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/einwilligungsarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Einwilligungsarten der Schule.",
+			description = "Entfernt mehrere Einwilligungsarten der Schule."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+	@ApiResponse(responseCode = "200", description = "Die Einwilligungsarten wurden erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Einwilligungsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+	@ApiResponse(responseCode = "404", description = "Einwilligungsarten nicht vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteEinwilligungsarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Einwilligungsarten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Kataloges der Abgangsarten für

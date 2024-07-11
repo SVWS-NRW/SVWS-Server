@@ -383,6 +383,7 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.NoteConverterFromKuerzel</class>
                           <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte</class>
                           <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString</class>
+                          <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.SchuelerStatusConverter</class>
                           <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>

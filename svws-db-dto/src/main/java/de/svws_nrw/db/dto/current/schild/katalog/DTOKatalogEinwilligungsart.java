@@ -2,6 +2,9 @@ package de.svws_nrw.db.dto.current.schild.katalog;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.svws_nrw.db.converter.current.PersonTypConverter;
+
+import de.svws_nrw.core.types.schule.PersonTyp;
 
 
 import jakarta.persistence.Cacheable;
@@ -17,6 +20,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
+import de.svws_nrw.csv.converter.current.PersonTypConverterSerializer;
+import de.svws_nrw.csv.converter.current.PersonTypConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Datenschutz.
@@ -26,62 +31,62 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Datenschutz")
-@JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "Sortierung", "Beschreibung", "PersonArt"})
-public final class DTOKatalogDatenschutz {
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "Sortierung", "Beschreibung", "personTyp"})
+public final class DTOKatalogEinwilligungsart {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogDatenschutz e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOKatalogEinwilligungsart e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
-	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel = ?1";
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
-	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Schluessel IN ?1";
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
-	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung = ?1";
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Beschreibung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
-	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.Beschreibung IN ?1";
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Beschreibung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonArt */
-	public static final String QUERY_BY_PERSONART = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes personTyp */
+	public static final String QUERY_BY_PERSONTYP = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.personTyp = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonArt */
-	public static final String QUERY_LIST_BY_PERSONART = "SELECT e FROM DTOKatalogDatenschutz e WHERE e.PersonArt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes personTyp */
+	public static final String QUERY_LIST_BY_PERSONTYP = "SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.personTyp IN ?1";
 
 	/** Eindeutige ID für den Datensatz */
 	@Id
@@ -89,12 +94,12 @@ public final class DTOKatalogDatenschutz {
 	@JsonProperty
 	public long ID;
 
-	/** Eine kurze Bezeichnung des DSGVO-Merkmals */
+	/** Eine kurze Bezeichnung der Einwilligungsart */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
 	public String Bezeichnung;
 
-	/** Regelt die Sichtbarkeit des Merkmals bei der Ansicht der Schülertabelle  */
+	/** Regelt die Sichtbarkeit der Einwilligungsart bei der Ansicht der Schülertabelle  */
 	@Column(name = "Sichtbar")
 	@JsonProperty
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
@@ -102,41 +107,44 @@ public final class DTOKatalogDatenschutz {
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
-	/** Fest vorgegebene Werte, die es in Schild-NRW später ermöglichen, die DSGVO-Merkmale zu erkennen */
+	/** Fest vorgegebene Werte, die es in Schild-NRW später ermöglichen, die Einwilligungsart zu erkennen */
 	@Column(name = "Schluessel")
 	@JsonProperty
 	public String Schluessel;
 
-	/** Gibt die Reihenfolge der Merkmale bei der Darstellung an. */
+	/** Gibt die Reihenfolge der Einwilligungsarten bei der Darstellung an. */
 	@Column(name = "Sortierung")
 	@JsonProperty
 	public int Sortierung;
 
-	/** Eine ausführliche Beschreibung des DSGCO-Merkmals */
+	/** Eine ausführliche Beschreibung der Einwilligungsart */
 	@Column(name = "Beschreibung")
 	@JsonProperty
 	public String Beschreibung;
 
-	/** PersonenArt des Datenschutz-Eintrags (S=Schueler L=Lehrer) */
+	/** Personentyp der Einwilligungsart (S=Schueler L=Lehrer E=Erzieher) */
 	@Column(name = "PersonArt")
 	@JsonProperty
-	public String PersonArt;
+	@Convert(converter = PersonTypConverter.class)
+	@JsonSerialize(using = PersonTypConverterSerializer.class)
+	@JsonDeserialize(using = PersonTypConverterDeserializer.class)
+	public PersonTyp personTyp;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOKatalogDatenschutz ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOKatalogEinwilligungsart ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOKatalogDatenschutz() {
+	private DTOKatalogEinwilligungsart() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOKatalogDatenschutz ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOKatalogEinwilligungsart ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param Sichtbar   der Wert für das Attribut Sichtbar
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
-	public DTOKatalogDatenschutz(final long ID, final String Bezeichnung, final Boolean Sichtbar, final int Sortierung) {
+	public DTOKatalogEinwilligungsart(final long ID, final String Bezeichnung, final Boolean Sichtbar, final int Sortierung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -158,7 +166,7 @@ public final class DTOKatalogDatenschutz {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOKatalogDatenschutz other = (DTOKatalogDatenschutz) obj;
+		DTOKatalogEinwilligungsart other = (DTOKatalogEinwilligungsart) obj;
 		return ID == other.ID;
 	}
 
@@ -178,7 +186,7 @@ public final class DTOKatalogDatenschutz {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKatalogDatenschutz(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sichtbar=" + this.Sichtbar + ", Schluessel=" + this.Schluessel + ", Sortierung=" + this.Sortierung + ", Beschreibung=" + this.Beschreibung + ", PersonArt=" + this.PersonArt + ")";
+		return "DTOKatalogEinwilligungsart(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sichtbar=" + this.Sichtbar + ", Schluessel=" + this.Schluessel + ", Sortierung=" + this.Sortierung + ", Beschreibung=" + this.Beschreibung + ", personTyp=" + this.personTyp + ")";
 	}
 
 }

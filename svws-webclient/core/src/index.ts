@@ -408,6 +408,7 @@ export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/Berufs
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { BildungsgangTypKatalogEintrag } from './core/data/schule/BildungsgangTypKatalogEintrag';
 export { EinschulungsartKatalogEintrag } from './core/data/schule/EinschulungsartKatalogEintrag';
+export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './core/data/schule/FoerderschwerpunktKatalogEintrag';
 export { HerkunftBildungsgangKatalogEintrag } from './core/data/schule/HerkunftBildungsgangKatalogEintrag';
@@ -604,6 +605,7 @@ export { BerufskollegOrganisationsformen } from './core/types/schule/Berufskolle
 export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern';
 export { Kindergartenbesuch } from './core/types/schule/Kindergartenbesuch';
 export { Nationalitaeten } from './core/types/schule/Nationalitaeten';
+export { PersonTyp } from './core/types/schule/PersonTyp';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
 export { Reformpaedagogik } from './core/types/schule/Reformpaedagogik';
 export { Religion } from './core/types/schule/Religion';

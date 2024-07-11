@@ -450,4 +450,5 @@ svws-webclient/src
 svws-module-pdf
 
 /Temp
+svws-server-app/Temp
 

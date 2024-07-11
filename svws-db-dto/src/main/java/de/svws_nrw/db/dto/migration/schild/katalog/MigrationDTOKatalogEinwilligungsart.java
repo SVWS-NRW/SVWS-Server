@@ -26,68 +26,68 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Datenschutz")
-@JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "SchulnrEigner", "Sortierung", "Beschreibung", "PersonArt"})
-public final class MigrationDTOKatalogDatenschutz {
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "SchulnrEigner", "Sortierung", "Beschreibung", "personTyp"})
+public final class MigrationDTOKatalogEinwilligungsart {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOKatalogDatenschutz e";
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Schluessel */
-	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Schluessel = ?1";
+	public static final String QUERY_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schluessel */
-	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Schluessel IN ?1";
+	public static final String QUERY_LIST_BY_SCHLUESSEL = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Schluessel IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
-	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.SchulnrEigner = ?1";
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.SchulnrEigner = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
-	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.SchulnrEigner IN ?1";
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.SchulnrEigner IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
-	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Beschreibung = ?1";
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Beschreibung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
-	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.Beschreibung IN ?1";
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.Beschreibung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes PersonArt */
-	public static final String QUERY_BY_PERSONART = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.PersonArt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes personTyp */
+	public static final String QUERY_BY_PERSONTYP = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.personTyp = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PersonArt */
-	public static final String QUERY_LIST_BY_PERSONART = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.PersonArt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes personTyp */
+	public static final String QUERY_LIST_BY_PERSONTYP = "SELECT e FROM MigrationDTOKatalogEinwilligungsart e WHERE e.personTyp IN ?1";
 
 	/** Eindeutige ID für den Datensatz */
 	@Id
@@ -95,12 +95,12 @@ public final class MigrationDTOKatalogDatenschutz {
 	@JsonProperty
 	public Long ID;
 
-	/** Eine kurze Bezeichnung des DSGVO-Merkmals */
+	/** Eine kurze Bezeichnung der Einwilligungsart */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
 	public String Bezeichnung;
 
-	/** Regelt die Sichtbarkeit des Merkmals bei der Ansicht der Schülertabelle  */
+	/** Regelt die Sichtbarkeit der Einwilligungsart bei der Ansicht der Schülertabelle  */
 	@Column(name = "Sichtbar")
 	@JsonProperty
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
@@ -108,7 +108,7 @@ public final class MigrationDTOKatalogDatenschutz {
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
-	/** Fest vorgegebene Werte, die es in Schild-NRW später ermöglichen, die DSGVO-Merkmale zu erkennen */
+	/** Fest vorgegebene Werte, die es in Schild-NRW später ermöglichen, die Einwilligungsart zu erkennen */
 	@Column(name = "Schluessel")
 	@JsonProperty
 	public String Schluessel;
@@ -118,37 +118,37 @@ public final class MigrationDTOKatalogDatenschutz {
 	@JsonProperty
 	public Integer SchulnrEigner;
 
-	/** Gibt die Reihenfolge der Merkmale bei der Darstellung an. */
+	/** Gibt die Reihenfolge der Einwilligungsarten bei der Darstellung an. */
 	@Column(name = "Sortierung")
 	@JsonProperty
 	public Integer Sortierung;
 
-	/** Eine ausführliche Beschreibung des DSGCO-Merkmals */
+	/** Eine ausführliche Beschreibung der Einwilligungsart */
 	@Column(name = "Beschreibung")
 	@JsonProperty
 	public String Beschreibung;
 
-	/** PersonenArt des Datenschutz-Eintrags (S=Schueler L=Lehrer) */
+	/** Personentyp der Einwilligungsart (S=Schueler L=Lehrer E=Erzieher) */
 	@Column(name = "PersonArt")
 	@JsonProperty
-	public String PersonArt;
+	public String personTyp;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTOKatalogDatenschutz ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse MigrationDTOKatalogEinwilligungsart ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private MigrationDTOKatalogDatenschutz() {
+	private MigrationDTOKatalogEinwilligungsart() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTOKatalogDatenschutz ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse MigrationDTOKatalogEinwilligungsart ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param Sichtbar   der Wert für das Attribut Sichtbar
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
-	public MigrationDTOKatalogDatenschutz(final Long ID, final String Bezeichnung, final Boolean Sichtbar, final Integer SchulnrEigner, final Integer Sortierung) {
+	public MigrationDTOKatalogEinwilligungsart(final Long ID, final String Bezeichnung, final Boolean Sichtbar, final Integer SchulnrEigner, final Integer Sortierung) {
 		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
@@ -180,7 +180,7 @@ public final class MigrationDTOKatalogDatenschutz {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MigrationDTOKatalogDatenschutz other = (MigrationDTOKatalogDatenschutz) obj;
+		MigrationDTOKatalogEinwilligungsart other = (MigrationDTOKatalogEinwilligungsart) obj;
 		if (ID == null) {
 			if (other.ID != null)
 				return false;
@@ -205,7 +205,7 @@ public final class MigrationDTOKatalogDatenschutz {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOKatalogDatenschutz(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sichtbar=" + this.Sichtbar + ", Schluessel=" + this.Schluessel + ", SchulnrEigner=" + this.SchulnrEigner + ", Sortierung=" + this.Sortierung + ", Beschreibung=" + this.Beschreibung + ", PersonArt=" + this.PersonArt + ")";
+		return "MigrationDTOKatalogEinwilligungsart(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sichtbar=" + this.Sichtbar + ", Schluessel=" + this.Schluessel + ", SchulnrEigner=" + this.SchulnrEigner + ", Sortierung=" + this.Sortierung + ", Beschreibung=" + this.Beschreibung + ", personTyp=" + this.personTyp + ")";
 	}
 
 }

@@ -93,7 +93,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
@@ -342,7 +342,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOKatalogAdressart.class.getSimpleName(), DTOKatalogAdressart.class);
              mapDTOName2DTOClass.put(DTOKatalogAllgemeineAdresse.class.getSimpleName(), DTOKatalogAllgemeineAdresse.class);
              mapDTOName2DTOClass.put(DTOKatalogAufsichtsbereich.class.getSimpleName(), DTOKatalogAufsichtsbereich.class);
-             mapDTOName2DTOClass.put(DTOKatalogDatenschutz.class.getSimpleName(), DTOKatalogDatenschutz.class);
+             mapDTOName2DTOClass.put(DTOKatalogEinwilligungsart.class.getSimpleName(), DTOKatalogEinwilligungsart.class);
              mapDTOName2DTOClass.put(DTOKatalogRaum.class.getSimpleName(), DTOKatalogRaum.class);
              mapDTOName2DTOClass.put(DTOKonfession.class.getSimpleName(), DTOKonfession.class);
              mapDTOName2DTOClass.put(DTOKursarten.class.getSimpleName(), DTOKursarten.class);
@@ -594,7 +594,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("K_Adressart", DTOKatalogAdressart.class);
              mapTablename2DTOClass.put("K_AllgAdresse", DTOKatalogAllgemeineAdresse.class);
              mapTablename2DTOClass.put("Katalog_Aufsichtsbereich", DTOKatalogAufsichtsbereich.class);
-             mapTablename2DTOClass.put("K_Datenschutz", DTOKatalogDatenschutz.class);
+             mapTablename2DTOClass.put("K_Datenschutz", DTOKatalogEinwilligungsart.class);
              mapTablename2DTOClass.put("Katalog_Raeume", DTOKatalogRaum.class);
              mapTablename2DTOClass.put("K_Religion", DTOKonfession.class);
              mapTablename2DTOClass.put("EigeneSchule_Kursart", DTOKursarten.class);

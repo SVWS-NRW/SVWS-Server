@@ -20,6 +20,7 @@ import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
 import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
 import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte;
 import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString;
+import de.svws_nrw.db.converter.current.PersonTypConverter;
 import de.svws_nrw.db.converter.current.PersonalTypConverter;
 import de.svws_nrw.db.converter.current.SchuelerStatusConverter;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
@@ -113,6 +114,7 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new NoteConverterFromKuerzel());
 		add(new NoteConverterFromNotenpunkte());
 		add(new NoteConverterFromNotenpunkteString());
+		add(new PersonTypConverter());
 		add(new PersonalTypConverter());
 		add(new SchuelerStatusConverter());
 		add(new StringToIntegerConverter());

@@ -9,6 +9,7 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.types.schule.Herkunftsschulnummern;
+import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.core.types.schule.Religion;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
@@ -21,7 +22,7 @@ import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -558,9 +559,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Datenschutz mit Verwendung Foto
-		final DTOKatalogDatenschutz foto = new DTOKatalogDatenschutz(1L, "Verwendung Foto", true, 32000);
+		final DTOKatalogEinwilligungsart foto = new DTOKatalogEinwilligungsart(1L, "Verwendung Foto", true, 32000);
 		foto.Schluessel = "FOTO";
-		foto.PersonArt = "S";
+		foto.personTyp = PersonTyp.SCHUELER;
 		conn.transactionPersist(foto);
 		conn.transactionFlush();
 

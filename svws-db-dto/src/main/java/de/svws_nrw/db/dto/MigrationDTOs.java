@@ -66,7 +66,7 @@ import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskeln;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse;
-import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogDatenschutz;
+import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKonfession;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt;
@@ -255,7 +255,7 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOHaltestellen.class.getSimpleName(), MigrationDTOHaltestellen.class);
              mapDTOName2DTOClass.put(MigrationDTOKatalogAdressart.class.getSimpleName(), MigrationDTOKatalogAdressart.class);
              mapDTOName2DTOClass.put(MigrationDTOKatalogAllgemeineAdresse.class.getSimpleName(), MigrationDTOKatalogAllgemeineAdresse.class);
-             mapDTOName2DTOClass.put(MigrationDTOKatalogDatenschutz.class.getSimpleName(), MigrationDTOKatalogDatenschutz.class);
+             mapDTOName2DTOClass.put(MigrationDTOKatalogEinwilligungsart.class.getSimpleName(), MigrationDTOKatalogEinwilligungsart.class);
              mapDTOName2DTOClass.put(MigrationDTOKonfession.class.getSimpleName(), MigrationDTOKonfession.class);
              mapDTOName2DTOClass.put(MigrationDTOKursarten.class.getSimpleName(), MigrationDTOKursarten.class);
              mapDTOName2DTOClass.put(MigrationDTOOrt.class.getSimpleName(), MigrationDTOOrt.class);
@@ -447,7 +447,7 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("K_Haltestelle", MigrationDTOHaltestellen.class);
              mapTablename2DTOClass.put("K_Adressart", MigrationDTOKatalogAdressart.class);
              mapTablename2DTOClass.put("K_AllgAdresse", MigrationDTOKatalogAllgemeineAdresse.class);
-             mapTablename2DTOClass.put("K_Datenschutz", MigrationDTOKatalogDatenschutz.class);
+             mapTablename2DTOClass.put("K_Datenschutz", MigrationDTOKatalogEinwilligungsart.class);
              mapTablename2DTOClass.put("K_Religion", MigrationDTOKonfession.class);
              mapTablename2DTOClass.put("EigeneSchule_Kursart", MigrationDTOKursarten.class);
              mapTablename2DTOClass.put("K_Ort", MigrationDTOOrt.class);

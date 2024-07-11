@@ -30,6 +30,7 @@
         <class>de.svws_nrw.db.converter.current.NoteConverterFromKuerzel</class>
         <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte</class>
         <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString</class>
+        <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
         <class>de.svws_nrw.db.converter.current.SchuelerStatusConverter</class>
         <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
@@ -114,7 +115,7 @@
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogDatenschutz</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt</class>
@@ -307,7 +308,7 @@
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogDatenschutz</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten</class>
