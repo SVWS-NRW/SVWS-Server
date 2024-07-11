@@ -233,7 +233,8 @@ public final class SvwsServer {
 		sslContextFactory.setKeyManagerPassword(keyStorePassword);
 		sslContextFactory.setTrustStorePath(keyStorePath + "/keystore");
 		sslContextFactory.setTrustStorePassword(keyStorePassword);
-		sslContextFactory.setCertAlias(keyAlias);
+		if ((keyAlias != null) && (!keyAlias.isBlank()))
+			sslContextFactory.setCertAlias(keyAlias);
 		sslContextFactory.setIncludeProtocols("TLSv1.3", "TLSv1.2");
 		sslContextFactory.setIncludeCipherSuites("TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256",
 				"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
