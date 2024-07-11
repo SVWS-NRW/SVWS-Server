@@ -695,9 +695,8 @@ public class GostBlockungsergebnisManager {
 			final @NotNull Set<Long> schuelerIDset = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs);
 
 			for (final long idSchueler : new HashSet<>(schuelerIDset))
-				if (!_parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
+				if (!_parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart))
 					MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
-				}
 		}
 
 	}
@@ -2180,9 +2179,10 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
 	 */
 	public boolean getOfSchuelerOfKursIstUngueltig(final long idSchueler, final long idKurs) {
-		for (final @NotNull GostBlockungsergebnisKurs kurs : MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler))
-			if (kurs.id == idKurs)
-				return true;
+		if (_schuelerID_to_ungueltigeKurseSet.containsKey(idSchueler))
+			for (final @NotNull GostBlockungsergebnisKurs kurs : MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler))
+				if (kurs.id == idKurs)
+					return true;
 
 		return false;
 	}
