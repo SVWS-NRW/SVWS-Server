@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, shallowRef } from 'vue';
 	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager , GostBlockungsergebnisKursSchuelerZuordnung} from '@core';
 	import { DTOUtils, HashSet } from '@core';
 
@@ -27,7 +27,7 @@
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 	}>();
 
-	const zuordnungen = computed<HashSet<GostBlockungsergebnisKursSchuelerZuordnung>>(()=>{
+	const zuordnungen = computed<HashSet<GostBlockungsergebnisKursSchuelerZuordnung>>(() => {
 		const zuordnungenSet = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const es of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().entrySet())
 			for (const kurs of es.getValue())
@@ -35,21 +35,24 @@
 		return zuordnungenSet;
 	})
 
-	const selected = ref<GostBlockungsergebnisKursSchuelerZuordnung[]>(zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[]);
-	const _showModal = ref<boolean>(false);
+	const selected = shallowRef<GostBlockungsergebnisKursSchuelerZuordnung[]>(zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[]);
+	const _showModal = shallowRef<boolean>(false);
 	const showModal = () => _showModal;
 
 	async function removeZuordnung() {
-		showModal().value = false;
 		const set = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const z of selected.value)
 			set.add(z);
-		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);
-		await props.updateKursSchuelerZuordnungen(update);
+		showModal().value = false;
+		if (!set.isEmpty()) {
+			const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);
+			await props.updateKursSchuelerZuordnungen(update);
+		}
 		selected.value = [];
 	}
 
 	const openModal = () => {
+		selected.value = zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[];
 		showModal().value = true;
 	}
 
