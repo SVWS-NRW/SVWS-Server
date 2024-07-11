@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <profiles version="2">
-    <profile kind="CleanUpProfile" name="SVWS-Server" version="2">
+    <profile kind="CleanUpProfile" name="SVWS-Server-Cleanup" version="2">
         <setting id="cleanup.array_with_curly" value="false"/>
         <setting id="cleanup.use_autoboxing" value="false"/>
         <setting id="cleanup.overridden_assignment_move_decl" value="true"/>
