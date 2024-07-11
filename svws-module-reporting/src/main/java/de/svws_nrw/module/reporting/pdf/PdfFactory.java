@@ -64,6 +64,8 @@ public final class PdfFactory {
 			this.logger.addConsumer(this.log);
 		}
 
+		this.logger.logLn("Beginne die Validierung der übergebenen Daten zur pdf-Erzeugung.");
+
 		// Validiere die htmlBuilders
 		if ((htmlBuilders == null) || htmlBuilders.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Html-Dateiinhalte sind nicht vorhanden.");
@@ -84,6 +86,8 @@ public final class PdfFactory {
 
 		if (this.htmlTemplateDefinition == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Template-Definitionen inkonsistent.");
+
+		this.logger.logLn("Validierung der übergebenen Daten zur pdf-Erzeugung abgeschlossen.");
 	}
 
 
@@ -92,7 +96,7 @@ public final class PdfFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
 	 */
-	public Response createPdfResponse() {
+	public Response createPdfResponse() throws ApiOperationException {
 
 		try {
 			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
@@ -106,7 +110,7 @@ public final class PdfFactory {
 			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es sind keine PDF-Builder generiert worden.");
 		} catch (final Exception e) {
-			return new ReportingErrorResponse(e, logger, log).getResponse();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(e, logger, log).getSimpleOperationResponse());
 		}
 	}
 

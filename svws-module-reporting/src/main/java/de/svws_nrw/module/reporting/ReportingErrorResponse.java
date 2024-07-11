@@ -20,12 +20,13 @@ public final class ReportingErrorResponse {
 	/** Die Exception, die geworfen wurde. */
 	private final Exception exception;
 
-
 	/** Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat */
 	private Logger logger;
 
 	/** Liste, die Einträge aus dem Logger gesammelt hat. */
 	private LogConsumerList log;
+
+	private Status code = Status.INTERNAL_SERVER_ERROR;
 
 
 	/**
@@ -49,13 +50,12 @@ public final class ReportingErrorResponse {
 
 
 	/**
-	 * Erzeugt eine Fehlerausgabe (als {@link SimpleOperationResponse}) mit den Daten der Exception und des Logger
-	 * @return Die Response mit der Fehlerdaten.
+	 * Erzeugt eine Fehlerausgabe (als {@link SimpleOperationResponse}) mit den Daten der Exception und des Loggers
+	 * @return Die SimpleOperationResponse mit der Fehlerdaten.
 	 */
-	public Response getResponse() {
+	public SimpleOperationResponse getSimpleOperationResponse() {
 		String htmlTemplate = "";
-
-		logger.logLn("###  FEHLER  ####################################");
+		code = Status.INTERNAL_SERVER_ERROR;
 
 		if (exception != null) {
 			if (exception instanceof final TemplateProcessingException tPE) {
@@ -64,41 +64,55 @@ public final class ReportingErrorResponse {
 			}
 
 			// Sammle alle Fehlerursachen im Log.
+			if (exception instanceof final ApiOperationException aoe) {
+				// Der Fehler ist eine ApiOperationException, gebe hier den Code und die Nachricht aus.
+				code = aoe.getStatus();
+				logger.logLn(0, "## Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
+				final String message = aoe.getMessage();
+				if (message != null)
+					logger.logLn(4, message);
+			} else {
+				// Andere Fehlertypen
+				logger.logLn(0, "## Fehler");
+			}
+			// Extrahiere für alle Fehler die Fehlerursachen und schreibe sie ins Log
 			for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
 				String message = cause.getMessage();
-				// Entferne das html-Template, falls es in der Message enthalten ist.
-				if ((exception instanceof TemplateProcessingException) && !htmlTemplate.isEmpty())
-					message = message.replace("(template: \"" + htmlTemplate + "\"", "(");
-				logger.logLn(4, message);
+				if ((message != null) && !message.isEmpty()) {
+					// Entferne das html-Template, falls es in der Message enthalten ist.
+					if ((exception instanceof TemplateProcessingException) && !htmlTemplate.isEmpty())
+						message = message.replace("(template: \"" + htmlTemplate + "\"", "(");
+					logger.logLn(4, message);
+				}
 			}
 
 			// Hänge das html-Template als weiteren Eintrag hinten an, wenn ein Fehler bei der Template-Verarbeitung aufgetreten ist.
 			if ((exception instanceof TemplateProcessingException) && !htmlTemplate.isEmpty()) {
 				logger.logLn(0, "");
-				logger.logLn(0, "###  Verwendetes html-Template  #################");
-				logger.logLn(0, htmlTemplate);
+				logger.logLn(0, "##  Verwendetes html-Template");
+				logger.logLn(4, htmlTemplate);
 			}
 		} else {
-			logger.logLn(0, "Keine Exception übergeben, es stehen daher nur Log-Daten zur Verfügung.");
+			logger.logLn(0, "## Fehler ohne Exception");
+			logger.logLn(4, "Es werden folgend nur Log-Daten ausgegeben.");
 		}
-
 
 		// Erstelle eine SimpleOperationResponse mit dem Log zum Fehler und gebe diese zurück.
 		final SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
 		simpleOperationResponse.success = false;
 		simpleOperationResponse.log = log.getStrings();
 
-		Status code = Status.INTERNAL_SERVER_ERROR;
-		if ((exception != null) && (exception instanceof final ApiOperationException aoe)) {
-			code = aoe.getStatus();
-			// Wenn eine ApiOperationException auftritt, gebe den Body der Response als Text aus.
-			final String message = aoe.getMessage();
-			if (message != null)
-				logger.logLn(4, "ApiOperationException - Code: %d - Message: %s".formatted(aoe.getStatus().getStatusCode(), message));
-			else
-				logger.logLn(4, "ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
-		}
+		return simpleOperationResponse;
+	}
 
+	/**
+	 * Erzeugt eine Fehlerausgabe (als Response einer {@link SimpleOperationResponse}) mit den Daten der Exception und des Loggers
+	 * @return Die Response der SimpleOperationResponse mit den Fehlerdaten.
+	 */
+	public Response getResponse() {
+		// Generiere die SOP und setze damit auch den Code der Response
+		final SimpleOperationResponse simpleOperationResponse = getSimpleOperationResponse();
 		return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();
 	}
+
 }

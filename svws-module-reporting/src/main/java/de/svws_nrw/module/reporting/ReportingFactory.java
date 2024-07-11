@@ -63,7 +63,7 @@ public final class ReportingFactory {
 	 * @return Im Falle eines Success enthält die HTTP-Response das Dokument oder die ZIP-Datei.
 	 *     Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
 	 */
-	public Response createReportResponse() {
+	public Response createReportResponse() throws ApiOperationException {
 
 		try {
 			return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
@@ -72,10 +72,14 @@ public final class ReportingFactory {
 					final HtmlFactory htmlFactory = new HtmlFactory(conn, reportingParameter, logger, log);
 					yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingParameter, logger, log).createPdfResponse();
 				}
-				case null -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein bekanntes Ausgabeformat übergeben.");
+				case null -> {
+					logger.logLn("## Fehler");
+					logger.logLn(4, "Kein bekanntes Ausgabeformat für die Reporterstellung übergeben.");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(null, logger, log).getSimpleOperationResponse());
+				}
 			};
 		} catch (final Exception e) {
-			return new ReportingErrorResponse(e, logger, log).getResponse();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(e, logger, log).getSimpleOperationResponse());
 		}
 	}
 }

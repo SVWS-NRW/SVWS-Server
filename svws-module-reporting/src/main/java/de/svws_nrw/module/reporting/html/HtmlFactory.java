@@ -78,6 +78,8 @@ public final class HtmlFactory {
 			this.logger.addConsumer(this.log);
 		}
 
+		this.logger.logLn("Beginne die Validierung der übergebenen Daten zur html-Erzeugung.");
+
 		// Validiere Datenbankverbindung
 		if (conn == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Verbindung zur Datenbank übergeben.");
@@ -112,6 +114,8 @@ public final class HtmlFactory {
 		// Setze Werte nach Validierung, falls null.
 		if (reportingParameter.idsDetaildaten == null)
 			this.reportingParameter.idsDetaildaten = new ArrayList<>();
+
+		this.logger.logLn("Validierung der übergebenen Daten zur html-Erzeugung abgeschlossen.");
 
 		getContexts();
 	}
@@ -179,7 +183,7 @@ public final class HtmlFactory {
 	 * @return Im Falle eines Success enthält die HTTP-Response das Html-Dokument oder die ZIP-Datei. Im Fehlerfall wird
 	 *     eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
 	 */
-	public Response createHtmlResponse() {
+	public Response createHtmlResponse() throws ApiOperationException {
 		try {
 			final List<HtmlBuilder> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
@@ -197,7 +201,7 @@ public final class HtmlFactory {
 			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es sind keine Html-Inhalte generiert worden.");
 		} catch (final Exception e) {
-			return new ReportingErrorResponse(e, logger, log).getResponse();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(e, logger, log).getSimpleOperationResponse());
 		}
 	}
 
