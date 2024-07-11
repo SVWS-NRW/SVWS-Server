@@ -451,16 +451,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let wahlkonflikte_ignored : number = 0;
 		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			const entries = this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
-			for (const e of entries) {
-				if (wahlkonflikte < 10) {
-					const idFach : number = e.getKey().valueOf();
-					const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
-				} else {
-					wahlkonflikte_ignored++;
+			for (const e of entries)
+				if (e.getValue() === null) {
+					if (wahlkonflikte < 10) {
+						const idFach : number = e.getKey().valueOf();
+						const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+						sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
+					} else {
+						wahlkonflikte_ignored++;
+					}
+					wahlkonflikte++;
 				}
-				wahlkonflikte++;
-			}
 		}
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
 			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {

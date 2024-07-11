@@ -426,17 +426,18 @@ public class GostBlockungsergebnisManager {
 		int wahlkonflikte_ignored = 0;
 		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			final var entries = _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
-			for (final @NotNull Entry<Long, GostBlockungsergebnisKurs> e : entries) {
-				if (wahlkonflikte < 10) {
-					final long idFach = e.getKey();
-					final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart)
-							+ " keinem Kurs zugeordnet.\n");
-				} else {
-					wahlkonflikte_ignored++;
+			for (final @NotNull Entry<Long, GostBlockungsergebnisKurs> e : entries)
+				if (e.getValue() == null) {
+					if (wahlkonflikte < 10) {
+						final long idFach = e.getKey();
+						final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart)
+								+ " keinem Kurs zugeordnet.\n");
+					} else {
+						wahlkonflikte_ignored++;
+					}
+					wahlkonflikte++;
 				}
-				wahlkonflikte++;
-			}
 		}
 
 		// Kollisionen des Schülers.
@@ -651,7 +652,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
 			if (!_kursID_to_kurs.containsKey(gKurs.id)) {
-				final @NotNull GostBlockungsergebnisKurs eKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
+				final @NotNull GostBlockungsergebnisKurs eKurs =
+						DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
 				_kursID_to_kurs.put(gKurs.id, eKurs);
 			}
 		}
