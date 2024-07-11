@@ -38,4 +38,9 @@ public class SchuelerblockungInputKurs {
 	/** Die Schienen, die dieser Kurs belegt. In der Regel steht im Array eine Zahl (Schiene). Die Schienen sind 1-indiziert. */
 	public @NotNull int[] schienen = new int[0]; // Falls das Array nicht gefüllt wird, wird es als Fehler interpretiert.
 
+	/** Die Anzahl an anderen SuS, die mit diesem S. in diesem Kurs zusammen sein sollen. */
+	public int anzahlZusammenMitWuensche = 0;
+
+	/** Die Anzahl an anderen SuS, die mit diesem S. in diesem Kurs nicht zusammen sein sollen. */
+	public int anzahlVerbotenMitWuensche = 0;
 }

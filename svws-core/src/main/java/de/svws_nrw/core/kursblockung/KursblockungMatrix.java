@@ -432,12 +432,22 @@ public class KursblockungMatrix {
 	 * @param bis Der größtmögliche zufällige Wert (inklusive).
 	 */
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
-		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < cols; c++) {
+		for (int r = 0; r < rows; r++)
+			for (int c = 0; c < cols; c++)
 				matrix[r][c] = _random.nextLong((bis - von) + 1L) + von;
-			}
-		}
 	}
+
+	/**
+	 * Füllt die Matrix mit dem übergebenen Wert.
+	 *
+	 * @param wert  Der Wert, der alle Zellen überschreibt.
+	 */
+	public void fuelleMitWert(final long wert) {
+		for (int r = 0; r < rows; r++)
+			for (int c = 0; c < cols; c++)
+				matrix[r][c] = wert;
+	}
+
 
 	/** Liefert die Anzahl an Zeilen der Matrix.
 	 *
@@ -452,5 +462,6 @@ public class KursblockungMatrix {
 	public int gibSpalten() {
 		return cols;
 	}
+
 
 }

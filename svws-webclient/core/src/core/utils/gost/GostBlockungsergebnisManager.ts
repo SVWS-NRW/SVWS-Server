@@ -1919,7 +1919,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 *
-	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param idSchueler           Die ID des {@link Schueler}-Objekts.
 	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
@@ -1931,29 +1931,39 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			input.fachwahlen.add(fachwahl);
 			input.fachwahlenText.add(this._parent.fachwahlGetName(fachwahl));
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
-			for (const kursE of this.getOfFachartKursmenge(fachartID)) {
-				const kursS : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
-				const idKurs : number = kursE.id;
-				kursS.id = idKurs;
-				kursS.fach = kursE.fachID;
-				kursS.kursart = kursE.kursart;
-				kursS.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
-				kursS.istFixiert = this.getOfSchuelerOfKursIstFixiert(idSchueler, idKurs) || (fixiereBelegteKurse && this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
-				DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " von " + this._parent.toStringSchueler(idSchueler)! + " ist gesperrt und fixiert zugleich!", kursS.istGesperrt && kursS.istFixiert);
-				kursS.anzahlSuS = this.getOfKursAnzahlSchueler(idKurs);
-				kursS.schienen = this.getOfKursSchienenNummern(idKurs);
-				input.kurse.add(kursS);
-			}
+			for (const kursE of this.getOfFachartKursmenge(fachartID))
+				input.kurse.add(this.getOfSchuelerNeuzuordnungErzeugeKurs(kursE.id, kursE.fachID, kursE.kursart, idSchueler, fixiereBelegteKurse));
 		}
 		if (input.kurse.isEmpty())
 			return new SchuelerblockungOutput();
 		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
+	private getOfSchuelerNeuzuordnungErzeugeKurs(idKurs : number, idFach : number, kursart : number, idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungInputKurs {
+		const kursS : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
+		kursS.id = idKurs;
+		kursS.fach = idFach;
+		kursS.kursart = kursart;
+		kursS.schienen = this.getOfKursSchienenNummern(idKurs);
+		kursS.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
+		kursS.istFixiert = this.getOfSchuelerOfKursIstFixiert(idSchueler, idKurs) || (fixiereBelegteKurse && this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+		kursS.anzahlSuS = this.getOfKursAnzahlSchuelerPlusDummy(idKurs);
+		if (this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+			kursS.anzahlSuS--;
+		const maxSuS : number = this.getOfKursMaxSuS(idKurs);
+		if (kursS.anzahlSuS >= maxSuS)
+			kursS.istGesperrt = true;
+		if (kursS.istGesperrt && kursS.istFixiert)
+			kursS.istGesperrt = false;
+		kursS.anzahlZusammenMitWuensche = this.getOfSchuelerOfKursAnzahlZusammenWuensche(idSchueler, idKurs);
+		kursS.anzahlVerbotenMitWuensche = this.getOfSchuelerOfKursAnzahlVerbotenWuensche(idSchueler, idKurs);
+		return kursS;
+	}
+
 	/**
-	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine berechnete Neuzuordnung der Kurse beinhaltet.
 	 *
-	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param idSchueler           Die ID des {@link Schueler}-Objekts.
 	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
@@ -2297,6 +2307,50 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl an SuS, die mit dem Schüler im Kurs sein wollen.
+	 *
+	 * @param idS1    Die ID des {@link Schueler}-Objekts.
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die Anzahl an SuS, die mit dem Schüler im Kurs sein wollen.
+	 */
+	public getOfSchuelerOfKursAnzahlZusammenWuensche(idS1 : number, idKurs : number) : number {
+		let anzahl : number = 0;
+		const idFach : number = this.getKursE(idKurs).fachID;
+		for (const idS2 of this.getKursE(idKurs).schueler) {
+			if (idS1 === idS2)
+				continue;
+			const typ1 : number = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+			const typ2 : number = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ;
+			if ((this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ1, idS1, idS2])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ1, idS2, idS1])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ2, idS1, idS2, idFach])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ2, idS2, idS1, idFach])) !== null))
+				anzahl++;
+		}
+		return anzahl;
+	}
+
+	/**
+	 * Liefert die Anzahl an SuS, die mit dem Schüler nicht im Kurs sein sollen.
+	 *
+	 * @param idS1    Die ID des {@link Schueler}-Objekts.
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die Anzahl an SuS, die mit dem Schüler nicht im Kurs sein sollen.
+	 */
+	public getOfSchuelerOfKursAnzahlVerbotenWuensche(idS1 : number, idKurs : number) : number {
+		let anzahl : number = 0;
+		const idFach : number = this.getKursE(idKurs).fachID;
+		for (const idS2 of this.getKursE(idKurs).schueler) {
+			if (idS1 === idS2)
+				continue;
+			const typ1 : number = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
+			const typ2 : number = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
+			if ((this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ1, idS1, idS2])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ1, idS2, idS1])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ2, idS1, idS2, idFach])) !== null) || (this._parent.regelGetByLongArrayKeyOrNull(new LongArrayKey([typ2, idS2, idS1, idFach])) !== null))
+				anzahl++;
+		}
+		return anzahl;
+	}
+
+	/**
 	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
 	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
@@ -2611,6 +2665,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				summe++;
 		}
 		return summe;
+	}
+
+	/**
+	 * Liefert die maximale Anzahl an SuS, die in dem Kurs sein dürfen, oder 999 falls es keine Begrenzung gibt.
+	 *
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die maximale Anzahl an SuS, die in dem Kurs sein dürfen, oder 999 falls es keine Begrenzung gibt.
+	 */
+	public getOfKursMaxSuS(idKurs : number) : number {
+		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			if (idKurs === rAlt.parameter.get(0))
+				return rAlt.parameter.get(1)!;
+		return 999;
 	}
 
 	/**
@@ -3899,7 +3967,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99] hat, wird die Regel hinzugefügt.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 * @param anzahl  Die Anzahl an Dummy-Schülern.
+	 * @param anzahl  Die maximale Anzahl an SuS des Kurses.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
@@ -4849,7 +4917,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung>) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
-		console.log(JSON.stringify("kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE --> " + kursSchuelerZuordnungen.size()));
 		for (const z of kursSchuelerZuordnungen) {
 			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listEntfernen.add(z);

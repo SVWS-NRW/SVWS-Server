@@ -36,6 +36,7 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
@@ -2049,43 +2050,25 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 *
-	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param idSchueler           Die ID des {@link Schueler}-Objekts.
 	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
 	private @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnungMitFixierung(final long idSchueler, final boolean fixiereBelegteKurse) {
-		// SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS
-		// SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
-		// SCHUELER_ZUSAMMEN_MIT_SCHUELER, SCHUELER_VERBIETEN_MIT_SCHUELER
-		// KURS_MAXIMALE_SCHUELERANZAHL
-		// Konstruiere die Eingabedaten "input".
+		// Erzeuge das SchuelerblockungInput-Objekt für den Algorithmus.
+
 		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
 		input.schienen = _parent.schieneGetAnzahl();
 
-		// Sammle alle Facharten des Schülers...
 		for (final @NotNull GostFachwahl fachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler)) {
 			input.fachwahlen.add(fachwahl);
 			input.fachwahlenText.add(_parent.fachwahlGetName(fachwahl));
 			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
 
 			// Sammle alle potentiellen Kurse der Fachart des Schülers...
-			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
-				final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
-				final long idKurs = kursE.id;
-				kursS.id = idKurs;
-				kursS.fach = kursE.fachID;
-				kursS.kursart = kursE.kursart;
-				kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
-				kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
-						|| (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)); // TODO BAR richtiges getOfSchuelerOfKursIstZugeordnet?
-				DeveloperNotificationException.ifTrue(
-						_parent.toStringKurs(idKurs) + " von " + _parent.toStringSchueler(idSchueler) + " ist gesperrt und fixiert zugleich!",
-						kursS.istGesperrt && kursS.istFixiert);
-				kursS.anzahlSuS = getOfKursAnzahlSchueler(idKurs);
-				kursS.schienen = getOfKursSchienenNummern(idKurs);
-				input.kurse.add(kursS);
-			}
+			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID))
+				input.kurse.add(getOfSchuelerNeuzuordnungErzeugeKurs(kursE.id, kursE.fachID, kursE.kursart, idSchueler, fixiereBelegteKurse));
 		}
 
 		// Sonderfall: Der Schüler hat 0 Fachwahlen oder alle Fachwahlen haben 0 Kurse.
@@ -2096,24 +2079,74 @@ public class GostBlockungsergebnisManager {
 		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
+	private @NotNull SchuelerblockungInputKurs getOfSchuelerNeuzuordnungErzeugeKurs(
+			final long idKurs,
+			final long idFach,
+			final int kursart,
+			final long idSchueler,
+			final boolean fixiereBelegteKurse) {
+
+		final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
+
+		kursS.id = idKurs;
+		kursS.fach = idFach;
+		kursS.kursart = kursart;
+		kursS.schienen = getOfKursSchienenNummern(idKurs);
+
+		// Regel: SCHUELER_VERBIETEN_IN_KURS
+		kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
+
+		// Regel: SCHUELER_FIXIEREN_IN_KURS
+		kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
+				|| (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+
+		// SuS Anzahl: Kurse in denen der Schüler ist, müssen um 1 reduziert werden.
+		kursS.anzahlSuS = getOfKursAnzahlSchuelerPlusDummy(idKurs);
+		if (getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+			kursS.anzahlSuS--;
+
+		// Regel: KURS_MAXIMALE_SCHUELERANZAHL
+		final long maxSuS = getOfKursMaxSuS(idKurs);
+		if (kursS.anzahlSuS >= maxSuS)
+			kursS.istGesperrt = true;
+
+		// Fehler, aber es wird keine Exception geworfen, sondern die Fixierung hat dann höhere Priorität.
+		if (kursS.istGesperrt && kursS.istFixiert)
+			kursS.istGesperrt = false;
+
+		// Regel: SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH
+		// Regel: SCHUELER_ZUSAMMEN_MIT_SCHUELER
+		kursS.anzahlZusammenMitWuensche = getOfSchuelerOfKursAnzahlZusammenWuensche(idSchueler, idKurs);
+
+		// Regel: SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
+		// Regel: SCHUELER_VERBIETEN_MIT_SCHUELER
+		kursS.anzahlVerbotenMitWuensche = getOfSchuelerOfKursAnzahlVerbotenWuensche(idSchueler, idKurs);
+
+		return kursS;
+	}
+
 	/**
-	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine berechnete Neuzuordnung der Kurse beinhaltet.
 	 *
-	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param idSchueler           Die ID des {@link Schueler}-Objekts.
 	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate getOfSchuelerNeuzuordnung(final long idSchueler, final boolean fixiereBelegteKurse) {
+		// Berechne die neue Zuordnung
 		final @NotNull SchuelerblockungOutput zuordnung = getOfSchuelerNeuzuordnungMitFixierung(idSchueler, fixiereBelegteKurse);
 
+		// Erzeuge das entsprechende Update-Objekt
 		final GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs z : zuordnung.fachwahlenZuKurs) {
 			// Kurs des Faches 'vorher'.
 			final GostBlockungsergebnisKurs kursV = getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
+
 			// Kurs des Faches 'nachher'.
 			final GostBlockungsergebnisKurs kursN = (z.kursID < 0) ? null : getKursE(z.kursID);
+
 			// Bei Ungleichheit wird der Kurs gewechselt.
 			if (kursV != kursN) {
 				if (kursV != null)
@@ -2147,7 +2180,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist, aber keine entsprechende Fachwahl hat.
 	 */
 	public boolean getOfSchuelerOfKursIstUngueltig(final long idSchueler, final long idKurs) {
-		for (final @NotNull GostBlockungsergebnisKurs kurs :  MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler))
+		for (final @NotNull GostBlockungsergebnisKurs kurs : MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler))
 			if (kurs.id == idKurs)
 				return true;
 
@@ -2402,7 +2435,8 @@ public class GostBlockungsergebnisManager {
 				return false;
 
 			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
-			if (!getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
+			if (!getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit != null)
+					&& (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
 				return false;
 		}
 
@@ -2472,6 +2506,60 @@ public class GostBlockungsergebnisManager {
 		final GostBlockungsergebnisKurs kurs1 = _schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler1, idFach);
 		final GostBlockungsergebnisKurs kurs2 = _schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler2, idFach);
 		return ((kurs1 != null) && (kurs2 != null)) && (kurs1.id == kurs2.id);
+	}
+
+	/**
+	 * Liefert die Anzahl an SuS, die mit dem Schüler im Kurs sein wollen.
+	 *
+	 * @param idS1    Die ID des {@link Schueler}-Objekts.
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die Anzahl an SuS, die mit dem Schüler im Kurs sein wollen.
+	 */
+	public int getOfSchuelerOfKursAnzahlZusammenWuensche(final long idS1, final long idKurs) {
+		int anzahl = 0;
+
+		final long idFach = getKursE(idKurs).fachID;
+		for (final long idS2 : getKursE(idKurs).schueler) {
+			if (idS1 == idS2)
+				continue;
+			final int typ1 = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+			final int typ2 = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ;
+			if ((_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ1, idS1, idS2 })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ1, idS2, idS1 })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ2, idS1, idS2, idFach })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ2, idS2, idS1, idFach })) != null))
+				anzahl++;
+		}
+
+		return anzahl;
+	}
+
+	/**
+	 * Liefert die Anzahl an SuS, die mit dem Schüler nicht im Kurs sein sollen.
+	 *
+	 * @param idS1    Die ID des {@link Schueler}-Objekts.
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die Anzahl an SuS, die mit dem Schüler nicht im Kurs sein sollen.
+	 */
+	public int getOfSchuelerOfKursAnzahlVerbotenWuensche(final long idS1, final long idKurs) {
+		int anzahl = 0;
+
+		final long idFach = getKursE(idKurs).fachID;
+		for (final long idS2 : getKursE(idKurs).schueler) {
+			if (idS1 == idS2)
+				continue;
+			final int typ1 = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
+			final int typ2 = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
+			if ((_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ1, idS1, idS2 })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ1, idS2, idS1 })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ2, idS1, idS2, idFach })) != null)
+					|| (_parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(new long[] { typ2, idS2, idS1, idFach })) != null))
+				anzahl++;
+		}
+
+		return anzahl;
 	}
 
 	// #########################################################################
@@ -2797,6 +2885,21 @@ public class GostBlockungsergebnisManager {
 				summe++;
 		}
 		return summe;
+	}
+
+	/**
+	 * Liefert die maximale Anzahl an SuS, die in dem Kurs sein dürfen, oder 999 falls es keine Begrenzung gibt.
+	 *
+	 * @param idKurs  Die ID des {@link StundenplanKurs}-Objekts.
+	 *
+	 * @return die maximale Anzahl an SuS, die in dem Kurs sein dürfen, oder 999 falls es keine Begrenzung gibt.
+	 */
+	public long getOfKursMaxSuS(final long idKurs) {
+		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			if (idKurs == rAlt.parameter.get(0))
+				return rAlt.parameter.get(1);
+
+		return 999;
 	}
 
 	/**
@@ -4352,7 +4455,7 @@ public class GostBlockungsergebnisManager {
 	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99] hat, wird die Regel hinzugefügt.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 * @param anzahl  Die Anzahl an Dummy-Schülern.
+	 * @param anzahl  Die maximale Anzahl an SuS des Kurses.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
@@ -5567,9 +5670,8 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(
 			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen) {
-		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
-		System.out.println("kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE --> " + kursSchuelerZuordnungen.size());
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
 			// (1)
@@ -5577,7 +5679,8 @@ public class GostBlockungsergebnisManager {
 				u.listEntfernen.add(z);
 
 			// (2)
-			final @NotNull LongArrayKey keyFixiertAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, z.idKurs});
+			final @NotNull LongArrayKey keyFixiertAlt =
+					new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, z.idKurs });
 			final GostBlockungRegel regelFixiertAlt = _parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
 			if (regelFixiertAlt != null)
 				u.regelUpdates.listEntfernen.add(regelFixiertAlt);

@@ -37,6 +37,16 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	 */
 	public schienen : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Die Anzahl an anderen SuS, die mit diesem S. in diesem Kurs zusammen sein sollen.
+	 */
+	public anzahlZusammenMitWuensche : number = 0;
+
+	/**
+	 * Die Anzahl an anderen SuS, die mit diesem S. in diesem Kurs nicht zusammen sein sollen.
+	 */
+	public anzahlVerbotenMitWuensche : number = 0;
+
 
 	public constructor() {
 		super();
@@ -74,6 +84,12 @@ export class SchuelerblockungInputKurs extends JavaObject {
 		for (let i = 0; i < obj.schienen.length; i++) {
 			result.schienen[i] = obj.schienen[i];
 		}
+		if (obj.anzahlZusammenMitWuensche === undefined)
+			 throw new Error('invalid json format, missing attribute anzahlZusammenMitWuensche');
+		result.anzahlZusammenMitWuensche = obj.anzahlZusammenMitWuensche;
+		if (obj.anzahlVerbotenMitWuensche === undefined)
+			 throw new Error('invalid json format, missing attribute anzahlVerbotenMitWuensche');
+		result.anzahlVerbotenMitWuensche = obj.anzahlVerbotenMitWuensche;
 		return result;
 	}
 
@@ -97,6 +113,8 @@ export class SchuelerblockungInputKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche + ',';
+		result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -136,6 +154,12 @@ export class SchuelerblockungInputKurs extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (obj.anzahlZusammenMitWuensche !== undefined) {
+			result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche + ',';
+		}
+		if (obj.anzahlVerbotenMitWuensche !== undefined) {
+			result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

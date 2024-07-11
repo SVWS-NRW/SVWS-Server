@@ -19,6 +19,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private static readonly UNENDLICH : number = 1000000;
 
+	private static readonly MALUS_ZUSAMMEN_MIT_IM_KURS : number = -1000;
+
+	private static readonly MALUS_VERBOTEN_MIT_IM_KURS : number = 1000;
+
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
@@ -224,51 +228,64 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		this._aktuellNichtwahlen -= schienenAnzahl;
 	}
 
-	private aktionVerteileMitMatching() : void {
+	private static gibKursBewertung(kurs : SchuelerblockungInputKurs) : number {
+		let bewertung : number = 0;
+		bewertung += kurs.anzahlSuS * kurs.anzahlSuS as number;
+		bewertung += kurs.anzahlZusammenMitWuensche * SchuelerblockungDynDaten.MALUS_ZUSAMMEN_MIT_IM_KURS;
+		bewertung += kurs.anzahlVerbotenMitWuensche * SchuelerblockungDynDaten.MALUS_VERBOTEN_MIT_IM_KURS;
+		return bewertung;
+	}
+
+	private aktionVerteileMitMatchingFuelleMatrix() : void {
 		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
-			for (let iSchiene : number = 0; iSchiene < this.nSchienen; iSchiene++)
-				data[iFachwahl][iSchiene] = SchuelerblockungDynDaten.UNENDLICH;
+		this._aktuellMatrix.fuelleMitWert(SchuelerblockungDynDaten.UNENDLICH);
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
 			if (!this._fachwahlZuHatMultikurse[iFachwahl])
 				for (let schiene : number = 0; schiene < this.nSchienen; schiene++)
 					if (!this._aktuellGesperrteSchiene[schiene]) {
 						const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs !== null)
-							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS as number;
+							data[iFachwahl][schiene] = SchuelerblockungDynDaten.gibKursBewertung(kurs);
 					}
+	}
+
+	private aktionVerteileMitMatching() : void {
+		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
+		this.aktionVerteileMitMatchingFuelleMatrix();
 		const r2c : Array<number> = this._aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
-			if (!this._fachwahlZuHatMultikurse[iFachwahl]) {
-				const schiene : number = r2c[iFachwahl];
-				if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
-					this._aktuellNichtwahlen++;
-					continue;
-				}
-				const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
-				if (kurs === null)
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
-				if (!this.aktionBelegeKurs(iFachwahl, kurs))
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
+			if (this._fachwahlZuHatMultikurse[iFachwahl])
+				continue;
+			const schiene : number = r2c[iFachwahl];
+			if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
+				this._aktuellNichtwahlen++;
+				continue;
 			}
+			const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+			if (kurs === null)
+				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+			if (!this.aktionBelegeKurs(iFachwahl, kurs))
+				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+		}
 		if ((this._aktuellNichtwahlen < this._aktuellNichtwahlenBest) || ((this._aktuellNichtwahlen === this._aktuellNichtwahlenBest) && (this._aktuellBewertung < this._aktuellBewertungBest))) {
 			this._aktuellNichtwahlenBest = this._aktuellNichtwahlen;
 			this._aktuellBewertungBest = this._aktuellBewertung;
 			System.arraycopy(this._aktuellFachwahlZuKurs, 0, this._aktuellFachwahlZuKursBest, 0, this.nFachwahlen);
 		}
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
-			if (!this._fachwahlZuHatMultikurse[iFachwahl]) {
-				const schiene : number = r2c[iFachwahl];
-				if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
-					this._aktuellNichtwahlen--;
-					continue;
-				}
-				const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
-				if (kurs === null)
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
-				if (!this.aktionBelegeKursUndo(iFachwahl, kurs))
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
+			if (this._fachwahlZuHatMultikurse[iFachwahl])
+				continue;
+			const schiene : number = r2c[iFachwahl];
+			if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
+				this._aktuellNichtwahlen--;
+				continue;
 			}
+			const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+			if (kurs === null)
+				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+			if (!this.aktionBelegeKursUndo(iFachwahl, kurs))
+				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+		}
 	}
 
 	private static gibKleinstenKursInSchiene(pKurse : ArrayList<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
@@ -287,7 +304,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		this._aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
 		for (const schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = true;
-		this._aktuellBewertung += kurs.anzahlSuS * kurs.anzahlSuS;
+		this._aktuellBewertung += SchuelerblockungDynDaten.gibKursBewertung(kurs);
 		return true;
 	}
 
@@ -300,7 +317,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		this._aktuellFachwahlZuKurs[iFachwahl] = -1;
 		for (const schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = false;
-		this._aktuellBewertung -= kurs.anzahlSuS * kurs.anzahlSuS;
+		this._aktuellBewertung -= SchuelerblockungDynDaten.gibKursBewertung(kurs);
 		return true;
 	}
 

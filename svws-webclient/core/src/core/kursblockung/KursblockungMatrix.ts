@@ -390,11 +390,20 @@ export class KursblockungMatrix extends JavaObject {
 	 * @param bis Der größtmögliche zufällige Wert (inklusive).
 	 */
 	public fuelleMitZufallszahlenVonBis(von : number, bis : number) : void {
-		for (let r : number = 0; r < this.rows; r++) {
-			for (let c : number = 0; c < this.cols; c++) {
+		for (let r : number = 0; r < this.rows; r++)
+			for (let c : number = 0; c < this.cols; c++)
 				this.matrix[r][c] = this._random.nextLong((bis - von) + 1) + von;
-			}
-		}
+	}
+
+	/**
+	 * Füllt die Matrix mit dem übergebenen Wert.
+	 *
+	 * @param wert  Der Wert, der alle Zellen überschreibt.
+	 */
+	public fuelleMitWert(wert : number) : void {
+		for (let r : number = 0; r < this.rows; r++)
+			for (let c : number = 0; c < this.cols; c++)
+				this.matrix[r][c] = wert;
 	}
 
 	/**
