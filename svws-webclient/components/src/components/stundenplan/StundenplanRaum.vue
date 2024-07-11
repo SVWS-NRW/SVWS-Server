@@ -1,5 +1,5 @@
 <template>
-	<stundenplan-ansicht text-pausenzeit="Aufsicht" hide-pausenaufsicht grow-unterricht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
+	<stundenplan-ansicht :mode-pausenaufsichten="modePausenaufsichten" :show-zeitachse="showZeitachse" :ignore-empty="ignoreEmpty"
 		:manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :use-drag-and-drop="useDragAndDrop" :drag-data="dragData"
 		:get-schienen="getSchienen" :get-unterricht="getUnterricht" :zeitraster-hat-unterricht-mit-wochentyp="zeitrasterHatUnterrichtMitWochentyp"
 		:get-pausenzeiten="getPausenzeiten" :schneiden-pausenzeiten-zeitraster="schneidenPausenzeitenZeitraster"
@@ -11,7 +11,7 @@
 				<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
-			<div class="text-center" title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 		</template>
 	</stundenplan-ansicht>
 </template>
@@ -19,14 +19,16 @@
 <script setup lang="ts">
 
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
-	import type { StundenplanAnsichtLehrerProps } from "./StundenplanAnsichtLehrerProps";
+	import type { StundenplanRaumProps } from "./StundenplanRaumProps";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import type { List } from "../../../../core/src/java/util/List";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 	import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
 	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
+	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 
-	const props = withDefaults(defineProps<StundenplanAnsichtLehrerProps>(), {
+	const props = withDefaults(defineProps<StundenplanRaumProps>(), {
 		mode: 'schueler',
 		modePausenaufsichten: 'normal',
 		showZeitachse: true,
@@ -39,31 +41,38 @@
 	});
 
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
-		return props.manager().schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
+		throw new DeveloperNotificationException("Die Anzeige von Schienen wird beim der Raumansicht nicht unterstützt.");
 	}
 
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null) : List<StundenplanUnterricht> {
-		return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
+		const unterricht = props.manager().unterrichtGetMengeAsList()
+		const list: List<StundenplanUnterricht> = new ArrayList();
+		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag, stunde);
+		for (const u of unterricht)
+			if (u.raeume.contains(props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
+				list.add(u);
+		return list;
 	}
 
 	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
-		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByLehrerIdWochentagAndStunde(props.id, wochentag, stunde);
+		//TODO
+		return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByRaumIdWochentagAndStunde(props.id, wochentag, stunde);
 	}
 
 	function getPausenzeiten() : List<StundenplanPausenzeit> {
-		return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
+		throw new DeveloperNotificationException("Die Anzeige von Pausenzeiten wird bei der Raumansicht nicht unterstützt.");
 	}
 
 	function schneidenPausenzeitenZeitraster(wochentag: number): boolean {
-		return props.manager().pausenzeitHatSchnittMitZeitrasterByWochentagAndLehrerId(wochentag, props.id);
+		return false;
 	}
 
 	function getPausenzeitenWochentag(wochentag: number) : List<StundenplanPausenzeit> {
-		return props.manager().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag);
+		throw new DeveloperNotificationException("Die Anzeige von Pausenzeiten wird bei der Raumansicht nicht unterstützt.");
 	}
 
 	function getPausenaufsichtenPausenzeit(idPausenzeit: number) : List<StundenplanPausenaufsicht> {
-		return props.manager().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, idPausenzeit, props.wochentyp(), true);
+		throw new DeveloperNotificationException("Die Anzeige von Pausenzeiten wird bei der Raumansicht nicht unterstützt.");
 	}
 
 </script>

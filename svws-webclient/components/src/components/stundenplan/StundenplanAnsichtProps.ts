@@ -19,7 +19,8 @@ export interface StundenplanAnsichtProps {
 	textPausenzeit?: string;
 	growUnterricht?: boolean;
 	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';
-	showZeitachse?: boolean;
+	hideZeitachse?: boolean;
+	hideZeitachsePausenzeiten?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;
 	ignoreEmpty?: boolean;
 	manager: () => StundenplanManager;
