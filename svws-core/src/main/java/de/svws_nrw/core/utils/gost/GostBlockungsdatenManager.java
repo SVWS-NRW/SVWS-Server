@@ -663,6 +663,17 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls ein {@link GostBlockungsergebnisManager}-Objekt mit der ID existiert.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
+	 *
+	 * @return TRUE, falls ein {@link GostBlockungsergebnisManager}-Objekt mit der ID existiert.
+	 */
+	public boolean ergebnisManagerExists(final long idErgebnis) {
+		return _map_idErgebnis_ErgebnisManager.containsKey(idErgebnis);
+	}
+
+	/**
 	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 *
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.

@@ -23,7 +23,7 @@
 				</svws-ui-tooltip>
 			</template>
 			<template #cell(bewertung)="{ rowData: row }">
-				<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
+				<div v-if="hatErgebnismanager(row)" class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === row}">
 						<!-- Wert 1  -->
 						<svws-ui-tooltip v-if="getErgebnismanager(row).getOfBewertung1Wert() > 0" autosize>
@@ -118,6 +118,10 @@
 		if (!props.auswahlErgebnis)
 			return;
 		await props.removeErgebnisse([props.auswahlErgebnis]);
+	}
+
+	function hatErgebnismanager(ergebnis: GostBlockungsergebnis) : boolean {
+		return props.getDatenmanager().ergebnisManagerExists(ergebnis.id);
 	}
 
 	function getErgebnismanager(ergebnis: GostBlockungsergebnis) : GostBlockungsergebnisManager {
