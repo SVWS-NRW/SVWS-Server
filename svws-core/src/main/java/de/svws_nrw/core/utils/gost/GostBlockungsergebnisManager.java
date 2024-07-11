@@ -215,7 +215,11 @@ public class GostBlockungsergebnisManager {
 		_fachartComparator_fach_kursart = createComparatorFachartFachKursart();
 		_kursComparator_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_kursComparator_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
-		stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
+		_ergebnis = new GostBlockungsergebnis();
+		_ergebnis.id = pGostBlockungsergebnisID;
+		_ergebnis.blockungID = _parent.getID();
+		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
+		stateClear();
 	}
 
 	/**
@@ -230,24 +234,22 @@ public class GostBlockungsergebnisManager {
 		_fachartComparator_fach_kursart = createComparatorFachartFachKursart();
 		_kursComparator_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_kursComparator_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
-		stateClear(pErgebnis, pErgebnis.id);
+		_ergebnis = pErgebnis;
+		_ergebnis.blockungID = _parent.getID();
+		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
+		stateClear();
 	}
 
 	/**
 	 * Baut alle Datenstrukturen neu auf.
 	 */
 	private void stateRevalidateEverything() {
-		stateClear(_ergebnis, _ergebnis.id);
+		stateClear();
 	}
 
-	private void stateClear(final @NotNull GostBlockungsergebnis pOld, final long pGostBlockungsergebnisID) {
-		// 1) GostBlockungsergebnis kopieren (ohne Bewertung und ohne Zuordnungen).
-		_ergebnis = new GostBlockungsergebnis();
-		_ergebnis.id = pGostBlockungsergebnisID;
-		_ergebnis.blockungID = _parent.getID();
-		_ergebnis.name = pOld.name;
-		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
-		_ergebnis.istAktiv = pOld.istAktiv;
+	private void stateClear() {
+		// 1) Bewertung des GostBlockungsergebnis zurücksetzen.
+		_ergebnis.bewertung = new GostBlockungsergebnisBewertung();
 
 		// 2) Aufbau der internen Datenstrukturen (in der Regel Maps).
 		_fehlermeldungen = new ArrayList<>();
@@ -259,9 +261,9 @@ public class GostBlockungsergebnisManager {
 		update_0_schienenID_to_schiene_schienenNR_to_schiene();
 		update_0_kursID_to_kurs();
 		update_0_schuelerID_to_schueler();
-		update_0_schienenID_to_kursIDSet(pOld);
+		update_0_schienenID_to_kursIDSet();
 
-		update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(pOld);  	// _kursIDset, _kursID_to_kurs
+		update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet();     	// _kursIDset, _kursID_to_kurs
 		update_1_kursID_to_dummySuS(); 												// _kursIDset
 		update_1_fachID_to_kurseList();												// _fachIDset, _kursID_to_kurs
 		update_1_kursID_to_schienenSet();           								// _kursIDset, _schienenID_to_kursIDSet
@@ -285,17 +287,6 @@ public class GostBlockungsergebnisManager {
 				System.out.println("    " + meldung);
 		}
 
-		// 3) Zuordnungen (Schüler zu Kursen, Schienen zu Kursen, Kurse zu Schienen) aktualisieren.
-		for (final long idKurs : _kursID_to_schuelerIDSet.keySet()) {
-			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs);
-			for (final long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs))
-				eKurs.schueler.add(idSchueler);
-			for (final @NotNull GostBlockungsergebnisSchiene eSchiene : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schienenSet, idKurs)) {
-				eKurs.schienen.add(eSchiene.id);
-				eSchiene.kurse.add(eKurs);
-			}
-		}
-
 		// Kursmenge pro Schiene sortieren.
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
 			final @NotNull List<GostBlockungsergebnisKurs> kursmenge = schiene.kurse;
@@ -305,9 +296,6 @@ public class GostBlockungsergebnisManager {
 				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
 			}
 		}
-
-		// Schienen dem Ergebnis hinzufügen. TODO BAR Schienenmenge sortieren?
-		_ergebnis.schienen.addAll(_schienenID_to_schiene.values());
 
 		// 4) "_ergebnis.bewertung" aktualisieren.
 		stateClearErgebnisBewertung1();
@@ -640,32 +628,44 @@ public class GostBlockungsergebnisManager {
 	private void update_0_schienenID_to_schiene_schienenNR_to_schiene() {
 		_schienenID_to_schiene = new HashMap<>();
 		_schienenNR_to_schiene = new HashMap<>();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
+			_schienenID_to_schiene.put(eSchiene.id, eSchiene);
+			final int nr = _parent.schieneGet(eSchiene.id).nummer;
+			_schienenNR_to_schiene.put(nr, eSchiene);
+		}
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
-			final @NotNull GostBlockungsergebnisSchiene eSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
-			_schienenID_to_schiene.put(gSchiene.id, eSchiene);
-			_schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
+			if (!_schienenID_to_schiene.containsKey(gSchiene.id)) {
+				final @NotNull GostBlockungsergebnisSchiene eSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
+				_schienenID_to_schiene.put(gSchiene.id, eSchiene);
+				_schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
+				_ergebnis.schienen.add(eSchiene);
+			}
 		}
 	}
 
 	private void update_0_kursID_to_kurs() {
 		_kursID_to_kurs = new HashMap<>();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
+				_kursID_to_kurs.put(eKurs.id, eKurs);
+
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
-			final @NotNull GostBlockungsergebnisKurs eKurs =
-					DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
-			_kursID_to_kurs.put(gKurs.id, eKurs);
+			if (!_kursID_to_kurs.containsKey(gKurs.id)) {
+				final @NotNull GostBlockungsergebnisKurs eKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
+				_kursID_to_kurs.put(gKurs.id, eKurs);
+			}
 		}
 	}
 
 	private void update_0_schuelerID_to_schueler() {
 		_schuelerID_to_schueler = new HashMap<>();
-		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
+		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
 			_schuelerID_to_schueler.put(gSchueler.id, gSchueler);
-		}
 	}
 
-	private void update_0_schienenID_to_kursIDSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+	private void update_0_schienenID_to_kursIDSet() {
 		_schienenID_to_kursIDSet = new HashMap<>();
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
 			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
 				MapUtils.getOrCreateHashSet(_schienenID_to_kursIDSet, eSchiene.id).add(eKurs.id);
 
@@ -673,13 +673,12 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchiene : _schienenIDset)
 			if (!_schienenID_to_kursIDSet.containsKey(idSchiene))
 				MapUtils.getOrCreateHashSet(_schienenID_to_kursIDSet, idSchiene);
-
 	}
 
-	private void update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+	private void update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet() {
 		// Leeren und hinzufügen.
 		_kursID_to_schuelerIDSet = new HashMap<>();
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
 			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
 				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, eKurs.id).addAll(eKurs.schueler);
 
@@ -1334,7 +1333,7 @@ public class GostBlockungsergebnisManager {
 	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 */
 	public @NotNull GostBlockungsergebnis getErgebnis() {
-		return deepCopyErgebnis(_ergebnis);
+		return _ergebnis;
 	}
 
 	/**
@@ -1354,64 +1353,6 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungsdatenManager getParent() {
 		return _parent;
-	}
-
-	/**
-	 * Liefert eine tiefe Kopie des Blockungsergebnisses.
-	 *
-	 * @param e  Das zu kopierende GostBlockungsergebnis.
-	 *
-	 * @return eine tiefe Kopie des Blockungsergebnisses.
-	 */
-	private static @NotNull GostBlockungsergebnis deepCopyErgebnis(final @NotNull GostBlockungsergebnis e) {
-		// Normale Kopie
-		final @NotNull GostBlockungsergebnis copy = new GostBlockungsergebnis();
-		copy.id = e.id;
-		copy.blockungID = e.blockungID;
-		copy.name = e.name;
-		copy.gostHalbjahr = e.gostHalbjahr;
-		copy.istAktiv = e.istAktiv;
-		for (final @NotNull GostBlockungsergebnisSchiene schiene : e.schienen)
-			copy.schienen.add(deepCopyBewertung(schiene)); // deep copy
-		copy.bewertung = deepCopyBewertung(e.bewertung);  // deep copy
-		return copy;
-	}
-
-	private static @NotNull GostBlockungsergebnisBewertung deepCopyBewertung(final @NotNull GostBlockungsergebnisBewertung b) {
-		final @NotNull GostBlockungsergebnisBewertung copy = new GostBlockungsergebnisBewertung();
-		copy.regelVerletzungen.addAll(b.regelVerletzungen); // copy Long-Values
-		copy.anzahlKurseNichtZugeordnet = b.anzahlKurseNichtZugeordnet;
-		copy.anzahlSchuelerNichtZugeordnet = b.anzahlSchuelerNichtZugeordnet;
-		copy.anzahlSchuelerKollisionen = b.anzahlSchuelerKollisionen;
-		copy.kursdifferenzMax = b.kursdifferenzMax;
-		copy.kursdifferenzHistogramm = deepCopyArray(b.kursdifferenzHistogramm); // deep copy
-		copy.anzahlKurseMitGleicherFachartProSchiene = b.anzahlKurseMitGleicherFachartProSchiene;
-		return copy;
-	}
-
-	private static @NotNull int[] deepCopyArray(final @NotNull int[] a) {
-		final int[] copy = new int[a.length];
-		System.arraycopy(a, 0, copy, 0, a.length);
-		return copy;
-	}
-
-	private static @NotNull GostBlockungsergebnisSchiene deepCopyBewertung(final @NotNull GostBlockungsergebnisSchiene s) {
-		final @NotNull GostBlockungsergebnisSchiene copy = new GostBlockungsergebnisSchiene();
-		copy.id = s.id;
-		for (final @NotNull GostBlockungsergebnisKurs kurs : s.kurse)
-			copy.kurse.add(deepCopyKurs(kurs)); // deep copy
-		return copy;
-	}
-
-	private static @NotNull GostBlockungsergebnisKurs deepCopyKurs(final @NotNull GostBlockungsergebnisKurs k) {
-		final @NotNull GostBlockungsergebnisKurs copy = new GostBlockungsergebnisKurs();
-		copy.id = k.id;
-		copy.fachID = k.fachID;
-		copy.kursart = k.kursart;
-		copy.anzahlSchienen = k.anzahlSchienen;
-		copy.schueler.addAll(k.schueler); // copy Long-Values
-		copy.schienen.addAll(k.schienen); // copy Long-Values
-		return copy;
 	}
 
 	/**
@@ -6192,6 +6133,7 @@ public class GostBlockungsergebnisManager {
 		final int nKurse = getSchieneE(idSchiene).kurse.size();
 		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + _parent.toStringSchiene(idSchiene) + " hat noch " + nKurse + " Kurse!",
 				nKurse > 0);
+		_ergebnis.schienen.remove(getSchieneE(idSchiene));
 
 		// Bewertungen aktualisieren.
 		stateRevalidateEverything();

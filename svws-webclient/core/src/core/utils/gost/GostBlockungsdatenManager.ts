@@ -765,9 +765,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public ergebnisUpdateBewertung(ergebnis : GostBlockungsergebnis) : void {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
-		for (let i : number = 0; i < this._daten.ergebnisse.size(); i++)
-			if (this._daten.ergebnisse.get(i).id === ergebnis.id)
-				this._daten.ergebnisse.set(i, ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 

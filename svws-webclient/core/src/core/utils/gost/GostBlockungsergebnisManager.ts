@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { GostBlockungsergebnisBewertung, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
+import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
@@ -29,14 +29,13 @@ import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Logger } from '../../../core/logger/Logger';
-import { System } from '../../../java/lang/System';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
@@ -293,7 +292,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._fachartComparator_fach_kursart = this.createComparatorFachartFachKursart();
 			this._kursComparator_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._kursComparator_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this.stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
+			this._ergebnis = new GostBlockungsergebnis();
+			this._ergebnis.id = pGostBlockungsergebnisID;
+			this._ergebnis.blockungID = this._parent.getID();
+			this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
+			this.stateClear();
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnis'))))) {
 			const pParent : GostBlockungsdatenManager = cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager(__param0);
 			const pErgebnis : GostBlockungsergebnis = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis(__param1);
@@ -302,7 +305,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._fachartComparator_fach_kursart = this.createComparatorFachartFachKursart();
 			this._kursComparator_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._kursComparator_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this.stateClear(pErgebnis, pErgebnis.id);
+			this._ergebnis = pErgebnis;
+			this._ergebnis.blockungID = this._parent.getID();
+			this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
+			this.stateClear();
 		} else throw new Error('invalid method overload');
 	}
 
@@ -310,16 +316,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Baut alle Datenstrukturen neu auf.
 	 */
 	private stateRevalidateEverything() : void {
-		this.stateClear(this._ergebnis, this._ergebnis.id);
+		this.stateClear();
 	}
 
-	private stateClear(pOld : GostBlockungsergebnis, pGostBlockungsergebnisID : number) : void {
-		this._ergebnis = new GostBlockungsergebnis();
-		this._ergebnis.id = pGostBlockungsergebnisID;
-		this._ergebnis.blockungID = this._parent.getID();
-		this._ergebnis.name = pOld.name;
-		this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
-		this._ergebnis.istAktiv = pOld.istAktiv;
+	private stateClear() : void {
+		this._ergebnis.bewertung = new GostBlockungsergebnisBewertung();
 		this._fehlermeldungen = new ArrayList();
 		this.update_0_schienenIDset_schienenNRset();
 		this.update_0_kursIDset();
@@ -328,8 +329,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.update_0_schienenID_to_schiene_schienenNR_to_schiene();
 		this.update_0_kursID_to_kurs();
 		this.update_0_schuelerID_to_schueler();
-		this.update_0_schienenID_to_kursIDSet(pOld);
-		this.update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(pOld);
+		this.update_0_schienenID_to_kursIDSet();
+		this.update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet();
 		this.update_1_kursID_to_dummySuS();
 		this.update_1_fachID_to_kurseList();
 		this.update_1_kursID_to_schienenSet();
@@ -349,15 +350,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const meldung of this._fehlermeldungen)
 				console.log(JSON.stringify("    " + meldung!));
 		}
-		for (const idKurs of this._kursID_to_schuelerIDSet.keySet()) {
-			const eKurs : GostBlockungsergebnisKurs = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs);
-			for (const idSchueler of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs))
-				eKurs.schueler.add(idSchueler);
-			for (const eSchiene of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs)) {
-				eKurs.schienen.add(eSchiene.id);
-				eSchiene.kurse.add(eKurs);
-			}
-		}
 		for (const schiene of this._ergebnis.schienen) {
 			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
 			if (this._fachartmenge_sortierung === 1) {
@@ -366,7 +358,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
 			}
 		}
-		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
 		this.stateClearErgebnisBewertung1();
 		this.stateClearErgebnisBewertung2();
 		this.stateClearErgebnisBewertung3();
@@ -637,31 +628,43 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private update_0_schienenID_to_schiene_schienenNR_to_schiene() : void {
 		this._schienenID_to_schiene = new HashMap();
 		this._schienenNR_to_schiene = new HashMap();
+		for (const eSchiene of this._ergebnis.schienen) {
+			this._schienenID_to_schiene.put(eSchiene.id, eSchiene);
+			const nr : number = this._parent.schieneGet(eSchiene.id).nummer;
+			this._schienenNR_to_schiene.put(nr, eSchiene);
+		}
 		for (const gSchiene of this._parent.daten().schienen) {
-			const eSchiene : GostBlockungsergebnisSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
-			this._schienenID_to_schiene.put(gSchiene.id, eSchiene);
-			this._schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
+			if (!this._schienenID_to_schiene.containsKey(gSchiene.id)) {
+				const eSchiene : GostBlockungsergebnisSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
+				this._schienenID_to_schiene.put(gSchiene.id, eSchiene);
+				this._schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
+				this._ergebnis.schienen.add(eSchiene);
+			}
 		}
 	}
 
 	private update_0_kursID_to_kurs() : void {
 		this._kursID_to_kurs = new HashMap();
+		for (const eSchiene of this._ergebnis.schienen)
+			for (const eKurs of eSchiene.kurse)
+				this._kursID_to_kurs.put(eKurs.id, eKurs);
 		for (const gKurs of this._parent.daten().kurse) {
-			const eKurs : GostBlockungsergebnisKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
-			this._kursID_to_kurs.put(gKurs.id, eKurs);
+			if (!this._kursID_to_kurs.containsKey(gKurs.id)) {
+				const eKurs : GostBlockungsergebnisKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
+				this._kursID_to_kurs.put(gKurs.id, eKurs);
+			}
 		}
 	}
 
 	private update_0_schuelerID_to_schueler() : void {
 		this._schuelerID_to_schueler = new HashMap();
-		for (const gSchueler of this._parent.daten().schueler) {
+		for (const gSchueler of this._parent.daten().schueler)
 			this._schuelerID_to_schueler.put(gSchueler.id, gSchueler);
-		}
 	}
 
-	private update_0_schienenID_to_kursIDSet(ergebnisOld : GostBlockungsergebnis) : void {
+	private update_0_schienenID_to_kursIDSet() : void {
 		this._schienenID_to_kursIDSet = new HashMap();
-		for (const eSchiene of ergebnisOld.schienen)
+		for (const eSchiene of this._ergebnis.schienen)
 			for (const eKurs of eSchiene.kurse)
 				MapUtils.getOrCreateHashSet(this._schienenID_to_kursIDSet, eSchiene.id).add(eKurs.id);
 		for (const idSchiene of this._schienenIDset)
@@ -669,9 +672,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				MapUtils.getOrCreateHashSet(this._schienenID_to_kursIDSet, idSchiene);
 	}
 
-	private update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(ergebnisOld : GostBlockungsergebnis) : void {
+	private update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet() : void {
 		this._kursID_to_schuelerIDSet = new HashMap();
-		for (const eSchiene of ergebnisOld.schienen)
+		for (const eSchiene of this._ergebnis.schienen)
 			for (const eKurs of eSchiene.kurse)
 				MapUtils.getOrCreateHashSet(this._kursID_to_schuelerIDSet, eKurs.id).addAll(eKurs.schueler);
 		for (const idKurs of this._kursIDset)
@@ -1219,7 +1222,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 */
 	public getErgebnis() : GostBlockungsergebnis {
-		return GostBlockungsergebnisManager.deepCopyErgebnis(this._ergebnis);
+		return this._ergebnis;
 	}
 
 	/**
@@ -1239,72 +1242,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getParent() : GostBlockungsdatenManager {
 		return this._parent;
-	}
-
-	/**
-	 * Liefert eine tiefe Kopie des Blockungsergebnisses.
-	 *
-	 * @param e  Das zu kopierende GostBlockungsergebnis.
-	 *
-	 * @return eine tiefe Kopie des Blockungsergebnisses.
-	 */
-	private static deepCopyErgebnis(e : GostBlockungsergebnis) : GostBlockungsergebnis {
-		const copy : GostBlockungsergebnis = new GostBlockungsergebnis();
-		copy.id = e.id;
-		copy.blockungID = e.blockungID;
-		copy.name = e.name;
-		copy.gostHalbjahr = e.gostHalbjahr;
-		copy.istAktiv = e.istAktiv;
-		for (const schiene of e.schienen)
-			copy.schienen.add(GostBlockungsergebnisManager.deepCopyBewertung(schiene));
-		copy.bewertung = GostBlockungsergebnisManager.deepCopyBewertung(e.bewertung);
-		return copy;
-	}
-
-	private static deepCopyBewertung(b : GostBlockungsergebnisBewertung) : GostBlockungsergebnisBewertung;
-
-	private static deepCopyBewertung(s : GostBlockungsergebnisSchiene) : GostBlockungsergebnisSchiene;
-
-	/**
-	 * Implementation for method overloads of 'deepCopyBewertung'
-	 */
-	private static deepCopyBewertung(__param0 : GostBlockungsergebnisBewertung | GostBlockungsergebnisSchiene) : GostBlockungsergebnisBewertung | GostBlockungsergebnisSchiene {
-		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung'))))) {
-			const b : GostBlockungsergebnisBewertung = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisBewertung(__param0);
-			const copy : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
-			copy.regelVerletzungen.addAll(b.regelVerletzungen);
-			copy.anzahlKurseNichtZugeordnet = b.anzahlKurseNichtZugeordnet;
-			copy.anzahlSchuelerNichtZugeordnet = b.anzahlSchuelerNichtZugeordnet;
-			copy.anzahlSchuelerKollisionen = b.anzahlSchuelerKollisionen;
-			copy.kursdifferenzMax = b.kursdifferenzMax;
-			copy.kursdifferenzHistogramm = GostBlockungsergebnisManager.deepCopyArray(b.kursdifferenzHistogramm);
-			copy.anzahlKurseMitGleicherFachartProSchiene = b.anzahlKurseMitGleicherFachartProSchiene;
-			return copy;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene'))))) {
-			const s : GostBlockungsergebnisSchiene = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene(__param0);
-			const copy : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
-			copy.id = s.id;
-			for (const kurs of s.kurse)
-				copy.kurse.add(GostBlockungsergebnisManager.deepCopyKurs(kurs));
-			return copy;
-		} else throw new Error('invalid method overload');
-	}
-
-	private static deepCopyArray(a : Array<number>) : Array<number> {
-		const copy : Array<number> | null = Array(a.length).fill(0);
-		System.arraycopy(a, 0, copy, 0, a.length);
-		return copy;
-	}
-
-	private static deepCopyKurs(k : GostBlockungsergebnisKurs) : GostBlockungsergebnisKurs {
-		const copy : GostBlockungsergebnisKurs = new GostBlockungsergebnisKurs();
-		copy.id = k.id;
-		copy.fachID = k.fachID;
-		copy.kursart = k.kursart;
-		copy.anzahlSchienen = k.anzahlSchienen;
-		copy.schueler.addAll(k.schueler);
-		copy.schienen.addAll(k.schienen);
-		return copy;
 	}
 
 	/**
@@ -5356,6 +5293,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Schiene " + this._parent.toStringSchiene(idSchiene)! + " muss erst beim Datenmanager entfernt werden!", this._parent.schieneGetExistiert(idSchiene));
 		const nKurse : number = this.getSchieneE(idSchiene).kurse.size();
 		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + this._parent.toStringSchiene(idSchiene)! + " hat noch " + nKurse + " Kurse!", nKurse > 0);
+		this._ergebnis.schienen.remove(this.getSchieneE(idSchiene));
 		this.stateRevalidateEverything();
 	}
 
