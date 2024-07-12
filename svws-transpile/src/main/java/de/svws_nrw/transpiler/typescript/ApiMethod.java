@@ -368,10 +368,185 @@ public final class ApiMethod {
 	}
 
 
+	private void transpileRequestBody(final StringBuilder sb) {
+		// Prüfe, ob überhaupt ein Request-Body vorliegt
+		if (!requestBody.exists || (requestBody.content == null))
+			return;
+		// Prüfe, ob der Request-Body in JSON umgewandelt werden muss
+		if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
+			if (requestBody.content.isArrayType) {
+				if (isTSPrimitive(getTSArrayElementType(requestBody.content))) {
+					sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + getTSArrayElementType(requestBody.content)
+							+ ">).map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator());
+				} else {
+					if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
+						sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
+								+ requestBody.content.arrayElementType + ".transpilerToJSONPatch(d)).join() + \"]\";" + System.lineSeparator());
+					} else {
+						sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
+								+ requestBody.content.arrayElementType + ".transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator());
+					}
+				}
+			} else {
+				if (isTSPrimitive(getTSType(requestBody.content, false))) {
+					sb.append("\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator());
+				} else {
+					if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
+						sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator());
+					} else {
+						sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator());
+					}
+				}
+			}
+		}
+	}
+
+
+	private static String transpileResultDatatypeConversion(final String datatype) {
+		return switch (datatype) {
+			case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
+			case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
+			case "Character", "String" -> "JSON.parse(text).toString()";
+			case "Boolean" -> "(text === \"true\")";
+			default -> datatype + ".transpilerFromJSON(text)";
+		};
+	}
+
+
+	private static String transpileResultDatatype(final String datatype) {
+		return switch (datatype) {
+			case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+			case "Character", "String" -> "string";
+			case "Boolean" -> "boolean";
+			default -> datatype;
+		};
+	}
+
+
+	private void transpileCodeForJsonResult(final StringBuilder sb) {
+		final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
+		final String conversion = transpileResultDatatypeConversion(datatype);
+		final String resultDatatype = transpileResultDatatype(datatype);
+		if (returnResponse.content.isArrayType) {
+			sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
+			sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
+			sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
+					+ System.lineSeparator());
+			sb.append("\t\treturn ret;" + System.lineSeparator());
+		} else {
+			sb.append("\t\tconst text = result;" + System.lineSeparator());
+			sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
+		}
+	}
+
+
+	private void transpileBodyForPostMethod(final StringBuilder sb) {
+		if (returnResponse.content == null) {
+			if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
+				sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+				sb.append("\t\treturn;" + System.lineSeparator());
+				return;
+			}
+			if (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA) {
+				sb.append("\t\tawait super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
+				sb.append("\t\treturn;" + System.lineSeparator());
+				return;
+			}
+			throw new TranspilerException("Transpiler Error: POST which produces nothing and consumes " + this.consumesFirst
+					+ " not yet implemented in the transpiler.");
+		}
+
+		if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : string = await super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			transpileCodeForJsonResult(sb);
+			return;
+		} else if ((this.producesFirst == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\treturn result;" + System.lineSeparator());
+			return;
+		} else if ((this.producesFirst == ApiMimeType.ZIP) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\treturn result;" + System.lineSeparator());
+			return;
+		} else if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA)) {
+			sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");"
+					+ System.lineSeparator());
+			transpileCodeForJsonResult(sb);
+			return;
+		}
+		throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
+				+ " not yet implemented in the transpiler.");
+	}
+
+
+	private void transpileBodyForGetMethod(final StringBuilder sb) {
+		if (this.producesFirst == ApiMimeType.APPLICATION_JSON) {
+			sb.append("\t\tconst result : string = await super.getJSON(path);" + System.lineSeparator());
+			transpileCodeForJsonResult(sb);
+		} else if (this.producesFirst == ApiMimeType.TEXT_PLAIN) {
+			sb.append("\t\tconst text : string = await super.getText(path);" + System.lineSeparator());
+			sb.append("\t\treturn text;" + System.lineSeparator());
+		} else if (this.producesFirst == ApiMimeType.PDF) {
+			sb.append("\t\tconst data : ApiFile = await super.getPDF(path);" + System.lineSeparator());
+			sb.append("\t\treturn data;" + System.lineSeparator());
+		} else if (this.producesFirst == ApiMimeType.APPLICATION_OCTET_STREAM) {
+			sb.append("\t\tconst data : ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
+			sb.append("\t\treturn data;" + System.lineSeparator());
+		} else if (this.producesFirst == ApiMimeType.SQLITE) {
+			sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
+			sb.append("\t\treturn data;" + System.lineSeparator());
+		} else
+			throw new TranspilerException("Transpiler Error: GET which produces " + this.producesFirst + " not yet implemented in the transpiler.");
+	}
+
+
+	private void transpileBodyForPatchMethod(final StringBuilder sb) {
+		if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
+			sb.append("\t\treturn super.patchJSON(path, body);" + System.lineSeparator());
+		} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
+			sb.append("\t\treturn super.patchText(path, body);" + System.lineSeparator());
+		} else
+			throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+	}
+
+
+	private void transpileBodyForPutMethod(final StringBuilder sb) {
+		if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
+			sb.append("\t\treturn super.putJSON(path, body);" + System.lineSeparator());
+		} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
+			sb.append("\t\treturn super.putText(path, body);" + System.lineSeparator());
+		} else
+			throw new TranspilerException("Transpiler Error: PUT which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+	}
+
+
+	private void transpileBodyForDeleteMethod(final StringBuilder sb) {
+		if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			if (returnResponse.content == null) {
+				sb.append("\t\tawait super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+				sb.append("\t\treturn;" + System.lineSeparator());
+			} else {
+				sb.append("\t\tconst result : string = await super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");"
+						+ System.lineSeparator());
+				transpileCodeForJsonResult(sb);
+			}
+		} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
+			if (returnResponse.content == null) {
+				sb.append("\t\treturn super.deleteText(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			} else {
+				throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
+						+ " not yet implemented in the transpiler.");
+			}
+		} else
+			throw new TranspilerException("Transpiler Error: DELETE which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+	}
+
+
+
 	private String getTSMethodBody() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("{" + System.lineSeparator());
-		// Erstelle die URL für den HTTP-Request
+		// Erstelle die URL für den HTTP-Request, ...
 		if (pathParams.params.isEmpty()) {
 			sb.append("\t\tconst path = \"" + path.replace("\\", "\\\\") + "\";" + System.lineSeparator());
 		} else {
@@ -387,222 +562,18 @@ public final class ApiMethod {
 				sb.append(System.lineSeparator());
 			}
 		}
-		// Code für die Handhabung des Request-Bodys
-		if (requestBody.exists && (requestBody.content != null)) {
-			// Prüfe, ob der Request-Body in JSON umgewandelt werden muss
-			if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
-				if (requestBody.content.isArrayType) {
-					if (isTSPrimitive(getTSArrayElementType(requestBody.content))) {
-						sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + getTSArrayElementType(requestBody.content)
-								+ ">).map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator());
-					} else {
-						if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
-							sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
-									+ requestBody.content.arrayElementType + ".transpilerToJSONPatch(d)).join() + \"]\";" + System.lineSeparator());
-						} else {
-							sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
-									+ requestBody.content.arrayElementType + ".transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator());
-						}
-					}
-				} else {
-					if (isTSPrimitive(getTSType(requestBody.content, false))) {
-						sb.append("\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator());
-					} else {
-						if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
-							sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator());
-						} else {
-							sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator());
-						}
-					}
-				}
-			}
+		// ... generiere ggf. Code für das Erzeugen des Request-Bodys, ...
+		transpileRequestBody(sb);
+		// ... den restlichen Code in Abhängigkeit der HTTP-Methode ...
+		switch (this.httpMethod) {
+			case POST -> transpileBodyForPostMethod(sb);
+			case GET -> transpileBodyForGetMethod(sb);
+			case PATCH -> transpileBodyForPatchMethod(sb);
+			case PUT -> transpileBodyForPutMethod(sb);
+			case DELETE -> transpileBodyForDeleteMethod(sb);
+			default -> throw new TranspilerException("Transpiler Error: HTTP-Methode " + this.httpMethod + " wird noch nicht vom Transpiler unterstützt.");
 		}
-		// fetch-Code
-		if (this.httpMethod == ApiHttpMethod.POST) {
-			if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-				if (returnResponse.content == null) {
-					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-					sb.append("\t\treturn;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst result : string = await super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-					final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-					final String conversion = switch (datatype) {
-						case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-						case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
-						case "Character", "String" -> "JSON.parse(text).toString()";
-						case "Boolean" -> "(text === \"true\")";
-						default -> datatype + ".transpilerFromJSON(text)";
-					};
-					final String resultDatatype = switch (datatype) {
-						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
-						case "Character", "String" -> "string";
-						case "Boolean" -> "boolean";
-						default -> datatype;
-					};
-					if (returnResponse.content.isArrayType) {
-						sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
-						sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-						sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
-								+ System.lineSeparator());
-						sb.append("\t\treturn ret;" + System.lineSeparator());
-					} else {
-						sb.append("\t\tconst text = result;" + System.lineSeparator());
-						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
-					}
-				}
-			} else if ((this.producesFirst == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-				if (returnResponse.content == null) {
-					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-					sb.append("\t\treturn;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");"
-							+ System.lineSeparator());
-					sb.append("\t\treturn result;" + System.lineSeparator());
-				}
-			} else if ((this.producesFirst == ApiMimeType.ZIP) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-				if (returnResponse.content == null) {
-					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-					sb.append("\t\treturn;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst result : ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");"
-							+ System.lineSeparator());
-					sb.append("\t\treturn result;" + System.lineSeparator());
-				}
-			} else if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA)) {
-				if (returnResponse.content == null) {
-					sb.append("\t\tawait super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
-					sb.append("\t\treturn;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");"
-							+ System.lineSeparator());
-					final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-					final String conversion = switch (datatype) {
-						case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-						case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
-						case "Character", "String" -> "JSON.parse(text).toString()";
-						case "Boolean" -> "(text === \"true\")";
-						default -> datatype + ".transpilerFromJSON(text)";
-					};
-					final String resultDatatype = switch (datatype) {
-						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
-						case "Character", "String" -> "string";
-						case "Boolean" -> "boolean";
-						default -> datatype;
-					};
-					if (returnResponse.content.isArrayType) {
-						sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
-						sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-						sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
-								+ System.lineSeparator());
-						sb.append("\t\treturn ret;" + System.lineSeparator());
-					} else {
-						sb.append("\t\tconst text = result;" + System.lineSeparator());
-						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
-					}
-				}
-			} else
-				throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
-						+ " not yet implemented in the transpiler.");
-		} else if (this.httpMethod == ApiHttpMethod.GET) {
-			if (this.producesFirst == ApiMimeType.APPLICATION_JSON) {
-				sb.append("\t\tconst result : string = await super.getJSON(path);" + System.lineSeparator());
-				final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-				final String conversion = switch (datatype) {
-					case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-					case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
-					case "Character", "String" -> "JSON.parse(text).toString()";
-					case "Boolean" -> "(text === \"true\")";
-					default -> datatype + ".transpilerFromJSON(text)";
-				};
-				final String resultDatatype = switch (datatype) {
-					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
-					case "Character", "String" -> "string";
-					case "Boolean" -> "boolean";
-					default -> datatype;
-				};
-				if (returnResponse.content.isArrayType) {
-					sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
-					sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-					sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
-							+ System.lineSeparator());
-					sb.append("\t\treturn ret;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst text = result;" + System.lineSeparator());
-					sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
-				}
-			} else if (this.producesFirst == ApiMimeType.TEXT_PLAIN) {
-				sb.append("\t\tconst text : string = await super.getText(path);" + System.lineSeparator());
-				sb.append("\t\treturn text;" + System.lineSeparator());
-			} else if (this.producesFirst == ApiMimeType.PDF) {
-				sb.append("\t\tconst data : ApiFile = await super.getPDF(path);" + System.lineSeparator());
-				sb.append("\t\treturn data;" + System.lineSeparator());
-			} else if (this.producesFirst == ApiMimeType.APPLICATION_OCTET_STREAM) {
-				sb.append("\t\tconst data : ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
-				sb.append("\t\treturn data;" + System.lineSeparator());
-			} else if (this.producesFirst == ApiMimeType.SQLITE) {
-				sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
-				sb.append("\t\treturn data;" + System.lineSeparator());
-			} else
-				throw new TranspilerException("Transpiler Error: GET which produces " + this.producesFirst + " not yet implemented in the transpiler.");
-		} else if (this.httpMethod == ApiHttpMethod.PATCH) {
-			if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
-				sb.append("\t\treturn super.patchJSON(path, body);" + System.lineSeparator());
-			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
-				sb.append("\t\treturn super.patchText(path, body);" + System.lineSeparator());
-			} else
-				throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
-		} else if (this.httpMethod == ApiHttpMethod.PUT) {
-			if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
-				sb.append("\t\treturn super.putJSON(path, body);" + System.lineSeparator());
-			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
-				sb.append("\t\treturn super.putText(path, body);" + System.lineSeparator());
-			} else
-				throw new TranspilerException("Transpiler Error: PUT which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
-		} else if (this.httpMethod == ApiHttpMethod.DELETE) {
-			if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-				if (returnResponse.content == null) {
-					sb.append("\t\tawait super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-					sb.append("\t\treturn;" + System.lineSeparator());
-				} else {
-					sb.append("\t\tconst result : string = await super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");"
-							+ System.lineSeparator());
-					final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-					final String conversion = switch (datatype) {
-						case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-						case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
-						case "Character", "String" -> "JSON.parse(text).toString()";
-						case "Boolean" -> "(text === \"true\")";
-						default -> datatype + ".transpilerFromJSON(text)";
-					};
-					final String resultDatatype = switch (datatype) {
-						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
-						case "Character", "String" -> "string";
-						case "Boolean" -> "boolean";
-						default -> datatype;
-					};
-					if (returnResponse.content.isArrayType) {
-						sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
-						sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-						sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
-								+ System.lineSeparator());
-						sb.append("\t\treturn ret;" + System.lineSeparator());
-					} else {
-						sb.append("\t\tconst text = result;" + System.lineSeparator());
-						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
-					}
-				}
-			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
-				if (returnResponse.content == null) {
-					sb.append("\t\treturn super.deleteText(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
-				} else {
-					throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
-							+ " not yet implemented in the transpiler.");
-				}
-			} else
-				throw new TranspilerException("Transpiler Error: DELETE which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
-		} else {
-			throw new TranspilerException("Transpiler Error: HTTP-Methode " + this.httpMethod + " wird noch nicht vom Transpiler unterstützt.");
-		}
+		// ... und schließe die Methode ab.
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		return sb.toString();
