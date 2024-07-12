@@ -33,11 +33,17 @@ public final class ApiMethod {
 	/** Der Typ der verwendeten HTTP-Methode */
 	public final ApiHttpMethod httpMethod;
 
-	/** Der Mime-Type, welcher für das Ergebnis der API-Method verwendet wird.*/
-	public final ApiMimeType produces;
+	/** Der erste Mime-Type, welcher für das Ergebnis der API-Methode bei dem Transpiler verwendet wird.*/
+	public final ApiMimeType producesFirst;
 
-	/** Der Mime-Type, welcher für den Input der API-Methode verwendet wird.*/
-	public final ApiMimeType consumes;
+	/** Die Mime-Types, welche für die Ergebnisse der API-Methode verwendet werden können.*/
+	public final List<ApiMimeType> produces;
+
+	/** Der erste Mime-Type, welcher für den Input der API-Methode bei dem Transpiler verwendet wird.*/
+	public final ApiMimeType consumesFirst;
+
+	/** Die Mime-Types, welche für den Input der API-Methode verwendet werden können.*/
+	public final List<ApiMimeType> consumes;
 
 	/** Dokumentation der Methode: Eine kurze Zusammenfassung */
 	public final String docSummary;
@@ -90,16 +96,18 @@ public final class ApiMethod {
 			throw new TranspilerException("Transpiler Error: Missing http response code annotation for method " + name + " of class "
 					+ classTree.getSimpleName().toString());
 		returnResponse = tmp200;
-		final ApiMimeType tmpProduces = ApiMethod.getMimeType(transpiler, method, "jakarta.ws.rs.Produces");
-		if (tmpProduces == null) // nehme den Standard der Java-API-Klasse
+		final List<ApiMimeType> tmpProduces = ApiMimeType.fromMethodTree(transpiler, method, "jakarta.ws.rs.Produces");
+		if (tmpProduces.isEmpty()) // nehme den Standard der Java-API-Klasse
 			this.produces = classAnnotations.produces;
 		else
 			this.produces = tmpProduces;
-		final ApiMimeType tmpConsumes = ApiMethod.getMimeType(transpiler, method, "jakarta.ws.rs.Consumes");
-		if (tmpConsumes == null) // nehme den Standard der Java-API-Klasse
+		this.producesFirst = this.produces.getFirst();
+		final List<ApiMimeType> tmpConsumes = ApiMimeType.fromMethodTree(transpiler, method, "jakarta.ws.rs.Consumes");
+		if (tmpConsumes.isEmpty()) // nehme den Standard der Java-API-Klasse
 			this.consumes = classAnnotations.consumes;
 		else
 			this.consumes = tmpConsumes;
+		this.consumesFirst = this.consumes.getFirst();
 
 		this.requestBody = new ApiRequestBody(transpiler, method);
 		this.pathParams = new ApiPathParams(transpiler, method);
@@ -166,29 +174,6 @@ public final class ApiMethod {
 			return description;
 		throw new TranspilerException(strExceptionUnhandledPathAnnotation);
 	}
-
-	/**
-	 * Bestimmt den Mime-Type, welche durch die angebenen Annotation spezifiziert wurde.
-	 *
-	 * @param transpiler   der für die Analyse zu verwendende Transpiler
-	 * @param methodTree   die Java-API-Methode
-	 * @param annotation   die Annotation
-	 *
-	 * @return der Mime-Type oder null, falls ie Annotation keinen Mime-Type spezifiziert
-	 */
-	private static ApiMimeType getMimeType(final Transpiler transpiler, final MethodTree methodTree, final String annotation) {
-		final AnnotationTree annotationTree = transpiler.getAnnotation(annotation, methodTree);
-		if (annotationTree == null)
-			return null;
-		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
-		final ExpressionTree value = args.get("value");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
-			return ApiMimeType.get(str);
-		if (value.getKind() == Kind.MEMBER_SELECT)
-			return ApiMimeType.get(value.toString());
-		throw new TranspilerException("Transpiler Exception: Unhandled value argument for Consumes annotation of kind " + value.getKind() + ".");
-	}
-
 
 	/**
 	 * Gibt die von dieser Klasse benötigten Klassen-Imports zurück.
@@ -434,7 +419,7 @@ public final class ApiMethod {
 		}
 		// fetch-Code
 		if (this.httpMethod == ApiHttpMethod.POST) {
-			if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.APPLICATION_JSON)) {
+			if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 				if (returnResponse.content == null) {
 					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
@@ -465,7 +450,7 @@ public final class ApiMethod {
 						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
 					}
 				}
-			} else if ((this.produces == ApiMimeType.PDF) && (this.consumes == ApiMimeType.APPLICATION_JSON)) {
+			} else if ((this.producesFirst == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 				if (returnResponse.content == null) {
 					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
@@ -474,7 +459,7 @@ public final class ApiMethod {
 							+ System.lineSeparator());
 					sb.append("\t\treturn result;" + System.lineSeparator());
 				}
-			} else if ((this.produces == ApiMimeType.ZIP) && (this.consumes == ApiMimeType.APPLICATION_JSON)) {
+			} else if ((this.producesFirst == ApiMimeType.ZIP) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 				if (returnResponse.content == null) {
 					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
@@ -483,7 +468,7 @@ public final class ApiMethod {
 							+ System.lineSeparator());
 					sb.append("\t\treturn result;" + System.lineSeparator());
 				}
-			} else if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.MULTIPART_FORM_DATA)) {
+			} else if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA)) {
 				if (returnResponse.content == null) {
 					sb.append("\t\tawait super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
@@ -516,10 +501,10 @@ public final class ApiMethod {
 					}
 				}
 			} else
-				throw new TranspilerException("Transpiler Error: POST which produces " + this.produces + " and consumes " + this.consumes
+				throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
 						+ " not yet implemented in the transpiler.");
 		} else if (this.httpMethod == ApiHttpMethod.GET) {
-			if (this.produces == ApiMimeType.APPLICATION_JSON) {
+			if (this.producesFirst == ApiMimeType.APPLICATION_JSON) {
 				sb.append("\t\tconst result : string = await super.getJSON(path);" + System.lineSeparator());
 				final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
 				final String conversion = switch (datatype) {
@@ -545,36 +530,36 @@ public final class ApiMethod {
 					sb.append("\t\tconst text = result;" + System.lineSeparator());
 					sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
 				}
-			} else if (this.produces == ApiMimeType.TEXT_PLAIN) {
+			} else if (this.producesFirst == ApiMimeType.TEXT_PLAIN) {
 				sb.append("\t\tconst text : string = await super.getText(path);" + System.lineSeparator());
 				sb.append("\t\treturn text;" + System.lineSeparator());
-			} else if (this.produces == ApiMimeType.PDF) {
+			} else if (this.producesFirst == ApiMimeType.PDF) {
 				sb.append("\t\tconst data : ApiFile = await super.getPDF(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
-			} else if (this.produces == ApiMimeType.APPLICATION_OCTET_STREAM) {
+			} else if (this.producesFirst == ApiMimeType.APPLICATION_OCTET_STREAM) {
 				sb.append("\t\tconst data : ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
-			} else if (this.produces == ApiMimeType.SQLITE) {
+			} else if (this.producesFirst == ApiMimeType.SQLITE) {
 				sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			} else
-				throw new TranspilerException("Transpiler Error: GET which produces " + this.produces + " not yet implemented in the transpiler.");
+				throw new TranspilerException("Transpiler Error: GET which produces " + this.producesFirst + " not yet implemented in the transpiler.");
 		} else if (this.httpMethod == ApiHttpMethod.PATCH) {
-			if (this.consumes == ApiMimeType.APPLICATION_JSON) {
+			if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
 				sb.append("\t\treturn super.patchJSON(path, body);" + System.lineSeparator());
-			} else if (this.consumes == ApiMimeType.TEXT_PLAIN) {
+			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
 				sb.append("\t\treturn super.patchText(path, body);" + System.lineSeparator());
 			} else
-				throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumes + " not yet implemented in the transpiler.");
+				throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
 		} else if (this.httpMethod == ApiHttpMethod.PUT) {
-			if (this.consumes == ApiMimeType.APPLICATION_JSON) {
+			if (this.consumesFirst == ApiMimeType.APPLICATION_JSON) {
 				sb.append("\t\treturn super.putJSON(path, body);" + System.lineSeparator());
-			} else if (this.consumes == ApiMimeType.TEXT_PLAIN) {
+			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
 				sb.append("\t\treturn super.putText(path, body);" + System.lineSeparator());
 			} else
-				throw new TranspilerException("Transpiler Error: PUT which consumes " + this.consumes + " not yet implemented in the transpiler.");
+				throw new TranspilerException("Transpiler Error: PUT which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
 		} else if (this.httpMethod == ApiHttpMethod.DELETE) {
-			if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.APPLICATION_JSON)) {
+			if ((this.producesFirst == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 				if (returnResponse.content == null) {
 					sb.append("\t\tawait super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
@@ -606,15 +591,15 @@ public final class ApiMethod {
 						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
 					}
 				}
-			} else if (this.consumes == ApiMimeType.TEXT_PLAIN) {
+			} else if (this.consumesFirst == ApiMimeType.TEXT_PLAIN) {
 				if (returnResponse.content == null) {
 					sb.append("\t\treturn super.deleteText(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 				} else {
-					throw new TranspilerException("Transpiler Error: POST which produces " + this.produces + " and consumes " + this.consumes
+					throw new TranspilerException("Transpiler Error: POST which produces " + this.producesFirst + " and consumes " + this.consumesFirst
 							+ " not yet implemented in the transpiler.");
 				}
 			} else
-				throw new TranspilerException("Transpiler Error: DELETE which consumes " + this.consumes + " not yet implemented in the transpiler.");
+				throw new TranspilerException("Transpiler Error: DELETE which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
 		} else {
 			throw new TranspilerException("Transpiler Error: HTTP-Methode " + this.httpMethod + " wird noch nicht vom Transpiler unterstützt.");
 		}
@@ -645,7 +630,7 @@ public final class ApiMethod {
 			if ("Object".equals(datatype))
 				return false;
 		}
-		if ((returnResponse.content != null) && (this.produces == ApiMimeType.APPLICATION_JSON)) {
+		if ((returnResponse.content != null) && (this.producesFirst == ApiMimeType.APPLICATION_JSON)) {
 			final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
 			if ("Object".equals(datatype))
 				return false;

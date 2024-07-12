@@ -1,5 +1,17 @@
 package de.svws_nrw.transpiler.typescript;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewArrayTree;
+
+import de.svws_nrw.transpiler.Transpiler;
 import de.svws_nrw.transpiler.TranspilerException;
 import jakarta.ws.rs.core.MediaType;
 
@@ -59,6 +71,69 @@ public enum ApiMimeType {
 	@Override
 	public String toString() {
 		return this.mimetype;
+	}
+
+
+
+	/**
+	 * Bestimmt die Mime-Types, welche durch die angebene Annotation bei einer Klasse spezifiziert wurden.
+	 *
+	 * @param transpiler   der für die Analyse zu verwendende Transpiler
+	 * @param classTree    die Java-API-Klasse
+	 * @param annotation   die Annotation
+	 *
+	 * @return die Mime-Types oder eine leere Liste, falls die Annotation keine Mime-Types spezifiziert
+	 */
+	public static List<ApiMimeType> fromClassTree(final Transpiler transpiler, final ClassTree classTree, final String annotation) {
+		return getListFromAnnotationTree(transpiler.getAnnotation(annotation, classTree));
+	}
+
+	/**
+	 * Bestimmt die Mime-Types, welche durch die angebene Annotation bei einer Methode spezifiziert wurden.
+	 *
+	 * @param transpiler   der für die Analyse zu verwendende Transpiler
+	 * @param methodTree   die Java-API-Methode
+	 * @param annotation   die Annotation
+	 *
+	 * @return die Mime-Types oder eine leere Liste, falls die Annotation keine Mime-Types spezifiziert
+	 */
+	public static List<ApiMimeType> fromMethodTree(final Transpiler transpiler, final MethodTree methodTree, final String annotation) {
+		return getListFromAnnotationTree(transpiler.getAnnotation(annotation, methodTree));
+	}
+
+	private static List<ApiMimeType> getListFromAnnotationTree(final AnnotationTree annotationTree) {
+		final List<ApiMimeType> result = new ArrayList<>();
+		if (annotationTree == null)
+			return result;
+		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
+		return getListFromExpressionTree(args.get("value"));
+	}
+
+
+	private static List<ApiMimeType> getListFromExpressionTree(final ExpressionTree value) {
+		final List<ApiMimeType> result = new ArrayList<>();
+		return switch (value.getKind()) {
+			case NEW_ARRAY -> {
+				if (value instanceof final NewArrayTree nat) {
+					for (final ExpressionTree et : nat.getInitializers())
+						result.addAll(getListFromExpressionTree(et));
+					yield result;
+				}
+				throw new TranspilerException("Transpiler Exception: Unerwarteter interner Transpiler-Fehler.");
+			}
+			case STRING_LITERAL -> {
+				if ((value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str)) {
+					result.add(ApiMimeType.get(str));
+					yield result;
+				}
+				throw new TranspilerException("Transpiler Exception: Unerwarteter interner Transpiler-Fehler.");
+			}
+			case MEMBER_SELECT -> {
+				result.add(ApiMimeType.get(value.toString()));
+				yield result;
+			}
+			default -> throw new TranspilerException("Transpiler Exception: Unhandled value argument for Consumes annotation of kind " + value.getKind() + ".");
+		};
 	}
 
 }

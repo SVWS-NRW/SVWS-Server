@@ -1,5 +1,6 @@
 package de.svws_nrw.transpiler.typescript;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sun.source.tree.AnnotationTree;
@@ -24,10 +25,10 @@ public class ApiClassAnnotations {
 	public final String path;
 
 	/** Der Mime-Type, welcher für alle Ergebnisse der API-Methoden als Standard gilt, sofern dort kein anderer Wert gesetzt wird.*/
-	public final ApiMimeType produces;
+	public final List<ApiMimeType> produces;
 
 	/** Der Mime-Type, welcher für den Input der API-Methoden als Standard gilt, sofern dort kein anderer Wert gesetzt wird.*/
-	public final ApiMimeType consumes;
+	public final List<ApiMimeType> consumes;
 
 
 	/**
@@ -40,14 +41,14 @@ public class ApiClassAnnotations {
 	public ApiClassAnnotations(final Transpiler transpiler, final ClassTree classTree) {
 		this.tag = ApiClassAnnotations.getTag(transpiler, classTree);
 		this.path = ApiClassAnnotations.getPath(transpiler, classTree);
-		final ApiMimeType tmpProduces = ApiClassAnnotations.getMimeType(transpiler, classTree, "jakarta.ws.rs.Produces");
-		if (tmpProduces == null) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
-			this.produces = ApiMimeType.APPLICATION_JSON;
+		final List<ApiMimeType> tmpProduces = ApiMimeType.fromClassTree(transpiler, classTree, "jakarta.ws.rs.Produces");
+		if (tmpProduces.isEmpty()) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
+			this.produces = List.of(ApiMimeType.APPLICATION_JSON);
 		else
 			this.produces = tmpProduces;
-		final ApiMimeType tmpConsumes = ApiClassAnnotations.getMimeType(transpiler, classTree, "jakarta.ws.rs.Consumes");
-		if (tmpConsumes == null) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
-			this.consumes = ApiMimeType.APPLICATION_JSON;
+		final List<ApiMimeType> tmpConsumes = ApiMimeType.fromClassTree(transpiler, classTree, "jakarta.ws.rs.Consumes");
+		if (tmpConsumes.isEmpty()) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
+			this.consumes = List.of(ApiMimeType.APPLICATION_JSON);
 		else
 			this.consumes = tmpConsumes;
 	}
@@ -80,29 +81,6 @@ public class ApiClassAnnotations {
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String path))
 			return path;
 		throw new TranspilerException("Transpiler Exception: Unhandled value argument for Path annotation.");
-	}
-
-
-	/**
-	 * Bestimmt den Mime-Type, welche durch die angebenen Annotation spezifiziert wurde.
-	 *
-	 * @param transpiler   der für die Analyse zu verwendende Transpiler
-	 * @param classTree    die Java-API-Klasse
-	 * @param annotation   die Annotation
-	 *
-	 * @return der Mime-Type oder null, falls ie Annotation keinen Mime-Type spezifiziert
-	 */
-	private static ApiMimeType getMimeType(final Transpiler transpiler, final ClassTree classTree, final String annotation) {
-		final AnnotationTree annotationTree = transpiler.getAnnotation(annotation, classTree);
-		if (annotationTree == null)
-			return null;
-		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
-		final ExpressionTree value = args.get("value");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
-			return ApiMimeType.get(str);
-		if (value.getKind() == Kind.MEMBER_SELECT)
-			return ApiMimeType.get(value.toString());
-		throw new TranspilerException("Transpiler Exception: Unhandled value argument for Consumes annotation of kind " + value.getKind() + ".");
 	}
 
 }
