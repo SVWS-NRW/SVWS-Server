@@ -22,7 +22,7 @@
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
 				<template #cell(istMdlPruefung)="{ value }">
-					<span class="icon i-ri-chat1-line -my-0.5" v-if="value" />
+					<span class="icon i-ri-chat-1-line -my-0.5" v-if="value" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(istAudioNotwendig)="{ value }">

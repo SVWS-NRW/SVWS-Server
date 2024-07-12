@@ -79,12 +79,12 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public constructor(faecherManager : GostFaecherManager, listVorgaben : List<GostKlausurvorgabe>);
+	public constructor(faecherManager : GostFaecherManager | null, listVorgaben : List<GostKlausurvorgabe>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : GostFaecherManager | List<GostKlausurvorgabe>, __param1? : List<GostKlausurvorgabe>) {
+	public constructor(__param0? : GostFaecherManager | List<GostKlausurvorgabe> | null, __param1? : List<GostKlausurvorgabe>) {
 		super();
 		if ((__param0 === undefined) && (__param1 === undefined)) {
 			this._faecherManager = null;
@@ -92,8 +92,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
 			this._faecherManager = null;
 			this.initAll(listVorgaben);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
-			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+			const faecherManager : GostFaecherManager | null = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
 			this._faecherManager = faecherManager;
 			this.initAll(listVorgaben);

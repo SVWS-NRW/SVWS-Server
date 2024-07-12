@@ -24,6 +24,7 @@ import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/Gos
 import { HashMap3D } from '../../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../../java/util/HashSet';
 import { GostFach } from '../../../../core/data/gost/GostFach';
+import { GostKlausurenMetaDataCollection, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenMetaDataCollection } from '../../../../core/data/gost/klausurplanung/GostKlausurenMetaDataCollection';
 import { StundenplanManager } from '../../../../core/utils/stundenplan/StundenplanManager';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { MapUtils } from '../../../../core/utils/MapUtils';
@@ -192,9 +193,17 @@ export class GostKursklausurManager extends JavaObject {
 	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null, listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null);
 
 	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
+	 * @param allData            das Objekt der Klasse GostKlausurenMetaDataCollection, das alle Informationen enthält
+	 */
+	public constructor(allData : GostKlausurenMetaDataCollection);
+
+	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : GostKlausurvorgabenManager, __param1? : List<GostKursklausur>, __param2? : List<GostKlausurtermin> | null, __param3? : List<GostSchuelerklausur> | null, __param4? : List<GostSchuelerklausurTermin> | null) {
+	public constructor(__param0? : GostKlausurenMetaDataCollection | GostKlausurvorgabenManager, __param1? : List<GostKursklausur>, __param2? : List<GostKlausurtermin> | null, __param3? : List<GostSchuelerklausur> | null, __param4? : List<GostSchuelerklausurTermin> | null) {
 		super();
 		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			this._vorgabenManager = new GostKlausurvorgabenManager();
@@ -206,6 +215,12 @@ export class GostKursklausurManager extends JavaObject {
 			const listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null = cast_java_util_List(__param4);
 			this._vorgabenManager = vorgabenManager;
 			this.initAll(listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection')))) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
+			const allData : GostKlausurenMetaDataCollection = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenMetaDataCollection(__param0);
+			this._vorgabenManager = new GostKlausurvorgabenManager((allData.faecher !== null && !allData.faecher.isEmpty()) ? new GostFaecherManager(allData.faecher) : null, allData.klausurdata.vorgaben);
+			this.initAll(allData.klausurdata.kursklausuren, allData.klausurdata.termine, allData.klausurdata.schuelerklausuren, allData.klausurdata.schuelerklausurtermine);
+			if (allData.kurse !== null && !allData.kurse.isEmpty())
+				this.setKursManager(new KursManager(allData.kurse));
 		} else throw new Error('invalid method overload');
 	}
 
@@ -1229,7 +1244,6 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return true, falls andere Jgst. enthalten sind, sonst false
 	 */
 	public terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, multijahrgang : boolean) : boolean {
-		const termine : List<GostKlausurtermin> | null = this.terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr, quartal, multijahrgang);
 		for (const t of this.terminGetMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr, quartal, multijahrgang))
 			if (this.terminMitAnderenJgst(t))
 				return true;
@@ -1424,6 +1438,30 @@ export class GostKursklausurManager extends JavaObject {
 					maxEnd = endzeit;
 			}
 		return maxEnd;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public minKlausurdauerGetByTerminid(idTermin : number) : number {
+		let minDauer : number = -1;
+		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren !== null)
+			for (const klausur of klausuren) {
+				const vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
+				minDauer = (minDauer === -1 || vorgabe.dauer < minDauer) ? vorgabe.dauer : minDauer;
+			}
+		const skts : List<GostSchuelerklausurTermin> | null = this.schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if (skts !== null)
+			for (const skt of skts) {
+				const vorgabe : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
+				minDauer = (minDauer === -1 || vorgabe.dauer < minDauer) ? vorgabe.dauer : minDauer;
+			}
+		return minDauer === -1 ? 0 : minDauer;
 	}
 
 	/**

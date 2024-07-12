@@ -14,6 +14,7 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.adt.map.HashMap4D;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
@@ -194,6 +195,19 @@ public class GostKursklausurManager {
 			final List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
 		_vorgabenManager = vorgabenManager;
 		initAll(listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
+	}
+
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
+	 * @param allData            das Objekt der Klasse GostKlausurenMetaDataCollection, das alle Informationen enthält
+	 */
+	public GostKursklausurManager(final @NotNull GostKlausurenMetaDataCollection allData) {
+		_vorgabenManager = new GostKlausurvorgabenManager((allData.faecher != null && !allData.faecher.isEmpty()) ? new GostFaecherManager(allData.faecher) : null, allData.klausurdata.vorgaben);
+		initAll(allData.klausurdata.kursklausuren, allData.klausurdata.termine, allData.klausurdata.schuelerklausuren, allData.klausurdata.schuelerklausurtermine);
+		if (allData.kurse != null && !allData.kurse.isEmpty())
+			setKursManager(new KursManager(allData.kurse));
 	}
 
 	private void initAll(final @NotNull List<GostKursklausur> listKlausuren, final List<GostKlausurtermin> listTermine,
@@ -1363,8 +1377,8 @@ public class GostKursklausurManager {
 	 */
 	public boolean terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(final int abiJahrgang,
 			final @NotNull GostHalbjahr halbjahr, final int quartal, final boolean multijahrgang) {
-		final List<GostKlausurtermin> termine = terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr,
-				quartal, multijahrgang);
+//		final List<GostKlausurtermin> termine = terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr,
+//				quartal, multijahrgang);
 		for (final @NotNull GostKlausurtermin t : terminGetMengeByHalbjahrAndQuartalMultijahrgang(abiJahrgang, halbjahr,
 				quartal, multijahrgang))
 			if (terminMitAnderenJgst(t))
@@ -1577,6 +1591,30 @@ public class GostKursklausurManager {
 					maxEnd = endzeit;
 			}
 		return maxEnd;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public int minKlausurdauerGetByTerminid(final long idTermin) {
+		int minDauer = -1;
+		final List<GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren != null)
+			for (final @NotNull GostKursklausur klausur : klausuren) {
+				final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
+				minDauer = (minDauer == -1 || vorgabe.dauer < minDauer) ? vorgabe.dauer : minDauer;
+			}
+		final List<GostSchuelerklausurTermin> skts = schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if (skts != null)
+			for (final @NotNull GostSchuelerklausurTermin skt : skts) {
+				final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
+				minDauer = (minDauer == -1 || vorgabe.dauer < minDauer) ? vorgabe.dauer : minDauer;
+			}
+		return minDauer == -1 ? 0 : minDauer;
 	}
 
 	/**

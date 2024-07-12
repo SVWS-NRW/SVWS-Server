@@ -21,7 +21,9 @@
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
+							<span class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler,&nbsp;</span>
+							<span><span v-if="kMan().minKlausurdauerGetByTerminid(termin.id) < kMan().maxKlausurdauerGetByTerminid(termin.id)">{{ kMan().minKlausurdauerGetByTerminid(termin.id) }} - </span>{{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</span>
+
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -124,7 +126,7 @@
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
 							<span class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler, </span>
-							<span>bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Min</span>
+							<span><span v-if="kMan().minKlausurdauerGetByTerminid(termin.id) < kMan().maxKlausurdauerGetByTerminid(termin.id)">{{ kMan().minKlausurdauerGetByTerminid(termin.id) }} - </span>{{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</span>
 						</div>
 						<slot name="loeschen" />
 					</span>

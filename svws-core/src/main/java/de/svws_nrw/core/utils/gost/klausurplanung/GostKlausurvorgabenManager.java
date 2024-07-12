@@ -91,7 +91,7 @@ public class GostKlausurvorgabenManager {
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public GostKlausurvorgabenManager(final @NotNull GostFaecherManager faecherManager, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
+	public GostKlausurvorgabenManager(final GostFaecherManager faecherManager, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
 		_faecherManager = faecherManager;
 		initAll(listVorgaben);
 	}
