@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
@@ -16,6 +15,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -41,40 +41,6 @@ public final class DataKursliste extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
-	 */
-	private static final Function<DTOKurs, KursDaten> dtoMapper = k -> {
-		final KursDaten eintrag = new KursDaten();
-		eintrag.id = k.ID;
-		eintrag.idSchuljahresabschnitt = k.Schuljahresabschnitts_ID;
-		eintrag.kuerzel = k.KurzBez;
-		if (k.Jahrgang_ID != null)
-			eintrag.idJahrgaenge.add(k.Jahrgang_ID);
-		if (k.Jahrgaenge != null)
-			for (final String jahrgang : k.Jahrgaenge.split(","))
-				if (jahrgang.matches("^\\d+$"))
-					eintrag.idJahrgaenge.add(Long.parseLong(jahrgang));
-		eintrag.idFach = k.Fach_ID;
-		eintrag.lehrer = k.Lehrer_ID;
-		eintrag.kursartAllg = (k.KursartAllg == null) ? "" : k.KursartAllg;
-		eintrag.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
-		eintrag.istSichtbar = k.Sichtbar;
-		if ((k.Schienen != null) && (!k.Schienen.isBlank())) {
-			for (final String strSchiene : k.Schienen.split(",")) {
-				if ("".equals(strSchiene.trim()))
-					continue;
-				try {
-					eintrag.schienen.add(Integer.parseInt(strSchiene.trim()));
-				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-					// ignore exception
-				}
-			}
-		}
-		return eintrag;
-	};
-
-
-	/**
 	 * Bestimmt die Liste der Kurse für den angegeben Abschnitt. Ist dieser Abschnitt null, so werden die Kurse
 	 * aller Abschnitte zurückgegeben.
 	 *
@@ -83,16 +49,21 @@ public final class DataKursliste extends DataManager<Long> {
 	 * @param mitSchuelerInfo          gibt an, ob die KurslistenEinträge die Information zu Schülern beinhalten soll
 	 *
 	 * @return die Liste der Kurse
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn,
-			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) {
-		final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
+	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn,
+			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) throws ApiOperationException {
+		final @NotNull List<DTOKurs> kurse = (idSchuljahresabschnitt == null)
 				? conn.queryAll(DTOKurs.class)
 				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
 		if (kurse.isEmpty())
 			return new ArrayList<>();
 		// Erstelle die Liste der Kurse
-		final List<KursDaten> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+		final @NotNull List<KursDaten> daten = new ArrayList<>();
+		for (final @NotNull DTOKurs dtoKurs : kurse)
+			daten.add(DataKursdaten.dtoMapper.apply(dtoKurs));
+		daten.sort((a, b) -> Long.compare(a.sortierung, b.sortierung));
 		if (!mitSchuelerInfo)
 			return daten;
 		// Ergänze die Liste der Schüler in den Kursen
@@ -123,14 +94,14 @@ public final class DataKursliste extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final @NotNull List<@NotNull KursDaten> daten = getKursListenFuerAbschnitt(conn, abschnitt, true);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

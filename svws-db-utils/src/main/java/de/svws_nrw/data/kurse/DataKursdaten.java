@@ -76,7 +76,7 @@ public final class DataKursdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
 	 */
-	private static final DTOMapper<DTOKurs, KursDaten> dtoMapper = (final DTOKurs kurs) -> {
+	public static final DTOMapper<DTOKurs, KursDaten> dtoMapper = (final DTOKurs kurs) -> {
 		final KursDaten daten = new KursDaten();
 		daten.id = kurs.ID;
 		daten.idSchuljahresabschnitt = kurs.Schuljahresabschnitts_ID;
