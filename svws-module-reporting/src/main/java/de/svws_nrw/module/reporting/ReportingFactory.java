@@ -8,6 +8,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.html.HtmlFactory;
 import de.svws_nrw.module.reporting.pdf.PdfFactory;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -75,11 +76,13 @@ public final class ReportingFactory {
 				case null -> {
 					logger.logLn("## Fehler");
 					logger.logLn(4, "Kein bekanntes Ausgabeformat für die Reporterstellung übergeben.");
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(null, logger, log).getSimpleOperationResponse());
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null,
+							new ReportingErrorResponse(null, logger, log).getSimpleOperationResponse(), MediaType.APPLICATION_JSON);
 				}
 			};
 		} catch (final Exception e) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, new ReportingErrorResponse(e, logger, log).getSimpleOperationResponse());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, new ReportingErrorResponse(e, logger, log).getSimpleOperationResponse(),
+					MediaType.APPLICATION_JSON);
 		}
 	}
 }
