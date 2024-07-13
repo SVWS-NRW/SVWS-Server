@@ -11,58 +11,58 @@ import de.svws_nrw.core.types.fach.Fachgruppe;
 public class ReportingStatistikFach {
 
 	/** Der ASD-Jahrgang, ab dem das Fach zulässig ist (z. B. bei Fremdsprachen) */
-	private String abJahrgang;
+	protected String abJahrgang;
 
 	/** Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3) */
-	private Integer aufgabenfeld;
+	protected Integer aufgabenfeld;
 
 	/** Die textuelle Beschreibung des Faches */
-	private String bezeichnung;
+	protected String bezeichnung;
 
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. */
-	private boolean exportASD;
+	protected boolean exportASD;
 
 	/** Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt. Andernfalls null. */
-	private ReportingFach fach;
+	protected ReportingFach fach;
 
 	/** Die zugeordnete Fachgruppe */
-	private Fachgruppe fachgruppe;
+	protected Fachgruppe fachgruppe;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	private Integer gueltigBis;
+	protected Integer gueltigBis;
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	private Integer gueltigVon;
+	protected Integer gueltigVon;
 
 	/** Die RGB-Farbe des Faches für html */
-	private String htmlFarbeRGB;
+	protected String htmlFarbeRGB;
 
 	/** Die ID des Katalog-Eintrags. */
-	private long idFachkatalog;
+	protected long idFachkatalog;
 
 	/** Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird. */
-	private boolean istAusRegUFach;
+	protected boolean istAusRegUFach;
 
 	/** Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) */
-	private boolean istErsatzPflichtFS;
+	protected boolean istErsatzPflichtFS;
 
 	/** Gibt an, ob es sich um eine Fremdsprache handelt */
-	private boolean istFremdsprache;
+	protected boolean istFremdsprache;
 
 	/** Gibt an, ob es sich um ein Fach der Herkunftssprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
-	private boolean istHKFS;
+	protected boolean istHKFS;
 
 	/** Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik */
-	private boolean istKonfKoop;
+	protected boolean istKonfKoop;
 
 	/** Das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik */
-	private String kuerzel;
+	protected String kuerzel;
 
 	/** Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik */
-	private String kuerzelASD;
+	protected String kuerzelASD;
 
 	/** Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird. */
-	private boolean nurSII;
+	protected boolean nurSII;
 
 
 
@@ -113,21 +113,13 @@ public class ReportingStatistikFach {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 	/**
 	 * Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen)
 	 * @return Inhalt des Feldes abJahrgang
 	 */
 	public String abJahrgang() {
 		return abJahrgang;
-	}
-
-	/**
-	 * Der ASD-Jahrgang, ab dem das Fach zulässig ist (z. B. bei Fremdsprachen), wird gesetzt.
-	 * @param abJahrgang Neuer Wert für das Feld abJahrgang
-	 */
-	public void setAbJahrgang(final String abJahrgang) {
-		this.abJahrgang = abJahrgang;
 	}
 
 	/**
@@ -139,27 +131,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Das Aufgabenfeld, welchem das Fach ggf zugeordnet ist (1, 2 oder 3) wird gesetzt.
-	 * @param aufgabenfeld Neuer Wert für das Feld aufgabenfeld
-	 */
-	public void setAufgabenfeld(final Integer aufgabenfeld) {
-		this.aufgabenfeld = aufgabenfeld;
-	}
-
-	/**
 	 * Die textuelle Beschreibung des Faches
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
-	}
-
-	/**
-	 * Die textuelle Beschreibung des Faches wird gesetzt.
-	 * @param bezeichnung Neuer Wert für das Feld bezeichnung
-	 */
-	public void setBezeichnung(final String bezeichnung) {
-		this.bezeichnung = bezeichnung;
 	}
 
 	/**
@@ -171,27 +147,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht wird gesetzt.
-	 * @param exportASD Neuer Wert für das Feld exportASD
-	 */
-	public void setExportASD(final boolean exportASD) {
-		this.exportASD = exportASD;
-	}
-
-	/**
 	 * Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt. Andernfalls null.
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
 		return fach;
-	}
-
-	/**
-	 * Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt, wird gesetzt.
-	 * @param fach Neuer Wert für das Feld fach
-	 */
-	public void setFach(final ReportingFach fach) {
-		this.fach = fach;
 	}
 
 	/**
@@ -203,27 +163,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Das Kürzel der zugeordneten Fachgruppe wird gesetzt.
-	 * @param fachgruppe Neuer Wert für das Feld fachgruppe
-	 */
-	public void setFachgruppe(final Fachgruppe fachgruppe) {
-		this.fachgruppe = fachgruppe;
-	}
-
-	/**
 	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @return Inhalt des Feldes gueltigBis
 	 */
 	public Integer gueltigBis() {
 		return gueltigBis;
-	}
-
-	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt wird gesetzt.
-	 * @param gueltigBis Neuer Wert für das Feld gueltigBis
-	 */
-	public void setGueltigBis(final Integer gueltigBis) {
-		this.gueltigBis = gueltigBis;
 	}
 
 	/**
@@ -235,27 +179,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt wird gesetzt.
-	 * @param gueltigVon Neuer Wert für das Feld gueltigVon
-	 */
-	public void setGueltigVon(final Integer gueltigVon) {
-		this.gueltigVon = gueltigVon;
-	}
-
-	/**
 	 * Die RGB-Farbe des Faches für html
 	 * @return Inhalt des Feldes htmlFarbeRGB
 	 */
 	public String htmlFarbeRGB() {
 		return htmlFarbeRGB;
-	}
-
-	/**
-	 * Die RGB-Farbe des Faches für html wird gesetzt.
-	 * @param htmlFarbeRGB Neuer Wert für das Feld htmlFarbeRGB
-	 */
-	public void setHtmlFarbeRGB(final String htmlFarbeRGB) {
-		this.htmlFarbeRGB = htmlFarbeRGB;
 	}
 
 	/**
@@ -267,27 +195,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Die ID des Katalog-Eintrags wird gesetzt.
-	 * @param idFachkatalog Neuer Wert für das Feld idFachkatalog
-	 */
-	public void setIdFachkatalog(final long idFachkatalog) {
-		this.idFachkatalog = idFachkatalog;
-	}
-
-	/**
 	 * Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird.
 	 * @return Inhalt des Feldes istAusRegUFach
 	 */
 	public boolean istAusRegUFach() {
 		return istAusRegUFach;
-	}
-
-	/**
-	 * Gibt an, ob das Fach außerhalb des regulären Fachunterrichts unterrichtet wird, wird gesetzt.
-	 * @param istAusRegUFach Neuer Wert für das Feld istAusRegUFach
-	 */
-	public void setIstAusRegUFach(final boolean istAusRegUFach) {
-		this.istAusRegUFach = istAusRegUFach;
 	}
 
 	/**
@@ -299,27 +211,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) wird gesetzt.
-	 * @param istErsatzPflichtFS Neuer Wert für das Feld istErsatzPflichtFS
-	 */
-	public void setIstErsatzPflichtFS(final boolean istErsatzPflichtFS) {
-		this.istErsatzPflichtFS = istErsatzPflichtFS;
-	}
-
-	/**
 	 * Gibt an, ob es sich um eine Fremdsprache handelt
 	 * @return Inhalt des Feldes istFremdsprache
 	 */
 	public boolean istFremdsprache() {
 		return istFremdsprache;
-	}
-
-	/**
-	 * Gibt an, ob es sich um eine Fremdsprache handelt wird gesetzt.
-	 * @param istFremdsprache Neuer Wert für das Feld istFremdsprache
-	 */
-	public void setIstFremdsprache(final boolean istFremdsprache) {
-		this.istFremdsprache = istFremdsprache;
 	}
 
 	/**
@@ -331,27 +227,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Gibt an, ob es sich um ein Fach der Herkunftssprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) wird gesetzt.
-	 * @param istHKFS Neuer Wert für das Feld istHKFS
-	 */
-	public void setIstHKFS(final boolean istHKFS) {
-		this.istHKFS = istHKFS;
-	}
-
-	/**
 	 * Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik
 	 * @return Inhalt des Feldes istKonfKoop
 	 */
 	public boolean istKonfKoop() {
 		return istKonfKoop;
-	}
-
-	/**
-	 * Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik wird gesetzt.
-	 * @param istKonfKoop Neuer Wert für das Feld istKonfKoop
-	 */
-	public void setIstKonfKoop(final boolean istKonfKoop) {
-		this.istKonfKoop = istKonfKoop;
 	}
 
 	/**
@@ -363,27 +243,11 @@ public class ReportingStatistikFach {
 	}
 
 	/**
-	 * Das atomare Kürzel des Faches (zB bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik wird gesetzt.
-	 * @param kuerzel Neuer Wert für das Feld kuerzel
-	 */
-	public void setKuerzel(final String kuerzel) {
-		this.kuerzel = kuerzel;
-	}
-
-	/**
 	 * Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik
 	 * @return Inhalt des Feldes kuerzelASD
 	 */
 	public String kuerzelASD() {
 		return kuerzelASD;
-	}
-
-	/**
-	 * Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik wird gesetzt.
-	 * @param kuerzelASD Neuer Wert für das Feld kuerzelASD
-	 */
-	public void setKuerzelASD(final String kuerzelASD) {
-		this.kuerzelASD = kuerzelASD;
 	}
 
 	/**
@@ -394,11 +258,4 @@ public class ReportingStatistikFach {
 		return nurSII;
 	}
 
-	/**
-	 * Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird wird gesetzt.
-	 * @param nurSII Neuer Wert für das Feld nurSII
-	 */
-	public void setNurSII(final boolean nurSII) {
-		this.nurSII = nurSII;
-	}
 }

@@ -74,7 +74,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				abiturdaten.schuljahrAbitur);
 		this.reportingRepository = reportingRepository;
 
-		super.setBesondereLernleistungNote(Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel));
+		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 
 		super.fachbelegungen()
 				.addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, f)).toList());

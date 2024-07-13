@@ -12,40 +12,40 @@ import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
 public class ReportingSchuelerSprachbelegung {
 
 	/** Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde */
-	private String belegungBisJahrgang;
+	protected String belegungBisJahrgang;
 
 	/** Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde */
-	private Integer belegungBisAbschnitt;
+	protected Integer belegungBisAbschnitt;
 
 	/** Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde */
-	private String belegungVonJahrgang;
+	protected String belegungVonJahrgang;
 
 	/** Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde */
-	private Integer belegungVonAbschnitt;
+	protected Integer belegungVonAbschnitt;
 
 	/** Gibt an, ob das kleine Latinum erreicht wurde oder nicht. */
-	private boolean hatKleinesLatinum;
+	protected boolean hatKleinesLatinum;
 
 	/** Gibt an, ob das Latinum erreicht wurde oder nicht. */
-	private boolean hatLatinum;
+	protected boolean hatLatinum;
 
 	/** Gibt an, ob das Graecum erreicht wurde oder nicht. */
-	private boolean hatGraecum;
+	protected boolean hatGraecum;
 
 	/** Gibt an, ob das Hebraicum erreicht wurde oder nicht. */
-	private boolean hatHebraicum;
+	protected boolean hatHebraicum;
 
 	/** Das Referenzniveau, welches bisher erreicht wurde */
-	private Sprachreferenzniveau referenzniveau;
+	protected Sprachreferenzniveau referenzniveau;
 
 	/** Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde */
-	private Integer reihenfolge;
+	protected Integer reihenfolge;
 
 	/** Das einstellige Sprachkürzel des Faches der Sprache */
-	private String sprache;
+	protected String sprache;
 
 	/** Das Statistik-Fach zur Sprache */
-	private ReportingStatistikFach statistikfach;
+	protected ReportingStatistikFach statistikfach;
 
 
 
@@ -83,7 +83,7 @@ public class ReportingSchuelerSprachbelegung {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
@@ -91,14 +91,6 @@ public class ReportingSchuelerSprachbelegung {
 	 */
 	public String belegungBisJahrgang() {
 		return belegungBisJahrgang;
-	}
-
-	/**
-	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde, wird gesetzt
-	 * @param belegungBisJahrgang Neuer Wert für das Feld belegungBisJahrgang wird gesetzt.
-	 */
-	public void setBelegungBisJahrgang(final String belegungBisJahrgang) {
-		this.belegungBisJahrgang = belegungBisJahrgang;
 	}
 
 	/**
@@ -110,27 +102,11 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde, wird gesetzt.
-	 * @param belegungBisAbschnitt Neuer Wert für das Feld belegungBisAbschnitt
-	 */
-	public void setBelegungBisAbschnitt(final Integer belegungBisAbschnitt) {
-		this.belegungBisAbschnitt = belegungBisAbschnitt;
-	}
-
-	/**
 	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
 	 * @return Inhalt des Feldes belegungVonJahrgang
 	 */
 	public String belegungVonJahrgang() {
 		return belegungVonJahrgang;
-	}
-
-	/**
-	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde wird gesetzt.
-	 * @param belegungVonJahrgang Neuer Wert für das Feld belegungVonJahrgang
-	 */
-	public void setBelegungVonJahrgang(final String belegungVonJahrgang) {
-		this.belegungVonJahrgang = belegungVonJahrgang;
 	}
 
 	/**
@@ -142,27 +118,11 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde wird gesetzt.
-	 * @param belegungVonAbschnitt Neuer Wert für das Feld belegungVonAbschnitt
-	 */
-	public void setBelegungVonAbschnitt(final Integer belegungVonAbschnitt) {
-		this.belegungVonAbschnitt = belegungVonAbschnitt;
-	}
-
-	/**
 	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatKleinesLatinum
 	 */
 	public boolean hatKleinesLatinum() {
 		return hatKleinesLatinum;
-	}
-
-	/**
-	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht wird gesetzt.
-	 * @param hatKleinesLatinum Neuer Wert für das Feld hatKleinesLatinum
-	 */
-	public void setHatKleinesLatinum(final boolean hatKleinesLatinum) {
-		this.hatKleinesLatinum = hatKleinesLatinum;
 	}
 
 	/**
@@ -174,27 +134,11 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Gibt an, ob das Latinum erreicht wurde oder nicht wird gesetzt.
-	 * @param hatLatinum Neuer Wert für das Feld hatLatinum
-	 */
-	public void setHatLatinum(final boolean hatLatinum) {
-		this.hatLatinum = hatLatinum;
-	}
-
-	/**
 	 * Gibt an, ob das Graecum erreicht wurde oder nicht.
 	 * @return Inhalt des Feldes hatGraecum
 	 */
 	public boolean hatGraecum() {
 		return hatGraecum;
-	}
-
-	/**
-	 * Gibt an, ob das Graecum erreicht wurde oder nicht wird gesetzt.
-	 * @param hatGraecum Neuer Wert für das Feld hatGraecum
-	 */
-	public void setHatGraecum(final boolean hatGraecum) {
-		this.hatGraecum = hatGraecum;
 	}
 
 	/**
@@ -206,27 +150,11 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht wird gesetzt.
-	 * @param hatHebraicum Neuer Wert für das Feld hatHebraicum
-	 */
-	public void setHatHebraicum(final boolean hatHebraicum) {
-		this.hatHebraicum = hatHebraicum;
-	}
-
-	/**
 	 * Das Referenzniveau, welches bisher erreicht wurde
 	 * @return Inhalt des Feldes referenzniveau
 	 */
 	public Sprachreferenzniveau referenzniveau() {
 		return referenzniveau;
-	}
-
-	/**
-	 * Das Referenzniveau, welches bisher erreicht wurde, wird gesetzt.
-	 * @param referenzniveau Neuer Wert für das Feld referenzniveau
-	 */
-	public void setReferenzniveau(final Sprachreferenzniveau referenzniveau) {
-		this.referenzniveau = referenzniveau;
 	}
 
 	/**
@@ -238,27 +166,11 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde, wird gesetzt.
-	 * @param reihenfolge Neuer Wert für das Feld reihenfolge
-	 */
-	public void setReihenfolge(final Integer reihenfolge) {
-		this.reihenfolge = reihenfolge;
-	}
-
-	/**
 	 * Das einstellige Sprachkürzel des Faches der Sprache
 	 * @return Inhalt des Feldes sprache
 	 */
 	public String sprache() {
 		return sprache;
-	}
-
-	/**
-	 * Das einstellige Sprachkürzel des Faches der Sprache wird gesetzt.
-	 * @param sprache Neuer Wert für das Feld sprache
-	 */
-	public void setSprache(final String sprache) {
-		this.sprache = sprache;
 	}
 
 	/**
@@ -269,11 +181,4 @@ public class ReportingSchuelerSprachbelegung {
 		return statistikfach;
 	}
 
-	/**
-	 * Das Statistik-Fach zur Sprache wird gesetzt.
-	 * @param statistikfach Neuer Wert für das Feld fach
-	 */
-	public void setStatistikfach(final ReportingStatistikFach statistikfach) {
-		this.statistikfach = statistikfach;
-	}
 }

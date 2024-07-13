@@ -10,13 +10,13 @@ package de.svws_nrw.module.reporting.types.gost.laufbahnplanung;
 public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 	/** Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer, */
-	private String code;
+	protected String code;
 
 	/** Kategorie der Meldung, bspw. Fehler oder Hinweis. */
-	private ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie;
+	protected ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie;
 
 	/** Text zur Meldung für den Benutzer */
-	private String meldung;
+	protected String meldung;
 
 
 
@@ -35,7 +35,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer,
@@ -43,14 +43,6 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 	 */
 	public String code() {
 		return code;
-	}
-
-	/**
-	 * Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer, wird gesetzt.
-	 * @param code Neuer Wert für das Feld code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
 	}
 
 	/**
@@ -62,28 +54,11 @@ public class ReportingGostLaufbahnplanungErgebnismeldung {
 	}
 
 	/**
-	 * Kategorie der Meldung, bspw Fehler oder Hinweis wird gesetzt.
-	 * @param kategorie Neuer Wert für das Feld kategorie
-	 */
-	public void setKategorie(final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie) {
-		this.kategorie = kategorie;
-	}
-
-	/**
 	 * Text zur Meldung für den Benutzer
 	 * @return Inhalt des Feldes meldung
 	 */
 	public String meldung() {
 		return meldung;
 	}
-
-	/**
-	 * Text zur Meldung für den Benutzer wird gesetzt.
-	 * @param meldung Neuer Wert für das Feld meldung
-	 */
-	public void setMeldung(final String meldung) {
-		this.meldung = meldung;
-	}
-
 
 }

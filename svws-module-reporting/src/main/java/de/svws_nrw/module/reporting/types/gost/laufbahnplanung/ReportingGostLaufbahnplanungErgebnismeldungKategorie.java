@@ -13,7 +13,8 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 	HINWEIS("Hinweis");
 
 	/** Kategorie der Rückmeldung */
-	private final String kategorie;
+	protected final String kategorie;
+
 
 
 	/**
@@ -24,6 +25,9 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 		this.kategorie = kategorie;
 	}
 
+
+
+	// ##### Getter #####
 
 	/**
 	 * Gibt die Kategorie der Meldung der Laufbahnplanung zurück.

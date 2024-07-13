@@ -64,15 +64,15 @@ public class ProxyReportingSchule extends ReportingSchule {
 				reportingRepository.schulstammdaten().webAdresse);
 
 		this.reportingRepository = reportingRepository;
-		super.setSchullogo(new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64());
-		super.setSchuljahresabschnitte(this.reportingRepository.mapSchuljahresabschnitte().values().stream()
-				.map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList());
-		super.setAktuellerSchuljahresabschnitt(new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt()));
+		super.schullogo = new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64();
+		super.schuljahresabschnitte = this.reportingRepository.mapSchuljahresabschnitte().values().stream()
+				.map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList();
+		super.aktuellerSchuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt());
 	}
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.

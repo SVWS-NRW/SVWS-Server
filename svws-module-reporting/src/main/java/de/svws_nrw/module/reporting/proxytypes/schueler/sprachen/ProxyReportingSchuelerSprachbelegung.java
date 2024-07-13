@@ -55,8 +55,8 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 		);
 		this.reportingRepository = reportingRepository;
 		if (sprachbelegung.referenzniveau != null)
-			super.setReferenzniveau(Sprachreferenzniveau.getByKuerzel(sprachbelegung.referenzniveau));
-		super.setStatistikfach(new ProxyReportingStatistikFach(reportingRepository, sprachbelegung.sprache));
+			super.referenzniveau = Sprachreferenzniveau.getByKuerzel(sprachbelegung.referenzniveau);
+		super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, sprachbelegung.sprache);
 	}
 
 

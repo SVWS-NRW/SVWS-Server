@@ -58,10 +58,10 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 				abiturFachbelegungHalbjahr.wochenstunden);
 		this.reportingRepository = reportingRepository;
 
-		super.setNote(Note.fromKuerzel(abiturFachbelegungHalbjahr.notenkuerzel));
+		super.note = Note.fromKuerzel(abiturFachbelegungHalbjahr.notenkuerzel);
 
 		if (abiturFachbelegungHalbjahr.lehrer != null) {
-			super.setLehrer(new ProxyReportingLehrer(
+			super.lehrer = new ProxyReportingLehrer(
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
 						try {
@@ -70,7 +70,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 							e.printStackTrace();
 							return new LehrerStammdaten();
 						}
-					})));
+					}));
 		}
 	}
 

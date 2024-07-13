@@ -82,7 +82,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	@Override
 	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
 		if (super.fachwahlstatistik() == null) {
-			super.setFachwahlstatistik(this.reportingGostKursplanungBlockungsergebnis.fachwahlstatistik().get(this.fach().id()));
+			super.fachwahlstatistik = this.reportingGostKursplanungBlockungsergebnis.fachwahlstatistik().get(this.fach().id());
 		}
 		return super.fachwahlstatistik();
 	}

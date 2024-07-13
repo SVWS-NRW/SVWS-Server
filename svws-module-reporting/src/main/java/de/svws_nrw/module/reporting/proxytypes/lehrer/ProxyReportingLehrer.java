@@ -67,8 +67,8 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				"");
 
 		this.reportingRepository = reportingRepository;
-		super.setWohnortname((super.wohnort() != null) ? super.wohnort().ortsname : "");
-		super.setWohnortsteilname((super.wohnortsteil() != null) ? super.wohnortsteil().ortsteil : "");
+		super.wohnortname = (super.wohnort() != null) ? super.wohnort().ortsname : "";
+		super.wohnortsteilname = (super.wohnortsteil() != null) ? super.wohnortsteil().ortsteil : "";
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);

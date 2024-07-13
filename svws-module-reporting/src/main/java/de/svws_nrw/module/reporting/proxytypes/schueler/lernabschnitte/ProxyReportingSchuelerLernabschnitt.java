@@ -122,8 +122,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS);
 
 		this.reportingRepository = reportingRepository;
-		super.setFoerderschwerpunkt1(this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID));
-		super.setFoerderschwerpunkt2(this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID));
+		super.foerderschwerpunkt1 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
+		super.foerderschwerpunkt2 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
 	}
 
 
@@ -143,7 +143,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			super.setFolgeklasse(
+			super.folgeklasse =
 					new ProxyReportingKlasse(
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
@@ -153,7 +153,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new KlassenDaten();
 								}
-							})));
+							}));
 		}
 		return super.folgeklasse();
 	}
@@ -165,7 +165,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingJahrgang jahrgang() {
 		if ((super.jahrgang() == null) && (super.idJahrgang() != null) && (super.idJahrgang() >= 0)) {
-			super.setJahrgang(
+			super.jahrgang =
 					new ProxyReportingJahrgang(
 							reportingRepository,
 							reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
@@ -175,7 +175,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new JahrgangsDaten();
 								}
-							})));
+							}));
 		}
 		return super.jahrgang();
 	}
@@ -187,7 +187,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse klasse() {
 		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
-			super.setKlasse(
+			super.klasse =
 					new ProxyReportingKlasse(
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
@@ -197,7 +197,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new KlassenDaten();
 								}
-							})));
+							}));
 		}
 		return super.klasse();
 	}
@@ -213,7 +213,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingSchueler schueler() {
 		if ((super.schueler() == null) && (super.idSchueler() >= 0)) {
-			super.setSchueler(
+			super.schueler =
 					new ProxyReportingSchueler(
 							reportingRepository,
 							reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
@@ -223,7 +223,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new SchuelerStammdaten();
 								}
-							})));
+							}));
 		}
 		return super.schueler();
 	}
@@ -235,8 +235,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
 		if ((super.schuljahresabschnitt() == null) && (super.idSchuljahresabschnitt() >= 0)) {
-			super.setSchuljahresabschnitt(
-					new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt())));
+			super.schuljahresabschnitt =
+					new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt()));
 		}
 		return super.schuljahresabschnitt();
 	}
@@ -249,7 +249,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer sonderpaedagoge() {
 		if ((super.sonderpaedagoge() == null) && (super.idSonderpaedagoge() != null) && (super.idSonderpaedagoge() >= 0)) {
-			super.setSonderpaedagoge(
+			super.sonderpaedagoge =
 					new ProxyReportingLehrer(
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
@@ -259,7 +259,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new LehrerStammdaten();
 								}
-							})));
+							}));
 		}
 		return super.sonderpaedagoge();
 	}
@@ -271,7 +271,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer tutor() {
 		if ((super.tutor() == null) && (super.idTutor() >= 0)) {
-			super.setTutor(
+			super.tutor =
 					new ProxyReportingLehrer(
 							reportingRepository,
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
@@ -281,7 +281,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									e.printStackTrace();
 									return new LehrerStammdaten();
 								}
-							})));
+							}));
 		}
 		return super.tutor();
 	}

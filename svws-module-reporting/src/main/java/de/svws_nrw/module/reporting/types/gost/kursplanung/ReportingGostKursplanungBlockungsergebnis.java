@@ -18,43 +18,43 @@ import java.util.Map;
 public class ReportingGostKursplanungBlockungsergebnis {
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet */
-	private int abiturjahr;
+	protected int abiturjahr;
 
 	/** Anzahl der Dummy-Schüler im Ergebnis */
-	private int anzahlDummy;
+	protected int anzahlDummy;
 
 	/** Anzahl der externen Schüler im Ergebnis */
-	private int anzahlExterne;
+	protected int anzahlExterne;
 
 	/** Maximale Anzahl an Kursen pro Schiene über alle Schienen */
-	private int anzahlMaxKurseProSchiene;
+	protected int anzahlMaxKurseProSchiene;
 
 	/** Anzahl der Schienen */
-	private int anzahlSchienen;
+	protected int anzahlSchienen;
 
 	/** Anzahl der Schüler im Ergebnis */
-	private int anzahlSchueler;
+	protected int anzahlSchueler;
 
 	/** Bezeichnung des Blockungsergebnisses */
-	private String bezeichnung;
+	protected String bezeichnung;
 
 	/** Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID */
-	private Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik = new HashMap<>();
+	protected Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik = new HashMap<>();
 
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
-	private GostHalbjahr gostHalbjahr;
+	protected GostHalbjahr gostHalbjahr;
 
 	/** ID des Blockungsergebnisses */
-	private long id;
+	protected long id;
 
 	/** Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet. */
-	private List<ReportingGostKursplanungKurs> kurse = new ArrayList<>();
+	protected List<ReportingGostKursplanungKurs> kurse = new ArrayList<>();
 
 	/** Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet. */
-	private List<ReportingGostKursplanungSchiene> schienen = new ArrayList<>();
+	protected List<ReportingGostKursplanungSchiene> schienen = new ArrayList<>();
 
 	/** Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet. */
-	private List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler = new ArrayList<>();
 
 
 
@@ -118,7 +118,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet
@@ -126,14 +126,6 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 */
 	public int abiturjahr() {
 		return abiturjahr;
-	}
-
-	/**
-	 * Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet, wird gesetzt.
-	 * @param abiturjahr Neuer Wert für das Feld abiturjahr
-	 */
-	public void setAbiturjahr(final int abiturjahr) {
-		this.abiturjahr = abiturjahr;
 	}
 
 	/**
@@ -145,27 +137,11 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * Anzahl der Dummy-Schüler im Ergebnis wird gesetzt.
-	 * @param anzahlDummy Neuer Wert für das Feld anzahlDummy
-	 */
-	public void setAnzahlDummy(final int anzahlDummy) {
-		this.anzahlDummy = anzahlDummy;
-	}
-
-	/**
 	 * Anzahl der externen Schüler im Ergebnis
 	 * @return Inhalt des Feldes anzahlExterne
 	 */
 	public int anzahlExterne() {
 		return anzahlExterne;
-	}
-
-	/**
-	 * Anzahl der externen Schüler im Ergebnis wird gesetzt.
-	 * @param anzahlExterne Neuer Wert für das Feld anzahlExterne
-	 */
-	public void setAnzahlExterne(final int anzahlExterne) {
-		this.anzahlExterne = anzahlExterne;
 	}
 
 	/**
@@ -177,27 +153,11 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * Maximale Anzahl an Kursen über alle Schienen wird gesetzt.
-	 * @param anzahlMaxKurseProSchiene Neuer Wert für das Feld anzahlMaxKurseProSchiene
-	 */
-	public void setAnzahlMaxKurseProSchiene(final int anzahlMaxKurseProSchiene) {
-		this.anzahlMaxKurseProSchiene = anzahlMaxKurseProSchiene;
-	}
-
-	/**
 	 * Anzahl der Schienen
 	 * @return Inhalt des Feldes anzahlSchienen
 	 */
 	public int anzahlSchienen() {
 		return anzahlSchienen;
-	}
-
-	/**
-	 * Anzahl der Schienen wird gesetzt.
-	 * @param anzahlSchienen Neuer Wert für das Feld anzahlSchienen
-	 */
-	public void setAnzahlSchienen(final int anzahlSchienen) {
-		this.anzahlSchienen = anzahlSchienen;
 	}
 
 	/**
@@ -209,27 +169,11 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * Anzahl der Schüler im Ergebnis wird gesetzt.
-	 * @param anzahlSchueler Neuer Wert für das Feld anzahlSchueler
-	 */
-	public void setAnzahlSchueler(final int anzahlSchueler) {
-		this.anzahlSchueler = anzahlSchueler;
-	}
-
-	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
 	 * @return Inhalt des Feldes fachwahlstatistik
 	 */
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
 		return fachwahlstatistik;
-	}
-
-	/**
-	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID wird gesetzt.
-	 * @param fachwahlstatistik Neuer Wert für das Feld fachwahlstatistik
-	 */
-	public void setFachwahlstatistik(final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik) {
-		this.fachwahlstatistik = fachwahlstatistik;
 	}
 
 	/**
@@ -241,27 +185,11 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * Bezeichnung des Blockungsergebnisses wird gesetzt.
-	 * @param bezeichnung Neuer Wert für das Feld bezeichnung
-	 */
-	public void setBezeichnung(final String bezeichnung) {
-		this.bezeichnung = bezeichnung;
-	}
-
-	/**
 	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
-	}
-
-	/**
-	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses wird gesetzt.
-	 * @param gostHalbjahr Neuer Wert für das Feld gostHalbjahr
-	 */
-	public void setGostHalbjahr(final GostHalbjahr gostHalbjahr) {
-		this.gostHalbjahr = gostHalbjahr;
 	}
 
 	/**
@@ -273,27 +201,11 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * ID des Blockungsergebnisses wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
 	 * @return Inhalt des Feldes kurse
 	 */
 	public List<ReportingGostKursplanungKurs> kurse() {
 		return kurse;
-	}
-
-	/**
-	 * Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet, wird gesetzt.
-	 * @param kurse Neuer Wert für das Feld kurse
-	 */
-	public void setKurse(final List<ReportingGostKursplanungKurs> kurse) {
-		this.kurse = kurse;
 	}
 
 	/**
@@ -305,14 +217,6 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	}
 
 	/**
-	 * Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet, wird gesetzt.
-	 * @param schienen Neuer Wert für das Feld schienen
-	 */
-	public void setSchienen(final List<ReportingGostKursplanungSchiene> schienen) {
-		this.schienen = schienen;
-	}
-
-	/**
 	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
 	 * @return Inhalt des Feldes schienen
 	 */
@@ -320,11 +224,4 @@ public class ReportingGostKursplanungBlockungsergebnis {
 		return schueler;
 	}
 
-	/**
-	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet, wird gesetzt.
-	 * @param schueler Neuer Wert für das Feld schienen
-	 */
-	public void setSchueler(final List<ReportingSchueler> schueler) {
-		this.schueler = schueler;
-	}
 }

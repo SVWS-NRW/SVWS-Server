@@ -18,52 +18,52 @@ import java.util.stream.Collectors;
 public class ReportingGostKursplanungKurs {
 
 	/** Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist. */
-	private int anzahlAB12;
+	protected int anzahlAB12;
 
 	/** Anzahl der Schülerinnen und Schüler für das Fach des Kurses drittes Abiturfach ist. */
-	private int anzahlAB3;
+	protected int anzahlAB3;
 
 	/** Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist. */
-	private int anzahlAB4;
+	protected int anzahlAB4;
 
 	/** Anzahl der Dummy-Schüler */
-	private int anzahlDummy;
+	protected int anzahlDummy;
 
 	/** Anzahl der Schülerinnen und Schüler mit Status extern. */
-	private int anzahlExterne;
+	protected int anzahlExterne;
 
 	/** Anzahl der Schülerinnen und Schüler im Kurs. */
-	private int anzahlSchueler;
+	protected int anzahlSchueler;
 
 	/** Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben. */
-	private int anzahlSchuelerSchriftlich;
+	protected int anzahlSchuelerSchriftlich;
 
 	/** Bezeichnung des Kurses. */
-	private String bezeichnung;
+	protected String bezeichnung;
 
 	/** Das Fach des Kurses */
-	private ReportingFach fach;
+	protected ReportingFach fach;
 
 	/** Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses */
-	private ReportingGostKursplanungFachwahlstatistik fachwahlstatistik;
+	protected ReportingGostKursplanungFachwahlstatistik fachwahlstatistik;
 
 	/** Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis. */
-	private GostHalbjahr gostHalbjahr;
+	protected GostHalbjahr gostHalbjahr;
 
 	/** Kursart des Kurses. */
-	private GostKursart gostKursart;
+	protected GostKursart gostKursart;
 
 	/** ID des Kurses */
-	private long id;
+	protected long id;
 
 	/** Eine Liste der Lehrkräfte des Kurses. */
-	private List<ReportingLehrer> lehrkraefte;
+	protected List<ReportingLehrer> lehrkraefte;
 
 	/** Eine Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt. */
-	private List<ReportingGostKursplanungSchiene> schienen;
+	protected List<ReportingGostKursplanungSchiene> schienen;
 
 	/** Eine Liste vom Typ Kursschueler, die alle Schülerinnen und Schüler des Kurses enthält. */
-	private List<ReportingSchueler> schueler;
+	protected List<ReportingSchueler> schueler;
 
 
 
@@ -130,7 +130,7 @@ public class ReportingGostKursplanungKurs {
 	}
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist.
@@ -138,14 +138,6 @@ public class ReportingGostKursplanungKurs {
 	 */
 	public int anzahlAB12() {
 		return anzahlAB12;
-	}
-
-	/**
-	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist, wird gesetzt.
-	 * @param anzahlAB12 Neuer Wert für das Feld anzahlAB12
-	 */
-	public void setAnzahlAB12(final int anzahlAB12) {
-		this.anzahlAB12 = anzahlAB12;
 	}
 
 	/**
@@ -157,27 +149,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses drittes Abiturfach ist, wird gesetzt.
-	 * @param anzahlAB3 Neuer Wert für das Feld anzahlAB3
-	 */
-	public void setAnzahlAB3(final int anzahlAB3) {
-		this.anzahlAB3 = anzahlAB3;
-	}
-
-	/**
 	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist.
 	 * @return Inhalt des Feldes anzahlAB4
 	 */
 	public int anzahlAB4() {
 		return anzahlAB4;
-	}
-
-	/**
-	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist, wird gesetzt.
-	 * @param anzahlAB4 Neuer Wert für das Feld anzahlAB4
-	 */
-	public void setAnzahlAB4(final int anzahlAB4) {
-		this.anzahlAB4 = anzahlAB4;
 	}
 
 	/**
@@ -189,27 +165,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Anzahl der Dummy-Schüler wird gesetzt.
-	 * @param anzahlDummy Neuer Wert für das Feld anzahlDummy
-	 */
-	public void setAnzahlDummy(final int anzahlDummy) {
-		this.anzahlDummy = anzahlDummy;
-	}
-
-	/**
 	 * Anzahl der Schülerinnen und Schüler mit Status extern.
 	 * @return Inhalt des Feldes anzahlExterne
 	 */
 	public int anzahlExterne() {
 		return anzahlExterne;
-	}
-
-	/**
-	 * Anzahl der Schülerinnen und Schüler mit Status extern wird gesetzt.
-	 * @param anzahlExterne Neuer Wert für das Feld anzahlExterne
-	 */
-	public void setAnzahlExterne(final int anzahlExterne) {
-		this.anzahlExterne = anzahlExterne;
 	}
 
 	/**
@@ -221,27 +181,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Anzahl der Schülerinnen und Schüler im Kurs wird gesetzt.
-	 * @param anzahlSchueler Neuer Wert für das Feld anzahlSchueler
-	 */
-	public void setAnzahlSchueler(final int anzahlSchueler) {
-		this.anzahlSchueler = anzahlSchueler;
-	}
-
-	/**
 	 * Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben.
 	 * @return Inhalt des Feldes anzahlSchuelerSchriftlich
 	 */
 	public int anzahlSchuelerSchriftlich() {
 		return anzahlSchuelerSchriftlich;
-	}
-
-	/**
-	 * Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben.
-	 * @param anzahlSchuelerSchriftlich Neuer Wert für das Feld anzahlSchuelerSchriftlich
-	 */
-	public void setAnzahlSchuelerSchriftlich(final int anzahlSchuelerSchriftlich) {
-		this.anzahlSchuelerSchriftlich = anzahlSchuelerSchriftlich;
 	}
 
 	/**
@@ -253,27 +197,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Bezeichnung des Kurses wird gesetzt.
-	 * @param bezeichnung Neuer Wert für das Feld bezeichnung
-	 */
-	public void setBezeichnung(final String bezeichnung) {
-		this.bezeichnung = bezeichnung;
-	}
-
-	/**
 	 * Das Fach des Kurses
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
 		return fach;
-	}
-
-	/**
-	 * Das Fach des Kurses wird gesetzt.
-	 * @param fach Neuer Wert für das Feld fach
-	 */
-	public void setFach(final ReportingFach fach) {
-		this.fach = fach;
 	}
 
 	/**
@@ -285,27 +213,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses wird gesetzt.
-	 * @param fachwahlstatistik Neuer Wert für das Feld fachwahlstatistik
-	 */
-	public void setFachwahlstatistik(final ReportingGostKursplanungFachwahlstatistik fachwahlstatistik) {
-		this.fachwahlstatistik = fachwahlstatistik;
-	}
-
-	/**
 	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
-	}
-
-	/**
-	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis wird gesetzt.
-	 * @param gostHalbjahr Neuer Wert für das Feld gostHalbjahr
-	 */
-	public void setGostHalbjahr(final GostHalbjahr gostHalbjahr) {
-		this.gostHalbjahr = gostHalbjahr;
 	}
 
 	/**
@@ -317,27 +229,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Kursart des Kurses wird gesetzt.
-	 * @param gostKursart Neuer Wert für das Feld gostKursart
-	 */
-	public void setGostKursart(final GostKursart gostKursart) {
-		this.gostKursart = gostKursart;
-	}
-
-	/**
 	 * ID des Kurses
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
 		return id;
-	}
-
-	/**
-	 * ID des Kurses wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
 	}
 
 	/**
@@ -349,27 +245,11 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Liste der Lehrkräfte des Kurses wird gesetzt.
-	 * @param lehrkraefte Neuer Wert für das Feld lehrkraefte
-	 */
-	public void setLehrkraefte(final List<ReportingLehrer> lehrkraefte) {
-		this.lehrkraefte = lehrkraefte;
-	}
-
-	/**
 	 * Eine Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @return Inhalt des Feldes schienen
 	 */
 	public List<ReportingGostKursplanungSchiene> schienen() {
 		return schienen;
-	}
-
-	/**
-	 * Eine Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt, wird gesetzt.
-	 * @param schienen Neuer Wert für das Feld schienen
-	 */
-	public void setSchienen(final List<ReportingGostKursplanungSchiene> schienen) {
-		this.schienen = schienen;
 	}
 
 	/**
@@ -380,11 +260,4 @@ public class ReportingGostKursplanungKurs {
 		return schueler;
 	}
 
-	/**
-	 * Eine Liste vom Typ Kursschueler, die alle Schülerinnen und Schüler des Kurses enthält, wird gesetzt.
-	 * @param schueler Neuer Wert für das Feld schueler
-	 */
-	public void setSchueler(final List<ReportingSchueler> schueler) {
-		this.schueler = schueler;
-	}
 }

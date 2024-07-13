@@ -67,13 +67,13 @@ public class ProxyReportingFach extends ReportingFach {
 		this.reportingRepository = reportingRepository;
 
 		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.setStatistikfach(new ProxyReportingStatistikFach(reportingRepository, ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik)));
-			super.setFachgruppe(super.statistikfach().fachgruppe());
+			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik));
+			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
 
 		if (fachGostDaten != null) {
-			this.setIstFremdsprache(fachGostDaten.istFremdsprache);
-			this.setIstFremdSpracheNeuEinsetzend(fachGostDaten.istFremdSpracheNeuEinsetzend);
+			this.istFremdsprache = fachGostDaten.istFremdsprache;
+			this.istFremdSpracheNeuEinsetzend = fachGostDaten.istFremdSpracheNeuEinsetzend;
 		}
 	}
 

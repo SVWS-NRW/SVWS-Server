@@ -112,7 +112,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			super.setFolgeklasse(
+			super.folgeklasse =
 					new ProxyReportingKlasse(
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
@@ -122,7 +122,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 									e.printStackTrace();
 									return new KlassenDaten();
 								}
-							})));
+							}));
 		}
 		return super.folgeklasse();
 	}
@@ -134,7 +134,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public ReportingJahrgang jahrgang() {
 		if ((super.jahrgang() == null) && (super.idJahrgang() != null) && (super.idJahrgang() >= 0)) {
-			super.setJahrgang(
+			super.jahrgang =
 					new ProxyReportingJahrgang(
 							this.reportingRepository,
 							this.reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), j -> {
@@ -144,7 +144,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 									e.printStackTrace();
 									return new JahrgangsDaten();
 								}
-							})));
+							}));
 		}
 		return super.jahrgang();
 	}
@@ -156,7 +156,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public List<ReportingLehrer> klassenleitungen() {
 		if (super.klassenleitungen().isEmpty() && !super.idsKlassenleitungen().isEmpty()) {
-			super.setKlassenleitungen(
+			super.klassenleitungen =
 					super.idsKlassenleitungen().stream()
 							.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> {
 								try {
@@ -173,8 +173,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 									.comparing(ReportingLehrer::nachname, colGerman)
 									.thenComparing(ReportingLehrer::vorname, colGerman)
 									.thenComparing(ReportingLehrer::kuerzel, colGerman))
-							.toList()
-			);
+							.toList();
 		}
 		return super.klassenleitungen();
 	}
@@ -194,7 +193,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 					return new KlassenDaten();
 				}
 			});
-			super.setSchueler(
+			super.schueler =
 					DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), tempKlasse.schueler.stream().map(s -> s.id).toList()).stream()
 							.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
 							.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
@@ -206,7 +205,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 									.thenComparing(ReportingSchueler::vornamen, colGerman)
 									.thenComparing(ReportingSchueler::geburtsdatum, colGerman)
 									.thenComparing(ReportingSchueler::id, colGerman))
-							.toList());
+							.toList();
 		}
 		return super.schueler();
 	}
@@ -218,7 +217,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public ReportingKlasse vorgaengerklasse() {
 		if ((super.vorgaengerklasse() == null) && (super.idVorgaengerklasse() != null) && (super.idVorgaengerklasse() >= 0)) {
-			super.setVorgaengerklasse(
+			super.vorgaengerklasse =
 					new ProxyReportingKlasse(
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idVorgaengerklasse(), k -> {
@@ -228,7 +227,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 									e.printStackTrace();
 									return new KlassenDaten();
 								}
-							})));
+							}));
 		}
 		return super.vorgaengerklasse();
 	}

@@ -11,13 +11,13 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
 public class ReportingSchuelerGostKursplanungKursbelegung {
 
 	/** Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist. */
-	private String abiturfach;
+	protected String abiturfach;
 
 	/** Gibt an, ob der Kurs schriftlich belegt ist. */
-	private boolean istSchriftlich;
+	protected boolean istSchriftlich;
 
 	/** Der Kurs, der vom Schüler belegt wird. */
-	private ReportingGostKursplanungKurs kurs;
+	protected ReportingGostKursplanungKurs kurs;
 
 
 	/**
@@ -34,7 +34,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist.
@@ -42,14 +42,6 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 	 */
 	public String abiturfach() {
 		return abiturfach;
-	}
-
-	/**
-	 * Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist, wird gesetzt.
-	 * @param abiturfach Neuer Wert für das Feld abiturfach
-	 */
-	public void setAbiturfach(final String abiturfach) {
-		this.abiturfach = abiturfach;
 	}
 
 	/**
@@ -61,14 +53,6 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 	}
 
 	/**
-	 * Gibt an, ob der Kurs schriftlich belegt ist, wird gesetzt.
-	 * @param istSchriftlich Neuer Wert für das Feld istSchriftlich
-	 */
-	public void setIstSchriftlich(final boolean istSchriftlich) {
-		this.istSchriftlich = istSchriftlich;
-	}
-
-	/**
 	 * Der Kurs, der vom Schüler belegt wird.
 	 * @return Inhalt des Feldes kurs
 	 */
@@ -76,11 +60,4 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 		return kurs;
 	}
 
-	/**
-	 * Der Kurs, der vom Schüler belegt wird, wird gesetzt.
-	 * @param kurs Neuer Wert für das Feld kurs
-	 */
-	public void setKurs(final ReportingGostKursplanungKurs kurs) {
-		this.kurs = kurs;
-	}
 }

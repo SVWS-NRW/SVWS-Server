@@ -66,7 +66,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 		final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
 				.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
 		if (faecher.size() == 1) {
-			super.setFach(faecher.getFirst());
+			super.fach = faecher.getFirst();
 		}
 	}
 
@@ -98,28 +98,28 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 
 		if ((kuerzelStatistik != null) && !kuerzelStatistik.isEmpty()) {
 			final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(kuerzelStatistik);
-			super.setAbJahrgang(zulaessigesFach.daten.abJahrgang);
-			super.setAufgabenfeld(zulaessigesFach.daten.aufgabenfeld);
-			super.setBezeichnung(zulaessigesFach.daten.bezeichnung);
-			super.setExportASD(zulaessigesFach.daten.exportASD);
-			super.setFachgruppe(zulaessigesFach.getFachgruppe());
-			super.setGueltigBis(zulaessigesFach.daten.gueltigBis);
-			super.setGueltigVon(zulaessigesFach.daten.gueltigVon);
-			super.setHtmlFarbeRGB(zulaessigesFach.getHMTLFarbeRGB());
-			super.setIdFachkatalog(zulaessigesFach.daten.id);
-			super.setIstAusRegUFach(zulaessigesFach.daten.istAusRegUFach);
-			super.setIstErsatzPflichtFS(zulaessigesFach.daten.istErsatzPflichtFS);
-			super.setIstFremdsprache(zulaessigesFach.daten.istFremdsprache);
-			super.setIstHKFS(zulaessigesFach.daten.istHKFS);
-			super.setIstKonfKoop(zulaessigesFach.daten.istKonfKoop);
-			super.setKuerzel(zulaessigesFach.daten.kuerzel);
-			super.setKuerzelASD(zulaessigesFach.daten.kuerzelASD);
-			super.setNurSII(zulaessigesFach.daten.nurSII);
+			super.abJahrgang = zulaessigesFach.daten.abJahrgang;
+			super.aufgabenfeld = zulaessigesFach.daten.aufgabenfeld;
+			super.bezeichnung = zulaessigesFach.daten.bezeichnung;
+			super.exportASD = zulaessigesFach.daten.exportASD;
+			super.fachgruppe = zulaessigesFach.getFachgruppe();
+			super.gueltigBis = zulaessigesFach.daten.gueltigBis;
+			super.gueltigVon = zulaessigesFach.daten.gueltigVon;
+			super.htmlFarbeRGB = zulaessigesFach.getHMTLFarbeRGB();
+			super.idFachkatalog = zulaessigesFach.daten.id;
+			super.istAusRegUFach = zulaessigesFach.daten.istAusRegUFach;
+			super.istErsatzPflichtFS = zulaessigesFach.daten.istErsatzPflichtFS;
+			super.istFremdsprache = zulaessigesFach.daten.istFremdsprache;
+			super.istHKFS = zulaessigesFach.daten.istHKFS;
+			super.istKonfKoop = zulaessigesFach.daten.istKonfKoop;
+			super.kuerzel = zulaessigesFach.daten.kuerzel;
+			super.kuerzelASD = zulaessigesFach.daten.kuerzelASD;
+			super.nurSII = zulaessigesFach.daten.nurSII;
 			// Prüfe, ob es im Fachkatalog des Reporting-Repositories der Schule ein Fach gibt, dessen Kürzel identisch ist mir dem ASD-Kürzel dieses Statistikfaches.
 			final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
 					.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
 			if (faecher.size() == 1) {
-				super.setFach(faecher.getFirst());
+				super.fach = faecher.getFirst();
 			}
 		}
 	}

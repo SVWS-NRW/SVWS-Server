@@ -11,40 +11,40 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 public class ReportingGostLaufbahnplanungFachwahl {
 
 	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
-	private String abiturfach;
+	protected String abiturfach;
 
 	/** Fachbelegung in der EF.1 */
-	private String belegungEF1;
+	protected String belegungEF1;
 
 	/** Fachbelegung in der EF.2 */
-	private String belegungEF2;
+	protected String belegungEF2;
 
 	/** Fachbelegung in der Q1.1 */
-	private String belegungQ11;
+	protected String belegungQ11;
 
 	/** Fachbelegung in der Q1.2 */
-	private String belegungQ12;
+	protected String belegungQ12;
 
 	/** Fachbelegung in der Q2.1 */
-	private String belegungQ21;
+	protected String belegungQ21;
 
 	/** Fachbelegung in der Q2.2 */
-	private String belegungQ22;
+	protected String belegungQ22;
 
 	/** Das Fach der Fachwahl */
-	private ReportingFach fach;
+	protected ReportingFach fach;
 
 	/** Fach ist in mindestens einem Halbjahr der GOSt belegt. */
-	private Boolean fachIstBelegtInGOSt;
+	protected Boolean fachIstBelegtInGOSt;
 
 	/** Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache */
-	private Boolean fachIstFortfuehrbareFremdspracheInGOSt;
+	protected Boolean fachIstFortfuehrbareFremdspracheInGOSt;
 
 	/** Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung */
-	private String jahrgangFremdsprachenbeginn;
+	protected String jahrgangFremdsprachenbeginn;
 
 	/** Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk */
-	private String positionFremdsprachenfolge;
+	protected String positionFremdsprachenfolge;
 
 
 
@@ -82,7 +82,7 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 
 
-	// ###### Getter und Setter ######
+	// ###### Getter ######
 
 	/**
 	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
@@ -90,14 +90,6 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	 */
 	public String abiturfach() {
 		return abiturfach;
-	}
-
-	/**
-	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde, wird gesetzt.
-	 * @param abiturfach Neuer Wert für das Feld abiturfach
-	 */
-	public void setAbiturfach(final String abiturfach) {
-		this.abiturfach = abiturfach;
 	}
 
 	/**
@@ -109,27 +101,11 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Fachbelegung in der EF1 wird gesetzt.
-	 * @param belegungEF1 Neuer Wert für das Feld belegungEF1
-	 */
-	public void setBelegungEF1(final String belegungEF1) {
-		this.belegungEF1 = belegungEF1;
-	}
-
-	/**
 	 * Fachbelegung in der EF.2
 	 * @return Inhalt des Feldes belegungEF2
 	 */
 	public String belegungEF2() {
 		return belegungEF2;
-	}
-
-	/**
-	 * Fachbelegung in der EF2 wird gesetzt.
-	 * @param belegungEF2 Neuer Wert für das Feld belegungEF2
-	 */
-	public void setBelegungEF2(final String belegungEF2) {
-		this.belegungEF2 = belegungEF2;
 	}
 
 	/**
@@ -141,27 +117,11 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Fachbelegung in der Q11 wird gesetzt.
-	 * @param belegungQ11 Neuer Wert für das Feld belegungQ11
-	 */
-	public void setBelegungQ11(final String belegungQ11) {
-		this.belegungQ11 = belegungQ11;
-	}
-
-	/**
 	 * Fachbelegung in der Q1.2
 	 * @return Inhalt des Feldes belegungQ12
 	 */
 	public String belegungQ12() {
 		return belegungQ12;
-	}
-
-	/**
-	 * Fachbelegung in der Q12 wird gesetzt.
-	 * @param belegungQ12 Neuer Wert für das Feld belegungQ12
-	 */
-	public void setBelegungQ12(final String belegungQ12) {
-		this.belegungQ12 = belegungQ12;
 	}
 
 	/**
@@ -173,27 +133,11 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Fachbelegung in der Q21 wird gesetzt.
-	 * @param belegungQ21 Neuer Wert für das Feld belegungQ21
-	 */
-	public void setBelegungQ21(final String belegungQ21) {
-		this.belegungQ21 = belegungQ21;
-	}
-
-	/**
 	 * Fachbelegung in der Q2.2
 	 * @return Inhalt des Feldes belegungQ22
 	 */
 	public String belegungQ22() {
 		return belegungQ22;
-	}
-
-	/**
-	 * Fachbelegung in der Q22 wird gesetzt.
-	 * @param belegungQ22 Neuer Wert für das Feld belegungQ22
-	 */
-	public void setBelegungQ22(final String belegungQ22) {
-		this.belegungQ22 = belegungQ22;
 	}
 
 	/**
@@ -205,27 +149,11 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Das Fach der Fachwahl wird gesetzt.
-	 * @param fach Neuer Wert für das Feld fach
-	 */
-	public void setFach(final ReportingFach fach) {
-		this.fach = fach;
-	}
-
-	/**
 	 * Fach ist in mindestens einem Halbjahr der GOSt belegt.
 	 * @return Inhalt des Feldes fachIstBelegtInGOSt
 	 */
 	public Boolean fachIstBelegtInGOSt() {
 		return fachIstBelegtInGOSt;
-	}
-
-	/**
-	 * Fach ist in mindestens einem Halbjahr der GOSt belegt wird gesetzt.
-	 * @param fachIstBelegtInGOSt Neuer Wert für das Feld fachIstBelegtInGOSt
-	 */
-	public void setFachIstBelegtInGOSt(final Boolean fachIstBelegtInGOSt) {
-		this.fachIstBelegtInGOSt = fachIstBelegtInGOSt;
 	}
 
 	/**
@@ -237,27 +165,11 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache wird gesetzt.
-	 * @param fachIstFortfuehrbareFremdspracheInGOSt Neuer Wert für das Feld fachIstFortfuehrbareFremdspracheInGOSt
-	 */
-	public void setFachIstFortfuehrbareFremdspracheInGOSt(final Boolean fachIstFortfuehrbareFremdspracheInGOSt) {
-		this.fachIstFortfuehrbareFremdspracheInGOSt = fachIstFortfuehrbareFremdspracheInGOSt;
-	}
-
-	/**
 	 * Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung
 	 * @return Inhalt des Feldes jahrgangFremdsprachenbeginn
 	 */
 	public String jahrgangFremdsprachenbeginn() {
 		return jahrgangFremdsprachenbeginn;
-	}
-
-	/**
-	 * Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung wird gesetzt.
-	 * @param jahrgangFremdsprachenbeginn Neuer Wert für das Feld jahrgangFremdsprachenbeginn
-	 */
-	public void setJahrgangFremdsprachenbeginn(final String jahrgangFremdsprachenbeginn) {
-		this.jahrgangFremdsprachenbeginn = jahrgangFremdsprachenbeginn;
 	}
 
 	/**
@@ -268,11 +180,4 @@ public class ReportingGostLaufbahnplanungFachwahl {
 		return positionFremdsprachenfolge;
 	}
 
-	/**
-	 * Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw Prüfungsvermerk wird gesetzt.
-	 * @param positionFremdsprachenfolge Neuer Wert für das Feld positionFremdsprachenfolge
-	 */
-	public void setPositionFremdsprachenfolge(final String positionFremdsprachenfolge) {
-		this.positionFremdsprachenfolge = positionFremdsprachenfolge;
-	}
 }

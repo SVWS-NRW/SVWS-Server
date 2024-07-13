@@ -62,11 +62,11 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 				abiturFachbelegung.letzteKursart);
 		this.reportingRepository = reportingRepository;
 
-		super.setBlock2PruefungNote(Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung));
-		super.setBlock2MuendlichePruefungNote(Note.fromKuerzel(abiturFachbelegung.block2MuendlichePruefungNotenKuerzel));
+		super.block2PruefungNote = Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung);
+		super.block2MuendlichePruefungNote = Note.fromKuerzel(abiturFachbelegung.block2MuendlichePruefungNotenKuerzel);
 
 		if (abiturFachbelegung.block2Pruefer != null) {
-			super.setBlock2Pruefer(
+			super.block2Pruefer =
 					new ProxyReportingLehrer(
 							this.reportingRepository,
 							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
@@ -76,10 +76,10 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 									e.printStackTrace();
 									return new LehrerStammdaten();
 								}
-							})));
+							}));
 		}
 
-		super.setFach(this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID));
+		super.fach = this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID);
 
 		final ReportingGostAbiturFachbelegungHalbjahr[] belegungenHJ = new ReportingGostAbiturFachbelegungHalbjahr[6];
 		for (int i = 0; i < 6; i++) {
@@ -88,7 +88,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 			} else
 				belegungenHJ[i] = null;
 		}
-		super.setHalbjahresbelegungen(belegungenHJ);
+		super.halbjahresbelegungen = belegungenHJ;
 	}
 
 

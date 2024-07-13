@@ -26,166 +26,166 @@ import java.util.List;
 public class ReportingSchueler {
 
 	/** Daten des aktuellen Lernabschnitts. */
-	private ReportingSchuelerLernabschnitt aktuellerLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt = null;
 
 	/** Das Anmeldedatum des Schülers. */
-	private String anmeldedatum;
+	protected String anmeldedatum;
 
 	/** Das Aufnahmedatum des Schülers. */
-	private String aufnahmedatum;
+	protected String aufnahmedatum;
 
 	/** Daten des ausgewählten Lernabschnitts. */
-	private ReportingSchuelerLernabschnitt auswahlLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt = null;
 
 	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
-	private String bemerkungen;
+	protected String bemerkungen;
 
 	/** Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll. */
-	private boolean druckeKonfessionAufZeugnisse;
+	protected boolean druckeKonfessionAufZeugnisse;
 
-	/** Die private Email-Adresse des Schülers. */
-	private String emailPrivat;
+	/** Die protected Email-Adresse des Schülers. */
+	protected String emailPrivat;
 
 	/** Die schulische E-Mail-Adresse des Schülers. */
-	private String emailSchule;
+	protected String emailSchule;
 
 	/** Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht. */
-	private boolean erhaeltMeisterBAFOEG;
+	protected boolean erhaeltMeisterBAFOEG;
 
 	/** Gibt an, ob der Schüler BAFÖG erhält oder nicht. */
-	private boolean erhaeltSchuelerBAFOEG;
+	protected boolean erhaeltSchuelerBAFOEG;
 
 	/** Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
-	private String externeSchulNr;
+	protected String externeSchulNr;
 
 	/** Die ID der Art des Fahr des Schülers. */
-	private Long fahrschuelerArtID;
+	protected Long fahrschuelerArtID;
 
 	/** Das Foto (in Base64 kodiert) des Schülers. */
-	private String foto;
+	protected String foto;
 
 	/** Das Geburtsdatum des Schülers. */
-	private String geburtsdatum;
+	protected String geburtsdatum;
 
 	/** Das Geburtsland des Schülers. */
-	private String geburtsland;
+	protected String geburtsland;
 
 	/** Das Geburtsland der Mutter des Schülers. */
-	private String geburtslandMutter;
+	protected String geburtslandMutter;
 
 	/** Das Geburtsland des Vaters des Schülers. */
-	private String geburtslandVater;
+	protected String geburtslandVater;
 
 	/** Der Geburtsname des Schülers. */
-	private String geburtsname;
+	protected String geburtsname;
 
 	/** Der Geburtsort des Schülers. */
-	private String geburtsort;
+	protected String geburtsort;
 
 	/** Das Geschlecht des Schülers */
-	private Geschlecht geschlecht;
+	protected Geschlecht geschlecht;
 
 	/** Daten der Abiturdaten der GOSt. */
-	private ReportingSchuelerGostAbitur gostAbitur = null;
+	protected ReportingSchuelerGostAbitur gostAbitur = null;
 
 	/** Daten der GOSt-Laufbahnplanung. */
-	private ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
+	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
 
 	/** Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert. */
-	private List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen;
+	protected List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen;
 
 	/** Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers. */
-	private Long haltestelleID;
+	protected Long haltestelleID;
 
 	/** Gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat. */
-	private boolean hatMasernimpfnachweis;
+	protected boolean hatMasernimpfnachweis;
 
 	/** Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist. */
-	private boolean hatMigrationshintergrund;
+	protected boolean hatMigrationshintergrund;
 
 	/** Ggf. die Hausnummer zur Straße im Wohnort des Schülers. */
-	private String hausnummer;
+	protected String hausnummer;
 
 	/** Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers. */
-	private String hausnummerZusatz;
+	protected String hausnummerZusatz;
 
 	/** Die ID des Schülers. */
-	private long id;
+	protected long id;
 
 	/** Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht. */
-	private Boolean istBerufsschulpflichtErfuellt;
+	protected Boolean istBerufsschulpflichtErfuellt;
 
 	/** Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
-	private boolean istDuplikat;
+	protected boolean istDuplikat;
 
 	/** Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht. */
-	private Boolean istSchulpflichtErfuellt;
+	protected Boolean istSchulpflichtErfuellt;
 
 	/** Gibt an, ob der Schüler volljährig ist oder nicht. */
-	private Boolean istVolljaehrig;
+	protected Boolean istVolljaehrig;
 
 	/** Gibt an, ob über den Schüler eine Auskunft an Dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte. */
-	private boolean keineAuskunftAnDritte;
+	protected boolean keineAuskunftAnDritte;
 
 	/** Daten aller Lernabschnitte. */
-	private List<ReportingSchuelerLernabschnitt> lernabschnitte = new ArrayList<>();
+	protected List<ReportingSchuelerLernabschnitt> lernabschnitte = new ArrayList<>();
 
 	/** Der Nachname des Schülers. */
-	private String nachname;
+	protected String nachname;
 
 	/** Das Datum der Religionsabmeldung des Schülers. */
-	private String religionabmeldung;
+	protected String religionabmeldung;
 
 	/** Das Datum der Religionsanmeldung des Schülers. */
-	private String religionanmeldung;
+	protected String religionanmeldung;
 
 	/** Die Religion des Schülers. */
-	private ReligionEintrag religion;
+	protected ReligionEintrag religion;
 
 	/** Daten aller Sprachbelegungen. */
-	private List<ReportingSchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
+	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
 
 	/** Die erste Staatsangehörigkeit des Schülers. */
-	private Nationalitaeten staatsangehoerigkeit1;
+	protected Nationalitaeten staatsangehoerigkeit1;
 
 	/** Die zweite Staatsangehörigkeit des Schülers. */
-	private Nationalitaeten staatsangehoerigkeit2;
+	protected Nationalitaeten staatsangehoerigkeit2;
 
 	/** Der Status des Schülers. */
-	private SchuelerStatus status;
+	protected SchuelerStatus status;
 
 	/** Ggf. der Straßenname im Wohnort des Schülers. */
-	private String strassenname;
+	protected String strassenname;
 
 	/** Die Telefonnummer des Schülers. */
-	private String telefon;
+	protected String telefon;
 
 	/** Die Mobilnummer des Schülers. */
-	private String telefonMobil;
+	protected String telefonMobil;
 
 	/** Die Verkehrssprache der Familie des Schülers. */
-	private String verkehrspracheFamilie;
+	protected String verkehrspracheFamilie;
 
 	/** Der Vorname des Schülers. */
-	private String vorname;
+	protected String vorname;
 
 	/** Alle Vornamen, sofern es mehrere gibt, des Schülers. */
-	private String vornamen;
+	protected String vornamen;
 
 	/** Der Wohnort des Schülers. */
-	private OrtKatalogEintrag wohnort;
+	protected OrtKatalogEintrag wohnort;
 
 	/** Der Name des Wohnorts des Schülers. */
-	private String wohnortname;
+	protected String wohnortname;
 
 	/** Der Ortsteil des Wohnorts des Schülers. */
-	private OrtsteilKatalogEintrag wohnortsteil;
+	protected OrtsteilKatalogEintrag wohnortsteil;
 
 	/** Der Name des Ortsteils des Wohnorts des Schülers. */
-	private String wohnortsteilname;
+	protected String wohnortsteilname;
 
 	/** Das Zuzugsjahr des Schülers. */
-	private Integer zuzugsjahr;
+	protected Integer zuzugsjahr;
 
 
 	/**
@@ -316,7 +316,7 @@ public class ReportingSchueler {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Daten des aktuellen Lernabschnitts.
@@ -324,14 +324,6 @@ public class ReportingSchueler {
 	 */
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
 		return aktuellerLernabschnitt;
-	}
-
-	/**
-	 * Daten des aktuellen Lernabschnitts wird gesetzt.
-	 * @param aktuellerLernabschnitt Neuer Wert für das Feld aktuellerLernabschnitt
-	 */
-	public void setAktuellerLernabschnitt(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt) {
-		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
 	}
 
 	/**
@@ -343,27 +335,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Das Anmeldedatum des Schülers wird gesetzt.
-	 * @param anmeldedatum Neuer Wert für das Feld anmeldedatum
-	 */
-	public void setAnmeldedatum(final String anmeldedatum) {
-		this.anmeldedatum = anmeldedatum;
-	}
-
-	/**
 	 * Das Aufnahmedatum des Schülers.
 	 * @return Inhalt des Feldes aufnahmedatum
 	 */
 	public String aufnahmedatum() {
 		return aufnahmedatum;
-	}
-
-	/**
-	 * Das Aufnahmedatum des Schülers wird gesetzt.
-	 * @param aufnahmedatum Neuer Wert für das Feld aufnahmedatum
-	 */
-	public void setAufnahmedatum(final String aufnahmedatum) {
-		this.aufnahmedatum = aufnahmedatum;
 	}
 
 	/**
@@ -375,27 +351,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Daten des ausgewählten Lernabschnitts wird gesetzt.
-	 * @param auswahlLernabschnitt Neuer Wert für das Feld auswahlLernabschnitt
-	 */
-	public void setAuswahlLernabschnitt(final ReportingSchuelerLernabschnitt auswahlLernabschnitt) {
-		this.auswahlLernabschnitt = auswahlLernabschnitt;
-	}
-
-	/**
 	 * Textfeld mit Bemerkungen zum Schülerdatensatz.
 	 * @return Inhalt des Feldes bemerkungen
 	 */
 	public String bemerkungen() {
 		return bemerkungen;
-	}
-
-	/**
-	 * Textfeld mit Bemerkungen zum Schülerdatensatz wird gesetzt.
-	 * @param bemerkungen Neuer Wert für das Feld bemerkungen
-	 */
-	public void setBemerkungen(final String bemerkungen) {
-		this.bemerkungen = bemerkungen;
 	}
 
 	/**
@@ -407,27 +367,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll wird gesetzt.
-	 * @param druckeKonfessionAufZeugnisse Neuer Wert für das Feld druckeKonfessionAufZeugnisse
-	 */
-	public void setDruckeKonfessionAufZeugnisse(final boolean druckeKonfessionAufZeugnisse) {
-		this.druckeKonfessionAufZeugnisse = druckeKonfessionAufZeugnisse;
-	}
-
-	/**
 	 * Die private E-Mail-Adresse des Schülers.
 	 * @return Inhalt des Feldes emailPrivat
 	 */
 	public String emailPrivat() {
 		return emailPrivat;
-	}
-
-	/**
-	 * Die private E-Mail-Adresse des Schülers wird gesetzt.
-	 * @param emailPrivat Neuer Wert für das Feld emailPrivat
-	 */
-	public void setEmailPrivat(final String emailPrivat) {
-		this.emailPrivat = emailPrivat;
 	}
 
 	/**
@@ -439,27 +383,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die schulische E-Mail-Adresse des Schülers wird gesetzt.
-	 * @param emailSchule Neuer Wert für das Feld emailSchule
-	 */
-	public void setEmailSchule(final String emailSchule) {
-		this.emailSchule = emailSchule;
-	}
-
-	/**
 	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht.
 	 * @return Inhalt des Feldes erhaeltMeisterBAFOEG
 	 */
 	public boolean erhaeltMeisterBAFOEG() {
 		return erhaeltMeisterBAFOEG;
-	}
-
-	/**
-	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht wird gesetzt.
-	 * @param erhaeltMeisterBAFOEG Neuer Wert für das Feld erhaeltMeisterBAFOEG
-	 */
-	public void setErhaeltMeisterBAFOEG(final boolean erhaeltMeisterBAFOEG) {
-		this.erhaeltMeisterBAFOEG = erhaeltMeisterBAFOEG;
 	}
 
 	/**
@@ -471,27 +399,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Gibt an, ob der Schüler BAFÖG erhält oder nicht wird gesetzt.
-	 * @param erhaeltSchuelerBAFOEG Neuer Wert für das Feld erhaeltSchuelerBAFOEG
-	 */
-	public void setErhaeltSchuelerBAFOEG(final boolean erhaeltSchuelerBAFOEG) {
-		this.erhaeltSchuelerBAFOEG = erhaeltSchuelerBAFOEG;
-	}
-
-	/**
 	 * Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
 	 * @return Inhalt des Feldes externeSchulNr
 	 */
 	public String externeSchulNr() {
 		return externeSchulNr;
-	}
-
-	/**
-	 * Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist, wird gesetzt.
-	 * @param externeSchulNr Neuer Wert für das Feld externeSchulNr
-	 */
-	public void setExterneSchulNr(final String externeSchulNr) {
-		this.externeSchulNr = externeSchulNr;
 	}
 
 	/**
@@ -503,27 +415,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die ID der Art des Fahr des Schülers wird gesetzt.
-	 * @param fahrschuelerArtID Neuer Wert für das Feld fahrschuelerArtID
-	 */
-	public void setFahrschuelerArtID(final Long fahrschuelerArtID) {
-		this.fahrschuelerArtID = fahrschuelerArtID;
-	}
-
-	/**
 	 * Das Foto (in Base64 kodiert) des Schülers.
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
 		return foto;
-	}
-
-	/**
-	 * Das Foto (in Base64 kodiert) des Schülers wird gesetzt.
-	 * @param foto Neuer Wert für das Feld foto
-	 */
-	public void setFoto(final String foto) {
-		this.foto = foto;
 	}
 
 	/**
@@ -535,27 +431,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Das Geburtsdatum des Schülers wird gesetzt.
-	 * @param geburtsdatum Neuer Wert für das Feld geburtsdatum
-	 */
-	public void setGeburtsdatum(final String geburtsdatum) {
-		this.geburtsdatum = geburtsdatum;
-	}
-
-	/**
 	 * Das Geburtsland des Schülers.
 	 * @return Inhalt des Feldes geburtsland
 	 */
 	public String geburtsland() {
 		return geburtsland;
-	}
-
-	/**
-	 * Das Geburtsland des Schülers wird gesetzt.
-	 * @param geburtsland Neuer Wert für das Feld geburtsland
-	 */
-	public void setGeburtsland(final String geburtsland) {
-		this.geburtsland = geburtsland;
 	}
 
 	/**
@@ -567,27 +447,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Das Geburtsland der Mutter des Schülers wird gesetzt.
-	 * @param geburtslandMutter Neuer Wert für das Feld geburtslandMutter
-	 */
-	public void setGeburtslandMutter(final String geburtslandMutter) {
-		this.geburtslandMutter = geburtslandMutter;
-	}
-
-	/**
 	 * Das Geburtsland des Vaters des Schülers.
 	 * @return Inhalt des Feldes geburtslandVater
 	 */
 	public String geburtslandVater() {
 		return geburtslandVater;
-	}
-
-	/**
-	 * Das Geburtsland des Vaters des Schülers wird gesetzt.
-	 * @param geburtslandVater Neuer Wert für das Feld geburtslandVater
-	 */
-	public void setGeburtslandVater(final String geburtslandVater) {
-		this.geburtslandVater = geburtslandVater;
 	}
 
 	/**
@@ -599,14 +463,6 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Der Geburtsname des Schülers wird gesetzt.
-	 * @param geburtsname Neuer Wert für das Feld geburtsname
-	 */
-	public void setGeburtsname(final String geburtsname) {
-		this.geburtsname = geburtsname;
-	}
-
-	/**
 	 * Der Geburtsort des Schülers.
 	 * @return Inhalt des Feldes geburtsort
 	 */
@@ -615,27 +471,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Der Geburtsort des Schülers wird gesetzt.
-	 * @param geburtsort Neuer Wert für das Feld geburtsort
-	 */
-	public void setGeburtsort(final String geburtsort) {
-		this.geburtsort = geburtsort;
-	}
-
-	/**
 	 * Das Geschlecht des Schülers
 	 * @return Inhalt des Feldes geschlecht
 	 */
 	public Geschlecht geschlecht() {
 		return geschlecht;
-	}
-
-	/**
-	 * Das Geschlecht des Schülers wird gesetzt.
-	 * @param geschlecht Neuer Wert für das Feld geschlecht
-	 */
-	public void setGeschlecht(final Geschlecht geschlecht) {
-		this.geschlecht = geschlecht;
 	}
 
 	/**
@@ -650,27 +490,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Daten der Abiturdaten der GOSt wird gesetzt.
-	 * @param gostAbitur Neuer Wert für das Feld gostAbitur
-	 */
-	public void setGostAbitur(final ReportingSchuelerGostAbitur gostAbitur) {
-		this.gostAbitur = gostAbitur;
-	}
-
-	/**
 	 * Daten der GOSt-Laufbahnplanung.
 	 * @return Inhalt des Feldes gostLaufbahnplanung
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		return gostLaufbahnplanung;
-	}
-
-	/**
-	 * Daten der GOSt-Laufbahnplanung wird gesetzt.
-	 * @param gostLaufbahnplanung Neuer Wert für das Feld gostLaufbahnplanung
-	 */
-	public void setGostLaufbahnplanung(final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung) {
-		this.gostLaufbahnplanung = gostLaufbahnplanung;
 	}
 
 	/**
@@ -692,27 +516,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die Kursbelegungen des Schülers in einer GOSt-Kursplanung werden gesetzt. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
-	 * @param gostKursplanungKursbelegungen Neuer Wert für das Feld gostKursplanung
-	 */
-	public void setGostKursplanung(final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen) {
-		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
-	}
-
-	/**
 	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers.
 	 * @return Inhalt des Feldes haltestelleID
 	 */
 	public Long haltestelleID() {
 		return haltestelleID;
-	}
-
-	/**
-	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers wird gesetzt.
-	 * @param haltestelleID Neuer Wert für das Feld haltestelleID
-	 */
-	public void setHaltestelleID(final Long haltestelleID) {
-		this.haltestelleID = haltestelleID;
 	}
 
 	/**
@@ -724,27 +532,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat, wird gesetzt.
-	 * @param hatMasernimpfnachweis Neuer Wert für das Feld hatMasernimpfnachweis
-	 */
-	public void setHatMasernimpfnachweis(final boolean hatMasernimpfnachweis) {
-		this.hatMasernimpfnachweis = hatMasernimpfnachweis;
-	}
-
-	/**
 	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist.
 	 * @return Inhalt des Feldes hatMigrationshintergrund
 	 */
 	public boolean hatMigrationshintergrund() {
 		return hatMigrationshintergrund;
-	}
-
-	/**
-	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist, wird gesetzt.
-	 * @param hatMigrationshintergrund Neuer Wert für das Feld hatMigrationshintergrund
-	 */
-	public void setHatMigrationshintergrund(final boolean hatMigrationshintergrund) {
-		this.hatMigrationshintergrund = hatMigrationshintergrund;
 	}
 
 	/**
@@ -756,27 +548,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Ggf die Hausnummer zur Straße im Wohnort des Schülers wird gesetzt.
-	 * @param hausnummer Neuer Wert für das Feld hausnummer
-	 */
-	public void setHausnummer(final String hausnummer) {
-		this.hausnummer = hausnummer;
-	}
-
-	/**
 	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers.
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
 		return hausnummerZusatz;
-	}
-
-	/**
-	 * Ggf der Hausnummerzusatz zur Straße im Wohnort des Schülers wird gesetzt.
-	 * @param hausnummerZusatz Neuer Wert für das Feld hausnummerZusatz
-	 */
-	public void setHausnummerZusatz(final String hausnummerZusatz) {
-		this.hausnummerZusatz = hausnummerZusatz;
 	}
 
 	/**
@@ -788,27 +564,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die ID des Schülers wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht.
 	 * @return Inhalt des Feldes istBerufsschulpflichtErfuellt
 	 */
 	public Boolean istBerufsschulpflichtErfuellt() {
 		return istBerufsschulpflichtErfuellt;
-	}
-
-	/**
-	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht wird gesetzt.
-	 * @param istBerufsschulpflichtErfuellt Neuer Wert für das Feld istBerufsschulpflichtErfuellt
-	 */
-	public void setIstBerufsschulpflichtErfuellt(final Boolean istBerufsschulpflichtErfuellt) {
-		this.istBerufsschulpflichtErfuellt = istBerufsschulpflichtErfuellt;
 	}
 
 	/**
@@ -820,27 +580,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht wird gesetzt.
-	 * @param istDuplikat Neuer Wert für das Feld istDuplikat
-	 */
-	public void setIstDuplikat(final boolean istDuplikat) {
-		this.istDuplikat = istDuplikat;
-	}
-
-	/**
 	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
 	 * @return Inhalt des Feldes istSchulpflichtErfuellt
 	 */
 	public Boolean istSchulpflichtErfuellt() {
 		return istSchulpflichtErfuellt;
-	}
-
-	/**
-	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht wird gesetzt.
-	 * @param istSchulpflichtErfuellt Neuer Wert für das Feld istSchulpflichtErfuellt
-	 */
-	public void setIstSchulpflichtErfuellt(final Boolean istSchulpflichtErfuellt) {
-		this.istSchulpflichtErfuellt = istSchulpflichtErfuellt;
 	}
 
 	/**
@@ -852,27 +596,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Gibt an, ob der Schüler volljährig ist oder nicht wird gesetzt.
-	 * @param istVolljaehrig Neuer Wert für das Feld istVolljaehrig
-	 */
-	public void setIstVolljaehrig(final Boolean istVolljaehrig) {
-		this.istVolljaehrig = istVolljaehrig;
-	}
-
-	/**
 	 * Gibt an, ob über den Schüler eine Auskunft an Dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.
 	 * @return Inhalt des Feldes keineAuskunftAnDritte
 	 */
 	public boolean keineAuskunftAnDritte() {
 		return keineAuskunftAnDritte;
-	}
-
-	/**
-	 * Gibt an, ob über den Schüler eine Auskunft an Dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte wird gesetzt.
-	 * @param keineAuskunftAnDritte Neuer Wert für das Feld keineAuskunftAnDritte
-	 */
-	public void setKeineAuskunftAnDritte(final boolean keineAuskunftAnDritte) {
-		this.keineAuskunftAnDritte = keineAuskunftAnDritte;
 	}
 
 	/**
@@ -884,27 +612,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Daten aller Lernabschnitte wird gesetzt.
-	 * @param lernabschnitte Neuer Wert für das Feld lernabschnitte
-	 */
-	public void setLernabschnitte(final List<ReportingSchuelerLernabschnitt> lernabschnitte) {
-		this.lernabschnitte = lernabschnitte;
-	}
-
-	/**
 	 * Der Nachname des Schülers.
 	 * @return Inhalt des Feldes nachname
 	 */
 	public String nachname() {
 		return nachname;
-	}
-
-	/**
-	 * Der Nachname des Schülers wird gesetzt.
-	 * @param nachname Neuer Wert für das Feld nachname
-	 */
-	public void setNachname(final String nachname) {
-		this.nachname = nachname;
 	}
 
 	/**
@@ -916,27 +628,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Das Datum der Religionsabmeldung des Schülers wird gesetzt.
-	 * @param religionabmeldung Neuer Wert für das Feld religionabmeldung
-	 */
-	public void setReligionabmeldung(final String religionabmeldung) {
-		this.religionabmeldung = religionabmeldung;
-	}
-
-	/**
 	 * Das Datum der Religionsanmeldung des Schülers.
 	 * @return Inhalt des Feldes religionanmeldung
 	 */
 	public String religionanmeldung() {
 		return religionanmeldung;
-	}
-
-	/**
-	 * Das Datum der Religionsanmeldung des Schülers wird gesetzt.
-	 * @param religionanmeldung Neuer Wert für das Feld religionanmeldung
-	 */
-	public void setReligionanmeldung(final String religionanmeldung) {
-		this.religionanmeldung = religionanmeldung;
 	}
 
 	/**
@@ -948,27 +644,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die Religion des Schülers wird gesetzt.
-	 * @param religion Neuer Wert für das Feld religion
-	 */
-	public void setReligion(final ReligionEintrag religion) {
-		this.religion = religion;
-	}
-
-	/**
 	 * Daten aller Sprachbelegungen.
 	 * @return Inhalt des Feldes sprachbelegungen
 	 */
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		return sprachbelegungen;
-	}
-
-	/**
-	 * Daten aller Sprachbelegungen werden gesetzt.
-	 * @param sprachbelegungen Neuer Wert für das Feld sprachbelegungen
-	 */
-	public void setSprachbelegungen(final List<ReportingSchuelerSprachbelegung> sprachbelegungen) {
-		this.sprachbelegungen = sprachbelegungen;
 	}
 
 	/**
@@ -980,27 +660,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die erste Staatsangehörigkeit des Schülers wird gesetzt.
-	 * @param staatsangehoerigkeit1 Neuer Wert für das Feld staatsangehoerigkeit1
-	 */
-	public void setStaatsangehoerigkeit1(final Nationalitaeten staatsangehoerigkeit1) {
-		this.staatsangehoerigkeit1 = staatsangehoerigkeit1;
-	}
-
-	/**
 	 * Die zweite Staatsangehörigkeit des Schülers.
 	 * @return Inhalt des Feldes staatsangehoerigkeit2
 	 */
 	public Nationalitaeten staatsangehoerigkeit2() {
 		return staatsangehoerigkeit2;
-	}
-
-	/**
-	 * Die zweite Staatsangehörigkeit des Schülers wird gesetzt.
-	 * @param staatsangehoerigkeit2 Neuer Wert für das Feld staatsangehoerigkeit2
-	 */
-	public void setStaatsangehoerigkeit2(final Nationalitaeten staatsangehoerigkeit2) {
-		this.staatsangehoerigkeit2 = staatsangehoerigkeit2;
 	}
 
 	/**
@@ -1012,27 +676,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Der Status des Schülers wird gesetzt.
-	 * @param status Neuer Wert für das Feld status
-	 */
-	public void setStatus(final SchuelerStatus status) {
-		this.status = status;
-	}
-
-	/**
 	 * Ggf. der Straßenname im Wohnort des Schülers.
 	 * @return Inhalt des Feldes strassenname
 	 */
 	public String strassenname() {
 		return strassenname;
-	}
-
-	/**
-	 * Ggf der Straßenname im Wohnort des Schülers wird gesetzt.
-	 * @param strassenname Neuer Wert für das Feld strassenname
-	 */
-	public void setStrassenname(final String strassenname) {
-		this.strassenname = strassenname;
 	}
 
 	/**
@@ -1044,27 +692,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die Telefonnummer des Schülers wird gesetzt.
-	 * @param telefon Neuer Wert für das Feld telefon
-	 */
-	public void setTelefon(final String telefon) {
-		this.telefon = telefon;
-	}
-
-	/**
 	 * Die Mobilnummer des Schülers.
 	 * @return Inhalt des Feldes telefonMobil
 	 */
 	public String telefonMobil() {
 		return telefonMobil;
-	}
-
-	/**
-	 * Die Mobilnummer des Schülers wird gesetzt.
-	 * @param telefonMobil Neuer Wert für das Feld telefonMobil
-	 */
-	public void setTelefonMobil(final String telefonMobil) {
-		this.telefonMobil = telefonMobil;
 	}
 
 	/**
@@ -1076,27 +708,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Die Verkehrssprache der Familie des Schülers wird gesetzt.
-	 * @param verkehrspracheFamilie Neuer Wert für das Feld verkehrspracheFamilie
-	 */
-	public void setVerkehrspracheFamilie(final String verkehrspracheFamilie) {
-		this.verkehrspracheFamilie = verkehrspracheFamilie;
-	}
-
-	/**
 	 * Der Vorname des Schülers.
 	 * @return Inhalt des Feldes vorname
 	 */
 	public String vorname() {
 		return vorname;
-	}
-
-	/**
-	 * Der Vorname des Schülers wird gesetzt.
-	 * @param vorname Neuer Wert für das Feld vorname
-	 */
-	public void setVorname(final String vorname) {
-		this.vorname = vorname;
 	}
 
 	/**
@@ -1108,27 +724,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Alle Vornamen, sofern es mehrere gibt, des Schülers wird gesetzt.
-	 * @param vornamen Neuer Wert für das Feld vornamen
-	 */
-	public void setVornamen(final String vornamen) {
-		this.vornamen = vornamen;
-	}
-
-	/**
 	 * Der Wohnort des Schülers.
 	 * @return Inhalt des Feldes wohnort
 	 */
 	public OrtKatalogEintrag wohnort() {
 		return wohnort;
-	}
-
-	/**
-	 * Der Wohnort des Schülers wird gesetzt.
-	 * @param wohnort Neuer Wert für das Feld wohnort
-	 */
-	public void setWohnort(final OrtKatalogEintrag wohnort) {
-		this.wohnort = wohnort;
 	}
 
 	/**
@@ -1140,27 +740,11 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Der Name des Wohnorts des Schülers wird gesetzt.
-	 * @param wohnortname Neuer Wert für das Feld wohnortname
-	 */
-	public void setWohnortname(final String wohnortname) {
-		this.wohnortname = wohnortname;
-	}
-
-	/**
 	 * Der Ortsteil des Wohnorts des Schülers.
 	 * @return Inhalt des Feldes wohnortsteil
 	 */
 	public OrtsteilKatalogEintrag wohnortsteil() {
 		return wohnortsteil;
-	}
-
-	/**
-	 * Der Ortsteil des Wohnorts des Schülers wird gesetzt.
-	 * @param wohnortsteil Neuer Wert für das Feld wohnortsteil
-	 */
-	public void setWohnortsteil(final OrtsteilKatalogEintrag wohnortsteil) {
-		this.wohnortsteil = wohnortsteil;
 	}
 
 	/**
@@ -1172,14 +756,6 @@ public class ReportingSchueler {
 	}
 
 	/**
-	 * Der Name des Ortsteils des Wohnorts des Schülers wird gesetzt.
-	 * @param wohnortsteilname Neuer Wert für das Feld wohnortsteilname
-	 */
-	public void setWohnortsteilname(final String wohnortsteilname) {
-		this.wohnortsteilname = wohnortsteilname;
-	}
-
-	/**
 	 * Das Zuzugsjahr des Schülers.
 	 * @return Inhalt des Feldes zuzugsjahr
 	 */
@@ -1187,11 +763,4 @@ public class ReportingSchueler {
 		return zuzugsjahr;
 	}
 
-	/**
-	 * Das Zuzugsjahr des Schülers wird gesetzt.
-	 * @param zuzugsjahr Neuer Wert für das Feld zuzugsjahr
-	 */
-	public void setZuzugsjahr(final Integer zuzugsjahr) {
-		this.zuzugsjahr = zuzugsjahr;
-	}
 }

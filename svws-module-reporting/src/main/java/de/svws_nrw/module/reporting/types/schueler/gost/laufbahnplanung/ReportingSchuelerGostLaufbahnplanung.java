@@ -19,115 +19,115 @@ import java.util.stream.Collectors;
 public class ReportingSchuelerGostLaufbahnplanung {
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung stattfindet */
-	private int abiturjahr;
+	protected int abiturjahr;
 
 	/** Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn */
-	private String aktuelleKlasse;
+	protected String aktuelleKlasse;
 
 	/** Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule */
-	private String aktuellesGOStHalbjahr;
+	protected String aktuellesGOStHalbjahr;
 
 	/** Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn */
-	private String auswahlKlasse;
+	protected String auswahlKlasse;
 
 	/** Das ausgewählte Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt  */
-	private String auswahlGOStHalbjahr;
+	protected String auswahlGOStHalbjahr;
 
 	/** Der Text der Schule für den Beratungsbogen */
-	private String beratungsbogenText;
+	protected String beratungsbogenText;
 
 	/** Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt */
-	private List<ReportingLehrer> beratungslehrkraefte;
+	protected List<ReportingLehrer> beratungslehrkraefte;
 
 	/** Der Text der Schule für den E-Mail-Versand */
-	private String emailText;
+	protected String emailText;
 
 	/** Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält. */
-	private List<ReportingGostLaufbahnplanungFachwahl> fachwahlen;
+	protected List<ReportingGostLaufbahnplanungFachwahl> fachwahlen;
 
 	/** Eine Liste vom Typ Fehler, die alle Fehler zur Laufbahn und deren Daten enthält. */
-	private List<ReportingGostLaufbahnplanungErgebnismeldung> fehler;
+	protected List<ReportingGostLaufbahnplanungErgebnismeldung> fehler;
 
 	/** Das folgende Halbjahr der Oberstufenlaufbahn, also in der Regel das Halbjahr, für das die Beratung erfolgt */
-	private String folgeAktuellesGOStHalbjahr;
+	protected String folgeAktuellesGOStHalbjahr;
 
 	/** Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt */
-	private String folgeAuswahlGOStHalbjahr;
+	protected String folgeAuswahlGOStHalbjahr;
 
 	/** Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält. */
-	private List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise;
+	protected List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise;
 
 	/** Das Datum der letzten Beratung */
-	private String letzteBeratungDatum;
+	protected String letzteBeratungDatum;
 
 	/** Die Lehrkraft der letzten Beratung */
-	private ReportingLehrer letzteBeratungLehrkraft;
+	protected ReportingLehrer letzteBeratungLehrkraft;
 
 	/** Das Datum des Rücklaufes der letzten importierten Wahldatei */
-	private String letzterRuecklaufDatum;
+	protected String letzterRuecklaufDatum;
 
 	/** Kommentar der Schule zur Laufbahn */
-	private String kommentar;
+	protected String kommentar;
 
 	/** Kursanzahl in der EF.1 */
-	private int kursanzahlEF1;
+	protected int kursanzahlEF1;
 
 	/** Kursanzahl in der EF.2 */
-	private int kursanzahlEF2;
+	protected int kursanzahlEF2;
 
 	/** Kursanzahl in der Q1.1 */
-	private int kursanzahlQ11;
+	protected int kursanzahlQ11;
 
 	/** Kursanzahl in der Q1.2 */
-	private int kursanzahlQ12;
+	protected int kursanzahlQ12;
 
 	/** Kursanzahl in der Q2.1 */
-	private int kursanzahlQ21;
+	protected int kursanzahlQ21;
 
 	/** Kursanzahl in der Q2.2 */
-	private int kursanzahlQ22;
+	protected int kursanzahlQ22;
 
 	/** Kursanzahl in der Qualifikationsphase */
-	private int kursanzahlQPh;
+	protected int kursanzahlQPh;
 
 	/** Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I */
-	private int kursanzahlAnrechenbarBlockI;
+	protected int kursanzahlAnrechenbarBlockI;
 
 	/** Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt */
-	private String pruefungsordnung;
+	protected String pruefungsordnung;
 
 	/** Wochenstundensumme in der EF.1 */
-	private int wochenstundenEF1;
+	protected int wochenstundenEF1;
 
 	/** Wochenstundensumme in der EF.2 */
-	private int wochenstundenEF2;
+	protected int wochenstundenEF2;
 
 	/** Wochenstundensumme in der Q1.1 */
-	private int wochenstundenQ11;
+	protected int wochenstundenQ11;
 
 	/** Wochenstundensumme in der Q1.2 */
-	private int wochenstundenQ12;
+	protected int wochenstundenQ12;
 
 	/** Wochenstundensumme in der Q2.1 */
-	private int wochenstundenQ21;
+	protected int wochenstundenQ21;
 
 	/** Wochenstundensumme in der Q2.2 */
-	private int wochenstundenQ22;
+	protected int wochenstundenQ22;
 
 	/** Wochenstundendurchschnitt in der EF */
-	private double wochenstundenDurchschnittEF;
+	protected double wochenstundenDurchschnittEF;
 
 	/** Wochenstundendurchschnitt in der Q1 */
-	private double wochenstundenDurchschnittQ1;
+	protected double wochenstundenDurchschnittQ1;
 
 	/** Wochenstundendurchschnitt in der Q2 */
-	private double wochenstundenDurchschnittQ2;
+	protected double wochenstundenDurchschnittQ2;
 
 	/** Wochenstundendurchschnitt in der Qualifikationsphase */
-	private double wochenstundenDurchschnittQPh;
+	protected double wochenstundenDurchschnittQPh;
 
 	/** Wochenstundensumme der gesamten Laufbahn */
-	private double wochenstundenGesamt;
+	protected double wochenstundenGesamt;
 
 
 	/**
@@ -267,7 +267,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Das Kalenderjahr, in dem die Abiturprüfung stattfindet
@@ -275,14 +275,6 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 */
 	public int abiturjahr() {
 		return abiturjahr;
-	}
-
-	/**
-	 * Das Kalenderjahr, in dem die Abiturprüfung stattfindet, wird gesetzt.
-	 * @param abiturjahr Neuer Wert für das Feld abiturjahr
-	 */
-	public void setAbiturjahr(final int abiturjahr) {
-		this.abiturjahr = abiturjahr;
 	}
 
 	/**
@@ -294,27 +286,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn wird gesetzt.
-	 * @param aktuelleKlasse Neuer Wert für das Feld aktuelleKlasse
-	 */
-	public void setAktuelleKlasse(final String aktuelleKlasse) {
-		this.aktuelleKlasse = aktuelleKlasse;
-	}
-
-	/**
 	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
 	 * @return Inhalt des Feldes aktuellesGOStHalbjahr
 	 */
 	public String aktuellesGOStHalbjahr() {
 		return aktuellesGOStHalbjahr;
-	}
-
-	/**
-	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule wird gesetzt.
-	 * @param aktuellesGOStHalbjahr Neuer Wert für das Feld aktuellesGOStHalbjahr
-	 */
-	public void setAktuellesGOStHalbjahr(final String aktuellesGOStHalbjahr) {
-		this.aktuellesGOStHalbjahr = aktuellesGOStHalbjahr;
 	}
 
 	/**
@@ -326,27 +302,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn wird gesetzt.
-	 * @param auswahlKlasse Neuer Wert für das Feld auswahlKlasse
-	 */
-	public void setAuswahlKlasse(final String auswahlKlasse) {
-		this.auswahlKlasse = auswahlKlasse;
-	}
-
-	/**
 	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn
 	 * @return Inhalt des Feldes auswahlGOStHalbjahr
 	 */
 	public String auswahlGOStHalbjahr() {
 		return auswahlGOStHalbjahr;
-	}
-
-	/**
-	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn wird gesetzt.
-	 * @param auswahlGOStHalbjahr Neuer Wert für das Feld auswahlGOStHalbjahr
-	 */
-	public void setAuswahlGOStHalbjahr(final String auswahlGOStHalbjahr) {
-		this.auswahlGOStHalbjahr = auswahlGOStHalbjahr;
 	}
 
 	/**
@@ -358,28 +318,12 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Der Text der Schule für den Beratungsbogen wird gesetzt.
-	 * @param beratungsbogenText Neuer Wert für das Feld beratungsbogenText
-	 */
-	public void setBeratungsbogenText(final String beratungsbogenText) {
-		this.beratungsbogenText = beratungsbogenText;
-	}
-
-	/**
 	 * Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt
 	 * @return Inhalt des Feldes beratungslehrkraefte
 	 */
 	public List<ReportingLehrer> beratungslehrkraefte() {
-		return beratungslehrkraefte;
-	}
-
-	/**
-	 * Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt wird gesetzt.
-	 * @param beratungslehrkraefte Neuer Wert für das Feld beratungslehrkraefte
-	 */
-	public void setBeratungslehrkraefte(final List<ReportingLehrer> beratungslehrkraefte) {
-		this.beratungslehrkraefte = beratungslehrkraefte;
 		this.beratungslehrkraefte.sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
+		return beratungslehrkraefte;
 	}
 
 	/**
@@ -391,27 +335,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Der Text der Schule für den E-Mail-Versand wird gesetzt.
-	 * @param emailText Neuer Wert für das Feld emailText
-	 */
-	public void setEmailText(final String emailText) {
-		this.emailText = emailText;
-	}
-
-	/**
 	 * Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält.
 	 * @return Inhalt des Feldes fachwahlen
 	 */
 	public List<ReportingGostLaufbahnplanungFachwahl> fachwahlen() {
 		return fachwahlen;
-	}
-
-	/**
-	 * Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält, wird gesetzt.
-	 * @param fachwahlen Neuer Wert für das Feld fachwahlen
-	 */
-	public void setFachwahlen(final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen) {
-		this.fachwahlen = fachwahlen;
 	}
 
 	/**
@@ -423,27 +351,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Eine Liste vom Typ Fehler, die alle Fehler zur Laufbahn und deren Daten enthält, wird gesetzt.
-	 * @param fehler Neuer Wert für das Feld fehler
-	 */
-	public void setFehler(final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler) {
-		this.fehler = fehler;
-	}
-
-	/**
 	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
 	 * @return Inhalt des Feldes folgeAktuellesGOStHalbjahr
 	 */
 	public String folgeAktuellesGOStHalbjahr() {
 		return folgeAktuellesGOStHalbjahr;
-	}
-
-	/**
-	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt, wird gesetzt.
-	 * @param folgeAktuellesGOStHalbjahr Neuer Wert für das Feld folgeAktuellesGOStHalbjahr
-	 */
-	public void setFolgeAktuellesGOStHalbjahr(final String folgeAktuellesGOStHalbjahr) {
-		this.folgeAktuellesGOStHalbjahr = folgeAktuellesGOStHalbjahr;
 	}
 
 	/**
@@ -455,27 +367,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt, wird gesetzt.
-	 * @param folgeAuswahlGOStHalbjahr Neuer Wert für das Feld folgeAuswahlGOStHalbjahr
-	 */
-	public void setFolgeAuswahlGOStHalbjahr(final String folgeAuswahlGOStHalbjahr) {
-		this.folgeAuswahlGOStHalbjahr = folgeAuswahlGOStHalbjahr;
-	}
-
-	/**
 	 * Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält.
 	 * @return Inhalt des Feldes hinweise
 	 */
 	public List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise() {
 		return hinweise;
-	}
-
-	/**
-	 * Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält, wird gesetzt.
-	 * @param hinweise Neuer Wert für das Feld hinweise
-	 */
-	public void setHinweise(final List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise) {
-		this.hinweise = hinweise;
 	}
 
 	/**
@@ -487,27 +383,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das Datum der letzten Beratung wird gesetzt.
-	 * @param letzteBeratungDatum Neuer Wert für das Feld letzteBeratungDatum
-	 */
-	public void setLetzteBeratungDatum(final String letzteBeratungDatum) {
-		this.letzteBeratungDatum = letzteBeratungDatum;
-	}
-
-	/**
 	 * Die Lehrkraft der letzten Beratung
 	 * @return Inhalt des Feldes letzteBeratungLehrkraft
 	 */
 	public ReportingLehrer letzteBeratungLehrkraft() {
 		return letzteBeratungLehrkraft;
-	}
-
-	/**
-	 * Die Lehrkraft der letzten Beratung wird gesetzt.
-	 * @param letzteBeratungLehrkraft Neuer Wert für das Feld letzteBeratungLehrkraft
-	 */
-	public void setLetzteBeratungLehrkraft(final ReportingLehrer letzteBeratungLehrkraft) {
-		this.letzteBeratungLehrkraft = letzteBeratungLehrkraft;
 	}
 
 	/**
@@ -519,27 +399,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Das Datum des Rücklaufes der letzten importierten Wahldatei wird gesetzt.
-	 * @param letzterRuecklaufDatum Neuer Wert für das Feld letzterRuecklaufDatum
-	 */
-	public void setLetzterRuecklaufDatum(final String letzterRuecklaufDatum) {
-		this.letzterRuecklaufDatum = letzterRuecklaufDatum;
-	}
-
-	/**
 	 * Kommentar der Schule zur Laufbahn
 	 * @return Inhalt des Feldes kommentar
 	 */
 	public String kommentar() {
 		return kommentar;
-	}
-
-	/**
-	 * Kommentar der Schule zur Laufbahn wird gesetzt.
-	 * @param kommentar Neuer Wert für das Feld kommentar
-	 */
-	public void setKommentar(final String kommentar) {
-		this.kommentar = kommentar;
 	}
 
 	/**
@@ -551,27 +415,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Kursanzahl in der EF1 wird gesetzt.
-	 * @param kursanzahlEF1 Neuer Wert für das Feld kursanzahlEF1
-	 */
-	public void setKursanzahlEF1(final int kursanzahlEF1) {
-		this.kursanzahlEF1 = kursanzahlEF1;
-	}
-
-	/**
 	 * Kursanzahl in der EF.2
 	 * @return Inhalt des Feldes kursanzahlEF2
 	 */
 	public int kursanzahlEF2() {
 		return kursanzahlEF2;
-	}
-
-	/**
-	 * Kursanzahl in der EF2 wird gesetzt.
-	 * @param kursanzahlEF2 Neuer Wert für das Feld kursanzahlEF2
-	 */
-	public void setKursanzahlEF2(final int kursanzahlEF2) {
-		this.kursanzahlEF2 = kursanzahlEF2;
 	}
 
 	/**
@@ -583,27 +431,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Kursanzahl in der Q11 wird gesetzt.
-	 * @param kursanzahlQ11 Neuer Wert für das Feld kursanzahlQ11
-	 */
-	public void setKursanzahlQ11(final int kursanzahlQ11) {
-		this.kursanzahlQ11 = kursanzahlQ11;
-	}
-
-	/**
 	 * Kursanzahl in der Q1.2
 	 * @return Inhalt des Feldes kursanzahlQ12
 	 */
 	public int kursanzahlQ12() {
 		return kursanzahlQ12;
-	}
-
-	/**
-	 * Kursanzahl in der Q12 wird gesetzt.
-	 * @param kursanzahlQ12 Neuer Wert für das Feld kursanzahlQ12
-	 */
-	public void setKursanzahlQ12(final int kursanzahlQ12) {
-		this.kursanzahlQ12 = kursanzahlQ12;
 	}
 
 	/**
@@ -615,27 +447,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Kursanzahl in der Q21 wird gesetzt.
-	 * @param kursanzahlQ21 Neuer Wert für das Feld kursanzahlQ21
-	 */
-	public void setKursanzahlQ21(final int kursanzahlQ21) {
-		this.kursanzahlQ21 = kursanzahlQ21;
-	}
-
-	/**
 	 * Kursanzahl in der Q2.2
 	 * @return Inhalt des Feldes kursanzahlQ22
 	 */
 	public int kursanzahlQ22() {
 		return kursanzahlQ22;
-	}
-
-	/**
-	 * Kursanzahl in der Q22 wird gesetzt.
-	 * @param kursanzahlQ22 Neuer Wert für das Feld kursanzahlQ22
-	 */
-	public void setKursanzahlQ22(final int kursanzahlQ22) {
-		this.kursanzahlQ22 = kursanzahlQ22;
 	}
 
 	/**
@@ -647,27 +463,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Kursanzahl in der Qualifikationsphase wird gesetzt.
-	 * @param kursanzahlQPh Neuer Wert für das Feld kursanzahlQPh
-	 */
-	public void setKursanzahlQPh(final int kursanzahlQPh) {
-		this.kursanzahlQPh = kursanzahlQPh;
-	}
-
-	/**
 	 * Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I
 	 * @return Inhalt des Feldes kursanzahlAnrechenbarBlockI
 	 */
 	public int kursanzahlAnrechenbarBlockI() {
 		return kursanzahlAnrechenbarBlockI;
-	}
-
-	/**
-	 * Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I wird gesetzt.
-	 * @param kursanzahlAnrechenbarBlockI Neuer Wert für das Feld kursanzahlAnrechenbarBlockI
-	 */
-	public void setKursanzahlAnrechenbarBlockI(final int kursanzahlAnrechenbarBlockI) {
-		this.kursanzahlAnrechenbarBlockI = kursanzahlAnrechenbarBlockI;
 	}
 
 	/**
@@ -679,27 +479,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt wird gesetzt.
-	 * @param pruefungsordnung Neuer Wert für das Feld pruefungsordnung
-	 */
-	public void setPruefungsordnung(final String pruefungsordnung) {
-		this.pruefungsordnung = pruefungsordnung;
-	}
-
-	/**
 	 * Wochenstundensumme in der EF.1
 	 * @return Inhalt des Feldes wochenstundenEF1
 	 */
 	public int wochenstundenEF1() {
 		return wochenstundenEF1;
-	}
-
-	/**
-	 * Wochenstundensumme in der EF1 wird gesetzt.
-	 * @param wochenstundenEF1 Neuer Wert für das Feld wochenstundenEF1
-	 */
-	public void setWochenstundenEF1(final int wochenstundenEF1) {
-		this.wochenstundenEF1 = wochenstundenEF1;
 	}
 
 	/**
@@ -711,27 +495,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Wochenstundensumme in der EF2 wird gesetzt.
-	 * @param wochenstundenEF2 Neuer Wert für das Feld wochenstundenEF2
-	 */
-	public void setWochenstundenEF2(final int wochenstundenEF2) {
-		this.wochenstundenEF2 = wochenstundenEF2;
-	}
-
-	/**
 	 * Wochenstundensumme in der Q1.1
 	 * @return Inhalt des Feldes wochenstundenQ11
 	 */
 	public int wochenstundenQ11() {
 		return wochenstundenQ11;
-	}
-
-	/**
-	 * Wochenstundensumme in der Q11 wird gesetzt.
-	 * @param wochenstundenQ11 Neuer Wert für das Feld wochenstundenQ11
-	 */
-	public void setWochenstundenQ11(final int wochenstundenQ11) {
-		this.wochenstundenQ11 = wochenstundenQ11;
 	}
 
 	/**
@@ -743,27 +511,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Wochenstundensumme in der Q12 wird gesetzt.
-	 * @param wochenstundenQ12 Neuer Wert für das Feld wochenstundenQ12
-	 */
-	public void setWochenstundenQ12(final int wochenstundenQ12) {
-		this.wochenstundenQ12 = wochenstundenQ12;
-	}
-
-	/**
 	 * Wochenstundensumme in der Q2.1
 	 * @return Inhalt des Feldes wochenstundenQ21
 	 */
 	public int wochenstundenQ21() {
 		return wochenstundenQ21;
-	}
-
-	/**
-	 * Wochenstundensumme in der Q21 wird gesetzt.
-	 * @param wochenstundenQ21 Neuer Wert für das Feld wochenstundenQ21
-	 */
-	public void setWochenstundenQ21(final int wochenstundenQ21) {
-		this.wochenstundenQ21 = wochenstundenQ21;
 	}
 
 	/**
@@ -775,27 +527,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Wochenstundensumme in der Q22 wird gesetzt.
-	 * @param wochenstundenQ22 Neuer Wert für das Feld wochenstundenQ22
-	 */
-	public void setWochenstundenQ22(final int wochenstundenQ22) {
-		this.wochenstundenQ22 = wochenstundenQ22;
-	}
-
-	/**
 	 * Wochenstundendurchschnitt in der EF
 	 * @return Inhalt des Feldes wochenstundenDurchschnittEF
 	 */
 	public double wochenstundenDurchschnittEF() {
 		return wochenstundenDurchschnittEF;
-	}
-
-	/**
-	 * Wochenstundendurchschnitt in der EF wird gesetzt.
-	 * @param wochenstundenDurchschnittEF Neuer Wert für das Feld wochenstundenDurchschnittEF
-	 */
-	public void setWochenstundenDurchschnittEF(final double wochenstundenDurchschnittEF) {
-		this.wochenstundenDurchschnittEF = wochenstundenDurchschnittEF;
 	}
 
 	/**
@@ -807,27 +543,11 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Wochenstundendurchschnitt in der Q1 wird gesetzt.
-	 * @param wochenstundenDurchschnittQ1 Neuer Wert für das Feld wochenstundenDurchschnittQ1
-	 */
-	public void setWochenstundenDurchschnittQ1(final double wochenstundenDurchschnittQ1) {
-		this.wochenstundenDurchschnittQ1 = wochenstundenDurchschnittQ1;
-	}
-
-	/**
 	 * Wochenstundendurchschnitt in der Q2
 	 * @return Inhalt des Feldes wochenstundenDurchschnittQ2
 	 */
 	public double wochenstundenDurchschnittQ2() {
 		return wochenstundenDurchschnittQ2;
-	}
-
-	/**
-	 * Wochenstundendurchschnitt in der Q2 wird gesetzt.
-	 * @param wochenstundenDurchschnittQ2 Neuer Wert für das Feld wochenstundenDurchschnittQ2
-	 */
-	public void setWochenstundenDurchschnittQ2(final double wochenstundenDurchschnittQ2) {
-		this.wochenstundenDurchschnittQ2 = wochenstundenDurchschnittQ2;
 	}
 
 	/**
@@ -839,14 +559,6 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	}
 
 	/**
-	 * Wochenstundendurchschnitt in der Qualifikationsphase wird gesetzt.
-	 * @param wochenstundenDurchschnittQPh Neuer Wert für das Feld wochenstundenDurchschnittQPh
-	 */
-	public void setWochenstundenDurchschnittQPh(final double wochenstundenDurchschnittQPh) {
-		this.wochenstundenDurchschnittQPh = wochenstundenDurchschnittQPh;
-	}
-
-	/**
 	 * Wochenstundensumme der gesamten Laufbahn
 	 * @return Inhalt des Feldes wochenstundenGesamt
 	 */
@@ -854,11 +566,5 @@ public class ReportingSchuelerGostLaufbahnplanung {
 		return wochenstundenGesamt;
 	}
 
-	/**
-	 * Wochenstundensumme der gesamten Laufbahn wird gesetzt.
-	 * @param wochenstundenGesamt Neuer Wert für das Feld wochenstundenGesamt
-	 */
-	public void setWochenstundenGesamt(final double wochenstundenGesamt) {
-		this.wochenstundenGesamt = wochenstundenGesamt;
-	}
+
 }

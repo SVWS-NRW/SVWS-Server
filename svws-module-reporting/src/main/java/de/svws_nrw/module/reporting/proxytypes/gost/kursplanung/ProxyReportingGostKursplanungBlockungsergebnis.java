@@ -95,14 +95,14 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		final Collator colGerman = java.text.Collator.getInstance(Locale.GERMAN);
 
 		// Grundwerte des Blockungsergebnisses setzen.
-		super.setAbiturjahr(datenManager.daten().abijahrgang);
-		super.setAnzahlDummy(ergebnisManager.getAnzahlSchuelerDummy());
-		super.setAnzahlExterne(ergebnisManager.getAnzahlSchuelerExterne());
-		super.setAnzahlMaxKurseProSchiene(ergebnisManager.getOfSchieneMaxKursanzahl());
-		super.setAnzahlSchienen(super.schienen().size());
-		super.setAnzahlSchueler(datenManager.schuelerGetAnzahl());
-		super.setBezeichnung(datenManager.daten().name);
-		super.setGostHalbjahr(GostHalbjahr.fromID(datenManager.daten().gostHalbjahr));
+		super.abiturjahr = datenManager.daten().abijahrgang;
+		super.anzahlDummy = ergebnisManager.getAnzahlSchuelerDummy();
+		super.anzahlExterne = ergebnisManager.getAnzahlSchuelerExterne();
+		super.anzahlMaxKurseProSchiene = ergebnisManager.getOfSchieneMaxKursanzahl();
+		super.anzahlSchienen = super.schienen().size();
+		super.anzahlSchueler = datenManager.schuelerGetAnzahl();
+		super.bezeichnung = datenManager.daten().name;
+		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
 		// Schülerstammdaten ermitteln und in Listen und Maps einfügen
 		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
@@ -264,7 +264,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			} catch (final ApiOperationException e) {
 				e.printStackTrace();
 			}
-			super.setFachwahlstatistik(mapFachwahlStatistik);
+			super.fachwahlstatistik = mapFachwahlStatistik;
 		}
 		return super.fachwahlstatistik();
 	}

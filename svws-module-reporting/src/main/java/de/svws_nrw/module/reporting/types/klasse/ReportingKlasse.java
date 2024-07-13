@@ -16,91 +16,91 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 public class ReportingKlasse {
 
 	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */
-	public boolean beginnSommersemester;
+	protected boolean beginnSommersemester;
 
 	/** Eine zusätzliche Beschreibung zu der Klasse */
-	public String beschreibung;
+	protected String beschreibung;
 
 	/** Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist. */
-	public ReportingKlasse folgeklasse;
+	protected ReportingKlasse folgeklasse;
 
 	/** Die ID der Klasse. */
-	public long id;
+	protected long id;
 
 	/** Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich */
-	public Long idAllgemeinbildendOrganisationsform;
+	protected Long idAllgemeinbildendOrganisationsform;
 
 	/** Die ID für die Organisationsform der Klasse im berufsbildenden Bereich */
-	public Long idBerufsbildendOrganisationsform;
+	protected Long idBerufsbildendOrganisationsform;
 
 	/** Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null */
-	public Long idFachklasse;
+	protected Long idFachklasse;
 
 	/** Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null */
-	public Long idFolgeklasse;
+	protected Long idFolgeklasse;
 
 	/** Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist */
-	public Long idJahrgang;
+	protected Long idJahrgang;
 
 	/** Die ID für Klassenart */
-	public long idKlassenart;
+	protected long idKlassenart;
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
-	private List<Long> idsKlassenleitungen = new ArrayList<>();
+	protected List<Long> idsKlassenleitungen = new ArrayList<>();
 
 	/** Die Liste der IDs der Schüler der Klasse. */
-	private List<Long> idsSchueler = new ArrayList<>();
+	protected List<Long> idsSchueler = new ArrayList<>();
 
 	/** Die ID für die Schulgliederung der Klasse */
-	public long idSchulgliederung;
+	protected long idSchulgliederung;
 
 	/** Die ID des Schuljahresabschnittes der Klasse. */
-	public long idSchuljahresabschnitt;
+	protected long idSchuljahresabschnitt;
 
 	/** Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null */
-	public Long idVorgaengerklasse;
+	protected Long idVorgaengerklasse;
 
 	/** Die ID für die Organisationsform der Klasse im Weiterbildungsbereich */
-	public Long idWeiterbildungOrganisationsform;
+	protected Long idWeiterbildungOrganisationsform;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	public boolean istSichtbar;
+	protected boolean istSichtbar;
 
 	/** Der Jahrgang, dem die Klasse zugeordnet ist. */
-	private ReportingJahrgang jahrgang;
+	protected ReportingJahrgang jahrgang;
 
 	/** Die Liste der Klassenleitungen der Klasse. */
-	private List<ReportingLehrer> klassenleitungen = new ArrayList<>();
+	protected List<ReportingLehrer> klassenleitungen = new ArrayList<>();
 
 	/** Das Kürzel der Klasse. */
-	public String kuerzel;
+	protected String kuerzel;
 
 	/** Das Kürzel der Folgeklasse. */
-	public String kuerzelFolgeklasse;
+	protected String kuerzelFolgeklasse;
 
 	/** Das Kürzel der Vorgängerklasse. */
-	public String kuerzelVorgaengerklasse;
+	protected String kuerzelVorgaengerklasse;
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
-	public String parallelitaet;
+	protected String parallelitaet;
 
 	/** Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird. */
-	public String pruefungsordnung;
+	protected String pruefungsordnung;
 
 	/** Die Liste der Schüler der Klasse. */
-	private List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler = new ArrayList<>();
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
-	public int sortierung;
+	protected int sortierung;
 
 	/** Adressmerkmal des Teilstandorts für die Klasse */
-	public String teilstandort;
+	protected String teilstandort;
 
 	/** Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden. */
-	public boolean verwendungAnkreuzkompetenzen;
+	protected boolean verwendungAnkreuzkompetenzen;
 
 	/** Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse. */
-	public ReportingKlasse vorgaengerklasse;
+	protected ReportingKlasse vorgaengerklasse;
 
 
 	/**
@@ -175,7 +175,7 @@ public class ReportingKlasse {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
@@ -183,14 +183,6 @@ public class ReportingKlasse {
 	 */
 	public boolean beginnSommersemester() {
 		return beginnSommersemester;
-	}
-
-	/**
-	 * Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat, wird gesetzt.
-	 * @param beginnSommersemester Neuer Wert für das Feld beginnSommersemester
-	 */
-	public void setBeginnSommersemester(final boolean beginnSommersemester) {
-		this.beginnSommersemester = beginnSommersemester;
 	}
 
 	/**
@@ -202,27 +194,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Eine zusätzliche Beschreibung zu der Klasse wird gesetzt.
-	 * @param beschreibung Neuer Wert für das Feld beschreibung
-	 */
-	public void setBeschreibung(final String beschreibung) {
-		this.beschreibung = beschreibung;
-	}
-
-	/**
 	 * Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist.
 	 * @return Inhalt des Feldes folgeklasse
 	 */
 	public ReportingKlasse folgeklasse() {
 		return folgeklasse;
-	}
-
-	/**
-	 * Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist, wird gesetzt.
-	 * @param folgeklasse Wert für das Feld folgeklasse
-	 */
-	public void setFolgeklasse(final ReportingKlasse folgeklasse) {
-		this.folgeklasse = folgeklasse;
 	}
 
 	/**
@@ -234,27 +210,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID der Klasse wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich
 	 * @return Inhalt des Feldes idAllgemeinbildendOrganisationsform
 	 */
 	public Long idAllgemeinbildendOrganisationsform() {
 		return idAllgemeinbildendOrganisationsform;
-	}
-
-	/**
-	 * Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich wird gesetzt.
-	 * @param idAllgemeinbildendOrganisationsform Neuer Wert für das Feld idAllgemeinbildendOrganisationsform
-	 */
-	public void setIdAllgemeinbildendOrganisationsform(final Long idAllgemeinbildendOrganisationsform) {
-		this.idAllgemeinbildendOrganisationsform = idAllgemeinbildendOrganisationsform;
 	}
 
 	/**
@@ -266,27 +226,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID für die Organisationsform der Klasse im berufsbildenden Bereich wird gesetzt.
-	 * @param idBerufsbildendOrganisationsform Neuer Wert für das Feld idBerufsbildendOrganisationsform
-	 */
-	public void setIdBerufsbildendOrganisationsform(final Long idBerufsbildendOrganisationsform) {
-		this.idBerufsbildendOrganisationsform = idBerufsbildendOrganisationsform;
-	}
-
-	/**
 	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null
 	 * @return Inhalt des Feldes idFachklasse
 	 */
 	public Long idFachklasse() {
 		return idFachklasse;
-	}
-
-	/**
-	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null wird gesetzt.
-	 * @param idFachklasse Neuer Wert für das Feld idFachklasse
-	 */
-	public void setIdFachklasse(final Long idFachklasse) {
-		this.idFachklasse = idFachklasse;
 	}
 
 	/**
@@ -298,27 +242,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null wird gesetzt.
-	 * @param idFolgeklasse Neuer Wert für das Feld idFolgeklasse
-	 */
-	public void setIdFolgeklasse(final Long idFolgeklasse) {
-		this.idFolgeklasse = idFolgeklasse;
-	}
-
-	/**
 	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist
 	 * @return Inhalt des Feldes idJahrgang
 	 */
 	public Long idJahrgang() {
 		return idJahrgang;
-	}
-
-	/**
-	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist, wird gesetzt.
-	 * @param idJahrgang Neuer Wert für das Feld idJahrgang
-	 */
-	public void setIdJahrgang(final Long idJahrgang) {
-		this.idJahrgang = idJahrgang;
 	}
 
 	/**
@@ -330,27 +258,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID für Klassenart wird gesetzt.
-	 * @param idKlassenart Neuer Wert für das Feld idKlassenart
-	 */
-	public void setIdKlassenart(final long idKlassenart) {
-		this.idKlassenart = idKlassenart;
-	}
-
-	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
 	 * @return Inhalt des Feldes idsKlassenleitungen
 	 */
 	public List<Long> idsKlassenleitungen() {
 		return idsKlassenleitungen;
-	}
-
-	/**
-	 * Die Liste der IDs der Klassenleitungen der Klasse wird gesetzt.
-	 * @param idsKlassenleitungen Neuer Wert für das Feld idsKlassenleitungen
-	 */
-	public void setIdsKlassenleitungen(final List<Long> idsKlassenleitungen) {
-		this.idsKlassenleitungen = idsKlassenleitungen;
 	}
 
 	/**
@@ -362,27 +274,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die Liste der IDs der Schüler der Klasse wird gesetzt.
-	 * @param idsSchueler Neuer Wert für das Feld idsSchueler
-	 */
-	public void setIdsSchueler(final List<Long> idsSchueler) {
-		this.idsSchueler = idsSchueler;
-	}
-
-	/**
 	 * Die ID für die Schulgliederung der Klasse
 	 * @return Inhalt des Feldes idSchulgliederung
 	 */
 	public long idSchulgliederung() {
 		return idSchulgliederung;
-	}
-
-	/**
-	 * Die ID für die Schulgliederung der Klasse wird gesetzt.
-	 * @param idSchulgliederung Neuer Wert für das Feld idSchulgliederung
-	 */
-	public void setIdSchulgliederung(final long idSchulgliederung) {
-		this.idSchulgliederung = idSchulgliederung;
 	}
 
 	/**
@@ -394,27 +290,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID des Schuljahresabschnittes der Klasse wird gesetzt.
-	 * @param idSchuljahresabschnitt Neuer Wert für das Feld idSchuljahresabschnitt
-	 */
-	public void setIdSchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-	}
-
-	/**
 	 * Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
 	 * @return Inhalt des Feldes idVorgaengerklasse
 	 */
 	public Long idVorgaengerklasse() {
 		return idVorgaengerklasse;
-	}
-
-	/**
-	 * Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null wird gesetzt.
-	 * @param idVorgaengerklasse Neuer Wert für das Feld idVorgaengerklasse
-	 */
-	public void setIdVorgaengerklasse(final Long idVorgaengerklasse) {
-		this.idVorgaengerklasse = idVorgaengerklasse;
 	}
 
 	/**
@@ -426,27 +306,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID für die Organisationsform der Klasse im Weiterbildungsbereich wird gesetzt.
-	 * @param idWeiterbildungOrganisationsform Neuer Wert für das Feld idWeiterbildungOrganisationsform
-	 */
-	public void setIdWeiterbildungOrganisationsform(final Long idWeiterbildungOrganisationsform) {
-		this.idWeiterbildungOrganisationsform = idWeiterbildungOrganisationsform;
-	}
-
-	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @return Inhalt des Feldes istSichtbar
 	 */
 	public boolean istSichtbar() {
 		return istSichtbar;
-	}
-
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht wird gesetzt.
-	 * @param istSichtbar Neuer Wert für das Feld istSichtbar
-	 */
-	public void setIstSichtbar(final boolean istSichtbar) {
-		this.istSichtbar = istSichtbar;
 	}
 
 	/**
@@ -458,27 +322,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Der Jahrgang, dem die Klasse zugeordnet ist, wird gesetzt.
-	 * @param jahrgang Neuer Wert für das Feld jahrgang
-	 */
-	public void setJahrgang(final ReportingJahrgang jahrgang) {
-		this.jahrgang = jahrgang;
-	}
-
-	/**
 	 * Die Liste der Klassenleitungen der Klasse.
 	 * @return Inhalt des Feldes klassenleitungen
 	 */
 	public List<ReportingLehrer> klassenleitungen() {
 		return klassenleitungen;
-	}
-
-	/**
-	 * Die Liste der Klassenleitungen der Klasse wird gesetzt.
-	 * @param klassenleitungen Neuer Wert für das Feld klassenleitungen
-	 */
-	public void setKlassenleitungen(final List<ReportingLehrer> klassenleitungen) {
-		this.klassenleitungen = klassenleitungen;
 	}
 
 	/**
@@ -490,27 +338,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Das Kürzel der Klasse wird gesetzt.
-	 * @param kuerzel Neuer Wert für das Feld kuerzel
-	 */
-	public void setKuerzel(final String kuerzel) {
-		this.kuerzel = kuerzel;
-	}
-
-	/**
 	 * Das Kürzel der Folgeklasse.
 	 * @return Inhalt des Feldes kuerzelFolgeklasse
 	 */
 	public String kuerzelFolgeklasse() {
 		return kuerzelFolgeklasse;
-	}
-
-	/**
-	 * Das Kürzel der Folgeklasse wird gesetzt.
-	 * @param kuerzelFolgeklasse Neuer Wert für das Feld kuerzelFolgeklasse
-	 */
-	public void setKuerzelFolgeklasse(final String kuerzelFolgeklasse) {
-		this.kuerzelFolgeklasse = kuerzelFolgeklasse;
 	}
 
 	/**
@@ -522,27 +354,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Das Kürzel der Vorgängerklasse wird gesetzt.
-	 * @param kuerzelVorgaengerklasse Neuer Wert für das Feld kuerzelVorgaengerklasse
-	 */
-	public void setKuerzelVorgaengerklasse(final String kuerzelVorgaengerklasse) {
-		this.kuerzelVorgaengerklasse = kuerzelVorgaengerklasse;
-	}
-
-	/**
 	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z).
 	 * @return Inhalt des Feldes parallelitaet
 	 */
 	public String parallelitaet() {
 		return parallelitaet;
-	}
-
-	/**
-	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z) wird gesetzt.
-	 * @param parallelitaet Neuer Wert für das Feld parallelitaet
-	 */
-	public void setParallelitaet(final String parallelitaet) {
-		this.parallelitaet = parallelitaet;
 	}
 
 	/**
@@ -554,27 +370,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird, wird gesetzt.
-	 * @param pruefungsordnung Neuer Wert für das Feld pruefungsordnung
-	 */
-	public void setPruefungsordnung(final String pruefungsordnung) {
-		this.pruefungsordnung = pruefungsordnung;
-	}
-
-	/**
 	 * Die Liste der Schüler der Klasse.
 	 * @return Inhalt des Feldes schueler
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;
-	}
-
-	/**
-	 * Die Liste der Schüler der Klasse wird gesetzt.
-	 * @param schueler Neuer Wert für das Feld schueler
-	 */
-	public void setSchueler(final List<ReportingSchueler> schueler) {
-		this.schueler = schueler;
 	}
 
 	/**
@@ -586,27 +386,11 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags wird gesetzt.
-	 * @param sortierung Neuer Wert für das Feld sortierung
-	 */
-	public void setSortierung(final int sortierung) {
-		this.sortierung = sortierung;
-	}
-
-	/**
 	 * Adressmerkmal des Teilstandorts für die Klasse
 	 * @return Inhalt des Feldes teilstandort
 	 */
 	public String teilstandort() {
 		return teilstandort;
-	}
-
-	/**
-	 * Adressmerkmal des Teilstandorts für die Klasse wird gesetzt.
-	 * @param teilstandort Neuer Wert für das Feld teilstandort
-	 */
-	public void setTeilstandort(final String teilstandort) {
-		this.teilstandort = teilstandort;
 	}
 
 	/**
@@ -618,14 +402,6 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden wird gesetzt.
-	 * @param verwendungAnkreuzkompetenzen Neuer Wert für das Feld verwendungAnkreuzkompetenzen
-	 */
-	public void setVerwendungAnkreuzkompetenzen(final boolean verwendungAnkreuzkompetenzen) {
-		this.verwendungAnkreuzkompetenzen = verwendungAnkreuzkompetenzen;
-	}
-
-	/**
 	 * Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
 	 * @return Inhalt des Feldes vorgaengerklasse
 	 */
@@ -633,11 +409,4 @@ public class ReportingKlasse {
 		return vorgaengerklasse;
 	}
 
-	/**
-	 * Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse wird gesetzt.
-	 * @param vorgaengerklasse Wert für das Feld vorgaengerklasse
-	 */
-	public void setVorgaengerklasse(final ReportingKlasse vorgaengerklasse) {
-		this.vorgaengerklasse = vorgaengerklasse;
-	}
 }

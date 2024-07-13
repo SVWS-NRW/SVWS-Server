@@ -20,187 +20,187 @@ import java.util.List;
 public class ReportingSchuelerLernabschnitt {
 
 	/** Der erreichte allgemeinbildende Abschluss */
-	private String abschluss;
+	protected String abschluss;
 
 	/** Die Art des Abschlusses (siehe Katalog) */
-	private Integer abschlussart;
+	protected Integer abschlussart;
 
 	/** Der erreichte berufsbezogene Abschluss am Berufskolleg */
-	private String abschlussBerufsbildend;
+	protected String abschlussBerufsbildend;
 
 	/** Die Anzahl der Schulbesuchsjahre */
-	private Integer anzahlSchulbesuchsjahre;
+	protected Integer anzahlSchulbesuchsjahre;
 
 	/** Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird */
-	private String bilingualerZweig;
+	protected String bilingualerZweig;
 
 	/** Das Datum, wann der Lernabschnitt beginnt */
-	private String datumAnfang;
+	protected String datumAnfang;
 
 	/** Das Datum, wann der Lernabschnitt endet */
-	private String datumEnde;
+	protected String datumEnde;
 
 	/** Das Datum der Konferenz */
-	private String datumKonferenz;
+	protected String datumKonferenz;
 
 	/** Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung */
-	private String datumZeugnis;
+	protected String datumZeugnis;
 
 	/** Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt */
-	private int fehlstundenGesamt;
+	protected int fehlstundenGesamt;
 
 	/** Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden */
-	private Integer fehlstundenGrenzwert;
+	protected Integer fehlstundenGrenzwert;
 
 	/** Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt */
-	private int fehlstundenUnentschuldigt;
+	protected int fehlstundenUnentschuldigt;
 
 	/** Der erste Förderschwerpunkt des Schülers zu diesem Lernabschnitt */
-	private FoerderschwerpunktEintrag foerderschwerpunkt1;
+	protected FoerderschwerpunktEintrag foerderschwerpunkt1;
 
 	/** Der zweite Förderschwerpunkt des Schülers zu diesem Lernabschnitt */
-	private FoerderschwerpunktEintrag foerderschwerpunkt2;
+	protected FoerderschwerpunktEintrag foerderschwerpunkt2;
 
 	/** Der Text mit Angaben zum Förderschwerpunkt. */
-	private String foerderschwerpunktText;
+	protected String foerderschwerpunktText;
 
 	/** Die Folgeklasse des Schülers aus diesem Lernabschnitt */
-	private ReportingKlasse folgeklasse;
+	protected ReportingKlasse folgeklasse;
 
 	/** Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt */
-	private boolean hatAOSF;
+	protected boolean hatAOSF;
 
 	/** Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht */
-	private boolean hatAutismus;
+	protected boolean hatAutismus;
 
 	/** Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht */
-	private boolean hatSchwerbehinderungsNachweis;
+	protected boolean hatSchwerbehinderungsNachweis;
 
 	/** Gibt an, ob zieldifferent unterrichtet wird oder nicht */
-	private boolean hatZieldifferentenUnterricht;
+	protected boolean hatZieldifferentenUnterricht;
 
 	/** Der Jahrgang des Schülers in diesem Lernabschnitt */
-	private ReportingJahrgang jahrgang;
+	protected ReportingJahrgang jahrgang;
 
 	/** Die ID des Lernabschnitts in der Datenbank. */
-	private long id;
+	protected long id;
 
 	/** Die ID der Fachklasse des Schülers an einem Berufskolleg */
-	private Long idFachklasse;
+	protected Long idFachklasse;
 
 	/** Die ID des Hauptförderschwerpunktes des Schülers */
-	private Long idFoerderschwerpunkt1;
+	protected Long idFoerderschwerpunkt1;
 
 	/** Die ID des weiteren Förderschwerpunktes des Schülers */
-	private Long idFoerderschwerpunkt2;
+	protected Long idFoerderschwerpunkt2;
 
 	/** Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht. */
-	private Long idFolgeklasse;
+	protected Long idFolgeklasse;
 
 	/** Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist */
-	private Long idJahrgang;
+	protected Long idJahrgang;
 
 	/** Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist. */
-	private Long idKlasse;
+	protected Long idKlasse;
 
 	/** Die ID des Schülers des Lernabschnitts in der Datenbank. */
-	private long idSchueler;
+	protected long idSchueler;
 
 	/** Die ID des Schuljahresabschnitts des Lernabschnitts in der Datenbank. */
-	private long idSchuljahresabschnitt;
+	protected long idSchuljahresabschnitt;
 
 	/** Die ID des Schwerpunktes des Schülers laut dem Schwerpunkt-Katalog */
-	private Long idSchwerpunkt;
+	protected Long idSchwerpunkt;
 
 	/** Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat */
-	private Long idSonderpaedagoge;
+	protected Long idSonderpaedagoge;
 
 	/** Die ID des Tutors des Schülers in der Datenbank. */
-	private Long idTutor;
+	protected Long idTutor;
 
 	/** Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog) */
-	private boolean istAbschlussPrognose;
+	protected boolean istAbschlussPrognose;
 
 	/** Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung */
-	private boolean istFachpraktischerAnteilAusreichend;
+	protected boolean istFachpraktischerAnteilAusreichend;
 
 	/** Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht */
-	private boolean istGewertet;
+	protected boolean istGewertet;
 
 	/** Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht */
-	private boolean istWiederholung;
+	protected boolean istWiederholung;
 
 	/** Die Klasse des Schülers aus diesem Lernabschnitt */
-	private ReportingKlasse klasse;
+	protected ReportingKlasse klasse;
 
 	/** Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
-	private String klassenart;
+	protected String klassenart;
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
-	private List<SchuelerLeistungsdaten> leistungsdaten;
+	protected List<SchuelerLeistungsdaten> leistungsdaten;
 
 	/** Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
-	private SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
+	protected SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
 
 	/** Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden */
-	private String noteDurchschnitt;
+	protected String noteDurchschnitt;
 
 	/** Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10 */
-	private Integer noteLernbereichGSbzwAL;
+	protected Integer noteLernbereichGSbzwAL;
 
 	/** Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10 */
-	private Integer noteLernbereichNW;
+	protected Integer noteLernbereichNW;
 
 	/** Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
-	private String organisationsform;
+	protected String organisationsform;
 
 	/** Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. */
-	private String pruefungsOrdnung;
+	protected String pruefungsOrdnung;
 
 	/** Der Schüler, zu dem dieser Lernabschnittsdaten gehören. */
-	private ReportingSchueler schueler;
+	protected ReportingSchueler schueler;
 
 	/** Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. */
-	private String schulgliederung;
+	protected String schulgliederung;
 
 	/** Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören. */
-	private ReportingSchuljahresabschnitt schuljahresabschnitt;
+	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
 
 	/** Der Sonderpädagoge, der den Schüler betreut */
-	private ReportingLehrer sonderpaedagoge;
+	protected ReportingLehrer sonderpaedagoge;
 
 	/** Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung */
-	private String textErgebnisPruefungsalgorithmus;
+	protected String textErgebnisPruefungsalgorithmus;
 
 	/** Der Tutor, der den Schüler betreut */
-	private ReportingLehrer tutor;
+	protected ReportingLehrer tutor;
 
 	/** Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I. */
-	private String uebergangsempfehlungText;
+	protected String uebergangsempfehlungText;
 
 	/** Der Text zur Versetzungsentscheidung auf dem Zeugnis. */
-	private String versetzungsentscheidungText;
+	protected String versetzungsentscheidungText;
 
 	/** Das Kürzel des Versetzungsvermerks */
-	private String versetzungsvermerkKuerzel;
+	protected String versetzungsvermerkKuerzel;
 
 	/** Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). */
-	private int wechselNr;
+	protected int wechselNr;
 
 	/** Die Art des Zeugnisses */
-	private String zeugnisart;
+	protected String zeugnisart;
 
 	/** Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten. */
-	private String zeugnisASVText;
+	protected String zeugnisASVText;
 
 	/** Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement. */
-	private String zeugnisAUEText;
+	protected String zeugnisAUEText;
 
 	/** Der Text für allgemeine Zeugnisbemerkungen. */
-	private String zeugnisBemerkungText;
+	protected String zeugnisBemerkungText;
 
 	/** Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen. */
-	private String zeugnisLELSText;
+	protected String zeugnisLELSText;
 
 
 
@@ -349,7 +349,7 @@ public class ReportingSchuelerLernabschnitt {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Der erreichte allgemeinbildende Abschluss
@@ -357,14 +357,6 @@ public class ReportingSchuelerLernabschnitt {
 	 */
 	public String abschluss() {
 		return abschluss;
-	}
-
-	/**
-	 * Der erreichte allgemeinbildende Abschluss wird gesetzt.
-	 * @param abschluss Neuer Wert für das Feld abschluss
-	 */
-	public void setAbschluss(final String abschluss) {
-		this.abschluss = abschluss;
 	}
 
 	/**
@@ -376,27 +368,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Art des Abschlusses (siehe Katalog) wird gesetzt.
-	 * @param abschlussart Neuer Wert für das Feld abschlussart
-	 */
-	public void setAbschlussart(final Integer abschlussart) {
-		this.abschlussart = abschlussart;
-	}
-
-	/**
 	 * Der erreichte berufsbezogene Abschluss am Berufskolleg
 	 * @return Inhalt des Feldes abschlussBerufsbildend
 	 */
 	public String abschlussBerufsbildend() {
 		return abschlussBerufsbildend;
-	}
-
-	/**
-	 * Der erreichte berufsbezogene Abschluss am Berufskolleg wird gesetzt.
-	 * @param abschlussBerufsbildend Neuer Wert für das Feld abschlussBerufsbildend
-	 */
-	public void setAbschlussBerufsbildend(final String abschlussBerufsbildend) {
-		this.abschlussBerufsbildend = abschlussBerufsbildend;
 	}
 
 	/**
@@ -408,27 +384,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Anzahl der Schulbesuchsjahre wird gesetzt.
-	 * @param anzahlSchulbesuchsjahre Neuer Wert für das Feld anzahlSchulbesuchsjahre
-	 */
-	public void setAnzahlSchulbesuchsjahre(final Integer anzahlSchulbesuchsjahre) {
-		this.anzahlSchulbesuchsjahre = anzahlSchulbesuchsjahre;
-	}
-
-	/**
 	 * Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
 	 * @return Inhalt des Feldes bilingualerZweig
 	 */
 	public String bilingualerZweig() {
 		return bilingualerZweig;
-	}
-
-	/**
-	 * Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird, wird gesetzt.
-	 * @param bilingualerZweig Neuer Wert für das Feld bilingualerZweig
-	 */
-	public void setBilingualerZweig(final String bilingualerZweig) {
-		this.bilingualerZweig = bilingualerZweig;
 	}
 
 	/**
@@ -440,27 +400,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Das Datum, wann der Lernabschnitt beginnt, wird gesetzt.
-	 * @param datumAnfang Neuer Wert für das Feld datumAnfang
-	 */
-	public void setDatumAnfang(final String datumAnfang) {
-		this.datumAnfang = datumAnfang;
-	}
-
-	/**
 	 * Das Datum, wann der Lernabschnitt endet
 	 * @return Inhalt des Feldes datumEnde
 	 */
 	public String datumEnde() {
 		return datumEnde;
-	}
-
-	/**
-	 * Das Datum, wann der Lernabschnitt endet, wird gesetzt.
-	 * @param datumEnde Neuer Wert für das Feld datumEnde
-	 */
-	public void setDatumEnde(final String datumEnde) {
-		this.datumEnde = datumEnde;
 	}
 
 	/**
@@ -472,27 +416,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Das Datum der Konferenz wird gesetzt.
-	 * @param datumKonferenz Neuer Wert für das Feld datumKonferenz
-	 */
-	public void setDatumKonferenz(final String datumKonferenz) {
-		this.datumKonferenz = datumKonferenz;
-	}
-
-	/**
 	 * Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung
 	 * @return Inhalt des Feldes datumZeugnis
 	 */
 	public String datumZeugnis() {
 		return datumZeugnis;
-	}
-
-	/**
-	 * Das Datum des Zeugnisses bzw der Laufbahnbescheinigung wird gesetzt.
-	 * @param datumZeugnis Neuer Wert für das Feld datumZeugnis
-	 */
-	public void setDatumZeugnis(final String datumZeugnis) {
-		this.datumZeugnis = datumZeugnis;
 	}
 
 	/**
@@ -504,27 +432,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt wird gesetzt.
-	 * @param fehlstundenGesamt Neuer Wert für das Feld fehlstundenGesamt
-	 */
-	public void setFehlstundenGesamt(final int fehlstundenGesamt) {
-		this.fehlstundenGesamt = fehlstundenGesamt;
-	}
-
-	/**
 	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden
 	 * @return Inhalt des Feldes fehlstundenGrenzwert
 	 */
 	public Integer fehlstundenGrenzwert() {
 		return fehlstundenGrenzwert;
-	}
-
-	/**
-	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden wird gesetzt.
-	 * @param fehlstundenGrenzwert Neuer Wert für das Feld fehlstundenGrenzwert
-	 */
-	public void setFehlstundenGrenzwert(final Integer fehlstundenGrenzwert) {
-		this.fehlstundenGrenzwert = fehlstundenGrenzwert;
 	}
 
 	/**
@@ -536,27 +448,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt wird gesetzt.
-	 * @param fehlstundenUnentschuldigt Neuer Wert für das Feld fehlstundenUnentschuldigt
-	 */
-	public void setFehlstundenUnentschuldigt(final int fehlstundenUnentschuldigt) {
-		this.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
-	}
-
-	/**
 	 * Der erste Förderschwerpunkt des Schülers zu diesem Lernabschnitt
 	 * @return Inhalt des Feldes foerderschwerpunkt1
 	 */
 	public FoerderschwerpunktEintrag foerderschwerpunkt1() {
 		return foerderschwerpunkt1;
-	}
-
-	/**
-	 * Der erste Förderschwerpunkt des Schülers zu diesem Lernabschnitt wird gesetzt.
-	 * @param foerderschwerpunkt1 Neuer Wert für das Feld foerderschwerpunkt1
-	 */
-	public void setFoerderschwerpunkt1(final FoerderschwerpunktEintrag foerderschwerpunkt1) {
-		this.foerderschwerpunkt1 = foerderschwerpunkt1;
 	}
 
 	/**
@@ -568,27 +464,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der zweite Förderschwerpunkt des Schülers zu diesem Lernabschnitt wird gesetzt.
-	 * @param foerderschwerpunkt2 Neuer Wert für das Feld foerderschwerpunkt2
-	 */
-	public void setFoerderschwerpunkt2(final FoerderschwerpunktEintrag foerderschwerpunkt2) {
-		this.foerderschwerpunkt2 = foerderschwerpunkt2;
-	}
-
-	/**
 	 * Der Text mit Angaben zum Förderschwerpunkt.
 	 * @return Inhalt des Feldes foerderschwerpunktText
 	 */
 	public String foerderschwerpunktText() {
 		return foerderschwerpunktText;
-	}
-
-	/**
-	 * Der Text mit Angaben zum Förderschwerpunkt wird gesetzt.
-	 * @param foerderschwerpunktText Neuer Wert für das Feld foerderschwerpunktText
-	 */
-	public void setFoerderschwerpunktText(final String foerderschwerpunktText) {
-		this.foerderschwerpunktText = foerderschwerpunktText;
 	}
 
 	/**
@@ -600,27 +480,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Folgeklasse des Schülers aus diesem Lernabschnitt wird gesetzt.
-	 * @param folgeklasse Neuer Wert für das Feld folgeklasse
-	 */
-	public void setFolgeklasse(final ReportingKlasse folgeklasse) {
-		this.folgeklasse = folgeklasse;
-	}
-
-	/**
 	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt
 	 * @return Inhalt des Feldes hatAOSF
 	 */
 	public boolean hatAOSF() {
 		return hatAOSF;
-	}
-
-	/**
-	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt wird gesetzt.
-	 * @param hatAOSF Neuer Wert für das Feld hatAOSF
-	 */
-	public void setHatAOSF(final boolean hatAOSF) {
-		this.hatAOSF = hatAOSF;
 	}
 
 	/**
@@ -632,27 +496,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht wird gesetzt.
-	 * @param hatAutismus Neuer Wert für das Feld hatAutismus
-	 */
-	public void setHatAutismus(final boolean hatAutismus) {
-		this.hatAutismus = hatAutismus;
-	}
-
-	/**
 	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht
 	 * @return Inhalt des Feldes hatSchwerbehinderungsNachweis
 	 */
 	public boolean hatSchwerbehinderungsNachweis() {
 		return hatSchwerbehinderungsNachweis;
-	}
-
-	/**
-	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht wird gesetzt.
-	 * @param hatSchwerbehinderungsNachweis Neuer Wert für das Feld hatSchwerbehinderungsNachweis
-	 */
-	public void setHatSchwerbehinderungsNachweis(final boolean hatSchwerbehinderungsNachweis) {
-		this.hatSchwerbehinderungsNachweis = hatSchwerbehinderungsNachweis;
 	}
 
 	/**
@@ -664,27 +512,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Gibt an, ob zieldifferent unterrichtet wird oder nicht wird gesetzt.
-	 * @param hatZieldifferentenUnterricht Neuer Wert für das Feld hatZieldifferentenUnterricht
-	 */
-	public void setHatZieldifferentenUnterricht(final boolean hatZieldifferentenUnterricht) {
-		this.hatZieldifferentenUnterricht = hatZieldifferentenUnterricht;
-	}
-
-	/**
 	 * Der Jahrgang des Schülers in diesem Lernabschnitt
 	 * @return Inhalt des Feldes jahrgang
 	 */
 	public ReportingJahrgang jahrgang() {
 		return jahrgang;
-	}
-
-	/**
-	 * Der Jahrgang des Schülers in diesem Lernabschnitt wird gesetzt.
-	 * @param jahrgang Neuer Wert für das Feld jahrgang
-	 */
-	public void setJahrgang(final ReportingJahrgang jahrgang) {
-		this.jahrgang = jahrgang;
 	}
 
 	/**
@@ -696,27 +528,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID des Lernabschnitts in der Datenbank wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
 	 * @return Inhalt des Feldes idFachklasse
 	 */
 	public Long idFachklasse() {
 		return idFachklasse;
-	}
-
-	/**
-	 * Die ID der Fachklasse des Schülers an einem Berufskolleg wird gesetzt.
-	 * @param idFachklasse Neuer Wert für das Feld idFachklasse
-	 */
-	public void setIdFachklasse(final Long idFachklasse) {
-		this.idFachklasse = idFachklasse;
 	}
 
 	/**
@@ -728,27 +544,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID des Hauptförderschwerpunktes des Schülers wird gesetzt.
-	 * @param idFoerderschwerpunkt1 Neuer Wert für das Feld idFoerderschwerpunkt1
-	 */
-	public void setIdFoerderschwerpunkt1(final Long idFoerderschwerpunkt1) {
-		this.idFoerderschwerpunkt1 = idFoerderschwerpunkt1;
-	}
-
-	/**
 	 * Die ID des weiteren Förderschwerpunktes des Schülers
 	 * @return Inhalt des Feldes idFoerderschwerpunkt2
 	 */
 	public Long idFoerderschwerpunkt2() {
 		return idFoerderschwerpunkt2;
-	}
-
-	/**
-	 * Die ID des weiteren Förderschwerpunktes des Schülers wird gesetzt.
-	 * @param idFoerderschwerpunkt2 Neuer Wert für das Feld idFoerderschwerpunkt2
-	 */
-	public void setIdFoerderschwerpunkt2(final Long idFoerderschwerpunkt2) {
-		this.idFoerderschwerpunkt2 = idFoerderschwerpunkt2;
 	}
 
 	/**
@@ -760,27 +560,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht wird gesetzt.
-	 * @param idFolgeklasse Neuer Wert für das Feld idFolgeklasse
-	 */
-	public void setIdFolgeklasse(final Long idFolgeklasse) {
-		this.idFolgeklasse = idFolgeklasse;
-	}
-
-	/**
 	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
 	 * @return Inhalt des Feldes idJahrgang
 	 */
 	public Long idJahrgang() {
 		return idJahrgang;
-	}
-
-	/**
-	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist, wird gesetzt.
-	 * @param idJahrgang Neuer Wert für das Feld idJahrgang
-	 */
-	public void setIdJahrgang(final Long idJahrgang) {
-		this.idJahrgang = idJahrgang;
 	}
 
 	/**
@@ -792,27 +576,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist, wird gesetzt.
-	 * @param idKlasse Neuer Wert für das Feld idKlasse
-	 */
-	public void setIdKlasse(final Long idKlasse) {
-		this.idKlasse = idKlasse;
-	}
-
-	/**
 	 * Die ID des Schülers des Lernabschnitts in der Datenbank.
 	 * @return Inhalt des Feldes idSchueler
 	 */
 	public long idSchueler() {
 		return idSchueler;
-	}
-
-	/**
-	 * Die ID des Schülers des Lernabschnitts in der Datenbank wird gesetzt.
-	 * @param idSchueler Neuer Wert für das Feld idSchueler
-	 */
-	public void setIdSchueler(final long idSchueler) {
-		this.idSchueler = idSchueler;
 	}
 
 	/**
@@ -824,27 +592,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID des Schuljahresabschnitts des Lernabschnitts in der Datenbank wird gesetzt.
-	 * @param idSchuljahresabschnitt Neuer Wert für das Feld idSchuljahresabschnitt
-	 */
-	public void setIdSchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-	}
-
-	/**
 	 * Die ID des Schwerpunktes des Schülers laut dem Schwerpunkt-Katalog
 	 * @return Inhalt des Feldes idSchwerpunkt
 	 */
 	public Long idSchwerpunkt() {
 		return idSchwerpunkt;
-	}
-
-	/**
-	 * Die ID des Schwerpunktes des Schülers laut dem Schwerpunkt-Katalog wird gesetzt.
-	 * @param idSchwerpunkt Neuer Wert für das Feld idSchwerpunkt
-	 */
-	public void setIdSchwerpunkt(final Long idSchwerpunkt) {
-		this.idSchwerpunkt = idSchwerpunkt;
 	}
 
 	/**
@@ -856,27 +608,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat, wird gesetzt.
-	 * @param idSonderpaedagoge Neuer Wert für das Feld idSonderpaedagoge
-	 */
-	public void setIdSonderpaedagoge(final Long idSonderpaedagoge) {
-		this.idSonderpaedagoge = idSonderpaedagoge;
-	}
-
-	/**
 	 * Die ID des Tutors des Schülers in der Datenbank.
 	 * @return Inhalt des Feldes idTutor
 	 */
 	public Long idTutor() {
 		return idTutor;
-	}
-
-	/**
-	 * Die ID des Tutors des Schülers in der Datenbank wird gesetzt.
-	 * @param idTutor Neuer Wert für das Feld idTutor
-	 */
-	public void setIdTutor(final Long idTutor) {
-		this.idTutor = idTutor;
 	}
 
 	/**
@@ -888,27 +624,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog) wird gesetzt.
-	 * @param istAbschlussPrognose Neuer Wert für das Feld istAbschlussPrognose
-	 */
-	public void setIstAbschlussPrognose(final boolean istAbschlussPrognose) {
-		this.istAbschlussPrognose = istAbschlussPrognose;
-	}
-
-	/**
 	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung
 	 * @return Inhalt des Feldes istFachpraktischerAnteilAusreichend
 	 */
 	public boolean istFachpraktischerAnteilAusreichend() {
 		return istFachpraktischerAnteilAusreichend;
-	}
-
-	/**
-	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung wird gesetzt.
-	 * @param istFachpraktischerAnteilAusreichend Neuer Wert für das Feld istFachpraktischerAnteilAusreichend
-	 */
-	public void setIstFachpraktischerAnteilAusreichend(final boolean istFachpraktischerAnteilAusreichend) {
-		this.istFachpraktischerAnteilAusreichend = istFachpraktischerAnteilAusreichend;
 	}
 
 	/**
@@ -920,27 +640,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht wird gesetzt.
-	 * @param istGewertet Neuer Wert für das Feld istGewertet
-	 */
-	public void setIstGewertet(final boolean istGewertet) {
-		this.istGewertet = istGewertet;
-	}
-
-	/**
 	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 * @return Inhalt des Feldes istWiederholung
 	 */
 	public boolean istWiederholung() {
 		return istWiederholung;
-	}
-
-	/**
-	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht wird gesetzt.
-	 * @param istWiederholung Neuer Wert für das Feld istWiederholung
-	 */
-	public void setIstWiederholung(final boolean istWiederholung) {
-		this.istWiederholung = istWiederholung;
 	}
 
 	/**
@@ -952,27 +656,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Klasse des Schülers aus diesem Lernabschnitt wird gesetzt.
-	 * @param klasse Neuer Wert für das Feld klasse
-	 */
-	public void setKlasse(final ReportingKlasse klasse) {
-		this.klasse = klasse;
-	}
-
-	/**
 	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 * @return Inhalt des Feldes klassenart
 	 */
 	public String klassenart() {
 		return klassenart;
-	}
-
-	/**
-	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z. B. Regelklasse - siehe Core-Type) wird gesetzt.
-	 * @param klassenart Neuer Wert für das Feld klassenart
-	 */
-	public void setKlassenart(final String klassenart) {
-		this.klassenart = klassenart;
 	}
 
 	/**
@@ -984,27 +672,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt wird gesetzt.
-	 * @param leistungsdaten Neuer Wert für das Feld leistungsdaten
-	 */
-	public void setLeistungsdaten(final List<SchuelerLeistungsdaten> leistungsdaten) {
-		this.leistungsdaten = leistungsdaten;
-	}
-
-	/**
 	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
 	 * @return Inhalt des Feldes nachpruefungen
 	 */
 	public SchuelerLernabschnittNachpruefungsdaten nachpruefungen() {
 		return nachpruefungen;
-	}
-
-	/**
-	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind, wird gesetzt.
-	 * @param nachpruefungen Neuer Wert für das Feld nachpruefungen
-	 */
-	public void setNachpruefungen(final SchuelerLernabschnittNachpruefungsdaten nachpruefungen) {
-		this.nachpruefungen = nachpruefungen;
 	}
 
 	/**
@@ -1016,27 +688,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden wird gesetzt.
-	 * @param noteDurchschnitt Neuer Wert für das Feld noteDurchschnitt
-	 */
-	public void setNoteDurchschnitt(final String noteDurchschnitt) {
-		this.noteDurchschnitt = noteDurchschnitt;
-	}
-
-	/**
 	 * Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10
 	 * @return Inhalt des Feldes noteLernbereichGSbzwAL
 	 */
 	public Integer noteLernbereichGSbzwAL() {
 		return noteLernbereichGSbzwAL;
-	}
-
-	/**
-	 * Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10 wird gesetzt.
-	 * @param noteLernbereichGSbzwAL Neuer Wert für das Feld noteLernbereichGSbzwAL
-	 */
-	public void setNoteLernbereichGSbzwAL(final Integer noteLernbereichGSbzwAL) {
-		this.noteLernbereichGSbzwAL = noteLernbereichGSbzwAL;
 	}
 
 	/**
@@ -1048,27 +704,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10 wird gesetzt.
-	 * @param noteLernbereichNW Neuer Wert für das Feld noteLernbereichNW
-	 */
-	public void setNoteLernbereichNW(final Integer noteLernbereichNW) {
-		this.noteLernbereichNW = noteLernbereichNW;
-	}
-
-	/**
 	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 * @return Inhalt des Feldes organisationsform
 	 */
 	public String organisationsform() {
 		return organisationsform;
-	}
-
-	/**
-	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z. B. Ganztag - siehe Core-Type) wird gesetzt.
-	 * @param organisationsform Neuer Wert für das Feld organisationsform
-	 */
-	public void setOrganisationsform(final String organisationsform) {
-		this.organisationsform = organisationsform;
 	}
 
 	/**
@@ -1080,27 +720,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist, wird gesetzt.
-	 * @param pruefungsOrdnung Neuer Wert für das Feld pruefungsOrdnung
-	 */
-	public void setPruefungsOrdnung(final String pruefungsOrdnung) {
-		this.pruefungsOrdnung = pruefungsOrdnung;
-	}
-
-	/**
 	 * Der Schüler, zu dem dieser Lernabschnittsdaten gehören.
 	 * @return Inhalt des Feldes schueler
 	 */
 	public ReportingSchueler schueler() {
 		return schueler;
-	}
-
-	/**
-	 * Der Schüler, zu dem dieser Lernabschnittsdaten gehören wird gesetzt.
-	 * @param schueler Neuer Wert für das Feld schueler
-	 */
-	public void setSchueler(final ReportingSchueler schueler) {
-		this.schueler = schueler;
 	}
 
 	/**
@@ -1112,27 +736,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Das Kürzel der Schulgliederung bzw des Bildungsgangs des Schülers wird gesetzt.
-	 * @param schulgliederung Neuer Wert für das Feld schulgliederung
-	 */
-	public void setSchulgliederung(final String schulgliederung) {
-		this.schulgliederung = schulgliederung;
-	}
-
-	/**
 	 * Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören.
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
 		return schuljahresabschnitt;
-	}
-
-	/**
-	 * Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören wird gesetzt.
-	 * @param schuljahresabschnitt Neuer Wert für das Feld schuljahresabschnitt
-	 */
-	public void setSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		this.schuljahresabschnitt = schuljahresabschnitt;
 	}
 
 	/**
@@ -1144,27 +752,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der Sonderpädagoge, der den Schüler betreut, wird gesetzt.
-	 * @param sonderpaedagoge Neuer Wert für das Feld sonderpaedagoge
-	 */
-	public void setSonderpaedagoge(final ReportingLehrer sonderpaedagoge) {
-		this.sonderpaedagoge = sonderpaedagoge;
-	}
-
-	/**
 	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung
 	 * @return Inhalt des Feldes textErgebnisPruefungsalgorithmus
 	 */
 	public String textErgebnisPruefungsalgorithmus() {
 		return textErgebnisPruefungsalgorithmus;
-	}
-
-	/**
-	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung wird gesetzt.
-	 * @param textErgebnisPruefungsalgorithmus Neuer Wert für das Feld textErgebnisPruefungsalgorithmus
-	 */
-	public void setTextErgebnisPruefungsalgorithmus(final String textErgebnisPruefungsalgorithmus) {
-		this.textErgebnisPruefungsalgorithmus = textErgebnisPruefungsalgorithmus;
 	}
 
 	/**
@@ -1176,27 +768,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der Tutor, der den Schüler betreut, wird gesetzt.
-	 * @param tutor Neuer Wert für das Feld tutor
-	 */
-	public void setTutor(final ReportingLehrer tutor) {
-		this.tutor = tutor;
-	}
-
-	/**
 	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I.
 	 * @return Inhalt des Feldes uebergangsempfehlungText
 	 */
 	public String uebergangsempfehlungText() {
 		return uebergangsempfehlungText;
-	}
-
-	/**
-	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I wird gesetzt.
-	 * @param uebergangsempfehlungText Neuer Wert für das Feld uebergangsempfehlungText
-	 */
-	public void setUebergangsempfehlungText(final String uebergangsempfehlungText) {
-		this.uebergangsempfehlungText = uebergangsempfehlungText;
 	}
 
 	/**
@@ -1208,27 +784,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der Text zur Versetzungsentscheidung auf dem Zeugnis wird gesetzt.
-	 * @param versetzungsentscheidungText Neuer Wert für das Feld versetzungsentscheidungText
-	 */
-	public void setVersetzungsentscheidungText(final String versetzungsentscheidungText) {
-		this.versetzungsentscheidungText = versetzungsentscheidungText;
-	}
-
-	/**
 	 * Das Kürzel des Versetzungsvermerks
 	 * @return Inhalt des Feldes versetzungsvermerkKuerzel
 	 */
 	public String versetzungsvermerkKuerzel() {
 		return versetzungsvermerkKuerzel;
-	}
-
-	/**
-	 * Das Kürzel des Versetzungsvermerks wird gesetzt.
-	 * @param versetzungsvermerkKuerzel Neuer Wert für das Feld versetzungsvermerkKuerzel
-	 */
-	public void setVersetzungsvermerkKuerzel(final String versetzungsvermerkKuerzel) {
-		this.versetzungsvermerkKuerzel = versetzungsvermerkKuerzel;
 	}
 
 	/**
@@ -1240,27 +800,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z. B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.) wird gesetzt.
-	 * @param wechselNr Neuer Wert für das Feld wechselNr
-	 */
-	public void setWechselNr(final int wechselNr) {
-		this.wechselNr = wechselNr;
-	}
-
-	/**
 	 * Die Art des Zeugnisses
 	 * @return Inhalt des Feldes zeugnisart
 	 */
 	public String zeugnisart() {
 		return zeugnisart;
-	}
-
-	/**
-	 * Die Art des Zeugnisses wird gesetzt.
-	 * @param zeugnisart Neuer Wert für das Feld zeugnisart
-	 */
-	public void setZeugnisart(final String zeugnisart) {
-		this.zeugnisart = zeugnisart;
 	}
 
 	/**
@@ -1272,27 +816,11 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten wird gesetzt.
-	 * @param zeugnisASVText Neuer Wert für das Feld zeugnisASVText
-	 */
-	public void setZeugnisASVText(final String zeugnisASVText) {
-		this.zeugnisASVText = zeugnisASVText;
-	}
-
-	/**
 	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement.
 	 * @return Inhalt des Feldes zeugnisAUEText
 	 */
 	public String zeugnisAUEText() {
 		return zeugnisAUEText;
-	}
-
-	/**
-	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement wird gesetzt.
-	 * @param zeugnisAUEText Neuer Wert für das Feld zeugnisAUEText
-	 */
-	public void setZeugnisAUEText(final String zeugnisAUEText) {
-		this.zeugnisAUEText = zeugnisAUEText;
 	}
 
 	/**
@@ -1304,14 +832,6 @@ public class ReportingSchuelerLernabschnitt {
 	}
 
 	/**
-	 * Der Text für allgemeine Zeugnisbemerkungen wird gesetzt.
-	 * @param zeugnisBemerkungText Neuer Wert für das Feld zeugnisBemerkungText
-	 */
-	public void setZeugnisBemerkungText(final String zeugnisBemerkungText) {
-		this.zeugnisBemerkungText = zeugnisBemerkungText;
-	}
-
-	/**
 	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 * @return Inhalt des Feldes zeugnisLELSText
 	 */
@@ -1319,11 +839,4 @@ public class ReportingSchuelerLernabschnitt {
 		return zeugnisLELSText;
 	}
 
-	/**
-	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen wird gesetzt.
-	 * @param zeugnisLELSText Neuer Wert für das Feld zeugnisLELSText
-	 */
-	public void setZeugnisLELSText(final String zeugnisLELSText) {
-		this.zeugnisLELSText = zeugnisLELSText;
-	}
 }

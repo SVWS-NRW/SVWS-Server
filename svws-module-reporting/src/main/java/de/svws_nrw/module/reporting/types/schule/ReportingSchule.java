@@ -12,70 +12,70 @@ import java.util.List;
 public class ReportingSchule {
 
 	/** Der aktuelle Abschnitt des Schuljahres der Schule. */
-	private ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
+	protected ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
 
 	/** Die Anzahl der Jahrgangsstufen pro Jahr. */
-	private long anzahlJahrgangsstufenProJahr;
+	protected long anzahlJahrgangsstufenProJahr;
 
 	/** Die Anzahl der Abschnitte pro Jahr */
-	private long anzahlSchuljahresabschnitteProJahr;
+	protected long anzahlSchuljahresabschnitteProJahr;
 
 	/** Der erste Teil der Bezeichnung der Schule */
-	private String bezeichnung1;
+	protected String bezeichnung1;
 
 	/** Der zweite Teil der Bezeichnung der Schule */
-	private String bezeichnung2;
+	protected String bezeichnung2;
 
 	/** Der dritte Teil der Bezeichnung der Schule */
-	private String bezeichnung3;
+	protected String bezeichnung3;
 
 	/** Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr) */
-	private String bezeichnungSchuljahresabschnitt;
+	protected String bezeichnungSchuljahresabschnitt;
 
 	/** Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Halbjahr, 2. Halbjahr) */
-	private List<String> bezeichnungenSchuljahresabschnitte = new ArrayList<>();
+	protected List<String> bezeichnungenSchuljahresabschnitte = new ArrayList<>();
 
 	/** Die Dauer einer Unterrichtseinheit in Minuten. */
-	private long dauerUnterrichtseinheit;
+	protected long dauerUnterrichtseinheit;
 
 	/** Die Mailadresse der Schule. */
-	private String email;
+	protected String email;
 
 	/** Die Faxnummer der Schule. */
-	private String fax;
+	protected String fax;
 
 	/** Die Hausnummer zur Straße in der die Schule liegt. */
-	private String hausnummer;
+	protected String hausnummer;
 
 	/** Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt. */
-	private String hausnummerZusatz;
+	protected String hausnummerZusatz;
 
 	/** Der Ort in dem die Schule liegt. */
-	private String ort;
+	protected String ort;
 
 	/** Die Postleitzahl des Gebietes in dem die Schule liegt. */
-	private String plz;
+	protected String plz;
 
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */
-	private List<ReportingSchuljahresabschnitt> schuljahresabschnitte = new ArrayList<>();
+	protected List<ReportingSchuljahresabschnitt> schuljahresabschnitte = new ArrayList<>();
 
 	/** Die Schulform der Schule */
-	private String schulform;
+	protected String schulform;
 
 	/** Das Logo der Schule im Base64-Format. */
-	private String schullogo;
+	protected String schullogo;
 
 	/** Die eindeutige Schulnummer der Schule */
-	private long schulnummer;
+	protected long schulnummer;
 
 	/** Der Straßenname der Straße in der die Schule liegt. */
-	private String strassenname;
+	protected String strassenname;
 
 	/** Die Telefonnummer der Schule. */
-	private String telefon;
+	protected String telefon;
 
 	/** Die Adresse der Homepage der Schule (Domain-Name) */
-	private String webAdresse;
+	protected String webAdresse;
 
 
 
@@ -178,7 +178,7 @@ public class ReportingSchule {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Der aktuelle Abschnitt des Schuljahres der Schule.
@@ -186,14 +186,6 @@ public class ReportingSchule {
 	 */
 	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
 		return aktuellerSchuljahresabschnitt;
-	}
-
-	/**
-	 * Der aktuelle Abschnitt des Schuljahres der Schule wird gesetzt.
-	 * @param aktuellerSchuljahresabschnitt Neuer Wert für das Feld aktuellerSchuljahresabschnitt
-	 */
-	public void setAktuellerSchuljahresabschnitt(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt) {
-		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 	}
 
 	/**
@@ -205,27 +197,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Die Anzahl der Jahrgangsstufen pro Jahr wird gesetzt.
-	 * @param anzahlJahrgangsstufenProJahr Neuer Wert für das Feld anzahlJahrgangsstufenProJahr
-	 */
-	public void setAnzahlJahrgangsstufenProJahr(final long anzahlJahrgangsstufenProJahr) {
-		this.anzahlJahrgangsstufenProJahr = anzahlJahrgangsstufenProJahr;
-	}
-
-	/**
 	 * Die Anzahl der Abschnitte pro Jahr
 	 * @return Inhalt des Feldes anzahlSchuljahresabschnitteProJahr
 	 */
 	public long anzahlSchuljahresabschnitteProJahr() {
 		return anzahlSchuljahresabschnitteProJahr;
-	}
-
-	/**
-	 * Die Anzahl der Abschnitte pro Jahr wird gesetzt.
-	 * @param anzahlSchuljahresabschnitteProJahr Neuer Wert für das Feld anzahlSchuljahresabschnitteProJahr
-	 */
-	public void setAnzahlSchuljahresabschnitteProJahr(final long anzahlSchuljahresabschnitteProJahr) {
-		this.anzahlSchuljahresabschnitteProJahr = anzahlSchuljahresabschnitteProJahr;
 	}
 
 	/**
@@ -237,27 +213,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Der erste Teil der Bezeichnung der Schule wird gesetzt.
-	 * @param bezeichnung1 Neuer Wert für das Feld bezeichnung1
-	 */
-	public void setBezeichnung1(final String bezeichnung1) {
-		this.bezeichnung1 = bezeichnung1;
-	}
-
-	/**
 	 * Der zweite Teil der Bezeichnung der Schule
 	 * @return Inhalt des Feldes bezeichnung2
 	 */
 	public String bezeichnung2() {
 		return bezeichnung2;
-	}
-
-	/**
-	 * Der zweite Teil der Bezeichnung der Schule wird gesetzt.
-	 * @param bezeichnung2 Neuer Wert für das Feld bezeichnung2
-	 */
-	public void setBezeichnung2(final String bezeichnung2) {
-		this.bezeichnung2 = bezeichnung2;
 	}
 
 	/**
@@ -269,27 +229,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Der dritte Teil der Bezeichnung der Schule wird gesetzt.
-	 * @param bezeichnung3 Neuer Wert für das Feld bezeichnung3
-	 */
-	public void setBezeichnung3(final String bezeichnung3) {
-		this.bezeichnung3 = bezeichnung3;
-	}
-
-	/**
 	 * Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr)
 	 * @return Inhalt des Feldes bezeichnungSchuljahresabschnitt
 	 */
 	public String bezeichnungSchuljahresabschnitt() {
 		return bezeichnungSchuljahresabschnitt;
-	}
-
-	/**
-	 * Die allgemeine Bezeichnung der Abschnitte (z. B. Quartal oder Halbjahr) wird gesetzt.
-	 * @param bezeichnungSchuljahresabschnitt Neuer Wert für das Feld bezeichnungSchuljahresabschnitt
-	 */
-	public void setBezeichnungSchuljahresabschnitt(final String bezeichnungSchuljahresabschnitt) {
-		this.bezeichnungSchuljahresabschnitt = bezeichnungSchuljahresabschnitt;
 	}
 
 	/**
@@ -301,27 +245,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Halbjahr, 2. Halbjahr) wird gesetzt.
-	 * @param bezeichnungenSchuljahresabschnitte Neuer Wert für das Feld bezeichnungenSchuljahresabschnitte
-	 */
-	public void setBezeichnungenSchuljahresabschnitte(final List<String> bezeichnungenSchuljahresabschnitte) {
-		this.bezeichnungenSchuljahresabschnitte = bezeichnungenSchuljahresabschnitte;
-	}
-
-	/**
 	 * Die Dauer einer Unterrichtseinheit in Minuten.
 	 * @return Inhalt des Feldes dauerUnterrichtseinheit
 	 */
 	public long dauerUnterrichtseinheit() {
 		return dauerUnterrichtseinheit;
-	}
-
-	/**
-	 * Die Dauer einer Unterrichtseinheit in Minuten wird gesetzt.
-	 * @param dauerUnterrichtseinheit Neuer Wert für das Feld dauerUnterrichtseinheit
-	 */
-	public void setDauerUnterrichtseinheit(final long dauerUnterrichtseinheit) {
-		this.dauerUnterrichtseinheit = dauerUnterrichtseinheit;
 	}
 
 	/**
@@ -333,27 +261,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Die Mailadresse der Schule wird gesetzt.
-	 * @param email Neuer Wert für das Feld email
-	 */
-	public void setEmail(final String email) {
-		this.email = email;
-	}
-
-	/**
 	 * Die Faxnummer der Schule.
 	 * @return Inhalt des Feldes fax
 	 */
 	public String fax() {
 		return fax;
-	}
-
-	/**
-	 * Die Faxnummer der Schule wird gesetzt.
-	 * @param fax Neuer Wert für das Feld fax
-	 */
-	public void setFax(final String fax) {
-		this.fax = fax;
 	}
 
 	/**
@@ -365,27 +277,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Die Hausnummer zur Straße, in der die Schule liegt, wird gesetzt.
-	 * @param hausnummer Neuer Wert für das Feld hausnummer
-	 */
-	public void setHausnummer(final String hausnummer) {
-		this.hausnummer = hausnummer;
-	}
-
-	/**
 	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
 		return hausnummerZusatz;
-	}
-
-	/**
-	 * Ggf der Hausnummerzusatz zur Straße, in der die Schule liegt, wird gesetzt.
-	 * @param hausnummerZusatz Neuer Wert für das Feld hausnummerZusatz
-	 */
-	public void setHausnummerZusatz(final String hausnummerZusatz) {
-		this.hausnummerZusatz = hausnummerZusatz;
 	}
 
 	/**
@@ -397,27 +293,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Der Ort, in dem die Schule liegt, wird gesetzt.
-	 * @param ort Neuer Wert für das Feld ort
-	 */
-	public void setOrt(final String ort) {
-		this.ort = ort;
-	}
-
-	/**
 	 * Die Postleitzahl des Gebietes in dem die Schule liegt.
 	 * @return Inhalt des Feldes plz
 	 */
 	public String plz() {
 		return plz;
-	}
-
-	/**
-	 * Die Postleitzahl des Gebietes, in dem die Schule liegt, wird gesetzt.
-	 * @param plz Neuer Wert für das Feld plz
-	 */
-	public void setPlz(final String plz) {
-		this.plz = plz;
 	}
 
 	/**
@@ -429,27 +309,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind, wird gesetzt.
-	 * @param schuljahresabschnitte Neuer Wert für das Feld schuljahresabschnitte
-	 */
-	public void setSchuljahresabschnitte(final List<ReportingSchuljahresabschnitt> schuljahresabschnitte) {
-		this.schuljahresabschnitte = schuljahresabschnitte;
-	}
-
-	/**
 	 * Die Schulform der Schule
 	 * @return Inhalt des Feldes schulform
 	 */
 	public String schulform() {
 		return schulform;
-	}
-
-	/**
-	 * Die Schulform der Schule wird gesetzt.
-	 * @param schulform Neuer Wert für das Feld schulform
-	 */
-	public void setSchulform(final String schulform) {
-		this.schulform = schulform;
 	}
 
 	/**
@@ -461,27 +325,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 *  Das Schullogo der Schule im Base64-Format wird gesetzt.
-	 * @param schullogo Neuer Wert für das Feld schullogo
-	 */
-	public void setSchullogo(final String schullogo) {
-		this.schullogo = schullogo;
-	}
-
-	/**
 	 * Die eindeutige Schulnummer der Schule
 	 * @return Inhalt des Feldes schulnummer
 	 */
 	public long schulnummer() {
 		return schulnummer;
-	}
-
-	/**
-	 * Die eindeutige Schulnummer der Schule wird gesetzt.
-	 * @param schulnummer Neuer Wert für das Feld schulnummer
-	 */
-	public void setSchulnummer(final long schulnummer) {
-		this.schulnummer = schulnummer;
 	}
 
 	/**
@@ -493,27 +341,11 @@ public class ReportingSchule {
 	}
 
 	/**
-	 * Der Straßenname der Straße, in der die Schule liegt, wird gesetzt.
-	 * @param strassenname Neuer Wert für das Feld strassenname
-	 */
-	public void setStrassenname(final String strassenname) {
-		this.strassenname = strassenname;
-	}
-
-	/**
 	 * Die Telefonnummer der Schule.
 	 * @return Inhalt des Feldes telefon
 	 */
 	public String telefon() {
 		return telefon;
-	}
-
-	/**
-	 * Die Telefonnummer der Schule wird gesetzt.
-	 * @param telefon Neuer Wert für das Feld telefon
-	 */
-	public void setTelefon(final String telefon) {
-		this.telefon = telefon;
 	}
 
 	/**
@@ -524,11 +356,4 @@ public class ReportingSchule {
 		return webAdresse;
 	}
 
-	/**
-	 * Die Adresse der Homepage der Schule (Domain-Name) wird gesetzt.
-	 * @param webAdresse Neuer Wert für das Feld webAdresse
-	 */
-	public void setWebAdresse(final String webAdresse) {
-		this.webAdresse = webAdresse;
-	}
 }

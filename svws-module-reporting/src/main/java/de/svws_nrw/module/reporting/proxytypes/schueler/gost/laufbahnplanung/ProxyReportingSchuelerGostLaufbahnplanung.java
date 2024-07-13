@@ -92,7 +92,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		if (abiturdaten.abiturjahr <= 0) {
 			return;
 		}
-		super.setAbiturjahr(abiturdaten.abiturjahr);
+		super.abiturjahr = abiturdaten.abiturjahr;
 
 		// Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
 		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten =
@@ -123,64 +123,63 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// ##### Grunddaten und Summen setzen ###############
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
-			super.setPruefungsordnung(reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung());
+			super.pruefungsordnung = reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung();
 			if (!super.pruefungsordnung().toLowerCase().contains("gost"))
-				super.setPruefungsordnung("APO-GOSt");
+				super.pruefungsordnung = "APO-GOSt";
 		} else {
-			super.setPruefungsordnung("APO-GOSt");
+			super.pruefungsordnung = "APO-GOSt";
 		}
-		super.setBeratungsbogenText(gostJahrgangsdaten.textBeratungsbogen);
-		super.setEmailText(gostJahrgangsdaten.textMailversand);
+		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
+		super.emailText = gostJahrgangsdaten.textMailversand;
 
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
-			super.setAktuellesGOStHalbjahr(reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt);
-			super.setAktuelleKlasse(reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel());
+			super.aktuellesGOStHalbjahr = reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt;
+			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
 			eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
 		}
 
 		if (reportingSchueler.auswahlLernabschnitt() != null) {
-			super.setAuswahlGOStHalbjahr(reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt);
-			super.setAuswahlKlasse(reportingSchueler.auswahlLernabschnitt().klasse().kuerzel());
+			super.auswahlGOStHalbjahr = reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
+					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt;
+			super.auswahlKlasse = reportingSchueler.auswahlLernabschnitt().klasse().kuerzel();
 			eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
 		}
 
 		eintragBeratungslehrkraefteErgaenzen(schuelerBeratungsdaten, gostJahrgangsdaten);
-		super.setLetzterRuecklaufDatum(schuelerBeratungsdaten.ruecklaufdatum);
-		super.setLetzteBeratungDatum(schuelerBeratungsdaten.beratungsdatum);
-		super.setKommentar(schuelerBeratungsdaten.kommentar);
+		super.letzterRuecklaufDatum = schuelerBeratungsdaten.ruecklaufdatum;
+		super.letzteBeratungDatum = schuelerBeratungsdaten.beratungsdatum;
+		super.kommentar = schuelerBeratungsdaten.kommentar;
 
 		final int[] kurse = abiturdatenManager.getAnrechenbareKurse();
 		final int[] wochenstunden = abiturdatenManager.getWochenstunden();
 
-		super.setKursanzahlEF1(kurse[0]);
-		super.setKursanzahlEF2(kurse[1]);
-		super.setKursanzahlQ11(kurse[2]);
-		super.setKursanzahlQ12(kurse[3]);
-		super.setKursanzahlQ21(kurse[4]);
-		super.setKursanzahlQ22(kurse[5]);
+		super.kursanzahlEF1 = kurse[0];
+		super.kursanzahlEF2 = kurse[1];
+		super.kursanzahlQ11 = kurse[2];
+		super.kursanzahlQ12 = kurse[3];
+		super.kursanzahlQ21 = kurse[4];
+		super.kursanzahlQ22 = kurse[5];
 
-		super.setKursanzahlQPh(super.kursanzahlQ11() + super.kursanzahlQ12() + super.kursanzahlQ21() + super.kursanzahlQ22());
-		super.setKursanzahlAnrechenbarBlockI((abiturdatenManager.getAnrechenbareKurseBlockI()));
+		super.kursanzahlQPh = super.kursanzahlQ11() + super.kursanzahlQ12() + super.kursanzahlQ21() + super.kursanzahlQ22();
+		super.kursanzahlAnrechenbarBlockI = (abiturdatenManager.getAnrechenbareKurseBlockI());
 
-		super.setWochenstundenEF1(wochenstunden[0]);
-		super.setWochenstundenEF2(wochenstunden[1]);
-		super.setWochenstundenQ11(wochenstunden[2]);
-		super.setWochenstundenQ12(wochenstunden[3]);
-		super.setWochenstundenQ21(wochenstunden[4]);
-		super.setWochenstundenQ22(wochenstunden[5]);
+		super.wochenstundenEF1 = wochenstunden[0];
+		super.wochenstundenEF2 = wochenstunden[1];
+		super.wochenstundenQ11 = wochenstunden[2];
+		super.wochenstundenQ12 = wochenstunden[3];
+		super.wochenstundenQ21 = wochenstunden[4];
+		super.wochenstundenQ22 = wochenstunden[5];
 
-		super.setWochenstundenDurchschnittEF((super.wochenstundenEF1() + super.wochenstundenEF2()) / 2.0);
-		super.setWochenstundenDurchschnittQ1((super.wochenstundenQ11() + super.wochenstundenQ12()) / 2.0);
-		super.setWochenstundenDurchschnittQ2((super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0);
-		super.setWochenstundenDurchschnittQPh((super.wochenstundenQ11() + super.wochenstundenQ12() + super.wochenstundenQ21() + super.wochenstundenQ22())
-				/ 4.00);
-		super.setWochenstundenGesamt((super.wochenstundenEF1() + super.wochenstundenEF2() + super.wochenstundenQ11() + super.wochenstundenQ12()
-				+ super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0);
+		super.wochenstundenDurchschnittEF = (super.wochenstundenEF1() + super.wochenstundenEF2()) / 2.0;
+		super.wochenstundenDurchschnittQ1 = (super.wochenstundenQ11() + super.wochenstundenQ12()) / 2.0;
+		super.wochenstundenDurchschnittQ2 = (super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0;
+		super.wochenstundenDurchschnittQPh = (super.wochenstundenQ11() + super.wochenstundenQ12() + super.wochenstundenQ21() + super.wochenstundenQ22()) / 4.00;
+		super.wochenstundenGesamt = (super.wochenstundenEF1() + super.wochenstundenEF2() + super.wochenstundenQ11() + super.wochenstundenQ12()
+				+ super.wochenstundenQ21() + super.wochenstundenQ22()) / 2.0;
 
 		// ##### Fachwahlliste erstellen ###############
-		super.setFachwahlen(getListFachwahlen(abiturdaten, this.reportingRepository.mapGostAbiturjahrgangFaecher().get(abiturdaten.abiturjahr)));
+		super.fachwahlen = getListFachwahlen(abiturdaten, this.reportingRepository.mapGostAbiturjahrgangFaecher().get(abiturdaten.abiturjahr));
 
 		// ##### Fehlerliste und Hinweisliste erstellen ###############
 		final GostBelegpruefungErgebnis ergebnis = abiturdatenManager.getBelegpruefungErgebnis();
@@ -217,19 +216,19 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private void eintragBeratungAktuellesGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
 		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
 		switch (folgeHalbjahr) {
-			case 2 -> super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+			case 2 -> super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
 			case 1 -> {
 				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1");
+					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
 				else
-					super.setFolgeAktuellesGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
 
 			}
-			default -> super.setFolgeAktuellesGOStHalbjahr("");
+			default -> super.folgeAktuellesGOStHalbjahr = "";
 		}
 		// Frühestes Beratungshalbjahr kann die EF.1 sein.
 		if (super.folgeAktuellesGOStHalbjahr().compareTo("EF.1") < 0)
-			super.setFolgeAktuellesGOStHalbjahr("EF.1");
+			super.folgeAktuellesGOStHalbjahr = "EF.1";
 	}
 
 
@@ -240,19 +239,19 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private void eintragBeratungAuswahlGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
 		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
 		switch (folgeHalbjahr) {
-			case 2 -> super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+			case 2 -> super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
 			case 1 -> {
 				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1");
+					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
 				else
-					super.setFolgeAuswahlGOStHalbjahr(reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2");
+					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
 
 			}
-			default -> super.setFolgeAuswahlGOStHalbjahr("");
+			default -> super.folgeAuswahlGOStHalbjahr = "";
 		}
 		// Frühestes Beratungshalbjahr kann die EF.1 sein.
 		if (super.folgeAuswahlGOStHalbjahr().compareTo("EF.1") < 0)
-			super.setFolgeAuswahlGOStHalbjahr("EF.1");
+			super.folgeAuswahlGOStHalbjahr = "EF.1";
 	}
 
 
@@ -264,7 +263,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private void eintragBeratungslehrkraefteErgaenzen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
-			super.setLetzteBeratungLehrkraft(new ProxyReportingLehrer(
+			super.letzteBeratungLehrkraft = new ProxyReportingLehrer(
 					this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
 						try {
@@ -273,7 +272,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 							e.printStackTrace();
 							return new LehrerStammdaten();
 						}
-					})));
+					}));
 		}
 		// Beratungslehrkräfte der Stufe bestimmen aus den GOSt-Daten der Jahrgangsstufe
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
@@ -294,60 +293,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		}
 	}
 
-	/**
-	 * Ergänzt im übergebenen LaufbahnplanungFachwahl-Objekt den Fremdspracheneintrag, wenn es sich um eine Fremdsprache handelt.
-	 * @param laufbahnplanungFach 	Das Laufbahnplanungsfach, bei dem die Fremdspracheninformationen ergänzt werden sollen.
-	 * @param fach 					GOST-Fach der Fremdsprache
-	 * @param abiturdaten 			Abiturdaten des Schülers
-	 * @param sprachbelegungen 		Sprachbelegungen des Schülers aus der Sprachenfolge
-	 * @param sprachpruefungen 		Sprachprüfungen des Schülers
-	 */
-	private void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final ProxyReportingGostLaufbahnplanungFachwahl laufbahnplanungFach, final GostFach fach,
-			final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
-
-		if (!fach.istFremdsprache)
-			return;
-
-		final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-
-		// Verhindern, dass Pseudofächer der Statistik hier als zulässiges Fach verwendet werden.
-		if (!(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"))) {
-			final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-			final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
-
-			if (sprachbelegung != null) {
-				if (((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-						&& ((zfach.daten.abJahrgang == null)
-								|| zfach.daten.abJahrgang.isEmpty()
-								|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
-										&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-								|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
-										&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
-					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
-					laufbahnplanungFach.setFachIstFortfuehrbareFremdspracheInGOSt(true);
-					laufbahnplanungFach.setJahrgangFremdsprachenbeginn(sprachbelegung.belegungVonJahrgang);
-					if (sprachbelegung.reihenfolge != null)
-						laufbahnplanungFach.setPositionFremdsprachenfolge(sprachbelegung.reihenfolge.toString());
-				}
-			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
-				laufbahnplanungFach.setFachIstFortfuehrbareFremdspracheInGOSt(true);
-				if (sprachpruefung.istFeststellungspruefung) {
-					laufbahnplanungFach.setJahrgangFremdsprachenbeginn("SFP");
-				} else if (sprachpruefung.istHSUPruefung) {
-					laufbahnplanungFach.setJahrgangFremdsprachenbeginn("HSU");
-				}
-				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
-					laufbahnplanungFach.setPositionFremdsprachenfolge("1");
-				else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
-					laufbahnplanungFach.setPositionFremdsprachenfolge("2");
-				else if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
-					laufbahnplanungFach.setPositionFremdsprachenfolge("2");
-				else {
-					laufbahnplanungFach.setPositionFremdsprachenfolge("");
-				}
-			}
-		}
-	}
 
 	/**
 	 * Erstellt eine Liste von Fachwahlen aus der Laufbahnplanung eines Schülers für die GOSt.
@@ -368,42 +313,116 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		for (final GostFach fach : gostFaecherManager.faecher()) {
-			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
+			if (!checkBelegungInGostMoeglich(fach))
 				continue;
 
+			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl;
+
+			// Variablen initialisieren
+			String abiturfach = "";
+			String belegungEF1 = "";
+			String belegungEF2 = "";
+			String belegungQ11 = "";
+			String belegungQ12 = "";
+			String belegungQ21 = "";
+			String belegungQ22 = "";
+			boolean fachBelegtInGost = false;
+			boolean istFortfuehrbareFremdspracheInGOSt = false;
+			String jahrgangFremdsprachenbeginn = "";
+			String positionFremdsprachenfolge = "";
+
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
-
-			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
-					"",
-					"", "",
-					"", "", "", "",
-					reportingRepository.mapReportingFaecher().get(fach.id),
-					false,
-					false,
-					"",
-					""
-			);
-
-			eintragFremdspracheInLaufbahnplanungFachErgaenzen(fachwahl, fach, abiturdaten, sprachbelegungen, sprachpruefungen);
-
 			if (belegung != null) {
-				fachwahl.setBelegungEF1(eintragFachbelegung(belegung.belegungen[0]));
-				fachwahl.setBelegungEF2(eintragFachbelegung(belegung.belegungen[1]));
-				fachwahl.setBelegungQ11(eintragFachbelegung(belegung.belegungen[2]));
-				fachwahl.setBelegungQ12(eintragFachbelegung(belegung.belegungen[3]));
-				fachwahl.setBelegungQ21(eintragFachbelegung(belegung.belegungen[4]));
-				fachwahl.setBelegungQ22(eintragFachbelegung(belegung.belegungen[5]));
-				fachwahl.setFachIstBelegtInGOSt(true);
-
-				if (belegung.abiturFach != null) {
-					fachwahl.setAbiturfach(belegung.abiturFach.toString());
-				}
+				abiturfach = (belegung.abiturFach != null) ? belegung.abiturFach.toString() : "";
+				belegungEF1 = eintragFachbelegung(belegung.belegungen[0]);
+				belegungEF2 = eintragFachbelegung(belegung.belegungen[1]);
+				belegungQ11 = eintragFachbelegung(belegung.belegungen[2]);
+				belegungQ12 = eintragFachbelegung(belegung.belegungen[3]);
+				belegungQ21 = eintragFachbelegung(belegung.belegungen[4]);
+				belegungQ22 = eintragFachbelegung(belegung.belegungen[5]);
+				fachBelegtInGost = true;
 			}
+
+			// Bestimme noch Einträge zu den Sprachdaten, wenn das Fach eine Sprache ist.
+			final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			Sprachbelegung sprachbelegung = null;
+			Sprachpruefung sprachpruefung = null;
+
+			if (checkIstFremdsprachenfach(fach, zfach)) {
+				sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
+				sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+			}
+
+			if (sprachbelegung != null) {
+				if (checkSprachbelegungsbeginn(fach, sprachbelegung, zfach)) {
+					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+					istFortfuehrbareFremdspracheInGOSt = true;
+					jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
+					positionFremdsprachenfolge = (sprachbelegung.reihenfolge != null) ? sprachbelegung.reihenfolge.toString() : "";
+				}
+			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
+				istFortfuehrbareFremdspracheInGOSt = true;
+				if (sprachpruefung.istFeststellungspruefung) {
+					jahrgangFremdsprachenbeginn = "SFP";
+				} else if (sprachpruefung.istHSUPruefung) {
+					jahrgangFremdsprachenbeginn = "HSU";
+				}
+				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
+					positionFremdsprachenfolge = "1";
+				else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen || sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
+					positionFremdsprachenfolge = "2";
+			}
+
+			fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
+					abiturfach,
+					belegungEF1, belegungEF2, belegungQ11, belegungQ12,	belegungQ21, belegungQ22,
+					reportingRepository.mapReportingFaecher().get(fach.id),
+					fachBelegtInGost,
+					istFortfuehrbareFremdspracheInGOSt,
+					jahrgangFremdsprachenbeginn,
+					positionFremdsprachenfolge);
 
 			fachwahlen.add(fachwahl);
 		}
 
 		return fachwahlen;
+	}
+
+
+	/** Prüft, ob ein Fach in der Oberstufe in mindestens einem Halbjahr belegt werden konnte.
+	 * @param fach	Das zu prüfende Fach
+	 * @return		true, wenn eine Belegung in mindestens einem Halbjahr möglich war, sonst false
+	 */
+	private boolean checkBelegungInGostMoeglich(final GostFach fach) {
+		return (fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22);
+	}
+
+
+	/**
+	 * Prüft, ob das Fach eine Fremdsprache ist und kein Pseudofach der Statistik
+	 * @param fach	Das zu prüfende Fach
+	 * @param zfach	Das zu prüfende zugehörige Fach
+	 * @return		true, wenn es eine reguläre Fremdsprache ist, sonst false.
+	 */
+	private static boolean checkIstFremdsprachenfach(final GostFach fach, final ZulaessigesFach zfach) {
+		return fach.istFremdsprache && (zfach != null) && !(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"));
+	}
+
+
+	/** Prüft, ob eine Sprachbelegung vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+	 * @param fach				Das zu prüfende Fach
+	 * @param sprachbelegung 	Die Sprachbelegung aus der Sprachenfolge
+	 * @param zfach 			Das zulässige Fach, gegen das der Sprachbeginn geprüft wird.
+	 * @return					true, wenn eine Belegung möglich war, sonst false
+	 */
+	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final ZulaessigesFach zfach) {
+		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
+				&& ((zfach.daten.abJahrgang == null)
+						|| zfach.daten.abJahrgang.isEmpty()
+						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
+								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
+								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
 	}
 
 

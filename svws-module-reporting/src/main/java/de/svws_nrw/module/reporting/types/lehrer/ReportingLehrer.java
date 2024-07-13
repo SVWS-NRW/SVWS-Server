@@ -14,73 +14,73 @@ import de.svws_nrw.core.types.schule.Nationalitaeten;
 public class ReportingLehrer {
 
 	/** Ggf. die Amtsbezeichnung des Lehrers. */
-	private String amtsbezeichnung;
+	protected String amtsbezeichnung;
 
 	/** Ggf. die Anrede des Lehrers. */
-	private String anrede;
+	protected String anrede;
 
 	/** Ggf. die dienstliche E-Mail-Adresse des Lehrers. */
-	private String emailDienstlich;
+	protected String emailDienstlich;
 
 	/** Ggf. die private Email-Adresse des Lehrers. */
-	private String emailPrivat;
+	protected String emailPrivat;
 
 	/** Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.) */
-	private String foto;
+	protected String foto;
 
 	/** Das Geburtsdatum des Lehrers. */
-	private String geburtsdatum;
+	protected String geburtsdatum;
 
 	/** Das Geschlecht des Lehrers */
-	private Geschlecht geschlecht;
+	protected Geschlecht geschlecht;
 
 	/** Ggf. die Hausnummer zur Straße im Wohnort des Lehrers. */
-	private String hausnummer;
+	protected String hausnummer;
 
 	/** Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers. */
-	private String hausnummerZusatz;
+	protected String hausnummerZusatz;
 
 	/** Die ID des Lehrers. */
-	private long id;
+	protected long id;
 
 	/** Das Kürzel des Lehrers. */
-	private String kuerzel;
+	protected String kuerzel;
 
 	/** Der Nachname des Lehrers. */
-	private String nachname;
+	protected String nachname;
 
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
-	private String personalTyp;
+	protected String personalTyp;
 
 	/** Ggf. die Staatsangehörigkeit des Lehrers. */
-	private Nationalitaeten staatsangehoerigkeit;
+	protected Nationalitaeten staatsangehoerigkeit;
 
 	/** Ggf. der Straßenname im Wohnort des Lehrers. */
-	private String strassenname;
+	protected String strassenname;
 
 	/** Ggf. die Telefonnummer des Lehrers. */
-	private String telefon;
+	protected String telefon;
 
 	/** Ggf. die Mobilnummer des Lehrers. */
-	private String telefonMobil;
+	protected String telefonMobil;
 
 	/** Ggf. ein akademischer Grad des Lehrers. */
-	private String titel;
+	protected String titel;
 
 	/** Der Vorname des Lehrers. */
-	private String vorname;
+	protected String vorname;
 
 	/** Der Wohnort des Lehrers. */
-	private OrtKatalogEintrag wohnort;
+	protected OrtKatalogEintrag wohnort;
 
 	/** Der Wohnortsname des Lehrers. */
-	private String wohnortname;
+	protected String wohnortname;
 
 	/** Ggf. der Ortsteil des Wohnortes des Lehrers. */
-	private OrtsteilKatalogEintrag wohnortsteil;
+	protected OrtsteilKatalogEintrag wohnortsteil;
 
 	/** Ggf. der Ortsteilname des Wohnortes des Lehrers. */
-	private String wohnortsteilname;
+	protected String wohnortsteilname;
 
 
 
@@ -181,7 +181,7 @@ public class ReportingLehrer {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Ggf. die Amtsbezeichnung des Lehrers.
@@ -189,14 +189,6 @@ public class ReportingLehrer {
 	 */
 	public String amtsbezeichnung() {
 		return amtsbezeichnung;
-	}
-
-	/**
-	 * Ggf die Amtsbezeichnung des Lehrers wird gesetzt.
-	 * @param amtsbezeichnung Neuer Wert für das Feld amtsbezeichnung
-	 */
-	public void setAmtsbezeichnung(final String amtsbezeichnung) {
-		this.amtsbezeichnung = amtsbezeichnung;
 	}
 
 	/**
@@ -208,27 +200,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf die Anrede des Lehrers wird gesetzt.
-	 * @param anrede Neuer Wert für das Feld anrede
-	 */
-	public void setAnrede(final String anrede) {
-		this.anrede = anrede;
-	}
-
-	/**
 	 * Ggf. die dienstliche E-Mail-Adresse des Lehrers.
 	 * @return Inhalt des Feldes emailDienstlich
 	 */
 	public String emailDienstlich() {
 		return emailDienstlich;
-	}
-
-	/**
-	 * Ggf die dienstliche E-Mail-Adresse des Lehrers wird gesetzt.
-	 * @param emailDienstlich Neuer Wert für das Feld emailDienstlich
-	 */
-	public void setEmailDienstlich(final String emailDienstlich) {
-		this.emailDienstlich = emailDienstlich;
 	}
 
 	/**
@@ -240,27 +216,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf die private E-Mail-Adresse des Lehrers wird gesetzt.
-	 * @param emailPrivat Neuer Wert für das Feld emailPrivat
-	 */
-	public void setEmailPrivat(final String emailPrivat) {
-		this.emailPrivat = emailPrivat;
-	}
-
-	/**
 	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
 		return foto;
-	}
-
-	/**
-	 * Ggf das Foto des Lehrers (jpg, Base64-kodiert des Lehrers) wird gesetzt.
-	 * @param foto Neuer Wert für das Feld foto
-	 */
-	public void setFoto(final String foto) {
-		this.foto = foto;
 	}
 
 	/**
@@ -272,27 +232,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Das Geburtsdatum des Lehrers wird gesetzt.
-	 * @param geburtsdatum Neuer Wert für das Feld geburtsdatum
-	 */
-	public void setGeburtsdatum(final String geburtsdatum) {
-		this.geburtsdatum = geburtsdatum;
-	}
-
-	/**
 	 * Das Geschlecht des Lehrers
 	 * @return Inhalt des Feldes geschlecht
 	 */
 	public Geschlecht geschlecht() {
 		return geschlecht;
-	}
-
-	/**
-	 * Das Geschlecht des Lehrers wird gesetzt.
-	 * @param geschlecht Neuer Wert für das Feld geschlecht
-	 */
-	public void setGeschlecht(final Geschlecht geschlecht) {
-		this.geschlecht = geschlecht;
 	}
 
 	/**
@@ -304,27 +248,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf die Hausnummer zur Straße im Wohnort des Lehrers wird gesetzt.
-	 * @param hausnummer Neuer Wert für das Feld hausnummer
-	 */
-	public void setHausnummer(final String hausnummer) {
-		this.hausnummer = hausnummer;
-	}
-
-	/**
 	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
 		return hausnummerZusatz;
-	}
-
-	/**
-	 * Ggf der Hausnummerzusatz zur Straße im Wohnort des Lehrers wird gesetzt.
-	 * @param hausnummerZusatz Neuer Wert für das Feld hausnummerZusatz
-	 */
-	public void setHausnummerZusatz(final String hausnummerZusatz) {
-		this.hausnummerZusatz = hausnummerZusatz;
 	}
 
 	/**
@@ -336,27 +264,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Die ID des Lehrers wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Das Kürzel des Lehrers.
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
 		return kuerzel;
-	}
-
-	/**
-	 * Das Kürzel des Lehrers wird gesetzt.
-	 * @param kuerzel Neuer Wert für das Feld kuerzel
-	 */
-	public void setKuerzel(final String kuerzel) {
-		this.kuerzel = kuerzel;
 	}
 
 	/**
@@ -368,27 +280,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Der Nachname des Lehrers wird gesetzt.
-	 * @param nachname Neuer Wert für das Feld nachname
-	 */
-	public void setNachname(final String nachname) {
-		this.nachname = nachname;
-	}
-
-	/**
 	 * Die Bezeichnung des Personals-Typs des Lehrers.
 	 * @return Inhalt des Feldes personalTyp
 	 */
 	public String personalTyp() {
 		return personalTyp;
-	}
-
-	/**
-	 * Die Bezeichnung des Personals-Typs des Lehrers wird gesetzt.
-	 * @param personalTyp Neuer Wert für das Feld personalTyp
-	 */
-	public void setPersonalTyp(final String personalTyp) {
-		this.personalTyp = personalTyp;
 	}
 
 	/**
@@ -400,27 +296,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf die Staatsangehörigkeit des Lehrers wird gesetzt.
-	 * @param staatsangehoerigkeit Neuer Wert für das Feld staatsangehoerigkeit
-	 */
-	public void setStaatsangehoerigkeit(final Nationalitaeten staatsangehoerigkeit) {
-		this.staatsangehoerigkeit = staatsangehoerigkeit;
-	}
-
-	/**
 	 * Ggf. der Straßenname im Wohnort des Lehrers.
 	 * @return Inhalt des Feldes strassenname
 	 */
 	public String strassenname() {
 		return strassenname;
-	}
-
-	/**
-	 * Ggf der Straßenname im Wohnort des Lehrers wird gesetzt.
-	 * @param strassenname Neuer Wert für das Feld strassenname
-	 */
-	public void setStrassenname(final String strassenname) {
-		this.strassenname = strassenname;
 	}
 
 	/**
@@ -432,27 +312,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf die Telefonnummer des Lehrers wird gesetzt.
-	 * @param telefon Neuer Wert für das Feld telefon
-	 */
-	public void setTelefon(final String telefon) {
-		this.telefon = telefon;
-	}
-
-	/**
 	 * Ggf. die Mobilnummer des Lehrers.
 	 * @return Inhalt des Feldes telefonMobil
 	 */
 	public String telefonMobil() {
 		return telefonMobil;
-	}
-
-	/**
-	 * Ggf die Mobilnummer des Lehrers wird gesetzt.
-	 * @param telefonMobil Neuer Wert für das Feld telefonMobil
-	 */
-	public void setTelefonMobil(final String telefonMobil) {
-		this.telefonMobil = telefonMobil;
 	}
 
 	/**
@@ -464,27 +328,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf ein akademischer Grad des Lehrers wird gesetzt.
-	 * @param titel Neuer Wert für das Feld titel
-	 */
-	public void setTitel(final String titel) {
-		this.titel = titel;
-	}
-
-	/**
 	 * Der Vorname des Lehrers.
 	 * @return Inhalt des Feldes vorname
 	 */
 	public String vorname() {
 		return vorname;
-	}
-
-	/**
-	 * Der Vorname des Lehrers wird gesetzt.
-	 * @param vorname Neuer Wert für das Feld vorname
-	 */
-	public void setVorname(final String vorname) {
-		this.vorname = vorname;
 	}
 
 	/**
@@ -496,27 +344,11 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Der Wohnort des Lehrers wird gesetzt.
-	 * @param wohnort Neuer Wert für das Feld wohnort
-	 */
-	public void setWohnort(final OrtKatalogEintrag wohnort) {
-		this.wohnort = wohnort;
-	}
-
-	/**
 	 * Der Wohnortsname des Lehrers.
 	 * @return Inhalt des Feldes wohnortname
 	 */
 	public String wohnortname() {
 		return wohnortname;
-	}
-
-	/**
-	 * Der Wohnortsname des Lehrers wird gesetzt.
-	 * @param wohnortname Neuer Wert für das Feld wohnortname
-	 */
-	public void setWohnortname(final String wohnortname) {
-		this.wohnortname = wohnortname;
 	}
 
 	/**
@@ -528,14 +360,6 @@ public class ReportingLehrer {
 	}
 
 	/**
-	 * Ggf der Ortsteil des Wohnortes des Lehrers wird gesetzt.
-	 * @param wohnortsteil Neuer Wert für das Feld wohnortsteil
-	 */
-	public void setWohnortsteil(final OrtsteilKatalogEintrag wohnortsteil) {
-		this.wohnortsteil = wohnortsteil;
-	}
-
-	/**
 	 * Ggf. der Ortsteilname des Wohnortes des Lehrers.
 	 * @return Inhalt des Feldes wohnortsteilname
 	 */
@@ -543,11 +367,4 @@ public class ReportingLehrer {
 		return wohnortsteilname;
 	}
 
-	/**
-	 * Ggf der Ortsteilname des Wohnortes des Lehrers wird gesetzt.
-	 * @param wohnortsteilname Neuer Wert für das Feld wohnortsteilname
-	 */
-	public void setWohnortsteilname(final String wohnortsteilname) {
-		this.wohnortsteilname = wohnortsteilname;
-	}
 }

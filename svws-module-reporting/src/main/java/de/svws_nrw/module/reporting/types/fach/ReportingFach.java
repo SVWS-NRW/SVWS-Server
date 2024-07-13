@@ -13,70 +13,70 @@ import de.svws_nrw.core.types.gost.GostFachbereich;
 public class ReportingFach {
 
 	/** Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört */
-	private String aufgabenfeld;
+	protected String aufgabenfeld;
 
 	/** Gibt an, ob das Fach auf einem Zeugnis erscheinen soll. */
-	private boolean aufZeugnis;
+	protected boolean aufZeugnis;
 
 	/** Die Bezeichnung des Faches */
-	private String bezeichnung;
+	protected String bezeichnung;
 
 	/** Die Bezeichnung des Faches auf Überweisungszeugnissen */
-	private String bezeichnungUeberweisungszeugnis;
+	protected String bezeichnungUeberweisungszeugnis;
 
 	/** Die Bezeichnung des Faches auf allgemeinen Zeugnissen */
-	private String bezeichnungZeugnis;
+	protected String bezeichnungZeugnis;
 
 	/** Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt. */
-	private String bilingualeSprache;
+	protected String bilingualeSprache;
 
 	/** Die Fachgruppe, der das Fach angehört. */
-	private Fachgruppe fachgruppe;
+	protected Fachgruppe fachgruppe;
 
 	/** Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussberechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde. */
-	private boolean holeAusAltenLernabschnitten;
+	protected boolean holeAusAltenLernabschnitten;
 
 	/** Die ID des Faches. */
-	private long id;
+	protected long id;
 
 	/** Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg). */
-	private boolean istFHRFach;
+	protected boolean istFHRFach;
 
 	/** Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht */
-	private boolean istFremdsprache;
+	protected boolean istFremdsprache;
 
 	/** Gibt an, ob das Fach eine neu einsetzende Fremdsprache ist. */
-	private boolean istFremdSpracheNeuEinsetzend;
+	protected boolean istFremdSpracheNeuEinsetzend;
 
 	/** Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht. */
-	private boolean istGostFach;
+	protected boolean istGostFach;
 
 	/** Gibt an, ob eine Nachprüfung in diesem Fach möglich ist. */
-	private boolean istNachpruefungErlaubt;
+	protected boolean istNachpruefungErlaubt;
 
 	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen). */
-	private boolean istPruefungsordnungsRelevant;
+	protected boolean istPruefungsordnungsRelevant;
 
 	/** Gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertet wird (Berufskolleg). */
-	private boolean istSchriftlichBA;
+	protected boolean istSchriftlichBA;
 
 	/** Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht. */
-	private boolean istSchriftlichZK;
+	protected boolean istSchriftlichZK;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	private boolean istSichtbar;
+	protected boolean istSichtbar;
 
 	/** Das eindeutige Kürzel des Faches */
-	private String kuerzel;
+	protected String kuerzel;
 
 	/** Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen. */
-	private int maxZeichenInFachbemerkungen;
+	protected int maxZeichenInFachbemerkungen;
 
 	/** Die Sortierreihenfolge des Fächerlisten-Eintrags. */
-	private int sortierung;
+	protected int sortierung;
 
 	/** Das Statistik-Kürzel des Faches */
-	private ReportingStatistikFach statistikfach;
+	protected ReportingStatistikFach statistikfach;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -148,21 +148,13 @@ public class ReportingFach {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 	/**
 	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört
 	 * @return Inhalt des Feldes aufgabenfeld
 	 */
 	public String aufgabenfeld() {
 		return aufgabenfeld;
-	}
-
-	/**
-	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört wird gesetzt.
-	 * @param aufgabenfeld Neuer Wert für das Feld aufgabenfeld
-	 */
-	public void setAufgabenfeld(final String aufgabenfeld) {
-		this.aufgabenfeld = aufgabenfeld;
 	}
 
 	/**
@@ -174,27 +166,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach auf einem Zeugnis erscheinen soll wird gesetzt.
-	 * @param aufZeugnis Neuer Wert für das Feld aufZeugnis
-	 */
-	public void setAufZeugnis(final boolean aufZeugnis) {
-		this.aufZeugnis = aufZeugnis;
-	}
-
-	/**
 	 * Die Bezeichnung des Faches
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
-	}
-
-	/**
-	 * Die Bezeichnung des Faches wird gesetzt.
-	 * @param bezeichnung Neuer Wert für das Feld bezeichnung
-	 */
-	public void setBezeichnung(final String bezeichnung) {
-		this.bezeichnung = bezeichnung;
 	}
 
 	/**
@@ -206,27 +182,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Die Bezeichnung des Faches auf Überweisungszeugnissen wird gesetzt.
-	 * @param bezeichnungUeberweisungszeugnis Neuer Wert für das Feld bezeichnungUeberweisungszeugnis
-	 */
-	public void setBezeichnungUeberweisungszeugnis(final String bezeichnungUeberweisungszeugnis) {
-		this.bezeichnungUeberweisungszeugnis = bezeichnungUeberweisungszeugnis;
-	}
-
-	/**
 	 * Die Bezeichnung des Faches auf allgemeinen Zeugnissen
 	 * @return Inhalt des Feldes bezeichnungZeugnis
 	 */
 	public String bezeichnungZeugnis() {
 		return bezeichnungZeugnis;
-	}
-
-	/**
-	 * Die Bezeichnung des Faches auf allgemeinen Zeugnissen wird gesetzt.
-	 * @param bezeichnungZeugnis Neuer Wert für das Feld bezeichnungZeugnis
-	 */
-	public void setBezeichnungZeugnis(final String bezeichnungZeugnis) {
-		this.bezeichnungZeugnis = bezeichnungZeugnis;
 	}
 
 	/**
@@ -238,27 +198,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt wird gesetzt.
-	 * @param bilingualeSprache Neuer Wert für das Feld bilingualeSprache
-	 */
-	public void setBilingualeSprache(final String bilingualeSprache) {
-		this.bilingualeSprache = bilingualeSprache;
-	}
-
-	/**
 	 * Die Fachgruppe, der das Fach angehört.
 	 * @return Fachgruppe des Faches
 	 */
 	public Fachgruppe fachgruppe() {
 		return fachgruppe;
-	}
-
-	/**
-	 * Die Fachgruppe, der das Fach angehört, wird gesetzt.
-	 * @param fachgruppe Neuer Wert für das Feld fachgruppe
-	 */
-	public void setFachgruppe(final Fachgruppe fachgruppe) {
-		this.fachgruppe = fachgruppe;
 	}
 
 	/**
@@ -270,27 +214,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach ggf bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussberechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde wird gesetzt.
-	 * @param holeAusAltenLernabschnitten Neuer Wert für das Feld holeAusAltenLernabschnitten
-	 */
-	public void setHoleAusAltenLernabschnitten(final boolean holeAusAltenLernabschnitten) {
-		this.holeAusAltenLernabschnitten = holeAusAltenLernabschnitten;
-	}
-
-	/**
 	 * Die ID des Faches.
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
 		return id;
-	}
-
-	/**
-	 * Die ID des Faches wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
 	}
 
 	/**
@@ -302,27 +230,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg) wird gesetzt.
-	 * @param istFHRFach Neuer Wert für das Feld istFHRFach
-	 */
-	public void setIstFHRFach(final boolean istFHRFach) {
-		this.istFHRFach = istFHRFach;
-	}
-
-	/**
 	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
 	 * @return Inhalt des Feldes istFremdsprache
 	 */
 	public boolean istFremdsprache() {
 		return istFremdsprache;
-	}
-
-	/**
-	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht wird gesetzt.
-	 * @param istFremdsprache Neuer Wert für das Feld istFremdsprache
-	 */
-	public void setIstFremdsprache(final boolean istFremdsprache) {
-		this.istFremdsprache = istFremdsprache;
 	}
 
 	/**
@@ -334,27 +246,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach eine neu einsetzende Fremdsprache ist wird gesetzt.
-	 * @param istFremdSpracheNeuEinsetzend Neuer Wert für das Feld istFremdSpracheNeuEinsetzend
-	 */
-	public void setIstFremdSpracheNeuEinsetzend(final boolean istFremdSpracheNeuEinsetzend) {
-		this.istFremdSpracheNeuEinsetzend = istFremdSpracheNeuEinsetzend;
-	}
-
-	/**
 	 * Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht.
 	 * @return Inhalt des Feldes istGostFach
 	 */
 	public boolean istGostFach() {
 		return istGostFach;
-	}
-
-	/**
-	 * Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht wird gesetzt.
-	 * @param istGostFach Neuer Wert für das Feld istGostFach
-	 */
-	public void setIstGostFach(final boolean istGostFach) {
-		this.istGostFach = istGostFach;
 	}
 
 	/**
@@ -366,27 +262,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob eine Nachprüfung in diesem Fach möglich ist wird gesetzt.
-	 * @param istNachpruefungErlaubt Neuer Wert für das Feld istNachpruefungErlaubt
-	 */
-	public void setIstNachpruefungErlaubt(final boolean istNachpruefungErlaubt) {
-		this.istNachpruefungErlaubt = istNachpruefungErlaubt;
-	}
-
-	/**
 	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen).
 	 * @return Inhalt des Feldes istPruefungsordnungsRelevant
 	 */
 	public boolean istPruefungsordnungsRelevant() {
 		return istPruefungsordnungsRelevant;
-	}
-
-	/**
-	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (zB bei Belegprüfungen) wird gesetzt.
-	 * @param istPruefungsordnungsRelevant Neuer Wert für das Feld istPruefungsordnungsRelevant
-	 */
-	public void setIstPruefungsordnungsRelevant(final boolean istPruefungsordnungsRelevant) {
-		this.istPruefungsordnungsRelevant = istPruefungsordnungsRelevant;
 	}
 
 	/**
@@ -398,27 +278,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertet wird (Berufskolleg) wird gesetzt.
-	 * @param istSchriftlichBA Neuer Wert für das Feld istSchriftlichBA
-	 */
-	public void setIstSchriftlichBA(final boolean istSchriftlichBA) {
-		this.istSchriftlichBA = istSchriftlichBA;
-	}
-
-	/**
 	 * Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht.
 	 * @return Inhalt des Feldes istSchriftlichZK
 	 */
 	public boolean istSchriftlichZK() {
 		return istSchriftlichZK;
-	}
-
-	/**
-	 * Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht wird gesetzt.
-	 * @param istSchriftlichZK Neuer Wert für das Feld istSchriftlichZK
-	 */
-	public void setIstSchriftlichZK(final boolean istSchriftlichZK) {
-		this.istSchriftlichZK = istSchriftlichZK;
 	}
 
 	/**
@@ -430,27 +294,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht wird gesetzt.
-	 * @param istSichtbar Neuer Wert für das Feld istSichtbar
-	 */
-	public void setIstSichtbar(final boolean istSichtbar) {
-		this.istSichtbar = istSichtbar;
-	}
-
-	/**
 	 * Das eindeutige Kürzel des Faches
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
 		return kuerzel;
-	}
-
-	/**
-	 * Das eindeutige Kürzel des Faches wird gesetzt.
-	 * @param kuerzel Neuer Wert für das Feld kuerzel
-	 */
-	public void setKuerzel(final String kuerzel) {
-		this.kuerzel = kuerzel;
 	}
 
 	/**
@@ -462,14 +310,6 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen wird gesetzt.
-	 * @param maxZeichenInFachbemerkungen Neuer Wert für das Feld maxZeichenInFachbemerkungen
-	 */
-	public void setMaxZeichenInFachbemerkungen(final int maxZeichenInFachbemerkungen) {
-		this.maxZeichenInFachbemerkungen = maxZeichenInFachbemerkungen;
-	}
-
-	/**
 	 * Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 * @return Inhalt des Feldes sortierung
 	 */
@@ -478,27 +318,11 @@ public class ReportingFach {
 	}
 
 	/**
-	 * Die Sortierreihenfolge des Fächerlisten-Eintrags wird gesetzt.
-	 * @param sortierung Neuer Wert für das Feld sortierung
-	 */
-	public void setSortierung(final int sortierung) {
-		this.sortierung = sortierung;
-	}
-
-	/**
 	 * Das Statistik-Fach des Faches
 	 * @return Inhalt des Feldes statistikfach
 	 */
 	public ReportingStatistikFach statistikfach() {
 		return statistikfach;
-	}
-
-	/**
-	 * Das Statistik-Fach des Faches wird gesetzt.
-	 * @param statistikfach Neuer Wert für das Feld statistikfach
-	 */
-	public void setStatistikfach(final ReportingStatistikFach statistikfach) {
-		this.statistikfach = statistikfach;
 	}
 
 }

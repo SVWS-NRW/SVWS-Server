@@ -60,7 +60,7 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 		// Hinweis: Die Klasse gostStatistikFachwahl unterscheidet bei der Anzahl der Wahlen nicht zwischen GK, PJK, VTF. Es gibt nur die wahlenGK.
 
 		final ReportingFach reportingFach = reportingRepository.mapReportingFaecher().get(gostStatistikFachwahl.id);
-		super.setFach(reportingFach);
+		super.fach = reportingFach;
 
 		int kursgroessendifferenzLK = -1;
 		int kursgroessendifferenzGK = -1;
@@ -94,10 +94,10 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
 		}
 
-		super.setDifferenzKursgroessenLK(kursgroessendifferenzLK);
-		super.setDifferenzKursgroessenGK(kursgroessendifferenzGK);
-		super.setDifferenzKursgroessenZK(kursgroessendifferenzZK);
-		super.setDifferenzKursgroessenPJK(kursgroessendifferenzPJK);
-		super.setDifferenzKursgroessenVTF(kursgroessendifferenzVTF);
+		super.differenzKursgroessenLK = kursgroessendifferenzLK;
+		super.differenzKursgroessenGK = kursgroessendifferenzGK;
+		super.differenzKursgroessenZK = kursgroessendifferenzZK;
+		super.differenzKursgroessenPJK = kursgroessendifferenzPJK;
+		super.differenzKursgroessenVTF = kursgroessendifferenzVTF;
 	}
 }

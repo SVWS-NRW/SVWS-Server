@@ -9,13 +9,13 @@ package de.svws_nrw.module.reporting.types.schule;
 public class ReportingSchuljahresabschnitt {
 
 	/** Die Nummer des Abschnitts im Schuljahr */
-	private int abschnitt;
+	protected int abschnitt;
 
 	/** Die ID des Schuljahresabschnittes */
-	private long id;
+	protected long id;
 
 	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
-	private int schuljahr;
+	protected int schuljahr;
 
 
 
@@ -33,7 +33,7 @@ public class ReportingSchuljahresabschnitt {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Die Nummer des Abschnitts im Schuljahr
@@ -41,14 +41,6 @@ public class ReportingSchuljahresabschnitt {
 	 */
 	public int abschnitt() {
 		return abschnitt;
-	}
-
-	/**
-	 * Die Nummer des Abschnitts im Schuljahr wird gesetzt.
-	 * @param abschnitt Neuer Wert für das Feld abschnitt
-	 */
-	public void setAbschnitt(final int abschnitt) {
-		this.abschnitt = abschnitt;
 	}
 
 	/**
@@ -60,14 +52,6 @@ public class ReportingSchuljahresabschnitt {
 	}
 
 	/**
-	 * Die ID des Schuljahresabschnittes wird gesetzt.
-	 * @param id Neuer Wert für das Feld id
-	 */
-	public void setId(final long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt
 	 * @return Inhalt des Feldes schuljahr
 	 */
@@ -75,11 +59,4 @@ public class ReportingSchuljahresabschnitt {
 		return schuljahr;
 	}
 
-	/**
-	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt, wird gesetzt.
-	 * @param schuljahr Neuer Wert für das Feld schuljahr
-	 */
-	public void setSchuljahr(final int schuljahr) {
-		this.schuljahr = schuljahr;
-	}
 }

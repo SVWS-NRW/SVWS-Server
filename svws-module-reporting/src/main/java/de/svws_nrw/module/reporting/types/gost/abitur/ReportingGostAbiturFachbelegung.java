@@ -13,49 +13,49 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 public class ReportingGostAbiturFachbelegung {
 
 	/** Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null) */
-	private Integer abiturFach;
+	protected Integer abiturFach;
 
 	/** Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung */
-	private Double block1NotenpunkteDurchschnitt;
+	protected Double block1NotenpunkteDurchschnitt;
 
 	/** Die Punktsumme im Block I des Abiturs für die Fachbelegung */
-	private Integer block1PunktSumme;
+	protected Integer block1PunktSumme;
 
 	/** Gibt an, ob eine mündliche Abweichungsprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist (nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr). */
-	private Boolean block2MuendlichePruefungAbweichung;
+	protected Boolean block2MuendlichePruefungAbweichung;
 
 	/** Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
-	private Boolean block2MuendlichePruefungBestehen;
+	protected Boolean block2MuendlichePruefungBestehen;
 
 	/** Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
-	private Boolean block2MuendlichePruefungFreiwillig;
+	protected Boolean block2MuendlichePruefungFreiwillig;
 
 	/** Die Note der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt. */
-	private Note block2MuendlichePruefungNote;
+	protected Note block2MuendlichePruefungNote;
 
 	/** Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
-	private Integer block2MuendlichePruefungReihenfolge;
+	protected Integer block2MuendlichePruefungReihenfolge;
 
 	/** Die Lehrkraft, welche Prüfer im Rahmen der Abiturprüfung ist. */
-	private ReportingLehrer block2Pruefer;
+	protected ReportingLehrer block2Pruefer;
 
 	/** Die Note in der Abiturprüfung, sofern dies die Belegung eines Abiturfaches ist. */
-	private Note block2PruefungNote;
+	protected Note block2PruefungNote;
 
 	/** Die erreichten Punkte im Abitur nach einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist. */
-	private Integer block2Punkte;
+	protected Integer block2Punkte;
 
 	/** Der Zwischenstand der erreichten Punkte im Abitur vor einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist. */
-	private Integer block2PunkteZwischenstand;
+	protected Integer block2PunkteZwischenstand;
 
 	/** Das Fach der gymnasialen Oberstufe, welches belegt wurde. */
-	private ReportingFach fach;
+	protected ReportingFach fach;
 
 	/** Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs */
-	private ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen;
+	protected ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen;
 
 	/** Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde */
-	private String letzteKursart;
+	protected String letzteKursart;
 
 
 
@@ -99,7 +99,7 @@ public class ReportingGostAbiturFachbelegung {
 		this.letzteKursart = letzteKursart;
 
 		if (halbjahresbelegungen == null)
-			setHalbjahresbelegungen(new ReportingGostAbiturFachbelegungHalbjahr[6]);
+			this.halbjahresbelegungen = new ReportingGostAbiturFachbelegungHalbjahr[6];
 	}
 
 
@@ -116,7 +116,7 @@ public class ReportingGostAbiturFachbelegung {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null)
@@ -124,14 +124,6 @@ public class ReportingGostAbiturFachbelegung {
 	 */
 	public Integer abiturFach() {
 		return abiturFach;
-	}
-
-	/**
-	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null) wird gesetzt.
-	 * @param abiturFach Neuer Wert für das Feld abiturFach
-	 */
-	public void setAbiturFach(final Integer abiturFach) {
-		this.abiturFach = abiturFach;
 	}
 
 	/**
@@ -143,27 +135,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung wird gesetzt.
-	 * @param block1NotenpunkteDurchschnitt Neuer Wert für das Feld block1NotenpunkteDurchschnitt
-	 */
-	public void setBlock1NotenpunkteDurchschnitt(final Double block1NotenpunkteDurchschnitt) {
-		this.block1NotenpunkteDurchschnitt = block1NotenpunkteDurchschnitt;
-	}
-
-	/**
 	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung
 	 * @return Inhalt des Feldes block1PunktSumme
 	 */
 	public Integer block1PunktSumme() {
 		return block1PunktSumme;
-	}
-
-	/**
-	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung wird gesetzt.
-	 * @param block1PunktSumme Neuer Wert für das Feld block1PunktSumme
-	 */
-	public void setBlock1PunktSumme(final Integer block1PunktSumme) {
-		this.block1PunktSumme = block1PunktSumme;
 	}
 
 	/**
@@ -175,27 +151,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Gibt an, ob eine mündliche Abweichungsprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist (nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr) wird gesetzt.
-	 * @param block2MuendlichePruefungAbweichung Neuer Wert für das Feld block2MuendlichePruefungAbweichung
-	 */
-	public void setBlock2MuendlichePruefungAbweichung(final Boolean block2MuendlichePruefungAbweichung) {
-		this.block2MuendlichePruefungAbweichung = block2MuendlichePruefungAbweichung;
-	}
-
-	/**
 	 * Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
 	 * @return Inhalt des Feldes block2MuendlichePruefungBestehen
 	 */
 	public Boolean block2MuendlichePruefungBestehen() {
 		return block2MuendlichePruefungBestehen;
-	}
-
-	/**
-	 * Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist wird gesetzt.
-	 * @param block2MuendlichePruefungBestehen Neuer Wert für das Feld block2MuendlichePruefungBestehen
-	 */
-	public void setBlock2MuendlichePruefungBestehen(final Boolean block2MuendlichePruefungBestehen) {
-		this.block2MuendlichePruefungBestehen = block2MuendlichePruefungBestehen;
 	}
 
 	/**
@@ -207,27 +167,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist wird gesetzt.
-	 * @param block2MuendlichePruefungFreiwillig Neuer Wert für das Feld block2MuendlichePruefungFreiwillig
-	 */
-	public void setBlock2MuendlichePruefungFreiwillig(final Boolean block2MuendlichePruefungFreiwillig) {
-		this.block2MuendlichePruefungFreiwillig = block2MuendlichePruefungFreiwillig;
-	}
-
-	/**
 	 * Das Notenkürzel der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt.
 	 * @return Inhalt des Feldes block2MuendlichePruefungNote
 	 */
 	public Note block2MuendlichePruefungNote() {
 		return block2MuendlichePruefungNote;
-	}
-
-	/**
-	 * Die Note der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt wird gesetzt.
-	 * @param block2MuendlichePruefungNote Neuer Wert für das Feld block2MuendlichePruefungNote
-	 */
-	public void setBlock2MuendlichePruefungNote(final Note block2MuendlichePruefungNote) {
-		this.block2MuendlichePruefungNote = block2MuendlichePruefungNote;
 	}
 
 	/**
@@ -239,27 +183,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist wird gesetzt.
-	 * @param block2MuendlichePruefungReihenfolge Neuer Wert für das Feld block2MuendlichePruefungReihenfolge
-	 */
-	public void setBlock2MuendlichePruefungReihenfolge(final Integer block2MuendlichePruefungReihenfolge) {
-		this.block2MuendlichePruefungReihenfolge = block2MuendlichePruefungReihenfolge;
-	}
-
-	/**
 	 * Die Lehrkraft, welche Prüfer im Rahmen der Abiturprüfung ist.
 	 * @return Inhalt des Feldes block2Pruefer
 	 */
 	public ReportingLehrer block2Pruefer() {
 		return block2Pruefer;
-	}
-
-	/**
-	 * Die Lehrkraft, welche Prüfer im Rahmen der Abiturprüfung ist, wird gesetzt.
-	 * @param block2Pruefer Neuer Wert für das Feld block2Pruefer
-	 */
-	public void setBlock2Pruefer(final ReportingLehrer block2Pruefer) {
-		this.block2Pruefer = block2Pruefer;
 	}
 
 	/**
@@ -271,27 +199,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Die Note in der Abiturprüfung, sofern dies die Belegung eines Abiturfaches ist, wird gesetzt.
-	 * @param block2PruefungNote Neuer Wert für das Feld block2PruefungNote
-	 */
-	public void setBlock2PruefungNote(final Note block2PruefungNote) {
-		this.block2PruefungNote = block2PruefungNote;
-	}
-
-	/**
 	 * Die erreichten Punkte im Abitur nach einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist.
 	 * @return Inhalt des Feldes block2Punkte
 	 */
 	public Integer block2Punkte() {
 		return block2Punkte;
-	}
-
-	/**
-	 * Die erreichten Punkte im Abitur nach einer evtl mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist wird gesetzt.
-	 * @param block2Punkte Neuer Wert für das Feld block2Punkte
-	 */
-	public void setBlock2Punkte(final Integer block2Punkte) {
-		this.block2Punkte = block2Punkte;
 	}
 
 	/**
@@ -303,27 +215,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Der Zwischenstand der erreichten Punkte im Abitur vor einer evtl mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist wird gesetzt.
-	 * @param block2PunkteZwischenstand Neuer Wert für das Feld block2PunkteZwischenstand
-	 */
-	public void setBlock2PunkteZwischenstand(final Integer block2PunkteZwischenstand) {
-		this.block2PunkteZwischenstand = block2PunkteZwischenstand;
-	}
-
-	/**
 	 * Das Fach der gymnasialen Oberstufe, welches belegt wurde.
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
 		return fach;
-	}
-
-	/**
-	 * Das Fach der gymnasialen Oberstufe, welches belegt wurde, wird gesetzt.
-	 * @param fach Neuer Wert für das Feld fach
-	 */
-	public void setFach(final ReportingFach fach) {
-		this.fach = fach;
 	}
 
 	/**
@@ -335,27 +231,11 @@ public class ReportingGostAbiturFachbelegung {
 	}
 
 	/**
-	 * Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs wird gesetzt.
-	 * @param halbjahresbelegungen Neuer Wert für das Feld halbjahresbelegungen
-	 */
-	public void setHalbjahresbelegungen(final ReportingGostAbiturFachbelegungHalbjahr[] halbjahresbelegungen) {
-		this.halbjahresbelegungen = halbjahresbelegungen;
-	}
-
-	/**
 	 * Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
 	 * @return Inhalt des Feldes letzteKursart
 	 */
 	public String letzteKursart() {
 		return letzteKursart;
-	}
-
-	/**
-	 * Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde, wird gesetzt.
-	 * @param letzteKursart Neuer Wert für das Feld letzteKursart
-	 */
-	public void setLetzteKursart(final String letzteKursart) {
-		this.letzteKursart = letzteKursart;
 	}
 
 

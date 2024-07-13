@@ -80,7 +80,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public ReportingJahrgang folgejahrgang() {
 		if ((super.folgejahrgang() == null) && (super.idFolgejahrgang() != null) && (super.idFolgejahrgang() >= 0)) {
-			super.setFolgejahrgang(
+			super.folgejahrgang =
 					new ProxyReportingJahrgang(
 							this.reportingRepository,
 							this.reportingRepository.mapJahrgaenge()
@@ -91,7 +91,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 											e.printStackTrace();
 											return new JahrgangsDaten();
 										}
-									})));
+									}));
 		}
 		return super.folgejahrgang();
 	}
@@ -104,15 +104,15 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	public List<ReportingKlasse> klassen() {
 		if (super.klassen().isEmpty()) {
 			// Im ReportingRepository ist die mapKlassen mit den Klassen des aktuellen Schuljahresabschnittes gefüllt worden.
-			super.setKlassen(this.reportingRepository.mapKlassen().values().stream()
-					.filter(kd -> kd.idJahrgang == super.id())
-					.map(kd -> (ReportingKlasse) new ProxyReportingKlasse(
-							this.reportingRepository,
-							kd))
-					.sorted(Comparator
-							.comparing(ReportingKlasse::kuerzel)
-							.thenComparing(ReportingKlasse::parallelitaet))
-					.toList());
+			super.klassen =
+					this.reportingRepository.mapKlassen().values().stream()
+							.filter(kd -> kd.idJahrgang == super.id())
+							.map(kd -> (ReportingKlasse) new ProxyReportingKlasse(
+									this.reportingRepository, kd))
+							.sorted(Comparator
+									.comparing(ReportingKlasse::kuerzel)
+									.thenComparing(ReportingKlasse::parallelitaet))
+							.toList();
 		}
 		return super.klassen();
 	}
@@ -124,13 +124,14 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty()) {
-			super.setSchueler(klassen().stream()
-					.flatMap(k -> k.schueler().stream())
-					.sorted(Comparator
-							.comparing(ReportingSchueler::nachname)
-							.thenComparing(ReportingSchueler::vorname)
-							.thenComparing(ReportingSchueler::geburtsdatum))
-					.toList());
+			super.schueler =
+					klassen().stream()
+							.flatMap(k -> k.schueler().stream())
+							.sorted(Comparator
+									.comparing(ReportingSchueler::nachname)
+									.thenComparing(ReportingSchueler::vorname)
+									.thenComparing(ReportingSchueler::geburtsdatum))
+							.toList();
 		}
 		return super.schueler();
 	}

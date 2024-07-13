@@ -16,104 +16,89 @@ import java.util.List;
 public class ReportingSchuelerGostAbitur {
 
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
-	private int abiturjahr;
+	protected int abiturjahr;
 
 	/** Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern). */
-	private String besondereLernleistung;
+	protected String besondereLernleistung;
 
 	/** Ggf. die Note einer externen besonderen Lernleistung. */
-	private Note besondereLernleistungNote;
+	protected Note besondereLernleistungNote;
 
 	/** Das Thema der besonderen Lernleistung. */
-	private String besondereLernleistungThema;
+	protected String besondereLernleistungThema;
 
 	/** Gibt für die einzelnen GostHalbjahr-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. */
-	private boolean[] bewertetesHalbjahr;
+	protected boolean[] bewertetesHalbjahr;
 
 	/** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
-	private String bilingualeSprache;
+	protected String bilingualeSprache;
 
 	/** Die Anzahl der Kurse in der Qualifikationsphase. */
-	private Integer block1AnzahlKurse;
+	protected Integer block1AnzahlKurse;
 
 	/** Die Anzahl der Gesamtdefizite in der Qualifikationsphase. */
-	private Integer block1DefiziteGesamt;
+	protected Integer block1DefiziteGesamt;
 
 	/** Die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase. */
-	private Integer block1DefiziteLK;
+	protected Integer block1DefiziteLK;
 
 	/** Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase. */
-	private long block1FehlstundenGesamt;
+	protected long block1FehlstundenGesamt;
 
 	/** Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase. */
-	private long block1FehlstundenUnentschuldigt;
+	protected long block1FehlstundenUnentschuldigt;
 
 	/** Der Durchschnitt der Notenpunkte von allen Kursen der Qualifikationsphase. */
-	private Double block1NotenpunkteDurchschnitt;
+	protected Double block1NotenpunkteDurchschnitt;
 
 	/** Die Punktsumme aller Grundkurse in der Qualifikationsphase. */
-	private Integer block1PunktSummeGK;
+	protected Integer block1PunktSummeGK;
 
 	/** Die Punktsumme aller Leistungskurse in der Qualifikationsphase. */
-	private Integer block1PunktSummeLK;
+	protected Integer block1PunktSummeLK;
 
 	/** Die normierte Punktsumme aller Kurse in der Qualifikationsphase. */
-	private Integer block1PunktSummeNormiert;
+	protected Integer block1PunktSummeNormiert;
 
 	/** Gibt an, ob die Zulassung erreicht wurde oder nicht - sofern diese schon geprüft wurde. */
-	private Boolean block1Zulassung;
+	protected Boolean block1Zulassung;
 
 	/** Gibt die Anzahl der Gesamtdefizite im Abiturbereich (Block II) an. */
-	private Integer block2DefiziteGesamt;
+	protected Integer block2DefiziteGesamt;
 
 	/** Die Anzahl der Leistungskurs-Defizite im Abiturbereich (Block II). */
-	private Integer block2DefiziteLK;
+	protected Integer block2DefiziteLK;
 
 	/** Die Punktsumme im Abiturbereich (Block II). */
-	private Integer block2PunktSumme;
+	protected Integer block2PunktSumme;
 
 	/** Die Liste mit den Fachbelegungen in der Oberstufe. */
-	private List<ReportingGostAbiturFachbelegung> fachbelegungen = new ArrayList<>();
+	protected List<ReportingGostAbiturFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Angabe, ob freiwillig von der Abiturprüfung zurückgetreten wurde. */
-	private boolean freiwilligerRuecktritt;
+	protected boolean freiwilligerRuecktritt;
 
 	/** Die erreichte Gesamtpunktzahl in der Qualifikation und im Abiturbereich (Block I und II). */
-	private Integer gesamtPunkte;
+	protected Integer gesamtPunkte;
 
 	/** Die Gesamtpunktzahl, ab der sich die Abiturnote verbessern würde. */
-	private Integer gesamtPunkteVerbesserung;
+	protected Integer gesamtPunkteVerbesserung;
 
 	/** Die Gesamtpunktzahl, ab der sich die Abiturnote verschlechtern würde. */
-	private Integer gesamtPunkteVerschlechterung;
+	protected Integer gesamtPunkteVerschlechterung;
 
 	/** Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde. */
-	private String note;
+	protected String note;
 
 	/** Das Projektkursthema, sofern ein Projektkurs belegt wurde. */
-	private String projektkursThema;
+	protected String projektkursThema;
 
 	/** Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. */
-	private Boolean pruefungBestanden;
+	protected Boolean pruefungBestanden;
 
 	/** Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
-	private int schuljahrAbitur;
+	protected int schuljahrAbitur;
 
-
-//	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
-//	private Sprachendaten sprachendaten = new Sprachendaten();
-//
-//	/** Gibt an, ob das Graecum erworben wurde. */
-//	private boolean graecum = false;
-//
-//	/** Gibt an, ob das Hebraicum erworben wurde. */
-//	private boolean hebraicum = false;
-//
-//	/** Gibt an, ob das kleine Latinum erworben wurde. */
-//	private boolean kleinesLatinum = false;
-//
-//	/** Gibt an, ob das große Latinum erworben wurde. */
-//	private boolean latinum = false;
 
 
 	/**
@@ -188,7 +173,7 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 
-	// ##### Berechnete Methodem #####
+	// ##### Berechnete Methoden #####
 
 	/**
 	 * Gibt die Information zurück, ob in der Q-Phase ein Projektkurs belegt wurde.
@@ -237,7 +222,7 @@ public class ReportingSchuelerGostAbitur {
 
 
 
-	// ##### Getter und Setter #####
+	// ##### Getter #####
 
 	/**
 	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
@@ -245,14 +230,6 @@ public class ReportingSchuelerGostAbitur {
 	 */
 	public int abiturjahr() {
 		return abiturjahr;
-	}
-
-	/**
-	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird, wird gesetzt.
-	 * @param abiturjahr Neuer Wert für das Feld abiturjahr
-	 */
-	public void setAbiturjahr(final int abiturjahr) {
-		this.abiturjahr = abiturjahr;
 	}
 
 	/**
@@ -264,27 +241,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern) wird gesetzt.
-	 * @param besondereLernleistung Neuer Wert für das Feld besondereLernleistung
-	 */
-	public void setBesondereLernleistung(final String besondereLernleistung) {
-		this.besondereLernleistung = besondereLernleistung;
-	}
-
-	/**
 	 * Ggf. Note einer externen besonderen Lernleistung.
 	 * @return Inhalt des Feldes besondereLernleistungNote
 	 */
 	public Note besondereLernleistungNote() {
 		return besondereLernleistungNote;
-	}
-
-	/**
-	 * Ggf. Note einer externen besonderen Lernleistung wird gesetzt.
-	 * @param besondereLernleistungNote Neuer Wert für das Feld besondereLernleistungNote
-	 */
-	public void setBesondereLernleistungNote(final Note besondereLernleistungNote) {
-		this.besondereLernleistungNote = besondereLernleistungNote;
 	}
 
 	/**
@@ -296,28 +257,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Das Thema der besonderen Lernleistung wird gesetzt.
-	 * @param besondereLernleistungThema Neuer Wert für das Feld besondereLernleistungThema
-	 */
-	public void setBesondereLernleistungThema(final String besondereLernleistungThema) {
-		this.besondereLernleistungThema = besondereLernleistungThema;
-	}
-
-	/**
 	 * Für die einzelnen GostHalbjahr wird angegeben, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
 	 * @return Inhalt des Feldes bewertetesHalbjahr
 	 */
 	public final boolean[] bewertetesHalbjahr() {
 		return bewertetesHalbjahr;
-	}
-
-	/**
-	 * Für die einzelnen GostHalbjahr wird angegeben, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
-	 * @param bewertetesHalbjahr Neuer Wert für das Feld bewertetesHalbjahr
-	 */
-	public void setBewertetesHalbjahr(final boolean[] bewertetesHalbjahr) {
-
-		this.bewertetesHalbjahr = bewertetesHalbjahr;
 	}
 
 	/**
@@ -329,27 +273,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, wird gesetzt.
-	 * @param bilingualeSprache Neuer Wert für das Feld bilingualeSprache
-	 */
-	public void setBilingualeSprache(final String bilingualeSprache) {
-		this.bilingualeSprache = bilingualeSprache;
-	}
-
-	/**
 	 * Die Anzahl der Kurse in der Qualifikationsphase.
 	 * @return Inhalt des Feldes block1AnzahlKurse
 	 */
 	public Integer block1AnzahlKurse() {
 		return block1AnzahlKurse;
-	}
-
-	/**
-	 * Die Anzahl der Kurse in der Qualifikationsphase wird gesetzt.
-	 * @param block1AnzahlKurse Neuer Wert für das Feld block1AnzahlKurse
-	 */
-	public void setBlock1AnzahlKurse(final Integer block1AnzahlKurse) {
-		this.block1AnzahlKurse = block1AnzahlKurse;
 	}
 
 	/**
@@ -361,27 +289,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Anzahl der Gesamtdefizite in der Qualifikationsphase wird gesetzt.
-	 * @param block1DefiziteGesamt Neuer Wert für das Feld block1DefiziteGesamt
-	 */
-	public void setBlock1DefiziteGesamt(final Integer block1DefiziteGesamt) {
-		this.block1DefiziteGesamt = block1DefiziteGesamt;
-	}
-
-	/**
 	 * Die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase.
 	 * @return Inhalt des Feldes block1DefiziteLK
 	 */
 	public Integer block1DefiziteLK() {
 		return block1DefiziteLK;
-	}
-
-	/**
-	 * Die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase wird gesetzt.
-	 * @param block1DefiziteLK Neuer Wert für das Feld block1DefiziteLK
-	 */
-	public void setBlock1DefiziteLK(final Integer block1DefiziteLK) {
-		this.block1DefiziteLK = block1DefiziteLK;
 	}
 
 	/**
@@ -393,27 +305,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase wird gesetzt.
-	 * @param block1FehlstundenGesamt Neuer Wert für das Feld block1FehlstundenGesamt
-	 */
-	public void setBlock1FehlstundenGesamt(final long block1FehlstundenGesamt) {
-		this.block1FehlstundenGesamt = block1FehlstundenGesamt;
-	}
-
-	/**
 	 * Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase.
 	 * @return Inhalt des Feldes block1FehlstundenUnentschuldigt
 	 */
 	public long block1FehlstundenUnentschuldigt() {
 		return block1FehlstundenUnentschuldigt;
-	}
-
-	/**
-	 * Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase wird gesetzt.
-	 * @param block1FehlstundenUnentschuldigt Neuer Wert für das Feld block1FehlstundenUnentschuldigt
-	 */
-	public void setBlock1FehlstundenUnentschuldigt(final long block1FehlstundenUnentschuldigt) {
-		this.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
 	}
 
 	/**
@@ -425,27 +321,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Der Durchschnitt der Notenpunkte von allen Kursen der Qualifikationsphase wird gesetzt.
-	 * @param block1NotenpunkteDurchschnitt Neuer Wert für das Feld block1NotenpunkteDurchschnitt
-	 */
-	public void setBlock1NotenpunkteDurchschnitt(final Double block1NotenpunkteDurchschnitt) {
-		this.block1NotenpunkteDurchschnitt = block1NotenpunkteDurchschnitt;
-	}
-
-	/**
 	 * Die Punktsumme aller Grundkurse in der Qualifikationsphase.
 	 * @return Inhalt des Feldes block1PunktSummeGK
 	 */
 	public Integer block1PunktSummeGK() {
 		return block1PunktSummeGK;
-	}
-
-	/**
-	 * Die Punktsumme aller Grundkurse in der Qualifikationsphase wird gesetzt.
-	 * @param block1PunktSummeGK Neuer Wert für das Feld block1PunktSummeGK
-	 */
-	public void setBlock1PunktSummeGK(final Integer block1PunktSummeGK) {
-		this.block1PunktSummeGK = block1PunktSummeGK;
 	}
 
 	/**
@@ -457,27 +337,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Punktsumme aller Leistungskurse in der Qualifikationsphase wird gesetzt.
-	 * @param block1PunktSummeLK Neuer Wert für das Feld block1PunktSummeLK
-	 */
-	public void setBlock1PunktSummeLK(final Integer block1PunktSummeLK) {
-		this.block1PunktSummeLK = block1PunktSummeLK;
-	}
-
-	/**
 	 * Die normierte Punktsumme aller Kurse in der Qualifikationsphase.
 	 * @return Inhalt des Feldes block1PunktSummeNormiert
 	 */
 	public Integer block1PunktSummeNormiert() {
 		return block1PunktSummeNormiert;
-	}
-
-	/**
-	 * Die normierte Punktsumme aller Kurse in der Qualifikationsphase wird gesetzt.
-	 * @param block1PunktSummeNormiert Neuer Wert für das Feld block1PunktSummeNormiert
-	 */
-	public void setBlock1PunktSummeNormiert(final Integer block1PunktSummeNormiert) {
-		this.block1PunktSummeNormiert = block1PunktSummeNormiert;
 	}
 
 	/**
@@ -489,27 +353,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Angabe, ob die Zulassung erreicht wurde oder nicht - sofern diese schon geprüft wurde - wird gesetzt.
-	 * @param block1Zulassung Neuer Wert für das Feld block1Zulassung
-	 */
-	public void setBlock1Zulassung(final Boolean block1Zulassung) {
-		this.block1Zulassung = block1Zulassung;
-	}
-
-	/**
 	 * Die Anzahl der Gesamtdefizite im Abiturbereich (Block II).
 	 * @return Inhalt des Feldes block2DefiziteGesamt
 	 */
 	public Integer block2DefiziteGesamt() {
 		return block2DefiziteGesamt;
-	}
-
-	/**
-	 * Die Anzahl der Gesamtdefizite im Abiturbereich (Block II) wird gesetzt.
-	 * @param block2DefiziteGesamt Neuer Wert für das Feld block2DefiziteGesamt
-	 */
-	public void setBlock2DefiziteGesamt(final Integer block2DefiziteGesamt) {
-		this.block2DefiziteGesamt = block2DefiziteGesamt;
 	}
 
 	/**
@@ -521,27 +369,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Anzahl der Leistungskurs-Defizite im Abiturbereich (Block II) wird gesetzt.
-	 * @param block2DefiziteLK Neuer Wert für das Feld block2DefiziteLK
-	 */
-	public void setBlock2DefiziteLK(final Integer block2DefiziteLK) {
-		this.block2DefiziteLK = block2DefiziteLK;
-	}
-
-	/**
 	 * Die Punktsumme im Abiturbereich (Block II).
 	 * @return Inhalt des Feldes block2PunktSumme
 	 */
 	public Integer block2PunktSumme() {
 		return block2PunktSumme;
-	}
-
-	/**
-	 * Die Punktsumme im Abiturbereich (Block II) wird gesetzt.
-	 * @param block2PunktSumme Neuer Wert für das Feld block2PunktSumme
-	 */
-	public void setBlock2PunktSumme(final Integer block2PunktSumme) {
-		this.block2PunktSumme = block2PunktSumme;
 	}
 
 	/**
@@ -553,27 +385,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Liste mit den Fachbelegungen in der Oberstufe wird gesetzt.
-	 * @param fachbelegungen Neuer Wert für das Feld fachbelegungen
-	 */
-	public void setFachbelegungen(final List<ReportingGostAbiturFachbelegung> fachbelegungen) {
-		this.fachbelegungen = fachbelegungen;
-	}
-
-	/**
 	 * Gibt an, ob freiwillig von der Abiturprüfung zurückgetreten wurde.
 	 * @return Inhalt des Feldes freiwilligerRuecktritt = false
 	 */
 	public boolean freiwilligerRuecktritt() {
 		return freiwilligerRuecktritt;
-	}
-
-	/**
-	 * Die Angabe, ob freiwillig von der Abiturprüfung zurückgetreten wurde, wird gesetzt.
-	 * @param freiwilligerRuecktritt Neuer Wert für das Feld freiwilligerRuecktritt = false
-	 */
-	public void setFreiwilligerRuecktritt(final boolean freiwilligerRuecktritt) {
-		this.freiwilligerRuecktritt = freiwilligerRuecktritt;
 	}
 
 	/**
@@ -585,27 +401,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die erreichte Gesamtpunktzahl in der Qualifikation und im Abiturbereich (Block I und II) wird gesetzt.
-	 * @param gesamtPunkte Neuer Wert für das Feld gesamtPunkte
-	 */
-	public void setGesamtPunkte(final Integer gesamtPunkte) {
-		this.gesamtPunkte = gesamtPunkte;
-	}
-
-	/**
 	 * Die Gesamtpunktzahl, ab der sich die Abiturnote verbessern würde
 	 * @return Inhalt des Feldes gesamtPunkteVerbesserung
 	 */
 	public Integer gesamtPunkteVerbesserung() {
 		return gesamtPunkteVerbesserung;
-	}
-
-	/**
-	 * Die Gesamtpunktzahl, ab der sich die Abiturnote verbessern würde, wird gesetzt.
-	 * @param gesamtPunkteVerbesserung Neuer Wert für das Feld gesamtPunkteVerbesserung
-	 */
-	public void setGesamtPunkteVerbesserung(final Integer gesamtPunkteVerbesserung) {
-		this.gesamtPunkteVerbesserung = gesamtPunkteVerbesserung;
 	}
 
 	/**
@@ -617,27 +417,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Die Gesamtpunktzahl, ab der sich die Abiturnote verschlechtern würde, wird gesetzt.
-	 * @param gesamtPunkteVerschlechterung Neuer Wert für das Feld gesamtPunkteVerschlechterung
-	 */
-	public void setGesamtPunkteVerschlechterung(final Integer gesamtPunkteVerschlechterung) {
-		this.gesamtPunkteVerschlechterung = gesamtPunkteVerschlechterung;
-	}
-
-	/**
 	 * Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
 		return note;
-	}
-
-	/**
-	 * Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde - wird gesetzt.
-	 * @param note Neuer Wert für das Feld note
-	 */
-	public void setNote(final String note) {
-		this.note = note;
 	}
 
 	/**
@@ -649,27 +433,11 @@ public class ReportingSchuelerGostAbitur {
 	}
 
 	/**
-	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde, wird gesetzt.
-	 * @param projektkursThema Neuer Wert für das Feld projektkursThema
-	 */
-	public void setProjektkursThema(final String projektkursThema) {
-		this.projektkursThema = projektkursThema;
-	}
-
-	/**
 	 * Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 * @return Inhalt des Feldes pruefungBestanden
 	 */
 	public Boolean pruefungBestanden() {
 		return pruefungBestanden;
-	}
-
-	/**
-	 * Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde, wird gesetzt.
-	 * @param pruefungBestanden Neuer Wert für das Feld pruefungBestanden
-	 */
-	public void setPruefungBestanden(final Boolean pruefungBestanden) {
-		this.pruefungBestanden = pruefungBestanden;
 	}
 
 	/**
@@ -680,11 +448,4 @@ public class ReportingSchuelerGostAbitur {
 		return schuljahrAbitur;
 	}
 
-	/**
-	 * Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird, wird gesetzt.
-	 * @param schuljahrAbitur Neuer Wert für das Feld schuljahrAbitur
-	 */
-	public void setSchuljahrAbitur(final int schuljahrAbitur) {
-		this.schuljahrAbitur = schuljahrAbitur;
-	}
 }
