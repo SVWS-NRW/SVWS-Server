@@ -4,8 +4,12 @@ Repository für den Javascript-Client, in dem sich auch die GUIs befinden.
 
 ## Projekt Setup
 
-https://git.svws-nrw.de/svws/svws-dokumentation/-/tree/main/Entwicklungsumgebungen
+https://doku.svws-nrw.de/Entwicklungsumgebungen/
+
+Hier kann unter verschiedenen Betriebssystemen die Einrichtung der Entwicklungsumgebung nachgelesen werden.
 
 ### Dokumentation
 
-https://git.svws-nrw.de/svws/svws-dokumentation/-/tree/main/SVWS-Client
+https://doku.svws-nrw.de/SVWS-Server/svws-webclient/
+
+Eine grundsätzliche Erklärung zum WebClient gibt es unter diesem Link.
