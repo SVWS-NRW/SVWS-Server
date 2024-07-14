@@ -1,4 +1,4 @@
-package de.svws_nrw.module.reporting.types.utils;
+package de.svws_nrw.module.reporting.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die Klasse enthält statische Hilfsmethoden rund um die DruckTypes.
+ * Die Klasse enthält statische Hilfsmethoden rund um die Reporting-Types.
  */
 public final class ReportingTypesUtils {
 
 	private ReportingTypesUtils() {
-		throw new IllegalStateException("Utility class");
+		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zu den Reporting-Types. Initialisierung nicht möglich.");
 	}
 
 	/**

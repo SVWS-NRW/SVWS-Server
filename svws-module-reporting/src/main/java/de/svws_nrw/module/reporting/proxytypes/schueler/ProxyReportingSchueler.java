@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
@@ -16,6 +17,7 @@ import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
@@ -26,7 +28,6 @@ import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schüler und erweitert die Klasse {@link ReportingSchueler}.</p>
@@ -127,7 +128,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb))).toList();
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
-		reportingRepository.mapSchuelerStammdaten().putIfAbsent(super.id(), schuelerStammdaten);
+		this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(super.id(), schuelerStammdaten);
 	}
 
 
@@ -192,11 +193,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.
 	 *
 	 * @return Daten zum Abitur in der GOSt
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public ReportingSchuelerGostAbitur gostAbitur() throws ApiOperationException {
+	public ReportingSchuelerGostAbitur gostAbitur() {
 		if (super.gostAbitur() == null) {
 			if (this.reportingRepository.mapGostSchuelerAbiturdaten().containsKey(this.id())) {
 				super.gostAbitur =
@@ -205,9 +204,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				try {
 					final Abiturdaten abiturdaten = DBUtilsGostAbitur.getAbiturdaten(this.reportingRepository.conn(), this.id());
 					super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten);
-				} catch (final ApiOperationException aoe) {
-					throw new ApiOperationException(Status.NOT_FOUND, aoe,
-							"Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				} catch (final ApiOperationException e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Abiturdaten eines Schülers.", e,
+							reportingRepository.logger(), LogLevel.INFO, 0);
+					return null;
 				}
 			}
 		}
@@ -222,12 +223,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		if (super.gostLaufbahnplanung() == null) {
-			try {
-				super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this);
-			} catch (final ApiOperationException e) {
-				e.printStackTrace();
-				return null;
-			}
+			super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this);
 		}
 		return super.gostLaufbahnplanung();
 	}
@@ -244,7 +240,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
 						.getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true));
 			} catch (final ApiOperationException e) {
-				e.printStackTrace();
+				ReportingExceptionUtils.putStacktraceInLog(
+						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
+						reportingRepository.logger(), LogLevel.INFO, 0);
 			}
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
 			if (schuelerLernabschnittsdaten.isEmpty()) {

@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
@@ -119,7 +121,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								try {
 									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new KlassenDaten();
 								}
 							}));
@@ -141,7 +145,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								try {
 									return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idJahrgang());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new JahrgangsDaten();
 								}
 							}));
@@ -162,7 +168,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								try {
 									return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(klId);
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
 								}
 							}))
@@ -189,7 +197,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 				try {
 					return new DataKlassendaten(this.reportingRepository.conn()).getFromID(super.id());
 				} catch (final ApiOperationException e) {
-					e.printStackTrace();
+					ReportingExceptionUtils.putStacktraceInLog(
+							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
+							reportingRepository.logger(), LogLevel.INFO, 0);
 					return new KlassenDaten();
 				}
 			});
@@ -224,7 +234,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								try {
 									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idVorgaengerklasse());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new KlassenDaten();
 								}
 							}));

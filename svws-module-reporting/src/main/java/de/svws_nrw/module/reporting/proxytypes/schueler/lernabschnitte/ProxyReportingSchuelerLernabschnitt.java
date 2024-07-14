@@ -7,11 +7,13 @@ import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -150,7 +152,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new KlassenDaten();
 								}
 							}));
@@ -172,7 +176,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new JahrgangsDaten();
 								}
 							}));
@@ -194,7 +200,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new KlassenDaten();
 								}
 							}));
@@ -220,7 +228,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Schülers.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new SchuelerStammdaten();
 								}
 							}));
@@ -256,7 +266,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
 								}
 							}));
@@ -278,7 +290,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
 								} catch (final ApiOperationException e) {
-									e.printStackTrace();
+									ReportingExceptionUtils.putStacktraceInLog(
+											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
 								}
 							}));

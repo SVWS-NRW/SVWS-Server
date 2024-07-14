@@ -54,7 +54,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * Erstellt eine neue Report-Vorlage
 	 * @param bezeichnung Der Name der Report-Vorlage
 	 */
-	private constructor(name : string, ordinal : number, bezeichnung : string) {
+	private constructor(name : string, ordinal : number, bezeichnung : string | null) {
 		super(name, ordinal);
 		ReportingReportvorlage.all_values_by_ordinal.push(this);
 		ReportingReportvorlage.all_values_by_name.set(name, this);
@@ -65,7 +65,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * Gibt die Bezeichnung dieser Report-Vorlage zurück
 	 * @return Die Bezeichnung dieser Report-Vorlage
 	 */
-	public getBezeichnung() : string {
+	public getBezeichnung() : string | null {
 		return (this.bezeichnung !== null) ? this.bezeichnung : "";
 	}
 
@@ -74,9 +74,11 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * @param bezeichnung Die Bezeichnung der Report-Vorlage
 	 * @return Die Report-Vorlage
 	 */
-	public static getByBezeichnung(bezeichnung : string) : ReportingReportvorlage | null {
+	public static getByBezeichnung(bezeichnung : string | null) : ReportingReportvorlage | null {
+		if ((bezeichnung === null) || (JavaString.isEmpty(bezeichnung)))
+			return null;
 		for (const rv of ReportingReportvorlage.values())
-			if (!JavaString.isEmpty(bezeichnung) && JavaObject.equalsTranspiler(rv.bezeichnung, (bezeichnung)))
+			if (JavaObject.equalsTranspiler(rv.bezeichnung, (bezeichnung)))
 				return rv;
 		return null;
 	}

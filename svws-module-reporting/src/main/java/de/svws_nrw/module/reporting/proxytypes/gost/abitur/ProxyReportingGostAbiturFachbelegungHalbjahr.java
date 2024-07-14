@@ -3,9 +3,11 @@ package de.svws_nrw.module.reporting.proxytypes.gost.abitur;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegungHalbjahr;
@@ -67,7 +69,9 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 						try {
 							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegungHalbjahr.lehrer);
 						} catch (final ApiOperationException e) {
-							e.printStackTrace();
+							ReportingExceptionUtils.putStacktraceInLog(
+									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+									reportingRepository.logger(), LogLevel.INFO, 0);
 							return new LehrerStammdaten();
 						}
 					}));

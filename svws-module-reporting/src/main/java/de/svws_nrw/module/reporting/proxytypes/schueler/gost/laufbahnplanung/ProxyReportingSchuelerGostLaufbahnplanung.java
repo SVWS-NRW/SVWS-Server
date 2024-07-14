@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -33,6 +34,7 @@ import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -78,42 +80,51 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param reportingSchueler	Schüler, dessen GOSt-Laufbahnplanung gelesen werden soll.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler)
-			throws ApiOperationException {
+	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) {
 		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0,
 				0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		this.reportingRepository = reportingRepository;
 
-		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind an die aus initSchuelerGostLaufbahnplanung.
-		final Abiturdaten abiturdaten = DBUtilsGostLaufbahn.get(this.reportingRepository.conn(), reportingSchueler.id());
+		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
+		// Initialisierung.
+		final Abiturdaten abiturdaten;
+		try {
+			abiturdaten = DBUtilsGostLaufbahn.get(this.reportingRepository.conn(), reportingSchueler.id());
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.putStacktraceInLog(
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Abitur).", e,
+					reportingRepository.logger(), LogLevel.INFO, 0);
+			return;
+		}
 		if (abiturdaten.abiturjahr <= 0) {
 			return;
 		}
 		super.abiturjahr = abiturdaten.abiturjahr;
 
-		// Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
+		// Weitere Datenobjekte erstellen. Prüfe zunächst, ob alle notwendigen Daten ermittelt werden können und speichere sie zwischen.
+		// Im Fehlerfall wird nur das initialisierte Reporting-Objekt zurückgegeben.
+		final GostLaufbahnplanungBeratungsdaten tempGostLaufbahnplanungBeratungsdaten;
+		final GostJahrgangsdaten tempGostJahrgangsdaten;
+		final GostFaecherManager tempGostFaecherManager;
+		try {
+			tempGostLaufbahnplanungBeratungsdaten =
+					new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
+			tempGostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
+			tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.putStacktraceInLog(
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Manager).", e,
+					reportingRepository.logger(), LogLevel.INFO, 0);
+			return;
+		}
+
+		// Abfragen erfolgreich. Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
 		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten =
-				this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> {
-					try {
-						return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
-					} catch (final ApiOperationException e) {
-						e.printStackTrace();
-						return new GostLaufbahnplanungBeratungsdaten();
-					}
-				});
-		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> {
-			try {
-				return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
-			} catch (final ApiOperationException e) {
-				e.printStackTrace();
-				return new GostJahrgangsdaten();
-			}
-		});
+				this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> tempGostLaufbahnplanungBeratungsdaten);
+		final GostJahrgangsdaten gostJahrgangsdaten =
+				this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> tempGostJahrgangsdaten);
 		if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
-			final GostFaecherManager tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
 			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(),
 					super.abiturjahr()));
 			this.reportingRepository.mapGostAbiturjahrgangFaecher().put(super.abiturjahr(), tempGostFaecherManager);
@@ -269,7 +280,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						try {
 							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
 						} catch (final ApiOperationException e) {
-							e.printStackTrace();
+							ReportingExceptionUtils.putStacktraceInLog(
+									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+									reportingRepository.logger(), LogLevel.INFO, 0);
 							return new LehrerStammdaten();
 						}
 					}));
@@ -284,7 +297,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 							try {
 								return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id);
 							} catch (final ApiOperationException e) {
-								e.printStackTrace();
+								ReportingExceptionUtils.putStacktraceInLog(
+										"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+										reportingRepository.logger(), LogLevel.INFO, 0);
 								return new LehrerStammdaten();
 							}
 						})));
@@ -375,7 +390,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 			fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
 					abiturfach,
-					belegungEF1, belegungEF2, belegungQ11, belegungQ12,	belegungQ21, belegungQ22,
+					belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22,
 					reportingRepository.mapReportingFaecher().get(fach.id),
 					fachBelegtInGost,
 					istFortfuehrbareFremdspracheInGOSt,

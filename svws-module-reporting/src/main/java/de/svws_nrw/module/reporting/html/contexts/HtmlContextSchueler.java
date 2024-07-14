@@ -3,12 +3,9 @@ package de.svws_nrw.module.reporting.html.contexts;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import jakarta.ws.rs.core.Response.Status;
 
 import org.thymeleaf.context.Context;
 
@@ -41,10 +38,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 *
 	 * @param reportingRepository Das Repository mit Daten zum Reporting.
 	 * @param reportingSchueler   Liste der Schüler, die berücksichtigt werden sollen.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) {
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromSchueler(reportingSchueler);
 	}
@@ -53,10 +48,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
 	 * @param reportingRepository   Das Repository mit Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository) throws ApiOperationException {
+	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
 	}
@@ -66,13 +59,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * Erzeugt den Context zum Füllen eines html-Templates.
 	 *
 	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
-
-		if ((reportingSchueler == null) || reportingSchueler.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler übergeben.");
+	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
 
 		// Sortiere die übergebene Liste der Schüler
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
@@ -96,18 +84,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * Erzeugt den Context zum Füllen eines html-Templates.
 	 *
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void erzeugeContextFromIds(final List<Long> idsSchueler) throws ApiOperationException {
-
-		final DBEntityManager conn = this.reportingRepository.conn();
-
-		if (conn == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenbankverbindung übergeben.");
-
-		if ((idsSchueler == null) || idsSchueler.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler-IDs übergeben.");
+	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
 
 		// Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, SchuelerStammdaten> mapSchueler = new HashMap<>();
@@ -165,10 +143,8 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * Teil diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<HtmlContextSchueler> getEinzelSchuelerContexts() throws ApiOperationException {
+	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
 		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
 
 		for (final ReportingSchueler reportingSchueler : schueler) {

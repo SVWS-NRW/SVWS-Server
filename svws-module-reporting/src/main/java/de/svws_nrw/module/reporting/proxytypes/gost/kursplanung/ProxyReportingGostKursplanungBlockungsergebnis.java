@@ -6,16 +6,16 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
-import de.svws_nrw.data.gost.DataGostBlockungsdaten;
-import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
@@ -68,7 +68,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Ergebnismanager des Blockunsgergebnisses. */
+	/** Ergebnismanager des Blockungsergebnisses. */
 	@JsonIgnore
 	private final GostBlockungsergebnisManager ergebnisManager;
 
@@ -76,18 +76,15 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * Erstellt ein neues Reporting-Objekt anhand der Blockungsergebnis-ID.
 	 *
 	 * @param reportingRepository	Repository für die Reporting.
-	 * @param id 					Die ID des Blockungsergebnisses aus der Kursplanung der gymnasialen Oberstufe.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param blockungsergebnis 	Das GOSt-Blockungsergebnis, welches für das Reporting genutzt werden soll.
+	 * @param datenManager 			Der zum Blockungsergebnis gehörige Datenmanager der Blockung.
 	 */
-	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final long id) throws ApiOperationException {
-		super(0, 0, 0, 0, 0, 0, "", null, null, id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final GostBlockungsergebnis blockungsergebnis,
+			final GostBlockungsdatenManager datenManager) {
+		super(0, 0, 0, 0, 0, 0, "", null, null, blockungsergebnis.id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		this.reportingRepository = reportingRepository;
 
-		// Initialisiere das Blockungsergebnis und dessen Manager.
-		final GostBlockungsergebnis blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), id);
-		final GostBlockungsdatenManager datenManager =
-				DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
+		// Initialisiere den Blockungsergebnis-Manager.
 		ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
 
 		// Sortierungen definieren.
@@ -165,7 +162,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 									try {
 										return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id);
 									} catch (final ApiOperationException e) {
-										e.printStackTrace();
+										ReportingExceptionUtils.putStacktraceInLog(
+												"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+												reportingRepository.logger(), LogLevel.INFO, 0);
 										return new LehrerStammdaten();
 									}
 								})))
@@ -262,7 +261,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 													this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
 				}
 			} catch (final ApiOperationException e) {
-				e.printStackTrace();
+				ReportingExceptionUtils.putStacktraceInLog(
+						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
+						reportingRepository.logger(), LogLevel.INFO, 0);
 			}
 			super.fachwahlstatistik = mapFachwahlStatistik;
 		}

@@ -1,7 +1,5 @@
 package de.svws_nrw.core.types.reporting;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers.
  * Im Rahmen des Reportings werden auf Basis dieses CoreTyps Template-Definitionen vorgenommen.
@@ -48,7 +46,7 @@ public enum ReportingReportvorlage {
 	 * Erstellt eine neue Report-Vorlage
 	 * @param bezeichnung Der Name der Report-Vorlage
 	 */
-	ReportingReportvorlage(final @NotNull String bezeichnung) {
+	ReportingReportvorlage(final String bezeichnung) {
 		this.bezeichnung = bezeichnung;
 	}
 
@@ -56,7 +54,7 @@ public enum ReportingReportvorlage {
 	 * Gibt die Bezeichnung dieser Report-Vorlage zurück
 	 * @return Die Bezeichnung dieser Report-Vorlage
 	 */
-	public @NotNull String getBezeichnung() {
+	public String getBezeichnung() {
 		return (this.bezeichnung != null) ? this.bezeichnung : "";
 	}
 
@@ -65,9 +63,11 @@ public enum ReportingReportvorlage {
 	 * @param bezeichnung Die Bezeichnung der Report-Vorlage
 	 * @return Die Report-Vorlage
 	 */
-	public static ReportingReportvorlage getByBezeichnung(final @NotNull String bezeichnung) {
+	public static ReportingReportvorlage getByBezeichnung(final String bezeichnung) {
+		if ((bezeichnung == null) || (bezeichnung.isEmpty()))
+			return null;
 		for (final ReportingReportvorlage rv : ReportingReportvorlage.values())
-			if (!bezeichnung.isEmpty() && rv.bezeichnung.equals(bezeichnung))
+			if (rv.bezeichnung.equals(bezeichnung))
 				return rv;
 		return null;
 	}

@@ -2,8 +2,10 @@ package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -88,7 +90,9 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 										try {
 											return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idFolgejahrgang());
 										} catch (final ApiOperationException e) {
-											e.printStackTrace();
+											ReportingExceptionUtils.putStacktraceInLog(
+													"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
+													reportingRepository.logger(), LogLevel.INFO, 0);
 											return new JahrgangsDaten();
 										}
 									}));

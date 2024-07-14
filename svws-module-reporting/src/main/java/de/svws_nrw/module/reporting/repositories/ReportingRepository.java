@@ -17,6 +17,9 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
@@ -54,6 +57,12 @@ public class ReportingRepository {
 
 	/** Die Reporting-Parameter, mit IDs und weiteren Informationen, die für den Druck verwendet werden sollen. */
 	private final ReportingParameter reportingParameter;
+
+	/** Liste, die Einträge aus dem Logger sammelt. */
+	private final LogConsumerList log;
+
+	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt */
+	private final Logger logger;
 
 	/** Die Stammdaten der Schule zur Datenbankanbindung. */
 	private final SchuleStammdaten schulstammdaten;
@@ -126,57 +135,115 @@ public class ReportingRepository {
 	 *     <li>Map: Lernabschnittsdaten der Schüler</li>
 	 * </ul>
 	 *
-	 * @param conn	Die Verbindung zur Datenbank der Schule.
-	 * @param reportingParameter Die Daten, die für die Generierung eines Reports verwendet werden sollen.
+	 * @param conn					Die Verbindung zur Datenbank der Schule.
+	 * @param reportingParameter 	Die Informationen, die für die Generierung eines Reports verwendet werden sollen.
+	 * @param logger 				Logger, der die Erstellung der Reports protokolliert.
+	 * @param log 					Log, das die Erstellung des Reports protokolliert.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ReportingRepository(final DBEntityManager conn, final ReportingParameter reportingParameter) throws ApiOperationException {
-		if (conn == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Datenbankverbindung wurde nicht angegeben.");
+	public ReportingRepository(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
+			throws ApiOperationException {
+
+		// Initialisiere den Logger und das Log, sofern noch nicht erfolgt.
+		if (logger == null)
+			this.logger = new Logger();
+		else
+			this.logger = logger;
+
+		if ((logger == null) || (log == null)) {
+			this.log = new LogConsumerList();
+			this.logger.addConsumer(this.log);
+		} else
+			this.log = log;
+
+		this.logger.logLn(LogLevel.DEBUG, 4, ">>> Beginn der Erzeugung des Reporting-Repository");
+
+		// Validiere Datenbankverbindung
+		if (conn == null) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Repository übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Repository übergeben.");
+		}
 		this.conn = conn;
 
-		if (reportingParameter == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Parameter für die Reporterzeugung übergeben.");
+		// Validiere Reporting-Parameter
+		if (reportingParameter == null) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
+		}
 		this.reportingParameter = reportingParameter;
 
 		// Ermittle die Daten der Schule. Wenn diese nicht gefunden wird oder sie keinen aktuellen Schuljahresabschnitt besitzt, dann wird ein Fehler geworfen.
-		schulstammdaten = DataSchuleStammdaten.getStammdaten(this.conn);
+		this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
+		try {
+			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.conn);
 
-		// Ermittle grundlegende Daten zur Schule und deren Katalogen.
-		mapSchuljahresabschnitte = new DataSchuljahresabschnitte(this.conn).getAbschnitte().stream().collect(Collectors.toMap(a -> a.id, a -> a));
-		aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt)
-				.toList().getFirst();
-
-		if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id) || (this.reportingParameter.idSchuljahresabschnitt < 0)
-				|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
-			auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
-		else
-			auswahlSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt)
+			// Ermittle grundlegende Daten zur Schule
+			mapSchuljahresabschnitte = new DataSchuljahresabschnitte(this.conn).getAbschnitte().stream().collect(Collectors.toMap(a -> a.id, a -> a));
+			aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt)
 					.toList().getFirst();
 
-		katalogFoerderschwerpunkte = new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
-		katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-		katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-		katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
-
-		mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
-		mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream()
-				.collect(Collectors.toMap(k -> k.id, k -> k));
-		if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
-			mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream()
-					.collect(Collectors.toMap(k -> k.id, k -> k)));
-
-		// TODO: Die Map der Lehrer noch mit den aktuell aktiven Lehrern füllen.
-		mapLehrerStammdaten = new HashMap<>();
-
-		// Erzeuge aus den Daten in den Maps Reporting-Objekte für zentrale Typen
-		final Map<Long, FachDaten> mapFaecherDaten = new DataFachdaten(this.conn).getFaecherdaten();
-		final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten();
-		for (final FachDaten fach : mapFaecherDaten.values()) {
-			mapReportingFaecher.put(fach.id, new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id)));
+			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id)
+					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
+					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
+				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
+			else
+				auswahlSchuljahresabschnitt =
+						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt)
+								.toList().getFirst();
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Stammdaten der Schule oder ihre Abschnittsdaten konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Die Stammdaten der Schule oder ihre Abschnittsdaten konnten nicht ermittelt werden.");
 		}
 
+		// Ermittle grundlegende Kataloge.
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
+			katalogFoerderschwerpunkte =
+					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
+			katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
+		}
+
+		// Ermittle Klassen-, Jahrgangsdaten und Stammdaten der Lehrer
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Klassen-, Jahrgangsdaten und Lehrerstammdaten.");
+			mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
+			mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream()
+					.collect(Collectors.toMap(k -> k.id, k -> k));
+			if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
+				mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream()
+						.collect(Collectors.toMap(k -> k.id, k -> k)));
+			mapLehrerStammdaten = new HashMap<>(); //  TODO: Ermittle Stammdaten der aktiven Lehrer.
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassen-, Jahrgangsdaten oder Lehrerstammdaten konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Die Klassen-, Jahrgangsdaten oder Lehrerstammdaten konnten nicht ermittelt werden..");
+		}
+
+		// Ermittle Fächerdaten und schreibe sie in die zentrale Map.
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächerdaten.");
+			final Map<Long, FachDaten> mapFaecherDaten = new DataFachdaten(this.conn).getFaecherdaten();
+			final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten();
+			for (final FachDaten fach : mapFaecherDaten.values()) {
+				mapReportingFaecher.put(fach.id, new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id)));
+			}
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden..");
+		}
+
+		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");
 	}
 
 
@@ -196,6 +263,21 @@ public class ReportingRepository {
 		return reportingParameter;
 	}
 
+	/**
+	 * Logger, der die Erstellung der Reports protokolliert.
+	 * @return Der Logger zum Sammeln der Fehler
+	 */
+	public Logger logger() {
+		return logger;
+	}
+
+	/**
+	 * Log, das die Erstellung des Reports protokolliert.
+	 * @return Das Log, in dem Fehlerinformationen gesammelt werden.
+	 * */
+	public LogConsumerList log() {
+		return log;
+	}
 
 
 	/**
@@ -353,6 +435,5 @@ public class ReportingRepository {
 	public Map<Long, ReportingFach> mapReportingFaecher() {
 		return mapReportingFaecher;
 	}
-
 
 }

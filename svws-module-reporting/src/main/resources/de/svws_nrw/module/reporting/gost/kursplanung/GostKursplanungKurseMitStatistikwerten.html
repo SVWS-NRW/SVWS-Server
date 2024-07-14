@@ -66,9 +66,9 @@
 					<td class="bob-grey pad-1001 ta-l" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
 					<td class="bob-grey pad-1001 ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (+' + ${Kurs.anzahlExterne()} + ')'">23 (+8)</td>
 					<td class="bob-grey pad-1001 ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
-					<td class="bob-grey pad-1001 ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
-					<td class="bob-grey pad-1001 ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB3()}">5</td>
-					<td class="bob-grey pad-1001 ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB4()}">3</td>
+					<td class="bob-grey pad-1001 ta-c" th:text="${Kurs.anzahlAB12()}">0</td>
+					<td class="bob-grey pad-1001 ta-c" th:text="${Kurs.anzahlAB3()}">5</td>
+					<td class="bob-grey pad-1001 ta-c" th:text="${Kurs.anzahlAB4()}">3</td>
 					<td class="bob-grey bol-grey pad-1001 small ta-l" th:text="${Kurs.fach().kuerzel()}">GE</td>
 					<td class="bob-grey pad-1001 small ta-l" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
 					<th:block th:switch="${Kurs.gostKursart().kuerzel}">
