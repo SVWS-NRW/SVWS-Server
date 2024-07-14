@@ -1,11 +1,17 @@
-# SVWS-Admin-Client
+# SVWS-AdminClient
 
-Repository für den Javascript Admin-Client
+Repository für den Javascript AdminClient
 
-## Projekt Setup
+## Allgemeine Beschreibung
 
-https://git.svws-nrw.de/svws/svws-dokumentation/-/tree/main/Entwicklungsumgebungen
+Der AdminClient stellt einen WebClient für administrative Aufgaben zur Verfügung.
+Hier können Arbeiten für das Schema-Management gemacht werden.
+Backups und Wiederherstellung sind hier auch realisiert.
 
-### Dokumentation
+Der AdminClient stellt das Gegenstück zur priviligierten OpenAPI-Schnittstelle des SVWS-Servers zur Verfügung. Hier können in einem abgeschotteten Bereicht die administrativen Zugriffe geregelt werden.
+So benötigt man hier Datenbank-User mit erhöhten Rechten und ggf. auch Rechte auf einen anderen Port.
 
-https://git.svws-nrw.de/svws/svws-dokumentation/-/tree/main/SVWS-Admin-Client
+## Anwenderdokumentation des Admin-Clients
+
+https://help.svws-nrw.de/administration/adminclient/
+
