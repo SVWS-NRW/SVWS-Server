@@ -61,7 +61,7 @@ public class Kurs42DataSchueler {
 	public int KoopDBIdNr;
 
 	/** ??? Diese Spalte wird ignoriert, da sie zum Import nicht nötig ist. */
-	public int ExterneId;
+	public String ExterneId;
 
 	/** Die Schul-eMail-Addresse des Schülers. */
 	public String SchulEmail;
