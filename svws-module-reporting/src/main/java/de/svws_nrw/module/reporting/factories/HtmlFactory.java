@@ -8,6 +8,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.html.HtmlBuilder;
 import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
@@ -34,7 +35,7 @@ import java.util.zip.ZipOutputStream;
  * Diese Klasse beinhaltet den Code zur Erstellung von Html-Inhalten auf Basis der hinterlegten html-Vorlage und den übergebenen Daten.
  * Sie setzt voraus, dass zum übergebenen html-Template eine css-Datei mit gleichem Pfad und Namen existiert.
  */
-public final class HtmlFactory {
+public class HtmlFactory {
 
 	/** Repository für die Reporting */
 	private final ReportingRepository reportingRepository;
@@ -76,7 +77,7 @@ public final class HtmlFactory {
 
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
 		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-			"Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
+				"Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
 		if (!this.reportingRepository.conn().getUser().pruefeKompetenz(new HashSet<>(htmlTemplateDefinition.getBenutzerKompetenzen()))) {
 			this.reportingRepository.logger()
 					.logLn(LogLevel.ERROR, 4,
@@ -108,24 +109,37 @@ public final class HtmlFactory {
 		switch (htmlTemplateDefinition.name().substring(0, htmlTemplateDefinition.name().indexOf("_v_"))) {
 			case "SCHUELER":
 				// Schüler-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						("Erzeuge Datenkontext Schüler für die html-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
-								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die html-Generierung.");
 				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten,
 						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_LAUFBAHNPLANUNG_"),
 						htmlTemplateDefinition.name().startsWith("SCHUELER_v_GOST_ABITUR_"), true);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						("Erzeuge Datenkontext Schüler für die html-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
+								.formatted(reportingParameter.idsHauptdaten.size(), htmlTemplateDefinition.name()));
 				final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
 				mapHtmlContexts.put("Schueler", htmlContextSchueler);
 				break;
 			case "GOST_KURSPLANUNG":
 				// GOSt-Kursplanung-Blockungsergebnis-Context ist Hauptdatenquelle
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Erzeuge Datenkontext Kursplanung-Blockungsergebnis für die html-Generierung mit ID %s für Template %s."
-								.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die html-Generierung.");
 				ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
-				final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung =
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die html-Generierung mit ID %s für Template %s."
+								.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
+				final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung =
 						new HtmlContextGostKursplanungBlockungsergebnis(reportingRepository);
-				mapHtmlContexts.put("Blockungsergebnis", htmlContextBlockung);
+				mapHtmlContexts.put("Blockungsergebnis", htmlContextGostBlockung);
+				break;
+			case "GOST_KLAUSURPLANUNG":
+				// GOSt-Klausurplanung-Klausurplan-Context ist Hauptdatenquelle
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die html-Generierung.");
+				ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Erzeuge Datenkontext Gost-Klausurplanung-Blockungsergebnis für die html-Generierung mit Abiturjahr %s-%s und Template %s."
+								.formatted(reportingParameter.idsHauptdaten.get(0), reportingParameter.idsHauptdaten.get(1), htmlTemplateDefinition.name()));
+				final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan =
+						new HtmlContextGostKlausurplanungKlausurplan(reportingRepository);
+				mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);
 				break;
 			default:
 				break;

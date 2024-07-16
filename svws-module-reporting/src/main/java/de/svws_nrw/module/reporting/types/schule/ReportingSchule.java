@@ -20,6 +20,9 @@ public class ReportingSchule {
 	/** Die Anzahl der Abschnitte pro Jahr */
 	protected long anzahlSchuljahresabschnitteProJahr;
 
+	/** Der über die API als ausgewählter Schuljahresabschnitt deklarierter Abschnitt der Schule. */
+	protected ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
+
 	/** Der erste Teil der Bezeichnung der Schule */
 	protected String bezeichnung1;
 
@@ -84,6 +87,7 @@ public class ReportingSchule {
 	 * @param aktuellerSchuljahresabschnitt Der aktuelle Abschnitt des Schuljahres der Schule.
 	 * @param anzahlJahrgangsstufenProJahr Die Anzahl der Jahrgangsstufen pro Jahr.
 	 * @param anzahlSchuljahresabschnitteProJahr Die Anzahl der Abschnitte pro Jahr
+	 * @param auswahlSchuljahresabschnitt Der über die API als ausgewählter Schuljahresabschnitt deklarierter Abschnitt der Schule.
 	 * @param bezeichnung1 Der erste Teil der Bezeichnung der Schule
 	 * @param bezeichnung2 Der zweite Teil der Bezeichnung der Schule
 	 * @param bezeichnung3 Der dritte Teil der Bezeichnung der Schule
@@ -105,7 +109,8 @@ public class ReportingSchule {
 	 * @param webAdresse Die Adresse der Homepage der Schule (Domain-Name)
 	 */
 	public ReportingSchule(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt, final long anzahlJahrgangsstufenProJahr,
-			final long anzahlSchuljahresabschnitteProJahr, final String bezeichnung1, final String bezeichnung2, final String bezeichnung3,
+			final long anzahlSchuljahresabschnitteProJahr, final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt, final String bezeichnung1,
+			final String bezeichnung2, final String bezeichnung3,
 			final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit,
 			final String email, final String fax, final String hausnummer, final String hausnummerZusatz, final String ort, final String plz,
 			final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final String schulform, final String schullogo, final long schulnummer,
@@ -113,6 +118,7 @@ public class ReportingSchule {
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.anzahlJahrgangsstufenProJahr = anzahlJahrgangsstufenProJahr;
 		this.anzahlSchuljahresabschnitteProJahr = anzahlSchuljahresabschnitteProJahr;
+		this.auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.bezeichnung1 = bezeichnung1;
 		this.bezeichnung2 = bezeichnung2;
 		this.bezeichnung3 = bezeichnung3;
@@ -202,6 +208,14 @@ public class ReportingSchule {
 	 */
 	public long anzahlSchuljahresabschnitteProJahr() {
 		return anzahlSchuljahresabschnitteProJahr;
+	}
+
+	/**
+	 * Der über die API als ausgewählter Schuljahresabschnitt deklarierter Abschnitt der Schule.
+	 * @return Inhalt des Feldes auswahlSchuljahresabschnitt
+	 */
+	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
+		return auswahlSchuljahresabschnitt;
 	}
 
 	/**

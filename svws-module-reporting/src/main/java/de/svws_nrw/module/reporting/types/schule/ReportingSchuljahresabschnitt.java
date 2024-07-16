@@ -32,6 +32,23 @@ public class ReportingSchuljahresabschnitt {
 	}
 
 
+	// ##### Berechnete Methoden #####
+	/**
+	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
+	 * @return Kurzer Text zum Schuljahresabschnitt
+	 */
+	public String textSchuljahresabschnittKurz() {
+		return "%s/%s.%s".formatted(schuljahr, (schuljahr % 100) + 1, abschnitt);
+	}
+
+	/**
+	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
+	 * @return Kurzer Text zum Schuljahresabschnitt
+	 */
+	public String textSchuljahresabschnittLang() {
+		return "%s/%s %s. Halbjahr".formatted(schuljahr, (schuljahr % 100) + 1, abschnitt);
+	}
+
 
 	// ##### Getter #####
 

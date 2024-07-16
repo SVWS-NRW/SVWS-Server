@@ -48,7 +48,6 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Blockungsergebnis", proxyReportingGostKursplanungBlockungsergebnis);
-		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}

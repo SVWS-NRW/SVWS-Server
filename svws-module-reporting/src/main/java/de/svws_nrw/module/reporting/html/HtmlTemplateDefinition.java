@@ -25,6 +25,18 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
  */
 public enum HtmlTemplateDefinition {
 
+	/** Report-Vorlage: GOSt - Klausurplanung - Klausurtermine - Kurse */
+	GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN(
+			ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN,
+			"de/svws_nrw/module/reporting/gost/klausurplanung/GostKlausurplanungKlausurtermineMitKursen.html",
+			"de/svws_nrw/module/reporting/gost/klausurplanung/GostKlausurplanungKlausurtermineMitKursen.css",
+			"GOSt-Klausurplanung-Klausurtermine-Kurse",
+			"""
+			        <p th:text="${'GOSt-Klausurplanung-Klausurtermine-Kurse_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN(
 			ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN,

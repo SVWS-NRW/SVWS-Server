@@ -24,7 +24,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung einer pdf-Datei auf Basis der übergebenen Html-Inhalte.
  */
-public final class PdfFactory {
+public class PdfFactory {
 
 	/** Die Daten für die Report-Ausgabe. */
 	private final ReportingParameter reportingParameter;

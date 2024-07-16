@@ -43,6 +43,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 		super(null,
 				reportingRepository.schulstammdaten().anzJGS_Jahr,
 				reportingRepository.schulstammdaten().schuleAbschnitte.anzahlAbschnitte,
+				null,
 				reportingRepository.schulstammdaten().bezeichnung1,
 				reportingRepository.schulstammdaten().bezeichnung2,
 				reportingRepository.schulstammdaten().bezeichnung3,
@@ -68,6 +69,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 		super.schuljahresabschnitte = this.reportingRepository.mapSchuljahresabschnitte().values().stream()
 				.map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList();
 		super.aktuellerSchuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt());
+		super.auswahlSchuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(this.reportingRepository.auswahlSchuljahresabschnitt());
 	}
 
 

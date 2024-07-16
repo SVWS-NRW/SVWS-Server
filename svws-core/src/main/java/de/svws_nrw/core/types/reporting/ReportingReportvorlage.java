@@ -16,6 +16,9 @@ package de.svws_nrw.core.types.reporting;
  */
 public enum ReportingReportvorlage {
 
+	/** Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse */
+	GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN("GostKlausurplanung-KlausurtermineMitKursen"),
+
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN("GostKursplanung-KursMitKursschuelern"),
 

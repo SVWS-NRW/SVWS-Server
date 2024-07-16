@@ -4,11 +4,13 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
@@ -153,4 +155,33 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden..");
 		}
 	}
+
+	/**
+	 * Validiert von der API übergebene Daten für GOSt-Klausurplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
+	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
+	 */
+	public static void validiereDatenFuerGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository)
+			throws ApiOperationException {
+
+		// Für die GOSt-Kursplanung muss die Schule eine Schule mit GOSt sein.
+		try {
+			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+		}
+
+		// TODO: Parameter von DataGostKlausuren.getAllData richtig setzen (am besten ausgewählter Schuljahresabschnitt).
+		//  Begründung: Die Methode DataGostKlausuren.getAllData wertet die zwei Parameter Abiturjahr und GOSt-Halbjahr nicht aus und es werden alle
+		//  Klausurdaten zurückgegeben.
+		try {
+			DataGostKlausuren.getAllData(reportingRepository.conn(), 0, GostHalbjahr.EF1);
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e,
+					"FEHLER: Zum ausgewählten Schuljahresabschnitt konnten keine Klausurplanungsdaten ermittelt werden.");
+		}
+	}
+
 }

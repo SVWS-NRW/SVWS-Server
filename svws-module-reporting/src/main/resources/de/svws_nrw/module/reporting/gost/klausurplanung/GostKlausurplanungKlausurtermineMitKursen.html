@@ -1,0 +1,98 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Klausurtermine mit Kursen</title>
+		<link rel="stylesheet" href="GostKlausurplanungKlausurtermineMitKursen.css" />
+	</head>
+
+	<body>
+		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+		<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+		<div class="pageTopRight" th:utext="'Klausurplanung ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klausurplanung<br/><br/>Schulnummer: 123456</div>
+		<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+		<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
+		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+		<table class="fixed-layout-100 no-space-pad">
+			<tr>
+				<td class="bob-grey"><h2 th:text="'Klausurplan ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klausurplan 2024/25 1. Halbjahr</h2></td>
+			</tr>
+		</table>
+		<th:block th:each="Datum,itStatDatum : ${GostKlausurplan.datumsangabenKlausurtermine()}">
+			<table class="fixed-layout-100 no-space-pad">
+				<colgroup>
+					<col style="width: 6%;" />
+					<col style="width: 8%;" />
+					<col style="width: 11%;" />
+					<col style="width: 35%;" />
+					<col style="width: 40%;" />
+				</colgroup>
+				<thead>
+					<tr>
+						<td colspan="5" class="pad-top bob-grey"><h3 th:text="${#convert.toDateDEWochentag(Datum)} + ', ' + ${#convert.toDateDE(Datum)}">15.03.2024</h3></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="Termin,itStatTermin : ${GostKlausurplan.klausurtermineZumDatum(Datum)}">
+						<td colspan="5">
+							<table class="fixed-layout-100 no-space-pad">
+								<colgroup>
+									<col style="width: 6%;" />
+									<col style="width: 8%;" />
+									<col style="width: 11%;" />
+									<col style="width: 35%;" />
+									<col style="width: 40%;" />
+								</colgroup>
+								<thead>
+								<tr >
+									<td class="bob-grey" th:text="${Termin.gostHalbjahr().kuerzel}">Stufe</td>
+									<td class="bob-grey ta-c" th:text="${Termin.quartal()}">Quartal</td>
+									<td class="bob-grey" th:text="${Termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
+									<td colspan="2" class="bob-grey" th:text="${Termin.bezeichnung()}">Bezeichnung</td>
+								</tr>
+								<tr>
+									<td class="beschriftung">Stufe</td>
+									<td class="beschriftung ta-c">Quartal</td>
+									<td class="beschriftung">Beginn</td>
+									<td colspan="2" class="beschriftung ta-l" th:text="${(Termin.bemerkung() == null || Termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + Termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+								</tr>
+								</thead>
+								<tbody>
+									<!-- Kurse einfügen
+									<table class="fixed-layout-100 no-space-pad">
+										<colgroup>
+											<col style="width: 6%;" />
+											<col style="width: 8%;" />
+											<col style="width: 11%;" />
+											<col style="width: 35%;" />
+											<col style="width: 40%;" />
+										</colgroup>
+										<thead>
+										<tr >
+											<td class="bob-grey" th:text="${Termin.gostHalbjahr().kuerzel}">Stufe</td>
+											<td class="bob-grey ta-c" th:text="${Termin.quartal()}">Quartal</td>
+											<td class="bob-grey" th:text="${Termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
+											<td colspan="2" class="bob-grey" th:text="${Termin.bezeichnung()}">Bezeichnung</td>
+										</tr>
+										<tr>
+											<td class="beschriftung">Stufe</td>
+											<td class="beschriftung ta-c">Quartal</td>
+											<td class="beschriftung">Beginn</td>
+											<td colspan="2" class="beschriftung ta-l" th:text="${(Termin.bemerkung() == null || Termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + Termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+										</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+									</table>
+									-->
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+	</body>
+</html>

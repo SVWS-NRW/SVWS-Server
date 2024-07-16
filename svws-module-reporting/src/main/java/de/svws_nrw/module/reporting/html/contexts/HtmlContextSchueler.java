@@ -74,7 +74,6 @@ public final class HtmlContextSchueler extends HtmlContext {
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Schueler", schueler);
-		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}
