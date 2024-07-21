@@ -20,7 +20,10 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -107,6 +110,30 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 			daten.foto = lehrerFoto.FotoBase64;
 		daten.leitungsfunktionen.addAll(DataSchulleitung.getSchulleitungsfunktionen(conn, id));
 		return daten;
+	}
+
+	/**
+	 * Gibt die Liste der Stammdaten der Lehrer zurück, die sichtbar sind.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 *
+	 * @return Liste der Stammdaten der sichtbaren Lehrer
+	 */
+	public List<LehrerStammdaten> getSichtbareLehrerStammdaten(final DBEntityManager conn) throws ApiOperationException {
+		final var result = new ArrayList<LehrerStammdaten>();
+		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		if ((lehrer == null) || lehrer.isEmpty())
+			return result;
+		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, lehrer.stream().map(l -> l.ID).toList())
+				.stream().collect(Collectors.toMap(lf -> lf.Lehrer_ID, lf -> lf));
+		for (final DTOLehrer l : lehrer) {
+			final LehrerStammdaten daten = dtoMapper.apply(l);
+			final var tmpFoto = mapFotos.get(daten.id);
+			daten.foto = (tmpFoto == null) ? null : tmpFoto.FotoBase64;
+			daten.leitungsfunktionen.addAll(DataSchulleitung.getSchulleitungsfunktionen(conn, daten.id));
+			result.add(daten);
+		}
+		return result;
 	}
 
 	private final Map<String, DataBasicMapper<DTOLehrer>> patchMappings = Map.ofEntries(

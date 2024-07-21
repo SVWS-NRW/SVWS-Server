@@ -19,7 +19,7 @@
 				<td class="bob-grey"><h2 th:text="'Klausurplan ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klausurplan 2024/25 1. Halbjahr</h2></td>
 			</tr>
 		</table>
-		<th:block th:each="Datum,itStatDatum : ${GostKlausurplan.datumsangabenKlausurtermine()}">
+		<th:block th:each="datum,itStatDatum : ${GostKlausurplan.datumsangabenKlausurtermine()}">
 			<table class="fixed-layout-100 no-space-pad">
 				<colgroup>
 					<col style="width: 6%;" />
@@ -30,63 +30,90 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<td colspan="5" class="pad-top bob-grey"><h3 th:text="${#convert.toDateDEWochentag(Datum)} + ', ' + ${#convert.toDateDE(Datum)}">15.03.2024</h3></td>
+						<td colspan="5" class="pad-top bob-grey"><h3 th:text="${#convert.toDateDEWochentag(datum)} + ', ' + ${#convert.toDateDE(datum)}">15.03.2024</h3></td>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Termin,itStatTermin : ${GostKlausurplan.klausurtermineZumDatum(Datum)}">
+					<tr th:each="termin,itStatTermin : ${GostKlausurplan.klausurtermineZumDatum(datum)}">
 						<td colspan="5">
 							<table class="fixed-layout-100 no-space-pad">
 								<colgroup>
-									<col style="width: 6%;" />
-									<col style="width: 8%;" />
+									<col style="width: 7%;" />
+									<col style="width: 7%;" />
 									<col style="width: 11%;" />
 									<col style="width: 35%;" />
 									<col style="width: 40%;" />
 								</colgroup>
 								<thead>
 								<tr >
-									<td class="bob-grey" th:text="${Termin.gostHalbjahr().kuerzel}">Stufe</td>
-									<td class="bob-grey ta-c" th:text="${Termin.quartal()}">Quartal</td>
-									<td class="bob-grey" th:text="${Termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
-									<td colspan="2" class="bob-grey" th:text="${Termin.bezeichnung()}">Bezeichnung</td>
+									<td class="bob-grey" th:text="${termin.gostHalbjahr().kuerzel}">Stufe</td>
+									<td class="bob-grey" th:text="${termin.quartal()}">Quartal</td>
+									<td class="bob-grey" th:text="${termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
+									<td colspan="2" class="bob-grey" th:text="${termin.bezeichnung()}">Bezeichnung</td>
 								</tr>
 								<tr>
 									<td class="beschriftung">Stufe</td>
-									<td class="beschriftung ta-c">Quartal</td>
+									<td class="beschriftung">Quartal</td>
 									<td class="beschriftung">Beginn</td>
-									<td colspan="2" class="beschriftung ta-l" th:text="${(Termin.bemerkung() == null || Termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + Termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+									<td colspan="2" class="beschriftung ta-l" th:text="${(termin.bemerkung() == null || termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+								</tr>
+								<tr>
+									<td style="height: 2mm"></td>
 								</tr>
 								</thead>
 								<tbody>
-									<!-- Kurse einfügen
-									<table class="fixed-layout-100 no-space-pad">
-										<colgroup>
-											<col style="width: 6%;" />
-											<col style="width: 8%;" />
-											<col style="width: 11%;" />
-											<col style="width: 35%;" />
-											<col style="width: 40%;" />
-										</colgroup>
-										<thead>
-										<tr >
-											<td class="bob-grey" th:text="${Termin.gostHalbjahr().kuerzel}">Stufe</td>
-											<td class="bob-grey ta-c" th:text="${Termin.quartal()}">Quartal</td>
-											<td class="bob-grey" th:text="${Termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
-											<td colspan="2" class="bob-grey" th:text="${Termin.bezeichnung()}">Bezeichnung</td>
-										</tr>
-										<tr>
-											<td class="beschriftung">Stufe</td>
-											<td class="beschriftung ta-c">Quartal</td>
-											<td class="beschriftung">Beginn</td>
-											<td colspan="2" class="beschriftung ta-l" th:text="${(Termin.bemerkung() == null || Termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + Termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
-										</tr>
-										</thead>
-										<tbody>
-
-										</tbody>
-									</table>
-									-->
+									<tr th:if="${!termin.kursklausuren().isEmpty()}">
+										<td colspan="2"></td>
+										<td colspan="3">
+											<table class="fixed-layout-100 no-space-pad">
+												<colgroup>
+													<col style="width: 17%;" />
+													<col style="width: 17%;" />
+													<col style="width: 15%;" />
+													<col style="width: 13%;" />
+													<col style="width: 13%;" />
+													<col style="width: 12%;" />
+													<col style="width: 13%;" />
+												</colgroup>
+												<thead>
+													<tr>
+														<td class="spaltenkopf">Kurs</td>
+														<td class="spaltenkopf">Lehrkraft</td>
+														<td class="spaltenkopf">Anzahl</td>
+														<td class="spaltenkopf">Beginn</td>
+														<td class="spaltenkopf ta-r">Dauer</td>
+														<td class="spaltenkopf ta-r">Auswahlzeit</td>
+														<td class="spaltenkopf ta-r">Medien</td>
+													</tr>
+												</thead>
+												<tbody>
+													<th:block th:each="kursklausur,itStatKursklausur : ${termin.kursklausuren()}">
+														<tr>
+															<td class="bot-grey pad-1001" th:text="${kursklausur.kurs().kuerzel()}">GE-GK2</td>
+															<td class="bot-grey pad-1001" th:text="${kursklausur.kurs().kursLehrer().kuerzel()}">ABC</td>
+															<td class="bot-grey pad-1001" th:text="${kursklausur.anzahlSchuelerKlausur() + ' / ' + kursklausur.anzahlSchuelerKurs()}">12/19</td>
+															<td class="bot-grey pad-1001" th:text="${kursklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
+															<td class="bot-grey pad-1001 ta-r" th:text="${kursklausur.dauer() + ' Min.'}">180 Min.</td>
+															<td class="bot-grey pad-1001 ta-r" th:text="${kursklausur.auswahlzeit() + ' Min.'}">30 Min.</td>
+															<td class="bot-grey pad-1001 ta-r" th:text="${(kursklausur.istAudioNotwendig() ? 'Audio' : '') + (kursklausur.istVideoNotwendig() ? 'Video' : '')}">Audio</td>
+														</tr>
+														<tr th:if="${kursklausur.istMdlPruefung()}">
+															<td></td>
+															<td colspan="6" class="beschriftung ta-l">Hinweis: Mündliche Prüfung.</td>
+														</tr>
+														<tr th:if="${(kursklausur.bemerkung() != null)}">
+															<td></td>
+															<td colspan="6" class="beschriftung ta-l" th:text="${'Bemerkung: ' + kursklausur.bemerkung()}">Bemerkungen zur Klausur des Kurses.</td>
+														</tr>
+													</th:block>
+												</tbody>
+													<!-- hier kommen noch die Schüler hin -->
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td style="height: 5mm"></td>
+									</tr>
 								</tbody>
 							</table>
 						</td>

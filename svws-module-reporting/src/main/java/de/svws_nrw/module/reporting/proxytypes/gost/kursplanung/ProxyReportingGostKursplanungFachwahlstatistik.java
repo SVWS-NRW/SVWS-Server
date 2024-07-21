@@ -6,6 +6,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungFachwahlstatistik;
 
 /**
@@ -22,7 +23,7 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
  * 		<li>Die Proxy-Klasse überschreibt einzelne Getter der Super-Klasse (beispielsweise bei Felder, die mit null initialisiert wurden)
  *  		und lädt dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
  *  		halten.</li>
- *  	<li>Die Proxy-Klasse können zudem auf das Blockungsergebnis {@link ReportingGostKursplanungFachwahlstatistik} zugreifen. Drin ist wieder der
+ *  	<li>Die Proxy-Klasse können zudem auf das Blockungsergebnis {@link ReportingGostKursplanungBlockungsergebnis} zugreifen. Drin ist wieder der
  *  		Zugriff auf das Repository {@link ReportingRepository} möglich. Im ersteren kann auf die Ergebnis- und Datenmanager der
  *  		Blockung zugegriffen werden, um darüber Daten nachladen zu können.
  *  		Das zweite enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte

@@ -26,6 +26,7 @@ import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -213,20 +214,30 @@ public class ReportingRepository {
 					"FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
 		}
 
-		// Ermittle Klassen-, Jahrgangsdaten und Stammdaten der Lehrer
+		// Ermittle die Stammdaten der Lehrer
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Klassen-, Jahrgangsdaten und Lehrerstammdaten.");
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
+			mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getSichtbareLehrerStammdaten(this.conn).stream()
+					.collect(Collectors.toMap(l -> l.id, l -> l));
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
+		}
+
+		// Ermittle die Klassen- und Jahrgangsdaten und Stammdaten
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Klassen- und Jahrgangsdaten.");
 			mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
 			mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream()
 					.collect(Collectors.toMap(k -> k.id, k -> k));
 			if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
 				mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k)));
-			mapLehrerStammdaten = new HashMap<>(); //  TODO: Ermittle Stammdaten der aktiven Lehrer.
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassen-, Jahrgangsdaten oder Lehrerstammdaten konnten nicht ermittelt werden.");
+			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassen- und Jahrgangsdaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"FEHLER: Die Klassen-, Jahrgangsdaten oder Lehrerstammdaten konnten nicht ermittelt werden..");
+					"FEHLER: Die Klassen- und Jahrgangsdaten. konnten nicht ermittelt werden.");
 		}
 
 		// Ermittle Fächerdaten und schreibe sie in die zentrale Map.

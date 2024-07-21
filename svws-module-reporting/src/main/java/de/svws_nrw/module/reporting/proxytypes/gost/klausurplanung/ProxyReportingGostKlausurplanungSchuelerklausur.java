@@ -1,15 +1,15 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
-import java.util.ArrayList;
-
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+
 
 /**
- *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurtermin und erweitert die Klasse {@link ReportingGostKlausurplanungKlausurtermin}.</p>
+ *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur und erweitert die Klasse {@link ReportingGostKlausurplanungKursklausur}.</p>
  *
  *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
  *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
@@ -30,23 +30,27 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  *    		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGostKlausurplanungKlausurtermin {
+public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
-	 * @param gostKlausurtermin							Der GostKlausurtermin mit den Daten zum Klausurtermin.
+	 * @param gostSchuelerklausur						Die GostKursklausur mit den Daten zur Klausur eines Kurses.
+	 * @param kursklausur 								Die Kursklausur, der diese Schülerklausur zugeordnet wurde.
+	 * @param schueler									Der Shcüler zu dieser Schülerklausur.
 	 */
-	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {
-		super(gostKlausurtermin.bemerkung,
-				gostKlausurtermin.bezeichnung,
-				gostKlausurtermin.datum,
-				GostHalbjahr.fromID(gostKlausurtermin.halbjahr),
-				gostKlausurtermin.id,
-				gostKlausurtermin.istHaupttermin,
-				new ArrayList<>(),
-				gostKlausurtermin.nachschreiberZugelassen,
-				gostKlausurtermin.quartal,
-				gostKlausurtermin.startzeit);
-	}
+	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostSchuelerklausur gostSchuelerklausur,
+			final ReportingGostKlausurplanungKursklausur kursklausur, final ReportingSchueler schueler) {
+		super(gostSchuelerklausur.bemerkung,
+				gostSchuelerklausur.id,
+				null,
+				schueler);
 
+		super.kursklausur = kursklausur;
+
+		// Die fertige Schülerklausur der Kursklausur zuweisen, wenn diese noch nicht dort in der Liste enthalten ist.
+		if ((super.kursklausur != null) && super.kursklausur.schuelerklausuren().stream().noneMatch(s -> s.id() == super.id)) {
+			super.kursklausur.schuelerklausuren().add(this);
+		}
+
+	}
 }

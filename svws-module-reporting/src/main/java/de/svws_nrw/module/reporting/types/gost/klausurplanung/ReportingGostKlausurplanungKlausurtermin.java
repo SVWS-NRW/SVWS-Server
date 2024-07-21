@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
+import java.util.List;
+
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
 
@@ -30,6 +32,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
 	protected boolean istHaupttermin;
 
+	/** Die Liste von Kursklausuren zu diesem Klausurtermin */
+	protected List<ReportingGostKlausurplanungKursklausur> kursklausuren;
+
 	/** Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht. */
 	protected boolean nachschreiberZugelassen;
 
@@ -38,8 +43,6 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
 	protected int startzeit;
-
-	//protected final List<ReportingGostKlausurplanungKursklausur> kursklausuren;
 
 	//protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
 
@@ -53,12 +56,14 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @param gostHalbjahr				Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
 	 * @param idKlausurtermin			Die ID des Klausurtermins.
 	 * @param istHaupttermin			Die Information, ob es sich um einen Haupttermin handelt oder nicht.
+	 * @param kursklausuren				Die Liste von Kursklausuren zu diesem Klausurtermin
 	 * @param nachschreiberZugelassen	Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
 	 * @param quartal					Das Quartal, in welchem die Klausur geschrieben wird.
 	 * @param startzeit					Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin(final String bemerkung, final String bezeichnung, final String datum,
-			final GostHalbjahr gostHalbjahr, final long idKlausurtermin, final boolean istHaupttermin, final boolean nachschreiberZugelassen, final int quartal,
+			final GostHalbjahr gostHalbjahr, final long idKlausurtermin, final boolean istHaupttermin,
+			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final boolean nachschreiberZugelassen, final int quartal,
 			final int startzeit) {
 		this.bemerkung = bemerkung;
 		this.bezeichnung = bezeichnung;
@@ -66,6 +71,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		this.gostHalbjahr = gostHalbjahr;
 		this.idKlausurtermin = idKlausurtermin;
 		this.istHaupttermin = istHaupttermin;
+		this.kursklausuren = kursklausuren;
 		this.nachschreiberZugelassen = nachschreiberZugelassen;
 		this.quartal = quartal;
 		this.startzeit = startzeit;
@@ -131,6 +137,14 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 */
 	public boolean istHaupttermin() {
 		return istHaupttermin;
+	}
+
+	/**
+	 * Die Liste von Kursklausuren zu diesem Klausurtermin.
+	 * @return Inhalt des Feldes kursklausuren
+	 */
+	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
+		return kursklausuren;
 	}
 
 	/**
