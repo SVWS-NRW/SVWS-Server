@@ -119,7 +119,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
 								try {
-									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
+									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
@@ -195,7 +195,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		if (super.schueler().isEmpty() && !super.idsSchueler().isEmpty()) {
 			final KlassenDaten tempKlasse = this.reportingRepository.mapKlassen().compute(super.id(), (k, v) -> {
 				try {
-					return new DataKlassendaten(this.reportingRepository.conn()).getFromID(super.id());
+					return new DataKlassendaten(this.reportingRepository.conn()).getById(super.id());
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.putStacktraceInLog(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
@@ -232,7 +232,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idVorgaengerklasse(), k -> {
 								try {
-									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idVorgaengerklasse());
+									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idVorgaengerklasse());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,

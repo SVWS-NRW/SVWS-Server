@@ -22,7 +22,7 @@ import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
-import de.svws_nrw.data.klassen.DataKlassenlisten;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKursliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
@@ -328,27 +328,35 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if ((schule == null) || (schule.Schulform == null))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schulform der Schule konnte nicht ermittelt werden.");
+
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
 		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
 		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
 					.formatted(idSchuljahresabschnitt));
-		// Erstelle das Ergebnis-DTO ...
+
+		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
+
+		// Erstelle das Ergebnis-DTO
 		final SchuelerListe result = new SchuelerListe();
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		// ... lese die Daten ein
 		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
-		result.klassen.addAll(DataKlassenlisten.getKlassenListe(conn, idSchuljahresabschnitt));
+		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
 		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
+
 		if (schule.Schulform.daten.hatGymOb)
 			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn));
-		// ... und ermittle ggf. weitere Klassen
+
+		// ermittle ggf. weitere Klassen
 		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
 		final List<Long> idsFehlendeKlassen = result.schueler.stream().map(s -> s.idKlasse)
-				.filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id))).distinct().toList();
+				.filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id)))
+				.distinct().toList();
+
 		if (!idsFehlendeKlassen.isEmpty())
-			result.klassen.addAll(DataKlassenlisten.getKlassenListeByIDs(conn, idSchuljahresabschnitt, idsFehlendeKlassen));
+			result.klassen.addAll(dataKlassendaten.getListByIdsOhneSchueler(idsFehlendeKlassen, idSchuljahresabschnitt));
+
 		return result;
 	}
 

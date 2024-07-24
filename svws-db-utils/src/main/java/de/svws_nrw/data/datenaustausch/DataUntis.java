@@ -18,7 +18,6 @@ import java.util.zip.ZipOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
 import de.svws_nrw.base.untis.UntisGPU005;
@@ -92,10 +91,12 @@ public final class DataUntis {
 			throws ApiOperationException {
 		// Prüfe die ID des Schuljahreabschnitts
 		logger.logLn("-> Prüfe, ob der Schuljahresabschnitt existiert... ");
-		final Schuljahresabschnitt schuljahresabschnitt = DataSchuljahresabschnitte.getByID(conn, idSchuljahresabschnitt);
-		if (schuljahresabschnitt == null) {
+		final Schuljahresabschnitt schuljahresabschnitt;
+		try {
+			schuljahresabschnitt = new DataSchuljahresabschnitte(conn).getByID(idSchuljahresabschnitt);
+		} catch (final ApiOperationException e) {
 			logger.logLn(2, "[Fehler] - Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
+			throw e;
 		}
 		// Bestimme die Lehrer
 		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = DataLehrerliste.getLehrerListe(conn).stream()

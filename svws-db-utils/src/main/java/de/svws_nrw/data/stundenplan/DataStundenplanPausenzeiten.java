@@ -47,14 +47,8 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 
 
 	@Override
-	protected Long getIDFromDatabaseDTO(final DTOStundenplanPausenzeit dto) {
-		return dto.ID;
-	}
-
-
-	@Override
-	protected void initDTO(final DTOStundenplanPausenzeit dto, final Long id) {
-		dto.ID = id;
+	protected void initDTO(final DTOStundenplanPausenzeit dto, final Long newId) throws ApiOperationException {
+		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}
 
@@ -152,7 +146,7 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	public StundenplanPausenzeit get(final Long id) throws ApiOperationException {
+	public StundenplanPausenzeit getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Pausenzeit eines Stundenplans mit der ID null ist unzulässig.");
 		final DTOStundenplanPausenzeit pausenzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, id);
@@ -169,13 +163,12 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 	/**
 	 * Prüft vor dem Löschen von Pausenzeiten, ob diese alle zu dem Stundenplan gehören.
 	 *
-	 * @param ids    die zu löschenden IDs
+	 * @param dtos    die zu löschenden DTOs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public void checkBeforeDeletion(final List<Long> ids) throws ApiOperationException {
-		final List<DTOStundenplanPausenzeit> dtos = conn.queryByKeyList(DTOStundenplanPausenzeit.class, ids);
+	public void checkBeforeDeletion(final List<DTOStundenplanPausenzeit> dtos) throws ApiOperationException {
 		for (final DTOStundenplanPausenzeit dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag gehört nicht zu dem angegebenen Stundenplan.");

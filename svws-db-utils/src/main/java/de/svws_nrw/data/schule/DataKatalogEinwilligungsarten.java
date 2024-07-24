@@ -10,7 +10,6 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +31,6 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 
 	@Override
-	protected Long getIDFromDatabaseDTO(final DTOKatalogEinwilligungsart dtoKatalogEinwilligungsart) {
-		return dtoKatalogEinwilligungsart.ID;
-	}
-
-
-	@Override
 	public Einwilligungsart map(final DTOKatalogEinwilligungsart dtoKatalogEinwilligungsart) {
 		final Einwilligungsart daten = new Einwilligungsart();
 		daten.id = dtoKatalogEinwilligungsart.ID;
@@ -51,26 +44,16 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 	@Override
 	public List<Einwilligungsart> getAll() throws ApiOperationException {
-		if (conn == null)
-			return new ArrayList<>();
 		final List<DTOKatalogEinwilligungsart> katalog = conn.queryAll(DTOKatalogEinwilligungsart.class);
 		if (katalog == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Einwilligungsarten gefunden.");
-		final List<Einwilligungsart> daten = new ArrayList<>();
-		for (final DTOKatalogEinwilligungsart r : katalog)
-			daten.add(map(r));
-		return daten;
+
+		return katalog.stream().map(this::map).toList();
 	}
 
 
 	@Override
-	public List<Einwilligungsart> getList() throws ApiOperationException {
-		return this.getAll();
-	}
-
-
-	@Override
-	public Einwilligungsart get(final Long id) throws ApiOperationException {
+	public Einwilligungsart getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Einwilligungsart mit der ID null ist unzulässig.");
 		final DTOKatalogEinwilligungsart einwilligung = conn.queryByKey(DTOKatalogEinwilligungsart.class, id);

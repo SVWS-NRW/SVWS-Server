@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import de.svws_nrw.db.DBEntityManager;
@@ -21,7 +22,7 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Diese abstrakte Klasse ist die Grundlage für das einheitliche Aggregieren von
  * Informationen für die OpenAPI und das einheitliche Bereitstellen von
- * Funktionen, welche Daten für GET oder PATCH-Zugriff zur Verfügung stellen.
+ * Funktionalitäten für GET-, CREATE-, PATCH- und DELETE-Operationen.
  *
  * @param <ID>            die Typ, welcher als ID für die Informationen verwendet wird.
  * @param <DatabaseDTO>   der Typ des zugrundeliegenden Datenbank-DTOs
@@ -46,14 +47,13 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	private final Set<String> attributesDelayedOnCreation = new HashSet<>();
 
 
-
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
 	 * @param conn               die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
 	 */
 	protected DataManagerRevised(final DBEntityManager conn) {
-		this.conn = conn;
+		this.conn = Objects.requireNonNull(conn, "DBEntityManager is required");
 		this.classDatabaseDTO = getClassDatabaseDTO();
 	}
 
@@ -101,16 +101,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Gibt die ID des Datenbank-DTOs zurück.
-	 *
-	 * @param dto   das Datenbank-DTO
-	 *
-	 * @return die ID des Datenbank-DTOs
-	 */
-	protected abstract ID getIDFromDatabaseDTO(DatabaseDTO dto);
-
-
-	/**
 	 * Bestimmt die nächste ID für ein Datenbank-DTO. Ist der Typ der ID nicht Long, so muss diese Methode überschrieben
 	 * werden, damit das Hinzufügen funktionieren kann.
 	 *
@@ -128,9 +118,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Erstellt und initialisiert eine neues DTO.
+	 * Erstellt und initialisiert ein neues Datenbank-DTO.
 	 *
-	 * @param newID      die neue ID für das DTO
+	 * @param newID      	die neue ID für das DTO
 	 *
 	 * @return das neue DTO
 	 *
@@ -153,13 +143,13 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Initialisiert das Datenbank-DTO mit der übergebenen ID. Diese Methode muss überschrieben werden,
-	 * damit die Add-Methoden ausführbar sind.
+	 * Initialisiert das Datenbank-DTO mit der übergebenen ID.<br>
+	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Add-Methoden ausführbar sind.
 	 *
 	 * @param dto   das Datenbank-DTO
 	 * @param id    die ID
 	 */
-	protected void initDTO(final DatabaseDTO dto, final ID id) {
+	protected void initDTO(final DatabaseDTO dto, final ID id) throws ApiOperationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -172,11 +162,12 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @return das neu erstellte Core-DTO
 	 */
-	public abstract CoreDTO map(DatabaseDTO dto);
+	protected abstract CoreDTO map(DatabaseDTO dto) throws ApiOperationException;
 
 
 	/**
-	 * Führt das Mapping eines Attributes des Core-DTOs auf das zugehörige Datenbank-DTO durch.
+	 * Führt das Mapping eines Attributes des Core-DTOs auf das zugehörige Datenbank-DTO durch.<br>
+	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Add-Methoden und Patch-Methoden ausführbar sind.
 	 *
 	 * @param conn    die Datenbank-Verbindung für Datenbankzugriffe
 	 * @param dto     das Datenbank-DTO
@@ -194,7 +185,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/**
 	 * Ermittelt eine Liste mit allen Core-DTOs aus der DB. Wird in seltenen Fällen
-	 * verwendet, wenn auch eine Filterung bei der Methode getList implementieert wird.
+	 * verwendet, wenn auch eine Filterung bei der Methode {@link #getList()} implementiert wird.
+	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Methode {@link #getAllAsResponse()} ausführbar ist.
 	 *
 	 * @return eine Liste der Core-DTOs
 	 *
@@ -207,9 +199,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/**
 	 * Ermittelt eine Liste mit allen Core-DTOs aus der DB. Wird in seltenen Fällen
-	 * verwendet, wenn auch eine Filterung bei der Methode getList implementieert wird.
-	 * Diese wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200
-	 * zurückgegeben.
+	 * verwendet, wenn auch eine Filterung bei der Methode {@link #getList()} implementiert wird.
+	 * Diese wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200 zurückgegeben.
 	 *
 	 * @return eine HTTP-Response mit der Liste der Core-DTOs
 	 *
@@ -223,9 +214,10 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 	/**
 	 * Ermittelt eine Liste mit Core-DTOs aus der DB. Wenn bei dieser Methode eine
-	 * Filterung in der abgeleiteten Klasse genutzt wird, so seht als zweite Option
-	 * die Methode getAll zur Verfügung, um den Abruf aller Datenbank-Werte zu
+	 * Filterung in der abgeleiteten Klasse genutzt wird, so steht als zweite Option
+	 * die Methode {@link #getAll()} zur Verfügung, um den Abruf aller Core-DTOs zu
 	 * implementieren.
+	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Methode {@link #getListAsResponse()} ausführbar ist.
 	 *
 	 * @return eine Liste der Core-DTOs
 	 *
@@ -241,21 +233,21 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * Filterung in der abgeleiteten Klasse genutzt wird, so seht als zweite Option
 	 * die Methode getAll zur Verfügung, um den Abruf aller Datenbank-Werte zu
 	 * implementieren.
-	 * Diese wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200
-	 * zurückgegeben.
+	 * Diese wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200 zurückgegeben.
 	 *
 	 * @return eine HTTP-Response mit der Liste der Core-DTOs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getListAsResponse() throws ApiOperationException {
-		final var daten = getList();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<CoreDTO> coreDTOs = getList();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(coreDTOs).build();
 	}
 
 
 	/**
 	 * Ermittelt das Core-DTO mit der angegebenen ID.
+	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Methode {@link #getByIdAsResponse(Object)} ausführbar ist.
 	 *
 	 * @param id   die ID
 	 *
@@ -263,15 +255,14 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public CoreDTO get(final ID id) throws ApiOperationException {
+	public CoreDTO getById(final ID id) throws ApiOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 
 	/**
 	 * Ermittelt das Core-DTO mit der angegebenen ID.
-	 * Dieses wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200
-	 * zurückgegeben.
+	 * Dieses wird im Erfolgsfall als JSON eingebettet in einer HTTP-Response 200 zurückgegeben.
 	 *
 	 * @param id   die ID
 	 *
@@ -279,59 +270,41 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getAsResponse(final ID id) throws ApiOperationException {
-		final var daten = get(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	public Response getByIdAsResponse(final ID id) throws ApiOperationException {
+		final CoreDTO coreDTO = getById(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(coreDTO).build();
 	}
 
 
 	/**
 	 * Wendet die angegebenen Mappings für die Attribute des Core-DTOs (übergebene Map) auf das übergebene Datenbank-DTO an.
 	 *
-	 * @param conn            die Datenbankverbindung
-	 * @param dto             das Datenbank-DTO
-	 * @param map             eine Map mit den Attributen und den Attributwerten des Core-DTOs
-	 * @param attributes      ggf. eine Menge von Attributen, die gepatched werden sollen, null für alle
-	 * @param attributesSkip  eine Menge von Attributen, die ausgelassen wird
+	 * @param conn               die Datenbankverbindung
+	 * @param dto                das Datenbank-DTO
+	 * @param patchMappings      eine Map mit den Attributen und den Attributwerten des Core-DTOs
+	 * @param attributesToPatch  eine Menge von Attributen, die gepatched werden sollen; <code>null</code> wenn alle Attribute berücksichtigt werden sollen
+	 * @param attributesToSkip   eine Menge von Attributen, die beim Patch ausgelassen werden sollen
+	 * @param isCreation         gibt an, ob es sich um ein neues DTO handelt. Wenn <code>true</code>, dann werden die Attribute aus
+	 *                           {@link #attributesNotPatchable} ignoriert.
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected void applyPatchMappings(final DBEntityManager conn, final DatabaseDTO dto, final Map<String, Object> map,
-			final Set<String> attributes, final Set<String> attributesSkip) throws ApiOperationException {
-		for (final Entry<String, Object> entry : map.entrySet()) {
-			final String key = entry.getKey();
-			final Object value = entry.getValue();
-			if ((attributesSkip.contains(key)) || ((attributes != null) && !attributes.contains(key)))
+	protected void applyPatchMappings(final DBEntityManager conn, final DatabaseDTO dto, final Map<String, Object> patchMappings,
+			final Set<String> attributesToPatch, final Set<String> attributesToSkip, final boolean isCreation) throws ApiOperationException {
+		for (final Entry<String, Object> patchMapping : patchMappings.entrySet()) {
+			final String key = patchMapping.getKey();
+			final Object value = patchMapping.getValue();
+
+			// Es wird geprüft, ob das Attribut ausgelassen werden soll oder nicht bei den zu patchenden Attributen enthalten ist
+			if ((attributesToSkip.contains(key)) || ((attributesToPatch != null) && !attributesToPatch.contains(key)))
 				continue;
-			if (attributesNotPatchable.contains(key))
+
+			// Beim initialen Erstellen eines DTOs werden die "not patchable" Attribute ignoriert
+			if (!isCreation && attributesNotPatchable.contains(key))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
-			mapAttribute(conn, dto, key, value, map);
+
+			mapAttribute(conn, dto, key, value, patchMappings);
 		}
-	}
-
-
-	/**
-	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
-	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
-	 * übergebenen Mappings zugelassen.
-	 *
-	 * @param id              die ID des zu patchenden DTOs
-	 * @param map             die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	protected void patch(final ID id, final Map<String, Object> map) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
-		if (map.isEmpty())
-			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
-		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Daten für die angegebene ID wurden in der Datenbank nicht gefunden.");
-		applyPatchMappings(conn, dto, map, null, Collections.emptySet());
-		if (!conn.transactionPersist(dto))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
-		conn.transactionFlush();
 	}
 
 
@@ -377,42 +350,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
-	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
-	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssels
-	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
-	 * dem Persistieren des Objektes in einem zweiten Schritt gepatched.
-	 *
-	 * @param newID           die neue ID für das DTO
-	 * @param mapAttributes   die Map für den Zugriff auf die Attribute
-	 *
-	 * @return das Core-DTO
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private CoreDTO addBasic(final ID newID, final Map<String, Object> mapAttributes) throws ApiOperationException {
-		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
-		for (final String attr : attributesRequiredOnCreation)
-			if (!mapAttributes.containsKey(attr))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
-		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-		final DatabaseDTO dto = newDTO(newID);
-		applyPatchMappings(conn, dto, mapAttributes, null, attributesDelayedOnCreation);
-		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
-		conn.transactionFlush();
-		if (!attributesDelayedOnCreation.isEmpty()) {
-			applyPatchMappings(conn, dto, mapAttributes, attributesDelayedOnCreation, Collections.emptySet());
-			if (!conn.transactionPersist(dto))
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
-			conn.transactionFlush();
-		}
-		return get(newID);
-	}
-
-
-	/**
 	 * Fügt ein neues DTO in die Datenbank hinzu, indem in der Datenbank eine neue ID abgefragt wird
 	 * und die Attribute des JSON-Objektes gemäß dem Attribut-Mapper integriert werden.
 	 *
@@ -438,8 +375,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultipleAsResponse(final InputStream is)
-			throws ApiOperationException {
+	public Response addMultipleAsResponse(final InputStream is) throws ApiOperationException {
 		// Bestimme die nächste verfügbare ID für das DTO
 		ID newID = getNextID(null);
 		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
@@ -456,11 +392,11 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Prüft ggf. vor dem Löschen, ob die Daten gelöscht werden dürfen.
 	 *
-	 * @param ids   die IDs der Daten, die gelöscht werden sollen
+	 * @param dtos   die Datanbank-DTOs, die gelöscht werden sollen
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void checkBeforeDeletion(final List<ID> ids) throws ApiOperationException {
+	public void checkBeforeDeletion(final List<DatabaseDTO> dtos) throws ApiOperationException {
 		// diese Methode kann für Checks vor dem Entfernen überschrieben werden
 	}
 
@@ -476,19 +412,22 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response deleteAsResponse(final ID id) throws ApiOperationException {
-		// Bestimme das DTO
 		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
-		checkBeforeDeletion(List.of(id));
-		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
-		if (dto == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+
+		// DTO mit Hilfe der ID ermitteln
+		final DatabaseDTO dbDTO = conn.queryByKey(classDatabaseDTO, id);
+		if (dbDTO == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-		final CoreDTO daten = get(id);
-		// Entferne das DTO
-		if (!conn.transactionRemove(dto))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Daten.");
-		conn.transactionFlush();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
+		// Prüfen, ob das DTO gelöscht werden darf
+		checkBeforeDeletion(List.of(dbDTO));
+
+		// DTO erst komplett laden für die spätere Response und anschließend löschen
+		final CoreDTO deletedCoreDTO = map(dbDTO);
+		deleteDatabaseDTO(dbDTO);
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(deletedCoreDTO).build();
 	}
 
 
@@ -503,26 +442,110 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response deleteMultipleAsResponse(final List<ID> ids) throws ApiOperationException {
-		// Bestimme die DTOs
 		if (ids == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");
-		if (ids.isEmpty())
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
-		checkBeforeDeletion(ids);
-		final List<CoreDTO> daten = new ArrayList<>();
-		if (ids.isEmpty())
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		final List<DatabaseDTO> dtos = conn.queryByKeyList(classDatabaseDTO, ids);
-		if (dtos == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine DTOs mit den angegebenen IDs gefunden.");
-		for (final DatabaseDTO dto : dtos) {
-			final ID id = getIDFromDatabaseDTO(dto);
-			daten.add(get(id));
-			if (!conn.transactionRemove(dto))
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Daten.");
-			conn.transactionFlush();
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");
+
+		final List<CoreDTO> deletedCoreDTOs = new ArrayList<>();
+		if (!ids.isEmpty()) {
+			// DTOs mit Hilfe der IDs ermitteln
+			final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
+			if (dbDTOs.isEmpty())
+				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine DTOs zu den IDs gefunden.");
+
+			// Prüfen, ob alle DTOs gelöscht werden dürfen
+			checkBeforeDeletion(dbDTOs);
+
+			// DTOs erst komplett laden für die spätere Response und anschließend löschen
+			for (final DatabaseDTO dbDTO : dbDTOs) {
+				deletedCoreDTOs.add(map(dbDTO));
+				deleteDatabaseDTO(dbDTO);
+			}
 		}
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(deletedCoreDTOs).build();
+	}
+
+
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param id              die ID des zu patchenden DTOs
+	 * @param attributeMap    die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void patch(final ID id, final Map<String, Object> attributeMap) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
+		if (attributeMap.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Daten für die angegebene ID wurden in der Datenbank nicht gefunden.");
+		applyPatchMappings(conn, dto, attributeMap, null, Collections.emptySet(), false);
+		saveDatabaseDTO(dto);
+	}
+
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param newID           die neue ID für das DTO
+	 * @param mapAttributes   die Map für den Zugriff auf die Attribute
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private CoreDTO addBasic(final ID newID, final Map<String, Object> mapAttributes) throws ApiOperationException {
+		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
+		for (final String attr : attributesRequiredOnCreation)
+			if (!mapAttributes.containsKey(attr))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s wird für das Erstellen des DTOs benötigt.".formatted(attr));
+		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
+		final DatabaseDTO dto = newDTO(newID);
+		applyPatchMappings(conn, dto, mapAttributes, null, attributesDelayedOnCreation, true);
+		// Persistiere das DTO in der Datenbank
+		saveDatabaseDTO(dto);
+		if (!attributesDelayedOnCreation.isEmpty()) {
+			applyPatchMappings(conn, dto, mapAttributes, attributesDelayedOnCreation, Collections.emptySet(), true);
+			saveDatabaseDTO(dto);
+		}
+		return getById(newID);
+	}
+
+
+	/**
+	 * Methode persistiert das übergebene Datenbank-DTO in der Datenbank.
+	 *
+	 * @param dto Datenbank-DTO, das persistiert werden soll
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private void saveDatabaseDTO(final DatabaseDTO dto) throws ApiOperationException {
+		if (!conn.transactionPersist(dto))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Daten.");
+		conn.transactionFlush();
+	}
+
+
+	/**
+	 * Methode löscht das übergebene Datenbank-DTO aus der Datenbank.
+	 *
+	 * @param dto Datenbank-DTO, das gelöscht werden soll
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private void deleteDatabaseDTO(final DatabaseDTO dto) throws ApiOperationException {
+		if (!conn.transactionRemove(dto))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Daten.");
+		conn.transactionFlush();
 	}
 
 }

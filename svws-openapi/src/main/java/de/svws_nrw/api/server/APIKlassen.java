@@ -11,7 +11,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.klassen.DataKlassenlisten;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,7 +62,7 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
 	public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassenlisten(conn, abschnitt).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getListBySchuljahresabschnittIDAsResponse(abschnitt),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -90,7 +89,7 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
 	public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -122,7 +121,7 @@ public class APIKlassen {
 			@RequestBody(description = "Der Patch für die Daten der Klasse", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -150,7 +149,7 @@ public class APIKlassen {
 	public Response addKlasse(@PathParam("schema") final String schema, @RequestBody(description = "Die Daten der Klasse", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -176,7 +175,7 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -203,7 +202,7 @@ public class APIKlassen {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKlassendaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKlassendaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -253,7 +252,7 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs- oder Klassen-Einträge gefunden")
 	public Response setKlassenSortierungFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> DataKlassenlisten.setDefaultSortierung(conn, abschnitt),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).setDefaultSortierung(abschnitt),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}

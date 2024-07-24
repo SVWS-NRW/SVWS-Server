@@ -229,10 +229,10 @@ public class ReportingRepository {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Klassen- und Jahrgangsdaten.");
 			mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
-			mapKlassen = new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(aktuellerSchuljahresabschnitt.id).stream()
+			mapKlassen = new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(aktuellerSchuljahresabschnitt.id, false).stream()
 					.collect(Collectors.toMap(k -> k.id, k -> k));
 			if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
-				mapKlassen.putAll(new DataKlassendaten(this.conn).getFromSchuljahresabschnittsIDOhneSchueler(auswahlSchuljahresabschnitt.id).stream()
+				mapKlassen.putAll(new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(auswahlSchuljahresabschnitt.id, false).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k)));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassen- und Jahrgangsdaten konnten nicht ermittelt werden.");

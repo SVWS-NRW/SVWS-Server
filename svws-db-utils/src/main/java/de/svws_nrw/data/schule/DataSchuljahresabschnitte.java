@@ -110,25 +110,24 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	 * Ermittelt den Schuljahresabschnitt für die angegebene ID. Existiert kein Schuljahresabschnitt, so
 	 * wird null zurückgegeben.
 	 *
-	 * @param conn   die Datenbankverbindung
 	 * @param id     die ID des Schuljahresabschnitts
 	 *
 	 * @return der Schuljahresabschnitt
 	 */
-	public static Schuljahresabschnitt getByID(final DBEntityManager conn, final long id) {
+	public Schuljahresabschnitt getByID(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schuljahresabschnittes darf nicht null sein.");
+
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, id);
 		if (abschnitt == null)
-			return null;
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt mit der ID %d wurde nicht gefunden.".formatted(id));
+
 		return dtoMapper.apply(abschnitt);
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Abschnitts darf nicht null sein.");
-		final Schuljahresabschnitt daten = getByID(conn, id);
-		if (daten == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(id));
+		final Schuljahresabschnitt daten = getByID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

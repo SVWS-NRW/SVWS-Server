@@ -8,6 +8,9 @@ dependencies {
     implementation project(':svws-core')
     implementation project(':svws-db')
     implementation project(':svws-db-dto')
+	testImplementation 'org.mockito:mockito-inline:5.2.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.2.0'
+	testImplementation "org.assertj:assertj-core:3.25.3"
 }
 
 compileJava.dependsOn(":svws-core:assemble")

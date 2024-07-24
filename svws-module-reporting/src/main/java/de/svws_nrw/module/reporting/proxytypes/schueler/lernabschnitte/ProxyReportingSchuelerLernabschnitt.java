@@ -150,7 +150,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
 								try {
-									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
+									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
@@ -198,7 +198,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository,
 							reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
 								try {
-									return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse());
+									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idKlasse());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.putStacktraceInLog(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,

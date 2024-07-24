@@ -41,16 +41,11 @@ public final class DataStundenplanKalenderwochenzuordnung
 
 
 	@Override
-	protected Long getIDFromDatabaseDTO(final DTOStundenplanKalenderwochenZuordnung dto) {
-		return dto.ID;
-	}
-
-
-	@Override
-	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long id) {
-		dto.ID = id;
+	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long newId) throws ApiOperationException {
+		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}
+
 
 	@Override
 	public StundenplanKalenderwochenzuordnung map(final DTOStundenplanKalenderwochenZuordnung dto) {
@@ -103,7 +98,7 @@ public final class DataStundenplanKalenderwochenzuordnung
 
 
 	@Override
-	public StundenplanKalenderwochenzuordnung get(final Long id) throws ApiOperationException {
+	public StundenplanKalenderwochenzuordnung getById(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Kalenderwochen-Zuordnung mit der ID null ist unzulässig.");
 		final DTOStundenplanKalenderwochenZuordnung zuordung = conn.queryByKey(DTOStundenplanKalenderwochenZuordnung.class, id);
@@ -116,13 +111,12 @@ public final class DataStundenplanKalenderwochenzuordnung
 	/**
 	 * Prüft vor dem Löschen von Pausenzeiten, ob diese alle zu dem Stundenplan gehören.
 	 *
-	 * @param ids    die zu löschenden IDs
+	 * @param dtos    die zu löschenden DTOs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public void checkBeforeDeletion(final List<Long> ids) throws ApiOperationException {
-		final List<DTOStundenplanKalenderwochenZuordnung> dtos = conn.queryByKeyList(DTOStundenplanKalenderwochenZuordnung.class, ids);
+	public void checkBeforeDeletion(final List<DTOStundenplanKalenderwochenZuordnung> dtos) throws ApiOperationException {
 		for (final DTOStundenplanKalenderwochenZuordnung dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Mindestens eine Kalenderwochenzuordnung gehört nicht zu dem angegebenen Stundenplan.");

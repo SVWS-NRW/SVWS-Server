@@ -909,7 +909,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Keine Pausenzeit eines Stundenplans gefunden")
 	public Response getStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).getAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}
@@ -1090,7 +1090,7 @@ public class APIStundenplan {
 	@ApiResponse(responseCode = "404", description = "Keine Kalenderwochen-Zuordnung eines Stundenplans gefunden")
 	public Response getStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).getAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
 	}

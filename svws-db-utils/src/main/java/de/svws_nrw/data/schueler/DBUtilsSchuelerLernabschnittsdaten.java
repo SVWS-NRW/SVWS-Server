@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.svws_nrw.data.jahrgaenge.DBUtilsJahrgaenge;
-import de.svws_nrw.data.klassen.DBUtilsKlassen;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -169,19 +169,22 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	public static DTOSchuelerLernabschnittsdaten createByPrevious(final long idSLA, final DBEntityManager conn, final long idSchueler,
 			final DTOSchuljahresabschnitte schuljahresabschnitt) throws ApiOperationException {
 		// Prüfe, ob der vorige Lernabschnitt existiert
+		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
 		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
 		if (slaPrev != null) {
 			// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
 			final boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
 			DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
 			if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
-				klassePrev = DBUtilsKlassen.get(conn, slaPrev.Klassen_ID);
+				klassePrev = dataKlassendaten.getDTO(slaPrev.Klassen_ID);
 				if (schuljahrNeu)
-					klassePrev = DBUtilsKlassen.getFolgeKlasse(conn, klassePrev);
+					klassePrev = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.FKlasse, null,
+							klassePrev.Schuljahresabschnitts_ID);
 			} else {
-				klassePrev = DBUtilsKlassen.get(conn, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
+				klassePrev = dataKlassendaten.getDTO(schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 			}
-			final DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
+			final DTOKlassen klasse = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.Klasse, klassePrev.ASDKlasse,
+					schuljahresabschnitt.ID);
 			final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
 			if (slaPrev.Schulbesuchsjahre != null)
@@ -203,9 +206,9 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			conn.transactionFlush();
 			return sla;
 		}
-		throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine"
-				+ " ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden."
-						.formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+		throw new ApiOperationException(Status.NOT_FOUND, ("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine"
+				+ " ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.")
+				.formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 	}
 
 }
