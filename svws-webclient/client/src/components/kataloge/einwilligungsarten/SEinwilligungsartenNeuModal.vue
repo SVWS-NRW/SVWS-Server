@@ -10,16 +10,20 @@
 						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
 						<p> Feld darf nicht leer sein </p>
 					</div>
-					<div v-else-if="existsBezeichnung()" class="flex mt-2">
+					<div v-else-if="existsBezeichnungFuerPersonTyp()" class="flex mt-2">
 						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
-						<p> Diese Bezeichnung wird bereits verwendet </p>
+						<p> Diese Bezeichnung existiert bereits für {{ getBezeichnungTyp(einwilligung.personTyp) }} </p>
 					</div>
 				</div>
-				<svws-ui-text-input v-model="einwilligung.schluessel" :valid="() => !!einwilligung.schluessel" type="text" placeholder="Schlüssel" />
+				<svws-ui-text-input v-model="einwilligung.schluessel" :valid="isValidSchluessel" type="text" placeholder="Schlüssel" />
 				<div>
 					<div v-if="!einwilligung.schluessel" class="flex mt-2">
 						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
 						<p> Feld darf nicht leer sein </p>
+					</div>
+					<div v-else-if="existsSchluesselFuerPersonTyp()" class="flex mt-2">
+						<span class="icon i-ri-alert-line mx-0.5 mr-1 inline-flex" />
+						<p> Dieser Schlüssel existiert bereits für {{ getBezeichnungTyp(einwilligung.personTyp) }} </p>
 					</div>
 				</div>
 				<svws-ui-textarea-input v-model="einwilligung.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" />
@@ -28,7 +32,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen</svws-ui-button>
-			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!einwilligung.schluessel || !isValidBezeichnung()">
+			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!isValidBezeichnung() || !isValidSchluessel()">
 				Speichern
 			</svws-ui-button>
 		</template>
@@ -58,18 +62,42 @@
 	});
 
 	function isValidBezeichnung(): boolean {
-		return !!einwilligung.value.bezeichnung && !existsBezeichnung();
+		return !!einwilligung.value.bezeichnung && !existsBezeichnungFuerPersonTyp();
 	}
 
-	function existsBezeichnung(): boolean {
-		for (const eintrag of props.mapKatalogeintraege.values())
+	function existsBezeichnungFuerPersonTyp(): boolean {
+		for (const eintrag of filterMapByPersonTyp(einwilligung.value.personTyp))
 			if (eintrag.bezeichnung === einwilligung.value.bezeichnung.trim())
 				return true;
 		return false;
 	}
 
+	function isValidSchluessel(): boolean {
+		return !!einwilligung.value.schluessel && !existsSchluesselFuerPersonTyp();
+	}
+
+	function existsSchluesselFuerPersonTyp(): boolean {
+		for (const eintrag of filterMapByPersonTyp(einwilligung.value.personTyp))
+			if (eintrag.schluessel === einwilligung.value.schluessel.trim())
+				return true;
+		return false;
+	}
+
+	function filterMapByPersonTyp(personTyp: number) {
+		return Array.from(props.mapKatalogeintraege.values()).filter(ele => ele.personTyp === personTyp);
+	}
+
+	function getBezeichnungTyp(typId: number): string | undefined {
+		return PersonTyp.getByID(typId)?.bezeichnung;
+	}
+
 	async function saveEntries() {
-		await props.addEintrag({bezeichnung: einwilligung.value.bezeichnung, personTyp: einwilligung.value.personTyp, schluessel: einwilligung.value.schluessel, beschreibung: einwilligung.value.beschreibung});
+		await props.addEintrag({
+			bezeichnung: einwilligung.value.bezeichnung.trim(),
+			personTyp: einwilligung.value.personTyp,
+			schluessel: einwilligung.value.schluessel.trim(),
+			beschreibung: einwilligung.value.beschreibung?.trim()
+		});
 		showModal().value = false;
 	}
 

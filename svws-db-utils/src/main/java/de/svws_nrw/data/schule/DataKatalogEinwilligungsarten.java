@@ -77,9 +77,36 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	}
 
 
+	private String validateBezeichnung(final Object value, final PersonTyp personTyp) throws ApiOperationException {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge());
+		final List<DTOKatalogEinwilligungsart> bezeichnungenFiltered = conn.queryList(
+				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Bezeichnung = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class,
+				bezeichnung, personTyp);
+		if (!bezeichnungenFiltered.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Bezeichnung '%s' wird bereits für eine andere Einwilligungsart des gleichen Personentyps ('%s') genutzt.".formatted(bezeichnung,
+							personTyp.bezeichnung));
+		return bezeichnung;
+	}
+
+
+	private String validateSchluessel(final Object value, final PersonTyp personTyp) throws ApiOperationException {
+		final String schluessel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge());
+		final List<DTOKatalogEinwilligungsart> schluesselFiltered = conn.queryList(
+				"SELECT e FROM DTOKatalogEinwilligungsart e WHERE e.Schluessel = ?1 AND e.personTyp = ?2", DTOKatalogEinwilligungsart.class,
+				schluessel, personTyp);
+		if (!schluesselFiltered.isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der Schlüssel '%s' wird bereits für eine andere Einwilligungsart des gleichen Personentyps ('%s') genutzt.".formatted(schluessel,
+							personTyp.bezeichnung));
+		return schluessel;
+	}
+
+
 	@Override
 	protected void mapAttribute(final DBEntityManager conn, final DTOKatalogEinwilligungsart dto, final String name, final Object value,
 			final Map<String, Object> map) throws ApiOperationException {
+		final PersonTyp personTyp = (map.containsKey("personTyp")) ? PersonTyp.getByID(JSONMapper.convertToInteger(map.get("personTyp"), true)) : dto.personTyp;
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
@@ -87,26 +114,20 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein.".formatted(patch_id, dto.ID));
 			}
-			case "bezeichnung" -> {
-				final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge());
-				final List<DTOKatalogEinwilligungsart> bezeichnungen =
-						conn.queryList(DTOKatalogEinwilligungsart.QUERY_BY_BEZEICHNUNG, DTOKatalogEinwilligungsart.class, bezeichnung);
-				if (!bezeichnungen.isEmpty())
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Die Bezeichnung '%s' wird bereits für eine andere Einwilligungsart genutzt.".formatted(bezeichnung));
-				dto.Bezeichnung = bezeichnung;
-			}
+			case "bezeichnung" -> dto.Bezeichnung = validateBezeichnung(value, personTyp);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
-			case "schluessel" -> dto.Schluessel =
-					JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge());
+			case "schluessel" -> dto.Schluessel = validateSchluessel(value, personTyp);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false);
 			case "beschreibung" -> dto.Beschreibung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Beschreibung.datenlaenge());
 			case "personTyp" -> {
-				final int idPersonTyp = JSONMapper.convertToInteger(value, false);
-				dto.personTyp = PersonTyp.getByID(idPersonTyp);
+				final PersonTyp convertedValue = PersonTyp.getByID(JSONMapper.convertToInteger(value, false));
+				validateBezeichnung(map.containsKey("bezeichnung") ? map.get("bezeichnung") : dto.Bezeichnung, convertedValue);
+				validateSchluessel(map.containsKey("schluessel") ? map.get("schluessel") : dto.Schluessel, convertedValue);
+				dto.personTyp = convertedValue;
 				if (dto.personTyp == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d ist für den Personentyp ungültig.".formatted(idPersonTyp));
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die ID %d ist für den Personentyp ungültig.".formatted(JSONMapper.convertToInteger(value, false)));
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
