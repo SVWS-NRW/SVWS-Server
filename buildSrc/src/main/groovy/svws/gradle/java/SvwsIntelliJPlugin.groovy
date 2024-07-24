@@ -12,6 +12,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 
 	void addSetIntellijFormatterMethod() {
 		project.ext.setIntellijFormatter = { File projectXml, File formatterProfile ->
+			createEclipseCodeFormatterConfig()
 			createCodeStyleConfig()
 
 			if (!projectXml.exists()) {
@@ -56,6 +57,33 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 				"    <option name=\"USE_PER_PROJECT_SETTINGS\" value=\"true\" />\n" +
 				"  </state>\n" +
 				"</component>")
+	}
+
+	private void createEclipseCodeFormatterConfig() {
+		def configFile = project.file('.idea/eclipseCodeFormatter.xml')
+		if (!configFile.exists()) {
+			configFile.parentFile.mkdirs()
+			configFile.createNewFile()
+		}
+		configFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<project version=\"4\">\n" +
+				"  <component name=\"EclipseCodeFormatterProjectSettings\">\n" +
+				"    <option name=\"projectSpecificProfile\">\n" +
+				"      <ProjectSpecificProfile>\n" +
+				"        <option name=\"formatter\" value=\"ECLIPSE\" />\n" +
+				"        <option name=\"optimizeImports\" value=\"false\" />\n" +
+				"        <option name=\"pathToConfigFileJava\" value=\"\$PROJECT_DIR\$/config/eclipse/Eclipse_Formatter.xml\" />\n" +
+				"        <option name=\"selectedJavaProfile\" value=\"SVWS-Server-Formatter\" />\n" +
+				"      </ProjectSpecificProfile>\n" +
+				"    </option>\n" +
+				"    <option name=\"selectedGlobalProfileReference\">\n" +
+				"      <GlobalProfileReference>\n" +
+				"        <option name=\"id\" value=\"1716449183454\" />\n" +
+				"        <option name=\"name\" value=\"SVWS\" />\n" +
+				"      </GlobalProfileReference>\n" +
+				"    </option>\n" +
+				"  </component>\n" +
+				"</project>")
 	}
 
 	private void createInspectionProfilesConfig() {
