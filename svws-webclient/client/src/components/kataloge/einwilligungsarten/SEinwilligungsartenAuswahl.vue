@@ -31,10 +31,10 @@
 
 	import type { SEinwilligungsartenAuswahlProps } from "./SEinwilligungsartenAuswahlProps";
 	import type { Einwilligungsart } from "@core";
-	import { computed, ref } from "vue";
+	import { computed, shallowRef } from "vue";
 
 	const props = defineProps<SEinwilligungsartenAuswahlProps>();
-	const selected = ref<Einwilligungsart[]>([]);
+	const selected = shallowRef<Einwilligungsart[]>([]);
 
 	const cols = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" }
