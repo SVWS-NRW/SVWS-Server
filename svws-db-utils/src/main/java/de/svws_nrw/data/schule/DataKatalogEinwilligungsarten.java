@@ -35,9 +35,11 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 		final Einwilligungsart daten = new Einwilligungsart();
 		daten.id = dtoKatalogEinwilligungsart.ID;
 		daten.bezeichnung = (dtoKatalogEinwilligungsart.Bezeichnung == null) ? "" : dtoKatalogEinwilligungsart.Bezeichnung;
-		daten.sortierung = dtoKatalogEinwilligungsart.Sortierung;
-		daten.personTyp = dtoKatalogEinwilligungsart.personTyp.id;
+		daten.sichtbar = (dtoKatalogEinwilligungsart.Sichtbar == null) || dtoKatalogEinwilligungsart.Sichtbar;
 		daten.schluessel = (dtoKatalogEinwilligungsart.Schluessel == null) ? "" : dtoKatalogEinwilligungsart.Schluessel;
+		daten.sortierung = dtoKatalogEinwilligungsart.Sortierung;
+		daten.beschreibung = (dtoKatalogEinwilligungsart.Beschreibung == null) ? "" : dtoKatalogEinwilligungsart.Beschreibung;
+		daten.personTyp = dtoKatalogEinwilligungsart.personTyp.id;
 		return daten;
 	}
 
@@ -67,9 +69,11 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 	protected void initDTO(final DTOKatalogEinwilligungsart dto, final Long id) {
 		dto.ID = id;
 		dto.Bezeichnung = "";
-		dto.Sortierung = 32000;
-		dto.personTyp = PersonTyp.SCHUELER;
+		dto.Sichtbar = true;
 		dto.Schluessel = "";
+		dto.Sortierung = 32000;
+		dto.Beschreibung = "";
+		dto.personTyp = PersonTyp.SCHUELER;
 	}
 
 
@@ -92,18 +96,19 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 							"Die Bezeichnung '%s' wird bereits für eine andere Einwilligungsart genutzt.".formatted(bezeichnung));
 				dto.Bezeichnung = bezeichnung;
 			}
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
+			case "schluessel" -> dto.Schluessel =
+					JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge());
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false);
+			case "beschreibung" -> dto.Beschreibung =
+					JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Beschreibung.datenlaenge());
 			case "personTyp" -> {
 				final int idPersonTyp = JSONMapper.convertToInteger(value, false);
 				dto.personTyp = PersonTyp.getByID(idPersonTyp);
 				if (dto.personTyp == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d ist für den Personentyp ungültig.".formatted(idPersonTyp));
 			}
-			case "schluessel" -> dto.Schluessel =
-					JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge());
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false);
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
 	}
-
 }

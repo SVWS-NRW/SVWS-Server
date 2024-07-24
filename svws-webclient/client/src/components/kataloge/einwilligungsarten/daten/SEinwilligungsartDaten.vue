@@ -4,6 +4,7 @@
 			<svws-ui-input-wrapper :grid="1">
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung })" type="text" />
 				<svws-ui-text-input placeholder="Schlüssel" :model-value="auswahl().schluessel" @change="schluessel => patch({ schluessel })" type="text" />
+				<svws-ui-textarea-input placeholder="Beschreibung" :model-value="auswahl().beschreibung" @change="beschreibung => patch(beschreibung != null ? { beschreibung } : '')" type="text" />
 				<svws-ui-select placeholder="Personentyp" label="Personentyp" v-model="personTypAuswahl" :items="PersonTyp.values()"
 					:item-text="item => item.bezeichnung" />
 			</svws-ui-input-wrapper>

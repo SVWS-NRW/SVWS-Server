@@ -14,19 +14,29 @@ export class Einwilligungsart extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
-	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
+	 * Gibt an, ob die Einwilligungsart in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public sortierung : number = 1;
-
-	/**
-	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
-	 */
-	public personTyp : number = PersonTyp.SCHUELER.id;
+	public sichtbar : boolean = true;
 
 	/**
 	 * Der Schlüssel der Einwilligungsart.
 	 */
 	public schluessel : string = "";
+
+	/**
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
+	 */
+	public sortierung : number = 1;
+
+	/**
+	 * Eine ausführliche Beschreibung der Einwilligungsart.
+	 */
+	public beschreibung : string | null = "";
+
+	/**
+	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
+	 */
+	public personTyp : number = PersonTyp.SCHUELER.id;
 
 
 	public constructor() {
@@ -50,15 +60,19 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
-		result.sortierung = obj.sortierung;
-		if (obj.personTyp === undefined)
-			 throw new Error('invalid json format, missing attribute personTyp');
-		result.personTyp = obj.personTyp;
+		if (obj.sichtbar === undefined)
+			 throw new Error('invalid json format, missing attribute sichtbar');
+		result.sichtbar = obj.sichtbar;
 		if (obj.schluessel === undefined)
 			 throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
+		if (obj.sortierung === undefined)
+			 throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		if (obj.personTyp === undefined)
+			 throw new Error('invalid json format, missing attribute personTyp');
+		result.personTyp = obj.personTyp;
 		return result;
 	}
 
@@ -66,9 +80,11 @@ export class Einwilligungsart extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"personTyp" : ' + obj.personTyp + ',';
+		result += '"sichtbar" : ' + obj.sichtbar + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+		result += '"sortierung" : ' + obj.sortierung + ',';
+		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		result += '"personTyp" : ' + obj.personTyp + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -82,14 +98,20 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
-		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
-		}
-		if (obj.personTyp !== undefined) {
-			result += '"personTyp" : ' + obj.personTyp + ',';
+		if (obj.sichtbar !== undefined) {
+			result += '"sichtbar" : ' + obj.sichtbar + ',';
 		}
 		if (obj.schluessel !== undefined) {
 			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung + ',';
+		}
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		}
+		if (obj.personTyp !== undefined) {
+			result += '"personTyp" : ' + obj.personTyp + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

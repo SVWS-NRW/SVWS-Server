@@ -22,7 +22,8 @@
 						<p> Feld darf nicht leer sein </p>
 					</div>
 				</div>
-				<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personentyp" label="Personentyp" />
+				<svws-ui-textarea-input v-model="einwilligung.beschreibung" type="text" placeholder="Beschreibung" class="col-span-full" />
+				<svws-ui-select v-model="auswahlPersonTyp" :items="personTypen" :item-text="item => item.bezeichnung" placeholder="Personentyp" label="Personentyp" class="col-span-full" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -68,7 +69,7 @@
 	}
 
 	async function saveEntries() {
-		await props.addEintrag({bezeichnung: einwilligung.value.bezeichnung, personTyp: einwilligung.value.personTyp, schluessel: einwilligung.value.schluessel});
+		await props.addEintrag({bezeichnung: einwilligung.value.bezeichnung, personTyp: einwilligung.value.personTyp, schluessel: einwilligung.value.schluessel, beschreibung: einwilligung.value.beschreibung});
 		showModal().value = false;
 	}
 
