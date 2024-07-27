@@ -34,7 +34,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
-	 * @param gostKlausurtermin							Der GostKlausurtermin mit den Daten zum Klausurtermin.
+	 * @param gostKlausurtermin	Der GostKlausurtermin mit den Daten zum Klausurtermin.
 	 */
 	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {
 		super(gostKlausurtermin.bemerkung,
@@ -44,9 +44,13 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGost
 				gostKlausurtermin.id,
 				gostKlausurtermin.istHaupttermin,
 				new ArrayList<>(),
+				new ArrayList<>(),
 				gostKlausurtermin.nachschreiberZugelassen,
 				gostKlausurtermin.quartal,
 				gostKlausurtermin.startzeit);
+
+		// Die Kursklausren werden bei deren Erzeugung dem Klausurtermin hinzugefügt.
+		// Die Klausurräume werden gesammelt für alle Termine erzeugt.
 	}
 
 }

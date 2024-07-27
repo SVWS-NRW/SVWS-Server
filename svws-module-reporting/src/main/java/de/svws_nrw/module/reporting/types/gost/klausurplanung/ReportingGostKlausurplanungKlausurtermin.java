@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -27,7 +28,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	protected GostHalbjahr gostHalbjahr;
 
 	/** Die ID des Klausurtermins. */
-	public long idKlausurtermin;
+	public long id;
 
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
 	protected boolean istHaupttermin;
@@ -44,7 +45,8 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
 	protected int startzeit;
 
-	//protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
+	/** Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur. */
+	protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
 
 
 
@@ -54,23 +56,25 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @param bezeichnung				Die Bezeichnung des Klausurtermins, falls schon gesetzt.
 	 * @param datum						Das Datum des Klausurtermins, falls schon gesetzt.
 	 * @param gostHalbjahr				Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
-	 * @param idKlausurtermin			Die ID des Klausurtermins.
+	 * @param id			Die ID des Klausurtermins.
 	 * @param istHaupttermin			Die Information, ob es sich um einen Haupttermin handelt oder nicht.
+	 * @param klausurraeume 			Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur.
 	 * @param kursklausuren				Die Liste von Kursklausuren zu diesem Klausurtermin
 	 * @param nachschreiberZugelassen	Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
 	 * @param quartal					Das Quartal, in welchem die Klausur geschrieben wird.
 	 * @param startzeit					Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin(final String bemerkung, final String bezeichnung, final String datum,
-			final GostHalbjahr gostHalbjahr, final long idKlausurtermin, final boolean istHaupttermin,
-			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final boolean nachschreiberZugelassen, final int quartal,
-			final int startzeit) {
+			final GostHalbjahr gostHalbjahr, final long id, final boolean istHaupttermin,
+			final List<ReportingGostKlausurplanungKlausurraum> klausurraeume, final List<ReportingGostKlausurplanungKursklausur> kursklausuren,
+			final boolean nachschreiberZugelassen, final int quartal, final int startzeit) {
 		this.bemerkung = bemerkung;
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
 		this.gostHalbjahr = gostHalbjahr;
-		this.idKlausurtermin = idKlausurtermin;
+		this.id = id;
 		this.istHaupttermin = istHaupttermin;
+		this.klausurraeume = klausurraeume;
 		this.kursklausuren = kursklausuren;
 		this.nachschreiberZugelassen = nachschreiberZugelassen;
 		this.quartal = quartal;
@@ -87,6 +91,33 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	public String startuhrzeit() {
 		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
+
+	/**
+	 * Erstellt eine Liste der Klausurräume mit Stunden für den KLausurtermin.
+	 * @return Die Angaben zu Räumen und Stunden.
+	 */
+	public String rauemeUndStunden() {
+		final List<String> tempList = new ArrayList<>();
+		for (final ReportingGostKlausurplanungKlausurraum raum : klausurraeume) {
+			String temp = "";
+			if ((raum.raumdaten != null) && (raum.raumdaten.kuerzel() != null)) {
+				temp = temp + " " + raum.raumdaten.kuerzel();
+			} else if (!raum.aufsichten.isEmpty()) {
+				temp = temp + " ???";
+			}
+			if (!raum.aufsichten.isEmpty()) {
+				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.unterrichtstunde() + "-"
+						+ raum.aufsichten.getLast().unterrichtsstunde.unterrichtstunde() + ")";
+			}
+			if (!temp.isEmpty())
+				tempList.add(temp);
+		}
+		if (tempList.isEmpty())
+			return "";
+		else
+			return String.join(",", tempList);
+	}
+
 
 
 	// ##### Getter #####
@@ -125,10 +156,10 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	/**
 	 * Die ID des Klausurtermins.
-	 * @return Inhalt des Feldes idKlausurtermin
+	 * @return Inhalt des Feldes id
 	 */
-	public long idKlausurtermin() {
-		return idKlausurtermin;
+	public long id() {
+		return id;
 	}
 
 	/**
@@ -137,6 +168,14 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 */
 	public boolean istHaupttermin() {
 		return istHaupttermin;
+	}
+
+	/**
+	 * Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * @return Inhalt des Feldes klausurraeume
+	 */
+	public List<ReportingGostKlausurplanungKlausurraum> klausurraeume() {
+		return klausurraeume;
 	}
 
 	/**

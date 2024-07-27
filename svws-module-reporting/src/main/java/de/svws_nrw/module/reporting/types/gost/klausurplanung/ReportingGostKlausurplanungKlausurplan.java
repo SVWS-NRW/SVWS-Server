@@ -2,11 +2,8 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -35,21 +32,6 @@ public class ReportingGostKlausurplanungKlausurplan {
 	/** Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet. */
 	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
 
-	/** Eine Map, die alle Termine des Klausurplanes zu deren ID beinhaltet. */
-	private Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine;
-
-	/** Eine Map, die alle Kurse des Klausurplanes zu deren ID beinhaltet. */
-	private Map<Long, ReportingKurs> mapKurse;
-
-	/** Eine Map, die alle Kursklausuren des Klausurplanes zu deren ID beinhaltet. */
-	private Map<Long, ReportingGostKlausurplanungKursklausur> mapKursklausuren;
-
-	/** Eine Map, die alle Schüler des Klausurplanes zu deren ID beinhaltet. */
-	private Map<Long, ReportingSchueler> mapSchueler;
-
-	/** Eine Map, die alle Schülerklausuren des Klausurplanes zu deren ID beinhaltet. */
-	private Map<Long, ReportingGostKlausurplanungSchuelerklausur> mapSchuelerklausuren;
-
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -69,32 +51,6 @@ public class ReportingGostKlausurplanungKlausurplan {
 		this.klausurtermine = (klausurtermine != null) ? klausurtermine : new ArrayList<>();
 		this.kursklausuren = (kursklausuren != null) ? kursklausuren : new ArrayList<>();
 		this.schuelerklausuren = (schuelerklausuren != null) ? schuelerklausuren : new ArrayList<>();
-
-		// Erzeuge Maps aus den erstellten Listen.
-		if (!this.klausurtermine.isEmpty())
-			this.mapKlausurtermine = this.klausurtermine.stream().collect(Collectors.toMap(ReportingGostKlausurplanungKlausurtermin::idKlausurtermin, t -> t));
-		else
-			this.mapKlausurtermine = new HashMap<>();
-
-		if (!this.kursklausuren.isEmpty())
-			this.mapKurse = this.kurse.stream().collect(Collectors.toMap(ReportingKurs::id, k -> k));
-		else
-			this.mapKurse = new HashMap<>();
-
-		if (!this.kursklausuren.isEmpty())
-			this.mapKursklausuren = this.kursklausuren.stream().collect(Collectors.toMap(ReportingGostKlausurplanungKursklausur::id, k -> k));
-		else
-			this.mapKursklausuren = new HashMap<>();
-
-		if (!this.schueler.isEmpty())
-			this.mapSchueler = this.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s));
-		else
-			this.mapSchueler = new HashMap<>();
-
-		if (!this.schuelerklausuren.isEmpty())
-			this.mapSchuelerklausuren = this.schuelerklausuren.stream().collect(Collectors.toMap(ReportingGostKlausurplanungSchuelerklausur::id, s -> s));
-		else
-			this.mapSchuelerklausuren = new HashMap<>();
 	}
 
 
@@ -142,13 +98,61 @@ public class ReportingGostKlausurplanungKlausurplan {
 	/**
 	 * Gibt den Klausurtermin zur übergebenen ID zurück
 	 * @param  id 	Die ID des Klausurtermins
-	 * @return 		Der Klausurtermin zur ID
+	 * @return 		Der Klausurtermin zur ID oder null, wenn nicht vorhanden.
 	 */
-	public ReportingGostKlausurplanungKlausurtermin klausurtermineZurID(final Long id) {
-		if ((id == null) || (id < 0) || !mapKlausurtermine.containsKey(id))
+	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) {
+		if (id < 0)
 			return null;
 		else
-			return mapKlausurtermine.get(id);
+			return this.klausurtermine.stream().filter(t -> id == t.id).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt den Kurs zur übergebenen ID zurück
+	 * @param  id 	Die ID des Kurses
+	 * @return 		Der Kurs zur ID oder null, wenn nicht vorhanden.
+	 */
+	public ReportingKurs kurs(final long id) {
+		if (id < 0)
+			return null;
+		else
+			return this.kurse.stream().filter(k -> id == k.id()).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt die Kursklausur zur übergebenen ID zurück
+	 * @param  id 	Die ID der Kursklausur
+	 * @return 		Die Kursklausur zur ID oder null, wenn nicht vorhanden.
+	 */
+	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) {
+		if (id < 0)
+			return null;
+		else
+			return this.kursklausuren.stream().filter(k -> id == k.id()).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt den Schüler zur übergebenen ID zurück
+	 * @param  id 	Die ID des Schülers
+	 * @return 		Der Schüler zur ID oder null, wenn nicht vorhanden.
+	 */
+	public ReportingSchueler schueler(final long id) {
+		if (id < 0)
+			return null;
+		else
+			return this.schueler.stream().filter(s -> id == s.id()).findFirst().orElse(null);
+	}
+
+	/**
+	 * Gibt die Schülerklausur zur übergebenen ID zurück
+	 * @param  id 	Die ID der Schülerklausur
+	 * @return 		Die Schülerklausur zur ID oder null, wenn nicht vorhanden.
+	 */
+	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long id) {
+		if (id < 0)
+			return null;
+		else
+			return this.schuelerklausuren.stream().filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 
 
@@ -192,45 +196,5 @@ public class ReportingGostKlausurplanungKlausurplan {
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
 		return this.schuelerklausuren;
-	}
-
-	/**
-	 * Eine Map, die alle Termine des Klausurplanes zu deren ID beinhaltet.
-	 * @return Inhalt des Feldes mapKlausurtermine
-	 */
-	public Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine() {
-		return mapKlausurtermine;
-	}
-
-	/**
-	 * Eine Map, die alle Kurse des Klausurplanes zu deren ID beinhaltet.
-	 * @return Inhalt des Feldes mapKurse
-	 */
-	public Map<Long, ReportingKurs> mapKurse() {
-		return mapKurse;
-	}
-
-	/**
-	 * Eine Map, die alle Kursklausuren des Klausurplanes zu deren ID beinhaltet.
-	 * @return Inhalt des Feldes mapKursklausuren
-	 */
-	public Map<Long, ReportingGostKlausurplanungKursklausur> mapKursklausuren() {
-		return mapKursklausuren;
-	}
-
-	/**
-	 * Eine Map, die alle Schüler des Klausurplanes zu deren ID beinhaltet.
-	 * @return Inhalt des Feldes mapSchueler
-	 */
-	public Map<Long, ReportingSchueler> mapSchueler() {
-		return mapSchueler;
-	}
-
-	/**
-	 * Eine Map, die alle Schülerklausuren des Klausurplanes zu deren ID beinhaltet.
-	 * @return Inhalt des Feldes mapSchuelerklausuren
-	 */
-	public Map<Long, ReportingGostKlausurplanungSchuelerklausur> mapSchuelerklausuren() {
-		return mapSchuelerklausuren;
 	}
 }
