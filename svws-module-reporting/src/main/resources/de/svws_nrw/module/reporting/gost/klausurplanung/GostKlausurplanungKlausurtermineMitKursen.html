@@ -73,18 +73,22 @@
 						<td colspan="4">
 							<table class="fixed-layout-100 no-space-pad">
 								<colgroup>
-									<col style="width: 17%;"/>
-									<col style="width: 17%;"/>
-									<col style="width: 15%;"/>
-									<col style="width: 13%;"/>
-									<col style="width: 13%;"/>
+									<col style="width: 14%;"/>
+									<col style="width: 10%;"/>
 									<col style="width: 12%;"/>
-									<col style="width: 13%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 10%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 10%;"/>
+									<col style="width: 8%;"/>
 								</colgroup>
 								<thead>
 								<tr>
 									<td class="spaltenkopf">Kurs</td>
 									<td class="spaltenkopf">Lehrkraft</td>
+									<td class="spaltenkopf">Stunden</td>
+									<td class="spaltenkopf">Räume</td>
 									<td class="spaltenkopf">Anzahl</td>
 									<td class="spaltenkopf">Beginn</td>
 									<td class="spaltenkopf ta-r">Dauer</td>
@@ -97,30 +101,31 @@
 									<tr>
 										<td class="bot-grey pad-1001" th:text="${kursklausur.kurs().kuerzel()}">GE-GK2</td>
 										<td class="bot-grey pad-1001" th:text="${kursklausur.kurs().kursLehrer().kuerzel()}">ABC</td>
-										<td class="bot-grey pad-1001"
-											th:text="${kursklausur.anzahlSchuelerKlausur() + ' / ' + kursklausur.anzahlSchuelerKurs()}">12/19
-										</td>
+										<td class="bot-grey pad-1001" th:text="${kursklausur.textStunden()}">1-4</td>
+										<td class="bot-grey pad-1001" th:text="${kursklausur.textRaeume()}">A2.13</td>
+										<td class="bot-grey pad-1001" th:text="${kursklausur.anzahlSchuelerKlausur() + ' / ' + kursklausur.anzahlSchuelerKurs()}">12/19</td>
 										<td class="bot-grey pad-1001" th:text="${kursklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
 										<td class="bot-grey pad-1001 ta-r" th:text="${kursklausur.dauer() + ' Min.'}">180 Min.</td>
 										<td class="bot-grey pad-1001 ta-r" th:text="${kursklausur.auswahlzeit() + ' Min.'}">30 Min.</td>
-										<td class="bot-grey pad-1001 ta-r"
-											th:text="${(kursklausur.istAudioNotwendig() ? 'Audio' : '') + (kursklausur.istVideoNotwendig() ? 'Video' : '')}">
-											Audio
-										</td>
+										<td class="bot-grey pad-1001 ta-r" th:text="${(kursklausur.istAudioNotwendig() ? 'A' : '') + (kursklausur.istVideoNotwendig() ? 'V' : '')}">A</td>
 									</tr>
 									<tr th:if="${kursklausur.istMdlPruefung()}">
 										<td></td>
-										<td colspan="6" class="beschriftung ta-l">Hinweis: Mündliche Prüfung.</td>
+										<td colspan="8" class="beschriftung pad-1001 ta-l">Hinweis: Mündliche Prüfung.</td>
 									</tr>
 									<tr th:if="${(kursklausur.bemerkung() != null)}">
 										<td></td>
-										<td colspan="6" class="beschriftung ta-l" th:text="${'Bemerkung: ' + kursklausur.bemerkung()}">Bemerkungen zur Klausur
+										<td colspan="8" class="beschriftung pad-1001 ta-l" th:text="${'Bemerkung: ' + kursklausur.bemerkung()}">Bemerkungen zur Klausur
 											des Kurses.
 										</td>
 									</tr>
+									<tr th:if="${!kursklausur.klausurschreiberNamen().isEmpty()}">
+										<td></td>
+										<td colspan="8" class="beschriftung pad-1001 ta-l" th:text="${kursklausur.textKlausurschreiberNamen()}">Max Mustermann, Tina Test</td>
+									</tr>
+
 								</th:block>
 								</tbody>
-								<!-- hier kommen noch die Schüler hin -->
 							</table>
 						</td>
 					</tr>

@@ -33,6 +33,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
 	protected boolean istHaupttermin;
 
+	/** Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur. */
+	protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
+
 	/** Die Liste von Kursklausuren zu diesem Klausurtermin */
 	protected List<ReportingGostKlausurplanungKursklausur> kursklausuren;
 
@@ -42,12 +45,11 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Das Quartal, in welchem die Klausur geschrieben wird. */
 	protected int quartal;
 
+	/** Die Liste der Schülerklausuren zu diesem Termin. */
+	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
+
 	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
 	protected int startzeit;
-
-	/** Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur. */
-	protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
-
 
 
 	/**
@@ -56,18 +58,20 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @param bezeichnung				Die Bezeichnung des Klausurtermins, falls schon gesetzt.
 	 * @param datum						Das Datum des Klausurtermins, falls schon gesetzt.
 	 * @param gostHalbjahr				Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
-	 * @param id			Die ID des Klausurtermins.
+	 * @param id						Die ID des Klausurtermins.
 	 * @param istHaupttermin			Die Information, ob es sich um einen Haupttermin handelt oder nicht.
-	 * @param klausurraeume 			Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * @param klausurraeume 			Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 * @param kursklausuren				Die Liste von Kursklausuren zu diesem Klausurtermin
 	 * @param nachschreiberZugelassen	Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
 	 * @param quartal					Das Quartal, in welchem die Klausur geschrieben wird.
+	 * @param schuelerklausuren			Die Liste der Schülerklausuren zu diesem Termin.
 	 * @param startzeit					Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin(final String bemerkung, final String bezeichnung, final String datum,
 			final GostHalbjahr gostHalbjahr, final long id, final boolean istHaupttermin,
 			final List<ReportingGostKlausurplanungKlausurraum> klausurraeume, final List<ReportingGostKlausurplanungKursklausur> kursklausuren,
-			final boolean nachschreiberZugelassen, final int quartal, final int startzeit) {
+			final boolean nachschreiberZugelassen, final int quartal, final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
+			final int startzeit) {
 		this.bemerkung = bemerkung;
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
@@ -78,6 +82,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		this.kursklausuren = kursklausuren;
 		this.nachschreiberZugelassen = nachschreiberZugelassen;
 		this.quartal = quartal;
+		this.schuelerklausuren = schuelerklausuren;
 		this.startzeit = startzeit;
 	}
 
@@ -202,4 +207,11 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		return quartal;
 	}
 
+	/**
+	 * Die Liste der Schülerklausuren zu diesem Termin.
+	 * @return Inhalt des Feldes schuelerklausuren
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
+		return schuelerklausuren;
+	}
 }

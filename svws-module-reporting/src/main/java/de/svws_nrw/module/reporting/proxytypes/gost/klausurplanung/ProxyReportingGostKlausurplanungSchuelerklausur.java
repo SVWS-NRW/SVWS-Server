@@ -1,10 +1,15 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausurtermin;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -32,25 +37,29 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGostKlausurplanungSchuelerklausur {
 
+
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
-	 * @param gostSchuelerklausur						Die GostKursklausur mit den Daten zur Klausur eines Kurses.
-	 * @param kursklausur 								Die Kursklausur, der diese Schülerklausur zugeordnet wurde.
-	 * @param schueler									Der Shcüler zu dieser Schülerklausur.
+	 * @param gostSchuelerklausur		Die GostKursklausur mit den Daten zur Klausur eines Kurses.
+	 * @param kursklausur 				Die Kursklausur, der diese Schülerklausur zugeordnet wurde.
+	 * @param schueler					Der Shcüler zu dieser Schülerklausur.
+	 * @param schuelerklausurtermine 	Die Schülerklausurtermine der Schülerklausur. Es können z. B. bei Nachschrieb mehrere Termine sein.
 	 */
 	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostSchuelerklausur gostSchuelerklausur,
-			final ReportingGostKlausurplanungKursklausur kursklausur, final ReportingSchueler schueler) {
+			final ReportingGostKlausurplanungKursklausur kursklausur, final ReportingSchueler schueler,
+			final List<ReportingGostKlausurplanungSchuelerklausurtermin> schuelerklausurtermine) {
 		super(gostSchuelerklausur.bemerkung,
 				gostSchuelerklausur.id,
-				null,
-				schueler);
+				kursklausur,
+				schueler,
+				new ArrayList<>());
 
-		super.kursklausur = kursklausur;
+		super.schuelerklausurtermine.addAll(schuelerklausurtermine);
+		super.schuelerklausurtermine.sort(Comparator.comparing(ReportingGostKlausurplanungSchuelerklausurtermin::nummerTerminfolge));
 
 		// Die fertige Schülerklausur der Kursklausur zuweisen, wenn diese noch nicht dort in der Liste enthalten ist.
 		if ((super.kursklausur != null) && super.kursklausur.schuelerklausuren().stream().noneMatch(s -> s.id() == super.id)) {
 			super.kursklausur.schuelerklausuren().add(this);
 		}
-
 	}
 }

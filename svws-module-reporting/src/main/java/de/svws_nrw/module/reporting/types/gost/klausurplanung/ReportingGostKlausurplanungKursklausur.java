@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.utils.DateUtils;
@@ -83,7 +84,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	// ##### Berechnete Methoden #####
 
 	/**
-	 * Die Anzahl an Schüler, die an dieser Kursklausur teilnehmen.
+	 * Die Anzahl an Schülern, die an diese Kursklausur schreiben müssen.
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKlausur() {
@@ -114,10 +115,36 @@ public class ReportingGostKlausurplanungKursklausur {
 		}
 	}
 
-
+	/**
+	 * Die Liste aller Namen der regulären Klausurschreiber dieser Kursklausur.
+	 * @return	Liste der Klausurschreiber.
+	 */
+	public List<String> klausurschreiberNamen() {
+		if (this.kurs == null) {
+			return new ArrayList<>();
+		} else {
+			return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
+		}
+	}
 
 	/**
-	 * Die Startuhrzeit des Klausurtermins, falls schon gesetzt
+	 * Die Liste der Räume, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 * @return Die Liste der Räume der Kursklausur.
+	 */
+	public List<String> raeume() {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
+			return schuelerklausuren.stream()
+					.filter(s -> (!s.schuelerklausurtermine.isEmpty()) && (s.schuelerklausurtermine.getFirst().nummerTerminfolge == 0)
+							&& (s.schuelerklausurtermine.getFirst().klausurraum != null) && (s.schuelerklausurtermine.getFirst().klausurraum.raumdaten != null))
+					.map(s -> s.schuelerklausurtermine.getFirst().klausurraum.raumdaten.kuerzel()).distinct().toList();
+		}
+	}
+
+	/**
+	 * Die Startuhrzeit des Klausurtermins, falls schon gesetzt.
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
@@ -129,6 +156,66 @@ public class ReportingGostKlausurplanungKursklausur {
 		} else
 			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
+
+	/**
+	 * Die Unterichtstunden, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 * @return Die Unterichtstunden der Klausur.
+	 */
+	public List<Integer> stunden() {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			// Der erste Termin einer Schülerklausur ist der Termin dedr Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
+			final List<ReportingGostKlausurplanungSchuelerklausur> klausurenMitRaumUndStunden = schuelerklausuren.stream()
+					.filter(s -> (!s.schuelerklausurtermine.isEmpty())
+							&& (s.schuelerklausurtermine.getFirst().nummerTerminfolge == 0)
+							&& (s.schuelerklausurtermine.getFirst().klausurraum != null)
+							&& (!s.schuelerklausurtermine.getFirst().klausurraum.aufsichten.isEmpty()))
+					.toList();
+
+			if (!klausurenMitRaumUndStunden.isEmpty())
+				return klausurenMitRaumUndStunden.getFirst().schuelerklausurtermine.getFirst().klausurraum.aufsichten.stream()
+						.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
+			else
+				return new ArrayList<>();
+		}
+	}
+
+	/**
+	 * Die kommaseparierte Liste in Textform aller Namen der regulären Klausurschreiber dieser Kursklausur.
+	 * @return	Liste der Klausurschreiber als Text.
+	 */
+	public String textKlausurschreiberNamen() {
+		if (this.kurs == null) {
+			return "";
+		} else {
+			return String.join(", ", klausurschreiberNamen());
+		}
+	}
+
+	/**
+	 * Die kommaseparierte Liste der Räume, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 * @return Die Liste der Räume der Kursklausur als Text.
+	 */
+	public String textRaeume() {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+			return "";
+		} else {
+			return String.join(", ", raeume());
+		}
+	}
+
+	/**
+	 * Die Unterichtstunden als Zeitbereich in Textform.
+	 * @return Die Unterichtstunden der Klausur als Text.
+	 */
+	public String textStunden() {
+		if (!stunden().isEmpty())
+			return stunden().getFirst() + "-" + stunden().getLast();
+		else
+			return "";
+	}
+
 
 
 	// ##### Getter #####
