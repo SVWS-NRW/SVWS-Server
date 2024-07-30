@@ -49,7 +49,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
 
 	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
-	protected int startzeit;
+	protected Integer startzeit;
 
 
 	/**
@@ -71,7 +71,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 			final GostHalbjahr gostHalbjahr, final long id, final boolean istHaupttermin,
 			final List<ReportingGostKlausurplanungKlausurraum> klausurraeume, final List<ReportingGostKlausurplanungKursklausur> kursklausuren,
 			final boolean nachschreiberZugelassen, final int quartal, final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
-			final int startzeit) {
+			final Integer startzeit) {
 		this.bemerkung = bemerkung;
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
@@ -94,7 +94,10 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+		if (this.startzeit == null) {
+			return "";
+		} else
+			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
 	/**

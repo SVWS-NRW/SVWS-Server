@@ -1,5 +1,9 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
@@ -36,10 +40,20 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 	 */
 	private void erzeugeContext(final ReportingRepository reportingRepository) throws ApiOperationException {
 
-		// TODO: Parameter von DataGostKlausuren.getAllData richtig setzen (am besten ausgewählter Schuljahresabschnitt). Siehe dann auch Validierung.
-		//  Begründung: Die Methode DataGostKlausuren.getAllData wertet die zwei Parameter Abiturjahr und GOSt-Halbjahr nicht aus und es werden alle
-		//  Klausurdaten zurückgegeben.
-		final GostKlausurenMetaDataCollection allData = DataGostKlausuren.getAllData(reportingRepository.conn(), 0, GostHalbjahr.EF1);
+		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHlabjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
+		// Hier werden die Daten NICHT valdiert. Die Daten aus den Paramatern müssen vorab validiert worden sein (ReportingValidierung).
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+		final List<Integer> abiturjahrgaenge = new ArrayList<>();
+		final List<Integer> gostHalbjahre = new ArrayList<>();
+
+		for (int i = 0; i < parameterDaten.size(); i = i + 2) {
+			abiturjahrgaenge.add(Math.toIntExact(parameterDaten.get(i)));
+			gostHalbjahre.add(Math.toIntExact(parameterDaten.get(i + 1)));
+		}
+
+		// TODO: Parameter von DataGostKlausuren.getAllData sollten eine Liste fassen können, statt einem einzigen Jahrgang.
+		final GostKlausurenMetaDataCollection allData = DataGostKlausuren.getAllData(reportingRepository.conn(), abiturjahrgaenge.getFirst(),
+				GostHalbjahr.fromID(gostHalbjahre.getFirst()));
 		final GostKursklausurManager gostKlausurManager = new GostKursklausurManager(allData);
 
 		final ReportingGostKlausurplanungKlausurplan gostKlausurplan =

@@ -1,5 +1,18 @@
 package de.svws_nrw.module.reporting.factories;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogLevel;
@@ -16,19 +29,6 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -135,8 +135,7 @@ public class HtmlFactory {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die html-Generierung.");
 				ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-						"Erzeuge Datenkontext Gost-Klausurplanung-Blockungsergebnis für die html-Generierung mit Abiturjahr %s-%s und Template %s."
-								.formatted(reportingParameter.idsHauptdaten.get(0), reportingParameter.idsHauptdaten.get(1), htmlTemplateDefinition.name()));
+						"Erzeuge Datenkontext Gost-Klausurplanung für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
 				final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan =
 						new HtmlContextGostKlausurplanungKlausurplan(reportingRepository);
 				mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);

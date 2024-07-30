@@ -58,7 +58,7 @@ public class ReportingGostKlausurplanungSchuelerklausurtermin {
 	 */
 	public String startuhrzeit() {
 		if (this.startzeit == null) {
-			if (klausurtermin != null)
+			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
 				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
 			else
 				return "";

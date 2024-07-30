@@ -1,10 +1,19 @@
 package de.svws_nrw.module.reporting.validierung;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
@@ -17,11 +26,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Statische Klasse mit Hilfsmethoden zur Validierung von Daten für das Reporting.
@@ -173,11 +177,41 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
-		// TODO: Parameter von DataGostKlausuren.getAllData richtig setzen (am besten ausgewählter Schuljahresabschnitt).
-		//  Begründung: Die Methode DataGostKlausuren.getAllData wertet die zwei Parameter Abiturjahr und GOSt-Halbjahr nicht aus und es werden alle
-		//  Klausurdaten zurückgegeben.
+		// Erwartete Datensturktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - Abiturjahr - GostHalbjahrID (0-5) - usw.
+		// null ist nicht erlaubt und die Einträge müssen paarweise auftreten.
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+
+		if ((parameterDaten.size() < 2) && ((parameterDaten.size() % 2) == 1))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Anzahl der Parameter für Abiturjahrgang und Gost-Halbjahr ist falsch.");
+
+		final List<Integer> abiturjahrgaenge = new ArrayList<>();
+		final List<Integer> gostHalbjahre = new ArrayList<>();
+
 		try {
-			DataGostKlausuren.getAllData(reportingRepository.conn(), 0, GostHalbjahr.EF1);
+			// Lese die Parameter im Wechsel aus.
+			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
+				abiturjahrgaenge.add(Math.toIntExact(parameterDaten.get(i)));
+				gostHalbjahre.add(Math.toIntExact(parameterDaten.get(i + 1)));
+			}
+			// Prüfe die Parameter in den Listen
+			for (final int wert : abiturjahrgaenge) {
+				if ((wert < 1900) || (wert > 10000))
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+			}
+			for (final int wert : gostHalbjahre) {
+				if ((wert < 0) || (wert > 5))
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+			}
+		} catch (final Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+		}
+
+		// TODO: Parameter von DataGostKlausuren.getAllData sollten eine Liste fassen können, statt einem einzigen Jahrgang.
+		try {
+			final GostKlausurenMetaDataCollection allData = DataGostKlausuren.getAllData(reportingRepository.conn(), abiturjahrgaenge.getFirst(),
+					GostHalbjahr.fromID(gostHalbjahre.getFirst()));
+			final GostKursklausurManager gostKlausurManager = new GostKursklausurManager(allData);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Zum ausgewählten Schuljahresabschnitt konnten keine Klausurplanungsdaten ermittelt werden.");

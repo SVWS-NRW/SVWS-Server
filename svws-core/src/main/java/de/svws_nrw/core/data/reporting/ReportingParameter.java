@@ -1,14 +1,14 @@
 package de.svws_nrw.core.data.reporting;
 
-import de.svws_nrw.transpiler.TranspilerDTO;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
+import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -34,7 +34,7 @@ public class ReportingParameter {
 	public @NotNull String reportvorlage = "";
 
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
-	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2025,4]")
+	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2019,5,2020,3]")
 	public @NotNull List<Long> idsHauptdaten = new ArrayList<>();
 
 	/** Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll. */
