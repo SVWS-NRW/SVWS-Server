@@ -137,9 +137,9 @@ public class ReportingGostKlausurplanungKursklausur {
 		} else {
 			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
 			return schuelerklausuren.stream()
-					.filter(s -> (!s.schuelerklausurtermine.isEmpty()) && (s.schuelerklausurtermine.getFirst().nummerTerminfolge == 0)
-							&& (s.schuelerklausurtermine.getFirst().klausurraum != null) && (s.schuelerklausurtermine.getFirst().klausurraum.raumdaten != null))
-					.map(s -> s.schuelerklausurtermine.getFirst().klausurraum.raumdaten.kuerzel()).distinct().toList();
+					.filter(s -> (s.klausurtermin != null) && (s.nummerTerminfolge == 0)
+							&& (s.klausurraum != null) && (s.klausurraum.raumdaten != null))
+					.map(s -> s.klausurraum.raumdaten.kuerzel()).distinct().toList();
 		}
 	}
 
@@ -158,23 +158,23 @@ public class ReportingGostKlausurplanungKursklausur {
 	}
 
 	/**
-	 * Die Unterichtstunden, in denen die Schüler des Kurses ihre Klausur schreiben.
-	 * @return Die Unterichtstunden der Klausur.
+	 * Die Unterrichtsstunden, in denen die Schüler des Kurses ihre Klausur schreiben.
+	 * @return Die Unterrichtsstunden der Klausur.
 	 */
 	public List<Integer> stunden() {
 		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
 			return new ArrayList<>();
 		} else {
-			// Der erste Termin einer Schülerklausur ist der Termin dedr Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
+			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
 			final List<ReportingGostKlausurplanungSchuelerklausur> klausurenMitRaumUndStunden = schuelerklausuren.stream()
-					.filter(s -> (!s.schuelerklausurtermine.isEmpty())
-							&& (s.schuelerklausurtermine.getFirst().nummerTerminfolge == 0)
-							&& (s.schuelerklausurtermine.getFirst().klausurraum != null)
-							&& (!s.schuelerklausurtermine.getFirst().klausurraum.aufsichten.isEmpty()))
+					.filter(s -> (s.klausurtermin != null)
+							&& (s.nummerTerminfolge == 0)
+							&& (s.klausurraum != null)
+							&& (!s.klausurraum.aufsichten.isEmpty()))
 					.toList();
 
 			if (!klausurenMitRaumUndStunden.isEmpty())
-				return klausurenMitRaumUndStunden.getFirst().schuelerklausurtermine.getFirst().klausurraum.aufsichten.stream()
+				return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
 						.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
 			else
 				return new ArrayList<>();

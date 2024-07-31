@@ -32,7 +32,6 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausurtermin;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -259,13 +258,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			// Zu einer Schülerklausur kann es mehrere Schülerklausurtermine geben, die sich in ihrer FolgeNr unterscheiden (z. B. bei Nachschrieb).
 			// Filtere daher die Schülerklausurtermine zur Schülerklausur in eine Liste und werte diese aus.
 			final List<GostSchuelerklausurTermin> skTermine = gostSchuelerklausurtermine.stream().filter(t -> t.idSchuelerklausur == sk.id).toList();
-			final List<ReportingGostKlausurplanungSchuelerklausurtermin> rskTermine = new ArrayList<>();
 
 			for (final GostSchuelerklausurTermin skTermin : skTermine) {
 				// 1. Den Klausurtermin für den Schülerklausurtermin erzeugen.
 				ReportingGostKlausurplanungKlausurtermin klausurtermin = null;
 
-				// Der Termin mit FolgeNr 0 ist der Termin der Kursklkausurm, wenn auch die TerminID null ist.
+				// Der Termin mit FolgeNr 0 ist der Termin der Kursklausur, wenn auch die TerminID null ist.
 				if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {
 					klausurtermin = mapKursklausuren.get(gostKlausurManager.kursklausurBySchuelerklausur(sk).id).klausurtermin();
 				} else {
@@ -292,13 +290,11 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 					}
 				}
 
-				// 3. Erzeuge ReportingSchuelerklausurtermin und füge ihn die Ergebnisliste ein.
-				rskTermine.add(new ProxyReportingGostKlausurplanungSchuelerklausurtermin(skTermin, klausurtermin, klausurraum));
+				// 3. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
+				super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(sk, skTermin, klausurraum, klausurtermin,
+						mapKursklausuren.get(gostKlausurManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
 			}
 
-			// Schülerklausur der Gesamtliste der Schülerklausuren hinzufügen.
-			super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(
-					sk, mapKursklausuren.get(gostKlausurManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler), rskTermine));
 		}
 	}
 

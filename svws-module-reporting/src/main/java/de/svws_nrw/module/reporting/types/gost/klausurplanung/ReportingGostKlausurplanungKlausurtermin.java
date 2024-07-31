@@ -45,7 +45,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Das Quartal, in welchem die Klausur geschrieben wird. */
 	protected int quartal;
 
-	/** Die Liste der Schülerklausuren zu diesem Termin. */
+	/** Die Liste aller Schülerklausuren zu diesem Termin. */
 	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
 
 	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
@@ -64,7 +64,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @param kursklausuren				Die Liste von Kursklausuren zu diesem Klausurtermin
 	 * @param nachschreiberZugelassen	Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
 	 * @param quartal					Das Quartal, in welchem die Klausur geschrieben wird.
-	 * @param schuelerklausuren			Die Liste der Schülerklausuren zu diesem Termin.
+	 * @param schuelerklausuren			Die Liste aller Schülerklausuren zu diesem Termin.
 	 * @param startzeit					Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin(final String bemerkung, final String bezeichnung, final String datum,
@@ -88,6 +88,28 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 
 	// ##### Berechnete Methoden #####
+
+	/**
+	 * Die Liste der Schülerklausuren zum Termin ihres Kurses.
+	 * @return Die Schülerklausuren zum Kurstermin.
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
+		if (this.schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else
+			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
+	}
+
+	/**
+	 * Die Liste der Schülerklausuren zum Termin die Nachschreibklausuren darstellen.
+	 * @return Die Schülerklausuren als Nachschreibklausuren.
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
+		if (this.schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else
+			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
+	}
 
 	/**
 	 * Die Startuhrzeit des Klausurtermins, falls schon gesetzt
@@ -211,7 +233,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	}
 
 	/**
-	 * Die Liste der Schülerklausuren zu diesem Termin.
+	 * Die Liste aller Schülerklausuren zu diesem Termin.
 	 * @return Inhalt des Feldes schuelerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
