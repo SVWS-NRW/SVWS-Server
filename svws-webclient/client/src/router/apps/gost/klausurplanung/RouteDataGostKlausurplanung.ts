@@ -1,6 +1,6 @@
 
-import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich} from "@core";
-import { StundenplanKalenderwochenzuordnung} from "@core";
+import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile} from "@core";
+import { ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
@@ -16,6 +16,7 @@ import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanu
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeApp } from "../../RouteApp";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
+import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/DownloadPDFTypen";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -516,6 +517,20 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	gotoVorgaben = async () => {
 		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}
+
+	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
+		const reportingParameter = new ReportingParameter();
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
+		reportingParameter.idsHauptdaten = new ArrayList<number>();
+		reportingParameter.idsHauptdaten.add(this.abiturjahr);
+		reportingParameter.idsHauptdaten.add(this.halbjahr.id);
+		reportingParameter.einzelausgabeHauptdaten = false;
+		reportingParameter.idsDetaildaten = new ArrayList<number>();
+		reportingParameter.einzelausgabeDetaildaten = false;
+		reportingParameter.detailLevel = 0;
+		return await api.server.pdfReport(reportingParameter, api.schema);
+	})
 
 
 }

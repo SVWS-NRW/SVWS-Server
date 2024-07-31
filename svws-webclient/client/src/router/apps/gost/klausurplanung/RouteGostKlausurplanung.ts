@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKursklausurManager, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -21,6 +21,7 @@ import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps
 import { routeError } from "~/router/error/RouteError";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
+import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -31,7 +32,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getNoProps(route);
+		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Klausurplanung";
 		super.children = [
@@ -155,6 +156,14 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		this.data.setView(node, this.children);
+	}
+
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
+		return {
+			apiStatus: api.status,
+			kMan: () => routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(),
+			getPDF: this.data.getPDF,
+		}
 	}
 
 }
