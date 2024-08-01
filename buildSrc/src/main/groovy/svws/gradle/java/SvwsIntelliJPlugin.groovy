@@ -76,12 +76,6 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 				"        <option name=\"selectedJavaProfile\" value=\"SVWS-Server-Formatter\" />\n" +
 				"      </ProjectSpecificProfile>\n" +
 				"    </option>\n" +
-				"    <option name=\"selectedGlobalProfileReference\">\n" +
-				"      <GlobalProfileReference>\n" +
-				"        <option name=\"id\" value=\"1716449183454\" />\n" +
-				"        <option name=\"name\" value=\"SVWS\" />\n" +
-				"      </GlobalProfileReference>\n" +
-				"    </option>\n" +
 				"  </component>\n" +
 				"</project>")
 	}
