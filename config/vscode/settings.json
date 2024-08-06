@@ -1,0 +1,4 @@
+{
+    "java.format.settings.url": "./config/eclipse/Eclipse_Formatter.xml",
+    "java.format.settings.profile": "SVWS-Server-Formatter"
+}

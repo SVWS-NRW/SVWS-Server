@@ -34,5 +34,10 @@ gradlePlugin {
 			id = 'svws.gradle.svwsintellij.plugin'
 			implementationClass = 'svws.gradle.java.SvwsIntelliJPlugin'
 		}
+
+		svwsVSCodePlugin {
+			id = 'svws.gradle.svwsvscode.plugin'
+			implementationClass = 'svws.gradle.java.SvwsVSCodePlugin'
+		}
     }
 }

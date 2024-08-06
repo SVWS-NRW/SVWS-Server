@@ -64,6 +64,7 @@ allprojects {
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
 	apply plugin: 'svws.gradle.svwseclipse.plugin'
 	apply plugin: 'svws.gradle.svwsintellij.plugin'
+	apply plugin: 'svws.gradle.svwsvscode.plugin'
 	apply plugin: 'org.sonarqube'
 	apply plugin: 'checkstyle'
 	// TODO Support JPMS-Modules
@@ -225,6 +226,10 @@ task initIntellij() {
 	SvwsIntelliJPlugin
 }
 
+task initVSCode() {
+	group "ide"
+	SvwsVSCodePlugin
+}
 
 nexusPublishing {
     repositories {
@@ -254,6 +259,7 @@ task allJavadoc(type: Javadoc) {
 import com.github.jk1.license.render.*
 import com.github.jk1.license.importer.*
 import svws.gradle.java.SvwsIntelliJPlugin
+import svws.gradle.java.SvwsVSCodePlugin
 
 licenseReport {
     // Set output directory for the report data.

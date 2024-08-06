@@ -476,7 +476,7 @@
     <inspection_tool class="TypeParameterHidesVisibleType" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="TypeScriptExplicitMemberType" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="UNCHECKED_WARNING" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
-    <inspection_tool class="UNUSED_IMPORT" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" />
+    <inspection_tool class="UNUSED_IMPORT" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup" />
     <inspection_tool class="UnaryPlus" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" />
     <inspection_tool class="UnclearBinaryExpression" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup" />
     <inspection_tool class="UnnecessarilyQualifiedInnerClassAccess" enabled="false" level="INFORMATION" enabled_by_default="false">
