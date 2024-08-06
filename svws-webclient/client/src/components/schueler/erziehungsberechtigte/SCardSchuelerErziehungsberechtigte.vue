@@ -4,10 +4,10 @@
 			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="patch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
 				Erhält Anschreiben
 			</svws-ui-checkbox>
-			<svws-ui-button type="danger">
+			<!-- TOS: Api erweitern <svws-ui-button type="danger">
 				<span class="icon i-ri-delete-bin-line" />
 				Person löschen
-			</svws-ui-button>
+			</svws-ui-button> -->
 		</template>
 		<svws-ui-input-wrapper :grid="4">
 			<svws-ui-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />

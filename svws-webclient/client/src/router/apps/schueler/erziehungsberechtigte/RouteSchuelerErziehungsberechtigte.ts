@@ -31,13 +31,14 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerErziehungsberechtigteProps {
 		return {
 			patch: this.data.patch,
-			data: this.data.daten,
+			add: this.data.add,
+			data: () => this.data.daten,
 			mapErzieherarten: this.data.mapErzieherarten,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile

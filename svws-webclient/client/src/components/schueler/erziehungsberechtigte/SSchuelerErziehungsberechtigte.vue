@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table :items="[]" :columns="cols" :no-data="data.size() === 0" clickable no-data-html="Noch keine Einträge vorhanden.">
+			<svws-ui-table :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value">
 				<template #header(anschreiben)>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-mail-send-line" />
@@ -10,55 +10,49 @@
 						</template>
 					</svws-ui-tooltip>
 				</template>
-				<template #body>
-					<div class="svws-ui-tr" role="row" v-for="(e, i) in data" :key="i" @click="select(clickedErzieher === e.id ? undefined : e.id)" :class="{'svws-clicked': clickedErzieher === e.id}">
-						<div class="svws-ui-td" role="cell">
-							{{ e.idErzieherArt ? mapErzieherarten.get(e.idErzieherArt)?.bezeichnung : '' }}
-						</div>
-						<div class="svws-ui-td" role="cell">
-							{{ e.vorname }} {{ e.nachname }}
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<span v-if="e.eMail?.length">{{ e.eMail }}</span>
-							<span v-else class="opacity-25">–</span>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							{{ e.strassenname }}{{ e.wohnortID && mapOrte?.get(e.wohnortID) ? `, ${mapOrte.get(e.wohnortID)?.plz} ${mapOrte?.get(e.wohnortID)?.ortsname}` : '' }}
-						</div>
-						<div class="svws-ui-td svws-align-center" role="cell">
-							<span v-if="e.erhaeltAnschreiben">&check;</span>
-							<span v-else>&times;</span>
-						</div>
-					</div>
+				<template #cell(idErzieherArt)="{ value: idErzieherArt }">
+					{{ idErzieherArt ? mapErzieherarten.get(idErzieherArt)?.bezeichnung : '' }}
+				</template>
+				<template #cell(name)="{ rowData }">
+					{{ rowData.vorname }} {{ rowData.nachname }}
+				</template>
+				<template #cell(email)="{ value: eMail }">
+					{{ eMail ? eMail : '–' }}
+				</template>
+				<template #cell(adresse)="{ rowData }">
+					{{ rowData.strassenname }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
+				</template>
+				<template #cell(anschreiben)="{ value: erhaeltAnschreiben }">
+					{{ erhaeltAnschreiben ? '&check;' : '&times;' }}
 				</template>
 			</svws-ui-table>
-			<svws-ui-button class="mt-4">Person hinzufügen</svws-ui-button>
-			<template v-for="(e, i) in data" :key="i">
-				<s-card-schueler-erziehungsberechtigte :erzieher="e" :patch="patch" :map-erzieherarten="mapErzieherarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" v-if="clickedErzieher === e.id" />
-			</template>
+			<!-- TODO: API erweitern <svws-ui-button class="mt-4" @click="hinzufuegen">Person hinzufügen</svws-ui-button> -->
+			<s-card-schueler-erziehungsberechtigte v-if="erzieher" :erzieher :patch :map-erzieherarten :map-orte :map-ortsteile />
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
+	import { ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
-	import { ref } from "vue";
+	import type { ErzieherStammdaten } from "@core";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
-	const clickedErzieher = ref<number | undefined>(undefined);
+	const erzieher = ref<ErzieherStammdaten | undefined>();
 
-	const cols: DataTableColumn[] = [
-		{ key: "erzieherart", label: "Art", span: 0.5},
+	async function hinzufuegen() {
+		const neu = await props.add();
+		erzieher.value = neu;
+	}
+
+	const columns: DataTableColumn[] = [
+		{ key: "idErzieherArt", label: "Art",},
 		{ key: "name", label: "Name"},
 		{ key: "email", label: "E-Mail"},
 		{ key: "adresse", label: "Adresse"},
 		{ key: "anschreiben", label: "Anschreiben", tooltip: "Erhält Anschreiben", fixedWidth: 3, align: "center"},
 	];
-
-	async function select(erzieher: number | undefined) {
-		clickedErzieher.value = erzieher;
-	}
 
 </script>

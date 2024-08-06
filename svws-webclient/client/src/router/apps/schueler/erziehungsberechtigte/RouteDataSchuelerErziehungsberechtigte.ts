@@ -1,4 +1,5 @@
-import { DeveloperNotificationException, type Erzieherart, type ErzieherStammdaten, type List} from "@core";
+import type { Erzieherart, List } from "@core";
+import { ErzieherStammdaten, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -28,11 +29,17 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 		return this._state.value.daten;
 	}
 
+	get idSchueler(): number {
+		if (this._state.value.idSchueler === undefined)
+			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		return this._state.value.idSchueler;
+	}
+
 	public async setEintrag(idSchueler?: number) {
 		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
 			return;
 		const daten = await api.server.getSchuelerErzieher(api.schema, idSchueler);
-		this.setPatchedState({idSchueler, daten});
+		this.setPatchedState({ idSchueler, daten });
 	}
 
 	public get mapErzieherarten() : Map<number, Erzieherart> {
@@ -51,6 +58,15 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
 		await api.server.patchErzieherStammdaten(data, api.schema, id);
+	}
+
+	add = async () => {
+		const data = new ErzieherStammdaten();
+		data.idSchueler = this.idSchueler;
+		this.daten.add(data);
+		// await api.server.createErzieherStammdaten();
+		this.commit();
+		return data;
 	}
 
 }
