@@ -7,7 +7,7 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
-				:disabled="!hatMigrationshintergrund" statistics hide-stepper />
+				:disabled="!hatMigrationshintergrund" statistics hide-stepper :min :max />
 			<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`"
 				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 				:disabled="!hatMigrationshintergrund" autocomplete statistics />
@@ -39,6 +39,8 @@
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
 	const hatMigrationshintergrund = computed<boolean>(() => props.schuelerListeManager().daten().hatMigrationshintergrund);
+	const max = new Date().getFullYear() + 1;
+	const min = max - 100;
 
 	const geburtsland: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.DEU,
