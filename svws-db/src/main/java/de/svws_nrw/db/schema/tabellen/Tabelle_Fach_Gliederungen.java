@@ -17,9 +17,15 @@ public class Tabelle_Fach_Gliederungen extends SchemaTabelle {
 			.setJavaComment("ID für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte Gliederung */
-	public SchemaTabelleSpalte col_Gliederung = add("Gliederung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+	public SchemaTabelleSpalte col_Gliederung = add("Gliederung", SchemaDatentypen.VARCHAR, true).setDatenlaenge(3)
 			.setNotNull()
 			.setJavaComment("SGL für die gliederungsbezogenen Einstellungen zum Fach (BK)");
+
+	/** Die Definition der Tabellenspalte Fachklasse_ID */
+	public SchemaTabelleSpalte col_Fachklasse_ID = add("Fachklasse_ID", SchemaDatentypen.BIGINT, true)
+			.setDefault("0")
+			.setNotNull()
+			.setJavaComment("Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
@@ -65,12 +71,6 @@ public class Tabelle_Fach_Gliederungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Lernfelder */
 	public SchemaTabelleSpalte col_Lernfelder = add("Lernfelder", SchemaDatentypen.TEXT, false)
 			.setJavaComment("Lernfelder für die gliederungsbezogenen Einstellungen zum Fach (BK)");
-
-	/** Die Definition der Tabellenspalte Fachklasse_ID */
-	public SchemaTabelleSpalte col_Fachklasse_ID = add("Fachklasse_ID", SchemaDatentypen.BIGINT, true)
-			.setDefault("0")
-			.setNotNull()
-			.setJavaComment("Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)

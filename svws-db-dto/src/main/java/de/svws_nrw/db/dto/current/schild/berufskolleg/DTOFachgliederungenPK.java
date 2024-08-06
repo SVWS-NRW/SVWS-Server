@@ -15,6 +15,9 @@ public final class DTOFachgliederungenPK implements Serializable {
 	/** ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	public long Fach_ID;
 
+	/** SGL für die gliederungsbezogenen Einstellungen zum Fach (BK) */
+	public String Gliederung;
+
 	/** Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	public long Fachklasse_ID;
 
@@ -28,10 +31,15 @@ public final class DTOFachgliederungenPK implements Serializable {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOFachgliederungenPK.
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
+	 * @param Gliederung   der Wert für das Attribut Gliederung
 	 * @param Fachklasse_ID   der Wert für das Attribut Fachklasse_ID
 	 */
-	public DTOFachgliederungenPK(final long Fach_ID, final long Fachklasse_ID) {
+	public DTOFachgliederungenPK(final long Fach_ID, final String Gliederung, final long Fachklasse_ID) {
 		this.Fach_ID = Fach_ID;
+		if (Gliederung == null) {
+			throw new NullPointerException("Gliederung must not be null");
+		}
+		this.Gliederung = Gliederung;
 		this.Fachklasse_ID = Fachklasse_ID;
 	}
 
@@ -47,6 +55,11 @@ public final class DTOFachgliederungenPK implements Serializable {
 		DTOFachgliederungenPK other = (DTOFachgliederungenPK) obj;
 		if (Fach_ID != other.Fach_ID)
 			return false;
+		if (Gliederung == null) {
+			if (other.Gliederung != null)
+				return false;
+		} else if (!Gliederung.equals(other.Gliederung))
+			return false;
 		return Fachklasse_ID == other.Fachklasse_ID;
 	}
 
@@ -55,6 +68,8 @@ public final class DTOFachgliederungenPK implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Long.hashCode(Fach_ID);
+
+		result = prime * result + ((Gliederung == null) ? 0 : Gliederung.hashCode());
 
 		result = prime * result + Long.hashCode(Fachklasse_ID);
 		return result;

@@ -15,6 +15,9 @@ public final class MigrationDTOFachgliederungenPK implements Serializable {
 	/** ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	public Long Fach_ID;
 
+	/** SGL für die gliederungsbezogenen Einstellungen zum Fach (BK) */
+	public String Gliederung;
+
 	/** Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	public Long Fachklasse_ID;
 
@@ -28,13 +31,18 @@ public final class MigrationDTOFachgliederungenPK implements Serializable {
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOFachgliederungenPK.
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
+	 * @param Gliederung   der Wert für das Attribut Gliederung
 	 * @param Fachklasse_ID   der Wert für das Attribut Fachklasse_ID
 	 */
-	public MigrationDTOFachgliederungenPK(final Long Fach_ID, final Long Fachklasse_ID) {
+	public MigrationDTOFachgliederungenPK(final Long Fach_ID, final String Gliederung, final Long Fachklasse_ID) {
 		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
+		if (Gliederung == null) {
+			throw new NullPointerException("Gliederung must not be null");
+		}
+		this.Gliederung = Gliederung;
 		if (Fachklasse_ID == null) {
 			throw new NullPointerException("Fachklasse_ID must not be null");
 		}
@@ -56,6 +64,11 @@ public final class MigrationDTOFachgliederungenPK implements Serializable {
 				return false;
 		} else if (!Fach_ID.equals(other.Fach_ID))
 			return false;
+		if (Gliederung == null) {
+			if (other.Gliederung != null)
+				return false;
+		} else if (!Gliederung.equals(other.Gliederung))
+			return false;
 		if (Fachklasse_ID == null) {
 			if (other.Fachklasse_ID != null)
 				return false;
@@ -69,6 +82,8 @@ public final class MigrationDTOFachgliederungenPK implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+
+		result = prime * result + ((Gliederung == null) ? 0 : Gliederung.hashCode());
 
 		result = prime * result + ((Fachklasse_ID == null) ? 0 : Fachklasse_ID.hashCode());
 		return result;

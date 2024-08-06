@@ -28,17 +28,17 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @IdClass(DTOFachgliederungenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Fach_Gliederungen")
-@JsonPropertyOrder({"Fach_ID", "Gliederung", "Faechergruppe", "GewichtungAB", "GewichtungBB", "SchriftlichAB", "SchriftlichBB", "GymOSFach", "ZeugnisBez", "Lernfelder", "Fachklasse_ID", "Sortierung"})
+@JsonPropertyOrder({"Fach_ID", "Gliederung", "Fachklasse_ID", "Faechergruppe", "GewichtungAB", "GewichtungBB", "SchriftlichAB", "SchriftlichBB", "GymOSFach", "ZeugnisBez", "Lernfelder", "Sortierung"})
 public final class DTOFachgliederungen {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOFachgliederungen e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Fachklasse_ID = ?2";
+	public static final String QUERY_PK = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Gliederung = ?2 AND e.Fachklasse_ID = ?3";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Fachklasse_ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Gliederung IS NOT NULL AND e.Fachklasse_ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Fach_ID */
 	public static final String QUERY_BY_FACH_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1";
@@ -51,6 +51,12 @@ public final class DTOFachgliederungen {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gliederung */
 	public static final String QUERY_LIST_BY_GLIEDERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachklasse_ID */
+	public static final String QUERY_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachklasse_ID */
+	public static final String QUERY_LIST_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Faechergruppe */
 	public static final String QUERY_BY_FAECHERGRUPPE = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe = ?1";
@@ -100,12 +106,6 @@ public final class DTOFachgliederungen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernfelder */
 	public static final String QUERY_LIST_BY_LERNFELDER = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Fachklasse_ID */
-	public static final String QUERY_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Fachklasse_ID */
-	public static final String QUERY_LIST_BY_FACHKLASSE_ID = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
 	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung = ?1";
 
@@ -119,9 +119,16 @@ public final class DTOFachgliederungen {
 	public long Fach_ID;
 
 	/** SGL für die gliederungsbezogenen Einstellungen zum Fach (BK) */
+	@Id
 	@Column(name = "Gliederung")
 	@JsonProperty
 	public String Gliederung;
+
+	/** Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
+	@Id
+	@Column(name = "Fachklasse_ID")
+	@JsonProperty
+	public long Fachklasse_ID;
 
 	/** Fächergruppe für gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Column(name = "Faechergruppe")
@@ -172,12 +179,6 @@ public final class DTOFachgliederungen {
 	@JsonProperty
 	public String Lernfelder;
 
-	/** Fachklassen ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
-	@Id
-	@Column(name = "Fachklasse_ID")
-	@JsonProperty
-	public long Fachklasse_ID;
-
 	/** Sortierung dfür die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Column(name = "Sortierung")
 	@JsonProperty
@@ -217,6 +218,11 @@ public final class DTOFachgliederungen {
 		DTOFachgliederungen other = (DTOFachgliederungen) obj;
 		if (Fach_ID != other.Fach_ID)
 			return false;
+		if (Gliederung == null) {
+			if (other.Gliederung != null)
+				return false;
+		} else if (!Gliederung.equals(other.Gliederung))
+			return false;
 		return Fachklasse_ID == other.Fachklasse_ID;
 	}
 
@@ -225,6 +231,8 @@ public final class DTOFachgliederungen {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Long.hashCode(Fach_ID);
+
+		result = prime * result + ((Gliederung == null) ? 0 : Gliederung.hashCode());
 
 		result = prime * result + Long.hashCode(Fachklasse_ID);
 		return result;
@@ -238,7 +246,7 @@ public final class DTOFachgliederungen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOFachgliederungen(Fach_ID=" + this.Fach_ID + ", Gliederung=" + this.Gliederung + ", Faechergruppe=" + this.Faechergruppe + ", GewichtungAB=" + this.GewichtungAB + ", GewichtungBB=" + this.GewichtungBB + ", SchriftlichAB=" + this.SchriftlichAB + ", SchriftlichBB=" + this.SchriftlichBB + ", GymOSFach=" + this.GymOSFach + ", ZeugnisBez=" + this.ZeugnisBez + ", Lernfelder=" + this.Lernfelder + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Sortierung=" + this.Sortierung + ")";
+		return "DTOFachgliederungen(Fach_ID=" + this.Fach_ID + ", Gliederung=" + this.Gliederung + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Faechergruppe=" + this.Faechergruppe + ", GewichtungAB=" + this.GewichtungAB + ", GewichtungBB=" + this.GewichtungBB + ", SchriftlichAB=" + this.SchriftlichAB + ", SchriftlichBB=" + this.SchriftlichBB + ", GymOSFach=" + this.GymOSFach + ", ZeugnisBez=" + this.ZeugnisBez + ", Lernfelder=" + this.Lernfelder + ", Sortierung=" + this.Sortierung + ")";
 	}
 
 }

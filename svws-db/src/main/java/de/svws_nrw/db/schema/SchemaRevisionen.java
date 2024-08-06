@@ -12,6 +12,7 @@ import de.svws_nrw.db.schema.revisionen.Revision15Updates;
 import de.svws_nrw.db.schema.revisionen.Revision17Updates;
 import de.svws_nrw.db.schema.revisionen.Revision18Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
+import de.svws_nrw.db.schema.revisionen.Revision20Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
@@ -150,7 +151,12 @@ public enum SchemaRevisionen {
 	 * Entfernen der nicht benötigten Tabelle Gost_Klausuren_Termine_Jahrgaenge und
 	 * der nicht benötigten Spalte ErsetzteSprache aus der Tabelle SchuelerSprachpruefungen
 	 */
-	REV_19(19, "2024-07-03");
+	REV_19(19, "2024-07-03"),
+
+	/**
+	 * Korrigiert ggf. den Primärschlüssel auf der Tabelle Fach_Gliederungen.
+	 */
+	REV_20(20, "2024-08-06");
 
 
 	/**
@@ -158,14 +164,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_19;
+	public static final SchemaRevisionen maxRevision = REV_20;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_19;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_20;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -237,6 +243,7 @@ public enum SchemaRevisionen {
 				case REV_15 -> new Revision15Updates();
 				case REV_17 -> new Revision17Updates();
 				case REV_18 -> new Revision18Updates();
+				case REV_20 -> new Revision20Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}
