@@ -48,10 +48,11 @@
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null) : List<StundenplanUnterricht> {
 		const unterricht = props.manager().unterrichtGetMengeAsList()
 		const list: List<StundenplanUnterricht> = new ArrayList();
-		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag, stunde);
-		for (const u of unterricht)
-			if ((u.idFach === props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
-				list.add(u);
+		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag, stunde);
+		if (zeitraster !== null)
+			for (const u of unterricht)
+				if ((u.idFach === props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
+					list.add(u);
 		return list;
 	}
 

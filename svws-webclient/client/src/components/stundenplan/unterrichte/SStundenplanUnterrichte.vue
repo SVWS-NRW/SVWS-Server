@@ -30,11 +30,12 @@
 						</div>
 						<template v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id">
 							<div class="svws-ui-td select-none svws-align-center svws-selectable svws-divider" role="cell"
-								@click="!stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde) && !stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag) && filterZeiraster(stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
+								@click="!stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde) && !stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag) && filterZeiraster(stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde))"
 								:class="{ 'svws-selected bg-success/20':
-									stundenplanUnterrichtListeManager().zeitraster.auswahlHas(stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))
-									|| stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde)
-									|| stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag)
+									stundenplanManager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde) &&
+									(stundenplanUnterrichtListeManager().zeitraster.auswahlHas(stundenplanManager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))
+										|| stundenplanUnterrichtListeManager().stunden.auswahlHas(stunde)
+										|| stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag))
 								}">
 								<template v-for="wt in wochentyprange" :key="wt">
 									{{ stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt).size() || '' }}{{ stundenplanManager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt+1).size() && wt !== wochentyprange.at(-1) ? ", ": "" }}
@@ -117,7 +118,7 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ArrayList, ListUtils, ZulaessigesFach } from "@core";
+	import { ArrayList, ListUtils, StundenplanManager, ZulaessigesFach } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -270,7 +271,7 @@
 		void props.setFilter();
 	}
 
-	function filterZeiraster(zeitraster: StundenplanZeitraster) {
+	function filterZeiraster(zeitraster: StundenplanZeitraster|null) {
 		props.stundenplanUnterrichtListeManager().zeitraster.auswahlToggle(zeitraster);
 		void props.setFilter();
 	}

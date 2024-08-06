@@ -54,7 +54,7 @@
 					<template v-for="stunde in zeitrasterRange" :key="stunde">
 						<div class="svws-ui-stundenplan--stunde relative" :style="getZeitrasterGridPos(wochentag.id, stunde)"
 							@dragover="checkDropZoneZeitraster($event, wochentag.id, stunde)" @dragleave="onDragLeaveInternal($event, wochentag.id, stunde)"
-							@drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), dragOverPos.wochentyp)">
+							@drop="onDropInternal(manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde) ?? undefined, dragOverPos.wochentyp)">
 							<!-- Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ... -->
 							<div v-if="(draggedData !== undefined) && ((hatWochentypen) || (!hatWochentypen && isZeitrasterDropZone.getOrException(wochentag.id, stunde, 0)))"
 								class="absolute pointer-events-none w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
