@@ -272,6 +272,8 @@
 	}
 
 	function filterZeiraster(zeitraster: StundenplanZeitraster|null) {
+		if (zeitraster === null)
+			return;
 		props.stundenplanUnterrichtListeManager().zeitraster.auswahlToggle(zeitraster);
 		void props.setFilter();
 	}
