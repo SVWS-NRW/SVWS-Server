@@ -1,7 +1,9 @@
 package de.svws_nrw.schulen.v1.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitAdresse;
 import de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitErreichbarkeit;
@@ -22,20 +24,8 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	/** Das Datenobjekt für die Adresse aus der Organisationseinheit */
 	private final @NotNull SchuldateiOrganisationseinheitAdresse _adresse;
 
-	/** Die Festnetznummern (codekey=02) zu der Adresse */
-	private final @NotNull List<String> _festnetzNummern;
-
-	/** Die Mobilnummern (codekey=03) zu der Adresse */
-	private final @NotNull List<String> _mobilNummern;
-
-	/** Die Faxnummern (codekey=04) zu der Adresse */
-	private final @NotNull List<String> _faxNummern;
-
-	/** Die Emails (codekey=01) zu der Adresse */
-	private final @NotNull List<String> _emailAdressen;
-
-	/** Die URLs (codekey=09) zu der Adresse */
-	private final @NotNull List<String> _webAdressen;
+	/** Die Erreichbarkeiten nach Kanal in einer Map https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit */
+	private final @NotNull Map<String, List<String>> _mapErreichbarkeitenByKanal = new HashMap<>();
 
 	/** Die Art der Adresse */
 	private final @NotNull String _artDerAdresse;
@@ -60,11 +50,6 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		this._managerSchuldatei = managerSchuldatei;
 		this._managerOrganisationseinheit = managerOrganisationseinheit;
 		this._adresse = adresse;
-		this._festnetzNummern = new ArrayList<>();
-		this._mobilNummern = new ArrayList<>();
-		this._faxNummern = new ArrayList<>();
-		this._emailAdressen = new ArrayList<>();
-		this._webAdressen = new ArrayList<>();
 
 		// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
 		if (this._managerOrganisationseinheit.getSchulnummer() != _adresse.schulnummer)
@@ -98,19 +83,10 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		for (final @NotNull SchuldateiOrganisationseinheitErreichbarkeit erreichbarkeit : erreichbarkeiten) {
 			if (((erreichbarkeit.liegenschaft == 0) || (erreichbarkeit.liegenschaft == adresse.liegenschaft)) // Erreichbarkeit gehört zur Adresse
 					&& (erreichbarkeit.codekey != null) && (SchuldateiUtils.pruefeUeberlappung(erreichbarkeit, adresse))) { // Überlappung zeitlich vorhanden (codekey != null wegen Transpiler)
-				if (erreichbarkeit.codekey.compareTo("01") == 0)
-					this._emailAdressen.add(erreichbarkeit.codewert);
-				else if (erreichbarkeit.codekey.compareTo("02") == 0)
-					this._festnetzNummern.add(erreichbarkeit.codewert);
-				else if (erreichbarkeit.codekey.compareTo("03") == 0)
-					this._mobilNummern.add(erreichbarkeit.codewert);
-				else if (erreichbarkeit.codekey.compareTo("04") == 0)
-					this._faxNummern.add(erreichbarkeit.codewert);
-				else if (erreichbarkeit.codekey.compareTo("09") == 0)
-					this._webAdressen.add(erreichbarkeit.codewert);
-				// TODO DeveloperNotificationException verfügbar machen
-				//else
-				//	throw new DeveloperNotificationException("Der Erreichbarkeitsart codekey=" +  erreichbarkeit.codekey + " wird noch nicht unterstützt");
+				List<String> listErreichbarkeit =
+						_mapErreichbarkeitenByKanal.computeIfAbsent(erreichbarkeit.codekey, (final @NotNull String k) -> new ArrayList<String>());
+				if (listErreichbarkeit != null)
+					listErreichbarkeit.add(erreichbarkeit.codewert);
 			}
 		}
 	}
@@ -288,12 +264,39 @@ public class SchuldateiOrganisationseinheitAdressManager {
 
 
 	/**
+	 * Gibt die Liste der Erreichbarkeiten für den gegebenen Codekey zurück
+	 * Kanäle sind: https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit
+	 *   01: Email
+	 *   02: Festnetznummer
+	 *   03: Mobilnummer
+	 *   04: Faxnummer
+	 *   05: Instant Messanger
+	 *   06: Pager
+	 *   07: Sonstiges
+	 *   08: De-Mail
+	 *   09: Web
+	 *
+	 * @param codekey   der Kanal der Erreichbarkeit
+	 *
+	 * @return die Liste mit den Einträgen für den angegebenen codekey (Kanal)
+	 */
+	public @NotNull List<String> getErreichbarkeitenAufKanal(final @NotNull String codekey) {
+		List<String> listErreichbarkeiten = this._mapErreichbarkeitenByKanal.get(codekey);
+		if (listErreichbarkeiten == null) {
+			listErreichbarkeiten = new ArrayList<>();
+			this._mapErreichbarkeitenByKanal.put(codekey, listErreichbarkeiten);
+		}
+		return listErreichbarkeiten;
+	}
+
+
+	/**
 	 * Gibt die Festnetznummern zu dieser Adresse zurück
 	 *
 	 * @return die Liste der entsprechenden Festnetznummern
 	 */
 	public @NotNull List<String> getFestnetznummern() {
-		return this._festnetzNummern;
+		return this.getErreichbarkeitenAufKanal("02");
 	}
 
 
@@ -303,7 +306,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 * @return die Liste der entsprechenden Mobilnummern
 	 */
 	public @NotNull List<String> getMobilnummern() {
-		return this._mobilNummern;
+		return this.getErreichbarkeitenAufKanal("03");
 	}
 
 
@@ -313,7 +316,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 * @return die Liste der entsprechenden Faxnummern
 	 */
 	public @NotNull List<String> getFaxnummern() {
-		return this._faxNummern;
+		return this.getErreichbarkeitenAufKanal("04");
 	}
 
 
@@ -323,7 +326,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 * @return die Liste der entsprechenden Emailadressen
 	 */
 	public @NotNull List<String> getEmailadressen() {
-		return this._emailAdressen;
+		return this.getErreichbarkeitenAufKanal("01");
 	}
 
 
@@ -333,7 +336,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 * @return die Liste der entsprechenden Webadressen
 	 */
 	public @NotNull List<String> getWebadressen() {
-		return this._webAdressen;
+		return this.getErreichbarkeitenAufKanal("09");
 	}
 
 }

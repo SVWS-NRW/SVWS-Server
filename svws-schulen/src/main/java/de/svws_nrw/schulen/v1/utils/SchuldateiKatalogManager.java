@@ -30,6 +30,8 @@ public class SchuldateiKatalogManager {
 	/** Eine Map von dem Schlüssel der Katalog-Einträge auf eine Menge von zugeordneten Katalog-Einträgen */
 	private final @NotNull Map<String, Set<SchuldateiKatalogeintrag>> _mapEintraegeBySchluessel = new HashMap<>();
 
+	/** Cache: Eine Map der Einträge anhand des Schuljahres */
+	private final @NotNull Map<Integer, List<SchuldateiKatalogeintrag>> _mapKatalogeintraegeBySchuljahr = new HashMap<>();
 
 	/**
 	 * Erstellt einen neuen Katalog-Manager.
@@ -161,4 +163,48 @@ public class SchuldateiKatalogManager {
 		return eintrag.bezeichnung;
 	}
 
+
+	/**
+	 * Gibt die Katalogwerte für das angegebene Schuljahr zurück
+	 *
+	 * @param schuljahr    das Schuljahr, zu dem die Werte geliefert werden
+	 *
+	 * @return die Liste der Katalogwerte, die in dem Schuljahr gültig sind
+	 */
+	public @NotNull List<SchuldateiKatalogeintrag> getEintraege(final int schuljahr) {
+		final List<SchuldateiKatalogeintrag> list = this._mapKatalogeintraegeBySchuljahr.get(schuljahr);
+		if (list != null)
+			return list;
+		// Wenn nicht, dann bestimme alle (!) Einträge, welche in den Zeitraum fallen ...
+		final @NotNull List<SchuldateiKatalogeintrag> listEintraege = new ArrayList<>();
+		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._eintraege)
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+				listEintraege.add(eintrag);
+		this._mapKatalogeintraegeBySchuljahr.put(schuljahr, listEintraege);
+		return listEintraege;
+	}
+
+
+	/**
+	 * Gibt die Katalogwerte für einen Schuljahresbereich zurück
+	 *
+	 * @param schuljahrVon			das erste Schuljahr
+	 * @param schuljahrBis			das letzte Schuljahr
+	 * @param mitTeilgueltigkeit	wenn true, werden auch die Einträge geliefert, die nicht im gesamten Zeitraum gültig sind
+	 *
+	 * @return die Liste mit den gültigen Einträgen
+	 */
+	public @NotNull List<SchuldateiKatalogeintrag> getEintraegeBereich(final int schuljahrVon, final int schuljahrBis, final boolean mitTeilgueltigkeit) {
+		final @NotNull List<SchuldateiKatalogeintrag> listEintraege = getEintraege(schuljahrVon);
+		final @NotNull Set<SchuldateiKatalogeintrag> setEintraege = new HashSet<>(listEintraege);
+		for (int jahr = schuljahrVon + 1; jahr <= schuljahrBis; jahr++) {
+			final @NotNull List<SchuldateiKatalogeintrag> list = getEintraege(jahr);
+			if (mitTeilgueltigkeit)
+				setEintraege.addAll(list);
+			else
+				setEintraege.retainAll(list);
+		}
+		final @NotNull List<SchuldateiKatalogeintrag> liste = new ArrayList<>(setEintraege);
+		return liste;
+	}
 }

@@ -7,6 +7,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
 import { HashSet } from '../../../java/util/HashSet';
 
 export class SchuldateiKatalogManager extends JavaObject {
@@ -35,6 +36,11 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * Eine Map von dem Schlüssel der Katalog-Einträge auf eine Menge von zugeordneten Katalog-Einträgen
 	 */
 	private readonly _mapEintraegeBySchluessel : JavaMap<string, JavaSet<SchuldateiKatalogeintrag>> = new HashMap<string, JavaSet<SchuldateiKatalogeintrag>>();
+
+	/**
+	 * Cache: Eine Map der Einträge anhand des Schuljahres
+	 */
+	private readonly _mapKatalogeintraegeBySchuljahr : JavaMap<number, List<SchuldateiKatalogeintrag>> = new HashMap<number, List<SchuldateiKatalogeintrag>>();
 
 
 	/**
@@ -87,9 +93,37 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * @return die Liste der Katalog-Eintrag für den Schlüssel existiert der Schlüssel nicht,
 	 *         so wird eine leere Menge zurückgegeben
 	 */
-	public getEintraege(schluessel : string | null) : JavaSet<SchuldateiKatalogeintrag> {
-		const tmp : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(schluessel);
-		return (tmp === null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
+	public getEintraege(schluessel : string | null) : JavaSet<SchuldateiKatalogeintrag>;
+
+	/**
+	 * Gibt die Katalogwerte für das angegebene Schuljahr zurück
+	 *
+	 * @param schuljahr    das Schuljahr, zu dem die Werte geliefert werden
+	 *
+	 * @return die Liste der Katalogwerte, die in dem Schuljahr gültig sind
+	 */
+	public getEintraege(schuljahr : number) : List<SchuldateiKatalogeintrag>;
+
+	/**
+	 * Implementation for method overloads of 'getEintraege'
+	 */
+	public getEintraege(__param0 : null | number | string) : JavaSet<SchuldateiKatalogeintrag> | List<SchuldateiKatalogeintrag> {
+		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
+			const schluessel : string | null = __param0;
+			const tmp : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(schluessel);
+			return (tmp === null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
+		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
+			const schuljahr : number = __param0 as number;
+			const list : List<SchuldateiKatalogeintrag> | null = this._mapKatalogeintraegeBySchuljahr.get(schuljahr);
+			if (list !== null)
+				return list;
+			const listEintraege : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
+			for (const eintrag of this._eintraege)
+				if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+					listEintraege.add(eintrag);
+			this._mapKatalogeintraegeBySchuljahr.put(schuljahr, listEintraege);
+			return listEintraege;
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -171,6 +205,29 @@ export class SchuldateiKatalogManager extends JavaObject {
 		if (eintrag === null)
 			throw new IllegalArgumentException("Es konnte kein Katalog-Eintrag für den Wert " + wert! + " gefunden werden.")
 		return eintrag.bezeichnung;
+	}
+
+	/**
+	 * Gibt die Katalogwerte für einen Schuljahresbereich zurück
+	 *
+	 * @param schuljahrVon			das erste Schuljahr
+	 * @param schuljahrBis			das letzte Schuljahr
+	 * @param mitTeilgueltigkeit	wenn true, werden auch die Einträge geliefert, die nicht im gesamten Zeitraum gültig sind
+	 *
+	 * @return die Liste mit den gültigen Einträgen
+	 */
+	public getEintraegeBereich(schuljahrVon : number, schuljahrBis : number, mitTeilgueltigkeit : boolean) : List<SchuldateiKatalogeintrag> {
+		const listEintraege : List<SchuldateiKatalogeintrag> = this.getEintraege(schuljahrVon);
+		const setEintraege : JavaSet<SchuldateiKatalogeintrag> = new HashSet<SchuldateiKatalogeintrag>(listEintraege);
+		for (let jahr : number = schuljahrVon + 1; jahr <= schuljahrBis; jahr++) {
+			const list : List<SchuldateiKatalogeintrag> = this.getEintraege(jahr);
+			if (mitTeilgueltigkeit)
+				setEintraege.addAll(list);
+			else
+				setEintraege.retainAll(list);
+		}
+		const liste : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>(setEintraege);
+		return liste;
 	}
 
 	transpilerCanonicalName(): string {
