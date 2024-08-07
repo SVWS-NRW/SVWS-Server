@@ -100,6 +100,23 @@ export class SchuldateiUtils extends JavaObject {
 		return true;
 	}
 
+	/**
+	 * Prüft, ob zwei SchuldateiEintrag zeitliche Überlappung haben
+	 * Keine zeitliche Überlappung liegt vor
+	 * |----1a----|                 |----1b----|
+	 *               |----2----|
+	 * keine Überlappung bei:  (1.bis kleiner 2.ab || 2.bis kleiner 1.ab)
+	 *       Überlappung bei: !(1.bis kleiner 2.ab || 2.bis kleiner 1.ab)
+	 *
+	 * @param eintrag1		der eine Eintrag
+	 * @param eintrag2		der andere Eintrag
+	 *
+	 * @return				ob die Einträge überlappend sind
+	 */
+	public static pruefeUeberlappung(eintrag1 : SchuldateiEintrag, eintrag2 : SchuldateiEintrag) : boolean {
+		return !(SchuldateiUtils.istFrueher(eintrag1.gueltigbis, eintrag2.gueltigab) || SchuldateiUtils.istFrueher(eintrag2.gueltigbis, eintrag1.gueltigab));
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.schulen.v1.utils.SchuldateiUtils';
 	}

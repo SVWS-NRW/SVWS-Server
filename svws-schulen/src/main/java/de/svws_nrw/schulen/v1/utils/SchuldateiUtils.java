@@ -103,4 +103,21 @@ public final class SchuldateiUtils {
 		return true;
 	}
 
+
+	/**
+	 * Prüft, ob zwei SchuldateiEintrag zeitliche Überlappung haben
+	 * Keine zeitliche Überlappung liegt vor
+	 * |----1a----|                 |----1b----|
+	 *               |----2----|
+	 * keine Überlappung bei:  (1.bis kleiner 2.ab || 2.bis kleiner 1.ab)
+	 *       Überlappung bei: !(1.bis kleiner 2.ab || 2.bis kleiner 1.ab)
+	 *
+	 * @param eintrag1		der eine Eintrag
+	 * @param eintrag2		der andere Eintrag
+	 *
+	 * @return				ob die Einträge überlappend sind
+	 */
+	public static boolean pruefeUeberlappung(final @NotNull SchuldateiEintrag eintrag1, final @NotNull SchuldateiEintrag eintrag2) {
+		return !(istFrueher(eintrag1.gueltigbis, eintrag2.gueltigab) || istFrueher(eintrag2.gueltigbis, eintrag1.gueltigab));
+	}
 }

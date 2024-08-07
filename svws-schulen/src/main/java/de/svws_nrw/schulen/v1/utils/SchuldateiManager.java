@@ -26,47 +26,62 @@ public final class SchuldateiManager {
 	/** Die Kataloge zu der Schuldatei anhand ihrer Namen */
 	private final @NotNull Map<String, SchuldateiKatalogManager> _mapKataloge = new HashMap<>();
 
-	/** Der Katalog der Arten von Organisationseinheiten*/
-	public final @NotNull SchuldateiKatalogManager katalogOrganisationseinheitarten;
+	/** Der Katalog der Arten von Adressen */
+	public final @NotNull SchuldateiKatalogManager katalogAddressarten;
+
+	/** Der Katalog der Arten von Attributen */
+	public final @NotNull SchuldateiKatalogManager katalogAttribute;
+
+	/** Der Katalog der Schulbetriebsschlüssel (Betriebsschlüssel)*/
+	public final @NotNull SchuldateiKatalogManager katalogSchulbetriebsschluessel;
 
 	/** Der Katalog der Erreichbarkeiten */
 	public final @NotNull SchuldateiKatalogManager katalogErreichbarkeiten;
 
-	/** Der Katalog der Schulformen */
-	public final @NotNull SchuldateiKatalogManager katalogSchulformen;
+	/** Der Katalog der Gliederung */
+	public final @NotNull SchuldateiKatalogManager katalogGliederungen;
 
-	/** Der Katalog der Liegenschaften */
-	public final @NotNull SchuldateiKatalogManager katalogLiegenschaftsarten;
-
-	/** Der Katalog der Schulträger */
-	public final @NotNull SchuldateiKatalogManager katalogArtDerTraegerschaft;
-
-	/** Der Katalog der Betriebsschlüssel */
-	public final @NotNull SchuldateiKatalogManager katalogSchulbetriebsschluessel;
-
-	/** Der Katalog der Kommunikationsgruppen */
-	public final @NotNull SchuldateiKatalogManager katalogKommunikationsgruppen;
+	/** Der Katalog der Hauptstandortart (Hauptstandortadresse) */
+	public final @NotNull SchuldateiKatalogManager katalogHauptstandort;
 
 	/** Der Katalog der Art von Heimen/Internaten */
 	public final @NotNull SchuldateiKatalogManager katalogHeimInternat;
 
-	/** Der Katalog der Schularten */
-	public final @NotNull SchuldateiKatalogManager katalogSchularten;
+	/** Der Katalog der Kommunikationsgruppen */
+	public final @NotNull SchuldateiKatalogManager katalogKommunikationsgruppen;
+
+	/** Der Katalog der Liegenschaften */
+	public final @NotNull SchuldateiKatalogManager katalogLiegenschaftsarten;
+
+	/** Der Katalog der Merkmal */
+	public final @NotNull SchuldateiKatalogManager katalogMerkmale;
+
+	/** Der Katalog der Eigenschaften von Organisationseinheiten */
+	public final @NotNull SchuldateiKatalogManager katalogOergangisationseinheitEigenschaften;
+
+	/** Der Katalog der Arten von Organisationseinheiten*/
+	public final @NotNull SchuldateiKatalogManager katalogOrganisationseinheitarten;
+
+	/** Der Katalog der Qualitäten zu den Ortskoordinaten */
+	public final @NotNull SchuldateiKatalogManager katalogQualitaetenVerortung;
 
 	/** Der Katalog des Rechtstatus von Schulen */
 	public final @NotNull SchuldateiKatalogManager katalogRechtsstatus;
 
 	/** Der Katalog der Schließungsgründe */
-	public final @NotNull SchuldateiKatalogManager katalogSchliessungsGrund;
+	public final @NotNull SchuldateiKatalogManager katalogSchliessungsGruende;
+
+	/** Der Katalog der Schularten */
+	public final @NotNull SchuldateiKatalogManager katalogSchularten;
 
 	/** Der Katalog der Schulaufsichten */
 	public final @NotNull SchuldateiKatalogManager katalogSchulaufsicht;
 
-	/** Der Katalog der Eigenschaften von Organisationseinheiten */
-	public final @NotNull SchuldateiKatalogManager katalogOergangisationseinheitEigenschaften;
+	/** Der Katalog der Schulformen */
+	public final @NotNull SchuldateiKatalogManager katalogSchulformen;
 
-	/** Der Katalog der Arten von Adressen */
-	public final @NotNull SchuldateiKatalogManager katalogAddressarten;
+	/** Der Katalog der Schulträger */
+	public final @NotNull SchuldateiKatalogManager katalogArtDerTraegerschaft;
 
 	/** Eine Map mit den Managern für alle Organisationseinheiten, welche den Schulnummern ihrer Organisationseinheiten zugeordnet sind */
 	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitManager> _mapOrganisationseinheitManagerBySchulnummer = new HashMap<>();
@@ -107,22 +122,27 @@ public final class SchuldateiManager {
 			if (katalog != null)
 				katalog.addEintrag(eintrag);
 		}
-		katalogOrganisationseinheitarten = getKatalogFromMap("OrganisationseinheitArt");
-		katalogErreichbarkeiten = getKatalogFromMap("Erreichbarkeit");
-		katalogSchulformen = getKatalogFromMap("Schulform");
-		katalogLiegenschaftsarten = getKatalogFromMap("LiegenschaftArt");
-		katalogArtDerTraegerschaft = getKatalogFromMap("Traeger");
-		katalogSchulbetriebsschluessel = getKatalogFromMap("Betriebsschluessel");
-		katalogKommunikationsgruppen = getKatalogFromMap("Kommunikationsgruppe");
-		katalogHeimInternat = getKatalogFromMap("HeimInternat");
-		katalogSchularten = getKatalogFromMap("Schulart");
-		katalogRechtsstatus = getKatalogFromMap("Rechtsstatus");
-		katalogSchliessungsGrund = getKatalogFromMap("SchliessungGrund");
-		katalogSchulaufsicht = getKatalogFromMap("Schulaufsicht");
-		katalogOergangisationseinheitEigenschaften = getKatalogFromMap("OE_Eigenschaften");
 		katalogAddressarten = getKatalogFromMap("ArtDerAdresse");
+		katalogAttribute = getKatalogFromMap("Attribut");
+		katalogSchulbetriebsschluessel = getKatalogFromMap("Betriebsschluessel");
+		katalogErreichbarkeiten = getKatalogFromMap("Erreichbarkeit");
+		katalogGliederungen = getKatalogFromMap("Gliederung");
+		katalogHauptstandort = getKatalogFromMap("Hauptstandortadresse");
+		katalogHeimInternat = getKatalogFromMap("HeimInternat");
+		katalogKommunikationsgruppen = getKatalogFromMap("Kommunikationsgruppe");
+		katalogLiegenschaftsarten = getKatalogFromMap("LiegenschaftArt");
+		katalogMerkmale = getKatalogFromMap("Merkmal");
+		katalogOergangisationseinheitEigenschaften = getKatalogFromMap("OE_Eigenschaften");
+		katalogOrganisationseinheitarten = getKatalogFromMap("OrganisationseinheitArt");
+		katalogQualitaetenVerortung = getKatalogFromMap("QualitaetVerortung");
+		katalogRechtsstatus = getKatalogFromMap("Rechtsstatus");
+		katalogSchliessungsGruende = getKatalogFromMap("SchliessungGrund");
+		katalogSchularten = getKatalogFromMap("Schulart");
+		katalogSchulaufsicht = getKatalogFromMap("Schulaufsicht");
+		katalogSchulformen = getKatalogFromMap("Schulform");
+		katalogArtDerTraegerschaft = getKatalogFromMap("Traeger");
 
-		// Durchwandere die Organisationseinheiten
+		// Durchwandere die Organisationseinheiten und erzeuge Manager für jede Organisationseinheit
 		for (final @NotNull SchuldateiOrganisationseinheit organisationseinheit : schuldatei.organisationseinheit) {
 			// Prüfe, ob die Schulnummer schonmal eingelesen wurde. In diesem Fall sind die Daten der Schuldatei inkonsistent
 			if (_mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer))
@@ -130,6 +150,11 @@ public final class SchuldateiManager {
 						+ organisationseinheit.schulnummer + ")");
 			_mapOrganisationseinheitManagerBySchulnummer.put(organisationseinheit.schulnummer,
 					new SchuldateiOrganisationseinheitManager(this, organisationseinheit));
+		}
+
+		// Durchwandere die Organisationseinheiten und prüfe die Referenzen auf andere Organisationseinheiten
+		for (final @NotNull SchuldateiOrganisationseinheitManager manager : this._mapOrganisationseinheitManagerBySchulnummer.values()) {
+			manager.validateOeReferenzen();
 		}
 	}
 

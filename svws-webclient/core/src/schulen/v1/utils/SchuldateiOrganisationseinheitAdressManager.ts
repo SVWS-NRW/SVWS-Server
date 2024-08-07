@@ -1,8 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuldateiManager } from '../../../schulen/v1/utils/SchuldateiManager';
 import { SchuldateiOrganisationseinheitAdresse } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitAdresse';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuldateiOrganisationseinheitManager } from '../../../schulen/v1/utils/SchuldateiOrganisationseinheitManager';
+import type { List } from '../../../java/util/List';
+import { JavaString } from '../../../java/lang/JavaString';
+import { SchuldateiOrganisationseinheitErreichbarkeit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitErreichbarkeit';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
 
 export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 
@@ -22,6 +27,31 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 	private readonly _adresse : SchuldateiOrganisationseinheitAdresse;
 
 	/**
+	 * Die Festnetznummern (codekey=02) zu der Adresse
+	 */
+	private readonly _festnetzNummern : List<string>;
+
+	/**
+	 * Die Mobilnummern (codekey=03) zu der Adresse
+	 */
+	private readonly _mobilNummern : List<string>;
+
+	/**
+	 * Die Faxnummern (codekey=04) zu der Adresse
+	 */
+	private readonly _faxNummern : List<string>;
+
+	/**
+	 * Die Emails (codekey=01) zu der Adresse
+	 */
+	private readonly _emailAdressen : List<string>;
+
+	/**
+	 * Die URLs (codekey=09) zu der Adresse
+	 */
+	private readonly _webAdressen : List<string>;
+
+	/**
 	 * Die Art der Adresse
 	 */
 	private readonly _artDerAdresse : string;
@@ -39,18 +69,46 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 	 * @param managerSchuldatei             der Manager für die Schuldatei
 	 * @param managerOrganisationseinheit   der Manager für die Organisationseinheit
 	 * @param adresse                       die Adresse der Organisationseinheit
+	 * @param erreichbarkeiten				die Erreichbarkeiten der Organisationseinheit
 	 */
-	public constructor(managerSchuldatei : SchuldateiManager, managerOrganisationseinheit : SchuldateiOrganisationseinheitManager, adresse : SchuldateiOrganisationseinheitAdresse) {
+	public constructor(managerSchuldatei : SchuldateiManager, managerOrganisationseinheit : SchuldateiOrganisationseinheitManager, adresse : SchuldateiOrganisationseinheitAdresse, erreichbarkeiten : List<SchuldateiOrganisationseinheitErreichbarkeit>) {
 		super();
 		this._managerSchuldatei = managerSchuldatei;
 		this._managerOrganisationseinheit = managerOrganisationseinheit;
 		this._adresse = adresse;
+		this._festnetzNummern = new ArrayList();
+		this._mobilNummern = new ArrayList();
+		this._faxNummern = new ArrayList();
+		this._emailAdressen = new ArrayList();
+		this._webAdressen = new ArrayList();
 		if (this._managerOrganisationseinheit.getSchulnummer() !== this._adresse.schulnummer)
-			throw new IllegalArgumentException("Die Schulnummer " + adresse.schulnummer + " bei der Adresse mit der ID " + adresse.id + " passt nicht zu der Schulnummer der Organisationseinheit " + this._managerOrganisationseinheit.getSchulnummer() + ".")
-		this._artDerAdresse = (adresse.adresstypeid === null) ? "" : ("" + adresse.adresstypeid);
+			throw new IllegalArgumentException("Die Schulnummer " + this._adresse.schulnummer + " bei der Adresse mit der ID " + this._adresse.id + " passt nicht zu der Schulnummer der Organisationseinheit " + this._managerOrganisationseinheit.getSchulnummer() + ".")
+		if (!this._managerSchuldatei.katalogQualitaetenVerortung.hatEintrag(this._adresse.qualitaetverortung))
+			throw new IllegalArgumentException("Der Wert von QualitätVerortung '" + this._adresse.qualitaetverortung + "' bei der Adresse mit der ID " + this._adresse.id + " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer() + " ist im zugehörigen Katalog nicht vorhanden.")
+		this._artDerAdresse = (this._adresse.adresstypeid === null) ? "" : ("" + this._adresse.adresstypeid);
 		if (!this._managerSchuldatei.katalogAddressarten.hatEintrag(this._artDerAdresse))
-			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + adresse.id + " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer() + " ist im zugehörigen Katalog nicht vorhanden.")
+			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + this._adresse.id + " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer() + " ist im zugehörigen Katalog nicht vorhanden.")
+		if (!this._managerSchuldatei.katalogHauptstandort.hatEintrag(this._adresse.hauptstandortadresse))
+			throw new IllegalArgumentException("Der Wert von Hauptstandortadresse '" + this._adresse.hauptstandortadresse + "' bei der Adresse mit der ID " + this._adresse.id + " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer() + " ist im zugehörigen Katalog nicht vorhanden.")
 		this._istHauptstandort = JavaObject.equalsTranspiler("1", (adresse.hauptstandortadresse));
+		for (const erreichbarkeit of erreichbarkeiten) {
+			if (((erreichbarkeit.liegenschaft === 0) || (erreichbarkeit.liegenschaft === adresse.liegenschaft)) && (erreichbarkeit.codekey !== null) && (SchuldateiUtils.pruefeUeberlappung(erreichbarkeit, adresse))) {
+				if (JavaString.compareTo(erreichbarkeit.codekey, "01") === 0)
+					this._emailAdressen.add(erreichbarkeit.codewert);
+				else
+					if (JavaString.compareTo(erreichbarkeit.codekey, "02") === 0)
+						this._festnetzNummern.add(erreichbarkeit.codewert);
+					else
+						if (JavaString.compareTo(erreichbarkeit.codekey, "03") === 0)
+							this._mobilNummern.add(erreichbarkeit.codewert);
+						else
+							if (JavaString.compareTo(erreichbarkeit.codekey, "04") === 0)
+								this._faxNummern.add(erreichbarkeit.codewert);
+							else
+								if (JavaString.compareTo(erreichbarkeit.codekey, "09") === 0)
+									this._webAdressen.add(erreichbarkeit.codewert);
+			}
+		}
 	}
 
 	/**
@@ -205,6 +263,51 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 	 */
 	public getGueltigBis() : string | null {
 		return this._adresse.gueltigbis;
+	}
+
+	/**
+	 * Gibt die Festnetznummern zu dieser Adresse zurück
+	 *
+	 * @return die Liste der entsprechenden Festnetznummern
+	 */
+	public getFestnetznummern() : List<string> {
+		return this._festnetzNummern;
+	}
+
+	/**
+	 * Gibt die Mobilnummern zu dieser Adresse zurück
+	 *
+	 * @return die Liste der entsprechenden Mobilnummern
+	 */
+	public getMobilnummern() : List<string> {
+		return this._mobilNummern;
+	}
+
+	/**
+	 * Gibt die Faxnummern zu dieser Adresse zurück
+	 *
+	 * @return die Liste der entsprechenden Faxnummern
+	 */
+	public getFaxnummern() : List<string> {
+		return this._faxNummern;
+	}
+
+	/**
+	 * Gibt die Emailadressen zu dieser Adresse zurück
+	 *
+	 * @return die Liste der entsprechenden Emailadressen
+	 */
+	public getEmailadressen() : List<string> {
+		return this._emailAdressen;
+	}
+
+	/**
+	 * Gibt die Webadressen zu dieser Adresse zurück
+	 *
+	 * @return die Liste der entsprechenden Webadressen
+	 */
+	public getWebadressen() : List<string> {
+		return this._webAdressen;
 	}
 
 	transpilerCanonicalName(): string {

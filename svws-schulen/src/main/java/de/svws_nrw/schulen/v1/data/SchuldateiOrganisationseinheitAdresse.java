@@ -44,7 +44,7 @@ public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
 	/** Qualität der Verortung */
 	@Schema(description = "Qualität der Verortung")
-	public long qualitaetverortung;
+	public int qualitaetverortung;
 
 	/** Koordinatenrechtswert der Adresse */
 	@Schema(description = "Koordinatenrechtswert der Adresse")

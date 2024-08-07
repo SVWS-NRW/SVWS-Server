@@ -27,9 +27,19 @@ export class SchuldateiManager extends JavaObject {
 	private readonly _mapKataloge : JavaMap<string, SchuldateiKatalogManager> = new HashMap<string, SchuldateiKatalogManager>();
 
 	/**
-	 * Der Katalog der Arten von Organisationseinheiten
+	 * Der Katalog der Arten von Adressen
 	 */
-	public readonly katalogOrganisationseinheitarten : SchuldateiKatalogManager;
+	public readonly katalogAddressarten : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Arten von Attributen
+	 */
+	public readonly katalogAttribute : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Schulbetriebsschlüssel (Betriebsschlüssel)
+	 */
+	public readonly katalogSchulbetriebsschluessel : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Erreichbarkeiten
@@ -37,29 +47,14 @@ export class SchuldateiManager extends JavaObject {
 	public readonly katalogErreichbarkeiten : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Schulformen
+	 * Der Katalog der Gliederung
 	 */
-	public readonly katalogSchulformen : SchuldateiKatalogManager;
+	public readonly katalogGliederungen : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Liegenschaften
+	 * Der Katalog der Hauptstandortart (Hauptstandortadresse)
 	 */
-	public readonly katalogLiegenschaftsarten : SchuldateiKatalogManager;
-
-	/**
-	 * Der Katalog der Schulträger
-	 */
-	public readonly katalogArtDerTraegerschaft : SchuldateiKatalogManager;
-
-	/**
-	 * Der Katalog der Betriebsschlüssel
-	 */
-	public readonly katalogSchulbetriebsschluessel : SchuldateiKatalogManager;
-
-	/**
-	 * Der Katalog der Kommunikationsgruppen
-	 */
-	public readonly katalogKommunikationsgruppen : SchuldateiKatalogManager;
+	public readonly katalogHauptstandort : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Art von Heimen/Internaten
@@ -67,9 +62,34 @@ export class SchuldateiManager extends JavaObject {
 	public readonly katalogHeimInternat : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Schularten
+	 * Der Katalog der Kommunikationsgruppen
 	 */
-	public readonly katalogSchularten : SchuldateiKatalogManager;
+	public readonly katalogKommunikationsgruppen : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Liegenschaften
+	 */
+	public readonly katalogLiegenschaftsarten : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Merkmal
+	 */
+	public readonly katalogMerkmale : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Eigenschaften von Organisationseinheiten
+	 */
+	public readonly katalogOergangisationseinheitEigenschaften : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Arten von Organisationseinheiten
+	 */
+	public readonly katalogOrganisationseinheitarten : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Qualitäten zu den Ortskoordinaten
+	 */
+	public readonly katalogQualitaetenVerortung : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog des Rechtstatus von Schulen
@@ -79,7 +99,12 @@ export class SchuldateiManager extends JavaObject {
 	/**
 	 * Der Katalog der Schließungsgründe
 	 */
-	public readonly katalogSchliessungsGrund : SchuldateiKatalogManager;
+	public readonly katalogSchliessungsGruende : SchuldateiKatalogManager;
+
+	/**
+	 * Der Katalog der Schularten
+	 */
+	public readonly katalogSchularten : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Schulaufsichten
@@ -87,14 +112,14 @@ export class SchuldateiManager extends JavaObject {
 	public readonly katalogSchulaufsicht : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Eigenschaften von Organisationseinheiten
+	 * Der Katalog der Schulformen
 	 */
-	public readonly katalogOergangisationseinheitEigenschaften : SchuldateiKatalogManager;
+	public readonly katalogSchulformen : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Arten von Adressen
+	 * Der Katalog der Schulträger
 	 */
-	public readonly katalogAddressarten : SchuldateiKatalogManager;
+	public readonly katalogArtDerTraegerschaft : SchuldateiKatalogManager;
 
 	/**
 	 * Eine Map mit den Managern für alle Organisationseinheiten, welche den Schulnummern ihrer Organisationseinheiten zugeordnet sind
@@ -118,24 +143,32 @@ export class SchuldateiManager extends JavaObject {
 			if (katalog !== null)
 				katalog.addEintrag(eintrag);
 		}
-		this.katalogOrganisationseinheitarten = this.getKatalogFromMap("OrganisationseinheitArt");
-		this.katalogErreichbarkeiten = this.getKatalogFromMap("Erreichbarkeit");
-		this.katalogSchulformen = this.getKatalogFromMap("Schulform");
-		this.katalogLiegenschaftsarten = this.getKatalogFromMap("LiegenschaftArt");
-		this.katalogArtDerTraegerschaft = this.getKatalogFromMap("Traeger");
-		this.katalogSchulbetriebsschluessel = this.getKatalogFromMap("Betriebsschluessel");
-		this.katalogKommunikationsgruppen = this.getKatalogFromMap("Kommunikationsgruppe");
-		this.katalogHeimInternat = this.getKatalogFromMap("HeimInternat");
-		this.katalogSchularten = this.getKatalogFromMap("Schulart");
-		this.katalogRechtsstatus = this.getKatalogFromMap("Rechtsstatus");
-		this.katalogSchliessungsGrund = this.getKatalogFromMap("SchliessungGrund");
-		this.katalogSchulaufsicht = this.getKatalogFromMap("Schulaufsicht");
-		this.katalogOergangisationseinheitEigenschaften = this.getKatalogFromMap("OE_Eigenschaften");
 		this.katalogAddressarten = this.getKatalogFromMap("ArtDerAdresse");
+		this.katalogAttribute = this.getKatalogFromMap("Attribut");
+		this.katalogSchulbetriebsschluessel = this.getKatalogFromMap("Betriebsschluessel");
+		this.katalogErreichbarkeiten = this.getKatalogFromMap("Erreichbarkeit");
+		this.katalogGliederungen = this.getKatalogFromMap("Gliederung");
+		this.katalogHauptstandort = this.getKatalogFromMap("Hauptstandortadresse");
+		this.katalogHeimInternat = this.getKatalogFromMap("HeimInternat");
+		this.katalogKommunikationsgruppen = this.getKatalogFromMap("Kommunikationsgruppe");
+		this.katalogLiegenschaftsarten = this.getKatalogFromMap("LiegenschaftArt");
+		this.katalogMerkmale = this.getKatalogFromMap("Merkmal");
+		this.katalogOergangisationseinheitEigenschaften = this.getKatalogFromMap("OE_Eigenschaften");
+		this.katalogOrganisationseinheitarten = this.getKatalogFromMap("OrganisationseinheitArt");
+		this.katalogQualitaetenVerortung = this.getKatalogFromMap("QualitaetVerortung");
+		this.katalogRechtsstatus = this.getKatalogFromMap("Rechtsstatus");
+		this.katalogSchliessungsGruende = this.getKatalogFromMap("SchliessungGrund");
+		this.katalogSchularten = this.getKatalogFromMap("Schulart");
+		this.katalogSchulaufsicht = this.getKatalogFromMap("Schulaufsicht");
+		this.katalogSchulformen = this.getKatalogFromMap("Schulform");
+		this.katalogArtDerTraegerschaft = this.getKatalogFromMap("Traeger");
 		for (const organisationseinheit of schuldatei.organisationseinheit) {
 			if (this._mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer))
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")")
 			this._mapOrganisationseinheitManagerBySchulnummer.put(organisationseinheit.schulnummer, new SchuldateiOrganisationseinheitManager(this, organisationseinheit));
+		}
+		for (const manager of this._mapOrganisationseinheitManagerBySchulnummer.values()) {
+			manager.validateOeReferenzen();
 		}
 	}
 

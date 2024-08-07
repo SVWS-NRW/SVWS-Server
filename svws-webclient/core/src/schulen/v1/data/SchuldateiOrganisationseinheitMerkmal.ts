@@ -23,7 +23,7 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	public merkmal : string = "";
 
 	/**
-	 * Die Merkmalsgruppe
+	 * Die Merkmalsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)
 	 */
 	public merkmalgruppe : string = "";
 
@@ -33,7 +33,7 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	public attribut : string | null = null;
 
 	/**
-	 * Die Attributsgruppe
+	 * Die Attributsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)
 	 */
 	public attributgruppe : string | null = null;
 

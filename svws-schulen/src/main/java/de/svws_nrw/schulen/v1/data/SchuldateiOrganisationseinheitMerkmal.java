@@ -29,7 +29,7 @@ public class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	@Schema(description = "das Merkmal", example = "32")
 	public @NotNull String merkmal = "";
 
-	/** Die Merkmalsgruppe */
+	/** Die Merkmalsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)*/
 	@Schema(description = "die Merkmalsgruppe", example = "2")
 	public @NotNull String merkmalgruppe = "";
 
@@ -37,7 +37,7 @@ public class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	@Schema(description = "Das Attribut", example = "55")
 	public String attribut;
 
-	/** Die Attributsgruppe*/
+	/** Die Attributsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)*/
 	@Schema(description = "Die Attributsgruppe", example = "-1")
 	public String attributgruppe;
 
