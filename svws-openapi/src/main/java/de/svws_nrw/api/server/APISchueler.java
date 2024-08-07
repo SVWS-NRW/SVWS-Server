@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
+import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schueler.SchuelerVermerke;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittBemerkungen;
@@ -32,6 +33,7 @@ import de.svws_nrw.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
+import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
@@ -128,6 +130,32 @@ public class APISchueler {
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
+	 *
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param vermerkart   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den einzelnen Schülern
+	 */
+	@GET
+	@Path("/vermerkart/{vermerkart : \\d+}")
+	@Operation(summary = "Gibt eine Übersicht von allen Schülern welche einen Vermerk mit der angegebenen Vermerkart haben zurück.",
+			description = "Erstellt eine Liste aller Schüler der angegebenen Vermerkart unter Angabe der ID."
+					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
+			content = @Content(mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = SchuelerVermerkartZusammenfassung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
+	public Response getSchuelerByVermerkartID(@PathParam("schema") final String schema, @PathParam("vermerkart") final long vermerkart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerkartenZusammenfassung(conn).getListByVermerkartIdAsResponse(vermerkart),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
 
 
 	/**
@@ -804,7 +832,34 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
 	public Response getVermerkdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIDasResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getBySchuelerIdAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Vermerke eines Schülers.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+	 *                soll
+	 * @param vermerkArt      die Datenbank-ID zur Identifikation des Vermerart
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Vermerkdaten des Schülers
+	 */
+	@GET
+	@Path("/vermerke/vermerkart/{vermerkArt : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Vermerkdaten.",
+			description = "Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerke besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Vermerkdaten des Schülers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerVermerke.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden")
+	public Response getVermerkdatenByVermerkArt(@PathParam("schema") final String schema, @PathParam("vermerkArt") final long vermerkArt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).getListByVermerkartIdAsResponse(vermerkArt),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
@@ -836,7 +891,7 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Vermerke", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patch(vid, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).patchAsResponse(vid, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
@@ -865,7 +920,7 @@ public class APISchueler {
 			@RequestBody(description = "Die Daten des Vermerks", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerVermerke.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}
@@ -892,7 +947,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Vermerk mit der angegebenen ID gefunden")
 	public Response deleteSchuelerVermerk(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID,
 			@PathParam("idVermerk") final long idVermerk, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).delete(idVermerk),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerke(conn).deleteAsResponse(idVermerk),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN);
 	}

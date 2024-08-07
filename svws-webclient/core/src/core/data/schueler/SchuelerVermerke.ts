@@ -15,7 +15,7 @@ export class SchuelerVermerke extends JavaObject {
 	/**
 	 * Die ID der Vermerkart des Vermerks.
 	 */
-	public idVermerkart : number = 0;
+	public idVermerkart : number | null = null;
 
 	/**
 	 * Das Datum der Erstellung oder letzten Bearbeitung.
@@ -59,9 +59,7 @@ export class SchuelerVermerke extends JavaObject {
 		if (obj.idSchueler === undefined)
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		if (obj.idVermerkart === undefined)
-			 throw new Error('invalid json format, missing attribute idVermerkart');
-		result.idVermerkart = obj.idVermerkart;
+		result.idVermerkart = (obj.idVermerkart === undefined) ? null : obj.idVermerkart === null ? null : obj.idVermerkart;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
 		if (obj.bemerkung === undefined)
 			 throw new Error('invalid json format, missing attribute bemerkung');
@@ -75,7 +73,7 @@ export class SchuelerVermerke extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"idVermerkart" : ' + obj.idVermerkart + ',';
+		result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart) + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung!) + ',';
 		result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
@@ -94,7 +92,7 @@ export class SchuelerVermerke extends JavaObject {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
 		if (obj.idVermerkart !== undefined) {
-			result += '"idVermerkart" : ' + obj.idVermerkart + ',';
+			result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart) + ',';
 		}
 		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';

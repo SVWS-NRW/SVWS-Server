@@ -13,21 +13,23 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!validatorVermerkBezeichnung(vermerkart.bezeichnung)"> Speichern </svws-ui-button>
+			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!validatorVermerkBezeichnung(vermerkart.bezeichnung) || (vermerkart.bezeichnung.length === 0)"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
+	import type { VermerkartenManager } from '@core';
 	import { VermerkartEintrag } from '@core';
-	import { ref } from 'vue';
 	import type { Ref } from "vue";
 	import type { InputDataType } from '@ui';
 
+	import { ref } from 'vue';
+
 	const props = defineProps<{
 		addEintrag: (vermerkart: Partial<VermerkartEintrag>) => Promise<void>;
-		mapKatalogeintraege: Map<number, VermerkartEintrag>;
+		vermerkartenManager : () => VermerkartenManager;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -41,14 +43,14 @@
 	function validatorVermerkBezeichnung(value: InputDataType) : boolean {
 		if ((value === undefined) || (value === null))
 			return true;
-		for (const eintrag of props.mapKatalogeintraege.values())
+		for (const eintrag of props.vermerkartenManager().liste.list())
 			if (eintrag.bezeichnung === value.toString().trim())
 				return false;
 		return true;
 	}
 
 	async function saveEntries() : Promise<void> {
-		const postCandidate: Partial<VermerkartEintrag> =  {bezeichnung: vermerkart.value.bezeichnung};
+		const postCandidate: Partial<VermerkartEintrag> = {bezeichnung: vermerkart.value.bezeichnung};
 		showModal().value = false;
 		await props.addEintrag(postCandidate);
 	}

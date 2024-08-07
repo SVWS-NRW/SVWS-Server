@@ -388,6 +388,7 @@ export { SchuelerSchulbesuchMerkmal } from './core/data/schueler/SchuelerSchulbe
 export { SchuelerSchulbesuchSchule } from './core/data/schueler/SchuelerSchulbesuchSchule';
 export { SchuelerSchulbesuchsdaten } from './core/data/schueler/SchuelerSchulbesuchsdaten';
 export { SchuelerStammdaten } from './core/data/schueler/SchuelerStammdaten';
+export { SchuelerVermerkartZusammenfassung } from './core/data/schueler/SchuelerVermerkartZusammenfassung';
 export { SchuelerVermerke } from './core/data/schueler/SchuelerVermerke';
 export { Sprachbelegung } from './core/data/schueler/Sprachbelegung';
 export { Sprachendaten } from './core/data/schueler/Sprachendaten';
@@ -676,6 +677,8 @@ export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/gost/klau
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
+export { VermerkArtUtils } from './core/utils/kataloge/vermerkart/VermerkArtUtils';
+export { VermerkartenManager } from './core/utils/kataloge/vermerkart/VermerkartenManager';
 export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
 export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
 export { KursListeManager } from './core/utils/kurse/KursListeManager';

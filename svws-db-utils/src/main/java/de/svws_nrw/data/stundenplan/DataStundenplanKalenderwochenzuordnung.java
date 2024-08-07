@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataStundenplanKalenderwochenzuordnung
 		extends DataManagerRevised<Long, DTOStundenplanKalenderwochenZuordnung, StundenplanKalenderwochenzuordnung> {
 
-	private Long stundenplanID = null;
+	private final Long stundenplanID;
 
 	/**
 	 * Erstellt einen neuen Manager.
@@ -37,6 +37,11 @@ public final class DataStundenplanKalenderwochenzuordnung
 		// Prüfe ggf. ob der Stundenplan existiert
 		if (stundenplanID != null)
 			DataStundenplan.getDTOStundenplan(conn, stundenplanID);
+	}
+
+	@Override
+	protected Long getID(final Map<String, Object> attributes) {
+		return (Long) attributes.get("id");
 	}
 
 
@@ -59,8 +64,8 @@ public final class DataStundenplanKalenderwochenzuordnung
 
 
 	@Override
-	protected void mapAttribute(final DBEntityManager conn, final DTOStundenplanKalenderwochenZuordnung dto, final String name, final Object value,
-			final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOStundenplanKalenderwochenZuordnung dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);

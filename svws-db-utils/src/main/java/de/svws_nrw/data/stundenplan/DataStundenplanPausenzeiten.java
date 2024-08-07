@@ -66,8 +66,8 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 
 
 	@Override
-	protected void mapAttribute(final DBEntityManager conn, final DTOStundenplanPausenzeit dto, final String name, final Object value,
-			final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOStundenplanPausenzeit dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);

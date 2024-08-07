@@ -1157,7 +1157,7 @@ public class APIStundenplan {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).patchMultipleAsResponse("id", is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).patchMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
 	}

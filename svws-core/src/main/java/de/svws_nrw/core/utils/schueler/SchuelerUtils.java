@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.schueler;
 import java.util.Comparator;
 
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -13,7 +14,6 @@ public final class SchuelerUtils {
 	private SchuelerUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
-
 
 	/** Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten. */
 	public static final @NotNull Comparator<SchuelerListeEintrag> comparator =
@@ -28,5 +28,14 @@ public final class SchuelerUtils {
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};
 
+	/** Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten. */
+	public static final @NotNull Comparator<SchuelerVermerkartZusammenfassung> comparatorSchuelerVermerkartZusammenfassung =
+			(final @NotNull SchuelerVermerkartZusammenfassung a, final @NotNull SchuelerVermerkartZusammenfassung b) -> {
+				int cmp = a.nachname.compareTo(b.nachname);
+				if (cmp != 0)
+					return cmp;
+				cmp = a.vorname.compareTo(b.vorname);
+				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+			};
 
 }

@@ -146,6 +146,7 @@ import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
 import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
+import { SchuelerVermerkartZusammenfassung } from '../core/data/schueler/SchuelerVermerkartZusammenfassung';
 import { SchuelerVermerke } from '../core/data/schueler/SchuelerVermerke';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
@@ -9907,6 +9908,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerByVermerkartID für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/vermerkart/{vermerkart : \d+}
+	 *
+	 * Erstellt eine Liste aller Schüler der angegebenen Vermerkart unter Angabe der ID.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerVermerkartZusammenfassung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Keine Schüler-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} vermerkart - der Pfad-Parameter vermerkart
+	 *
+	 * @returns Eine Liste von Schüler-Listen-Einträgen
+	 */
+	public async getSchuelerByVermerkartID(schema : string, vermerkart : number) : Promise<List<SchuelerVermerkartZusammenfassung>> {
+		const path = "/db/{schema}/schueler/vermerkart/{vermerkart : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{vermerkart\s*(:[^{}]+({[^{}]+})*)?}/g, vermerkart.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerVermerkartZusammenfassung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerkartZusammenfassung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/vermerke
 	 *
 	 * Erstellt einen neuen Vermerk EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Vermerkdaten besitzt.
@@ -9955,6 +9985,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{vid\s*(:[^{}]+({[^{}]+})*)?}/g, vid.toString());
 		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getVermerkdatenByVermerkArt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/vermerke/vermerkart/{vermerkArt : \d+}
+	 *
+	 * Liest die Vermerkdaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten und Vermerke besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Vermerkdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerVermerke>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Schüler-Vermerk-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} vermerkArt - der Pfad-Parameter vermerkArt
+	 *
+	 * @returns Die Vermerkdaten des Schülers
+	 */
+	public async getVermerkdatenByVermerkArt(schema : string, vermerkArt : number) : Promise<List<SchuelerVermerke>> {
+		const path = "/db/{schema}/schueler/vermerke/vermerkart/{vermerkArt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{vermerkArt\s*(:[^{}]+({[^{}]+})*)?}/g, vermerkArt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerVermerke>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

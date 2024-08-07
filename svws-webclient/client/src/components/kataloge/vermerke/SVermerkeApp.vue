@@ -1,10 +1,10 @@
 <template>
-	<template v-if="auswahl">
+	<template v-if="vermerkartenManager().hasDaten()">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3 capitalize">{{ auswahl.bezeichnung }}</span>
+				<span class="inline-block mr-3 capitalize">{{ vermerkartenManager().auswahl().bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ auswahl.id }}
+					ID: {{ vermerkartenManager().auswahl().id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
@@ -12,6 +12,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</template>
+
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-archive-line" />
 	</div>
@@ -21,6 +22,6 @@
 
 	import type { VermerkeAppProps } from "./SVermerkeAppProps";
 
-	const props = defineProps<VermerkeAppProps>();
+	defineProps<VermerkeAppProps>();
 
 </script>

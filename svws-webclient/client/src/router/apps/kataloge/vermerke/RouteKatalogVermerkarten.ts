@@ -15,6 +15,7 @@ import type { VermerkeAppProps } from "~/components/kataloge/vermerke/SVermerkeA
 import type { VermerkeAuswahlProps } from "~/components/kataloge/vermerke/SVermerkeAuswahlProps";
 import { RouteDataKatalogVermerke } from "./RouteDataKatalogVermerke";
 
+import { routeError } from "~/router/error/RouteError";
 
 const SVermerkAuswahl = () => import("~/components/kataloge/vermerke/SVermerkeAuswahl.vue")
 const SVermerkApp = () => import("~/components/kataloge/vermerke/SVermerkeApp.vue")
@@ -34,24 +35,31 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined) {
 			await this.data.ladeListe();
 		} else {
-			const id = parseInt(to_params.id);
-			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if ((eintrag === undefined) && (this.data.auswahl !== undefined)) {
+			if (!this.data.vermerkartenManager.hasDaten())
 				await this.data.ladeListe();
-				return this.getRoute(this.data.auswahl.id);
+
+			const idVermerkart = RouteNode.getIntParam(to_params, "id");
+
+			if (idVermerkart instanceof Error)
+				return routeError.getRoute(idVermerkart);
+
+			if (idVermerkart === undefined)
+				return routeError.getRoute(idVermerkart);
+
+			const eintrag = this.data.vermerkartenManager.liste.get(idVermerkart)
+
+			if (eintrag) {
+				return this.data.setEintrag(eintrag);
 			}
-			else if (eintrag)
-				this.data.setEintrag(eintrag);
 		}
-		if ((to.name === this.name) && (this.data.auswahl !== undefined))
-			return this.getRoute(this.data.auswahl.id);
+
+		if ((to.name === this.name)) {
+			const route = this.getRoute(this.data.vermerkartenManager.auswahl().id)
+			return route;
+		}
 	}
 
 	public getRoute(id: number|undefined) : RouteLocationRaw {
@@ -60,24 +68,22 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 
 	public getAuswahlProps(to: RouteLocationNormalized): VermerkeAuswahlProps {
 		return {
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
-			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeKataloge.returnToKataloge
+			returnToKataloge: routeKataloge.returnToKataloge,
+			vermerkartenManager: () => this.data.vermerkartenManager,
+			commit: this.data.enforceCommit,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): VermerkeAppProps {
 		return {
-			auswahl: this.data.auswahl,
-			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
 			tabs: this.getTabs(),
 			tabsHidden: this.children_hidden().value,
+			vermerkartenManager: () => this.data.vermerkartenManager,
 		};
 	}
 

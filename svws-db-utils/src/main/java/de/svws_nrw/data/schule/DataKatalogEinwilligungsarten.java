@@ -104,8 +104,8 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 
 	@Override
-	protected void mapAttribute(final DBEntityManager conn, final DTOKatalogEinwilligungsart dto, final String name, final Object value,
-			final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
 		final PersonTyp personTyp = (map.containsKey("personTyp")) ? PersonTyp.getByID(JSONMapper.convertToInteger(map.get("personTyp"), true)) : dto.personTyp;
 		switch (name) {
 			case "id" -> {

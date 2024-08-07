@@ -266,8 +266,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	}
 
 	@Override
-	protected void mapAttribute(final DBEntityManager conn, final DTOKlassen dto, final String name, final Object value, final Map<String, Object> map)
-			throws ApiOperationException {
+	protected void mapAttribute(final DTOKlassen dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
 			case "kuerzel" -> {
 				// Prüfen, ob das Klassenkürzel bereits im Schuljahresabschnitt existiert
