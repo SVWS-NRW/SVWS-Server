@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
@@ -48,6 +49,7 @@ import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
 import de.svws_nrw.data.schule.DataKatalogAllgemeineMerkmale;
@@ -862,6 +864,33 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
+	 *
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param vermerkart   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den einzelnen Schülern
+	 */
+	@GET
+	@Path("/vermerkart/{vermerkart : \\d+}/schuelerinfos")
+	@Operation(summary = "Gibt eine Übersicht von allen Schülern welche einen Vermerk mit der angegebenen Vermerkart haben zurück.",
+			description = "Erstellt eine Liste aller Schüler der angegebenen Vermerkart unter Angabe der ID."
+					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
+			content = @Content(mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = SchuelerVermerkartZusammenfassung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
+	public Response getSchuelerByVermerkartID(@PathParam("schema") final String schema, @PathParam("vermerkart") final long vermerkart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerkartenZusammenfassung(conn).getListByVermerkartIdAsResponse(vermerkart),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 
