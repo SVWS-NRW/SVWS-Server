@@ -18,7 +18,7 @@
 					{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
+					<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
 				</template>
 				<template #cell(kuerzel)="{ rowData }">
 					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}
@@ -33,7 +33,7 @@
 					{{ kMan().vorgabeBySchuelerklausurTermin(rowData).dauer }}
 				</template>
 				<template #cell(raum)="{ rowData }">
-					{{ raummanager.stundenplanraumGetBySchuelerklausurtermin(rowData)?.kuerzel ?? "-" }}
+					{{ kMan().stundenplanraumGetBySchuelerklausurtermin(rowData)?.kuerzel ?? "-" }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>

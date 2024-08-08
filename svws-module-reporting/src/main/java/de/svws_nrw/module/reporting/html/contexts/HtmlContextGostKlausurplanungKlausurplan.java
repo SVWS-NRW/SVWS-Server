@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import org.thymeleaf.context.Context;
+
+import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
-import org.thymeleaf.context.Context;
 
 
 /**
@@ -43,18 +44,14 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHlabjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT valdiert. Die Daten aus den Paramatern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
-		final List<Integer> abiturjahrgaenge = new ArrayList<>();
-		final List<Integer> gostHalbjahre = new ArrayList<>();
 
+		final List<Pair<Integer, Integer>> selection = new ArrayList<>();
 		for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-			abiturjahrgaenge.add(Math.toIntExact(parameterDaten.get(i)));
-			gostHalbjahre.add(Math.toIntExact(parameterDaten.get(i + 1)));
+			selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 		}
 
-		// TODO: Parameter von DataGostKlausuren.getAllData sollten eine Liste fassen können, statt einem einzigen Jahrgang.
-		final GostKlausurenMetaDataCollection allData = DataGostKlausuren.getAllData(reportingRepository.conn(), abiturjahrgaenge.getFirst(),
-				GostHalbjahr.fromID(gostHalbjahre.getFirst()));
-		final GostKursklausurManager gostKlausurManager = new GostKursklausurManager(allData);
+		final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
+		final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
 
 		final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
 				new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKursklausurManager, Schulform, ServerMode, Vector } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode, Vector } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -22,7 +22,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.hatStundenplanManager)
+		if (!routeGostKlausurplanung.data.manager.getStundenplanManagerOrNull())
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
 		return false;
 	}
@@ -40,13 +40,14 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
 		const idTermin = !to_params.idtermin ? null : parseInt(to_params.idtermin);
-		const terminList = routeGostKlausurplanung.data.kursklausurmanager.terminMitDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
+		const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
 		if (idTermin === null && !terminList.isEmpty()) {
-			const termin = routeGostKlausurplanung.data.raummanager !== undefined ? routeGostKlausurplanung.data.raummanager.getHauptTermin() : terminList.getFirst();
+			const termin = routeGostKlausurplanung.data.terminSelected.value !== undefined && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
 			return this.getRoute(abiturjahr, halbjahr.id,  termin.id);
 		}
 		if (idTermin !== null) {
-			const termin = routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrException(idTermin);
+			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idTermin);
+			// routeGostKlausurplanung.data.terminSelected.value = termin;
 			await routeGostKlausurplanung.data.setRaumTermin(termin);
 		}
 	}
@@ -56,9 +57,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			gotoTermin: routeGostKlausurplanung.data.gotoTermin,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
-			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
-			hatStundenplanManager: routeGostKlausurplanung.data.hatStundenplanManager,
+			kMan: () => routeGostKlausurplanung.data.manager,
 			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
 			loescheKlausurraum: routeGostKlausurplanung.data.loescheKlausurraum,
 			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
@@ -66,7 +65,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			setRaumTermin: routeGostKlausurplanung.data.setRaumTermin,
-			raummanager: () => routeGostKlausurplanung.data.raummanager,
+			terminSelected: routeGostKlausurplanung.data.terminSelected,
 			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 			setConfigValue: routeGostKlausurplanung.data.setConfigValue,

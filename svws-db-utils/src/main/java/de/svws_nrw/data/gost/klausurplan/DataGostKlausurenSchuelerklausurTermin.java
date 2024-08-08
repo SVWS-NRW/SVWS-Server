@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.Pair;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -19,8 +19,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurvorgabenManager;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
@@ -280,7 +279,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostNachschreibterminblockungKonfiguration config)
+	public static GostKlausurenCollectionAllData blocken(final DBEntityManager conn, final GostNachschreibterminblockungKonfiguration config)
 			throws ApiOperationException {
 		final List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
 		listSktsManager.addAll(config.schuelerklausurtermine);
@@ -289,8 +288,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 		final List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSktsManager);
 		final List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
 
-		final GostKlausurvorgabenManager vMan = new GostKlausurvorgabenManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks));
-		final GostKursklausurManager kMan = new GostKursklausurManager(vMan, listKks, config.termine, listSks, listSktsManager);
+		final GostKlausurplanManager kMan = new GostKlausurplanManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks), listKks, config.termine, listSks, listSktsManager);
 
 		final KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
 
@@ -324,7 +322,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 		}
 		conn.transactionPersistAll(mapNachschreiber.values());
 
-		final GostKlausurenDataCollection blockungsDaten = new GostKlausurenDataCollection();
+		final GostKlausurenCollectionAllData blockungsDaten = new GostKlausurenCollectionAllData();
 		blockungsDaten.schuelerklausurtermine = DTOMapper.mapList(mapNachschreiber.values(), dtoMapper);
 		blockungsDaten.termine = DTOMapper.mapList(mapNeueTermine.values(), DataGostKlausurenTermin.dtoMapper);
 		return blockungsDaten;

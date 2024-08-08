@@ -15,9 +15,9 @@
 
 	<h3 class="border-b text-headline-md">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h3>
 	<table>
-		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur.id)" :key="s.id">
+		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id">
 			<td>
-				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin.id)">
+				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin)">
 					<span class="line-through text-red-500">
 						{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).vorname }}
 					</span>
@@ -28,7 +28,7 @@
 				</span>
 			</td>
 			<td v-if="patchKlausur && createSchuelerklausurTermin">
-				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin.id)" @click="terminSelected = s; showModalTerminGrund().value = true">
+				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; showModalTerminGrund().value = true">
 					<svws-ui-tooltip>
 						<template #content>
 							Klausur nicht mitgeschrieben
@@ -42,17 +42,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostKlausurenCollectionSkrsKrs} from '@core';
+	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostKlausurenCollectionSkrsKrsData} from '@core';
 	import { GostSchuelerklausurTermin } from '@core';
 	import type { Ref} from 'vue';
 	import { ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
-		kMan: () => GostKursklausurManager;
+		kMan: () => GostKlausurplanManager;
 		kursklausur: GostKursklausur;
 		termin?: GostKlausurtermin;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	}>(), {
 		termin: undefined,
 		createSchuelerklausurTermin: undefined,

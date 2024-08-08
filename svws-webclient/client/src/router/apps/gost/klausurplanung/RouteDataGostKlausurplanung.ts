@@ -1,10 +1,10 @@
 
-import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile} from "@core";
-import { ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
-import { GostSchuelerklausurTermin, HashMap } from "@core";
-import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
+import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile } from "@core";
+import { GostKlausurenCollectionAllData, ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
+import { GostSchuelerklausurTermin } from "@core";
+import { GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException, GostKlausurenMetaDataCollection } from "@core";
+import { StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
 import { computed } from "vue";
 
@@ -24,12 +24,9 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	abschnitt : Schuljahresabschnitt | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	halbjahr: GostHalbjahr;
-	kursklausurmanager: GostKursklausurManager | undefined;
-	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
-	stundenplanmanager: StundenplanManager | undefined;
+	manager: GostKlausurplanManager;
 	kalenderwoche: StundenplanKalenderwochenzuordnung;
 	termin: GostKlausurtermin | undefined;
-	raummanager: GostKlausurraumManager | undefined;
 }
 
 const defaultState = <RouteStateGostKlausurplanung> {
@@ -37,11 +34,8 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	abschnitt: undefined,
 	jahrgangsdaten: undefined,
 	halbjahr: GostHalbjahr.EF1,
-	kursklausurmanager: undefined,
-	klausurvorgabenmanager: undefined,
-	stundenplanmanager: undefined,
+	manager: new GostKlausurplanManager(),
 	view: routeGostKlausurplanungVorgaben,
-	raummanager: undefined,
 	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
 	termin: undefined,
 };
@@ -91,12 +85,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				halbjahr: this._state.value.halbjahr,
 				view: view,
 			}
-			if (this._state.value.klausurvorgabenmanager)
-				Object.assign(result, {klausurvorgabenmanager: this._state.value.klausurvorgabenmanager});
-			if (this._state.value.kursklausurmanager)
-				Object.assign(result, {kursklausurmanager: this._state.value.kursklausurmanager});
-			if (this._state.value.stundenplanmanager)
-				Object.assign(result, {stundenplanmanager: this._state.value.stundenplanmanager});
+			if (this._state.value.manager)
+				Object.assign(result, {manager: this._state.value.manager});
 			if (this._state.value.kalenderwoche !== undefined)
 				Object.assign(result, {kalenderwoche: this._state.value.kalenderwoche});
 			// Setze den State neu
@@ -132,12 +122,12 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				halbjahr: halbjahr,
 			}
 			if (this._state.value.abiturjahr === -1) {
-				if (!this.hatKlausurvorgabenManager) {
+				if (!this.manager.isVorgabenInitialized()) {
 					const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
+					this.manager.vorgabeAddAll(listKlausurvorgaben);
 					const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
 					const faecherManager = new GostFaecherManager(listFaecher);
-					const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, listKlausurvorgaben);
-					Object.assign(result, {klausurvorgabenmanager});
+					this.manager.setFaecherManager(faecherManager);
 				}
 				this.setPatchedState(result);
 				return true;
@@ -149,25 +139,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				return true;
 			}
 			Object.assign(result, {abschnitt});
-			if (!this.hatKursklausurManager) {
+			if (!this.manager.isKlausurenInitialized()) {
 				const klausurdatenGzip = await api.server.getGostKlausurenMetaCollectionOberstufeGZip(api.schema, this.abiturjahr, halbjahr.id);
 				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-				const klausurdaten = GostKlausurenMetaDataCollection.transpilerFromJSON(await klausurdatenBlob.text());
-				const faecherManager = new GostFaecherManager(klausurdaten.faecher);
-				const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, klausurdaten.klausurdata.vorgaben);
-				const kursklausurmanager = new GostKursklausurManager(klausurvorgabenmanager, klausurdaten.klausurdata.kursklausuren, klausurdaten.klausurdata.termine, klausurdaten.klausurdata.schuelerklausuren, klausurdaten.klausurdata.schuelerklausurtermine);
-				kursklausurmanager.setKursManager(new KursManager(klausurdaten.kurse));
-				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
-				for (const l of klausurdaten.lehrer)
-					mapLehrer.put(l.id, l);
-				const mapSchueler = new HashMap<number, SchuelerListeEintrag>();
-				for (const l of klausurdaten.schueler)
-					mapSchueler.put(l.id, l);
-				kursklausurmanager.setLehrerMap(mapLehrer);
-				kursklausurmanager.setSchuelerMap(mapSchueler);
-				Object.assign(result, {kursklausurmanager, klausurvorgabenmanager});
+				const klausurdaten = GostKlausurenCollectionAllData.transpilerFromJSON(await klausurdatenBlob.text());
+				const manager = new GostKlausurplanManager(klausurdaten);
+				Object.assign(result, {	manager });
+				this.setPatchedState(result);
 			}
-			if (!this.hatStundenplanManager) {
+			if (!this.manager.getStundenplanManagerOrNull()) {
 				const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 				if (listStundenplaene.isEmpty()) {
 					this.setPatchedState(result);
@@ -181,9 +161,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
 				const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 				const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
+				this.manager.setStundenplanManager(stundenplanmanager);
 				if (this.kalenderwoche.value.jahr === -1)
 					this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
-				Object.assign(result, {	stundenplanmanager });
 			}
 			this.setPatchedState(result);
 			return true;
@@ -192,39 +172,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 	}
 
-	public get hatStundenplanManager(): boolean {
-		return this._state.value.stundenplanmanager !== undefined;
-	}
-
-	public get stundenplanmanager(): StundenplanManager {
-		if (this._state.value.stundenplanmanager === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Stundenplan-Manager zur Verfügung steht.");
-		return this._state.value.stundenplanmanager;
-	}
-
-
-	public get hatKursklausurManager(): boolean {
-		return this._state.value.kursklausurmanager !== undefined;
-	}
-
-	public get kursklausurmanager(): GostKursklausurManager {
-		if (this._state.value.kursklausurmanager === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Kurs-Klausur-Manager zur Verfügung steht.");
-		return this._state.value.kursklausurmanager;
-	}
-
-	public get hatKlausurvorgabenManager(): boolean {
-		return this._state.value.klausurvorgabenmanager !== undefined;
-	}
-
-	public get klausurvorgabenmanager(): GostKlausurvorgabenManager {
-		if (this._state.value.klausurvorgabenmanager === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Klausur-Vorgaben-Manager zur Verfügung steht.");
-		return this._state.value.klausurvorgabenmanager;
-	}
-
-	public get raummanager(): GostKlausurraumManager | undefined {
-		return this._state.value.raummanager;
+	public get manager(): GostKlausurplanManager {
+		return this._state.value.manager;
 	}
 
 	public getConfigValue(key: string): string {
@@ -236,10 +185,11 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	setRaumTermin = async (termin: GostKlausurtermin | null) => {
-		if (this._state.value.raummanager === undefined || termin !== this._state.value.raummanager.getHauptTermin()) {
-			this._state.value.raummanager = termin !== null ? await this.erzeugeKlausurraummanager(termin) : undefined;
-			this.commit();
+		if (termin !== null && (this.terminSelected.value === undefined || !this.terminSelected.value.equals(termin))) {
+			this.terminSelected.value = termin;
+			await this.erzeugeKlausurraummanager(termin);
 		}
+		this.commit();
 	}
 
 	quartalsauswahl = computed<0 | 1 | 2>({
@@ -304,7 +254,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		terminNeu.istHaupttermin = ht;
 		delete terminNeu.id;
 		const termin = await api.server.createGostKlausurenKlausurtermin(terminNeu, api.schema);
-		this.kursklausurmanager.terminAdd(termin);
+		this.manager.terminAdd(termin);
 		this.commit();
 		api.status.stop();
 		return termin;
@@ -316,12 +266,12 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		for (const termin of termine)
 			terminIds.add(termin.id);
 		await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
-		this.kursklausurmanager.terminRemoveAll(termine);
+		this.manager.terminRemoveAll(termine);
 		this.commit();
 		api.status.stop();
 	}
 
-	patchKlausur = async (klausur: GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin>): Promise<GostKlausurenCollectionSkrsKrs> => {
+	patchKlausur = async (klausur: GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin>): Promise<GostKlausurenCollectionSkrsKrsData> => {
 		try {
 			api.status.start();
 			delete patch.id;
@@ -330,14 +280,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
 				const result = await api.server.patchGostKlausurenKursklausur(patch, api.schema, klausur.id, this._state.value.abschnitt.id);
 				if (result.kursKlausurPatched !== null)
-					this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched);
+					this.manager.kursklausurPatchAttributes(result.kursKlausurPatched);
 				return result;
 			} else if (klausur instanceof GostSchuelerklausurTermin) {
-				const _schuelerklausurtermin = this.kursklausurmanager.schuelerklausurterminGetByIdOrException(klausur.id);
+				const _schuelerklausurtermin = this.manager.schuelerklausurterminGetByIdOrException(klausur.id);
 				await api.server.patchGostKlausurenSchuelerklausurtermin(patch, api.schema, klausur.id);
-			 	this.kursklausurmanager.schuelerklausurterminPatchAttributes(Object.assign(_schuelerklausurtermin, patch));
+			 	this.manager.schuelerklausurterminPatchAttributes(Object.assign(_schuelerklausurtermin, patch));
 			}
-			return new GostKlausurenCollectionSkrsKrs();
+			return new GostKlausurenCollectionSkrsKrsData();
 		} finally {
 			this.commit();
 			api.status.stop();
@@ -347,7 +297,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
 		api.status.start();
 		const neueVorgaben = await api.server.createDefaultGostKlausurenVorgaben(api.schema, this.halbjahr.id, quartal);
-		this.klausurvorgabenmanager.vorgabeAddAll(neueVorgaben);
+		this.manager.vorgabeAddAll(neueVorgaben);
 		this.commit();
 		api.status.stop();
 	}
@@ -359,7 +309,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		vorgabe.halbjahr = this.halbjahr.id;
 		try {
 			const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
-			this.klausurvorgabenmanager.vorgabeAdd(neueVorgabe);
+			this.manager.vorgabeAdd(neueVorgabe);
 		} finally {
 			this.commit();
 			api.status.stop();
@@ -369,7 +319,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number) => {
 		api.status.start();
 		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, id);
-		this.klausurvorgabenmanager.vorgabePatchAttributes(Object.assign(this.klausurvorgabenmanager.vorgabeGetByIdOrException(id), vorgabe));
+		this.manager.vorgabePatchAttributes(Object.assign(this.manager.vorgabeGetByIdOrException(id), vorgabe));
 		this.commit();
 		api.status.stop();
 	}
@@ -377,7 +327,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	loescheKlausurvorgabe = async (idVorgabe: number) => {
 		api.status.start();
 		await api.server.deleteGostKlausurenVorgabe(api.schema, idVorgabe);
-		this.klausurvorgabenmanager.vorgabeRemoveById(idVorgabe);
+		this.manager.vorgabeRemoveById(idVorgabe);
 		this.commit();
 		api.status.stop();
 	}
@@ -386,9 +336,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		try {
 			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-			this.kursklausurmanager.kursklausurAddAll(result.kursklausuren);
-			this.kursklausurmanager.schuelerklausurAddAll(result.schuelerklausuren);
-			this.kursklausurmanager.schuelerklausurterminAddAll(result.schuelerklausurtermine);
+			this.manager.addKlausurData(result);
 		} finally {
 			this.commit();
 			api.status.stop();
@@ -398,10 +346,10 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
 		api.status.start();
 		try {
-			const oldTtermin = this.kursklausurmanager.terminGetByIdOrException(id);
+			const oldTtermin = this.manager.terminGetByIdOrException(id);
 			await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
 			Object.assign(oldTtermin, termin);
-			this.kursklausurmanager.terminPatchAttributes(oldTtermin);
+			this.manager.terminPatchAttributes(oldTtermin);
 		} finally {
 			this.commit();
 			api.status.stop();
@@ -411,60 +359,57 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {
 		api.status.start();
 		const listKlausurvorgaben = await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.klausurvorgabenmanager.vorgabeAddAll(listKlausurvorgaben);
+		this.manager.vorgabeAddAll(listKlausurvorgaben);
 		this.commit();
 		api.status.stop();
 	}
 
-	createKlausurraum = async (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => {
+	createKlausurraum = async (raum: Partial<GostKlausurraum>) => {
 		api.status.start();
 		const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
-		manager.raumAdd(neuerRaum);
+		this.manager.raumAdd(neuerRaum);
 		this.commit();
 		api.status.stop();
 	}
 
-	loescheKlausurraum = async (id: number, manager: GostKlausurraumManager): Promise<boolean> => {
+	loescheKlausurraum = async (id: number): Promise<boolean> => {
 		api.status.start();
 		await api.server.deleteGostKlausurenRaum(api.schema, id);
-		manager.raumRemoveById(id);
+		this.manager.raumRemoveById(id);
 		this.commit();
 		api.status.stop();
 		return true;
 	}
 
-	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager): Promise<boolean> => {
+	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>): Promise<boolean> => {
 		api.status.start();
-		const oldRaum: GostKlausurraum = manager.raumGetByIdOrException(id);
+		const oldRaum: GostKlausurraum = this.manager.raumGetByIdOrException(id);
 		await api.server.patchGostKlausurenRaum(raum, api.schema, id);
-		manager.raumPatchAttributes(Object.assign(oldRaum, raum));
+		this.manager.raumPatchAttributes(Object.assign(oldRaum, raum));
 		this.commit();
 		api.status.stop();
 		return true;
 	}
 
-	erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>): Promise<GostKlausurraumManager> => {
+	erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>) => {
 		api.status.start();
-		let manager;
 		if (termin instanceof GostKlausurtermin) {
-			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-			manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, termin);
+			if (!this.manager.hasRaumdataZuTermin(termin)) {
+				const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
+				this.manager.addRaumData(krsCollection);
+			}
 		} else {
 			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenSktids(termin, api.schema);
-			manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, new GostKlausurtermin());
+			this.manager.addRaumData(krsCollection);
 		}
-		manager.setStundenplanManager(this.stundenplanmanager);
 		api.status.stop();
-		return manager;
 	}
 
-	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<GostKlausurenCollectionSkrsKrs> => {
-		if (!this.raummanager)
-			throw new DeveloperNotificationException('Kein Raummanager gesetzt');
+	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<GostKlausurenCollectionSkrsKrsData> => {
 		if (this._state.value.abschnitt === undefined)
 			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt');
 		if (rRaeume.isEmpty())
-			return new GostKlausurenCollectionSkrsKrs();
+			return new GostKlausurenCollectionSkrsKrsData();
 		api.status.start();
 		const skids = new ArrayList<number>();
 		let collectionSkrsKrs;
@@ -473,7 +418,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		} else {
 			collectionSkrsKrs = await api.server.loescheGostSchuelerklausurenAusRaum(rRaeume, api.schema);
 		}
-		this.raummanager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
+		this.manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
 		api.status.stop();
 		return collectionSkrsKrs;
@@ -482,8 +427,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten) => {
 		api.status.start();
 		const blockung = await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
-		this.kursklausurmanager.terminAddAll(blockung.termine);
-		this.kursklausurmanager.kursklausurMengePatchAttributes(blockung.kursklausuren);
+		this.manager.terminAddAll(blockung.termine);
+		this.manager.kursklausurMengePatchAttributes(blockung.kursklausuren);
 		this.commit();
 		api.status.stop();
 	}
@@ -491,9 +436,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	blockenNachschreiber = async (config: GostNachschreibterminblockungKonfiguration) => {
 		api.status.start();
 		const blockungDaten = await api.server.blockenGostSchuelerklausurtermine(config, api.schema);
-		this.kursklausurmanager.terminAddAll(blockungDaten.termine);
+		this.manager.terminAddAll(blockungDaten.termine);
 		for (const skt of blockungDaten.schuelerklausurtermine)
-			this.kursklausurmanager.schuelerklausurterminPatchAttributes(skt);
+			this.manager.schuelerklausurterminPatchAttributes(skt);
 		this.commit();
 		api.status.stop();
 	}
@@ -501,7 +446,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	updateKlausurblockung = async (update: GostKlausurenUpdate) => {
 		api.status.start();
 		await api.server.updateGostKlausuren(update, api.schema);
-		this.kursklausurmanager.updateExecute(update);
+		this.manager.updateExecute(update);
 		this.commit();
 		api.status.stop();
 	}
@@ -509,7 +454,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	createSchuelerklausurTermin = async (id: number) => {
 		api.status.start();
 		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(api.schema, id);
-		this.kursklausurmanager.schuelerklausurterminAdd(skNeu);
+		this.manager.schuelerklausurterminAdd(skNeu);
 		this.commit();
 		api.status.stop();
 	}

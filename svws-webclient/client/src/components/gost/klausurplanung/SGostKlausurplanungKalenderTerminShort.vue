@@ -5,17 +5,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@core";
+	import type { GostKlausurplanManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@core";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
-		kursklausurmanager: () => GostKursklausurManager;
+		kursklausurmanager: () => GostKlausurplanManager;
 		faecherManager: GostFaecherManager;
 		kursmanager: KursManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
+	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTermin(props.termin);
 	const klausurBezeichnungen = [...klausuren()].map(k => props.kursmanager.get(k.idKurs)?.kuerzel).join(", ");
 
 </script>

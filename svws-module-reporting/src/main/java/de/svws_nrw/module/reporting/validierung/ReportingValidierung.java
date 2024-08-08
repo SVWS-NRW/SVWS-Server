@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
@@ -184,22 +184,20 @@ public final class ReportingValidierung {
 		if ((parameterDaten.size() < 2) && ((parameterDaten.size() % 2) == 1))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Anzahl der Parameter für Abiturjahrgang und Gost-Halbjahr ist falsch.");
 
-		final List<Integer> abiturjahrgaenge = new ArrayList<>();
-		final List<Integer> gostHalbjahre = new ArrayList<>();
+		final List<Pair<Integer, Integer>> selection = new ArrayList<>();
 
 		try {
 			// Lese die Parameter im Wechsel aus.
+
 			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-				abiturjahrgaenge.add(Math.toIntExact(parameterDaten.get(i)));
-				gostHalbjahre.add(Math.toIntExact(parameterDaten.get(i + 1)));
+				selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 			}
+
 			// Prüfe die Parameter in den Listen
-			for (final int wert : abiturjahrgaenge) {
-				if ((wert < 1900) || (wert > 10000))
+			for (final Pair<Integer, Integer> wert : selection) {
+				if ((wert.a < 1900) || (wert.a > 10000))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
-			}
-			for (final int wert : gostHalbjahre) {
-				if ((wert < 0) || (wert > 5))
+				if ((wert.b < 0) || (wert.b > 5))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
 			}
 		} catch (final Exception e) {
@@ -209,9 +207,8 @@ public final class ReportingValidierung {
 
 		// TODO: Parameter von DataGostKlausuren.getAllData sollten eine Liste fassen können, statt einem einzigen Jahrgang.
 		try {
-			final GostKlausurenMetaDataCollection allData = DataGostKlausuren.getAllData(reportingRepository.conn(), abiturjahrgaenge.getFirst(),
-					GostHalbjahr.fromID(gostHalbjahre.getFirst()));
-			final GostKursklausurManager gostKlausurManager = new GostKursklausurManager(allData);
+			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
+			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Zum ausgewählten Schuljahresabschnitt konnten keine Klausurplanungsdaten ermittelt werden.");

@@ -16,23 +16,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Sammlung von neuen GostKlausurraumstunden und GostSchuelerklausurraumstunden, wenn Schülerklausuren über die API einem Raum zugewiesen werden.")
 @TranspilerDTO
-public class GostKlausurenCollectionSkrsKrs {
+public class GostKlausurenCollectionSkrsKrsData {
 
-	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<GostKlausurraum> raeume = new ArrayList<>();
 
-	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<GostKlausurraumstunde> raumstunden = new ArrayList<>();
+	/** Die Liste der Schülerklausuren. */
+	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	public @NotNull GostKlausurenCollectionRaumData raumdata = new GostKlausurenCollectionRaumData();
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
 	public @NotNull List<GostKlausurraumstunde> raumstundenGeloescht = new ArrayList<>();
-
-	/** Die ID der Klausurraumstunde. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<GostSchuelerklausurterminraumstunde> sktRaumstunden = new ArrayList<>();
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")

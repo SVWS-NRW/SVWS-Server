@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ServerMode, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -37,7 +37,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
+			kMan: () => routeGostKlausurplanung.data.manager,
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			createSchuelerklausurTermin: routeGostKlausurplanung.data.createSchuelerklausurTermin,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,

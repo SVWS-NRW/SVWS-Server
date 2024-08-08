@@ -23,6 +23,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -155,22 +156,25 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @param abiturjahr 	das Abiturjahr
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param ganzesSchuljahr true, um Termine für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
+	 * @param plusTerminIds
 	 *
 	 * @return die Liste der Kursklausuren
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr)
+	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr, final List<Long> plusTerminIds)
 			throws ApiOperationException {
 		final GostHalbjahr ghj = (halbjahr <= 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
-		final List<DTOGostKlausurenTermine> terminDTOs = (ghj == null)
-				? conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
-						.setParameter("jgid", abiturjahr)
-						.getResultList()
-				: conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr IN :hj", DTOGostKlausurenTermine.class)
-						.setParameter("jgid", abiturjahr)
-						.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[] { ghj }))
-						.getResultList();
+
+		final String plusHJ = (ghj == null ? "" : " AND t.Halbjahr IN :hj");
+		final String plusTermine = ((plusTerminIds == null || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
+		final TypedQuery<DTOGostKlausurenTermine> query = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid" + plusHJ + plusTermine, DTOGostKlausurenTermine.class)
+				.setParameter("jgid", abiturjahr);
+		if (ghj != null)
+			query.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[] { ghj }));
+		if (plusTermine.length() > 0)
+			query.setParameter("plusIds", plusTerminIds);
+		final List<DTOGostKlausurenTermine> terminDTOs = query.getResultList();
 		return DTOMapper.mapList(terminDTOs, dtoMapper);
 	}
 

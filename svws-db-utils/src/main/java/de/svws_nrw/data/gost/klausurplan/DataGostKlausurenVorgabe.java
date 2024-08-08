@@ -13,14 +13,14 @@ import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -81,14 +81,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenDataCollection createKlausuren(final int hj, final int quartal) throws ApiOperationException {
+	public GostKlausurenCollectionAllData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
 		final List<GostKlausurvorgabe> vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, _abiturjahr, hj, false);
 		if (vorgaben.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
-		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(vorgaben);
 
 		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
 		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
@@ -143,7 +143,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-		final GostKlausurenDataCollection retKlausuren = new GostKlausurenDataCollection();
+		final GostKlausurenCollectionAllData retKlausuren = new GostKlausurenCollectionAllData();
 		retKlausuren.kursklausuren = DTOMapper.mapList(kursklausuren, DataGostKlausurenKursklausur.dtoMapper);
 		retKlausuren.schuelerklausuren = DTOMapper.mapList(schuelerklausuren, DataGostKlausurenSchuelerklausur.dtoMapper);
 		retKlausuren.schuelerklausurtermine = DTOMapper.mapList(sktermine, DataGostKlausurenSchuelerklausurTermin.dtoMapper);
@@ -500,9 +500,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-		final EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
+		final EnumMap<GostHalbjahr, GostKlausurplanManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
-			manager.put(hj, new GostKlausurvorgabenManager(DTOMapper.mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList(), dtoMapper)));
+			manager.put(hj, new GostKlausurplanManager(DTOMapper.mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList(), dtoMapper)));
 		final List<GostFach> faecher = DBUtilsFaecherGost.getFaecherManager(conn, null).getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird

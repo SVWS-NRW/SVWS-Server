@@ -73,6 +73,21 @@ export class ListUtils extends JavaObject {
 	}
 
 	/**
+	 * Liefert zu einer Liste von Listen eine flache Liste.
+	 *
+	 * @param <T>      Der Inhaltstyp der Liste.
+	 * @param listOfLists die Liste von Listen des Inhaltstyps
+	 *
+	 * @return eine flache Liste desselben Inhaltstyps
+	 */
+	public static getFlatted<T>(listOfLists : List<List<T>>) : List<T> {
+		const resultList : List<T> = new ArrayList<T>();
+		for (const currentList of listOfLists)
+			resultList.addAll(currentList);
+		return resultList;
+	}
+
+	/**
 	 * Liefert eine permutierte Kopie der Liste.
 	 *
 	 * @param <T>      Der Inhaltstyp der Liste.

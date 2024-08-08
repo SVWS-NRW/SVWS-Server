@@ -1,5 +1,5 @@
 import type { List, FachDaten, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
-import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
+import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -21,7 +21,7 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
 	manager: SchuelerLernabschnittManager | undefined;
-	klausurManager: GostKursklausurManager | undefined;
+	klausurManager: GostKlausurplanManager | undefined;
 }
 
 const defaultState = <RouteStateDataSchuelerLernabschnitte> {
@@ -63,7 +63,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		return (this._state.value.klausurManager !== undefined);
 	}
 
-	get klausurManager(): GostKursklausurManager {
+	get klausurManager(): GostKlausurplanManager {
 		if (this._state.value.klausurManager === undefined)
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Klausurmanager nicht initialisiert");
 		return this._state.value.klausurManager;
@@ -117,8 +117,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
-				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben);
-				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
+				klausurManager = new GostKlausurplanManager(gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 				klausurManager.setKursManager(new KursManager(listKurse));
 				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
 				for (const l of curState.listLehrer)

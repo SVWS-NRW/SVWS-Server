@@ -4,13 +4,11 @@
 	</Teleport>
 	<div class="page--content relative flex-col">
 		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
-			<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() > 0" class="flex flex-col gap-20 mt-8">
-				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
+			<div v-if="kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() > 0" class="flex flex-col gap-20 mt-8">
+				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 					:key="termin.id"
 					:termin="termin"
-					:k-man="kMan"
-					:erzeuge-klausurraummanager="erzeugeKlausurraummanager"
-					:stundenplanmanager="stundenplanmanager()" />
+					:k-man="kMan" />
 			</div>
 			<div v-else>
 				<span>Es wurden noch keine Klausurtermine geplant.</span>

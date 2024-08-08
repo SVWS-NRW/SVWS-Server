@@ -2,34 +2,29 @@
 import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
-	GostKlausurenCollectionSkrsKrs,
+	GostKlausurenCollectionSkrsKrsData,
 	GostKlausurraum,
-	GostKlausurraumManager,
 	GostKlausurraumRich,
 	GostKlausurtermin,
 	GostKursklausur,
-	GostKursklausurManager,
-	GostSchuelerklausurTermin,
+	GostKlausurplanManager,
 	List,
-	StundenplanManager,
 } from "@core";
-import type { Ref, WritableComputedRef } from "vue";
+import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	gotoTermin: (value: number) => Promise<void>;
-	kMan: () => GostKursklausurManager;
-	stundenplanmanager: () => StundenplanManager;
-	hatStundenplanManager: boolean,
-	raummanager: () => GostKlausurraumManager | undefined;
-	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
-	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrs>;
-	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+	kMan: () => GostKlausurplanManager;
+	createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
+	loescheKlausurraum: (id: number) => Promise<boolean>;
+	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
+	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
+	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	setRaumTermin : (termin: GostKlausurtermin | null) => Promise<void>;
+	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	getConfigValue: (value: string) => string;

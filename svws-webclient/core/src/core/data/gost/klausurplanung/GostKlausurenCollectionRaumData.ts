@@ -1,12 +1,11 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 
-export class GostKlausurenCollectionSkrsKrs extends JavaObject {
+export class GostKlausurenCollectionRaumData extends JavaObject {
 
 	/**
 	 * Die ID der Schülerklausur.
@@ -19,11 +18,6 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
-	 * Die ID der Schülerklausur.
-	 */
-	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
-
-	/**
 	 * Die ID der Klausurraumstunde.
 	 */
 	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
@@ -31,17 +25,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public idKlausurraum : number = -1;
-
-	/**
-	 * Die ID der Klausurraumstunde.
-	 */
-	public idsSchuelerklausurtermine : List<number> = new ArrayList<number>();
-
-	/**
-	 * Die ID der Klausurraumstunde.
-	 */
-	public kursKlausurPatched : GostKursklausur | null = null;
+	public idsKlausurtermine : List<number> = new ArrayList<number>();
 
 
 	public constructor() {
@@ -49,16 +33,16 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs';
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkrsKrs {
+	public static transpilerFromJSON(json : string): GostKlausurenCollectionRaumData {
 		const obj = JSON.parse(json);
-		const result = new GostKlausurenCollectionSkrsKrs();
+		const result = new GostKlausurenCollectionRaumData();
 		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
 			for (const elem of obj.raeume) {
 				result.raeume?.add(GostKlausurraum.transpilerFromJSON(JSON.stringify(elem)));
@@ -69,29 +53,20 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.raumstunden?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.raumstundenGeloescht !== undefined) && (obj.raumstundenGeloescht !== null)) {
-			for (const elem of obj.raumstundenGeloescht) {
-				result.raumstundenGeloescht?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		if ((obj.sktRaumstunden !== undefined) && (obj.sktRaumstunden !== null)) {
 			for (const elem of obj.sktRaumstunden) {
 				result.sktRaumstunden?.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.idKlausurraum === undefined)
-			 throw new Error('invalid json format, missing attribute idKlausurraum');
-		result.idKlausurraum = obj.idKlausurraum;
-		if ((obj.idsSchuelerklausurtermine !== undefined) && (obj.idsSchuelerklausurtermine !== null)) {
-			for (const elem of obj.idsSchuelerklausurtermine) {
-				result.idsSchuelerklausurtermine?.add(elem);
+		if ((obj.idsKlausurtermine !== undefined) && (obj.idsKlausurtermine !== null)) {
+			for (const elem of obj.idsKlausurtermine) {
+				result.idsKlausurtermine?.add(elem);
 			}
 		}
-		result.kursKlausurPatched = ((obj.kursKlausurPatched === undefined) || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
 		return result;
 	}
 
-	public static transpilerToJSON(obj : GostKlausurenCollectionSkrsKrs) : string {
+	public static transpilerToJSON(obj : GostKlausurenCollectionRaumData) : string {
 		let result = '{';
 		if (!obj.raeume) {
 			result += '"raeume" : []';
@@ -117,18 +92,6 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.raumstundenGeloescht) {
-			result += '"raumstundenGeloescht" : []';
-		} else {
-			result += '"raumstundenGeloescht" : [ ';
-			for (let i = 0; i < obj.raumstundenGeloescht.size(); i++) {
-				const elem = obj.raumstundenGeloescht.get(i);
-				result += GostKlausurraumstunde.transpilerToJSON(elem);
-				if (i < obj.raumstundenGeloescht.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
 		if (!obj.sktRaumstunden) {
 			result += '"sktRaumstunden" : []';
 		} else {
@@ -141,26 +104,24 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
-		if (!obj.idsSchuelerklausurtermine) {
-			result += '"idsSchuelerklausurtermine" : []';
+		if (!obj.idsKlausurtermine) {
+			result += '"idsKlausurtermine" : []';
 		} else {
-			result += '"idsSchuelerklausurtermine" : [ ';
-			for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
-				const elem = obj.idsSchuelerklausurtermine.get(i);
+			result += '"idsKlausurtermine" : [ ';
+			for (let i = 0; i < obj.idsKlausurtermine.size(); i++) {
+				const elem = obj.idsKlausurtermine.get(i);
 				result += elem;
-				if (i < obj.idsSchuelerklausurtermine.size() - 1)
+				if (i < obj.idsKlausurtermine.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
-		result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkrsKrs>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionRaumData>) : string {
 		let result = '{';
 		if (obj.raeume !== undefined) {
 			if (!obj.raeume) {
@@ -190,20 +151,6 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (obj.raumstundenGeloescht !== undefined) {
-			if (!obj.raumstundenGeloescht) {
-				result += '"raumstundenGeloescht" : []';
-			} else {
-				result += '"raumstundenGeloescht" : [ ';
-				for (let i = 0; i < obj.raumstundenGeloescht.size(); i++) {
-					const elem = obj.raumstundenGeloescht.get(i);
-					result += GostKlausurraumstunde.transpilerToJSON(elem);
-					if (i < obj.raumstundenGeloescht.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.sktRaumstunden !== undefined) {
 			if (!obj.sktRaumstunden) {
 				result += '"sktRaumstunden" : []';
@@ -218,25 +165,19 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (obj.idKlausurraum !== undefined) {
-			result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
-		}
-		if (obj.idsSchuelerklausurtermine !== undefined) {
-			if (!obj.idsSchuelerklausurtermine) {
-				result += '"idsSchuelerklausurtermine" : []';
+		if (obj.idsKlausurtermine !== undefined) {
+			if (!obj.idsKlausurtermine) {
+				result += '"idsKlausurtermine" : []';
 			} else {
-				result += '"idsSchuelerklausurtermine" : [ ';
-				for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
-					const elem = obj.idsSchuelerklausurtermine.get(i);
+				result += '"idsKlausurtermine" : [ ';
+				for (let i = 0; i < obj.idsKlausurtermine.size(); i++) {
+					const elem = obj.idsKlausurtermine.get(i);
 					result += elem;
-					if (i < obj.idsSchuelerklausurtermine.size() - 1)
+					if (i < obj.idsKlausurtermine.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (obj.kursKlausurPatched !== undefined) {
-			result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -245,6 +186,6 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionSkrsKrs(obj : unknown) : GostKlausurenCollectionSkrsKrs {
-	return obj as GostKlausurenCollectionSkrsKrs;
+export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionRaumData(obj : unknown) : GostKlausurenCollectionRaumData {
+	return obj as GostKlausurenCollectionRaumData;
 }

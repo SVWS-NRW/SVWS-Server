@@ -1,9 +1,9 @@
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
-import { GostKursklausurManager, cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostSchuelerklausurTermin, cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
+import { GostKlausurplanManager, cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKlausurplanManager } from '../../../../core/utils/gost/klausurplanung/GostKlausurplanManager';
 
 export class GostSchuelerklausurTerminRich extends JavaObject {
 
@@ -64,7 +64,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	 * @param termin     das zu vergleichende Objekt
 	 * @param manager
 	 */
-	public constructor(termin : GostSchuelerklausurTermin | null, manager : GostKursklausurManager | null);
+	public constructor(termin : GostSchuelerklausurTermin | null, manager : GostKlausurplanManager | null);
 
 	/**
 	 * Konstruktor für Transpiler.
@@ -74,11 +74,11 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : GostSchuelerklausurTermin | null, __param1? : GostKursklausurManager | null) {
+	public constructor(__param0? : GostSchuelerklausurTermin | null, __param1? : GostKlausurplanManager | null) {
 		super();
-		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager'))) || (__param1 === null))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager'))) || (__param1 === null))) {
 			const termin : GostSchuelerklausurTermin | null = cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin(__param0);
-			const manager : GostKursklausurManager | null = cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager(__param1);
+			const manager : GostKlausurplanManager | null = cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKlausurplanManager(__param1);
 			this.id = termin.id;
 			const kursklausur : GostKursklausur | null = manager.kursklausurBySchuelerklausurTermin(termin);
 			this.startzeit = manager.startzeitByKursklausurOrException(kursklausur);

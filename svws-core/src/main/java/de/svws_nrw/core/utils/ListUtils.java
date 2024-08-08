@@ -84,6 +84,21 @@ public final class ListUtils {
 	}
 
 	/**
+	 * Liefert zu einer Liste von Listen eine flache Liste.
+	 *
+	 * @param <T>      Der Inhaltstyp der Liste.
+	 * @param listOfLists die Liste von Listen des Inhaltstyps
+	 *
+	 * @return eine flache Liste desselben Inhaltstyps
+	 */
+	public static <T> @NotNull List<T> getFlatted(final @NotNull List<List<T>> listOfLists) {
+		final @NotNull List<T> resultList = new ArrayList<>();
+		for (final @NotNull List<T> currentList : listOfLists)
+			resultList.addAll(currentList);
+		return resultList;
+	}
+
+	/**
 	 * Liefert eine permutierte Kopie der Liste.
 	 *
 	 * @param <T>      Der Inhaltstyp der Liste.

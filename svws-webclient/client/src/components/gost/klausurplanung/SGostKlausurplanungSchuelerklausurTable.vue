@@ -25,7 +25,7 @@
 				<div class="svws-ui-td" role="cell">
 					{{ GostHalbjahr.fromIDorException(kMan().vorgabeBySchuelerklausurTermin(schuelertermin).halbjahr).jahrgang }}
 				</div>
-				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
+				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
 				<div class="svws-ui-td svws-align-left" role="cell">
 					{{ kMan().datumSchuelerklausurVorgaenger(schuelertermin) !== null ? DateUtils.gibDatumGermanFormat(kMan().datumSchuelerklausurVorgaenger(schuelertermin)!) : "N.N." }}
 
@@ -50,20 +50,20 @@
 
 <script setup lang="ts">
 	import { DateUtils, GostHalbjahr } from "@core";
-	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostKlausurtermin } from "@core";
+	import type { GostKlausurplanManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrsData, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import { computed} from "vue";
 
 	const props = withDefaults(defineProps<{
-		kMan: () => GostKursklausurManager;
+		kMan: () => GostKlausurplanManager;
 		termin?: GostKlausurtermin | undefined;
 		schuelerklausuren: List<GostSchuelerklausurTermin>;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 	}>(), {
 		termin: undefined,

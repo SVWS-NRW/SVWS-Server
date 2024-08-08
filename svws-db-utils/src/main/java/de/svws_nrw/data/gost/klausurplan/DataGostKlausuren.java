@@ -1,11 +1,14 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.GostJahrgang;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -42,55 +45,68 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 * zurück.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param selection das Jahr, in welchem der Jahrgang Abitur machen wird
+//	 * @param halbjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 *
 	 * @return die DataCollection
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response getAllDataGZip(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
-		final GostKlausurenMetaDataCollection coll = getAllData(conn, abiturjahr, halbjahr);
-		return JSONMapper.gzipFileResponseFromObject(coll, "klausurdaten_%d_%d.json.gz".formatted(abiturjahr, halbjahr.id));
+	public static Response getAllDataGZip(final DBEntityManager conn, final List<Pair<Integer, Integer>> selection) throws ApiOperationException {
+		final GostKlausurenCollectionAllData coll = getAllData(conn, selection);
+		return JSONMapper.gzipFileResponseFromObject(coll, "klausurdaten.json.gz");
 	}
 
 	/**
 	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param selection das Jahr, in welchem der Jahrgang Abitur machen wird
 	 *
 	 * @return die DataCollection
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenMetaDataCollection getAllData(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr)
+	public static GostKlausurenCollectionAllData getAllData(final DBEntityManager conn, final List<Pair<Integer, Integer>> selection)
 			throws ApiOperationException {
 
-		final List<GostJahrgang> jahrgaenge = DataGostJahrgangsliste.getGostJahrgangsliste(conn);
 
-		final GostKlausurenMetaDataCollection data = new GostKlausurenMetaDataCollection();
-		for (final GostJahrgang jg : jahrgaenge) {
-			final GostKlausurenDataCollection klausuren = DataGostKlausurenKursklausur.getKlausurDataCollection(conn, jg.abiturjahr, -1, true);
-			data.klausurdata.kursklausuren.addAll(klausuren.kursklausuren);
-			data.klausurdata.schuelerklausuren.addAll(klausuren.schuelerklausuren);
-			data.klausurdata.schuelerklausurtermine.addAll(klausuren.schuelerklausurtermine);
-			data.klausurdata.termine.addAll(klausuren.termine);
-			data.klausurdata.vorgaben.addAll(klausuren.vorgaben);
-			data.faecher.addAll(DataGostFaecher.getFaecherManager(conn, jg.abiturjahr).faecher());
-			data.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg.abiturjahr).getAllSchueler());
+		final List<Pair<Integer, Integer>> jgs = new ArrayList<>();
+		if (selection == null) {
+			for (final GostJahrgang jg : DataGostJahrgangsliste.getGostJahrgangsliste(conn)) {
+				jgs.add(new Pair<>(jg.abiturjahr, -1));
+			}
+		} else {
+			jgs.addAll(selection);
+		}
+
+		final GostKlausurenCollectionAllData data = new GostKlausurenCollectionAllData();
+		for (final Pair<Integer, Integer> jg : jgs) {
+			final GostKlausurenCollectionAllData klausuren = DataGostKlausurenKursklausur.getKlausurDataCollection(conn, jg.a, jg.b, true);
+			data.kursklausuren.addAll(klausuren.kursklausuren);
+			data.schuelerklausuren.addAll(klausuren.schuelerklausuren);
+			data.schuelerklausurtermine.addAll(klausuren.schuelerklausurtermine);
+			final Set<GostKlausurtermin> terminMenge = new HashSet<>(data.termine);
+			terminMenge.addAll(klausuren.termine);
+			data.termine = new ArrayList<>(terminMenge);
+			data.vorgaben.addAll(klausuren.vorgaben);
+			data.metadata.faecher.addAll(DataGostFaecher.getFaecherManager(conn, jg.a).faecher());
+			data.metadata.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg.a).getAllSchueler());
 
 			for (final GostHalbjahr gj : GostHalbjahr.values()) {
 				final Schuljahresabschnitt sja =
-						DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahr), gj.halbjahr);
+						DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.a), gj.halbjahr);
 				if (sja != null)
-					data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
+					data.metadata.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
 
 		}
 
-		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
+		data.metadata.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
+
+
+		data.raumdata = DataGostKlausurenSchuelerklausurraumstunde.getSchuelerklausurraumstundenByTerminids(conn, data.termine.stream().map(t -> t.id).toList());
+
 		return data;
 	}
 

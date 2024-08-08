@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { GostSchuelerklausurTermin, List} from "@core";
-import { ArrayList, BenutzerKompetenz, GostKlausurraumManager, GostKursklausurManager, Schulform, ServerMode } from "@core";
+import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -18,8 +18,6 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 		super.text = "Nachschreibplan";
 	}
 
-	raummanager : GostKlausurraumManager = new GostKlausurraumManager();
-
 	public checkHidden(params?: RouteParams) {
 		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
 		return (abiturjahr === undefined) || (abiturjahr === -1);
@@ -31,7 +29,7 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			this.raummanager = await routeGostKlausurplanung.data.erzeugeKlausurraummanager(this.mapIDs(routeGostKlausurplanung.data.kursklausurmanager.schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value)));
+			await routeGostKlausurplanung.data.erzeugeKlausurraummanager(this.mapIDs(routeGostKlausurplanung.data.manager.schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value)));
 		}
 	}
 
@@ -39,9 +37,8 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
+			kMan: () => routeGostKlausurplanung.data.manager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-			raummanager: this.raummanager,
 		}
 	}
 

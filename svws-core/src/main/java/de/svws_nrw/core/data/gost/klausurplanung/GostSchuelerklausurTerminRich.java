@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -62,7 +62,7 @@ public class GostSchuelerklausurTerminRich {
 	 * @param manager
 	 *
 	 */
-	public GostSchuelerklausurTerminRich(final GostSchuelerklausurTermin termin, final GostKursklausurManager manager) {
+	public GostSchuelerklausurTerminRich(final GostSchuelerklausurTermin termin, final GostKlausurplanManager manager) {
 		id = termin.id;
 		final GostKursklausur kursklausur = manager.kursklausurBySchuelerklausurTermin(termin);
 		startzeit = manager.startzeitByKursklausurOrException(kursklausur);

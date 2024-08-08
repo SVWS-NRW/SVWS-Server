@@ -4,28 +4,28 @@
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
 			'border-red-500': raumHatFehler(),
-			'bg-red-200': raum.idTermin !== raummanager().getHauptTermin().id, // TODO Priorität und warum überhaupt???
+			'bg-red-200': raum.idTermin !== terminSelected.id, // TODO Priorität und warum überhaupt???
 		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
 				<svws-ui-select :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
-					:model-value="raum.idStundenplanRaum === null ? undefined : stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum)"
+					:model-value="raum.idStundenplanRaum === null ? undefined : kMan().stundenplanraumGetByKlausurraum(raum)"
 					headless
 					class="flex-grow"
-					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null }, raummanager())"
+					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
 				<span class="inline-flex items-center flex-shrink-0  -my-1">
 					<svws-ui-tooltip class="text-error font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
 							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
-							<template v-else-if="anzahlSuS() > props.stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
+							<template v-else-if="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
 						</template>
 						<span class="icon icon-error i-ri-alert-fill" />
 					</svws-ui-tooltip>
 					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
 					<template v-if="multijahrgang()">
-						<span class="border rounded-md p-1 text-button" v-if="raum.idTermin === raummanager().getHauptTermin().id">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
+						<span class="border rounded-md p-1 text-button" v-if="raum.idTermin === terminSelected.id">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
 						<svws-ui-button v-else type="secondary" class="p-1" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(termin().abijahr, termin().halbjahr, termin().id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</svws-ui-button>
 					</template>
 				</span>
@@ -45,7 +45,7 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" />
 								</template>
-								<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 							</svws-ui-tooltip>
 						</div>
 
@@ -53,8 +53,8 @@
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td flex" role="cell">
 							<div>
-								<span v-if="raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() }}/</span>
-								<span :class="raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+								<span v-if="kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() }}/</span>
+								<span :class="kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 								<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 							</div>
 						</div>
@@ -68,19 +68,19 @@
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
 					<span class="font-bold">
-						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-error' : ''">{{ anzahlSuS() }}/{{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }} belegt, </span>
+						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > kMan().stundenplanraumGetByKlausurraum(raum).groesse ? 'text-error' : ''">{{ anzahlSuS() }}/{{ kMan().stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
 						<span v-else>{{ anzahlSuS() }} Plätze, </span>
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
 				</div>
-				<svws-ui-button type="icon" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id, raummanager())"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
+				<svws-ui-button type="icon" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id)"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
 			</span>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostKursklausurManager, GostKlausurenCollectionSkrsKrs, GostKlausurraum } from '@core';
+	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
 	import { GostKursklausur, GostHalbjahr } from '@core';
@@ -91,41 +91,40 @@
 
 
 	const props = defineProps<{
-		stundenplanmanager: StundenplanManager;
 		raum: GostKlausurraum;
-		kMan: () => GostKursklausurManager;
-		raummanager: () => GostKlausurraumManager;
-		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		kMan: () => GostKlausurplanManager;
+		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
+		loescheKlausurraum: (id: number) => Promise<boolean>;
+		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		multijahrgang: () => boolean;
+		terminSelected: GostKlausurtermin;
 		// terminStartzeit?: string;
 	}>();
 
-	const raumHatFehler = () => props.raum.idStundenplanRaum && anzahlSuS() > props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum).groesse || props.raum.idStundenplanRaum === null;
+	const raumHatFehler = () => props.raum.idStundenplanRaum && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse || props.raum.idStundenplanRaum === null;
 
-	const klausurenImRaum = () => props.raummanager().kursklausurGetMengeByRaumid(props.raum.id);
+	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum);
 
-	const anzahlSuS = () => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id).size();
+	const anzahlSuS = () => props.kMan().schuelerklausurGetMengeByRaum(props.raum).size();
 
 	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
 
 	const anzahlRaumstunden = computed(() => {
-		return props.raummanager().klausurraumstundeGetMengeByRaumid(props.raum.id).size();
+		return props.kMan().klausurraumstundeGetMengeByRaum(props.raum).size();
 	});
 
 	const raeumeVerfuegbar = computed(() => {
-		const raeume = props.raummanager().stundenplanraumVerfuegbarGetMenge(props.stundenplanmanager.raumGetMengeAsList());
+		const raeume = props.kMan().stundenplanraumVerfuegbarGetMengeByTermin(termin());
 		if (props.raum.idStundenplanRaum !== null)
-			raeume.add(0, props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
+			raeume.add(0, props.kMan().stundenplanraumGetByKlausurraum(props.raum));
 		return raeume;
 	});
 
 	function isDropZone() : boolean {
-		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.raummanager().containsKlausurraumKursklausur(props.raum.id, props.dragData()!.id))
+		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur))
 			return false;
 		return true;
 	}
@@ -141,7 +140,7 @@
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
 			const result = await props.patchKlausur(klausur, {startzeit});
-			props.raummanager().setzeRaumZuSchuelerklausuren(result);
+			props.kMan().setzeRaumZuSchuelerklausuren(result);
 		} catch(e) {
 			// Do nothing
 		}

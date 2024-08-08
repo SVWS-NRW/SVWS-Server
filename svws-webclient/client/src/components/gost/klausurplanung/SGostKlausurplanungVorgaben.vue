@@ -9,7 +9,7 @@
 		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(klausurvorgabenmanager().getFaecherManager().get(value)?.kuerzel || null) }">{{ klausurvorgabenmanager().getFaecherManager().get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -45,7 +45,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-8 -ml-2">
 			<template #actions v-if="activeVorgabe.idVorgabe > 0">
-				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByKursklausur(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
+				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kMan().istVorgabeVerwendetByKursklausur(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
 				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -my-0.5" /> eine neue erstellen.</span>
@@ -113,7 +113,7 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const vorgaben = () => props.klausurvorgabenmanager().vorgabeGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
+	const vorgaben = () => props.kMan().vorgabeGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());
@@ -123,7 +123,7 @@
 	const formQuartale = computed(() => [1, 2]);
 	const inputVorgabeFach: WritableComputedRef<GostFach | undefined> = computed({
 		get() {
-			const fach = props.klausurvorgabenmanager().getFaecherManager().get(activeVorgabe.value.idFach);
+			const fach = props.kMan().getFaecherManager().get(activeVorgabe.value.idFach);
 			return fach === null ? undefined : fach;
 		},
 		set(val) {
@@ -133,7 +133,7 @@
 	});
 
 	const faecherSortiert = computed(() => {
-		const f = new ArrayList(props.klausurvorgabenmanager().getFaecherManager().faecher());
+		const f = new ArrayList(props.kMan().getFaecherManager().faecher());
 		//		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
 		return f;
 	});
@@ -170,7 +170,7 @@
 
 	const startEdit = () => {
 		if (selectedVorgabeRow.value !== undefined) {
-			const v = props.klausurvorgabenmanager().vorgabeGetByIdOrException(selectedVorgabeRow.value.idVorgabe);
+			const v = props.kMan().vorgabeGetByIdOrException(selectedVorgabeRow.value.idVorgabe);
 			if (activeVorgabe.value.idVorgabe === v.idVorgabe) {
 				cancelEdit();
 			} else {

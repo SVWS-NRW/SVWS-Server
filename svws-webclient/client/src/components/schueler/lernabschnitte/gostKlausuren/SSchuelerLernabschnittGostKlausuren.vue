@@ -23,7 +23,7 @@
 							{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null ? (kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!) : "N.N.") : "N.N." }}
 						</template>
 						<template #cell(button)="{ rowData: termin }">
-							<div class="flex space-x-1" v-if="kMan().istAktuellerSchuelerklausurtermin(termin)">
+							<div class="flex space-x-1" v-if="kMan().istSchuelerklausurterminAktuell(termin)">
 								<svws-ui-button class="mt-4" v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund().value = true">
 									<svws-ui-tooltip>
 										<template #content>

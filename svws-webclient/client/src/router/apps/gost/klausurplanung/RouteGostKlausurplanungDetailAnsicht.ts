@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager } from "@core";
+import { BenutzerKompetenz, GostKlausurplanManager, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -21,7 +21,7 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGo
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.hatStundenplanManager)
+		if (!routeGostKlausurplanung.data.manager.getStundenplanManagerOrNull())
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
 		return false;
 	}
@@ -34,9 +34,7 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGo
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
-			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
-			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
+			kMan: () => routeGostKlausurplanung.data.manager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
 	}

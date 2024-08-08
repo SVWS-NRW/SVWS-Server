@@ -2,15 +2,13 @@
 import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
-	GostKlausurraumManager,
-	GostKursklausurManager,
+	GostKlausurplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungNachschreibAnsichtProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	kMan: () => GostKursklausurManager;
+	kMan: () => GostKlausurplanManager;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	raummanager: GostKlausurraumManager;
 }

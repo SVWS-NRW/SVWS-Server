@@ -3,11 +3,11 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../../core/logger/Logger';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
+import { GostKlausurplanManager } from '../../../../core/utils/gost/klausurplanung/GostKlausurplanManager';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { KlausurblockungNachschreiberAlgorithmusBewertung } from '../../../../core/utils/gost/klausurplanung/KlausurblockungNachschreiberAlgorithmusBewertung';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
-import { GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
 import type { List } from '../../../../java/util/List';
 import { GostNachschreibterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { ListUtils } from '../../../../core/utils/ListUtils';
@@ -56,7 +56,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
-	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
+	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKlausurplanManager) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const nachschreiberGruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList<List<GostSchuelerklausurTermin>>();
 		for (const skt of config.schuelerklausurtermine) {
 			const sk : GostSchuelerklausur | null = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
@@ -88,7 +88,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return bestErgebnis;
 	}
 
-	private static _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : boolean {
+	private static _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKlausurplanManager) : boolean {
 		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
 		const sk1 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt1);
 		const idFach : number = klausurManager.vorgabeBySchuelerklausurTermin(skt1).idFach;
@@ -112,7 +112,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return false;
 	}
 
-	private static _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
+	private static _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKlausurplanManager) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList<Pair<GostSchuelerklausurTermin, number>>();
 		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList<List<GostSchuelerklausurTermin>>(nachschreiberGruppen);
 		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random)) {
@@ -130,10 +130,11 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return ergebnis;
 	}
 
-	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
+	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(idTermin : number, klausurManager : GostKlausurplanManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
 		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet<number>();
 		if (idTermin >= 0) {
-			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
+			const termin : GostKlausurtermin = klausurManager.terminGetByIdOrException(idTermin);
+			for (const sk of klausurManager.schuelerklausurGetMengeByTermin(termin))
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
 		for (const gruppe of ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random)) {

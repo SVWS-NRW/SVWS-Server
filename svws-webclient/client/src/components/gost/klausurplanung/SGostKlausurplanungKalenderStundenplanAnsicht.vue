@@ -47,15 +47,17 @@
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
-						@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20 pointer-events-none">
-							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
-								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
-								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag, stunde) }}</span>
+					<template v-if="manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde)">
+						<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
+							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
+							<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20 pointer-events-none">
+								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
+									<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
+									<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag, stunde) }}</span>
+								</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 				<template v-for="pause in getPausenzeitenWochentag(wochentag)" :key="pause">
@@ -140,8 +142,8 @@
 			return termin.bezeichnung;
 		if (!termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (props.kMan().kursklausurGetMengeByTerminid(termin.id).size())
-			return [...props.kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
+		if (props.kMan().kursklausurGetMengeByTermin(termin).size())
+			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}
 
@@ -260,8 +262,8 @@
 	function posKlausurtermin(termin: GostKlausurtermin): string {
 		let rowStart = 0;
 		let rowEnd = 10;
-		const terminBeginn = props.kMan().minKursklausurstartzeitByTerminid(termin.id);
-		const terminEnde = Math.ceil(props.kMan().maxKursklausurendzeitByTerminid(termin.id) / 5) * 5;
+		const terminBeginn = props.kMan().minKlausurstartzeitByTermin(termin, true);
+		const terminEnde = Math.ceil(props.kMan().maxKlausurendzeitByTermin(termin, true) / 5) * 5;
 		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
 			rowStart = (terminBeginn - beginn.value) / 5;
 			rowEnd = (terminEnde - beginn.value) / 5;
@@ -280,7 +282,7 @@
 		if (termin.abijahr !== props.jahrgangsdaten.abiturjahr)
 			return "#f2f4f5";
 
-		const klausuren = [...props.kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
+		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
 		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 
 		let gradient = '';

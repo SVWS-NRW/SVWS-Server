@@ -4,16 +4,14 @@ import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurvorgabe,
-	GostKlausurvorgabenManager,
-	GostKursklausurManager,
+	GostKlausurplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungVorgabenProps {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	halbjahr: GostHalbjahr;
-	klausurvorgabenmanager: () => GostKlausurvorgabenManager;
-	kursklausurmanager?: () => GostKursklausurManager;
+	kMan: () => GostKlausurplanManager;
 	erzeugeKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>) => Promise<void>;
 	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<void>;
 	loescheKlausurvorgabe: (idVorgabe: number) => Promise<void>;

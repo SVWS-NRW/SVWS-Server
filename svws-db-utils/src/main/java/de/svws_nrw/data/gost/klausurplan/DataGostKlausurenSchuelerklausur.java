@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
@@ -60,9 +59,9 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionSkSkt getCollectionSkSktNachschreiber(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr)
+	public static GostKlausurenCollectionAllData getCollectionSkSktNachschreiber(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr)
 			throws ApiOperationException {
-		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
+		final GostKlausurenCollectionAllData ergebnis = new GostKlausurenCollectionAllData();
 		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
 		if (!kursKlausuren.isEmpty()) {
 			final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query(
@@ -89,9 +88,9 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionSkSkt getCollectionSkSkt(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr,
+	public static GostKlausurenCollectionAllData getCollectionSkSkt(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr,
 			final boolean ganzesSchuljahr) throws ApiOperationException {
-		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
+		final GostKlausurenCollectionAllData ergebnis = new GostKlausurenCollectionAllData();
 		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, ganzesSchuljahr);
 		ergebnis.schuelerklausuren = getSchuelerKlausurenZuKursklausuren(conn, kursKlausuren);
 		ergebnis.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, ergebnis.schuelerklausuren);
@@ -190,9 +189,9 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenDataCollection getGostKlausurenCollectionBySchuelerid(final DBEntityManager conn, final long idSchueler, final int abiturjahr,
+	public static GostKlausurenCollectionAllData getGostKlausurenCollectionBySchuelerid(final DBEntityManager conn, final long idSchueler, final int abiturjahr,
 			final int halbjahr) throws ApiOperationException {
-		final GostKlausurenDataCollection result = new GostKlausurenDataCollection();
+		final GostKlausurenCollectionAllData result = new GostKlausurenCollectionAllData();
 
 		result.schuelerklausuren = DTOMapper.mapList(
 				conn.query(

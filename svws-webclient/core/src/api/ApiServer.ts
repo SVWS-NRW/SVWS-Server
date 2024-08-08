@@ -55,10 +55,9 @@ import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachk
 import { GostJahrgangFachwahlen } from '../core/data/gost/GostJahrgangFachwahlen';
 import { GostJahrgangFachwahlenHalbjahr } from '../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
-import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
-import { GostKlausurenCollectionSkSkt } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkSkt';
-import { GostKlausurenDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenDataCollection';
-import { GostKlausurenMetaDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenMetaDataCollection';
+import { GostKlausurenCollectionAllData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionAllData';
+import { GostKlausurenCollectionRaumData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
+import { GostKlausurenCollectionSkrsKrsData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';
 import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumRich } from '../core/data/gost/klausurplanung/GostKlausurraumRich';
@@ -4877,7 +4876,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenDataCollection
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4886,13 +4885,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenDataCollection> {
+	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenCollectionAllData> {
 		const path = "/db/{schema}/gost/klausuren/blocken/kursklausuren"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenDataCollection.transpilerFromJSON(text);
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 
@@ -4904,7 +4903,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenDataCollection
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4913,73 +4912,41 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenDataCollection> {
+	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenCollectionAllData> {
 		const path = "/db/{schema}/gost/klausuren/blocken/schuelerklausurtermine"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenDataCollection.transpilerFromJSON(text);
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 
 	/**
-	 * Implementierung der GET-Methode getGostKlausurenCollection für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 * Implementierung der POST-Methode getGostKlausurenMetaCollectionOberstufe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufe/
 	 *
 	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Schuelerklausuren.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenDataCollection
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
 	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Die Liste der Schuelerklausuren.
 	 */
-	public async getGostKlausurenCollection(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenDataCollection> {
-		const path = "/db/{schema}/gost/klausuren/collection/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+	public async getGostKlausurenMetaCollectionOberstufe(data : List<number>, schema : string) : Promise<GostKlausurenCollectionAllData> {
+		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufe/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenDataCollection.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenMetaCollectionOberstufe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Schuelerklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenMetaDataCollection
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Schuelerklausuren.
-	 */
-	public async getGostKlausurenMetaCollectionOberstufe(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenMetaDataCollection> {
-		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostKlausurenMetaDataCollection.transpilerFromJSON(text);
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 
@@ -5026,7 +4993,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kursklausuren zu ändern.
 	 *   Code 404: Kein Kursklausur-Eintrag mit der angegebenen ID gefunden
@@ -5040,7 +5007,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
@@ -5048,71 +5015,7 @@ export class ApiServer extends BaseApi {
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Kursklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKursklausur>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Kursklausuren.
-	 */
-	public async getGostKlausurenKursklausurenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKursklausur>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgangSchuljahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Kursklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKursklausur>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Kursklausuren.
-	 */
-	public async getGostKlausurenKursklausurenJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKursklausur>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
-		return ret;
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
 
 
@@ -5124,7 +5027,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Kursklausuren.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenDataCollection
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
 	 *   Code 404: Keine Klausurvorgaben definiert oder der Schuljahresabschnitt wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -5136,7 +5039,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Kursklausuren.
 	 */
-	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenDataCollection> {
+	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenCollectionAllData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
@@ -5144,7 +5047,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostKlausurenDataCollection.transpilerFromJSON(text);
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 
@@ -5171,36 +5074,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenRaeumeTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/{termin : -?\d+}
-	 *
-	 * Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurräume.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurraum>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurräume auszulesen.
-	 *   Code 404: Die Id des Klausurtermins wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} termin - der Pfad-Parameter termin
-	 *
-	 * @returns Die Liste der Klausurräume.
-	 */
-	public async getGostKlausurenRaeumeTermin(schema : string, termin : number) : Promise<List<GostKlausurraum>> {
-		const path = "/db/{schema}/gost/klausuren/raeume/{termin : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurraum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurraum.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -5267,7 +5140,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
 	 *   Code 404: Der Termin-ID wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -5277,13 +5150,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async getGostKlausurenSchuelerraumstundenSktids(data : List<number>, schema : string) : Promise<GostKlausurenCollectionSkrsKrs> {
+	public async getGostKlausurenSchuelerraumstundenSktids(data : List<number>, schema : string) : Promise<GostKlausurenCollectionRaumData> {
 		const path = "/db/{schema}/gost/klausuren/raumstunden"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
+		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
 	}
 
 
@@ -5295,7 +5168,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
 	 *   Code 404: Der Termin-ID wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -5305,13 +5178,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionSkrsKrs> {
+	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionRaumData> {
 		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
+		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
 	}
 
 
@@ -5323,7 +5196,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenDataCollection
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
 	 *   Code 404: Der Termin-ID wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -5335,7 +5208,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenDataCollection> {
+	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionAllData> {
 		const path = "/db/{schema}/gost/klausuren/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{sid\s*(:[^{}]+({[^{}]+})*)?}/g, sid.toString())
@@ -5343,7 +5216,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostKlausurenDataCollection.transpilerFromJSON(text);
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 
@@ -5381,7 +5254,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -5390,73 +5263,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async loescheGostSchuelerklausurenAusRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrs> {
+	public async loescheGostSchuelerklausurenAusRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/ausraum"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenNachschreiber für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Schuelerklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkSkt
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Schuelerklausuren.
-	 */
-	public async getGostKlausurenSchuelerklausurenNachschreiber(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkSkt> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostKlausurenCollectionSkSkt.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenTermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\d+}
-	 *
-	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Schuelerklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostSchuelerklausurTermin>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Liste der Schuelerklausuren.
-	 */
-	public async getGostKlausurenSchuelerklausurenTermine(schema : string, id : number) : Promise<List<GostSchuelerklausurTermin>> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostSchuelerklausurTermin>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostSchuelerklausurTermin.transpilerFromJSON(text)); });
-		return ret;
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
 
 
@@ -5549,7 +5362,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -5559,14 +5372,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
+	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
 
 
@@ -5593,70 +5406,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenKlausurtermineJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurtermine.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurtermin>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Klausurtermine.
-	 */
-	public async getGostKlausurenKlausurtermineJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
-		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurtermin>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurtermin.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenKlausurtermineJahrgangSchuljahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurtermine.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurtermin>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Klausurtermine.
-	 */
-	public async getGostKlausurenKlausurtermineJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
-		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurtermin>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurtermin.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -5787,70 +5536,6 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenVorgabenJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurvorgaben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
-	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Klausurvorgaben.
-	 */
-	public async getGostKlausurenVorgabenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurvorgabe>> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenVorgabenJahrgangSchuljahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
-	 *
-	 * Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurvorgaben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
-	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 *
-	 * @returns Die Liste der Klausurvorgaben.
-	 */
-	public async getGostKlausurenVorgabenJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurvorgabe>> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();

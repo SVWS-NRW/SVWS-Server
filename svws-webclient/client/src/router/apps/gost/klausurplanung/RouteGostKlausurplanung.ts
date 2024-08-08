@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKursklausurManager, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -161,7 +161,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
 		return {
 			apiStatus: api.status,
-			kMan: () => routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(),
+			kMan: () => routeGostKlausurplanung.data.manager,
 			getPDF: this.data.getPDF,
 		}
 	}

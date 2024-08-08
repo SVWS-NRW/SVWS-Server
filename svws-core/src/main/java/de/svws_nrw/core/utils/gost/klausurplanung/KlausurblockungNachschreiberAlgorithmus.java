@@ -52,7 +52,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	 */
 	public @NotNull List<Pair<GostSchuelerklausurTermin, Long>> berechne(
 			final @NotNull GostNachschreibterminblockungKonfiguration config,
-			final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull GostKlausurplanManager klausurManager) {
 
 		// 1) Bilde Gruppen von Nachschreibern, falls dies bestimmte Kriterien/Regeln erfordern.
 		final @NotNull List<List<GostSchuelerklausurTermin>> nachschreiberGruppen = new ArrayList<>(); // Liste der Gruppen.
@@ -101,7 +101,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	}
 
 	private static boolean _istHinzufuegenErlaubt(final @NotNull List<GostSchuelerklausurTermin> gruppe, final @NotNull GostSchuelerklausurTermin skt1,
-			final @NotNull GostNachschreibterminblockungKonfiguration config, final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull GostNachschreibterminblockungKonfiguration config, final @NotNull GostKlausurplanManager klausurManager) {
 
 		// Integrität überprüfen.
 		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
@@ -139,7 +139,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 	private static @NotNull List<Pair<GostSchuelerklausurTermin, Long>> _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(
 			final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung bewertung, final @NotNull List<GostKlausurtermin> termine,
-			final @NotNull List<List<GostSchuelerklausurTermin>> nachschreiberGruppen, final @NotNull GostKursklausurManager klausurManager) {
+			final @NotNull List<List<GostSchuelerklausurTermin>> nachschreiberGruppen, final @NotNull GostKlausurplanManager klausurManager) {
 
 		// Zum Sammeln der Ergebnisse.
 		final @NotNull List<Pair<GostSchuelerklausurTermin, Long>> ergebnis = new ArrayList<>();
@@ -166,13 +166,14 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		return ergebnis;
 	}
 
-	private static void _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(final long idTermin, final @NotNull GostKursklausurManager klausurManager,
+	private static void _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(final long idTermin, final @NotNull GostKlausurplanManager klausurManager,
 			final @NotNull List<List<GostSchuelerklausurTermin>> gruppen, final @NotNull List<Pair<GostSchuelerklausurTermin, Long>> ergebnis) {
 
 		// Sammle Schüler-IDs des Termins.
 		final HashSet<Long> schuelerIDsDesTermin = new HashSet<>();
 		if (idTermin >= 0) {
-			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
+			final @NotNull GostKlausurtermin termin = klausurManager.terminGetByIdOrException(idTermin);
+			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTermin(termin))
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
 

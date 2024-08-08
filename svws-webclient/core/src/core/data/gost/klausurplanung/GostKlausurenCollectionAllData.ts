@@ -1,13 +1,15 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { GostKlausurenCollectionMetaData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionMetaData';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 
-export class GostKlausurenDataCollection extends JavaObject {
+export class GostKlausurenCollectionAllData extends JavaObject {
 
 	/**
 	 * Die Liste der Klausurvorgaben.
@@ -34,22 +36,32 @@ export class GostKlausurenDataCollection extends JavaObject {
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
+	/**
+	 * Die Liste der Schülerklausuren.
+	 */
+	public metadata : GostKlausurenCollectionMetaData = new GostKlausurenCollectionMetaData();
+
+	/**
+	 * Die Liste der Schülerklausuren.
+	 */
+	public raumdata : GostKlausurenCollectionRaumData = new GostKlausurenCollectionRaumData();
+
 
 	public constructor() {
 		super();
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection';
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): GostKlausurenDataCollection {
+	public static transpilerFromJSON(json : string): GostKlausurenCollectionAllData {
 		const obj = JSON.parse(json);
-		const result = new GostKlausurenDataCollection();
+		const result = new GostKlausurenCollectionAllData();
 		if ((obj.vorgaben !== undefined) && (obj.vorgaben !== null)) {
 			for (const elem of obj.vorgaben) {
 				result.vorgaben?.add(GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(elem)));
@@ -75,10 +87,16 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result.termine?.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (obj.metadata === undefined)
+			 throw new Error('invalid json format, missing attribute metadata');
+		result.metadata = GostKlausurenCollectionMetaData.transpilerFromJSON(JSON.stringify(obj.metadata));
+		if (obj.raumdata === undefined)
+			 throw new Error('invalid json format, missing attribute raumdata');
+		result.raumdata = GostKlausurenCollectionRaumData.transpilerFromJSON(JSON.stringify(obj.raumdata));
 		return result;
 	}
 
-	public static transpilerToJSON(obj : GostKlausurenDataCollection) : string {
+	public static transpilerToJSON(obj : GostKlausurenCollectionAllData) : string {
 		let result = '{';
 		if (!obj.vorgaben) {
 			result += '"vorgaben" : []';
@@ -140,12 +158,14 @@ export class GostKlausurenDataCollection extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"metadata" : ' + GostKlausurenCollectionMetaData.transpilerToJSON(obj.metadata) + ',';
+		result += '"raumdata" : ' + GostKlausurenCollectionRaumData.transpilerToJSON(obj.raumdata) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<GostKlausurenDataCollection>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionAllData>) : string {
 		let result = '{';
 		if (obj.vorgaben !== undefined) {
 			if (!obj.vorgaben) {
@@ -217,6 +237,12 @@ export class GostKlausurenDataCollection extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
+		if (obj.metadata !== undefined) {
+			result += '"metadata" : ' + GostKlausurenCollectionMetaData.transpilerToJSON(obj.metadata) + ',';
+		}
+		if (obj.raumdata !== undefined) {
+			result += '"raumdata" : ' + GostKlausurenCollectionRaumData.transpilerToJSON(obj.raumdata) + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -224,6 +250,6 @@ export class GostKlausurenDataCollection extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenDataCollection(obj : unknown) : GostKlausurenDataCollection {
-	return obj as GostKlausurenDataCollection;
+export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionAllData(obj : unknown) : GostKlausurenCollectionAllData {
+	return obj as GostKlausurenCollectionAllData;
 }

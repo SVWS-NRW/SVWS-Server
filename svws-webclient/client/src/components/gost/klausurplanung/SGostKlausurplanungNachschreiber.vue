@@ -19,20 +19,20 @@
 				</template>
 
 				<template #body>
-					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
+					<div v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 						:key="termin.id"
 						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-checkbox :disabled="kMan().schuelerklausurterminNtByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+							<svws-ui-checkbox :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
 						</div>
 						<div class="svws-ui-td" role="cell">
-							{{ kMan().schuelerklausurterminGetMengeByTerminid(termin.id).size() }}
+							{{ kMan().schuelerklausurterminGetMengeByTermin(termin).size() }}
 						</div>
 						<div class="svws-ui-td" role="cell">
-							{{ [...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
+							{{ [...kMan().kursklausurGetMengeByTermin(termin)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
 						</div>
 					</div>
 				</template>
@@ -81,9 +81,9 @@
 			<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
 				<template #title>
 					<span class="leading-tight text-headline-md gap-1">
-						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-error px-4" />
+						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-error px-4" />
 						<span>Jahrgangsübergreifende Planung</span>
-						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
+						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
 					</span>
 				</template>
 				<ul>
@@ -92,7 +92,7 @@
 						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
 						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
 					</li>
-					<li class="flex" v-for="pair in GostKursklausurManager.getParallelHalbjahre(jahrgangsdaten.abiturjahr, halbjahr.id, false)" :key="pair.a">
+					<li class="flex" v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
 						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
 						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
 						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
@@ -139,7 +139,7 @@
 <script setup lang="ts">
 
 	import type { JavaSet} from "@core";
-	import { GostKursklausurManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
+	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
@@ -154,7 +154,7 @@
 	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
 	const gleiche_fachart_auf_selbe_termine = ref(false);
 
-	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().terminGetNTMengeEnthaeltFremdeJgstByHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true);
+	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true);
 
 	const selectedNachschreiber = ref<JavaSet<GostSchuelerklausurTermin>>(new HashSet<GostSchuelerklausurTermin>());
 
@@ -201,12 +201,12 @@
 		}
 	};
 
-	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
+	const termine = computed(() => props.kMan().terminNTGetMengeByAbijahrAndHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
 
 	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		if (klausur instanceof GostKursklausur && dragData.value !== undefined)
 			return {
-				"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur(props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur), klausur),
+				"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur((dragData.value as GostSchuelerklausurTermin), klausur),
 			}
 		else if (klausur instanceof GostSchuelerklausurTermin && dragData.value !== undefined)
 			return {
@@ -214,7 +214,7 @@
 			}
 		else if (klausur instanceof GostSchuelerklausurTermin && termin !== undefined) {
 			return {
-				"bg-red-200": props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(termin, klausur) > 0,
+				"bg-red-200": props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0,
 			}
 		}
 	};

@@ -18,7 +18,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaumstunde;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurTermin;
@@ -65,7 +65,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 	/** Klausurmanager des GOSt-Klausurplans. */
 	@JsonIgnore
-	private final GostKursklausurManager gostKlausurManager;
+	private final GostKlausurplanManager gostKlausurManager;
 
 	/** Die Räume, in denen Klausuren geschrieben werden. */
 	@JsonIgnore
@@ -82,7 +82,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * @param reportingRepository	Repository für die Reporting.
 	 * @param gostKlausurManager 	Der Manager der Klausuren zu diesem Klausurplan
 	 */
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKursklausurManager gostKlausurManager) {
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurManager) {
 		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
@@ -109,7 +109,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 						this.gostKlausurManager.vorgabeByKursklausur(k),
 						(this.gostKlausurManager.terminOrNullByKursklausur(k) == null)
 								? null : klausurtermin(this.gostKlausurManager.terminOrNullByKursklausur(k).id),
-						kurs(this.gostKlausurManager.getKursByKursklausur(k).id)))
+						kurs(this.gostKlausurManager.kursdatenByKursklausur(k).id)))
 				.toList());
 
 		// 5. Klausurräume mit Aufsichten (sofern schon zugeteilt) erstellen.
@@ -169,7 +169,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		final List<Long> gefundeneIdsKurse = new ArrayList<>();
 
 		for (final GostKursklausur kursklausur : this.gostKlausurManager.kursklausurGetMengeAsList()) {
-			final KursDaten kursDaten = this.gostKlausurManager.getKursByKursklausur(kursklausur);
+			final KursDaten kursDaten = this.gostKlausurManager.kursdatenByKursklausur(kursklausur);
 			if (!gefundeneIdsKurse.contains(kursDaten.id)) {
 				gefundeneKurse.add(new ProxyReportingKurs(this.reportingRepository, kursDaten));
 				gefundeneIdsKurse.add(kursDaten.id);
@@ -278,8 +278,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 				if ((gostSchuelerraumstunden != null) && !gostSchuelerraumstunden.isEmpty()) {
 					// Für einen Schüler kann es nur einen Raum zu einem Termin geben, nehme daher den ersten Eintrag der Liste aus den Raumstunden.
-					final GostKlausurraum gostKlausurraum =
-							mapGostKlausurraeume.get(mapGostKlausurraumstunden.get(gostSchuelerraumstunden.getFirst().idRaumstunde).idRaum);
+					gostKlausurManager.klausurraumGetBySchuelerklausurtermin(skTermin);
+
+					// Änderung von ESR: Der auskommentierte Code gab bei mir einen Fehler. Stattdessen habe ich die Zeile darunter eingefügt
+					// final GostKlausurraum gostKlausurraum =
+					//	mapGostKlausurraeume.get(mapGostKlausurraumstunden.get(gostSchuelerraumstunden.getFirst().idRaumstunde).idRaum);
+					final GostKlausurraum gostKlausurraum = gostKlausurManager.klausurraumGetBySchuelerklausurtermin(skTermin);
 
 					if (gostKlausurraum != null) {
 						// Ab hier gibt es einen Klausurraum mit Raumstunden, erzeuge daher den Klausurraum

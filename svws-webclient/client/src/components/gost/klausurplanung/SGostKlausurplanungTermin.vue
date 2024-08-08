@@ -21,8 +21,8 @@
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler,&nbsp;</span>
-							<span><span v-if="kMan().minKlausurdauerGetByTerminid(termin.id) < kMan().maxKlausurdauerGetByTerminid(termin.id)">{{ kMan().minKlausurdauerGetByTerminid(termin.id) }} - </span>{{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</span>
+							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler,&nbsp;</span>
+							<span><span v-if="kMan().minKlausurdauerGetByTermin(termin, true) < kMan().maxKlausurdauerGetByTermin(termin, true)">{{ kMan().minKlausurdauerGetByTermin(termin, true) }} - </span>{{ kMan().maxKlausurdauerGetByTermin(termin, true) }} Minuten</span>
 
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
@@ -91,21 +91,21 @@
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
 											</template>
-											<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 									<div class="svws-ui-td flex" role="cell">
 										<div>
-											<span v-if="kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() }}/</span>
-											<span :class="kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+											<span v-if="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() }}/</span>
+											<span :class="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 										</div>
 										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>
 									</div>
 									<div class="svws-ui-td svws-align-right" :class="{'pr-3': inTooltip}" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
-									<div v-if="kMan().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
+									<div v-if="kMan().quartalGetByTermin(termin) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 									<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 								</div>
 							</template>
@@ -125,8 +125,8 @@
 					</div>-->
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
-							<span class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminid(termin.id).size() }} Schüler, </span>
-							<span><span v-if="kMan().minKlausurdauerGetByTerminid(termin.id) < kMan().maxKlausurdauerGetByTerminid(termin.id)">{{ kMan().minKlausurdauerGetByTerminid(termin.id) }} - </span>{{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</span>
+							<span class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).size() }} Schüler, </span>
+							<span><span v-if="kMan().minKlausurdauerGetByTermin(termin, true) < kMan().maxKlausurdauerGetByTermin(termin, true)">{{ kMan().minKlausurdauerGetByTermin(termin, true) }} - </span>{{ kMan().maxKlausurdauerGetByTermin(termin, true) }} Minuten</span>
 						</div>
 						<slot name="loeschen" />
 					</span>
@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrs} from "@core";
+	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
 	import { GostHalbjahr} from "@core";
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
@@ -151,7 +151,7 @@
 
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;
-		kMan: () => GostKursklausurManager;
+		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
@@ -168,7 +168,7 @@
 		showKlausurenSelbesDatum?: boolean;
 		hideButtonRaeumePlanen?: boolean;
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		inTooltip?: boolean;
 	}>(), {
 		klausurCssClasses: undefined,
@@ -185,8 +185,8 @@
 		inTooltip: false,
 	});
 
-	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTerminid(props.termin.id, props.showKursklausurenNachschreiber);
-	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminFolgeterminGetMengeByTerminid(props.termin.id);
+	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTermin(props.termin, props.showKursklausurenNachschreiber);
+	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminNtGetMengeByTermin(props.termin);
 
 	const datumVorklausur = (klausur: GostKursklausur) => {
 		const vorklausur = props.kMan().kursklausurVorterminByKursklausur(klausur);
@@ -202,7 +202,7 @@
 		if (!props.termin.istHaupttermin)
 			return "Nachschreibtermin";
 		if (kursklausuren().size())
-			return [...props.kMan().kursklausurGetMengeByTerminid(props.termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
+			return [...props.kMan().kursklausurGetMengeByTermin(props.termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}
 
@@ -220,7 +220,7 @@
 			cols.push({ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 1.75 })
 		}
 
-		if (props.kMan().quartalGetByTerminid(props.termin.id) === -1) {
+		if (props.kMan().quartalGetByTermin(props.termin) === -1) {
 			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 1.75 })
 		}
 

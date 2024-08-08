@@ -1,11 +1,11 @@
 import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
-	GostKlausurenCollectionSkrsKrs,
+	GostKlausurenCollectionSkrsKrsData,
 	GostKlausurtermin,
 	GostKlausurterminblockungDaten,
 	GostKursklausur,
-	GostKursklausurManager,
+	GostKlausurplanManager,
 	GostSchuelerklausurTermin,
 	List,
 } from "@core";
@@ -14,8 +14,8 @@ import type { WritableComputedRef } from "vue";
 export interface GostKlausurplanungSchienenProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	kMan: () => GostKursklausurManager;
-	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+	kMan: () => GostKlausurplanManager;
+	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	createSchuelerklausurTermin: (id: number) => Promise<void>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;

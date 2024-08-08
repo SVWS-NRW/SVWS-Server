@@ -11,7 +11,7 @@
 			:show-schuelerklausuren>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
-					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
+					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
 					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 						<span class="icon i-ri-alert-line" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
@@ -37,14 +37,14 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurenCollectionSkrsKrs, GostKlausurenUpdate} from "@core";
+	import type { GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
 	import { GostKursklausur} from "@core";
-	import { type GostKursklausurManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
+	import { type GostKlausurplanManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		termin: () => GostKlausurtermin;
-		kMan: () => GostKursklausurManager;
+		kMan: () => GostKlausurplanManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		klausurCssClasses: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
@@ -54,28 +54,28 @@
 		draggable: (data: GostKlausurplanungDragData) => boolean;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
-		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,
 	});
 
-	const klausuren = () => props.kMan().kursklausurGetMengeByTerminid(props.termin().id);
+	const klausuren = () => props.kMan().kursklausurGetMengeByTermin(props.termin());
 	const terminTitel = () => kurzBezeichnungenShort;
 	const kurzBezeichnungen = [...klausuren()].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k));
 	const kurzBezeichnungenShort = kurzBezeichnungen.length > 3 ? kurzBezeichnungen.slice(0, 3).join(', ') + '...' : kurzBezeichnungen.join(', ');
 
-	const terminQuartalsWechselMoeglich = () => !props.termin().istHaupttermin && !(props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1);
+	const terminQuartalsWechselMoeglich = () => !props.termin().istHaupttermin && !(props.termin().quartal === 0 && props.kMan().quartalGetByTermin(props.termin()) === -1);
 
 	async function terminQuartalWechseln() {
-		const terminQuartal = props.kMan().quartalGetByTerminid(props.termin().id);
+		const terminQuartal = props.kMan().quartalGetByTermin(props.termin());
 		if (props.termin().quartal === 0)
 			if (terminQuartal > 0)
 				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
 			else
 				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTerminid(props.termin().id).size() > 0)
+		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0)
 			await props.patchKlausurtermin(props.termin().id, {quartal: 0});
 		else
 			await props.patchKlausurtermin(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});
@@ -86,7 +86,7 @@
 			if (props.dragData instanceof GostKursklausur) {
 				return false;
 			} else if (props.dragData instanceof GostSchuelerklausurTermin) {
-				return props.kMan().schuelerklausurterminByTerminidAndSchuelerid(termin.id, props.kMan().schuelerklausurGetByIdOrException(props.dragData.idSchuelerklausur).idSchueler) === null;
+				return props.kMan().schuelerklausurterminByTerminAndSchuelerid(termin, props.kMan().schuelerklausurGetByIdOrException(props.dragData.idSchuelerklausur).idSchueler) === null;
 			}
 		}
 		return false;
@@ -99,7 +99,7 @@
 
 	const konflikteTerminDragKlausur = computed(() => {
 		if (props.dragData instanceof GostSchuelerklausurTermin) {
-			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(props.termin(), props.dragData)
+			return props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(props.termin(), props.dragData).size()
 		} else
 			return -1
 	});

@@ -4,7 +4,7 @@
 			Automatisch Verteilen
 		</template>
 		<template #modalContent>
-			<svws-ui-notification type="info" v-if="raummanager().isSchuelerklausurenInRaum(multijahrgang())">
+			<svws-ui-notification type="info" v-if="kMan().isSchuelerklausurenInRaumByTermin(termin, multijahrgang())">
 				Existierende Klausur-Raumzuweisungen werden durch diesen Vorgang neu verteilt.
 			</svws-ui-notification>
 			<svws-ui-spacing :size="2" />
@@ -51,44 +51,43 @@
 		<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
 			<template #title>
 				<span class="leading-tight text-headline-md gap-1">
-					<span v-if="(!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen())" class="icon i-ri-alert-fill icon-error px-4" />
+					<span v-if="(!zeigeAlleJahrgaenge() && kMan().isKlausurenInFremdraeumenByTermin(termin))" class="icon i-ri-alert-fill icon-error px-4" />
 					<span>Jahrgangsübergreifende Planung</span>
-					<span v-if="(!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen())"> aktiviert, da jahrgangsgemischte Räume existieren</span>
+					<span v-if="(!zeigeAlleJahrgaenge() && kMan().isKlausurenInFremdraeumenByTermin(termin))"> aktiviert, da jahrgangsgemischte Räume existieren</span>
 				</span>
 			</template>
 			<ul>
 				<li class="flex font-bold">
-					<span>{{ raummanager().anzahlBenoetigtePlaetzeAlleKlausuren(false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
-					<span v-if="raummanager().isTerminAlleSchuelerklausurenVerplant(raummanager().getHauptTermin())" class="text-green-500">alle zugewiesen.</span>
+					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(termin, false) }} Klausuren im akutellen Jahrgang,&nbsp;</span>
+					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(termin)" class="text-green-500">alle zugewiesen.</span>
 					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
 				</li>
-				<li class="flex" v-for="pair in raummanager().getFremdTermine()" :key="pair.a.id">
-					<span>{{ pair.b!.size() }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(pair.a.halbjahr).jahrgang }},&nbsp;</span>
-					<span v-if="raummanager().isTerminAlleSchuelerklausurenVerplant(pair.a)" class="text-green-500">alle zugewiesen.</span>
+				<li class="flex" v-for="terminFremd in kMan().getFremdTermineByTermin(termin)" :key="terminFremd.id">
+					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
+					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-green-500">alle zugewiesen.</span>
 					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-					<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(pair.a.abijahr, pair.a.halbjahr, pair.a.id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+					<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(terminFremd.abijahr, terminFremd.halbjahr, terminFremd.id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 				</li>
 			</ul>
 		</svws-ui-content-card>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
-			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-button type="transparent" :disabled="!raummanager().alleRaeumeHabenStundenplanRaum(multijahrgang()) || !raummanager().isPlatzkapazitaetAusreichend(multijahrgang())" @click="showModalAutomatischVerteilen().value = true"><span class="icon i-ri-sparkling-line -ml-1 mr-1" />{{ raummanager().isPlatzkapazitaetAusreichend(multijahrgang()) && raummanager().alleRaeumeHabenStundenplanRaum(multijahrgang()) ? "Automatisch verteilen" : (raummanager().alleRaeumeHabenStundenplanRaum(multijahrgang()) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }} </svws-ui-button>
+			<svws-ui-button @click="createKlausurraum({idTermin: termin.id})"><span class="icon i-ri-add-line -ml-1" /> {{ kMan().raumGetMengeByTerminIncludingFremdtermine(termin, multijahrgang()).size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
+			<svws-ui-button type="transparent" :disabled="!kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang()) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen().value = true"><span class="icon i-ri-sparkling-line -ml-1 mr-1" />{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang()) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang()) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }} </svws-ui-button>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
-			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager().raeumeVerfuegbarGetMenge(zeigeAlleJahrgaenge() || raummanager().isKlausurenInFremdraeumen())"
+			<s-gost-klausurplanung-raumzeit-raum v-for="raum in kMan().raumGetMengeByTerminIncludingFremdtermine(termin, zeigeAlleJahrgaenge() || kMan().isKlausurenInFremdraeumenByTermin(termin))"
 				:key="raum.id"
-				:stundenplanmanager="stundenplanmanager"
-				:raum="raum"
-				:raummanager="raummanager"
-				:patch-klausurraum="patchKlausurraum"
-				:loesche-klausurraum="loescheKlausurraum"
-				:patch-klausur="patchKlausur"
-				:k-man="kMan"
-				:drag-data="dragData"
-				:on-drag="onDrag"
+				:raum
+				:patch-klausurraum
+				:loesche-klausurraum
+				:patch-klausur
+				:k-man
+				:drag-data
+				:on-drag
 				:multijahrgang
-				:on-drop="onDrop" />
+				:on-drop
+				:termin-selected="termin" />
 			<!-- </template>
 			<template v-else>
 				<div class="shadow-inner rounded-lg h-48" />
@@ -98,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich } from '@core';
+	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrsData, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich } from '@core';
 	import { GostKlausurraumRich, ListUtils, ArrayList } from '@core';
 	import { DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
@@ -108,18 +107,16 @@
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
-		kMan: () => GostKursklausurManager;
-		stundenplanmanager: StundenplanManager;
-		raummanager: () => GostKlausurraumManager;
-		createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
-		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		kMan: () => GostKlausurplanManager;
+		createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
+		loescheKlausurraum: (id: number) => Promise<boolean>;
+		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
+		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		zeigeAlleJahrgaenge: () => boolean;
-		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrs>;
+		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		getConfigValue: (value: string) => string;
 		setConfigValue: (key: string, value: string) => void;
 	}>();
@@ -138,7 +135,7 @@
 
 	const config = new GostKlausurraumblockungKonfiguration();
 
-	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.raummanager().isKlausurenInFremdraeumen();
+	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().isKlausurenInFremdraeumenByTermin(props.termin);
 	let nichtVerteilt = 0;
 
 	function mapIDs(skts: List<GostSchuelerklausurTermin | GostSchuelerklausurTerminRich>) {
@@ -155,8 +152,8 @@
 		props.setConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum", config._regel_forciere_selben_klausurstart_pro_raum ? "true" : "false");
 		props.setConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume ? "true" : "false");
 		props.setConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", config._regel_optimiere_blocke_in_moeglichst_wenig_raeume ? "true" : "false");
-		config.schuelerklausurtermine = props.raummanager().enrichSchuelerklausurtermine(props.raummanager().schuelerklausurtermineZuVerteilenGetMenge(multijahrgang()));
-		config.raeume = props.raummanager().enrichKlausurraeume(props.raummanager().raeumeVerfuegbarGetMenge(multijahrgang()));
+		config.schuelerklausurtermine = props.kMan().enrichSchuelerklausurtermine(props.kMan().schuelerklausurterminGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
+		config.raeume = props.kMan().enrichKlausurraeume(props.kMan().raumGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
 		const algo = new KlausurraumblockungAlgorithmus();
 		const raumAlleSkts = new GostKlausurraumRich();
 		raumAlleSkts.schuelerklausurterminIDs = mapIDs(config.schuelerklausurtermine);
