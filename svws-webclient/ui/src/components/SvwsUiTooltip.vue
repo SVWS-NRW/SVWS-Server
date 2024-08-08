@@ -25,14 +25,14 @@
 			leaveFromClass="opacity-100"
 			leaveToClass="transform opacity-0">
 			<div v-if="isOpen"
-				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
+				:style="floatingStyles"
 				class="tooltip transition-opacity"
 				:class="[`tooltip--${color}`, {'tooltip--autosize': autosize}]"
 				ref="floating">
 				<span v-if="showArrow"
 					:style="{
-						top: floatingArrowTop,
-						left: floatingArrowLeft,
+						left: middlewareData.arrow?.x != null ? middlewareData.arrow.x + 'px' : '',
+						top: middlewareData.arrow?.y != null ? middlewareData.arrow.y + 'px' : '',
 						...floatingArrowBalance,
 					}"
 					class="absolute rotate-45 bg-inherit aspect-square w-2"
@@ -57,7 +57,6 @@
 		keepOpen?: boolean;
 		initOpen?: boolean;
 		autosize?: boolean;
-		clickOutside?: () => unknown;
 	}>(), {
 		position: "bottom",
 		showArrow: true,
@@ -67,31 +66,21 @@
 		keepOpen: false,
 		initOpen: false,
 		autosize: false,
-		clickOutside: () => undefined,
 	});
-
-	const flipped = {
-		top: "bottom",
-		right: "left",
-		bottom: "top",
-		left: "right",
-	};
 
 	const isOpen = ref(false);
 	const reference = ref(null);
 	const floating = ref(null);
 	const floatingArrow = ref(null);
 
-	if (props.clickOutside !== undefined)
-		// eslint-disable-next-line vue/no-setup-props-destructure
-		onClickOutside(floating, props.clickOutside);
+	if (props.hover === false)
+		onClickOutside(floating, hideTooltip, { ignore: [reference] });
 
-	if ((props.keepOpen === true) || (props.initOpen === true)) {
+	if ((props.keepOpen === true) || (props.initOpen === true))
 		isOpen.value = true;
-	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const {x, y, strategy, placement, middlewareData} = useFloating(
+	const { placement, middlewareData, floatingStyles } = useFloating(
 		reference,
 		floating,
 		{
@@ -102,30 +91,26 @@
 		}
 	);
 
-	const side = computed(() => placement.value.split("-")[0] as "top" | "bottom" | "left" | "right");
-	const floatingTop = computed(() => `${y.value ?? 0}px`);
-	const floatingLeft = computed(() => `${x.value ?? 0}px`);
-
-	const floatingArrowX = computed(() => middlewareData.value.arrow?.x ?? null);
-	const floatingArrowY = computed(() => middlewareData.value.arrow?.y ?? null);
-	const floatingArrowTop = computed(() =>
-		floatingArrowY.value === null ? "" : `${floatingArrowY.value}px`
-	);
-	const floatingArrowLeft = computed(() =>
-		floatingArrowX.value === null ? "" : `${floatingArrowX.value}px`
-	);
-	const floatingArrowBalance = computed(() => ({
-		[flipped[side.value]]: "-4px",
-	}));
+	const floatingArrowBalance = computed(() => {
+		if (props.showArrow === false)
+			return {};
+		const flipped = {
+			top: "bottom",
+			right: "left",
+			bottom: "top",
+			left: "right",
+		};
+		const side = placement.value.split('-')[0] as keyof typeof flipped;
+		return {[flipped[side]]: '-4px'};
+	});
 
 	function showTooltip() {
 		isOpen.value = true;
 	}
 
 	function hoverEnterTooltip() {
-		if (props.hover && !props.keepOpen) {
+		if (props.hover && !props.keepOpen)
 			showTooltip();
-		}
 	}
 
 	function hideTooltip() {
@@ -133,16 +118,15 @@
 	}
 
 	function hoverLeaveTooltip() {
-		if (props.hover && !props.keepOpen) {
+		if (props.hover && !props.keepOpen)
 			hideTooltip();
-		}
 	}
 
 	function toggleTooltip() {
-		if (!props.keepOpen) {
+		if (!props.keepOpen)
 			isOpen.value = !isOpen.value;
-		}
 	}
+
 </script>
 
 <style lang="postcss">
