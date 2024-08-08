@@ -251,7 +251,7 @@
 													<span v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
 												</div>
 												<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
-													<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">
+													<svws-ui-tooltip :show-arrow="false" init-open @close="resetDrop">
 														<template #content>
 															<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
 															<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse immer zusammen')">{{ zusammenKursbezeichnung }} immer auf einer Schiene</svws-ui-button>

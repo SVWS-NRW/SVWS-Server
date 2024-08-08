@@ -68,12 +68,16 @@
 		autosize: false,
 	});
 
+	const emit = defineEmits<{
+		"close": [value: void];
+	}>();
+
 	const isOpen = ref(false);
 	const reference = ref(null);
 	const floating = ref(null);
 	const floatingArrow = ref(null);
 
-	if (props.hover === false)
+	if (props.hover === false || props.initOpen === true)
 		onClickOutside(floating, hideTooltip, { ignore: [reference] });
 
 	if ((props.keepOpen === true) || (props.initOpen === true))
@@ -115,11 +119,12 @@
 
 	function hideTooltip() {
 		isOpen.value = false;
+		emit("close");
 	}
 
 	function hoverLeaveTooltip() {
 		if (props.hover && !props.keepOpen)
-			hideTooltip();
+			isOpen.value = false;
 	}
 
 	function toggleTooltip() {
