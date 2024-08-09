@@ -282,18 +282,18 @@
 
 	const klausurCssClasses = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
-		let konfliktfreiZuFremdtermin = false;
-		for (const oTermin of termine.value) {
-			if (oTermin.id !== klausur.idTermin && oTermin.quartal === props.kMan().vorgabeByKursklausur(klausur).quartal || oTermin.quartal === 0)
-				konfliktfreiZuFremdtermin = props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
-			if (konfliktfreiZuFremdtermin)
-				break;
-		}
+		// let konfliktfreiZuFremdtermin = false;
+		// for (const oTermin of termine.value) {
+		// 	if (oTermin.id !== klausur.idTermin && oTermin.quartal === props.kMan().vorgabeByKursklausur(klausur).quartal || oTermin.quartal === 0)
+		// 		konfliktfreiZuFremdtermin = props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
+		// 	if (konfliktfreiZuFremdtermin)
+		// 		break;
+		// }
 		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
-			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			"svws-warning": !konfliktfreiZuFremdtermin,
-			"svws-error": konfliktZuEigenemTermin,
+			// "svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
+			// "bg-yellow-300": !konfliktfreiZuFremdtermin,
+			"bg-red-200": konfliktZuEigenemTermin,
 		}
 	};
 
