@@ -13,7 +13,7 @@ const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/d
 export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, RouteSchuleDatenaustausch> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.laufbahnplanung", "laufbahnplanung", SSchuleDatenaustauschLaufbahnplanung);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.laufbahnplanung", "laufbahnplanung", SSchuleDatenaustauschLaufbahnplanung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "LuPO Laufbahnplanung";

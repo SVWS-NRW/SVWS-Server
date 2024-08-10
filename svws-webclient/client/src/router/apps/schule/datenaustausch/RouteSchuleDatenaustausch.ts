@@ -38,7 +38,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 			routeSchuleDatenaustauschWenom,
 			routeSchuleDatenaustauschUntis,
 		];
-		super.defaultChild = routeSchuleDatenaustauschLaufbahnplanung;
+		super.defaultChild = routeSchuleDatenaustauschUntis;
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<any> {

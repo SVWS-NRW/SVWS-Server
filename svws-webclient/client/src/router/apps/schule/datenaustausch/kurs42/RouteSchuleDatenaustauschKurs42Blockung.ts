@@ -14,7 +14,7 @@ const SSchuleDatenaustauschKurs42Blockung = () => import("~/components/schule/da
 export class RouteSchuleDatenaustauschKurs42Blockung extends RouteNode<any, RouteSchuleDatenaustauschKurs42> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.blockung", "blockung", SSchuleDatenaustauschKurs42Blockung);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.blockung", "blockung", SSchuleDatenaustauschKurs42Blockung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Blockung";
