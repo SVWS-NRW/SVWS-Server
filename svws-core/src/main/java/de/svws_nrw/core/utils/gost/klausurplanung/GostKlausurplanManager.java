@@ -264,7 +264,8 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausure}n, {@link GostKlausurtermin}en, {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausur}en, {@link GostKlausurtermin}en,
+	 * {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
 	 *
 	 * @param listVorgaben 			die Liste der {@link GostKlausurvorgabe}n
 	 * @param listKlausuren         die Liste der {@link GostKursklausur}en
@@ -334,10 +335,10 @@ public class GostKlausurplanManager {
 		if (meta.kurse != null && !meta.kurse.isEmpty())
 			setKursManager(new KursManager(meta.kurse));
 		_lehrerMap = new HashMap<>();
-		for (LehrerListeEintrag lehrer : meta.lehrer)
+		for (final LehrerListeEintrag lehrer : meta.lehrer)
 			_lehrerMap.put(lehrer.id, lehrer);
 		_schuelerMap = new HashMap<>();
-		for (SchuelerListeEintrag schueler : meta.schueler)
+		for (final SchuelerListeEintrag schueler : meta.schueler)
 			_schuelerMap.put(schueler.id, schueler);
 	}
 
@@ -2140,7 +2141,7 @@ public class GostKlausurplanManager {
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr    das {@link Gost-Halbjahr}
+	 * @param halbjahr    das {@link GostHalbjahr}
 	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten

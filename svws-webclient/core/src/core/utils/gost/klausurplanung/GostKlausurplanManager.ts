@@ -269,7 +269,8 @@ export class GostKlausurplanManager extends JavaObject {
 	public constructor(faecherManager : GostFaecherManager | null, listVorgaben : List<GostKlausurvorgabe>);
 
 	/**
-	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausure}n, {@link GostKlausurtermin}en, {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausur}en, {@link GostKlausurtermin}en,
+	 * {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
 	 *
 	 * @param listVorgaben 			die Liste der {@link GostKlausurvorgabe}n
 	 * @param listKlausuren         die Liste der {@link GostKursklausur}en
@@ -360,10 +361,10 @@ export class GostKlausurplanManager extends JavaObject {
 		if (meta.kurse !== null && !meta.kurse.isEmpty())
 			this.setKursManager(new KursManager(meta.kurse));
 		this._lehrerMap = new HashMap();
-		for (let lehrer of meta.lehrer)
+		for (const lehrer of meta.lehrer)
 			this._lehrerMap.put(lehrer.id, lehrer);
 		this._schuelerMap = new HashMap();
-		for (let schueler of meta.schueler)
+		for (const schueler of meta.schueler)
 			this._schuelerMap.put(schueler.id, schueler);
 	}
 
@@ -1967,7 +1968,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
-	 * @param halbjahr    das {@link Gost-Halbjahr}
+	 * @param halbjahr    das {@link GostHalbjahr}
 	 * @param quartal     die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
