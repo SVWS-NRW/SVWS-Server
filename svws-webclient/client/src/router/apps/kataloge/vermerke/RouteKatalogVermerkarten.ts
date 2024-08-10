@@ -24,7 +24,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.vermerkarten", "kataloge/vermerkarten/:id(\\d+)?", SVermerkApp, new RouteDataKatalogVermerke());
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkarten";
 		super.setView("liste", SVermerkAuswahl, (route) => this.getAuswahlProps(route));
@@ -105,7 +105,9 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		const manager = this.data.vermerkartenManager;
+		const id = (manager.auswahlID === null) ? undefined : manager.auswahlID.toString();
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id } });
 		this.data.setView(node, this.children);
 	}
 }
