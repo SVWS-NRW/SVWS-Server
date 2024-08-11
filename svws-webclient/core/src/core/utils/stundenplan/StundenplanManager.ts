@@ -6339,14 +6339,14 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * Liefert TRUE, falls die Intervalle [beginn1, ende1[ und [beginn2, ende2[ sich schneiden.
 	 *
 	 * @param iBeginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde1    Das Ende (exklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
 	 * @param iBeginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2    Das Ende (exklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
 	 *
-	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * @return TRUE, falls die Intervalle [beginn1, ende1[ und [beginn2, ende2[ sich schneiden.
 	 */
 	public zeitrasterGetSchneidenSich(iBeginn1 : number | null, iEnde1 : number | null, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
 		const beginn1 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn1 ist NULL!", iBeginn1).valueOf();
@@ -6357,7 +6357,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
 		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
 		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
-		return !((ende1 < beginn2) || (ende2 < beginn1));
+		return !((ende1 <= beginn2) || (ende2 <= beginn1));
 	}
 
 	/**

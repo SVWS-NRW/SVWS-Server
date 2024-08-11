@@ -6794,9 +6794,7 @@ public class StundenplanManager {
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public @NotNull List<StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(
-			final @NotNull Wochentag wochentag,
-			final int beginn,
+	public @NotNull List<StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final int beginn,
 			final int minutenVerstrichen) {
 		final int ende = beginn + minutenVerstrichen;
 		return CollectionUtils.toFilteredArrayList(_zeitrastermenge, (final @NotNull StundenplanZeitraster z) -> (wochentag.id == z.wochentag)
@@ -7005,14 +7003,14 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * Liefert TRUE, falls die Intervalle [beginn1, ende1[ und [beginn2, ende2[ sich schneiden.
 	 *
 	 * @param iBeginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde1    Das Ende (exklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
 	 * @param iBeginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2    Das Ende (exklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
 	 *
-	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * @return TRUE, falls die Intervalle [beginn1, ende1[ und [beginn2, ende2[ sich schneiden.
 	 */
 	public boolean zeitrasterGetSchneidenSich(final Integer iBeginn1, final Integer iEnde1, final Integer iBeginn2, final Integer iEnde2) {
 		final int beginn1 = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn1 ist NULL!", iBeginn1);
@@ -7023,7 +7021,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
 		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
 		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
-		return !((ende1 < beginn2) || (ende2 < beginn1));
+		return !((ende1 <= beginn2) || (ende2 <= beginn1));
 	}
 
 	/**

@@ -75,8 +75,6 @@
 	}
 
 	async function patchZeiten() {
-		if ((start.value === null) || (ende.value === null))
-			return;
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const zeitraster of props.stundenplanManager().getListZeitrasterZuStunde(props.item)) {
 			const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start.value);
@@ -100,4 +98,5 @@
 				arr.push(w);
 		return arr;
 	})
+
 </script>
